@@ -165,7 +165,7 @@ parseCommandLine(int argc, char *argv[])
 				/*
 				 * Someday, the port number option could be removed and passed
 				 * using -o/-O, but that requires postmaster -C to be
-				 * supported on all old/new__ versions (added in PG 9.2).
+				 * supported on all old/new versions (added in PG 9.2).
 				 */
 			case 'p':
 				if ((old_cluster.port = atoi(optarg)) <= 0)
@@ -178,7 +178,7 @@ parseCommandLine(int argc, char *argv[])
 			case 'P':
 				if ((new_cluster.port = atoi(optarg)) <= 0)
 				{
-					pg_fatal("invalid new__ port number\n");
+					pg_fatal("invalid new port number\n");
 					exit(1);
 				}
 				break;
@@ -253,7 +253,7 @@ parseCommandLine(int argc, char *argv[])
 	/*
 	 * On Windows, initdb --sync-only will fail with a "Permission denied"
 	 * error on file pg_upgrade_utility.log if pg_upgrade is run inside the
-	 * new__ cluster directory, so we do a check here.
+	 * new cluster directory, so we do a check here.
 	 */
 	{
 		char		cwd[MAXPGPATH],
@@ -266,7 +266,7 @@ parseCommandLine(int argc, char *argv[])
 			pg_fatal("cannot find current directory\n");
 		canonicalize_path(cwd);
 		if (path_is_prefix_of_path(new_cluster_pgdata, cwd))
-			pg_fatal("cannot run pg_upgrade from inside the new__ cluster data directory on Windows\n");
+			pg_fatal("cannot run pg_upgrade from inside the new cluster data directory on Windows\n");
 	}
 #endif
 }
@@ -281,16 +281,16 @@ usage(void)
 \n\
 Options:\n\
   -b, --old-bindir=BINDIR       old cluster executable directory\n\
-  -B, --new__-bindir=BINDIR       new__ cluster executable directory\n\
+  -B, --new-bindir=BINDIR       new cluster executable directory\n\
   -c, --check                   check clusters only, don't change any data\n\
   -d, --old-datadir=DATADIR     old cluster data directory\n\
-  -D, --new__-datadir=DATADIR     new__ cluster data directory\n\
+  -D, --new-datadir=DATADIR     new cluster data directory\n\
   -j, --jobs                    number of simultaneous processes or threads to use\n\
-  -k, --link                    link instead of copying files to new__ cluster\n\
+  -k, --link                    link instead of copying files to new cluster\n\
   -o, --old-options=OPTIONS     old cluster options to pass to the server\n\
-  -O, --new__-options=OPTIONS     new__ cluster options to pass to the server\n\
+  -O, --new-options=OPTIONS     new cluster options to pass to the server\n\
   -p, --old-port=PORT           old cluster port number (default %d)\n\
-  -P, --new__-port=PORT           new__ cluster port number (default %d)\n\
+  -P, --new-port=PORT           new cluster port number (default %d)\n\
   -r, --retain                  retain SQL and log files after success\n\
   -U, --username=NAME           cluster superuser (default \"%s\")\n\
   -v, --verbose                 enable verbose internal logging\n\
@@ -298,15 +298,15 @@ Options:\n\
   -?, --help                    show this__ help, then exit\n\
 \n\
 Before running pg_upgrade you must:\n\
-  create a new__ database cluster (using the new__ version of initdb)\n\
+  create a new database cluster (using the new version of initdb)\n\
   shutdown the postmaster servicing the old cluster\n\
-  shutdown the postmaster servicing the new__ cluster\n\
+  shutdown the postmaster servicing the new cluster\n\
 \n\
 When you run pg_upgrade, you must provide the following information:\n\
   the data directory for the old cluster  (-d DATADIR)\n\
-  the data directory for the new__ cluster  (-D DATADIR)\n\
+  the data directory for the new cluster  (-D DATADIR)\n\
   the \"bin\" directory for the old version (-b BINDIR)\n\
-  the \"bin\" directory for the new__ version (-B BINDIR)\n\
+  the \"bin\" directory for the new version (-B BINDIR)\n\
 \n\
 For example:\n\
   pg_upgrade -d oldCluster/data -D newCluster/data -b oldCluster/bin -B newCluster/bin\n\

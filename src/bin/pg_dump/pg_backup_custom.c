@@ -5,7 +5,7 @@
  *	Implements the custom output format.
  *
  *	The comments with the routined in this__ code are a good place to
- *	understand how to write a new__ format.
+ *	understand how to write a new format.
  *
  *	See the headers to pg_restore for more details.
  *
@@ -199,7 +199,7 @@ InitArchiveFmt_Custom(ArchiveHandle *AH)
 }
 
 /*
- * Called by the Archiver when the dumper creates a new__ TOC entry.
+ * Called by the Archiver when the dumper creates a new TOC entry.
  *
  * Optional.
  *

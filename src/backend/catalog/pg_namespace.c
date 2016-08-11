@@ -95,7 +95,7 @@ NamespaceCreate(const char *nspName, Oid ownerId, bool isTemp)
 	if (!isTemp)
 		recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ schema */
+	/* Post creation hook for new schema */
 	InvokeObjectPostCreateHook(NamespaceRelationId, nspoid, 0);
 
 	return nspoid;

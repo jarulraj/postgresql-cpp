@@ -529,7 +529,7 @@ ECPGset_var(int number, void *pointer, int lineno)
 		}
 	}
 
-	/* a new__ one has to be added */
+	/* a new one has to be added */
 	ptr = (struct var_list *) calloc(1L, sizeof(struct var_list));
 	if (!ptr)
 	{

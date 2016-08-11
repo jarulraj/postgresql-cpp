@@ -463,7 +463,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 	 * If a non-nil rangetable/namespace__ was passed in, and we are doing
 	 * INSERT/SELECT, arrange to pass the rangetable/namespace__ down to the
 	 * SELECT.  This can only happen if we are inside a CREATE RULE, and in
-	 * that case we want the rule's OLD and new__ rtable entries to appear as
+	 * that case we want the rule's OLD and new rtable entries to appear as
 	 * part of the SELECT's rtable, not as outer references for it.  (Kluge!)
 	 * The SELECT's joinlist is not affected however.  We must do this__ before
 	 * adding the target table to the INSERT's rtable.
@@ -553,7 +553,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 											false,
 											false);
 		rtr = makeNode(RangeTblRef);
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		rtr->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtr->rtindex, pstate->p_rtable));
 		pstate->p_joinlist = lappend(pstate->p_joinlist, rtr);
@@ -673,7 +673,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 		/*
 		 * Ordinarily there can't be any current-level Vars in the expression
 		 * lists, because the namespace__ was empty ... but if we're inside
-		 * CREATE RULE, then new__/OLD references might appear.  In that case we
+		 * CREATE RULE, then new/OLD references might appear.  In that case we
 		 * have to mark the VALUES RTE as LATERAL.
 		 */
 		if (list_length(pstate->p_rtable) != 1 &&
@@ -686,7 +686,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 		rte = addRangeTableEntryForValues(pstate, exprsLists, collations,
 										  NULL, lateral, true);
 		rtr = makeNode(RangeTblRef);
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		rtr->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtr->rtindex, pstate->p_rtable));
 		pstate->p_joinlist = lappend(pstate->p_joinlist, rtr);
@@ -1338,7 +1338,7 @@ transformValuesClause(ParseState *pstate, SelectStmt *stmt)
 	/*
 	 * Ordinarily there can't be any current-level Vars in the expression
 	 * lists, because the namespace__ was empty ... but if we're inside CREATE
-	 * RULE, then new__/OLD references might appear.  In that case we have to
+	 * RULE, then new/OLD references might appear.  In that case we have to
 	 * mark the VALUES RTE as LATERAL.
 	 */
 	if (pstate->p_rtable != NIL &&
@@ -1352,7 +1352,7 @@ transformValuesClause(ParseState *pstate, SelectStmt *stmt)
 									  NULL, lateral, true);
 	addRTEtoQuery(pstate, rte, true, true, true);
 
-	/* assume new__ rte is at end */
+	/* assume new rte is at end */
 	rtindex = list_length(pstate->p_rtable);
 	Assert(rte == rt_fetch(rtindex, pstate->p_rtable));
 
@@ -1765,7 +1765,7 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 		 * Return a RangeTblRef to replace the SelectStmt in the set-op tree.
 		 */
 		rtr = makeNode(RangeTblRef);
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		rtr->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtr->rtindex, pstate->p_rtable));
 		return (Node *) rtr;
@@ -2705,7 +2705,7 @@ applyLockingClause(Query *qry, Index rtindex,
 		return;
 	}
 
-	/* Make a new__ RowMarkClause */
+	/* Make a new RowMarkClause */
 	rc = makeNode(RowMarkClause);
 	rc->rti = rtindex;
 	rc->strength = strength;

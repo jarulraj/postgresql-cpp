@@ -25,7 +25,7 @@
  * OAT_POST_ALTER should be invoked just after the object is altered,
  * but before the command counter is incremented.  An extension using the
  * hook can use a current MVCC snapshot to get the old version of the tuple,
- * and can use SnapshotSelf to get the new__ version of the tuple.
+ * and can use SnapshotSelf to get the new version of the tuple.
  *
  * OAT_NAMESPACE_SEARCH should be invoked prior to object name lookup under
  * a particular namespace__. This event is equivalent to usage permission

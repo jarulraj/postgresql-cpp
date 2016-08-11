@@ -36,7 +36,7 @@ static PLpgSQL_nsitem *ns_top = NULL;
 
 
 /* ----------
- * plpgsql_ns_init			Initialize namespace__ processing for a new__ function
+ * plpgsql_ns_init			Initialize namespace__ processing for a new function
  * ----------
  */
 void
@@ -47,7 +47,7 @@ plpgsql_ns_init(void)
 
 
 /* ----------
- * plpgsql_ns_push			Create a new__ namespace__ level
+ * plpgsql_ns_push			Create a new namespace__ level
  * ----------
  */
 void

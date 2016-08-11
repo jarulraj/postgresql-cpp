@@ -127,7 +127,7 @@ pg_signal_backend(int pid, int sig)
 
 	/*
 	 * Can the process we just validated above end, followed by the pid being
-	 * recycled for a new__ process, before reaching here?  Then we'd be trying
+	 * recycled for a new process, before reaching here?  Then we'd be trying
 	 * to kill the wrong thing.  Seems near impossible when sequential pid
 	 * assignment and wraparound is used.  Perhaps it could happen on a system
 	 * where pid re-use is randomized.  That race condition possibility seems

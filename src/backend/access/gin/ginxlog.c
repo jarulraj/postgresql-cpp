@@ -144,7 +144,7 @@ ginRedoRecompress(Page page, ginxlogRecompressDataLeaf *data)
 	int			totalsize;
 
 	/*
-	 * If the page is in pre-9.4 format, convert to new__ format first.
+	 * If the page is in pre-9.4 format, convert to new format first.
 	 */
 	if (!GinPageIsCompressed(page))
 	{
@@ -212,9 +212,9 @@ ginRedoRecompress(Page page, ginxlogRecompressDataLeaf *data)
 		}
 
 		/*
-		 * ADDITEMS action is handled like REPLACE, but the new__ segment to
+		 * ADDITEMS action is handled like REPLACE, but the new segment to
 		 * replace the old one is reconstructed using the old segment from
-		 * disk and the new__ items from the WAL record.
+		 * disk and the new items from the WAL record.
 		 */
 		if (a_action == GIN_SEGMENT_ADDITEMS)
 		{
@@ -259,9 +259,9 @@ ginRedoRecompress(Page page, ginxlogRecompressDataLeaf *data)
 				break;
 
 			case GIN_SEGMENT_INSERT:
-				/* make room for the new__ segment */
+				/* make room for the new segment */
 				memmove(segptr + newsegsize, segptr, szleft);
-				/* copy the new__ segment in place */
+				/* copy the new segment in place */
 				memcpy(segptr, newseg, newsegsize);
 				segmentend += newsegsize;
 				segptr += newsegsize;
@@ -568,7 +568,7 @@ ginRedoUpdateMetapage(XLogReaderState *record)
 	else if (data->prevTail != InvalidBlockNumber)
 	{
 		/*
-		 * new__ tail
+		 * new tail
 		 */
 		if (XLogReadBufferForRedo(record, 1, &buffer) == BLK_NEEDS_REDO)
 		{
@@ -667,12 +667,12 @@ ginRedoDeleteListPages(XLogReaderState *record)
 	 * that we are deleting pages from the head of the list, and that readers
 	 * share-lock the next page before releasing the one they are on. So we
 	 * cannot get past a reader that is on, or due to visit, any page we are
-	 * going to delete.  new__ incoming readers will block behind our metapage
+	 * going to delete.  new incoming readers will block behind our metapage
 	 * lock and then see a fully updated page list.
 	 *
 	 * No full-page images are taken of the deleted pages. Instead, they are
 	 * re-initialized as empty, deleted pages. Their right-links don't need to
-	 * be preserved, because no new__ readers can see the pages, as explained
+	 * be preserved, because no new readers can see the pages, as explained
 	 * above.
 	 */
 	for (i = 0; i < data->ndeleted; i++)

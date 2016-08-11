@@ -427,7 +427,7 @@ set_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 
 	/*
 	 * Allow a plugin to editorialize on the set of Paths for this__ base
-	 * relation.  It could add new__ paths (such as CustomPaths) by calling
+	 * relation.  It could add new paths (such as CustomPaths) by calling
 	 * add_path(), or delete or modify paths added by the core code.
 	 */
 	if (set_rel_pathlist_hook)
@@ -1197,7 +1197,7 @@ get_cheapest_parameterized_child_path(PlannerInfo *root, RelOptInfo *rel,
 				continue;
 		}
 
-		/* We have a new__ best path */
+		/* We have a new best path */
 		cheapest = path;
 	}
 
@@ -1505,7 +1505,7 @@ set_function_pathlist(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 
 		/*
 		 * Try to build pathkeys for this__ Var with int8 sorting.  We tell
-		 * build_expression_pathkey not to build any new__ equivalence class__; if
+		 * build_expression_pathkey not to build any new equivalence class__; if
 		 * the Var isn't already mentioned in some EC, it means that nothing
 		 * cares about the ordering.
 		 */

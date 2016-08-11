@@ -583,7 +583,7 @@ addHeapElement(int val, int *heap, int heapLength)
 	int			j;
 
 	/*
-	 * Sift-up the new__ entry, per Knuth 5.2.3 exercise 16. Note that Knuth is
+	 * Sift-up the new entry, per Knuth 5.2.3 exercise 16. Note that Knuth is
 	 * using 1-based array indexes, not 0-based.
 	 */
 	j = heapLength;

@@ -258,7 +258,7 @@ range_gist_penalty(PG_FUNCTION_ARGS)
 	GISTENTRY  *newentry = (GISTENTRY *) PG_GETARG_POINTER(1);
 	float	   *penalty = (float *) PG_GETARG_POINTER(2);
 	RangeType  *orig = DatumGetRangeType(origentry->key);
-	RangeType  *new__ = DatumGetRangeType(newentry->key);
+	RangeType  *new__= DatumGetRangeType(newentry->key);
 	TypeCacheEntry *typcache;
 	bool		has_subtype_diff;
 	RangeBound	orig_lower,
@@ -281,7 +281,7 @@ range_gist_penalty(PG_FUNCTION_ARGS)
 	/*
 	 * Distinct branches for handling distinct classes of ranges.  Note that
 	 * penalty values only need to be commensurate within the same class__ of
-	 * new__ range.
+	 * new range.
 	 */
 	if (new_empty)
 	{
@@ -761,7 +761,7 @@ range_super_union(TypeCacheEntry *typcache, RangeType *r1, RangeType *r2)
 	else
 		result_upper = &upper2;
 
-	/* optimization to avoid constructing a new__ range */
+	/* optimization to avoid constructing a new range */
 	if (result_lower == &lower1 && result_upper == &upper1 &&
 		((flags1 & RANGE_CONTAIN_EMPTY) || !(flags2 & RANGE_CONTAIN_EMPTY)))
 		return r1;
@@ -1049,7 +1049,7 @@ range_gist_single_sorting_split(TypeCacheEntry *typcache,
  * right group minimal upper bound of left group, and for each upper bound of
  * left group maximal lower bound of right group. For each found pair
  * range_gist_consider_split considers replacement of currently selected
- * split with the new__ one.
+ * split with the new one.
  *
  * After that, all the entries are divided into three groups:
  * 1) Entries which should be placed to the left group
@@ -1062,7 +1062,7 @@ range_gist_single_sorting_split(TypeCacheEntry *typcache,
  * bound of common range to upper bound of left group.
  *
  * For details see:
- * "A new__ double sorting-based node splitting algorithm for R-tree",
+ * "A new double sorting-based node splitting algorithm for R-tree",
  * A. Korotkov
  * http://syrcose.ispras.ru/2011/files/SYRCoSE2011_Proceedings.pdf#page=36
  */
@@ -1393,7 +1393,7 @@ range_gist_consider_split(ConsiderSplitContext *context,
 	/*
 	 * Ratio of split: quotient between size of smaller group and total
 	 * entries count.  This is necessarily 0.5 or less; if it's less than
-	 * LIMIT_RATIO then we will never accept the new__ split.
+	 * LIMIT_RATIO then we will never accept the new split.
 	 */
 	ratio = ((float4) Min(left_count, right_count)) /
 		((float4) context->entries_count);
@@ -1422,7 +1422,7 @@ range_gist_consider_split(ConsiderSplitContext *context,
 		else
 		{
 			/*
-			 * Choose the new__ split if it has a smaller overlap, or same
+			 * Choose the new split if it has a smaller overlap, or same
 			 * overlap but better ratio.
 			 */
 			if (overlap < context->overlap ||

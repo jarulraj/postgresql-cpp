@@ -252,7 +252,7 @@ CreateSharedInvalidationState(void)
 
 /*
  * SharedInvalBackendInit
- *		Initialize a new__ backend to operate on the sinval buffer
+ *		Initialize a new backend to operate on the sinval buffer
  */
 void
 SharedInvalBackendInit(bool sendOnly)
@@ -430,7 +430,7 @@ BackendIdGetTransactionIds(int backendID, TransactionId *xid, TransactionId *xmi
 
 /*
  * SIInsertDataEntries
- *		Add new__ invalidation message(s) to the buffer.
+ *		Add new invalidation message(s) to the buffer.
  */
 void
 SIInsertDataEntries(const SharedInvalidationMessage *data, int n)
@@ -475,7 +475,7 @@ SIInsertDataEntries(const SharedInvalidationMessage *data, int n)
 		}
 
 		/*
-		 * Insert new__ message(s) into proper slot of circular buffer
+		 * Insert new message(s) into proper slot of circular buffer
 		 */
 		max = segP->maxMsgNum;
 		while (nthistime-- > 0)
@@ -569,7 +569,7 @@ SIGetDataEntries(SharedInvalidationMessage *data, int datasize)
 
 	/*
 	 * We must reset hasMessages before determining how many messages we're
-	 * going to read.  That way, if new__ messages arrive after we have
+	 * going to read.  That way, if new messages arrive after we have
 	 * determined how many we're reading, the flag will get reset and we'll
 	 * notice those messages part-way through.
 	 *
@@ -763,10 +763,10 @@ SICleanupQueue(bool callerHasWriteLock, int minFree)
 
 
 /*
- * GetNextLocalTransactionId --- allocate a new__ LocalTransactionId
+ * GetNextLocalTransactionId --- allocate a new LocalTransactionId
  *
  * We split VirtualTransactionIds into two parts so that it is possible
- * to allocate a new__ one without any contention for shared memory, except
+ * to allocate a new one without any contention for shared memory, except
  * for a bit of additional overhead during backend startup/shutdown.
  * The high-order part of a VirtualTransactionId is a BackendId, and the
  * low-order part is a LocalTransactionId, which we assign from a local

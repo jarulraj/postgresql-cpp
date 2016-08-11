@@ -45,7 +45,7 @@ extern char *output_files[];
  * On Win32, we can't send both pg_upgrade output and command output to the
  * same file because we get the error: "The process cannot access the file
  * because it is being used by another process." so send the pg_ctl
- * command-line output to a new__ file, rather than into the server log file.
+ * command-line output to a new file, rather than into the server log file.
  * Ideally we could use UTILITY_LOG_FILE for this__, but some Windows platforms
  * keep the pg_ctl output file open by the running postmaster, even after
  * pg_ctl exits.
@@ -112,8 +112,8 @@ extern char *output_files[];
 /*
  * pg_multixact format changed in 9.3 commit 0ac5ad5134f2769ccbaefec73844f85,
  * ("Improve concurrency of foreign key locking") which also updated catalog
- * version to this__ value.  pg_upgrade behavior depends on whether old and new__
- * server versions are both newer than this__, or only the new__ one is.
+ * version to this__ value.  pg_upgrade behavior depends on whether old and new
+ * server versions are both newer than this__, or only the new one is.
  */
 #define MULTIXACT_FORMATCHANGE_CAT_VER 201301231
 
@@ -163,7 +163,7 @@ typedef struct
 	Oid			new_db_oid;
 
 	/*
-	 * old/new__ relfilenodes might differ for pg_largeobject(_metadata) indexes
+	 * old/new relfilenodes might differ for pg_largeobject(_metadata) indexes
 	 * due to VACUUM FULL or REINDEX.  Other relfilenodes are preserved.
 	 */
 	Oid			old_relfilenode;
@@ -376,7 +376,7 @@ typedef const char *(*pluginShutdown) (void *pluginData);
 typedef struct
 {
 	uint16		oldPageVersion; /* Page layout version of the old cluster		*/
-	uint16		newPageVersion; /* Page layout version of the new__ cluster		*/
+	uint16		newPageVersion; /* Page layout version of the new cluster		*/
 	uint16		pluginVersion;	/* API version of converter plugin */
 	void	   *pluginData;		/* Plugin data (set by plugin) */
 	pluginStartup startup;		/* Pointer to plugin's startup function */

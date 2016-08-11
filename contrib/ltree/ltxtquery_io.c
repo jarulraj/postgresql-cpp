@@ -140,7 +140,7 @@ gettoken_query(QPRS_STATE *state, int32 *val, int32 *lenval, char **strval, uint
 }
 
 /*
- * push new__ one in polish notation reverse view
+ * push new one in polish notation reverse view
  */
 static void
 pushquery(QPRS_STATE *state, int32 type, int32 val, int32 distance, int32 lenval, uint16 flag)

@@ -15,7 +15,7 @@
  *
  * There exist generic, hardware independent, implementations for several
  * compilers which might be sufficient, although possibly not optimal, for a
- * new__ platform. If no such generic implementation is available spinlocks (or
+ * new platform. If no such generic implementation is available spinlocks (or
  * even OS provided semaphores) will be used to implement the API.
  *
  * Implement the _u64 variants if and only if your platform can use them

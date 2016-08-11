@@ -111,7 +111,7 @@ static volatile BufferDesc *PinCountWaitBuf = NULL;
  * keep track of backend local pins.
  *
  * Until no more than REFCOUNT_ARRAY_ENTRIES buffers are pinned at once, all
- * refcounts are kept track of in the array; after that, new__ array entries
+ * refcounts are kept track of in the array; after that, new array entries
  * displace old ones into the hash table. That way a frequently used entry
  * can't get "stuck" in the hashtable while infrequent ones clog the array.
  *
@@ -140,7 +140,7 @@ static void ForgetPrivateRefCountEntry(PrivateRefCountEntry *ref);
 /*
  * Ensure that the PrivateRefCountArray has sufficient space to store one more
  * entry. This has to be called before using NewPrivateRefCountEntry() to fill
- * a new__ entry - but it's perfectly fine to not use a reserved entry.
+ * a new entry - but it's perfectly fine to not use a reserved entry.
  */
 static void
 ReservePrivateRefCountEntry(void)
@@ -498,7 +498,7 @@ ReadBuffer(Relation reln, BlockNumber blockNum)
  * ReadBufferExtended -- returns a buffer containing the requested
  *		block of the requested relation.  If the blknum
  *		requested is P_NEW, extend the relation file and
- *		allocate a new__ block.  (Caller is responsible for
+ *		allocate a new block.  (Caller is responsible for
  *		ensuring that only one backend tries to extend a
  *		relation at the same time!)
  *
@@ -752,7 +752,7 @@ ReadBuffer_common(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 
 	if (isExtend)
 	{
-		/* new__ buffers are zero-filled */
+		/* new buffers are zero-filled */
 		MemSet((char *) bufBlock, 0, BLCKSZ);
 		/* don't set checksum for all-zero page */
 		smgrextend(smgr, forkNum, blockNum, (char *) bufBlock, false);
@@ -850,7 +850,7 @@ ReadBuffer_common(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 /*
  * BufferAlloc -- subroutine for ReadBuffer.  Handles lookup of a shared
  *		buffer.  If no buffer exists already, selects a replacement
- *		victim and evicts the old page, but does NOT read in new__ page.
+ *		victim and evicts the old page, but does NOT read in new page.
  *
  * "strategy" can be a buffer replacement strategy object, or NULL for
  * the default strategy.  The selected buffer's usage_count is advanced when
@@ -932,7 +932,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 	}
 
 	/*
-	 * Didn't find it in the buffer pool.  We'll have to initialize a new__
+	 * Didn't find it in the buffer pool.  We'll have to initialize a new
 	 * buffer.  Remember to unlock the mapping lock while doing the work.
 	 */
 	LWLockRelease(newPartitionLock);
@@ -1039,7 +1039,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 
 		/*
 		 * To change the association of a valid buffer, we'll need to have
-		 * exclusive lock on both the old and new__ mapping partitions.
+		 * exclusive lock on both the old and new mapping partitions.
 		 */
 		if (oldFlags & BM_TAG_VALID)
 		{
@@ -1074,7 +1074,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 		}
 		else
 		{
-			/* if it wasn't valid, we need only the new__ partition */
+			/* if it wasn't valid, we need only the new partition */
 			LWLockAcquire(newPartitionLock, LW_EXCLUSIVE);
 			/* these just keep the compiler quiet about uninit variables */
 			oldHash = 0;
@@ -1082,7 +1082,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 		}
 
 		/*
-		 * Try to make a hashtable entry for the buffer under its new__ tag.
+		 * Try to make a hashtable entry for the buffer under its new tag.
 		 * This could fail because while we were writing someone else
 		 * allocated another buffer for the same block we want to read in.
 		 * Note that we have not yet removed the hashtable entry for the old
@@ -1145,9 +1145,9 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 
 		/*
 		 * Somebody could have pinned or re-dirtied the buffer while we were
-		 * doing the I/O and making the new__ hashtable entry.  If so, we can't
+		 * doing the I/O and making the new hashtable entry.  If so, we can't
 		 * recycle this__ buffer; we must undo everything we've done and start
-		 * over with a new__ victim buffer.
+		 * over with a new victim buffer.
 		 */
 		oldFlags = buf->flags;
 		if (buf->refcount == 1 && !(oldFlags & BM_DIRTY))
@@ -1856,7 +1856,7 @@ BgBufferSync(void)
 	saved_info_valid = true;
 
 	/*
-	 * Compute how many buffers had to be scanned for each new__ allocation, ie,
+	 * Compute how many buffers had to be scanned for each new allocation, ie,
 	 * 1/density of reusable buffers, and track a moving average of that.
 	 *
 	 * If the strategy point didn't move, we don't update the density estimate
@@ -1973,7 +1973,7 @@ BgBufferSync(void)
 #endif
 
 	/*
-	 * Consider the above scan as being like a new__ allocation scan.
+	 * Consider the above scan as being like a new allocation scan.
 	 * Characterize its density and update the smoothed one based on it. This
 	 * effectively halves the moving average period in cases where both the
 	 * strategy and the background writer are doing some useful scanning,
@@ -1989,7 +1989,7 @@ BgBufferSync(void)
 			smoothing_samples;
 
 #ifdef BGW_DEBUG
-		elog(DEBUG2, "bgwriter: cleaner density alloc=%u scan=%ld density=%.2f new__ smoothed=%.2f",
+		elog(DEBUG2, "bgwriter: cleaner density alloc=%u scan=%ld density=%.2f new smoothed=%.2f",
 			 new_recent_alloc, new_strategy_delta,
 			 scans_per_alloc, smoothed_density);
 #endif
@@ -2110,7 +2110,7 @@ InitBufferPoolAccess(void)
 }
 
 /*
- * InitBufferPoolBackend --- second-stage initialization of a new__ backend
+ * InitBufferPoolBackend --- second-stage initialization of a new backend
  *
  * This is called after we have acquired a PGPROC and so can safely get
  * LWLocks.  We don't currently need to do anything at this__ stage ...
@@ -2474,7 +2474,7 @@ BufferIsPermanent(Buffer buffer)
 	 * need not bother with the buffer header spinlock.  Even if someone else
 	 * changes the buffer header flags while we're doing this__, we assume that
 	 * changing an aligned 2-byte BufFlags value is atomic, so we'll read the
-	 * old value or the new__ value, but not random garbage.
+	 * old value or the new value, but not random garbage.
 	 */
 	bufHdr = GetBufferDescriptor(buffer - 1);
 	return (bufHdr->flags & BM_PERMANENT) != 0;
@@ -2559,7 +2559,7 @@ DropRelFileNodeBuffers(RelFileNodeBackend rnode, ForkNumber forkNum,
 		 * we attempt to lock the buffer; this__ saves a lot of lock
 		 * acquisitions in typical cases.  It should be safe because the
 		 * caller must have AccessExclusiveLock on the relation, or some other
-		 * reason to be certain that no one is loading new__ pages of the rel
+		 * reason to be certain that no one is loading new pages of the rel
 		 * into the buffer pool.  (Otherwise we might well miss such pages
 		 * entirely.)  Therefore, while the tag might be changing while we
 		 * look at it, it can't be changing *to* a value we care about, only

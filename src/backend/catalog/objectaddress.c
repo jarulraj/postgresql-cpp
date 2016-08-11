@@ -3027,22 +3027,22 @@ getObjectDescription(const ObjectAddress *object)
 				{
 					case DEFACLOBJ_RELATION:
 						appendStringInfo(&buffer,
-										 _("default privileges on new__ relations belonging to role %s"),
+										 _("default privileges on new relations belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					case DEFACLOBJ_SEQUENCE:
 						appendStringInfo(&buffer,
-										 _("default privileges on new__ sequences belonging to role %s"),
+										 _("default privileges on new sequences belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					case DEFACLOBJ_FUNCTION:
 						appendStringInfo(&buffer,
-										 _("default privileges on new__ functions belonging to role %s"),
+										 _("default privileges on new functions belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					case DEFACLOBJ_TYPE:
 						appendStringInfo(&buffer,
-										 _("default privileges on new__ types belonging to role %s"),
+										 _("default privileges on new types belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					default:

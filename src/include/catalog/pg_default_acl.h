@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * pg_default_acl.h
- *	  definition of default ACLs for new__ objects.
+ *	  definition of default ACLs for new objects.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

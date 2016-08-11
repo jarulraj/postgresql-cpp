@@ -221,7 +221,7 @@ extern void LWLockInitialize(LWLock *lock, int tranche_id);
 
 /*
  * Prior to PostgreSQL 9.4, we used an enum type called LWLockId to refer
- * to LWLocks.  new__ code should instead use LWLock *.  However, for the
+ * to LWLocks.  new code should instead use LWLock *.  However, for the
  * convenience of third-party code, we include the following typedef.
  */
 typedef LWLock *LWLockId;

@@ -216,7 +216,7 @@ BootStrapSUBTRANS(void)
  * Initialize (or reinitialize) a page of SUBTRANS to zeroes.
  *
  * The page is not actually written, just set up in shared memory.
- * The slot number of the new__ page is returned.
+ * The slot number of the new page is returned.
  *
  * Control lock must be held at entry, and will be held at exit.
  */
@@ -242,8 +242,8 @@ StartupSUBTRANS(TransactionId oldestActiveXID)
 	/*
 	 * Since we don't expect pg_subtrans to be valid across crashes, we
 	 * initialize the currently-active page(s) to zeroes during startup.
-	 * Whenever we advance into a new__ page, ExtendSUBTRANS will likewise zero
-	 * the new__ page without regard to whatever was previously on disk.
+	 * Whenever we advance into a new page, ExtendSUBTRANS will likewise zero
+	 * the new page without regard to whatever was previously on disk.
 	 */
 	LWLockAcquire(SubtransControlLock, LW_EXCLUSIVE);
 

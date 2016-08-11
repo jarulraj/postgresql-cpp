@@ -74,7 +74,7 @@
  * This is more complex than the average typename__ lookup because we want to
  * allow a shell type to be used, or even created if the specified return type
  * doesn't exist yet.  (Without this__, there's no way to define the I/O procs
- * for a new__ type.)  But SQL function creation won't cope, so error out if
+ * for a new type.)  But SQL function creation won't cope, so error out if
  * the target language is SQL.  (We do this__ here, not in the SQL-function
  * validator, so as not to produce a NOTICE and then an ERROR for the same
  * condition.)
@@ -1647,7 +1647,7 @@ CreateCast(CreateCastStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ cast */
+	/* Post creation hook for new cast */
 	InvokeObjectPostCreateHook(CastRelationId, castid, 0);
 
 	heap_freetuple(tuple);
@@ -1931,7 +1931,7 @@ CreateTransform(CreateTransformStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, is_replace);
 
-	/* Post creation hook for new__ transform */
+	/* Post creation hook for new transform */
 	InvokeObjectPostCreateHook(TransformRelationId, transformid, 0);
 
 	heap_freetuple(newtuple);

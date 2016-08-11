@@ -361,7 +361,7 @@ smgrclosenode(RelFileNodeBackend rnode)
 }
 
 /*
- *	smgrcreate() -- Create a new__ relation.
+ *	smgrcreate() -- Create a new relation.
  *
  *		Given an already-created (but presumably unused) SMgrRelation,
  *		cause the underlying disk file or other storage for the fork
@@ -586,7 +586,7 @@ smgrdounlinkfork(SMgrRelation reln, ForkNumber forknum, bool isRedo)
 }
 
 /*
- *	smgrextend() -- Add a new__ block to a file.
+ *	smgrextend() -- Add a new block to a file.
  *
  *		The semantics are nearly the same as smgrwrite(): write at the
  *		specified position.  However, this__ is to be used for the case of
@@ -678,7 +678,7 @@ smgrtruncate(SMgrRelation reln, ForkNumber forknum, BlockNumber nblocks)
 	 * Send a shared-inval message to force other backends to close any smgr
 	 * references they may have for this__ rel.  This is useful because they
 	 * might have open file pointers to segments that got removed, and/or
-	 * smgr_targblock variables pointing past the new__ rel end.  (The inval
+	 * smgr_targblock variables pointing past the new rel end.  (The inval
 	 * message will come back to our backend, too, causing a
 	 * probably-unnecessary local smgr flush.  But we don't expect that this__
 	 * is a performance-critical path.)  As in the unlink code, we want to be
@@ -698,7 +698,7 @@ smgrtruncate(SMgrRelation reln, ForkNumber forknum, BlockNumber nblocks)
  *		Synchronously force all previous writes to the specified relation
  *		down to disk.
  *
- *		This is useful for building completely new__ relations (eg, new__
+ *		This is useful for building completely new relations (eg, new
  *		indexes).  Instead of incrementally WAL-logging the index build
  *		steps, we can just write completed index pages to disk with smgrwrite
  *		or smgrextend, and then fsync the completed index file before

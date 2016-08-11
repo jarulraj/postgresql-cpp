@@ -120,7 +120,7 @@ sepgsql_object_access(ObjectAccessType access,
 						{
 							/*
 							 * The cases in which we want to apply permission
-							 * checks on creation of a new__ relation correspond
+							 * checks on creation of a new relation correspond
 							 * to direct user invocation.  For internal uses,
 							 * that is creation of toast tables, index rebuild
 							 * or ALTER TABLE commands, we need neither

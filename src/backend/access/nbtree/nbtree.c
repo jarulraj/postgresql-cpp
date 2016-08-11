@@ -76,7 +76,7 @@ static void btvacuumpage(BTVacState *vstate, BlockNumber blkno,
 
 
 /*
- *	btbuild() -- build a new__ btree index.
+ *	btbuild() -- build a new btree index.
  */
 Datum
 btbuild(PG_FUNCTION_ARGS)
@@ -222,7 +222,7 @@ btbuildempty(PG_FUNCTION_ARGS)
  *	btinsert() -- insert an index tuple into a btree.
  *
  *		Descend the tree recursively, find the appropriate location for our
- *		new__ tuple, and put it there.
+ *		new tuple, and put it there.
  */
 Datum
 btinsert(PG_FUNCTION_ARGS)
@@ -584,7 +584,7 @@ btrestrpos(PG_FUNCTION_ARGS)
 	if (so->markItemIndex >= 0)
 	{
 		/*
-		 * The scan has never moved to a new__ page since the last mark.  Just
+		 * The scan has never moved to a new page since the last mark.  Just
 		 * restore the itemIndex.
 		 *
 		 * NB: In this__ case we can't count on anything in so->markPos to be
@@ -597,14 +597,14 @@ btrestrpos(PG_FUNCTION_ARGS)
 		/*
 		 * so->markItemIndex < 0 but mark and current positions are on the
 		 * same page.  This would be an unusual case, where the scan moved to
-		 * a new__ index page after the mark, restored, and later restored again
+		 * a new index page after the mark, restored, and later restored again
 		 * without moving off the marked page.  It is not clear that this__ code
 		 * can currently be reached, but it seems better to make this__ function
 		 * robust for this__ case than to Assert() or elog() that it can't
 		 * happen.
 		 *
 		 * We neither want to set so->markItemIndex >= 0 (because that could
-		 * cause a later move to a new__ page to redo the memcpy() executions)
+		 * cause a later move to a new page to redo the memcpy() executions)
 		 * nor re-execute the memcpy() functions for a restore within the same
 		 * page.  The previous restore to this__ page already set everything
 		 * except markPos as it should be.
@@ -614,7 +614,7 @@ btrestrpos(PG_FUNCTION_ARGS)
 	else
 	{
 		/*
-		 * The scan moved to a new__ page after last mark or restore, and we are
+		 * The scan moved to a new page after last mark or restore, and we are
 		 * now restoring to the marked page.  We aren't holding any read
 		 * locks, but if we're still holding the pin for the current position,
 		 * we must drop it.
@@ -785,11 +785,11 @@ btvacuumscan(IndexVacuumInfo *info, IndexBulkDeleteResult *stats,
 	 * delete some deletable tuples.  Hence, we must repeatedly check the
 	 * relation length.  We must acquire the relation-extension lock while
 	 * doing so to avoid a race condition: if someone else is extending the
-	 * relation, there is a window where bufmgr/smgr have created a new__
+	 * relation, there is a window where bufmgr/smgr have created a new
 	 * all-zero page but it hasn't yet been write-locked by _bt_getbuf(). If
 	 * we manage to scan such a page here, we'll improperly assume it can be
 	 * recycled.  Taking the lock synchronizes things enough to prevent a
-	 * problem: either num_pages won't include the new__ page, or _bt_getbuf
+	 * problem: either num_pages won't include the new page, or _bt_getbuf
 	 * already has write lock on the buffer and it will be fully initialized
 	 * before we can examine it.  (See also vacuumlazy.c, which has the same
 	 * issue.)	Also, we need not worry if a page is added immediately after
@@ -797,7 +797,7 @@ btvacuumscan(IndexVacuumInfo *info, IndexBulkDeleteResult *stats,
 	 * page before it adds a right page, so we must already have processed any
 	 * tuples due to be moved into such a page.
 	 *
-	 * We can skip locking for new__ or temp relations, however, since no one
+	 * We can skip locking for new or temp relations, however, since no one
 	 * else could be accessing them.
 	 */
 	needLock = !RELATION_IS_LOCAL(rel);

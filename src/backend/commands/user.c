@@ -406,20 +406,20 @@ CreateRole(CreateRoleStmt *stmt)
 	}
 
 	/*
-	 * Insert new__ record in the pg_authid table
+	 * Insert new record in the pg_authid table
 	 */
 	roleid = simple_heap_insert(pg_authid_rel, tuple);
 	CatalogUpdateIndexes(pg_authid_rel, tuple);
 
 	/*
-	 * Advance command counter so we can see new__ record; else tests in
+	 * Advance command counter so we can see new record; else tests in
 	 * AddRoleMems may fail.
 	 */
 	if (addroleto || adminmembers || rolemembers)
 		CommandCounterIncrement();
 
 	/*
-	 * Add the new__ role to the specified existing roles.
+	 * Add the new role to the specified existing roles.
 	 */
 	foreach(item, addroleto)
 	{
@@ -437,7 +437,7 @@ CreateRole(CreateRoleStmt *stmt)
 	}
 
 	/*
-	 * Add the specified members to this__ new__ role. adminmembers get the admin
+	 * Add the specified members to this__ new role. adminmembers get the admin
 	 * option, rolemembers don't.
 	 */
 	AddRoleMems(stmt->role, roleid,
@@ -447,7 +447,7 @@ CreateRole(CreateRoleStmt *stmt)
 				rolemembers, roleSpecsToIds(rolemembers),
 				GetUserId(), false);
 
-	/* Post creation hook for new__ role */
+	/* Post creation hook for new role */
 	InvokeObjectPostCreateHook(AuthIdRelationId, roleid, 0);
 
 	/*
@@ -821,7 +821,7 @@ AlterRole(AlterRoleStmt *stmt)
 	heap_freetuple(new_tuple);
 
 	/*
-	 * Advance command counter so we can see new__ record; else tests in
+	 * Advance command counter so we can see new record; else tests in
 	 * AddRoleMems may fail.
 	 */
 	if (rolemembers)
@@ -1146,7 +1146,7 @@ RenameRole(const char *oldname, const char *newname)
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("current user cannot be renamed")));
 
-	/* make sure the new__ name doesn't exist */
+	/* make sure the new name doesn't exist */
 	if (SearchSysCacheExists1(AUTHNAME, CStringGetDatum(newname)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),

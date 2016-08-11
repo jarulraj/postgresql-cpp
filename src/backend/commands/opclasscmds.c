@@ -232,7 +232,7 @@ get_opclass_oid(Oid amID, List *opclassname, bool missing_ok)
 
 /*
  * CreateOpFamily
- *		Internal routine to make the catalog entry for a new__ operator__ family.
+ *		Internal routine to make the catalog entry for a new operator__ family.
  *
  * Caller must have done permissions checks etc. already.
  */
@@ -304,7 +304,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ operator__ family */
+	/* Post creation hook for new operator__ family */
 	InvokeObjectPostCreateHook(OperatorFamilyRelationId, opfamilyoid, 0);
 
 	heap_close(rel, RowExclusiveLock);
@@ -314,7 +314,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 
 /*
  * DefineOpClass
- *		Define a new__ index operator__ class__.
+ *		Define a new index operator__ class__.
  */
 ObjectAddress
 DefineOpClass(CreateOpClassStmt *stmt)
@@ -710,7 +710,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ operator__ class__ */
+	/* Post creation hook for new operator__ class__ */
 	InvokeObjectPostCreateHook(OperatorClassRelationId, opclassoid, 0);
 
 	heap_close(rel, RowExclusiveLock);
@@ -721,7 +721,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 
 /*
  * DefineOpFamily
- *		Define a new__ index operator__ family.
+ *		Define a new index operator__ family.
  */
 ObjectAddress
 DefineOpFamily(CreateOpFamilyStmt *stmt)
@@ -1236,7 +1236,7 @@ assignProcTypes(OpFamilyMember *member, Oid amoid, Oid typeoid)
 }
 
 /*
- * Add a new__ family member to the appropriate list, after checking for
+ * Add a new family member to the appropriate list, after checking for
  * duplicated strategy or proc number.
  */
 static void
@@ -1695,7 +1695,7 @@ void
 IsThereOpClassInNamespace(const char *opcname, Oid opcmethod,
 						  Oid opcnamespace)
 {
-	/* make sure the new__ name doesn't exist */
+	/* make sure the new name doesn't exist */
 	if (SearchSysCacheExists3(CLAAMNAMENSP,
 							  ObjectIdGetDatum(opcmethod),
 							  CStringGetDatum(opcname),
@@ -1718,7 +1718,7 @@ void
 IsThereOpFamilyInNamespace(const char *opfname, Oid opfmethod,
 						   Oid opfnamespace)
 {
-	/* make sure the new__ name doesn't exist */
+	/* make sure the new name doesn't exist */
 	if (SearchSysCacheExists3(OPFAMILYAMNAMENSP,
 							  ObjectIdGetDatum(opfmethod),
 							  CStringGetDatum(opfname),

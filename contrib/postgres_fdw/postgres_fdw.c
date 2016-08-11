@@ -936,7 +936,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 
 	/*
 	 * Get connection to the foreign server.  Connection manager will
-	 * establish new__ connection if necessary.
+	 * establish new connection if necessary.
 	 */
 	fsstate->conn = GetConnection(server, user, false);
 
@@ -1940,7 +1940,7 @@ ec_member_matches_foreign(PlannerInfo *root, RelOptInfo *rel,
 	if (list_member(state->already_used, expr))
 		return false;
 
-	/* This is the new__ target to process. */
+	/* This is the new target to process. */
 	state->current = expr;
 	return true;
 }
@@ -2639,7 +2639,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 
 	/*
 	 * Get connection to the foreign server.  Connection manager will
-	 * establish new__ connection if necessary.
+	 * establish new connection if necessary.
 	 */
 	server = GetForeignServer(serverOid);
 	mapping = GetUserMapping(GetUserId(), server->serverid);

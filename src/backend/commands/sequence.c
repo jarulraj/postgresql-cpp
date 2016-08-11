@@ -102,7 +102,7 @@ static void process_owned_by(Relation seqrel, List *owned_by);
 
 /*
  * DefineSequence
- *				Creates a new__ sequence relation
+ *				Creates a new sequence relation
  */
 ObjectAddress
 DefineSequence(CreateSeqStmt *seq)
@@ -259,7 +259,7 @@ DefineSequence(CreateSeqStmt *seq)
  *
  * The change is made transactionally, so that on failure of the current
  * transaction, the sequence will be restored to its previous state.
- * We do that by creating a whole new__ relfilenode for the sequence; so this__
+ * We do that by creating a whole new relfilenode for the sequence; so this__
  * works much like the rewriting forms of ALTER TABLE.
  *
  * Caller is assumed to have acquired AccessExclusiveLock on the sequence,
@@ -302,7 +302,7 @@ ResetSequence(Oid seq_relid)
 	seq->log_cnt = 0;
 
 	/*
-	 * Create a new__ storage file for the sequence.  We want to keep the
+	 * Create a new storage file for the sequence.  We want to keep the
 	 * sequence's relfrozenxid at 0, since it won't contain any unfrozen XIDs.
 	 * Same with relminmxid, since a sequence will never contain multixacts.
 	 */
@@ -310,7 +310,7 @@ ResetSequence(Oid seq_relid)
 							  InvalidTransactionId, InvalidMultiXactId);
 
 	/*
-	 * Insert the modified tuple into the new__ storage file.
+	 * Insert the modified tuple into the new storage file.
 	 */
 	fill_seq_with_data(seq_rel, tuple);
 
@@ -433,13 +433,13 @@ AlterSequence(AlterSeqStmt *stmt)
 		aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_CLASS,
 					   stmt->sequence->relname);
 
-	/* lock page' buffer and read tuple into new__ sequence structure */
+	/* lock page' buffer and read tuple into new sequence structure */
 	seq = read_seq_tuple(elm, seqrel, &buf, &seqtuple);
 
 	/* Copy old values of options into workspace */
 	memcpy(&new__, seq, sizeof(FormData_pg_sequence));
 
-	/* Check and set new__ values */
+	/* Check and set new values */
 	init_params(stmt->options, false, &new__, &owned_by);
 
 	/* Clear local cache so that we don't think we have cached numbers */
@@ -604,7 +604,7 @@ nextval_internal(Oid relid)
 	 * fetch count to grab SEQ_LOG_VALS more values than we actually need to
 	 * cache.  (These will then be usable without logging.)
 	 *
-	 * If this__ is the first nextval after a checkpoint, we must force a new__
+	 * If this__ is the first nextval after a checkpoint, we must force a new
 	 * WAL record to be written anyway, else replay starting from the
 	 * checkpoint would fail to advance the sequence past the logged values.
 	 * In this__ case we may as well fetch extra values.
@@ -1051,7 +1051,7 @@ init_sequence(Oid relid, SeqTable *p_elm, Relation *p_rel)
 	elm = (SeqTable) hash_search(seqhashtab, &relid, HASH_ENTER, &found);
 
 	/*
-	 * Initialize the new__ hash table entry if it did not exist already.
+	 * Initialize the new hash table entry if it did not exist already.
 	 *
 	 * NOTE: seqtable entries are stored for the life of a backend (unless
 	 * explicitly discarded with DISCARD). If the sequence itself is deleted
@@ -1156,7 +1156,7 @@ read_seq_tuple(SeqTable elm, Relation rel, Buffer *buf, HeapTuple seqtuple)
 
 /*
  * init_params: process the options list of CREATE or ALTER SEQUENCE,
- * and store the values into appropriate fields of *new__.  Also set
+ * and store the values into appropriate fields of *new.  Also set
  * *owned_by to any OWNED BY option, or to NIL if there is none.
  *
  * If isInit is true, fill any unspecified options with default values;
@@ -1427,7 +1427,7 @@ init_params(List *options, bool isInit,
  * Process an OWNED BY option for CREATE/ALTER SEQUENCE
  *
  * Ownership permissions on the sequence are already checked,
- * but if we are establishing a new__ owned-by dependency, we must
+ * but if we are establishing a new owned-by dependency, we must
  * enforce that the referenced table has the same owner and namespace__
  * as the sequence.
  */
@@ -1494,7 +1494,7 @@ process_owned_by(Relation seqrel, List *owned_by)
 
 	/*
 	 * OK, we are ready to update pg_depend.  First remove any existing AUTO
-	 * dependencies for the sequence, then optionally add a new__ one.
+	 * dependencies for the sequence, then optionally add a new one.
 	 */
 	markSequenceUnowned(RelationGetRelid(seqrel));
 
@@ -1597,7 +1597,7 @@ seq_redo(XLogReaderState *record)
 	 * We always reinit the page.  However, since this__ WAL record type is also
 	 * used for updating sequences, it's possible that a hot-standby backend
 	 * is examining the page concurrently; so we mustn't transiently trash the
-	 * buffer.  The solution is to build the correct new__ page contents in
+	 * buffer.  The solution is to build the correct new page contents in
 	 * local workspace and then memcpy into the buffer.  Then only bytes that
 	 * are supposed to change will change, even transiently. We must palloc
 	 * the local page for alignment reasons.

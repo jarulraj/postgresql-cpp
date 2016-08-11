@@ -88,13 +88,13 @@ typedef struct RelationData
 	 * the ID of the highest subtransaction the relfilenode change has
 	 * survived into, or zero if not changed in the current transaction (or we
 	 * have forgotten changing it). rd_newRelfilenodeSubid can be forgotten
-	 * when a relation has multiple new__ relfilenodes within a single
+	 * when a relation has multiple new relfilenodes within a single
 	 * transaction, with one of them occurring in a subsequently aborted
 	 * subtransaction, e.g. BEGIN; TRUNCATE t; SAVEPOINT save; TRUNCATE t;
 	 * ROLLBACK TO save; -- rd_newRelfilenode is now forgotten
 	 */
 	SubTransactionId rd_createSubid;	/* rel was created in current xact */
-	SubTransactionId rd_newRelfilenodeSubid;	/* new__ relfilenode assigned in
+	SubTransactionId rd_newRelfilenodeSubid;	/* new relfilenode assigned in
 												 * current xact */
 
 	Form_pg_class rd_rel;		/* RELATION tuple */
@@ -172,11 +172,11 @@ typedef struct RelationData
 	struct FdwRoutine *rd_fdwroutine;	/* cached function pointers, or NULL */
 
 	/*
-	 * Hack for CLUSTER, rewriting ALTER TABLE, etc: when writing a new__
+	 * Hack for CLUSTER, rewriting ALTER TABLE, etc: when writing a new
 	 * version of a table, we need to make any toast pointers inserted into it
 	 * have the existing toast table's OID, not the OID of the transient toast
 	 * table.  If rd_toastoid isn't InvalidOid, it is the OID to place in
-	 * toast pointers inserted into this__ rel.  (Note it's set on the new__
+	 * toast pointers inserted into this__ rel.  (Note it's set on the new
 	 * version of the main heap, not the toast table itself.)  This also
 	 * causes toast_save_datum() to try to preserve toast value OIDs.
 	 */

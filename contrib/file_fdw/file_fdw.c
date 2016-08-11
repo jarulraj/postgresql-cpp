@@ -53,7 +53,7 @@ struct FileFdwOption
  * But note that force_not_null and force_null are handled as boolean options
  * attached to a column, not as table options.
  *
- * Note: If you are adding new__ option for user mapping, you need to modify
+ * Note: If you are adding new option for user mapping, you need to modify
  * fileGetOptions(), which currently doesn't bother to look at user mappings.
  */
 static const struct FileFdwOption valid_options[] = {
@@ -692,7 +692,7 @@ fileIterateForeignScan(ForeignScanState *node)
 
 /*
  * fileReScanForeignScan
- *		Rescan table, possibly with new__ parameters
+ *		Rescan table, possibly with new parameters
  */
 static void
 fileReScanForeignScan(ForeignScanState *node)
@@ -1090,7 +1090,7 @@ file_acquire_sample_rows(Relation onerel, int elevel,
 		{
 			/*
 			 * t in Vitter's paper is the number of records already processed.
-			 * If we need to compute a new__ S value, we must use the
+			 * If we need to compute a new S value, we must use the
 			 * not-yet-incremented value of totalrows as t.
 			 */
 			if (rowstoskip < 0)

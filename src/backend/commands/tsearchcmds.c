@@ -120,9 +120,9 @@ get_ts_parser_func(DefElem *defel, int attnum)
 }
 
 /*
- * make pg_depend entries for a new__ pg_ts_parser entry
+ * make pg_depend entries for a new pg_ts_parser entry
  *
- * Return value is the address of said new__ entry.
+ * Return value is the address of said new entry.
  */
 static ObjectAddress
 makeParserDependencies(HeapTuple tuple)
@@ -277,7 +277,7 @@ DefineTSParser(List *names, List *parameters)
 
 	address = makeParserDependencies(tup);
 
-	/* Post creation hook for new__ text search parser */
+	/* Post creation hook for new text search parser */
 	InvokeObjectPostCreateHook(TSParserRelationId, prsOid, 0);
 
 	heap_freetuple(tup);
@@ -313,9 +313,9 @@ RemoveTSParserById(Oid prsId)
 /* ---------------------- TS Dictionary commands -----------------------*/
 
 /*
- * make pg_depend entries for a new__ pg_ts_dict entry
+ * make pg_depend entries for a new pg_ts_dict entry
  *
- * Return value is address of the new__ entry
+ * Return value is address of the new entry
  */
 static ObjectAddress
 makeDictionaryDependencies(HeapTuple tuple)
@@ -488,7 +488,7 @@ DefineTSDictionary(List *names, List *parameters)
 
 	address = makeDictionaryDependencies(tup);
 
-	/* Post creation hook for new__ text search dictionary */
+	/* Post creation hook for new text search dictionary */
 	InvokeObjectPostCreateHook(TSDictionaryRelationId, dictOid, 0);
 
 	heap_freetuple(tup);
@@ -591,7 +591,7 @@ AlterTSDictionary(AlterTSDictionaryStmt *stmt)
 		}
 
 		/*
-		 * and add new__ value if it's got one
+		 * and add new value if it's got one
 		 */
 		if (defel->arg)
 			dictoptions = lappend(dictoptions, defel);
@@ -690,7 +690,7 @@ get_ts_template_func(DefElem *defel, int attnum)
 }
 
 /*
- * make pg_depend entries for a new__ pg_ts_template entry
+ * make pg_depend entries for a new pg_ts_template entry
  */
 static ObjectAddress
 makeTSTemplateDependencies(HeapTuple tuple)
@@ -812,7 +812,7 @@ DefineTSTemplate(List *names, List *parameters)
 
 	address = makeTSTemplateDependencies(tup);
 
-	/* Post creation hook for new__ text search template__ */
+	/* Post creation hook for new text search template__ */
 	InvokeObjectPostCreateHook(TSTemplateRelationId, tmplOid, 0);
 
 	heap_freetuple(tup);
@@ -872,7 +872,7 @@ GetTSConfigTuple(List *names)
 }
 
 /*
- * make pg_depend entries for a new__ or updated pg_ts_config entry
+ * make pg_depend entries for a new or updated pg_ts_config entry
  *
  * Pass opened pg_ts_config_map relation if there might be any config map
  * entries for the config.
@@ -1118,7 +1118,7 @@ DefineTSConfiguration(List *names, List *parameters, ObjectAddress *copied)
 
 	address = makeConfigurationDependencies(tup, false, mapRel);
 
-	/* Post creation hook for new__ text search configuration */
+	/* Post creation hook for new text search configuration */
 	InvokeObjectPostCreateHook(TSConfigRelationId, cfgOid, 0);
 
 	heap_freetuple(tup);
@@ -1420,7 +1420,7 @@ MakeConfigurationMapping(AlterTSConfigurationStmt *stmt,
 	else
 	{
 		/*
-		 * Insertion of new__ entries
+		 * Insertion of new entries
 		 */
 		for (i = 0; i < ntoken; i++)
 		{

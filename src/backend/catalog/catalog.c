@@ -260,7 +260,7 @@ IsSharedRelation(Oid relationId)
 
 /*
  * GetNewOid
- *		Generate a new__ OID that is unique within the given relation.
+ *		Generate a new OID that is unique within the given relation.
  *
  * Caller must have a suitable lock on the relation.
  *
@@ -337,7 +337,7 @@ GetNewOidWithIndex(Relation relation, Oid indexId, AttrNumber oidcolumn)
 
 	InitDirtySnapshot(SnapshotDirty);
 
-	/* Generate new__ OIDs until we find one not in the table */
+	/* Generate new OIDs until we find one not in the table */
 	do
 	{
 		CHECK_FOR_INTERRUPTS();
@@ -363,7 +363,7 @@ GetNewOidWithIndex(Relation relation, Oid indexId, AttrNumber oidcolumn)
 
 /*
  * GetNewRelFileNode
- *		Generate a new__ relfilenode number that is unique within the
+ *		Generate a new relfilenode number that is unique within the
  *		database of the given tablespace.
  *
  * If the relfilenode will also be used as the relation's OID, pass the
@@ -442,7 +442,7 @@ GetNewRelFileNode(Oid reltablespace, Relation pg_class, char relpersistence)
 			 * that we can't read the directory itself, we'd be in an infinite
 			 * loop.  In practice it seems best to go ahead regardless of the
 			 * errno.  If there is a colliding file we will get an smgr
-			 * failure when we attempt to create the new__ relation file.
+			 * failure when we attempt to create the new relation file.
 			 */
 			collides = false;
 		}

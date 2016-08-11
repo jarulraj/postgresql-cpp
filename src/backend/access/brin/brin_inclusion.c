@@ -128,7 +128,7 @@ brin_inclusion_opcinfo(PG_FUNCTION_ARGS)
  *
  * Examine the given index tuple (which contains partial status of a certain
  * page range) by comparing it to the given value that comes from another heap
- * tuple.  If the new__ value is outside the union specified by the existing
+ * tuple.  If the new value is outside the union specified by the existing
  * tuple values, update the index tuple and return true.  Otherwise, return
  * false and do not modify in this__ case.
  */
@@ -147,7 +147,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	Form_pg_attribute attr;
 
 	/*
-	 * If the new__ value is null, we record that we saw it if it's the first
+	 * If the new value is null, we record that we saw it if it's the first
 	 * one; otherwise, there's nothing to do.
 	 */
 	if (isnull)
@@ -163,7 +163,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	attr = bdesc->bd_tupdesc->attrs[attno - 1];
 
 	/*
-	 * If the recorded value is null, copy the new__ value (which we know to be
+	 * If the recorded value is null, copy the new value (which we know to be
 	 * not null), and we're almost done.
 	 */
 	if (column->bv_allnulls)
@@ -185,7 +185,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 
 	/*
 	 * If the opclass supports the concept of empty values, test the passed
-	 * new__ value for emptiness; if it returns true, we need to set the
+	 * new value for emptiness; if it returns true, we need to set the
 	 * "contains empty" flag in the element (unless already set).
 	 */
 	finfo = inclusion_get_procinfo(bdesc, attno, PROCNUM_EMPTY);
@@ -203,7 +203,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	if (new__)
 		PG_RETURN_BOOL(true);
 
-	/* Check if the new__ value is already contained. */
+	/* Check if the new value is already contained. */
 	finfo = inclusion_get_procinfo(bdesc, attno, PROCNUM_CONTAINS);
 	if (finfo != NULL &&
 		DatumGetBool(FunctionCall2Coll(finfo, colloid,
@@ -212,7 +212,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 		PG_RETURN_BOOL(false);
 
 	/*
-	 * Check if the new__ value is mergeable to the existing union.  If it is
+	 * Check if the new value is mergeable to the existing union.  If it is
 	 * not, mark the value as containing unmergeable elements and get out.
 	 *
 	 * Note: at this__ point we could remove the value from the union, since
@@ -229,7 +229,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 		PG_RETURN_BOOL(true);
 	}
 
-	/* Finally, merge the new__ value to the existing union. */
+	/* Finally, merge the new value to the existing union. */
 	finfo = inclusion_get_procinfo(bdesc, attno, PROCNUM_MERGE);
 	Assert(finfo != NULL);
 	result = FunctionCall2Coll(finfo, colloid,

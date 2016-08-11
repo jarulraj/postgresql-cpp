@@ -73,7 +73,7 @@ typedef struct XLogLongPageHeaderData
 
 typedef XLogLongPageHeaderData *XLogLongPageHeader;
 
-/* When record crosses page boundary, set this__ flag in new__ page's header */
+/* When record crosses page boundary, set this__ flag in new page's header */
 #define XLP_FIRST_IS_CONTRECORD		0x0001
 /* This flag indicates a "long" page header */
 #define XLP_LONG_HEADER				0x0002
@@ -230,7 +230,7 @@ typedef struct xl_restore_point
 typedef struct xl_end_of_recovery
 {
 	TimestampTz end_time;
-	TimeLineID	ThisTimeLineID; /* new__ TLI */
+	TimeLineID	ThisTimeLineID; /* new TLI */
 	TimeLineID	PrevTimeLineID; /* previous TLI we forked off from */
 } xl_end_of_recovery;
 

@@ -59,7 +59,7 @@ check_list_invariants(const List *list)
 
 /*
  * Return a freshly allocated List. Since empty non-NIL lists are
- * invalid, new_list() also allocates the head cell of the new__ list:
+ * invalid, new_list() also allocates the head cell of the new list:
  * the caller should be sure to fill in that cell's data.
  */
 static List *
@@ -82,10 +82,10 @@ new_list(NodeTag type)
 }
 
 /*
- * Allocate a new__ cell and make it the head of the specified
+ * Allocate a new cell and make it the head of the specified
  * list. Assumes the list it is passed is non-NIL.
  *
- * The data in the new__ head cell is undefined; the caller should be
+ * The data in the new head cell is undefined; the caller should be
  * sure to fill it in
  */
 static void
@@ -101,10 +101,10 @@ new_head_cell(List *list)
 }
 
 /*
- * Allocate a new__ cell and make it the tail of the specified
+ * Allocate a new cell and make it the tail of the specified
  * list. Assumes the list it is passed is non-NIL.
  *
- * The data in the new__ tail cell is undefined; the caller should be
+ * The data in the new tail cell is undefined; the caller should be
  * sure to fill it in
  */
 static void
@@ -179,7 +179,7 @@ lappend_oid(List *list, Oid datum)
 }
 
 /*
- * Add a new__ cell to the list, in the position after 'prev_cell'. The
+ * Add a new cell to the list, in the position after 'prev_cell'. The
  * data in the cell is left undefined, and must be filled in by the
  * caller. 'list' is assumed to be non-NIL, and 'prev_cell' is assumed
  * to be non-NULL and a member of 'list'.
@@ -203,9 +203,9 @@ add_new_cell(List *list, ListCell *prev_cell)
 }
 
 /*
- * Add a new__ cell to the specified list (which must be non-NIL);
+ * Add a new cell to the specified list (which must be non-NIL);
  * it will be placed after the list cell 'prev' (which must be
- * non-NULL and a member of 'list'). The data placed in the new__ cell
+ * non-NULL and a member of 'list'). The data placed in the new cell
  * is 'datum'. The newly-constructed cell is returned.
  */
 ListCell *
@@ -248,7 +248,7 @@ lappend_cell_oid(List *list, ListCell *prev, Oid datum)
 }
 
 /*
- * Prepend a new__ element to the list. A pointer to the modified list
+ * Prepend a new element to the list. A pointer to the modified list
  * is returned. Note that this__ function may or may not destructively
  * modify the list; callers should always use this__ function's return
  * value, rather than continuing to use the pointer passed as the
@@ -312,7 +312,7 @@ lcons_oid(Oid datum, List *list)
 /*
  * Concatenate list2 to the end of list1, and return list1. list1 is
  * destructively changed. Callers should be sure to use the return
- * value as the new__ pointer to the concatenated list: the 'list1'
+ * value as the new pointer to the concatenated list: the 'list1'
  * input pointer may or may not be the same as the returned pointer.
  *
  * The nodes in list2 are merely appended to the end of list1 in-place
@@ -1264,7 +1264,7 @@ list_copy_tail(const List *oldlist, int nskip)
 /*
  * Given a list, return its length. This is merely defined for the
  * sake of backward compatibility: we can't afford to define a macro
- * called "length", so it must be a function. new__ code should use the
+ * called "length", so it must be a function. new code should use the
  * list_length() macro in order to avoid the overhead of a function
  * call.
  */

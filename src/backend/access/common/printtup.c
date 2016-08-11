@@ -345,7 +345,7 @@ printtup(TupleTableSlot *slot, DestReceiver *self)
 		 * client without hitting disk; see comments at the related check in
 		 * PageAddItem().  This test is most useful for uncompressed,
 		 * non-external datums, but we're quite likely to see such here when
-		 * testing new__ C functions.
+		 * testing new C functions.
 		 */
 		if (thisState->typisvarlena)
 			VALGRIND_CHECK_MEM_IS_DEFINED(DatumGetPointer(attr),
@@ -405,7 +405,7 @@ printtup_20(TupleTableSlot *slot, DestReceiver *self)
 	oldcontext = MemoryContextSwitchTo(myState->tmpcontext);
 
 	/*
-	 * tell the frontend to expect new__ tuple data (in ASCII style)
+	 * tell the frontend to expect new tuple data (in ASCII style)
 	 */
 	pq_beginmessage(&buf, 'D');
 
@@ -587,7 +587,7 @@ printtup_internal_20(TupleTableSlot *slot, DestReceiver *self)
 	oldcontext = MemoryContextSwitchTo(myState->tmpcontext);
 
 	/*
-	 * tell the frontend to expect new__ tuple data (in binary style)
+	 * tell the frontend to expect new tuple data (in binary style)
 	 */
 	pq_beginmessage(&buf, 'B');
 

@@ -127,12 +127,12 @@ int			dynamic_shared_memory_type;
  *
  * DSM_OP_ATTACH.  Map the segment, whose size must be the request_size.
  * The segment may already be mapped; any existing mapping should be removed
- * before creating a new__ one.
+ * before creating a new one.
  *
  * DSM_OP_DETACH.  Unmap the segment.
  *
  * DSM_OP_RESIZE.  Resize the segment to the given request_size and
- * remap the segment at that new__ size.
+ * remap the segment at that new size.
  *
  * DSM_OP_DESTROY.  Unmap the segment, if it is mapped.  Destroy the
  * segment.
@@ -140,17 +140,17 @@ int			dynamic_shared_memory_type;
  * Arguments:
  *	 op: The operation to be performed.
  *	 handle: The handle of an existing object, or for DSM_OP_CREATE, the
- *	   a new__ handle the caller wants created.
+ *	   a new handle the caller wants created.
  *	 request_size: For DSM_OP_CREATE, the requested size.  For DSM_OP_RESIZE,
- *	   the new__ size.  Otherwise, 0.
+ *	   the new size.  Otherwise, 0.
  *	 impl_private: private__, implementation-specific data.  Will be a pointer
  *	   to NULL for the first operation on a shared memory segment within this__
  *	   backend; thereafter, it will point to the value to which it was set
  *	   on the previous call.
  *	 mapped_address: Pointer to start of current mapping; pointer to NULL
- *	   if none.  Updated with new__ mapping address.
+ *	   if none.  Updated with new mapping address.
  *	 mapped_size: Pointer to size of current mapping; pointer to 0 if none.
- *	   Updated with new__ mapped size.
+ *	   Updated with new mapped size.
  *	 elevel: Level at which to log errors.
  *
  * Return value: true on success, false on failure.  When false is returned,
@@ -277,7 +277,7 @@ dsm_impl_posix(dsm_op op, dsm_handle handle, Size request_size,
 	}
 
 	/*
-	 * Create new__ segment or open an existing one for attach or resize.
+	 * Create new segment or open an existing one for attach or resize.
 	 *
 	 * Even though we're not going through fd.c, we should be safe against
 	 * running out of file descriptors, because of NUM_RESERVED_FDS.  We're
@@ -667,7 +667,7 @@ dsm_impl_windows(dsm_op op, dsm_handle handle, Size request_size,
 		return true;
 	}
 
-	/* Create new__ segment or open an existing one for attach. */
+	/* Create new segment or open an existing one for attach. */
 	if (op == DSM_OP_CREATE)
 	{
 		DWORD		size_high;
@@ -748,7 +748,7 @@ dsm_impl_windows(dsm_op op, dsm_handle handle, Size request_size,
 	/*
 	 * VirtualQuery gives size in page_size units, which is 4K for Windows. We
 	 * need size only when we are attaching, but it's better to get the size
-	 * when creating new__ segment to keep size consistent both for
+	 * when creating new segment to keep size consistent both for
 	 * DSM_OP_CREATE and DSM_OP_ATTACH.
 	 */
 	if (VirtualQuery(address, &info, sizeof(info)) == 0)
@@ -826,7 +826,7 @@ dsm_impl_mmap(dsm_op op, dsm_handle handle, Size request_size,
 		return true;
 	}
 
-	/* Create new__ segment or open an existing one for attach or resize. */
+	/* Create new segment or open an existing one for attach or resize. */
 	flags = O_RDWR | (op == DSM_OP_CREATE ? O_CREAT | O_EXCL : 0);
 	if ((fd = OpenTransientFile(name, flags, 0600)) == -1)
 	{

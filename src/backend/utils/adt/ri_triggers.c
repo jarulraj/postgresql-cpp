@@ -773,7 +773,7 @@ ri_restrict_del(TriggerData *trigdata, bool is_no_action)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_SELECT);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -875,7 +875,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 									trigdata->tg_relation, true);
 
 	/*
-	 * Get the relation descriptors of the FK and PK tables and the new__ and
+	 * Get the relation descriptors of the FK and PK tables and the new and
 	 * old tuple.
 	 *
 	 * fk_rel is opened in RowShareLock mode since that's what our eventual
@@ -918,7 +918,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 			}
 
 			/*
-			 * No need to check anything if old and new__ keys are equal
+			 * No need to check anything if old and new keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -996,7 +996,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_SELECT);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1152,7 +1152,7 @@ RI_FKey_cascade_del(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_DELETE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1214,7 +1214,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 									trigdata->tg_relation, true);
 
 	/*
-	 * Get the relation descriptors of the FK and PK tables and the new__ and
+	 * Get the relation descriptors of the FK and PK tables and the new and
 	 * old tuple.
 	 *
 	 * fk_rel is opened in RowExclusiveLock mode since that's what our
@@ -1257,7 +1257,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 			}
 
 			/*
-			 * No need to do anything if old and new__ keys are equal
+			 * No need to do anything if old and new keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -1333,7 +1333,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, new_row,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1498,7 +1498,7 @@ RI_FKey_setnull_del(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1601,7 +1601,7 @@ RI_FKey_setnull_upd(PG_FUNCTION_ARGS)
 			}
 
 			/*
-			 * No need to do anything if old and new__ keys are equal
+			 * No need to do anything if old and new keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -1674,7 +1674,7 @@ RI_FKey_setnull_upd(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1840,7 +1840,7 @@ RI_FKey_setdefault_del(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1956,7 +1956,7 @@ RI_FKey_setdefault_upd(PG_FUNCTION_ARGS)
 			}
 
 			/*
-			 * No need to do anything if old and new__ keys are equal
+			 * No need to do anything if old and new keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -2031,7 +2031,7 @@ RI_FKey_setdefault_upd(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new__ rows */
+							true,		/* must detect new rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -2108,7 +2108,7 @@ RI_FKey_pk_upd_check_required(Trigger *trigger, Relation pk_rel,
 			if (ri_NullCheck(old_row, riinfo, true) != RI_KEYS_NONE_NULL)
 				return false;
 
-			/* If all old and new__ key values are equal, no check is needed */
+			/* If all old and new key values are equal, no check is needed */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 				return false;
 
@@ -2158,7 +2158,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 		case FKCONSTR_MATCH_SIMPLE:
 
 			/*
-			 * If any new__ key value is NULL, the row must satisfy the
+			 * If any new key value is NULL, the row must satisfy the
 			 * constraint, so no check is needed.
 			 */
 			if (ri_NullCheck(new_row, riinfo, false) != RI_KEYS_NONE_NULL)
@@ -2175,7 +2175,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 			if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(old_row->t_data)))
 				return true;
 
-			/* If all old and new__ key values are equal, no check is needed */
+			/* If all old and new key values are equal, no check is needed */
 			if (ri_KeysEqual(fk_rel, old_row, new_row, riinfo, false))
 				return false;
 
@@ -2185,7 +2185,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 		case FKCONSTR_MATCH_FULL:
 
 			/*
-			 * If all new__ key values are NULL, the row must satisfy the
+			 * If all new key values are NULL, the row must satisfy the
 			 * constraint, so no check is needed.  On the other hand, if only
 			 * some of them are NULL, the row must fail the constraint.  We
 			 * must not throw error here, because the row might get
@@ -2213,7 +2213,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 			if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(old_row->t_data)))
 				return true;
 
-			/* If all old and new__ key values are equal, no check is needed */
+			/* If all old and new key values are equal, no check is needed */
 			if (ri_KeysEqual(fk_rel, old_row, new_row, riinfo, false))
 				return false;
 
@@ -3464,7 +3464,7 @@ ri_FetchPreparedPlan(RI_QueryKey *key)
 
 	/*
 	 * Otherwise we might as well flush the cached plan now, to free a little
-	 * memory space before we make a new__ one.
+	 * memory space before we make a new one.
 	 */
 	entry->plan = NULL;
 	if (plan)
@@ -3493,7 +3493,7 @@ ri_HashPreparedPlan(RI_QueryKey *key, SPIPlanPtr plan)
 		ri_InitHashTables();
 
 	/*
-	 * Add the new__ plan.  We might be overwriting an entry previously found
+	 * Add the new plan.  We might be overwriting an entry previously found
 	 * invalid by ri_FetchPreparedPlan.
 	 */
 	entry = (RI_QueryHashEntry *) hash_search(ri_query_cache,
@@ -3507,7 +3507,7 @@ ri_HashPreparedPlan(RI_QueryKey *key, SPIPlanPtr plan)
 /* ----------
  * ri_KeysEqual -
  *
- *	Check if all key values in OLD and new__ are equal.
+ *	Check if all key values in OLD and new are equal.
  *
  *	Note: at some point we might wish to redefine this__ as checking for
  *	"IS NOT DISTINCT" rather than "=", that is, allow two nulls to be
@@ -3605,7 +3605,7 @@ ri_AttributesEqual(Oid eq_opr, Oid typeid__,
 /* ----------
  * ri_HashCompareOp -
  *
- *	See if we know how to compare two values, and create a new__ hash entry
+ *	See if we know how to compare two values, and create a new hash entry
  *	if not.
  * ----------
  */

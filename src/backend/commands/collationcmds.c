@@ -156,7 +156,7 @@ DefineCollation(List *names, List *parameters)
 void
 IsThereCollationInNamespace(const char *collname, Oid nspOid)
 {
-	/* make sure the name doesn't already exist in new__ schema */
+	/* make sure the name doesn't already exist in new schema */
 	if (SearchSysCacheExists3(COLLNAMEENCNSP,
 							  CStringGetDatum(collname),
 							  Int32GetDatum(GetDatabaseEncoding()),

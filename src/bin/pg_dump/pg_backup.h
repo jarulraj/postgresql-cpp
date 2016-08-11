@@ -263,7 +263,7 @@ extern void RestoreArchive(Archive *AH);
 /* Open an existing archive */
 extern Archive *OpenArchive(const char *FileSpec, const ArchiveFormat fmt);
 
-/* Create a new__ archive */
+/* Create a new archive */
 extern Archive *CreateArchive(const char *FileSpec, const ArchiveFormat fmt,
 			  const int compression, ArchiveMode mode,
 			  SetupWorkerPtr setupDumpWorker);

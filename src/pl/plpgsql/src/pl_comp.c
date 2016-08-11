@@ -180,9 +180,9 @@ recheck:
 
 			/*
 			 * If the function isn't in active use then we can overwrite the
-			 * func struct with new__ data, allowing any other existing fn_extra
-			 * pointers to make use of the new__ definition on their next use.
-			 * If it is in use then just leave it alone and make a new__ one.
+			 * func struct with new data, allowing any other existing fn_extra
+			 * pointers to make use of the new definition on their next use.
+			 * If it is in use then just leave it alone and make a new one.
 			 * (The active invocations will run to completion using the
 			 * previous definition, and then the cache entry will just be
 			 * leaked; doesn't seem worth adding code to clean it up, given
@@ -317,7 +317,7 @@ do_compile(FunctionCallInfo fcinfo,
 	plpgsql_check_syntax = forValidator;
 
 	/*
-	 * Create the new__ function struct, if not done already.  The function
+	 * Create the new function struct, if not done already.  The function
 	 * structs are never thrown away, so keep them in TopMemoryContext.
 	 */
 	if (function == NULL)
@@ -592,7 +592,7 @@ do_compile(FunctionCallInfo fcinfo,
 				  errmsg("trigger functions cannot have declared arguments"),
 						 errhint("The arguments of the trigger can be accessed through TG_NARGS and TG_ARGV instead.")));
 
-			/* Add the record for referencing new__ */
+			/* Add the record for referencing new */
 			rec = plpgsql_build_record("new", 0, true);
 			function->new_varno = rec->dno;
 
@@ -991,7 +991,7 @@ static void
 add_dummy_return(PLpgSQL_function *function)
 {
 	/*
-	 * If the outer block has an EXCEPTION clause, we need to make a new__ outer
+	 * If the outer block has an EXCEPTION clause, we need to make a new outer
 	 * block, since the added RETURN shouldn't act like it is inside the
 	 * EXCEPTION clause.
 	 */

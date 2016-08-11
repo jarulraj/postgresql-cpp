@@ -45,7 +45,7 @@ typedef struct TrieChar
 /*
  * placeChar - put str into trie's structure, byte by byte.
  *
- * If node is NULL, we need to make a new__ node, which will be returned;
+ * If node is NULL, we need to make a new node, which will be returned;
  * otherwise the return value is the same as node.
  */
 static TrieChar *

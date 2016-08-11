@@ -353,7 +353,7 @@ GetAuthenticatedUserId(void)
  * bit prevents not only SET ROLE, but various other changes of session state
  * that normally is unprotected but might possibly be used to subvert the
  * calling session later.  An example is replacing an existing prepared
- * statement with new__ code, which will then be executed with the outer
+ * statement with new code, which will then be executed with the outer
  * session's permissions when the prepared statement is next used.  Since
  * these restrictions are fairly draconian, we apply them only in contexts
  * where the called functions are really supposed to be side-effect-free
@@ -368,7 +368,7 @@ GetAuthenticatedUserId(void)
  *
  * Unlike GetUserId, GetUserIdAndSecContext does *not* Assert that the current
  * value of CurrentUserId is valid; nor does SetUserIdAndSecContext require
- * the new__ value to be valid.  In fact, these routines had better not
+ * the new value to be valid.  In fact, these routines had better not
  * ever throw any kind of error.  This is because they are used by
  * StartTransaction and AbortTransaction to save/restore the settings,
  * and during the first transaction within a backend, the value to be saved

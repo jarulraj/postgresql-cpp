@@ -15,8 +15,8 @@
 
 /*
  * new_9_0_populate_pg_largeobject_metadata()
- *	new__ >= 9.0, old <= 8.4
- *	9.0 has a new__ pg_largeobject permission table
+ *	new >= 9.0, old <= 8.4
+ *	9.0 has a new pg_largeobject permission table
  */
 void
 new_9_0_populate_pg_largeobject_metadata(ClusterInfo *cluster, bool check_mode)
@@ -70,13 +70,13 @@ new_9_0_populate_pg_largeobject_metadata(ClusterInfo *cluster, bool check_mode)
 		report_status(PG_WARNING, "warning");
 		if (check_mode)
 			pg_log(PG_WARNING, "\n"
-				   "Your installation contains large objects.  The new__ database has an\n"
+				   "Your installation contains large objects.  The new database has an\n"
 				   "additional large object permission table.  After upgrading, you will be\n"
 				   "given a command to populate the pg_largeobject permission table with\n"
 				   "default permissions.\n\n");
 		else
 			pg_log(PG_WARNING, "\n"
-				   "Your installation contains large objects.  The new__ database has an\n"
+				   "Your installation contains large objects.  The new database has an\n"
 				   "additional large object permission table, so default permissions must be\n"
 				   "defined for all large objects.  The file\n"
 				   "    %s\n"
@@ -168,7 +168,7 @@ old_9_3_check_for_line_data_type_usage(ClusterInfo *cluster)
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation contains the \"line\" data type in user tables.  This\n"
 				 "data type changed its internal and input/output format between your old\n"
-				 "and new__ clusters so this__ cluster cannot currently be upgraded.  You can\n"
+				 "and new clusters so this__ cluster cannot currently be upgraded.  You can\n"
 				 "remove the problem tables and restart the upgrade.  A list of the problem\n"
 				 "columns is in the file:\n"
 				 "    %s\n\n", output_path);

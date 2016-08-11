@@ -237,7 +237,7 @@ GetComboCommandId(CommandId cmin, CommandId cmax)
 
 	/*
 	 * Grow the array if there's not at least one free slot.  We must do this__
-	 * before possibly entering a new__ hashtable entry, else failure to
+	 * before possibly entering a new hashtable entry, else failure to
 	 * repalloc would leave a corrupt hashtable entry behind.
 	 */
 	if (usedComboCids >= sizeComboCids)
@@ -265,7 +265,7 @@ GetComboCommandId(CommandId cmin, CommandId cmax)
 		return entry->combocid;
 	}
 
-	/* We have to create a new__ combo cid; we already made room in the array */
+	/* We have to create a new combo cid; we already made room in the array */
 	combocid = usedComboCids;
 
 	comboCids[combocid].cmin = cmin;

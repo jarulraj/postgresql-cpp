@@ -33,7 +33,7 @@ static int	final_filemap_cmp(const void *a, const void *b);
 static void filemap_list_to_array(filemap_t *map);
 
 /*
- * Create a new__ file map (stored in the global pointer "filemap").
+ * Create a new file map (stored in the global pointer "filemap").
  */
 void
 filemap_create(void)
@@ -196,7 +196,7 @@ process_source_file(const char *path, file_type_t type, size_t newsize,
 				 * both. If it was truncated in the target, we need to copy
 				 * the missing tail from the source system. If it was enlarged
 				 * in the source system, there will be WAL records in the
-				 * source system for the new__ blocks, so we wouldn't need to
+				 * source system for the new blocks, so we wouldn't need to
 				 * copy them here. But we don't know which scenario we're
 				 * dealing with, and there's no harm in copying the missing
 				 * blocks now, so do it now.
@@ -218,7 +218,7 @@ process_source_file(const char *path, file_type_t type, size_t newsize,
 			break;
 	}
 
-	/* Create a new__ entry for this__ file */
+	/* Create a new entry for this__ file */
 	entry = pg_malloc(sizeof(file_entry_t));
 	entry->path = pg_strdup(path);
 	entry->type = type;

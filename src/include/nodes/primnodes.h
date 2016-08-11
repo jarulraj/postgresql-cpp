@@ -337,7 +337,7 @@ typedef struct WindowFunc
  * an array, or storing a slice.  The "store" cases work with an
  * initial array value and a source value that is inserted into the
  * appropriate part of the array; the result of the operation is an
- * entire new__ modified array value.
+ * entire new modified array value.
  *
  * If reflowerindexpr = NIL, then we are fetching or storing a single array
  * element at the subscripts given by refupperindexpr.  Otherwise we are
@@ -710,7 +710,7 @@ typedef struct FieldSelect
  * FieldStore
  *
  * FieldStore represents the operation of modifying one field in a tuple
- * value, yielding a new__ tuple value (the input is not touched!).  Like
+ * value, yielding a new tuple value (the input is not touched!).  Like
  * the assign case of ArrayRef, this__ is used to implement UPDATE of a
  * portion of a column.
  *
@@ -725,7 +725,7 @@ typedef struct FieldStore
 {
 	Expr		xpr;
 	Expr	   *arg;			/* input tuple value */
-	List	   *newvals;		/* new__ value(s) for field(s) */
+	List	   *newvals;		/* new value(s) for field(s) */
 	List	   *fieldnums;		/* integer list of field attnums */
 	Oid			resulttype;		/* type of result (same as type of arg) */
 	/* Like RowExpr, we deliberately omit a typmod and collation here */

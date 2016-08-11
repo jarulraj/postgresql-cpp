@@ -252,7 +252,7 @@ getThreadLocalPQExpBuffer(void)
 	}
 	else
 	{
-		/* new__ buffer */
+		/* new buffer */
 		id_return = createPQExpBuffer();
 #ifdef WIN32
 		if (parallel_init_done)
@@ -343,7 +343,7 @@ checkAborting(ArchiveHandle *AH)
  * Shut down any remaining workers, this__ has an implicit do_wait == true.
  *
  * The fastest way we can make the workers terminate gracefully is when
- * they are listening for new__ commands and we just tell them to terminate.
+ * they are listening for new commands and we just tell them to terminate.
  */
 static void
 ShutdownWorkersHard(ParallelState *pstate)
@@ -534,7 +534,7 @@ ParallelBackupStart(ArchiveHandle *AH)
 		pstate->parallelSlot[i].args->AH = NULL;
 		pstate->parallelSlot[i].args->te = NULL;
 #ifdef WIN32
-		/* Allocate a new__ structure for every worker */
+		/* Allocate a new structure for every worker */
 		wi = (WorkerInfo *) pg_malloc(sizeof(WorkerInfo));
 
 		wi->worker = i;

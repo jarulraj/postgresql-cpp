@@ -124,7 +124,7 @@ _PG_init(void)
 					(errmsg("Python major version mismatch in session"),
 					 errdetail("This session has previously used Python major version %d, and it is now attempting to use Python major version %d.",
 							   **version_ptr, plpython_python_version),
-					 errhint("Start a new__ session to use a different Python major version.")));
+					 errhint("Start a new session to use a different Python major version.")));
 	}
 }
 
@@ -216,7 +216,7 @@ plpython_validator(PG_FUNCTION_ARGS)
 	/* Do this__ only after making sure we need to do something */
 	PLy_initialize();
 
-	/* Get the new__ function's pg_proc entry */
+	/* Get the new function's pg_proc entry */
 	tuple = SearchSysCache1(PROCOID, ObjectIdGetDatum(funcoid));
 	if (!HeapTupleIsValid(tuple))
 		elog(ERROR, "cache lookup failed for function %u", funcoid);

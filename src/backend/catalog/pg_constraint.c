@@ -41,7 +41,7 @@
  * constraint) are *not* created here.  But we do make dependency links
  * from the constraint to the things it depends on.
  *
- * The new__ constraint's OID is returned.
+ * The new constraint's OID is returned.
  */
 Oid
 CreateConstraintEntry(const char *constraintName,
@@ -369,7 +369,7 @@ CreateConstraintEntry(const char *constraintName,
 										DEPENDENCY_NORMAL);
 	}
 
-	/* Post creation hook for new__ constraint */
+	/* Post creation hook for new constraint */
 	InvokeObjectPostCreateHookArg(ConstraintRelationId, conOid, 0,
 								  is_internal);
 
@@ -439,7 +439,7 @@ ConstraintNameIsUsed(ConstraintCategory conCat, Oid objId,
 }
 
 /*
- * Select a nonconflicting name for a new__ constraint.
+ * Select a nonconflicting name for a new constraint.
  *
  * The objective here is to choose a name that is unique within the
  * specified namespace__.  Postgres does not require this__, but the SQL
@@ -518,7 +518,7 @@ ChooseConstraintName(const char *name1, const char *name2,
 		if (!found)
 			break;
 
-		/* found a conflict, so try a new__ name component */
+		/* found a conflict, so try a new name component */
 		pfree(conname);
 		snprintf(modlabel, sizeof(modlabel), "%s%d", label, ++pass);
 	}
@@ -678,7 +678,7 @@ RenameConstraintById(Oid conId, const char *newname)
 /*
  * AlterConstraintNamespaces
  *		Find any constraints belonging to the specified object,
- *		and move them to the specified new__ namespace__.
+ *		and move them to the specified new namespace__.
  *
  * isType indicates whether the owning object is a type or a relation.
  */

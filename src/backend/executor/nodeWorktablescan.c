@@ -139,7 +139,7 @@ ExecInitWorkTableScan(WorkTableScan *node, EState *estate, int eflags)
 	Assert(innerPlan(node) == NULL);
 
 	/*
-	 * create new__ WorkTableScanState for node
+	 * create new WorkTableScanState for node
 	 */
 	scanstate = makeNode(WorkTableScanState);
 	scanstate->ss.ps.plan = (Plan *) node;

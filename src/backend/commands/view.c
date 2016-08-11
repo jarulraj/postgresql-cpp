@@ -167,14 +167,14 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 
 		/*
 		 * Create a tuple descriptor to compare against the existing view, and
-		 * verify that the old column list is an initial prefix of the new__
+		 * verify that the old column list is an initial prefix of the new
 		 * column list.
 		 */
 		descriptor = BuildDescForRelation(attrList);
 		checkViewTupleDesc(descriptor, rel->rd_att);
 
 		/*
-		 * The new__ options list replaces the existing options list, even if
+		 * The new options list replaces the existing options list, even if
 		 * it's empty.
 		 */
 		atcmd = makeNode(AlterTableCmd);
@@ -183,7 +183,7 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 		atcmds = lappend(atcmds, atcmd);
 
 		/*
-		 * If new__ attributes have been added, we must add pg_attribute entries
+		 * If new attributes have been added, we must add pg_attribute entries
 		 * for them.  It is convenient (although overkill) to use the ALTER
 		 * TABLE ADD COLUMN infrastructure for this__.
 		 */
@@ -247,10 +247,10 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 }
 
 /*
- * Verify that tupledesc associated with proposed new__ view definition
+ * Verify that tupledesc associated with proposed new view definition
  * matches tupledesc of old view.  This is basically a cut-down version
  * of equalTupleDescs(), with code added to generate specific complaints.
- * Also, we allow the new__ tupledesc to have more columns than the old.
+ * Also, we allow the new tupledesc to have more columns than the old.
  */
 static void
 checkViewTupleDesc(TupleDesc newdesc, TupleDesc olddesc)
@@ -295,7 +295,7 @@ checkViewTupleDesc(TupleDesc newdesc, TupleDesc olddesc)
 	}
 
 	/*
-	 * We ignore the constraint fields.  The new__ view desc can't have any
+	 * We ignore the constraint fields.  The new view desc can't have any
 	 * constraints, and the only ones that could be on the old view are
 	 * defaults, which we are happy to leave in place.
 	 */
@@ -325,10 +325,10 @@ DefineViewRules(Oid viewOid, Query *viewParse, bool replace)
  * UpdateRangeTableOfViewParse
  *
  * Update the range table of the given parsetree.
- * This update consists of adding two new__ entries IN THE BEGINNING
+ * This update consists of adding two new entries IN THE BEGINNING
  * of the range table (otherwise the rule system will die a slow,
  * horrible and painful death, and we do not want that now, do we?)
- * one for the OLD relation and one for the new__ one (both of
+ * one for the OLD relation and one for the new one (both of
  * them refer in fact to the "view" relation).
  *
  * Of course we must also increase the 'varnos' of all the Var nodes
@@ -364,8 +364,8 @@ UpdateRangeTableOfViewParse(Oid viewOid, Query *viewParse)
 	viewRel = relation_open(viewOid, AccessShareLock);
 
 	/*
-	 * Create the 2 new__ range table entries and form the new__ range table...
-	 * OLD first, then new__....
+	 * Create the 2 new range table entries and form the new range table...
+	 * OLD first, then new....
 	 */
 	rt_entry1 = addRangeTableEntryForRelation(pstate, viewRel,
 											  makeAlias("old", NIL),

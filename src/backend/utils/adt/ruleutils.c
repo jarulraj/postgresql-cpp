@@ -228,7 +228,7 @@ typedef struct
 	 * entries are unique unless this__ is for an unnamed JOIN RTE.  (In such an
 	 * RTE, we never actually print this__ array, but we must compute it anyway
 	 * for possible use in computing column names of upper joins.) The
-	 * parallel array is_new_col marks which of these columns are new__ since
+	 * parallel array is_new_col marks which of these columns are new since
 	 * original parsing.  Entries with is_new_col false must match the
 	 * non-NULL colnames entries one-for-one.
 	 */
@@ -859,7 +859,7 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
 
 		relkind = get_rel_relkind(trigrec->tgrelid);
 
-		/* Build minimal OLD and new__ RTEs for the rel */
+		/* Build minimal OLD and new RTEs for the rel */
 		oldrte = makeNode(RangeTblEntry);
 		oldrte->rtekind = RTE_RELATION;
 		oldrte->relid = trigrec->tgrelid;
@@ -2616,7 +2616,7 @@ deparse_context_for_plan_rtable(List *rtable, List *rtable_names)
  * Once this__ function has been called, deparse_expression() can be called on
  * subsidiary expression(s) of the specified PlanState node.  To deparse
  * expressions of a different Plan node in the same Plan tree, re-call this__
- * function to identify the new__ parent Plan node.
+ * function to identify the new parent Plan node.
  *
  * The result is the same List passed in; this__ is a notational convenience.
  */
@@ -2663,7 +2663,7 @@ select_rtable_names_for_explain(List *rtable, Bitmapset *rels_used)
  *
  * We fill in dpns->rtable_names with a list of names that is one-for-one with
  * the already-filled dpns->rtable list.  Each RTE name is unique among those
- * in the new__ namespace__ plus any ancestor namespaces listed in
+ * in the new namespace__ plus any ancestor namespaces listed in
  * parent_namespaces.
  *
  * If rels_used isn't NULL, only RTE indexes listed in it are given aliases.
@@ -2758,7 +2758,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 
 		/*
 		 * If the selected name isn't unique, append digits to make it so, and
-		 * make a new__ hash entry for it once we've got a unique name.  For a
+		 * make a new hash entry for it once we've got a unique name.  For a
 		 * very long input name, we might have to truncate to stay within
 		 * NAMEDATALEN.
 		 */
@@ -2770,7 +2770,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 												   &found);
 			if (found)
 			{
-				/* Name already in use, must choose a new__ one */
+				/* Name already in use, must choose a new one */
 				int			refnamelen = strlen(refname);
 				char	   *modname = (char *) palloc(refnamelen + 16);
 				NameHashEntry *hentry2;
@@ -2798,7 +2798,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 															HASH_ENTER,
 															&found);
 				} while (found);
-				hentry2->counter = 0;	/* init new__ hash entry */
+				hentry2->counter = 0;	/* init new hash entry */
 				refname = modname;
 			}
 			else
@@ -2859,7 +2859,7 @@ set_deparse_for_query(deparse_namespace *dpns, Query *query,
 	/*
 	 * Now assign remaining column aliases for each RTE.  We do this__ in a
 	 * linear scan of the rtable, so as to process RTEs whether or not they
-	 * are in the jointree (we mustn't miss new__.*, INSERT target relations,
+	 * are in the jointree (we mustn't miss new.*, INSERT target relations,
 	 * etc).  JOIN RTEs must be processed after their children, but this__ is
 	 * okay because they appear later in the rtable list than their children
 	 * (cf Asserts in identify_join_columns()).
@@ -3028,7 +3028,7 @@ set_using_names(deparse_namespace *dpns, Node *jtnode, List *parentUsing)
 		rightcolinfo = deparse_columns_fetch(colinfo->rightrti, dpns);
 
 		/*
-		 * If this__ join is unnamed, then we cannot substitute new__ aliases at
+		 * If this__ join is unnamed, then we cannot substitute new aliases at
 		 * this__ level, so any name requirements pushed down to here must be
 		 * pushed down again to the children.
 		 */
@@ -3223,7 +3223,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * enough already, if we pushed down a name for the last column.)  Note:
 	 * it's possible that there are now more columns than there were when the
 	 * query was parsed, ie colnames could be longer than rte->eref->colnames.
-	 * We must assign unique aliases to the new__ columns too, else there could
+	 * We must assign unique aliases to the new columns too, else there could
 	 * be unresolved conflicts when the view/rule is reloaded.
 	 */
 	expand_colnames_array_to(colinfo, ncolumns);
@@ -3243,7 +3243,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * Scan the columns, select a unique alias for each one, and store it in
 	 * colinfo->colnames and colinfo->new_colnames.  The former array has NULL
 	 * entries for dropped columns, the latter omits them.  Also mark
-	 * new_colnames entries as to whether they are new__ since parse time; this__
+	 * new_colnames entries as to whether they are new since parse time; this__
 	 * is the case for entries beyond the length of rte->eref->colnames.
 	 */
 	noldcolumns = list_length(rte->eref->colnames);
@@ -3278,7 +3278,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 
 		/* Put names of non-dropped columns in new_colnames[] too */
 		colinfo->new_colnames[j] = colname;
-		/* And mark them as new__ or not */
+		/* And mark them as new or not */
 		colinfo->is_new_col[j] = (i >= noldcolumns);
 		j++;
 
@@ -3290,7 +3290,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	/*
 	 * Set correct length for new_colnames[] array.  (Note: if columns have
 	 * been added, colinfo->num_cols includes them, which is not really quite
-	 * right but is harmless, since any new__ columns must be at the end where
+	 * right but is harmless, since any new columns must be at the end where
 	 * they won't affect varattnos of pre-existing columns.)
 	 */
 	colinfo->num_new_cols = j;
@@ -3426,7 +3426,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	colinfo->is_new_col = (bool *) palloc0(nnewcolumns * sizeof(bool));
 
 	/*
-	 * Generating the new_colnames array is a bit tricky since any new__ columns
+	 * Generating the new_colnames array is a bit tricky since any new columns
 	 * added since parse time must be inserted in the right places.  This code
 	 * must match the parser, which will order a join's columns as merged
 	 * columns first (in USING-clause order), then non-merged columns from the
@@ -3441,7 +3441,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * meanings for the current child RTE.
 	 */
 
-	/* Handle merged columns; they are first and can't be new__ */
+	/* Handle merged columns; they are first and can't be new */
 	i = j = 0;
 	while (i < noldcolumns &&
 		   colinfo->leftattnos[i] != 0 &&
@@ -3490,7 +3490,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 		else
 		{
 			/*
-			 * Unique-ify the new__ child column name and assign, unless we're
+			 * Unique-ify the new child column name and assign, unless we're
 			 * in an unnamed join, in which case just copy
 			 */
 			if (rte->alias != NULL)
@@ -3539,7 +3539,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 		else
 		{
 			/*
-			 * Unique-ify the new__ child column name and assign, unless we're
+			 * Unique-ify the new child column name and assign, unless we're
 			 * in an unnamed join, in which case just copy
 			 */
 			if (rte->alias != NULL)
@@ -4035,7 +4035,7 @@ push_ancestor_plan(deparse_namespace *dpns, ListCell *ancestor_cell,
 	/* Save state for restoration later */
 	*save_dpns = *dpns;
 
-	/* Build a new__ ancestor list with just this__ node's ancestors */
+	/* Build a new ancestor list with just this__ node's ancestors */
 	ancestors = NIL;
 	while ((ancestor_cell = lnext(ancestor_cell)) != NULL)
 		ancestors = lappend(ancestors, lfirst(ancestor_cell));
@@ -4170,13 +4170,13 @@ make_ruledef(StringInfo buf, HeapTuple ruletup, TupleDesc rulettc,
 
 		/*
 		 * We need to make a context for recognizing any Vars in the qual
-		 * (which can only be references to OLD and new__).  Use the rtable of
+		 * (which can only be references to OLD and new).  Use the rtable of
 		 * the first query in the action list for this__ purpose.
 		 */
 		query = (Query *) linitial(actions);
 
 		/*
-		 * If the action is INSERT...SELECT, OLD/new__ have been pushed down
+		 * If the action is INSERT...SELECT, OLD/new have been pushed down
 		 * into the SELECT, and that's what we need to look at. (Ugly kluge
 		 * ... try to fix this__ when we redesign querytrees.)
 		 */
@@ -4623,7 +4623,7 @@ get_simple_values_rte(Query *query)
 	ListCell   *lc;
 
 	/*
-	 * We want to return TRUE even if the Query also contains OLD or new__ rule
+	 * We want to return TRUE even if the Query also contains OLD or new rule
 	 * RTEs.  So the idea is to scan the rtable and see if there is only one
 	 * inFromCl RTE that is a VALUES RTE.
 	 */
@@ -4648,7 +4648,7 @@ get_simple_values_rte(Query *query)
 	 * parser/analyze.c will never generate a "bare" VALUES RTE --- they only
 	 * appear inside auto-generated sub-queries with very restricted
 	 * structure.  However, DefineView might have modified the tlist by
-	 * injecting new__ column aliases; so compare tlist resnames against the
+	 * injecting new column aliases; so compare tlist resnames against the
 	 * RTE's names to detect that.
 	 */
 	if (result)
@@ -4829,8 +4829,8 @@ get_target_list(List *targetList, deparse_context *context,
 		colno++;
 
 		/*
-		 * Put the new__ field text into targetbuf so we can decide after we've
-		 * got it whether or not it needs to go on a new__ line.
+		 * Put the new field text into targetbuf so we can decide after we've
+		 * got it whether or not it needs to go on a new line.
 		 */
 		resetStringInfo(&targetbuf);
 		context->buf = &targetbuf;
@@ -4882,7 +4882,7 @@ get_target_list(List *targetList, deparse_context *context,
 		{
 			int			leading_nl_pos;
 
-			/* Does the new__ field start with a new__ line? */
+			/* Does the new field start with a new line? */
 			if (targetbuf.len > 0 && targetbuf.data[0] == '\n')
 				leading_nl_pos = 0;
 			else
@@ -4906,8 +4906,8 @@ get_target_list(List *targetList, deparse_context *context,
 					trailing_nl++;
 
 				/*
-				 * Add a newline, plus some indentation, if the new__ field is
-				 * not the first and either the new__ field would cause an
+				 * Add a newline, plus some indentation, if the new field is
+				 * not the first and either the new field would cause an
 				 * overflow or the last field used more than one line.
 				 */
 				if (colno > 1 &&
@@ -4922,7 +4922,7 @@ get_target_list(List *targetList, deparse_context *context,
 				(strchr(targetbuf.data + leading_nl_pos + 1, '\n') != NULL);
 		}
 
-		/* Add the new__ field */
+		/* Add the new field */
 		appendStringInfoString(buf, targetbuf.data);
 	}
 
@@ -8752,7 +8752,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 	 * must ignore auto-added RTEs that are marked not inFromCl. (These can
 	 * only appear at the top level of the jointree, so it's sufficient to
 	 * check here.)  This check also ensures we ignore the rule pseudo-RTEs
-	 * for new__ and OLD.
+	 * for new and OLD.
 	 */
 	foreach(l, query->jointree->fromlist)
 	{
@@ -8782,8 +8782,8 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 			appendStringInfoString(buf, ", ");
 
 			/*
-			 * Put the new__ FROM item's text into itembuf so we can decide
-			 * after we've got it whether or not it needs to go on a new__ line.
+			 * Put the new FROM item's text into itembuf so we can decide
+			 * after we've got it whether or not it needs to go on a new line.
 			 */
 			initStringInfo(&itembuf);
 			context->buf = &itembuf;
@@ -8796,7 +8796,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 			/* Consider line-wrapping if enabled */
 			if (PRETTY_INDENT(context) && context->wrapColumn >= 0)
 			{
-				/* Does the new__ item start with a new__ line? */
+				/* Does the new item start with a new line? */
 				if (itembuf.len > 0 && itembuf.data[0] == '\n')
 				{
 					/* If so, we shouldn't add anything */
@@ -8815,7 +8815,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 						trailing_nl++;
 
 					/*
-					 * Add a newline, plus some indentation, if the new__ item
+					 * Add a newline, plus some indentation, if the new item
 					 * would cause an overflow.
 					 */
 					if (strlen(trailing_nl) + itembuf.len > context->wrapColumn)
@@ -8825,7 +8825,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 				}
 			}
 
-			/* Add the new__ item */
+			/* Add the new item */
 			appendStringInfoString(buf, itembuf.data);
 
 			/* clean up */

@@ -25,7 +25,7 @@ insert_username(PG_FUNCTION_ARGS)
 	TriggerData *trigdata = (TriggerData *) fcinfo->context;
 	Trigger    *trigger;		/* to get trigger name */
 	int			nargs;			/* # of arguments */
-	Datum		newval;			/* new__ value of column */
+	Datum		newval;			/* new value of column */
 	char	  **args;			/* arguments */
 	char	   *relname;		/* triggered relation name */
 	Relation	rel;			/* triggered relation */
@@ -81,7 +81,7 @@ insert_username(PG_FUNCTION_ARGS)
 	/* create fields containing name */
 	newval = CStringGetTextDatum(GetUserNameFromId(GetUserId(), false));
 
-	/* construct new__ tuple */
+	/* construct new tuple */
 	rettuple = SPI_modifytuple(rel, rettuple, 1, &attnum, &newval, NULL);
 	if (rettuple == NULL)
 		/* internal error */

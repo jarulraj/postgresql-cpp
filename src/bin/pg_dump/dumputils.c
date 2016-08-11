@@ -60,7 +60,7 @@ defaultGetLocalPQExpBuffer(void)
 	}
 	else
 	{
-		/* new__ buffer */
+		/* new buffer */
 		id_return = createPQExpBuffer();
 	}
 
@@ -552,8 +552,8 @@ buildACLCommands(const char *name, const char *subname,
 	appendPQExpBuffer(firstsql, " ON %s %s FROM public;\n", type, name);
 
 	/*
-	 * We still need some hacking though to cover the case where new__ default
-	 * public privileges are added in new__ versions: the REVOKE ALL will revoke
+	 * We still need some hacking though to cover the case where new default
+	 * public privileges are added in new versions: the REVOKE ALL will revoke
 	 * them, leading to behavior different from what the old version had,
 	 * which is generally not what's wanted.  So add back default privs if the
 	 * source database is too old to have had that particular priv.

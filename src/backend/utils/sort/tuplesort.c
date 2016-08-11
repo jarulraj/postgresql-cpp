@@ -39,7 +39,7 @@
  * workMem, we construct a heap using Algorithm H and begin to emit tuples
  * into sorted runs in temporary tapes, emitting just enough tuples at each
  * step to get back within the workMem limit.  Whenever the run number at
- * the top of the heap changes, we begin a new__ run with a new__ output tape
+ * the top of the heap changes, we begin a new run with a new output tape
  * (selected per Algorithm D).  After the end of the input is reached,
  * we dump out remaining tuples in memory into a final run (or two),
  * then merge the runs using Algorithm D.
@@ -1101,7 +1101,7 @@ grow_memtuples(Tuplesortstate *state)
 	if (!state->growmemtuples)
 		return false;
 
-	/* Select new__ value of memtupsize */
+	/* Select new value of memtupsize */
 	if (memNowUsed <= state->availMem)
 	{
 		/*
@@ -1125,10 +1125,10 @@ grow_memtuples(Tuplesortstate *state)
 		 * To stay within allowedMem, we can't increase memtupsize by more
 		 * than availMem / sizeof(SortTuple) elements.  In practice, we want
 		 * to increase it by considerably less, because we need to leave some
-		 * space for the tuples to which the new__ array slots will refer.  We
-		 * assume the new__ tuples will be about the same size as the tuples
+		 * space for the tuples to which the new array slots will refer.  We
+		 * assume the new tuples will be about the same size as the tuples
 		 * we've already seen, and thus we can extrapolate from the space
-		 * consumption so far to estimate an appropriate new__ size for the
+		 * consumption so far to estimate an appropriate new size for the
 		 * memtuples array.  The optimal value might be higher or lower than
 		 * this__ estimate, but it's hard to know that in advance.  We again
 		 * clamp at INT_MAX tuples.
@@ -1136,7 +1136,7 @@ grow_memtuples(Tuplesortstate *state)
 		 * This calculation is safe against enlarging the array so much that
 		 * LACKMEM becomes true, because the memory currently used includes
 		 * the present array; thus, there would be enough allowedMem for the
-		 * new__ array elements even if no other memory were currently used.
+		 * new array elements even if no other memory were currently used.
 		 *
 		 * We do the arithmetic in float8, because otherwise the product of
 		 * memtupsize and allowedMem could overflow.  Any inaccuracy in the
@@ -1181,7 +1181,7 @@ grow_memtuples(Tuplesortstate *state)
 	 * LACKMEM if the memory chunk overhead associated with the memtuples
 	 * array were to increase.  That shouldn't happen because we chose the
 	 * initial array size large enough to ensure that palloc will be treating
-	 * both old and new__ arrays as separate chunks.  But we'll check LACKMEM
+	 * both old and new arrays as separate chunks.  But we'll check LACKMEM
 	 * explicitly below just in case.)
 	 */
 	if (state->availMem < (int64) ((newmemtupsize - memtupsize) * sizeof(SortTuple)))
@@ -1471,7 +1471,7 @@ puttuple_common(Tuplesortstate *state, SortTuple *tuple)
 		case TSS_BOUNDED:
 
 			/*
-			 * We don't want to grow the array here, so check whether the new__
+			 * We don't want to grow the array here, so check whether the new
 			 * tuple can be discarded before putting it in.  This should be a
 			 * good speed optimization, too, since when there are many more
 			 * input tuples than the bound, most input tuples can be discarded
@@ -1480,13 +1480,13 @@ puttuple_common(Tuplesortstate *state, SortTuple *tuple)
 			 */
 			if (COMPARETUP(state, tuple, &state->memtuples[0]) <= 0)
 			{
-				/* new__ tuple <= top of the heap, so we can discard it */
+				/* new tuple <= top of the heap, so we can discard it */
 				free_sort_tuple(state, tuple);
 				CHECK_FOR_INTERRUPTS();
 			}
 			else
 			{
-				/* discard top of heap, sift up, insert new__ tuple */
+				/* discard top of heap, sift up, insert new tuple */
 				free_sort_tuple(state, &state->memtuples[0]);
 				tuplesort_heap_siftup(state, false);
 				tuplesort_heap_insert(state, tuple, 0, false);
@@ -2180,7 +2180,7 @@ inittapes(Tuplesortstate *state)
 }
 
 /*
- * selectnewtape -- select new__ tape for new__ initial run.
+ * selectnewtape -- select new tape for new initial run.
  *
  * This is called after finishing a run when we know another run
  * must be started.  This implements steps D3, D4 of Algorithm D.
@@ -2326,7 +2326,7 @@ mergeruns(Tuplesortstate *state)
 		/* Step D6: decrease level */
 		if (--state->Level == 0)
 			break;
-		/* rewind output tape T to use as new__ input */
+		/* rewind output tape T to use as new input */
 		LogicalTapeRewind(state->tapeset, state->tp_tapenum[state->tapeRange],
 						  false);
 		/* rewind used-up input tape P, and prepare it for write pass */
@@ -2629,7 +2629,7 @@ mergeprereadone(Tuplesortstate *state, int srcTape)
  *
  * If we empty the heap, close out the current run and return (this__ should
  * only happen at end of input data).  If we see that the tuple run number
- * at the top of the heap has changed, start a new__ run.
+ * at the top of the heap has changed, start a new run.
  */
 static void
 dumptuples(Tuplesortstate *state, bool alltuples)
@@ -2668,7 +2668,7 @@ dumptuples(Tuplesortstate *state, bool alltuples)
 #endif
 
 			/*
-			 * Done if heap is empty, else prepare for new__ run.
+			 * Done if heap is empty, else prepare for new run.
 			 */
 			if (state->memtupcount == 0)
 				break;
@@ -2875,7 +2875,7 @@ make_bounded_heap(Tuplesortstate *state)
 		if (state->memtupcount >= state->bound &&
 		  COMPARETUP(state, &state->memtuples[i], &state->memtuples[0]) <= 0)
 		{
-			/* new__ tuple would just get thrown out, so skip it */
+			/* new tuple would just get thrown out, so skip it */
 			free_sort_tuple(state, &state->memtuples[i]);
 			CHECK_FOR_INTERRUPTS();
 		}
@@ -2938,7 +2938,7 @@ sort_bounded_heap(Tuplesortstate *state)
 }
 
 /*
- * Insert a new__ tuple into an empty or existing heap, maintaining the
+ * Insert a new tuple into an empty or existing heap, maintaining the
  * heap invariant.  Caller is responsible for ensuring there's room.
  *
  * Note: we assume *tuple is a temporary variable that can be scribbled on.
@@ -2968,7 +2968,7 @@ tuplesort_heap_insert(Tuplesortstate *state, SortTuple *tuple,
 	CHECK_FOR_INTERRUPTS();
 
 	/*
-	 * Sift-up the new__ entry, per Knuth 5.2.3 exercise 16. Note that Knuth is
+	 * Sift-up the new entry, per Knuth 5.2.3 exercise 16. Note that Knuth is
 	 * using 1-based array indexes, not 0-based.
 	 */
 	j = state->memtupcount++;

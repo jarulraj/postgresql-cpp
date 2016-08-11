@@ -56,7 +56,7 @@ typedef struct spgBulkDeleteState
 /*
  * Add TID to pendingList, but only if not already present.
  *
- * Note that new__ items are always appended at the end of the list; this__
+ * Note that new items are always appended at the end of the list; this__
  * ensures that scans of the list don't miss items added during the scan.
  */
 static void
@@ -74,7 +74,7 @@ spgAddPendingTID(spgBulkDeleteState *bds, ItemPointer tid)
 			return;				/* already in list, do nothing */
 		listLink = &pitem->next;
 	}
-	/* not there, so append new__ entry */
+	/* not there, so append new entry */
 	pitem = (spgVacPendingItem *) palloc(sizeof(spgVacPendingItem));
 	pitem->tid = *tid;
 	pitem->done = false;
@@ -218,9 +218,9 @@ vacuumLeafPage(spgBulkDeleteState *bds, Relation index, Buffer buffer,
 	 * toPlaceholder[]: tuple numbers to be replaced with PLACEHOLDER tuples
 	 * moveSrc[]: tuple numbers that need to be relocated to another offset
 	 * (replacing the tuple there) and then replaced with PLACEHOLDER tuples
-	 * moveDest[]: new__ locations for moveSrc tuples
+	 * moveDest[]: new locations for moveSrc tuples
 	 * chainSrc[]: tuple numbers whose chain links (nextOffset) need updates
-	 * chainDest[]: new__ values of nextOffset for chainSrc members
+	 * chainDest[]: new values of nextOffset for chainSrc members
 	 *
 	 * It's easiest to figure out what we have to do by processing tuple
 	 * chains, so we iterate over all the tuples (not just the deletable
@@ -650,7 +650,7 @@ spgvacuumpage(spgBulkDeleteState *bds, BlockNumber blkno)
 	/*
 	 * The root pages must never be deleted, nor marked as available in FSM,
 	 * because we don't want them ever returned by a search for a place to put
-	 * a new__ tuple.  Otherwise, check for empty page, and make sure the FSM
+	 * a new tuple.  Otherwise, check for empty page, and make sure the FSM
 	 * knows about it.
 	 */
 	if (!SpGistBlockIsRoot(blkno))
@@ -807,7 +807,7 @@ spgvacuumscan(spgBulkDeleteState *bds)
 	bds->stats->num_index_tuples = 0;
 	bds->stats->pages_deleted = 0;
 
-	/* We can skip locking for new__ or temp relations */
+	/* We can skip locking for new or temp relations */
 	needLock = !RELATION_IS_LOCAL(index);
 
 	/*

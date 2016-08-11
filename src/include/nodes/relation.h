@@ -182,7 +182,7 @@ typedef struct PlannerInfo
 	/*
 	 * When doing a dynamic-programming-style join search, join_rel_level[k]
 	 * is a list of all join-relation RelOptInfos of level k, and
-	 * join_cur_level is the current level.  new__ join-relation RelOptInfos are
+	 * join_cur_level is the current level.  new join-relation RelOptInfos are
 	 * automatically added to the join_rel_level[join_cur_level] list.
 	 * join_rel_level is NULL if not in use.
 	 */
@@ -311,7 +311,7 @@ typedef struct PlannerInfo
  * alias Vars are expanded to non-aliased form during preprocess_expression.
  *
  * Parts of this__ data structure are specific to various scan and join
- * mechanisms.  It didn't seem worth creating new__ node types for them.
+ * mechanisms.  It didn't seem worth creating new node types for them.
  *
  *		relids - Set of base-relation identifiers; it is a base relation
  *				if there is just one, a join relation if more than one

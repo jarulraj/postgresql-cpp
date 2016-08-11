@@ -38,7 +38,7 @@ extern void _PG_init(void);
  * ereport's if not acceptable
  *
  * username: name of role being created or changed
- * password: new__ password (possibly already encrypted)
+ * password: new password (possibly already encrypted)
  * password_type: PASSWORD_TYPE_PLAINTEXT or PASSWORD_TYPE_MD5 (there
  *			could be other encryption schemes in future)
  * validuntil_time: password expiration time, as a timestamptz Datum

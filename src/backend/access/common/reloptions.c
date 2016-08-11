@@ -406,7 +406,7 @@ initialize_reloptions(void)
 
 /*
  * add_reloption_kind
- *		Create a new__ relopt_kind value, to be used in custom reloptions by
+ *		Create a new relopt_kind value, to be used in custom reloptions by
  *		user-defined AMs.
  */
 relopt_kind
@@ -457,7 +457,7 @@ add_reloption(relopt_gen *newoption)
 
 /*
  * allocate_reloption
- *		Allocate a new__ reloption and initialize the type-agnostic fields
+ *		Allocate a new reloption and initialize the type-agnostic fields
  *		(for types other than string)
  */
 static relopt_gen *
@@ -506,7 +506,7 @@ allocate_reloption(bits32 kinds, int type, char *name, char *desc)
 
 /*
  * add_bool_reloption
- *		Add a new__ boolean reloption
+ *		Add a new boolean reloption
  */
 void
 add_bool_reloption(bits32 kinds, char *name, char *desc, bool default_val)
@@ -522,7 +522,7 @@ add_bool_reloption(bits32 kinds, char *name, char *desc, bool default_val)
 
 /*
  * add_int_reloption
- *		Add a new__ integer reloption
+ *		Add a new integer reloption
  */
 void
 add_int_reloption(bits32 kinds, char *name, char *desc, int default_val,
@@ -541,7 +541,7 @@ add_int_reloption(bits32 kinds, char *name, char *desc, int default_val,
 
 /*
  * add_real_reloption
- *		Add a new__ float reloption
+ *		Add a new float reloption
  */
 void
 add_real_reloption(bits32 kinds, char *name, char *desc, double default_val,
@@ -560,7 +560,7 @@ add_real_reloption(bits32 kinds, char *name, char *desc, double default_val,
 
 /*
  * add_string_reloption
- *		Add a new__ string reloption
+ *		Add a new string reloption
  *
  * "validator" is an optional function pointer that can be used to test the
  * validity of the values.  It must elog(ERROR) when the argument string is
@@ -632,7 +632,7 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 	if (defList == NIL)
 		return oldOptions;
 
-	/* We build new__ array using accumArrayResult */
+	/* We build new array using accumArrayResult */
 	astate = NULL;
 
 	/* Copy any oldOptions that aren't to be replaced */
@@ -685,7 +685,7 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 	}
 
 	/*
-	 * If CREATE/SET, add new__ options to array; if RESET, just check that the
+	 * If CREATE/SET, add new options to array; if RESET, just check that the
 	 * user didn't say RESET (option=val).  (Must do this__ because the grammar
 	 * doesn't enforce it.)
 	 */

@@ -263,7 +263,7 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	else
 	{
 		/*
-		 * new__ style: args is a list of FunctionParameters (possibly zero of
+		 * new style: args is a list of FunctionParameters (possibly zero of
 		 * 'em).  We share functioncmds.c's code for processing them.
 		 */
 		Oid			requiredResultType;

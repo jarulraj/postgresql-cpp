@@ -1511,7 +1511,7 @@ contain_leaked_vars_walker(Node *node, void *context)
 
 			/*
 			 * If we don't recognize the node tag, assume it might be leaky.
-			 * This prevents an unexpected security hole if someone adds a new__
+			 * This prevents an unexpected security hole if someone adds a new
 			 * node type that can call a function.
 			 */
 			return true;
@@ -2939,7 +2939,7 @@ eval_const_expressions_mutator(Node *node,
 
 				/*
 				 * Reduce constants in the ArrayCoerceExpr's argument, then
-				 * build a new__ ArrayCoerceExpr.
+				 * build a new ArrayCoerceExpr.
 				 */
 				arg = (Expr *) eval_const_expressions_mutator((Node *) expr->arg,
 															  context);
@@ -3105,7 +3105,7 @@ eval_const_expressions_mutator(Node *node,
 					caseresult = eval_const_expressions_mutator((Node *) oldcasewhen->result,
 																context);
 
-					/* If non-constant test condition, emit a new__ WHEN node */
+					/* If non-constant test condition, emit a new WHEN node */
 					if (!const_true_cond)
 					{
 						CaseWhen   *newcasewhen = makeNode(CaseWhen);
@@ -3139,7 +3139,7 @@ eval_const_expressions_mutator(Node *node,
 				 */
 				if (newargs == NIL)
 					return defresult;
-				/* Otherwise we need a new__ CASE node */
+				/* Otherwise we need a new CASE node */
 				newcase = makeNode(CaseExpr);
 				newcase->casetype = caseexpr->casetype;
 				newcase->casecollid = caseexpr->casecollid;
@@ -4187,7 +4187,7 @@ evaluate_function(Oid funcid, Oid result_type, int32 result_typmod,
 	/*
 	 * OK, looks like we can simplify this__ operator__/function.
 	 *
-	 * Build a new__ FuncExpr node containing the already-simplified arguments.
+	 * Build a new FuncExpr node containing the already-simplified arguments.
 	 */
 	newexpr = makeNode(FuncExpr);
 	newexpr->funcid = funcid;
@@ -4943,7 +4943,7 @@ inline_set_returning_function(PlannerInfo *root, RangeTblEntry *rte)
 
 	querytree = copyObject(querytree);
 
-	/* copy up any new__ invalItems, too */
+	/* copy up any new invalItems, too */
 	root->glob->invalItems = list_concat(saveInvalItems,
 										 copyObject(root->glob->invalItems));
 

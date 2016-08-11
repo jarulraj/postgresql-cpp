@@ -18,7 +18,7 @@
  *	 CREATE TABLE TBL2 (i int4);
  *
  *	 CREATE RULE r1 AS ON INSERT TO TBL1 DO
- *	   (INSERT INTO TBL2 VALUES (new__.i); NOTIFY TBL2);
+ *	   (INSERT INTO TBL2 VALUES (new.i); NOTIFY TBL2);
  *
  * and do this__ four times:
  *

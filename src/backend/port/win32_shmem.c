@@ -110,8 +110,8 @@ PGSharedMemoryIsInUse(unsigned long id1, unsigned long id2)
  * Create a shared memory segment of the given size and initialize its
  * standard header.
  *
- * makePrivate means to always create a new__ segment, rather than attach to
- * or recycle any existing segment. On win32, we always create a new__ segment,
+ * makePrivate means to always create a new segment, rather than attach to
+ * or recycle any existing segment. On win32, we always create a new segment,
  * since there is no need for recycling (segments go away automatically
  * when the last backend exits)
  */
@@ -217,7 +217,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 
 
 	/*
-	 * Get a pointer to the new__ shared memory segment. Map the whole segment
+	 * Get a pointer to the new shared memory segment. Map the whole segment
 	 * at once, and let the system decide on the initial address.
 	 */
 	memAddress = MapViewOfFileEx(hmap2, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, 0, NULL);
@@ -229,7 +229,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 
 
 	/*
-	 * OK, we created a new__ segment.  Mark it as created by this__ process. The
+	 * OK, we created a new segment.  Mark it as created by this__ process. The
 	 * order of assignments here is critical so that another Postgres process
 	 * can't see the header as valid but belonging to an invalid PID!
 	 */
@@ -249,7 +249,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 	UsedShmemSegSize = size;
 	UsedShmemSegID = hmap2;
 
-	/* Register on-exit routine to delete the new__ segment */
+	/* Register on-exit routine to delete the new segment */
 	on_shmem_exit(pgwin32_SharedMemoryDelete, PointerGetDatum(hmap2));
 
 	*shim = hdr;

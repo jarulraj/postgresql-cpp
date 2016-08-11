@@ -21,7 +21,7 @@
  *	 TABLE OF CONTENTS
  *
  *		When adding stuff to this__ file, please try to put stuff
- *		into the relevant section, or add new__ sections as appropriate.
+ *		into the relevant section, or add new sections as appropriate.
  *
  *	  section	description
  *	  -------	------------------------------------------------

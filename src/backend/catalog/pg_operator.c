@@ -259,7 +259,7 @@ OperatorShellMake(const char *operatorName,
 	tupDesc = pg_operator_desc->rd_att;
 
 	/*
-	 * create a new__ operator__ tuple
+	 * create a new operator__ tuple
 	 */
 	tup = heap_form_tuple(tupDesc, values, nulls);
 
@@ -275,7 +275,7 @@ OperatorShellMake(const char *operatorName,
 
 	heap_freetuple(tup);
 
-	/* Post creation hook for new__ shell operator__ */
+	/* Post creation hook for new shell operator__ */
 	InvokeObjectPostCreateHook(OperatorRelationId, operatorObjectId, 0);
 
 	/*
@@ -295,8 +295,8 @@ OperatorShellMake(const char *operatorName,
  * OperatorCreate
  *
  * "X" indicates an optional argument (i.e. one that can be NULL or 0)
- *		operatorName			name for new__ operator__
- *		operatorNamespace		namespace__ for new__ operator__
+ *		operatorName			name for new operator__
+ *		operatorNamespace		namespace__ for new operator__
  *		leftTypeId				X left type ID
  *		rightTypeId				X right type ID
  *		procedureId				procedure ID for operator__
@@ -544,7 +544,7 @@ OperatorCreate(const char *operatorName,
 	/* Add dependencies for the entry */
 	address = makeOperatorDependencies(tup);
 
-	/* Post creation hook for new__ operator__ */
+	/* Post creation hook for new operator__ */
 	InvokeObjectPostCreateHook(OperatorRelationId, operatorObjectId, 0);
 
 	heap_close(pg_operator_desc, RowExclusiveLock);
@@ -557,7 +557,7 @@ OperatorCreate(const char *operatorName,
 	 * then defines the other operator__ of the pair with the proper commutator
 	 * or negator attribute.  That style doesn't require creation of a shell,
 	 * and it's the only style that worked right before Postgres version 6.5.
-	 * This code also takes care of the situation where the new__ operator__ is
+	 * This code also takes care of the situation where the new operator__ is
 	 * its own commutator.
 	 */
 	if (selfCommutator)
@@ -638,8 +638,8 @@ get_other_operator(List *otherOp, Oid otherLeftTypeId, Oid otherRightTypeId,
  *
  *	For a given operator__, look up its negator and commutator operators.
  *	If they are defined, but their negator and commutator fields
- *	(respectively) are empty, then use the new__ operator__ for neg or comm.
- *	This solves a problem for users who need to insert two new__ operators
+ *	(respectively) are empty, then use the new operator__ for neg or comm.
+ *	This solves a problem for users who need to insert two new operators
  *	which are the negator or commutator of each other.
  */
 static void
@@ -760,8 +760,8 @@ OperatorUpd(Oid baseId, Oid commId, Oid negId)
 }
 
 /*
- * Create dependencies for a new__ operator__ (either a freshly inserted
- * complete operator__, a new__ shell operator__, or a just-updated shell).
+ * Create dependencies for a new operator__ (either a freshly inserted
+ * complete operator__, a new shell operator__, or a just-updated shell).
  *
  * NB: the OidIsValid tests in this__ routine are necessary, in case
  * the given operator__ is a shell.

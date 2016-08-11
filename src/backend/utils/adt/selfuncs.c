@@ -3166,7 +3166,7 @@ add_unique_group_var(PlannerInfo *root, List *varinfos,
 		{
 			if (varinfo->ndistinct <= ndistinct)
 			{
-				/* Keep older item, forget new__ one */
+				/* Keep older item, forget new one */
 				return varinfos;
 			}
 			else
@@ -3386,7 +3386,7 @@ estimate_num_groups(PlannerInfo *root, List *groupExprs, double input_rows,
 
 		/*
 		 * Get the product of numdistinct estimates of the Vars for this__ rel.
-		 * Also, construct new__ varinfos list of remaining Vars.
+		 * Also, construct new varinfos list of remaining Vars.
 		 */
 		for_each_cell(l, lnext(list_head(varinfos)))
 		{
@@ -5060,7 +5060,7 @@ get_actual_variable_range(PlannerInfo *root, VariableStatData *vardata,
 				 * In principle, we should scan the index with our current
 				 * active snapshot, which is the best approximation we've got
 				 * to what the query will see when executed.  But that won't
-				 * be exact if a new__ snap is taken before running the query,
+				 * be exact if a new snap is taken before running the query,
 				 * and it can be very expensive if a lot of uncommitted rows
 				 * exist at the end of the index (because we'll laboriously
 				 * fetch each one and reject it).  What seems like a good
@@ -5871,7 +5871,7 @@ make_greater_string(const Const *str_const, FmgrInfo *ltproc, Oid collation)
 		 * (for BYTEA, we treat each byte as a character).
 		 *
 		 * Note: the incrementer function is expected to return true if it's
-		 * generated a valid-per-the-encoding new__ character, otherwise false.
+		 * generated a valid-per-the-encoding new character, otherwise false.
 		 * The contents of the character on false return are unspecified.
 		 */
 		while (charinc(lastchar, charlen))
@@ -6499,7 +6499,7 @@ btcostestimate(PG_FUNCTION_ARGS)
 
 		if (indexcol != qinfo->indexcol)
 		{
-			/* Beginning of a new__ column's quals */
+			/* Beginning of a new column's quals */
 			if (!eqQualHere)
 				break;			/* done if no '=' qual for indexcol */
 			eqQualHere = false;

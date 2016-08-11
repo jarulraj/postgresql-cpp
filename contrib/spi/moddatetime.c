@@ -118,7 +118,7 @@ moddatetime(PG_FUNCTION_ARGS)
 
 /* 1 is the number of items in the arrays attnum and newdt.
 	attnum is the positional number of the field to be updated.
-	newdt is the new__ datetime stamp.
+	newdt is the new datetime stamp.
 	NOTE that attnum and newdt are not arrays, but then a 1 element array
 	is not an array any more then they are.  Thus, they can be considered a
 	one element array.

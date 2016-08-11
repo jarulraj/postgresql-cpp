@@ -234,7 +234,7 @@ InitArchiveFmt_Directory(ArchiveHandle *AH)
 }
 
 /*
- * Called by the Archiver when the dumper creates a new__ TOC entry.
+ * Called by the Archiver when the dumper creates a new TOC entry.
  *
  * We determine the filename for this__ entry.
 */

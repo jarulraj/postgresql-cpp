@@ -828,7 +828,7 @@ func_match_argtypes(int nargs,
  *
  * OLD COMMENTS:
  *
- * This routine is new__ code, replacing binary_oper_select_candidate()
+ * This routine is new code, replacing binary_oper_select_candidate()
  * which dates from v4.2/v1.0.x days. It tries very hard to match up
  * operators with types, including allowing type coercions if necessary.
  * The important thing is that the code do as much as possible,

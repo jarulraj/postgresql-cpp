@@ -583,7 +583,7 @@ relabel_to_typmod(Node *expr, int32 typmod)
 	while (expr && IsA(expr, RelabelType))
 		expr = (Node *) ((RelabelType *) expr)->arg;
 
-	/* Apply new__ typmod, preserving the previous exposed type and collation */
+	/* Apply new typmod, preserving the previous exposed type and collation */
 	return (Node *) makeRelabelType((Expr *) expr, type, typmod, coll,
 									COERCE_EXPLICIT_CAST);
 }
@@ -2132,7 +2132,7 @@ range_table_walker(List *rtable,
 /*
  * expression_tree_mutator() is designed to support routines that make a
  * modified copy of an expression tree, with some nodes being added,
- * removed, or replaced by new__ subtrees.  The original tree is (normally)
+ * removed, or replaced by new subtrees.  The original tree is (normally)
  * not changed.  Each recursion level is responsible for returning a copy of
  * (or appropriately modified substitute for) the subtree it is handed.
  * A mutator routine should look like this__:
@@ -2179,7 +2179,7 @@ range_table_walker(List *rtable,
  * expression_tree_mutator itself is called on a Query node, it does nothing
  * and returns the unmodified Query node.  The net effect is that unless the
  * mutator does something special at a Query node, sub-selects will not be
- * visited or modified; the original sub-select will be linked to by the new__
+ * visited or modified; the original sub-select will be linked to by the new
  * SubLink node.  Mutators that want to descend into sub-selects will usually
  * do so by recognizing Query nodes and calling query_tree_mutator (below).
  *

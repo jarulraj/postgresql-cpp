@@ -2846,7 +2846,7 @@ populate_recordset_object_start(void *state)
 	if (lex_level > 1)
 		return;
 
-	/* Object at level 1: set up a new__ hash table for this__ object */
+	/* Object at level 1: set up a new hash table for this__ object */
 	memset(&ctl, 0, sizeof(ctl));
 	ctl.keysize = NAMEDATALEN;
 	ctl.entrysize = sizeof(JsonHashEntry);
@@ -3711,7 +3711,7 @@ IteratorConcat(JsonbIterator **it1, JsonbIterator **it2,
  *
  * If newval is null, the element is to be removed.
  *
- * If create is true, we create the new__ value if the key or array index
+ * If create is true, we create the new value if the key or array index
  * does not exist. All path elements before the last must already exist
  * whether or not create is true, or nothing is done.
  */
@@ -3904,7 +3904,7 @@ setPathArray(JsonbIterator **it, Datum *path_elems, bool *path_nulls,
 		idx = nelems;
 
 	/*
-	 * if we're creating, and idx == INT_MIN, we prepend the new__ value to the
+	 * if we're creating, and idx == INT_MIN, we prepend the new value to the
 	 * array also if the array is empty - in which case we don't really care
 	 * what the idx value is
 	 */

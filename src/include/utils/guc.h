@@ -78,7 +78,7 @@ typedef enum
 
 /*
  * The following type records the source of the current setting.  A
- * new__ setting can only take effect if the previous setting had the
+ * new setting can only take effect if the previous setting had the
  * same or lower level.  (E.g, changing the config file doesn't
  * override the postmaster command line.)  Tracking the source allows us
  * to process sources in any convenient order without affecting results.

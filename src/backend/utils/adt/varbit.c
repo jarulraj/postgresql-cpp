@@ -671,7 +671,7 @@ varbit_send(PG_FUNCTION_ARGS)
 
 /*
  * varbit_transform()
- * Flatten calls to varbit's length coercion function that set the new__ maximum
+ * Flatten calls to varbit's length coercion function that set the new maximum
  * length >= the previous maximum length.  We can ignore the isExplicit
  * argument, since that only affects truncation cases.
  */
@@ -1765,7 +1765,7 @@ bitposition(PG_FUNCTION_ARGS)
 /*
  * bitsetbit
  *
- * Given an instance of type 'bit' creates a new__ one with
+ * Given an instance of type 'bit' creates a new one with
  * the Nth bit set to the given value.
  *
  * The bit location is specified left-to-right in a zero-based fashion

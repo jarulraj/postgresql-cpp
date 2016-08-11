@@ -408,7 +408,7 @@ fmgr_info_C_lang(Oid functionId, FmgrInfo *finfo, HeapTuple procedureTuple)
 			}
 			break;
 		case 1:
-			/* new__ style: call directly */
+			/* new style: call directly */
 			finfo->fn_addr = user_fn;
 			break;
 		default:
@@ -808,7 +808,7 @@ fmgr_oldstyle(PG_FUNCTION_ARGS)
 			 * above code, so mention the actual value in this__ error not
 			 * FUNC_MAX_ARGS.  You could add cases to the above if you needed
 			 * to support old-style functions with many arguments, but making
-			 * 'em be new__-style is probably a better idea.
+			 * 'em be new-style is probably a better idea.
 			 */
 			ereport(ERROR,
 					(errcode(ERRCODE_TOO_MANY_ARGUMENTS),
@@ -900,7 +900,7 @@ fmgr_security_definer(PG_FUNCTION_ARGS)
 
 	/* GetUserIdAndSecContext is cheap enough that no harm in a wasted call */
 	GetUserIdAndSecContext(&save_userid, &save_sec_context);
-	if (fcache->proconfig)		/* Need a new__ GUC nesting level */
+	if (fcache->proconfig)		/* Need a new GUC nesting level */
 		save_nestlevel = NewGUCNestLevel();
 	else
 		save_nestlevel = 0;		/* keep compiler quiet */
@@ -2045,10 +2045,10 @@ OidSendFunctionCall(Oid functionId, Datum val)
  * fmgr() is the only remaining vestige of the old-style caller support
  * functions.  It's no longer used anywhere in the Postgres distribution,
  * but we should leave it around for a release or two to ease the transition
- * for user-supplied C functions.  OidFunctionCallN() replaces it for new__
+ * for user-supplied C functions.  OidFunctionCallN() replaces it for new
  * code.
  *
- * DEPRECATED, DO NOT USE IN new__ CODE
+ * DEPRECATED, DO NOT USE IN new CODE
  */
 char *
 fmgr(Oid procedureId,...)

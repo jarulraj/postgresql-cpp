@@ -75,13 +75,13 @@
 										 * updates; in milliseconds. */
 
 #define PGSTAT_RETRY_DELAY		10		/* How long to wait between checks for
-										 * a new__ file; in milliseconds. */
+										 * a new file; in milliseconds. */
 
 #define PGSTAT_MAX_WAIT_TIME	10000	/* Maximum time to wait for a stats
 										 * file update; in milliseconds. */
 
 #define PGSTAT_INQ_INTERVAL		640		/* How often to ping the collector for
-										 * a new__ file; in milliseconds. */
+										 * a new file; in milliseconds. */
 
 #define PGSTAT_RESTART_INTERVAL 60		/* How often to attempt to restart a
 										 * failed statistics collector; in
@@ -1548,7 +1548,7 @@ pgstat_init_function_usage(FunctionCallInfoData *fcinfo,
  * find_funcstat_entry - find any existing PgStat_BackendFunctionEntry entry
  *		for specified function
  *
- * If no entry, return NULL, don't create a new__ one
+ * If no entry, return NULL, don't create a new one
  */
 PgStat_BackendFunctionEntry *
 find_funcstat_entry(Oid func_id)
@@ -1596,7 +1596,7 @@ pgstat_end_function_usage(PgStat_FunctionCallUsage *fcu, bool finalize)
 	INSTR_TIME_ADD(total_func_time, f_self);
 
 	/*
-	 * Compute the new__ f_total_time as the total elapsed time added to the
+	 * Compute the new f_total_time as the total elapsed time added to the
 	 * pre-call value of f_total_time.  This is necessary to avoid
 	 * double-counting any time taken by recursive calls of myself.  (We do
 	 * not need any similar kluge for self time, since that already excludes
@@ -1712,7 +1712,7 @@ get_tabstat_entry(Oid rel_id, bool isshared)
 		pgStatTabList = tsa;
 
 	/*
-	 * Use the first entry of the new__ TabStatusArray.
+	 * Use the first entry of the new TabStatusArray.
 	 */
 	entry = &tsa->tsa_entries[tsa->tsa_used++];
 	entry->t_id = rel_id;
@@ -1723,7 +1723,7 @@ get_tabstat_entry(Oid rel_id, bool isshared)
 /*
  * find_tabstat_entry - find any existing PgStat_TableStatus entry for rel
  *
- * If no entry, return NULL, don't create a new__ one
+ * If no entry, return NULL, don't create a new one
  */
 PgStat_TableStatus *
 find_tabstat_entry(Oid rel_id)
@@ -1747,7 +1747,7 @@ find_tabstat_entry(Oid rel_id)
 }
 
 /*
- * get_tabstat_stack_level - add a new__ (sub)transaction stack entry if needed
+ * get_tabstat_stack_level - add a new (sub)transaction stack entry if needed
  */
 static PgStat_SubXactStatus *
 get_tabstat_stack_level(int nest_level)
@@ -1769,7 +1769,7 @@ get_tabstat_stack_level(int nest_level)
 }
 
 /*
- * add_tabstat_xact_level - add a new__ (sub)transaction state record
+ * add_tabstat_xact_level - add a new (sub)transaction state record
  */
 static void
 add_tabstat_xact_level(PgStat_TableStatus *pgstat_info, int nest_level)
@@ -2084,7 +2084,7 @@ AtEOSubXact_PgStat(bool isCommit, int nestDepth)
 					 * palloc/pfree pushup (this__ works since it's all in
 					 * TopTransactionContext anyway).  We have to re-link it
 					 * into the parent level, though, and that might mean
-					 * pushing a new__ entry into the pgStatXactStack.
+					 * pushing a new entry into the pgStatXactStack.
 					 */
 					PgStat_SubXactStatus *upper_xact_state;
 
@@ -3391,7 +3391,7 @@ PgstatCollectorMain(int argc, char *argv[])
 			}
 
 			/*
-			 * Write the stats file if a new__ request has arrived that is not
+			 * Write the stats file if a new request has arrived that is not
 			 * satisfied by existing file.
 			 */
 			if (pgstat_write_statsfile_needed())
@@ -3659,7 +3659,7 @@ pgstat_get_db_entry(Oid databaseid, bool create)
 		return NULL;
 
 	/*
-	 * If not found, initialize the new__ one.  This creates empty hash tables
+	 * If not found, initialize the new one.  This creates empty hash tables
 	 * for tables and functions, too.
 	 */
 	if (!found)
@@ -3689,7 +3689,7 @@ pgstat_get_tab_entry(PgStat_StatDBEntry *dbentry, Oid tableoid, bool create)
 	if (!create && !found)
 		return NULL;
 
-	/* If not found, initialize the new__ one. */
+	/* If not found, initialize the new one. */
 	if (!found)
 	{
 		result->numscans = 0;
@@ -3724,8 +3724,8 @@ pgstat_get_tab_entry(PgStat_StatDBEntry *dbentry, Oid tableoid, bool create)
  *
  *	If writing to the permanent files (happens when the collector is
  *	shutting down only), remove the temporary files so that backends
- *	starting up under a new__ postmaster can't read the old data before
- *	the new__ collector is ready.
+ *	starting up under a new postmaster can't read the old data before
+ *	the new collector is ready.
  *
  *	When 'allDbs' is false, only the requested databases (listed in
  *	last_statrequests) will be written; otherwise, all databases will be
@@ -3899,8 +3899,8 @@ get_dbstat_filename(bool permanent, bool tempname, Oid databaseid,
  *
  *	If writing to the permanent file (happens when the collector is
  *	shutting down only), remove the temporary file so that backends
- *	starting up under a new__ postmaster can't read the old data before
- *	the new__ collector is ready.
+ *	starting up under a new postmaster can't read the old data before
+ *	the new collector is ready.
  * ----------
  */
 static void
@@ -4387,7 +4387,7 @@ done:
  *	- if there's a database entry in the global file, return the corresponding
  *	stats_timestamp value.
  *
- *	- if there's no db stat entry (e.g. for a new__ or inactive database),
+ *	- if there's no db stat entry (e.g. for a new or inactive database),
  *	there's no stats_timestamp value, but also nothing to write so we return
  *	the timestamp of the global statfile.
  * ----------
@@ -4648,7 +4648,7 @@ pgstat_setup_memcxt(void)
  * pgstat_clear_snapshot() -
  *
  *	Discard any data collected in the current transaction.  Any subsequent
- *	request will cause new__ snapshots to be read.
+ *	request will cause new snapshots to be read.
  *
  *	This is also invoked during transaction commit or abort to discard
  *	the no-longer-wanted snapshot.
@@ -4730,7 +4730,7 @@ pgstat_recv_inquiry(PgStat_MsgInquiry *msg, int len)
 		if (cur_ts < dbentry->stats_timestamp)
 		{
 			/*
-			 * Sure enough, time went backwards.  Force a new__ stats file write
+			 * Sure enough, time went backwards.  Force a new stats file write
 			 * to get back in sync; but first, log a complaint.
 			 */
 			char	   *writetime;
@@ -4790,7 +4790,7 @@ pgstat_recv_tabstat(PgStat_MsgTabstat *msg, int len)
 		if (!found)
 		{
 			/*
-			 * If it's a new__ table entry, initialize counters to the values we
+			 * If it's a new table entry, initialize counters to the values we
 			 * just got.
 			 */
 			tabentry->numscans = tabmsg->t_counts.t_numscans;
@@ -4956,7 +4956,7 @@ pgstat_recv_resetcounter(PgStat_MsgResetcounter *msg, int len)
 
 	/*
 	 * We simply throw away all the database's table entries by recreating a
-	 * new__ hash table for them.
+	 * new hash table for them.
 	 */
 	if (dbentry->tables != NULL)
 		hash_destroy(dbentry->tables);
@@ -5273,7 +5273,7 @@ pgstat_recv_funcstat(PgStat_MsgFuncstat *msg, int len)
 		if (!found)
 		{
 			/*
-			 * If it's a new__ function entry, initialize counters to the values
+			 * If it's a new function entry, initialize counters to the values
 			 * we just got.
 			 */
 			funcentry->f_numcalls = funcmsg->f_numcalls;

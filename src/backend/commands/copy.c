@@ -342,7 +342,7 @@ SendCopyBegin(CopyState cstate)
 {
 	if (PG_PROTOCOL_MAJOR(FrontendProtocol) >= 3)
 	{
-		/* new__ way */
+		/* new way */
 		StringInfoData buf;
 		int			natts = list_length(cstate->attnumlist);
 		int16		format = (cstate->binary ? 1 : 0);
@@ -387,7 +387,7 @@ ReceiveCopyBegin(CopyState cstate)
 {
 	if (PG_PROTOCOL_MAJOR(FrontendProtocol) >= 3)
 	{
-		/* new__ way */
+		/* new way */
 		StringInfoData buf;
 		int			natts = list_length(cstate->attnumlist);
 		int16		format = (cstate->binary ? 1 : 0);
@@ -1337,7 +1337,7 @@ BeginCopy(bool is_from,
 	cstate = (CopyStateData *) palloc0(sizeof(CopyStateData));
 
 	/*
-	 * We allocate everything used by a cstate in a new__ memory context. This
+	 * We allocate everything used by a cstate in a new memory context. This
 	 * avoids memory leaks during repeated use of COPY in a query.
 	 */
 	cstate->copycontext = AllocSetContextCreate(CurrentMemoryContext,
@@ -2228,14 +2228,14 @@ CopyFrom(CopyState cstate)
 	 *	- table was created in same transaction as this__ COPY
 	 *	- data is being written to relfilenode created in this__ transaction
 	 * then we can skip writing WAL.  It's safe because if the transaction
-	 * doesn't commit, we'll discard the table (or the new__ relfilenode file).
+	 * doesn't commit, we'll discard the table (or the new relfilenode file).
 	 * If it does commit, we'll have done the heap_sync at the bottom of this__
 	 * routine first.
 	 *
 	 * As mentioned in comments in utils/rel.h, the in-same-transaction test
 	 * is not always set correctly, since in rare cases rd_newRelfilenodeSubid
 	 * can be cleared before the end of the transaction. The exact case is
-	 * when a relation sets a new__ relfilenode twice in same transaction, yet
+	 * when a relation sets a new relfilenode twice in same transaction, yet
 	 * the second one fails in an aborted subtransaction, e.g.
 	 *
 	 * BEGIN;
@@ -2245,14 +2245,14 @@ CopyFrom(CopyState cstate)
 	 * ROLLBACK TO save;
 	 * COPY ...
 	 *
-	 * Also, if the target file is new__-in-transaction, we assume that checking
+	 * Also, if the target file is new-in-transaction, we assume that checking
 	 * FSM for free space is a waste of time, even if we must use WAL because
 	 * of archiving.  This could possibly be wrong, but it's unlikely.
 	 *
 	 * The comments for heap_insert and RelationGetBufferForTuple specify that
 	 * skipping WAL logging is only safe if we ensure that our tuples do not
 	 * go into pages containing tuples from any other transactions --- but this__
-	 * must be the case if we have a new__ table or new__ relfilenode, so we need
+	 * must be the case if we have a new table or new relfilenode, so we need
 	 * no additional work to enforce that.
 	 *----------
 	 */
@@ -2266,7 +2266,7 @@ CopyFrom(CopyState cstate)
 	}
 
 	/*
-	 * Optimize if new__ relfilenode was created in this__ subxact or one of its
+	 * Optimize if new relfilenode was created in this__ subxact or one of its
 	 * committed children and we won't see those rows later as part of an
 	 * earlier scan or command. This ensures that if this__ subtransaction
 	 * aborts then the frozen rows won't be visible after xact cleanup. Note
@@ -3060,7 +3060,7 @@ NextCopyFrom(CopyState cstate, ExprContext *econtext,
 			 * copy, since there is no protocol-level EOF marker then.  We
 			 * could go either way for copy from file, but choose to throw
 			 * error if there's data after the EOF marker, for consistency
-			 * with the new__-protocol case.
+			 * with the new-protocol case.
 			 */
 			char		dummy;
 

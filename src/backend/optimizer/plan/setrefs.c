@@ -1931,7 +1931,7 @@ search_indexed_tlist_for_sortgroupref(Node *node,
 
 /*
  * fix_join_expr
- *	   Create a new__ set of targetlist entries or join qual clauses by
+ *	   Create a new set of targetlist entries or join qual clauses by
  *	   changing the varno/varattno values of variables in the clauses
  *	   to reference target list values from the outer and inner join
  *	   relation target lists.  Also perform opcode lookup and add
@@ -1962,7 +1962,7 @@ search_indexed_tlist_for_sortgroupref(Node *node,
  *		whose Vars may appear in the clause without provoking an error
  * 'rtoffset': how much to increment varnoold by
  *
- * Returns the new__ expression tree.  The original clause structure is
+ * Returns the new expression tree.  The original clause structure is
  * not modified.
  */
 static List *

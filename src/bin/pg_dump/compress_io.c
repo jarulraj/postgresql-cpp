@@ -124,7 +124,7 @@ ParseCompressionOption(int compression, CompressionAlgorithm *alg, int *level)
 
 /* public__ interface routines */
 
-/* Allocate a new__ compressor */
+/* Allocate a new compressor */
 CompressorState *
 AllocateCompressor(int compression, WriteFunc writeF)
 {

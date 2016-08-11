@@ -267,7 +267,7 @@ ExplainQuery(ExplainStmt *stmt, const char *queryString,
 }
 
 /*
- * Create a new__ ExplainState struct initialized with default options.
+ * Create a new ExplainState struct initialized with default options.
  */
 ExplainState *
 NewExplainState(void)

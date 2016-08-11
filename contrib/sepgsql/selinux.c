@@ -815,12 +815,12 @@ sepgsql_compute_avd(const char *scontext,
 /*
  * sepgsql_compute_create
  *
- * It returns a default security context to be assigned on a new__ database
+ * It returns a default security context to be assigned on a new database
  * object. SELinux compute it based on a combination of client, upper object
- * which owns the new__ object and object class__.
+ * which owns the new object and object class__.
  *
  * For example, when a client (staff_u:staff_r:staff_t:s0) tries to create
- * a new__ table within a schema (system_u:object_r:sepgsql_schema_t:s0),
+ * a new table within a schema (system_u:object_r:sepgsql_schema_t:s0),
  * SELinux looks-up its security policy. If it has a special rule on the
  * combination of these security contexts and object class__ (db_table),
  * it returns the security context suggested by the special rule.
@@ -831,7 +831,7 @@ sepgsql_compute_avd(const char *scontext,
  *
  * scontext: security context of the subject (mostly, peer process).
  * tcontext: security context of the upper database object.
- * tclass: class__ code (SEPG_CLASS_*) of the new__ object in creation
+ * tclass: class__ code (SEPG_CLASS_*) of the new object in creation
  */
 char *
 sepgsql_compute_create(const char *scontext,
@@ -861,7 +861,7 @@ sepgsql_compute_create(const char *scontext,
 										 &ncontext) < 0)
 		ereport(ERROR,
 				(errcode(ERRCODE_INTERNAL_ERROR),
-				 errmsg("SELinux could not compute a new__ context: "
+				 errmsg("SELinux could not compute a new context: "
 						"scontext=%s tcontext=%s tclass=%s: %m",
 						scontext, tcontext, tclass_name)));
 

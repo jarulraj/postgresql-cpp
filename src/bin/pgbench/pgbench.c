@@ -384,7 +384,7 @@ usage(void)
 		   "  --unlogged-tables        create tables as unlogged tables\n"
 		   "\nBenchmarking options:\n"
 		   "  -c, --client=NUM         number of concurrent database clients (default: 1)\n"
-		   "  -C, --connect            establish new__ connection for each transaction\n"
+		   "  -C, --connect            establish new connection for each transaction\n"
 		   "  -D, --define=VARNAME=VALUE\n"
 	  "                           define variable for use by custom script\n"
 		 "  -f, --file=FILENAME      read transaction script from FILENAME\n"
@@ -773,7 +773,7 @@ putVariable(CState *st, const char *context, char *name, char *value)
 		Variable   *newvars;
 
 		/*
-		 * Check for the name only when declaring a new__ variable to avoid
+		 * Check for the name only when declaring a new variable to avoid
 		 * overhead.
 		 */
 		if (!isLegalVariableName(name))
@@ -2034,7 +2034,7 @@ init(bool is_no_vacuum)
 		snprintf(buffer, sizeof(buffer), "drop table if exists %s", ddl->table);
 		executeStatement(con, buffer);
 
-		/* Construct new__ create table statement. */
+		/* Construct new create table statement. */
 		opts[0] = '\0';
 		if (ddl->declare_fillfactor)
 			snprintf(opts + strlen(opts), sizeof(opts) - strlen(opts),

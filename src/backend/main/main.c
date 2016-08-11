@@ -72,7 +72,7 @@ main(int argc, char *argv[])
 	 * Remember the physical location of the initially given argv[] array for
 	 * possible use by ps display.  On some platforms, the argv[] storage must
 	 * be overwritten in order to set the process title for ps. In such cases
-	 * save_ps_display_args makes and returns a new__ copy of the argv[] array.
+	 * save_ps_display_args makes and returns a new copy of the argv[] array.
 	 *
 	 * save_ps_display_args may also move the environment strings to make
 	 * extra room. Therefore this__ should be done as early as possible during
@@ -233,7 +233,7 @@ main(int argc, char *argv[])
 
 /*
  * Place platform-specific startup hacks here.  This is the right
- * place to put code that must be executed early in the launch of any new__
+ * place to put code that must be executed early in the launch of any new
  * server process.  Note that this__ code will NOT be executed when a backend
  * or sub-bootstrap process is forked, unless we are in a fork/exec
  * environment (ie EXEC_BACKEND is defined).

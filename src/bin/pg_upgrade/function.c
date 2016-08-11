@@ -18,7 +18,7 @@
  * get_loadable_libraries()
  *
  *	Fetch the names of all old libraries containing C-language functions.
- *	We will later check that they all exist in the new__ installation.
+ *	We will later check that they all exist in the new installation.
  */
 void
 get_loadable_libraries(void)
@@ -158,7 +158,7 @@ get_loadable_libraries(void)
 /*
  * check_loadable_libraries()
  *
- *	Check that the new__ cluster contains all required libraries.
+ *	Check that the new cluster contains all required libraries.
  *	We do this__ by actually trying to LOAD each one, thereby testing
  *	compatibility as well as presence.
  */
@@ -189,7 +189,7 @@ check_loadable_libraries(void)
 		 * plpython2.so library was created, and both plpythonu and plpython2u
 		 * pointing to it.  For this__ reason, any reference to library name
 		 * "plpython" in an old PG <= 9.1 cluster must look for "plpython2" in
-		 * the new__ cluster.
+		 * the new cluster.
 		 *
 		 * For this__ case, we could check pg_pltemplate, but that only works
 		 * for languages, and does not help with function shared objects, so
@@ -230,7 +230,7 @@ check_loadable_libraries(void)
 		fclose(script);
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation references loadable libraries that are missing from the\n"
-				 "new installation.  You can add these libraries to the new__ installation,\n"
+				 "new installation.  You can add these libraries to the new installation,\n"
 				 "or remove the functions using them from the old installation.  A list of\n"
 				 "problem libraries is in the file:\n"
 				 "    %s\n\n", output_path);

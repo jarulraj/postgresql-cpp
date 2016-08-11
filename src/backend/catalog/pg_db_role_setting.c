@@ -55,7 +55,7 @@ AlterSetting(Oid databaseid, Oid roleid, VariableSetStmt *setstmt)
 	 * - in other commands, if there's a tuple in pg_db_role_setting, update
 	 * it; if it ends up empty, delete it
 	 *
-	 * - otherwise, insert a new__ pg_db_role_setting tuple, but only if the
+	 * - otherwise, insert a new pg_db_role_setting tuple, but only if the
 	 * command is not RESET
 	 */
 	if (setstmt->kind == VAR_RESET_ALL)
@@ -139,7 +139,7 @@ AlterSetting(Oid databaseid, Oid roleid, VariableSetStmt *setstmt)
 	}
 	else if (valuestr)
 	{
-		/* non-null valuestr means it's not RESET, so insert a new__ tuple */
+		/* non-null valuestr means it's not RESET, so insert a new tuple */
 		HeapTuple	newtuple;
 		Datum		values[Natts_pg_db_role_setting];
 		bool		nulls[Natts_pg_db_role_setting];

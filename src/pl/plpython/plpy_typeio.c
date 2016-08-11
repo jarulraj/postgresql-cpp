@@ -299,7 +299,7 @@ PLyDict_FromTuple(PLyTypeInfo *info, HeapTuple tuple, TupleDesc desc)
 
 	dict = PyDict_New();
 	if (dict == NULL)
-		PLy_elog(ERROR, "could not create new__ dictionary");
+		PLy_elog(ERROR, "could not create new dictionary");
 
 	PG_TRY();
 	{
@@ -653,7 +653,7 @@ PLyList_FromArray(PLyDatumToOb *arg, Datum d)
 	lbound = ARR_LBOUND(array)[0];
 	list = PyList_New(length);
 	if (list == NULL)
-		PLy_elog(ERROR, "could not create new__ Python list");
+		PLy_elog(ERROR, "could not create new Python list");
 
 	for (i = 0; i < length; i++)
 	{

@@ -156,7 +156,7 @@ extern void core_yyset_column(int column_no, yyscan_t yyscanner);
  *  <xusend> end of a quoted string with Unicode escapes, UESCAPE can follow
  *  <xeu> Unicode surrogate pair in extended quoted string
  *
- * Remember to add an <<EOF>> case whenever you add a new__ exclusive state!
+ * Remember to add an <<EOF>> case whenever you add a new exclusive state!
  * The default one is probably not the right thing.
  */
 
@@ -1160,7 +1160,7 @@ addlit(char *ytext, int yleng, core_yyscan_t yyscanner)
 		yyextra->literalbuf = (char *) repalloc(yyextra->literalbuf,
 												yyextra->literalalloc);
 	}
-	/* append new__ data */
+	/* append new data */
 	memcpy(yyextra->literalbuf + yyextra->literallen, ytext, yleng);
 	yyextra->literallen += yleng;
 }
@@ -1176,7 +1176,7 @@ addlitchar(unsigned char ychar, core_yyscan_t yyscanner)
 		yyextra->literalbuf = (char *) repalloc(yyextra->literalbuf,
 												yyextra->literalalloc);
 	}
-	/* append new__ data */
+	/* append new data */
 	yyextra->literalbuf[yyextra->literallen] = ychar;
 	yyextra->literallen += 1;
 }

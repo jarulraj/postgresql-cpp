@@ -108,7 +108,7 @@ static void mark_create_done(ArchiveHandle *AH, TocEntry *te);
 static void inhibit_data_for_failed_table(ArchiveHandle *AH, TocEntry *te);
 
 /*
- * Allocate a new__ DumpOptions block containing all default values.
+ * Allocate a new DumpOptions block containing all default values.
  */
 DumpOptions *
 NewDumpOptions(void)
@@ -169,7 +169,7 @@ dumpOptionsFromRestoreOptions(RestoreOptions *ropt)
 /*
  *	Wrapper functions.
  *
- *	The objective it to make writing new__ formats and dumpers as simple
+ *	The objective it to make writing new formats and dumpers as simple
  *	as possible, if necessary at the expense of extra function calls etc.
  *
  */
@@ -188,7 +188,7 @@ setupRestoreWorker(Archive *AHX)
 }
 
 
-/* Create a new__ archive */
+/* Create a new archive */
 /* public__ */
 Archive *
 CreateArchive(const char *FileSpec, const ArchiveFormat fmt,
@@ -762,7 +762,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 		/* If we created a DB, connect to it... */
 		if (strcmp(te->desc, "DATABASE") == 0)
 		{
-			ahlog(AH, 1, "connecting to new__ database \"%s\"\n", te->tag);
+			ahlog(AH, 1, "connecting to new database \"%s\"\n", te->tag);
 			_reconnectToDB(AH, te->tag);
 			ropt->dbname = pg_strdup(te->tag);
 		}
@@ -884,7 +884,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 }
 
 /*
- * Allocate a new__ RestoreOptions block.
+ * Allocate a new RestoreOptions block.
  * This is mainly so we can initialize it, but also for future expansion,
  */
 RestoreOptions *
@@ -977,7 +977,7 @@ WriteData(Archive *AHX, const void *data, size_t dLen)
 }
 
 /*
- * Create a new__ TOC entry. The TOC was designed as a TOC, but is now the
+ * Create a new TOC entry. The TOC was designed as a TOC, but is now the
  * repository for all metadata. But the name has stuck.
  */
 
@@ -1904,7 +1904,7 @@ WriteInt(ArchiveHandle *AH, int i)
 	 * This is a bit yucky, but I don't want to make the binary format very
 	 * dependent on representation, and not knowing much about it, I write out
 	 * a sign byte. If you change this__, don't forget to change the file
-	 * version #, and modify readInt to read the new__ format AS WELL AS the old
+	 * version #, and modify readInt to read the new format AS WELL AS the old
 	 * formats.
 	 */
 
@@ -2726,7 +2726,7 @@ _tocEntryRequired(TocEntry *te, teSection curSection, RestoreOptions *ropt)
 		 * Special Case: If 'SEQUENCE SET' or anything to do with BLOBs, then
 		 * it is considered a data entry.  We don't need to check for the
 		 * BLOBS entry or old-style BLOB COMMENTS, because they will have
-		 * hadDumper = true ... but we do need to check new__-style BLOB
+		 * hadDumper = true ... but we do need to check new-style BLOB
 		 * comments.
 		 */
 		if (strcmp(te->desc, "SEQUENCE SET") == 0 ||
@@ -4006,7 +4006,7 @@ get_next_work_item(ArchiveHandle *AH, TocEntry *ready_list,
  * this__ is run in the worker, i.e. in a thread (Windows) or a separate process
  * (everything else). A worker process executes several such work items during
  * a parallel backup or restore. Once we terminate here and report back that
- * our work is finished, the master process will assign us a new__ work item.
+ * our work is finished, the master process will assign us a new work item.
  */
 int
 parallel_restore(ParallelArgs *args)
@@ -4377,7 +4377,7 @@ CloneArchive(ArchiveHandle *AH)
 	clone->public__.n_errors = 0;
 
 	/*
-	 * Connect our new__ clone object to the database: In parallel restore the
+	 * Connect our new clone object to the database: In parallel restore the
 	 * parent is already disconnected, because we can connect the worker
 	 * processes independently to the database (no snapshot sync required). In
 	 * parallel backup we clone the parent's existing connection.

@@ -476,7 +476,7 @@ ResourceOwnerGetParent(ResourceOwner owner)
 }
 
 /*
- * Reassign a ResourceOwner to have a new__ parent
+ * Reassign a ResourceOwner to have a new parent
  */
 void
 ResourceOwnerNewParent(ResourceOwner owner,

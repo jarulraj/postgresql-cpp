@@ -146,7 +146,7 @@ report_namespace_conflict(Oid classId, const char *name, Oid nspOid)
  *
  * rel: catalog relation containing object (RowExclusiveLock'd by caller)
  * objectId: OID of object to be renamed
- * new_name: CString representation of new__ name
+ * new_name: CString representation of new name
  */
 static void
 AlterObjectRename_internal(Relation rel, Oid objectId, const char *new_name)
@@ -556,7 +556,7 @@ AlterObjectNamespace_oid(Oid classId, Oid objid, Oid nspOid,
  *
  * rel: catalog relation containing object (RowExclusiveLock'd by caller)
  * objid: OID of object to change the namespace__ of
- * nspOid: OID of new__ namespace__
+ * nspOid: OID of new namespace__
  *
  * Returns the OID of the object's previous namespace__.
  */
@@ -618,7 +618,7 @@ AlterObjectNamespace_internal(Relation rel, Oid objid, Oid nspOid)
 			aclcheck_error(ACLCHECK_NOT_OWNER, acl_kind,
 						   NameStr(*(DatumGetName(name))));
 
-		/* User must have CREATE privilege on new__ namespace__ */
+		/* User must have CREATE privilege on new namespace__ */
 		aclresult = pg_namespace_aclcheck(nspOid, GetUserId(), ACL_CREATE);
 		if (aclresult != ACLCHECK_OK)
 			aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -682,7 +682,7 @@ AlterObjectNamespace_internal(Relation rel, Oid objid, Oid nspOid)
 	pfree(nulls);
 	pfree(replaces);
 
-	/* update dependencies to point to the new__ schema */
+	/* update dependencies to point to the new schema */
 	changeDependencyFor(classId, objid,
 						NamespaceRelationId, oldNspOid, nspOid);
 
@@ -784,7 +784,7 @@ ExecAlterOwnerStmt(AlterOwnerStmt *stmt)
  *
  * rel: catalog relation containing object (RowExclusiveLock'd by caller)
  * objectId: OID of object to change the ownership of
- * new_ownerId: OID of new__ object owner
+ * new_ownerId: OID of new object owner
  */
 void
 AlterObjectOwner_internal(Relation rel, Oid objectId, Oid new_ownerId)
@@ -852,10 +852,10 @@ AlterObjectOwner_internal(Relation rel, Oid objectId, Oid new_ownerId)
 				}
 				aclcheck_error(ACLCHECK_NOT_OWNER, aclkind, objname);
 			}
-			/* Must be able to become new__ owner */
+			/* Must be able to become new owner */
 			check_is_member_of_role(GetUserId(), new_ownerId);
 
-			/* new__ owner must have CREATE privilege on namespace__ */
+			/* new owner must have CREATE privilege on namespace__ */
 			if (OidIsValid(namespaceId))
 			{
 				AclResult	aclresult;
@@ -877,7 +877,7 @@ AlterObjectOwner_internal(Relation rel, Oid objectId, Oid new_ownerId)
 		replaces[Anum_owner - 1] = true;
 
 		/*
-		 * Determine the modified ACL for the new__ owner.  This is only
+		 * Determine the modified ACL for the new owner.  This is only
 		 * necessary when the ACL is non-null.
 		 */
 		if (Anum_acl != InvalidAttrNumber)

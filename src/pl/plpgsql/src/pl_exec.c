@@ -616,12 +616,12 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 		estate.datums[i] = copy_plpgsql_datum(func->datums[i]);
 
 	/*
-	 * Put the OLD and new__ tuples into record variables
+	 * Put the OLD and new tuples into record variables
 	 *
 	 * We make the tupdescs available in both records even though only one may
 	 * have a value.  This allows parsing of record references to succeed in
 	 * functions that are used for multiple trigger types.  For example, we
-	 * might have a test like "if (TG_OP = 'INSERT' and new__.foo = 'xyz')",
+	 * might have a test like "if (TG_OP = 'INSERT' and new.foo = 'xyz')",
 	 * which should parse regardless of the current trigger type.
 	 */
 	rec_new = (PLpgSQL_rec *) (estate.datums[func->new_varno]);
@@ -636,7 +636,7 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 	if (!TRIGGER_FIRED_FOR_ROW(trigdata->tg_event))
 	{
 		/*
-		 * Per-statement triggers don't use OLD/new__ variables
+		 * Per-statement triggers don't use OLD/new variables
 		 */
 		rec_new->tup = NULL;
 		rec_old->tup = NULL;
@@ -1225,7 +1225,7 @@ exec_stmt_block(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)
 		PG_TRY();
 		{
 			/*
-			 * We need to run the block's statements with a new__ eval_econtext
+			 * We need to run the block's statements with a new eval_econtext
 			 * that belongs to the current subtransaction; if we try to use
 			 * the outer econtext then ExprContext shutdown callbacks will be
 			 * called at the wrong times.
@@ -4307,7 +4307,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 									var->refname)));
 
 				/*
-				 * If type is by-reference, copy the new__ value (which is
+				 * If type is by-reference, copy the new value (which is
 				 * probably in the eval_econtext) into the procedure's memory
 				 * context.  But if it's a read/write reference to an expanded
 				 * object, no physical copy needs to happen; at most we need
@@ -4341,8 +4341,8 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				}
 
 				/*
-				 * Now free the old value, unless it's the same as the new__
-				 * value (ie, we're doing "foo := foo").  Note that for
+				 * Now free the old value, unless it's the same as the new
+		new__* value (ie, we're doing "foo := foo").  Note that for
 				 * expanded objects, this__ test is necessary and cannot
 				 * reliably be made any earlier; we have to be looking at the
 				 * object's standard R/W pointer to be sure pointer equality
@@ -4462,7 +4462,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				replaces[fno] = true;
 
 				/*
-				 * Now insert the new__ value, being careful to cast it to the
+				 * Now insert the new value, being careful to cast it to the
 				 * right type.
 				 */
 				atttype = rec->tupdesc->attrs[fno]->atttypid;
@@ -4477,7 +4477,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				nulls[fno] = isNull;
 
 				/*
-				 * Now call heap_modify_tuple() to create a new__ tuple that
+				 * Now call heap_modify_tuple() to create a new tuple that
 				 * replaces the old one in the record.
 				 */
 				newtup = heap_modify_tuple(rec->tup, rec->tupdesc,
@@ -4674,7 +4674,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				MemoryContextSwitchTo(oldcontext);
 
 				/*
-				 * Assign the new__ array to the base variable.  It's never NULL
+				 * Assign the new array to the base variable.  It's never NULL
 				 * at this__ point.  Note that if the target is a domain,
 				 * coercing the base array type back up to the domain will
 				 * happen within exec_assign_value.
@@ -4814,7 +4814,7 @@ exec_eval_datum(PLpgSQL_execstate *estate,
  * This is the same logic as in exec_eval_datum, except that it can handle
  * some cases where exec_eval_datum has to fail; specifically, we may have
  * a tupdesc but no row value for a record variable.  (This currently can
- * happen only for a trigger's new__/OLD records.)
+ * happen only for a trigger's new/OLD records.)
  */
 Oid
 exec_get_datum_type(PLpgSQL_execstate *estate,
@@ -5351,7 +5351,7 @@ loop_exit:
  * can't handle recursion cases.  So, if we see the tree is already busy
  * with an evaluation in the current xact, we just return FALSE and let the
  * caller run the expression the hard way.  (Other alternatives such as
- * creating a new__ tree for a recursive call either introduce memory leaks,
+ * creating a new tree for a recursive call either introduce memory leaks,
  * or add enough bookkeeping to be doubtful wins anyway.)  Another case that
  * is covered by the expr_simple_in_use test is where a previous execution
  * of the tree was aborted by an error: the tree may contain bogus state
@@ -5718,7 +5718,7 @@ exec_move_row(PLpgSQL_execstate *estate,
 			rec->freetupdesc = false;
 		}
 
-		/* ... and install the new__ */
+		/* ... and install the new */
 		if (HeapTupleIsValid(tup))
 		{
 			rec->tup = tup;
@@ -6170,11 +6170,11 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 	/*
 	 * Prepare the expression for execution, if it's not been done already in
 	 * the current transaction; also, if it's marked busy in the current
-	 * transaction, abandon that expression tree and build a new__ one, so as to
+	 * transaction, abandon that expression tree and build a new one, so as to
 	 * avoid potential problems with recursive cast expressions and failed
 	 * executions.  (We will leak some memory intra-transaction if that
 	 * happens a lot, but we don't expect it to.)  It's okay to update the
-	 * hash table with the new__ tree because all plpgsql functions within a
+	 * hash table with the new tree because all plpgsql functions within a
 	 * given transaction share the same simple_eval_estate.  (Well, regular
 	 * functions do; DO blocks have private__ simple_eval_estates, and private__
 	 * cast hash tables to go with them.)
@@ -6743,7 +6743,7 @@ exec_set_found(PLpgSQL_execstate *estate, bool state)
 /*
  * plpgsql_create_econtext --- create an eval_econtext for the current function
  *
- * We may need to create a new__ shared_simple_eval_estate too, if there's not
+ * We may need to create a new shared_simple_eval_estate too, if there's not
  * one already for the current transaction.  The EState will be cleaned up at
  * transaction end.
  */
@@ -6893,7 +6893,7 @@ free_var(PLpgSQL_var *var)
 }
 
 /*
- * free old value of a text variable and assign new__ value from C string
+ * free old value of a text variable and assign new value from C string
  */
 static void
 assign_text_var(PLpgSQL_var *var, const char *str)

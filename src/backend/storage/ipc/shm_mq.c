@@ -160,7 +160,7 @@ MAXALIGN(offsetof(shm_mq, mq_ring)) + MAXIMUM_ALIGNOF;
 #define MQH_INITIAL_BUFSIZE				8192
 
 /*
- * Initialize a new__ shared message queue.
+ * Initialize a new shared message queue.
  */
 shm_mq *
 shm_mq_create(void *address, Size size)

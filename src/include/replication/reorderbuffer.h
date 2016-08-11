@@ -65,7 +65,7 @@ enum ReorderBufferChangeType
 };
 
 /*
- * a single 'change', can be an insert (with one tuple), an update (old, new__),
+ * a single 'change', can be an insert (with one tuple), an update (old, new),
  * or a delete (old).
  *
  * The same struct is also used internally for other purposes but that should
@@ -86,7 +86,7 @@ typedef struct ReorderBufferChange
 	 */
 	union
 	{
-		/* Old, new__ tuples when action == *_INSERT|UPDATE|DELETE */
+		/* Old, new tuples when action == *_INSERT|UPDATE|DELETE */
 		struct
 		{
 			/* relation that has been changed */
@@ -101,17 +101,17 @@ typedef struct ReorderBufferChange
 			ReorderBufferTupleBuf *newtuple;
 		}			tp;
 
-		/* new__ snapshot, set when action == *_INTERNAL_SNAPSHOT */
+		/* new snapshot, set when action == *_INTERNAL_SNAPSHOT */
 		Snapshot	snapshot;
 
 		/*
-		 * new__ command id for existing snapshot in a catalog changing tx. Set
+		 * new command id for existing snapshot in a catalog changing tx. Set
 		 * when action == *_INTERNAL_COMMAND_ID.
 		 */
 		CommandId	command_id;
 
 		/*
-		 * new__ cid mapping for catalog changing transaction, set when action
+		 * new cid mapping for catalog changing transaction, set when action
 		 * == *_INTERNAL_TUPLECID.
 		 */
 		struct
@@ -207,7 +207,7 @@ typedef struct ReorderBufferTXN
 	uint64		nentries_mem;
 
 	/*
-	 * List of ReorderBufferChange structs, including new__ Snapshots and new__
+	 * List of ReorderBufferChange structs, including new Snapshots and new
 	 * CommandIds
 	 */
 	dlist_head	changes;

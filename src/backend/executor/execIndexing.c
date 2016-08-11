@@ -594,14 +594,14 @@ ExecCheckIndexConstraints(TupleTableSlot *slot,
 /*
  * Check for violation of an exclusion or unique constraint
  *
- * heap: the table containing the new__ tuple
+ * heap: the table containing the new tuple
  * index: the index supporting the constraint
  * indexInfo: info about the index, including the exclusion properties
- * tupleid: heap TID of the new__ tuple we have just inserted (invalid if we
- *		haven't inserted a new__ tuple yet)
- * values, isnull: the *index* column values computed for the new__ tuple
+ * tupleid: heap TID of the new tuple we have just inserted (invalid if we
+ *		haven't inserted a new tuple yet)
+ * values, isnull: the *index* column values computed for the new tuple
  * estate: an EState we can do evaluation in
- * newIndex: if true, we are trying to build a new__ index (this__ affects
+ * newIndex: if true, we are trying to build a new index (this__ affects
  *		only the wording of error messages)
  * waitMode: whether to wait for concurrent inserters/deleters
  * violationOK: if true, don't throw error for violation

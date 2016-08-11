@@ -206,7 +206,7 @@ spgbuildempty(PG_FUNCTION_ARGS)
 }
 
 /*
- * Insert one new__ tuple into an SPGiST index.
+ * Insert one new tuple into an SPGiST index.
  */
 Datum
 spginsert(PG_FUNCTION_ARGS)

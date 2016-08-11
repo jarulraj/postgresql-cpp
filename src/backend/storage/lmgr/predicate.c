@@ -12,7 +12,7 @@
  *	Serializable isolation for snapshot databases.
  *	In SIGMOD '08: Proceedings of the 2008 ACM SIGMOD
  *	international conference on Management of data,
- *	pages 729-738, new__ York, NY, USA. ACM.
+ *	pages 729-738, new York, NY, USA. ACM.
  *	http://doi.acm.org/10.1145/1376616.1376690
  *
  * and further elaborated in Cahill's doctoral thesis:
@@ -848,7 +848,7 @@ OldSerXidAdd(TransactionId xid, SerCommitSeqNo minConflictCommitSeqNo)
 	/*
 	 * If the SLRU is currently unused, zero out the whole active region from
 	 * tailXid to headXid before taking it into use. Otherwise zero out only
-	 * any new__ pages that enter the tailXid-headXid range as we advance
+	 * any new pages that enter the tailXid-headXid range as we advance
 	 * headXid.
 	 */
 	if (oldSerXidControl->headPage < 0)
@@ -970,7 +970,7 @@ OldSerXidGetMinConflictCommitSeqNo(TransactionId xid)
 }
 
 /*
- * Call this__ whenever there is a new__ xmin for active serializable
+ * Call this__ whenever there is a new xmin for active serializable
  * transactions.  We don't need to keep information on transactions which
  * precede that.  InvalidTransactionId means none active, so everything in
  * the SLRU can be discarded.
@@ -983,7 +983,7 @@ OldSerXidSetActiveSerXmin(TransactionId xid)
 	/*
 	 * When no sxacts are active, nothing overlaps, set the xid values to
 	 * invalid to show that there are no valid entries.  Don't clear headPage,
-	 * though.  A new__ xmin might still land on that page, and we don't want to
+	 * though.  A new xmin might still land on that page, and we don't want to
 	 * repeatedly zero out the same page.
 	 */
 	if (!TransactionIdIsValid(xid))
@@ -1053,7 +1053,7 @@ CheckPointPredicate(void)
 		 *
 		 * XXX: It's possible that the SLRU is not needed again until XID
 		 * wrap-around has happened, so that the segment containing headPage
-		 * that we leave behind will appear to be new__ again. In that case it
+		 * that we leave behind will appear to be new again. In that case it
 		 * won't be removed until XID horizon advances enough to make it
 		 * current again.
 		 */
@@ -1490,7 +1490,7 @@ SummarizeOldestCommittedSxact(void)
  *		transaction. Ensures that the snapshot is "safe", i.e. a
  *		read-only transaction running on it can execute serializably
  *		without further checks. This requires waiting for concurrent
- *		transactions to complete, and retrying with a new__ snapshot if
+ *		transactions to complete, and retrying with a new snapshot if
  *		one of them could possibly create a conflict.
  *
  *		As with GetSerializableTransactionSnapshot (which this__ is a subroutine
@@ -1545,7 +1545,7 @@ GetSafeSnapshot(Snapshot origSnapshot)
 		/* else, need to retry... */
 		ereport(DEBUG2,
 				(errcode(ERRCODE_T_R_SERIALIZATION_FAILURE),
-				 errmsg("deferrable snapshot was unsafe; trying a new__ one")));
+				 errmsg("deferrable snapshot was unsafe; trying a new one")));
 		ReleasePredicateLocks(false);
 	}
 
@@ -1566,7 +1566,7 @@ GetSafeSnapshot(Snapshot origSnapshot)
  *
  * The passed-in Snapshot pointer should reference a static data area that
  * can safely be passed to GetSnapshotData.  The return value is actually
- * always this__ same pointer; no new__ snapshot data structure is allocated
+ * always this__ same pointer; no new snapshot data structure is allocated
  * within this__ function.
  */
 Snapshot
@@ -1603,7 +1603,7 @@ GetSerializableTransactionSnapshot(Snapshot snapshot)
  * Import a snapshot to be used for the current transaction.
  *
  * This is nearly the same as GetSerializableTransactionSnapshot, except that
- * we don't take a new__ snapshot, but rather use the data we're handed.
+ * we don't take a new snapshot, but rather use the data we're handed.
  *
  * The caller must have verified that the snapshot came from a serializable
  * transaction; and if we're read-write, the source transaction must not be
@@ -1715,7 +1715,7 @@ GetSerializableTransactionSnapshotInt(Snapshot snapshot,
 	 * The reason this__ is safe is that a read-only transaction can only become
 	 * part of a dangerous structure if it overlaps a writable transaction
 	 * which in turn overlaps a writable transaction which committed before
-	 * the read-only transaction started.  A new__ writable transaction can
+	 * the read-only transaction started.  A new writable transaction can
 	 * overlap this__ one, but it can't meet the other condition of overlapping
 	 * a transaction which committed before this__ one started.
 	 */
@@ -2234,7 +2234,7 @@ CheckAndPromotePredicateLockRequest(const PREDICATELOCKTARGETTAG *reqtag)
  *
  * This is called only when releasing a lock via
  * DeleteChildTargetLocks (i.e. when a lock becomes redundant because
- * we've acquired its parent, possibly due to promotion) or when a new__
+ * we've acquired its parent, possibly due to promotion) or when a new
  * MVCC write lock makes the predicate lock unnecessary. There's no
  * point in calling it when locks are released at transaction end, as
  * this__ information is no longer needed.
@@ -2360,7 +2360,7 @@ CreatePredicateLock(const PREDICATELOCKTARGETTAG *targettag,
  * connection if not already held. This updates the local lock table
  * and uses it to implement granularity promotion. It will consolidate
  * multiple locks into a coarser lock if warranted, and will release
- * any finer-grained locks covered by the new__ one.
+ * any finer-grained locks covered by the new one.
  */
 static void
 PredicateLockAcquire(const PREDICATELOCKTARGETTAG *targettag)
@@ -2584,13 +2584,13 @@ DeleteLockTarget(PREDICATELOCKTARGET *target, uint32 targettaghash)
  * will be removed.
  *
  * Returns true on success, or false if we ran out of shared memory to
- * allocate the new__ target or locks. Guaranteed to always succeed if
+ * allocate the new target or locks. Guaranteed to always succeed if
  * removeOld is set (by using the scratch entry in PredicateLockTargetHash
  * for scratch space).
  *
  * Warning: the "removeOld" option should be used only with care,
  * because this__ function does not (indeed, can not) update other
- * backends' LocalPredicateLockHash. If we are only adding new__
+ * backends' LocalPredicateLockHash. If we are only adding new
  * entries, this__ is not a problem: the local lock table is used only
  * as a hint, so missing entries for locks that are held are
  * OK. Having entries for locks that are no longer held, as can happen
@@ -2625,14 +2625,14 @@ TransferPredicateLocksToNewTarget(PREDICATELOCKTARGETTAG oldtargettag,
 	{
 		/*
 		 * Remove the dummy entry to give us scratch space, so we know we'll
-		 * be able to create the new__ lock target.
+		 * be able to create the new lock target.
 		 */
 		RemoveScratchTarget(false);
 	}
 
 	/*
 	 * We must get the partition locks in ascending sequence to avoid
-	 * deadlocks. If old and new__ partitions are the same, we must request the
+	 * deadlocks. If old and new partitions are the same, we must request the
 	 * lock only once.
 	 */
 	if (oldpartitionLock < newpartitionLock)
@@ -2653,7 +2653,7 @@ TransferPredicateLocksToNewTarget(PREDICATELOCKTARGETTAG oldtargettag,
 	/*
 	 * Look for the old target.  If not found, that's OK; no predicate locks
 	 * are affected, so we can just clean up and return. If it does exist,
-	 * walk its list of predicate locks and move or copy them to the new__
+	 * walk its list of predicate locks and move or copy them to the new
 	 * target.
 	 */
 	oldtarget = hash_search_with_hash_value(PredicateLockTargetHash,
@@ -2679,7 +2679,7 @@ TransferPredicateLocksToNewTarget(PREDICATELOCKTARGETTAG oldtargettag,
 			goto exit;
 		}
 
-		/* If we created a new__ entry, initialize it */
+		/* If we created a new entry, initialize it */
 		if (!found)
 			SHMQueueInit(&(newtarget->predicateLocks));
 
@@ -2687,7 +2687,7 @@ TransferPredicateLocksToNewTarget(PREDICATELOCKTARGETTAG oldtargettag,
 
 		/*
 		 * Loop through all the locks on the old target, replacing them with
-		 * locks on the new__ target.
+		 * locks on the new target.
 		 */
 		oldpredlock = (PREDICATELOCK *)
 			SHMQueueNext(&(oldtarget->predicateLocks),
@@ -2834,7 +2834,7 @@ DropAllPredicateLocksFromTable(Relation relation, bool transfer)
 	/*
 	 * Bail out quickly if there are no serializable transactions running.
 	 * It's safe to check this__ without taking locks because the caller is
-	 * holding an ACCESS EXCLUSIVE lock on the relation.  No new__ locks which
+	 * holding an ACCESS EXCLUSIVE lock on the relation.  No new locks which
 	 * would matter here can be acquired while that is held.
 	 */
 	if (!TransactionIdIsValid(PredXact->SxactGlobalXmin))
@@ -2871,7 +2871,7 @@ DropAllPredicateLocksFromTable(Relation relation, bool transfer)
 
 	/*
 	 * Remove the dummy entry to give us scratch space, so we know we'll be
-	 * able to create the new__ lock target.
+	 * able to create the new lock target.
 	 */
 	if (transfer)
 		RemoveScratchTarget(true);
@@ -2921,7 +2921,7 @@ DropAllPredicateLocksFromTable(Relation relation, bool transfer)
 
 		/*
 		 * Loop through all the locks on the old target, replacing them with
-		 * locks on the new__ target.
+		 * locks on the new target.
 		 */
 		oldpredlock = (PREDICATELOCK *)
 			SHMQueueNext(&(oldtarget->predicateLocks),
@@ -3023,14 +3023,14 @@ TransferPredicateLocksToHeapRelation(Relation relation)
 /*
  *		PredicateLockPageSplit
  *
- * Copies any predicate locks for the old page to the new__ page.
+ * Copies any predicate locks for the old page to the new page.
  * Skip if this__ is a temporary table or toast table.
  *
  * NOTE: A page split (or overflow) affects all serializable transactions,
  * even if it occurs in the context of another transaction isolation level.
  *
  * NOTE: This currently leaves the local copy of the locks without
- * information on the new__ lock which is in shared memory.  This could cause
+ * information on the new lock which is in shared memory.  This could cause
  * problems if enough page splits occur on locked pages without the processes
  * which hold the locks getting in and noticing.
  */
@@ -3074,7 +3074,7 @@ PredicateLockPageSplit(Relation relation, BlockNumber oldblkno,
 	LWLockAcquire(SerializablePredicateLockListLock, LW_EXCLUSIVE);
 
 	/*
-	 * Try copying the locks over to the new__ page's tag, creating it if
+	 * Try copying the locks over to the new page's tag, creating it if
 	 * necessary.
 	 */
 	success = TransferPredicateLocksToNewTarget(oldtargettag,
@@ -3125,12 +3125,12 @@ PredicateLockPageCombine(Relation relation, BlockNumber oldblkno,
 {
 	/*
 	 * Page combines differ from page splits in that we ought to be able to
-	 * remove the locks on the old page after transferring them to the new__
+	 * remove the locks on the old page after transferring them to the new
 	 * page, instead of duplicating them. However, because we can't edit other
 	 * backends' local lock tables, removing the old lock would leave them
 	 * with an entry in their LocalPredicateLockHash for a lock they're not
 	 * holding, which isn't acceptable. So we wind up having to do the same
-	 * work as a page split, acquiring a lock on the new__ page and keeping the
+	 * work as a page split, acquiring a lock on the new page and keeping the
 	 * old page locked too. That can lead to some false positives, but should
 	 * be rare in practice.
 	 */
@@ -3138,7 +3138,7 @@ PredicateLockPageCombine(Relation relation, BlockNumber oldblkno,
 }
 
 /*
- * Walk the list of in-progress serializable transactions and find the new__
+ * Walk the list of in-progress serializable transactions and find the new
  * xmin.
  */
 static void
@@ -3237,7 +3237,7 @@ ReleasePredicateLocks(bool isCommit)
 	 * atomic!
 	 *
 	 * If this__ value is changing, we don't care that much whether we get the
-	 * old or new__ value -- it is just used to determine how far
+	 * old or new value -- it is just used to determine how far
 	 * GlobalSerializableXmin must advance before this__ transaction can be
 	 * fully cleaned up.  The worst that could happen is we wait for one more
 	 * transaction to complete before freeing some RAM; correctness of visible
@@ -3291,7 +3291,7 @@ ReleasePredicateLocks(bool isCommit)
 			/*
 			 * Release predicate locks and rw-conflicts in for all committed
 			 * transactions.  There are no longer any transactions which might
-			 * conflict with the locks and no chance for new__ transactions to
+			 * conflict with the locks and no chance for new transactions to
 			 * overlap.  Similarly, existing conflicts in can't cause pivots,
 			 * and any conflicts in which could have completed a dangerous
 			 * structure would already have caused a rollback, so any
@@ -3923,7 +3923,7 @@ CheckForSerializableConflictOut(bool visible, Relation relation,
 		default:
 
 			/*
-			 * The only way to get to this__ default clause is if a new__ value is
+			 * The only way to get to this__ default clause is if a new value is
 			 * added to the enum type without adding it to this__ switch
 			 * statement.  That's a bug, so elog.
 			 */
@@ -4226,7 +4226,7 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 		{
 			/*
 			 * Remove entry in local lock table if it exists. It's OK if it
-			 * doesn't exist; that means the lock was transferred to a new__
+			 * doesn't exist; that means the lock was transferred to a new
 			 * target by a different backend.
 			 */
 			hash_search_with_hash_value(LocalPredicateLockHash,
@@ -4275,7 +4275,7 @@ CheckForSerializableConflictIn(Relation relation, HeapTuple tuple,
 	/*
 	 * It is important that we check for locks from the finest granularity to
 	 * the coarsest granularity, so that granularity promotion doesn't cause
-	 * us to miss a lock.  The new__ (coarser) lock will be acquired before the
+	 * us to miss a lock.  The new (coarser) lock will be acquired before the
 	 * old (finer) locks are released.
 	 *
 	 * It is not possible to take and hold a lock across the checks for all
@@ -4345,7 +4345,7 @@ CheckTableForSerializableConflictIn(Relation relation)
 	/*
 	 * Bail out quickly if there are no serializable transactions running.
 	 * It's safe to check this__ without taking locks because the caller is
-	 * holding an ACCESS EXCLUSIVE lock on the relation.  No new__ locks which
+	 * holding an ACCESS EXCLUSIVE lock on the relation.  No new locks which
 	 * would matter here can be acquired while that is held.
 	 */
 	if (!TransactionIdIsValid(PredXact->SxactGlobalXmin))
@@ -4751,7 +4751,7 @@ AtPrepare_PredicateLocks(void)
 
 	/*
 	 * Note that we don't include the list of conflicts in our out in the
-	 * statefile, because new__ conflicts can be added even after the
+	 * statefile, because new conflicts can be added even after the
 	 * transaction prepares. We'll just make a conservative assumption during
 	 * recovery instead.
 	 */

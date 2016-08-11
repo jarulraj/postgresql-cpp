@@ -461,9 +461,9 @@ transformAssignedExpr(ParseState *pstate,
 
 	/*
 	 * If there is indirection on the target column, prepare an array or
-	 * subfield assignment expression.  This will generate a new__ column value
+	 * subfield assignment expression.  This will generate a new column value
 	 * that the source value has been inserted into, which can then be placed
-	 * in the new__ tuple constructed by INSERT or UPDATE.
+	 * in the new tuple constructed by INSERT or UPDATE.
 	 */
 	if (indirection)
 	{
@@ -1154,7 +1154,7 @@ ExpandColumnRefStar(ParseState *pstate, ColumnRef *cref,
  *
  * tlist entries are generated for each relation visible for unqualified
  * column name access.  We do not consider qualified-name-only entries because
- * that would include input tables of aliasless JOINs, new__/OLD pseudo-entries,
+ * that would include input tables of aliasless JOINs, new/OLD pseudo-entries,
  * etc.
  *
  * The referenced relations/columns are marked as requiring SELECT access.

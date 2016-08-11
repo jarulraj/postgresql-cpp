@@ -31,7 +31,7 @@ typedef struct
 	int			rt_index;		/* Index of security barrier RTE */
 	int			sublevels_up;	/* Current nesting depth */
 	Relation	rel;			/* RTE relation at rt_index */
-	List	   *targetlist;		/* Targetlist for new__ subquery RTE */
+	List	   *targetlist;		/* Targetlist for new subquery RTE */
 	List	   *colnames;		/* Column names in subquery RTE */
 	List	   *vars_processed; /* List of Vars already processed */
 } security_barrier_replace_vars_context;
@@ -97,7 +97,7 @@ expand_security_quals(PlannerInfo *root, List *tlist)
 
 		/*
 		 * If this__ RTE is the target then we need to make a copy of it before
-		 * expanding it.  The unexpanded copy will become the new__ target, and
+		 * expanding it.  The unexpanded copy will become the new target, and
 		 * the original RTE will be expanded to become the source of rows to
 		 * update/delete.
 		 */
@@ -118,7 +118,7 @@ expand_security_quals(PlannerInfo *root, List *tlist)
 			parse->resultRelation = list_length(parse->rtable);
 
 			/*
-			 * Wipe out any copied security barrier quals on the new__ target to
+			 * Wipe out any copied security barrier quals on the new target to
 			 * prevent infinite recursion.
 			 */
 			newrte->securityQuals = NIL;
@@ -138,8 +138,8 @@ expand_security_quals(PlannerInfo *root, List *tlist)
 			 * For the most part, Vars referencing the original relation
 			 * should remain as they are, meaning that they pull OLD values
 			 * from the expanded RTE.  But in the RETURNING list and in any
-			 * WITH CHECK OPTION quals, we want such Vars to represent new__
-			 * values, so change them to reference the new__ RTE.
+			 * WITH CHECK OPTION quals, we want such Vars to represent new
+			 * values, so change them to reference the new RTE.
 			 */
 			ChangeVarNodes((Node *) parse->returningList, rt_index,
 						   parse->resultRelation, 0);
@@ -196,7 +196,7 @@ expand_security_qual(PlannerInfo *root, List *tlist, int rt_index,
 	 * referenced columns.
 	 *
 	 * 2. A subquery RTE (either from a prior call to this__ function or from an
-	 * expanded view).  In this__ case we build a new__ subquery on top of it to
+	 * expanded view).  In this__ case we build a new subquery on top of it to
 	 * isolate this__ security barrier qual from any other quals.
 	 */
 	switch (rte->rtekind)
@@ -268,7 +268,7 @@ expand_security_qual(PlannerInfo *root, List *tlist, int rt_index,
 			/*
 			 * Replace any variables in the outer query that refer to the
 			 * original relation RTE with references to columns that we will
-			 * expose in the new__ subquery, building the subquery's targetlist
+			 * expose in the new subquery, building the subquery's targetlist
 			 * as we go.  Also replace any references in the translated_vars
 			 * lists of any appendrels.
 			 */
@@ -295,7 +295,7 @@ expand_security_qual(PlannerInfo *root, List *tlist, int rt_index,
 		case RTE_SUBQUERY:
 
 			/*
-			 * Build a new__ subquery that includes all the same columns as the
+			 * Build a new subquery that includes all the same columns as the
 			 * original subquery.
 			 */
 			subquery = makeNode(Query);
@@ -443,7 +443,7 @@ security_barrier_replace_vars_walker(Node *node,
 				elog(ERROR, "invalid attribute number %d in security_barrier_replace_vars", var->varattno);
 			}
 
-			/* new__ variable for subquery targetlist */
+			/* new variable for subquery targetlist */
 			newvar = copyObject(var);
 			newvar->varno = newvar->varnoold = 1;
 			newvar->varlevelsup = 0;

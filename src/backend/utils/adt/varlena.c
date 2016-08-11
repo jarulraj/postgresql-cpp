@@ -134,7 +134,7 @@ static void text_format_append_string(StringInfo buf, const char *str,
  *
  * Create a text value from a null-terminated C string.
  *
- * The new__ text value is freshly palloc'd with a full-size VARHDR.
+ * The new text value is freshly palloc'd with a full-size VARHDR.
  */
 text *
 cstring_to_text(const char *s)
@@ -2713,7 +2713,7 @@ byteaGetBit(PG_FUNCTION_ARGS)
 /*-------------------------------------------------------------
  * byteaSetByte
  *
- * Given an instance of type 'bytea' creates a new__ one with
+ * Given an instance of type 'bytea' creates a new one with
  * the Nth byte set to the given value.
  *
  *-------------------------------------------------------------
@@ -2752,7 +2752,7 @@ byteaSetByte(PG_FUNCTION_ARGS)
 /*-------------------------------------------------------------
  * byteaSetBit
  *
- * Given an instance of type 'bytea' creates a new__ one with
+ * Given an instance of type 'bytea' creates a new one with
  * the Nth bit set to the given value.
  *
  *-------------------------------------------------------------
@@ -2927,7 +2927,7 @@ SplitIdentifierString(char *rawstring, char separator,
 	if (*nextp == '\0')
 		return true;			/* allow empty string */
 
-	/* At the top of the loop, we are at start of a new__ identifier. */
+	/* At the top of the loop, we are at start of a new identifier. */
 	do
 	{
 		char	   *curname;
@@ -3052,7 +3052,7 @@ SplitDirectoriesString(char *rawstring, char separator,
 	if (*nextp == '\0')
 		return true;			/* allow empty string */
 
-	/* At the top of the loop, we are at start of a new__ directory. */
+	/* At the top of the loop, we are at start of a new directory. */
 	do
 	{
 		char	   *curname;
@@ -5008,7 +5008,7 @@ text_format_string_conversion(StringInfo buf, char conversion,
 	/* Escape. */
 	if (conversion == 'I')
 	{
-		/* quote_identifier may or may not allocate a new__ string. */
+		/* quote_identifier may or may not allocate a new string. */
 		text_format_append_string(buf, quote_identifier(str), flags, width);
 	}
 	else if (conversion == 'L')
@@ -5016,7 +5016,7 @@ text_format_string_conversion(StringInfo buf, char conversion,
 		char	   *qstr = quote_literal_cstr(str);
 
 		text_format_append_string(buf, qstr, flags, width);
-		/* quote_literal_cstr() always allocates a new__ string */
+		/* quote_literal_cstr() always allocates a new string */
 		pfree(qstr);
 	}
 	else

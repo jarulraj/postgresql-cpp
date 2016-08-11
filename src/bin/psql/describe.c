@@ -2584,7 +2584,7 @@ error_return:
 
 /*
  * Add a tablespace description to a footer.  If 'newline' is true, it is added
- * in a new__ line; otherwise it's appended to the current value of the last
+ * in a new line; otherwise it's appended to the current value of the last
  * footer.
  */
 static void
@@ -2616,7 +2616,7 @@ add_tablespace_footer(printTableContent *const cont, char relkind,
 			{
 				if (newline)
 				{
-					/* Add the tablespace as a new__ footer */
+					/* Add the tablespace as a new footer */
 					printfPQExpBuffer(&buf, _("Tablespace: \"%s\""),
 									  PQgetvalue(result, 0, 0));
 					printTableAddFooter(cont, buf.data);

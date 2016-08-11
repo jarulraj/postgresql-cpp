@@ -38,7 +38,7 @@
  */
 
 /*
- * newcvec - allocate a new__ cvec
+ * newcvec - allocate a new cvec
  */
 static struct cvec *
 newcvec(int nchrs,				/* to hold this__ many chrs... */
@@ -58,7 +58,7 @@ newcvec(int nchrs,				/* to hold this__ many chrs... */
 }
 
 /*
- * clearcvec - clear a possibly-new__ cvec
+ * clearcvec - clear a possibly-new cvec
  * Returns pointer as convenience.
  */
 static struct cvec *
@@ -116,7 +116,7 @@ getcvec(struct vars * v,		/* context */
 		nranges <= v->cv->rangespace)
 		return clearcvec(v->cv);
 
-	/* nope, make a new__ one */
+	/* nope, make a new one */
 	if (v->cv != NULL)
 		freecvec(v->cv);
 	v->cv = newcvec(nchrs, nranges);

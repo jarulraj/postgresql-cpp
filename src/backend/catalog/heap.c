@@ -371,20 +371,20 @@ heap_create(const char *relname,
  *		   performs a scan to ensure that no relation with the
  *		   same name already exists.
  *
- *		3) heap_create() is called to create the new__ relation on disk.
+ *		3) heap_create() is called to create the new relation on disk.
  *
- *		4) TypeCreate() is called to define a new__ type corresponding
- *		   to the new__ relation.
+ *		4) TypeCreate() is called to define a new type corresponding
+ *		   to the new relation.
  *
  *		5) AddNewRelationTuple() is called to register the
  *		   relation in pg_class.
  *
  *		6) AddNewAttributeTuples() is called to register the
- *		   new__ relation's schema in pg_attribute.
+ *		   new relation's schema in pg_attribute.
  *
  *		7) StoreConstraints is called ()		- vadim 08/22/97
  *
- *		8) the relations are closed and the new__ relation's oid
+ *		8) the relations are closed and the new relation's oid
  *		   is returned.
  *
  * ----------------------------------------------------------------
@@ -456,7 +456,7 @@ CheckAttributeNamesTypes(TupleDesc tupdesc, char relkind,
 		CheckAttributeType(NameStr(tupdesc->attrs[i]->attname),
 						   tupdesc->attrs[i]->atttypid,
 						   tupdesc->attrs[i]->attcollation,
-						   NIL, /* assume we're creating a new__ rowtype */
+						   NIL, /* assume we're creating a new rowtype */
 						   allow_system_table_mods);
 	}
 }
@@ -586,7 +586,7 @@ CheckAttributeType(const char *attname,
 
 /*
  * InsertPgAttributeTuple
- *		Construct and insert a new__ tuple in pg_attribute.
+ *		Construct and insert a new tuple in pg_attribute.
  *
  * Caller has already opened and locked pg_attribute.  new_attribute is the
  * attribute to insert (but we ignore attacl and attoptions, which are always
@@ -635,7 +635,7 @@ InsertPgAttributeTuple(Relation pg_attribute_rel,
 
 	tup = heap_form_tuple(RelationGetDescr(pg_attribute_rel), values, nulls);
 
-	/* finally insert the new__ tuple, update the indexes, and clean up */
+	/* finally insert the new tuple, update the indexes, and clean up */
 	simple_heap_insert(pg_attribute_rel, tup);
 
 	if (indstate != NULL)
@@ -649,7 +649,7 @@ InsertPgAttributeTuple(Relation pg_attribute_rel,
 /* --------------------------------
  *		AddNewAttributeTuples
  *
- *		this__ registers the new__ relation's schema by adding
+ *		this__ registers the new relation's schema by adding
  *		tuples to pg_attribute.
  * --------------------------------
  */
@@ -753,7 +753,7 @@ AddNewAttributeTuples(Oid new_rel_oid,
 /* --------------------------------
  *		InsertPgClassTuple
  *
- *		Construct and insert a new__ tuple in pg_class.
+ *		Construct and insert a new tuple in pg_class.
  *
  * Caller has already opened and locked pg_class.
  * Tuple data is taken from new_rel_desc->rd_rel, except for the
@@ -820,12 +820,12 @@ InsertPgClassTuple(Relation pg_class_desc,
 	tup = heap_form_tuple(RelationGetDescr(pg_class_desc), values, nulls);
 
 	/*
-	 * The new__ tuple must have the oid already chosen for the rel.  Sure would
+	 * The new tuple must have the oid already chosen for the rel.  Sure would
 	 * be embarrassing to do this__ sort of thing in polite company.
 	 */
 	HeapTupleSetOid(tup, new_rel_oid);
 
-	/* finally insert the new__ tuple, update the indexes, and clean up */
+	/* finally insert the new tuple, update the indexes, and clean up */
 	simple_heap_insert(pg_class_desc, tup);
 
 	CatalogUpdateIndexes(pg_class_desc, tup);
@@ -836,7 +836,7 @@ InsertPgClassTuple(Relation pg_class_desc,
 /* --------------------------------
  *		AddNewRelationTuple
  *
- *		this__ registers the new__ relation in the catalogs by
+ *		this__ registers the new relation in the catalogs by
  *		adding a tuple to pg_class.
  * --------------------------------
  */
@@ -933,7 +933,7 @@ AddNewRelationTuple(Relation pg_class_desc,
 /* --------------------------------
  *		AddNewRelationType -
  *
- *		define a composite type corresponding to the new__ relation
+ *		define a composite type corresponding to the new relation
  * --------------------------------
  */
 static ObjectAddress
@@ -982,19 +982,19 @@ AddNewRelationType(const char *typename__,
 /* --------------------------------
  *		heap_create_with_catalog
  *
- *		creates a new__ cataloged relation.  see comments above.
+ *		creates a new cataloged relation.  see comments above.
  *
  * Arguments:
- *	relname: name to give to new__ rel
+ *	relname: name to give to new rel
  *	relnamespace: OID of namespace__ it goes in
  *	reltablespace: OID of tablespace it goes in
- *	relid: OID to assign to new__ rel, or InvalidOid to select a new__ OID
+ *	relid: OID to assign to new rel, or InvalidOid to select a new OID
  *	reltypeid: OID to assign to rel's rowtype, or InvalidOid to select one
  *	reloftypeid: if a typed table, OID of underlying type; else InvalidOid
- *	ownerid: OID of new__ rel's owner
+ *	ownerid: OID of new rel's owner
  *	tupdesc: tuple descriptor (source of column definitions)
  *	cooked_constraints: list of precooked check constraints and defaults
- *	relkind: relkind for new__ rel
+ *	relkind: relkind for new rel
  *	relpersistence: rel's persistence status (permanent, temp, or unlogged)
  *	shared_relation: TRUE if it's to be a shared relation
  *	mapped_relation: TRUE if the relation will use the relfilenode map
@@ -1008,9 +1008,9 @@ AddNewRelationType(const char *typename__,
  *	is_internal: is this__ a system-generated catalog?
  *
  * Output parameters:
- *	typaddress: if not null, gets the object address of the new__ pg_type entry
+ *	typaddress: if not null, gets the object address of the new pg_type entry
  *
- * Returns the OID of the new__ relation
+ * Returns the OID of the new relation
  * --------------------------------
  */
 Oid
@@ -1184,10 +1184,10 @@ heap_create_with_catalog(const char *relname,
 		new_array_oid = AssignTypeArrayOid();
 
 	/*
-	 * Since defining a relation also defines a complex type, we add a new__
-	 * system type corresponding to the new__ relation.  The OID of the type can
+	 * Since defining a relation also defines a complex type, we add a new
+	 * system type corresponding to the new relation.  The OID of the type can
 	 * be preselected by the caller, but if reltypeid is InvalidOid, we'll
-	 * generate a new__ OID for it.
+	 * generate a new OID for it.
 	 *
 	 * NOTE: we could get a unique-index failure here, in case someone else is
 	 * creating the same type name in parallel but hadn't committed yet when
@@ -1266,7 +1266,7 @@ heap_create_with_catalog(const char *relname,
 						reloptions);
 
 	/*
-	 * now add tuples to pg_attribute for the attributes in our new__ relation.
+	 * now add tuples to pg_attribute for the attributes in our new relation.
 	 */
 	AddNewAttributeTuples(relid, new_rel_desc->rd_att, relkind,
 						  oidislocal, oidinhcount);
@@ -1331,7 +1331,7 @@ heap_create_with_catalog(const char *relname,
 		}
 	}
 
-	/* Post creation hook for new__ relation */
+	/* Post creation hook for new relation */
 	InvokeObjectPostCreateHookArg(RelationRelationId, relid, 0, is_internal);
 
 	/*
@@ -1854,7 +1854,7 @@ heap_drop_with_catalog(Oid relid)
 /*
  * Store a default expression for column attnum of relation rel.
  *
- * Returns the OID of the new__ pg_attrdef tuple.
+ * Returns the OID of the new pg_attrdef tuple.
  */
 Oid
 StoreAttrDefault(Relation rel, AttrNumber attnum,
@@ -1971,7 +1971,7 @@ StoreAttrDefault(Relation rel, AttrNumber attnum,
  * Caller is responsible for updating the count of constraints
  * in the pg_class entry for the relation.
  *
- * The OID of the new__ constraint is returned.
+ * The OID of the new constraint is returned.
  */
 static Oid
 StoreRelCheck(Relation rel, char *ccname, Node *expr,
@@ -2074,7 +2074,7 @@ StoreRelCheck(Relation rel, char *ccname, Node *expr,
 /*
  * Store defaults and constraints (passed as a list of CookedConstraint).
  *
- * Each CookedConstraint struct is modified to store the new__ catalog tuple OID.
+ * Each CookedConstraint struct is modified to store the new catalog tuple OID.
  *
  * NOTE: only pre-cooked expressions will be passed this__ way, which is to
  * say expressions inherited from an existing relation.  Newly parsed
@@ -2128,7 +2128,7 @@ StoreConstraints(Relation rel, List *cooked_constraints, bool is_internal)
 /*
  * AddRelationNewConstraints
  *
- * Add new__ column default expressions and/or constraint check expressions
+ * Add new column default expressions and/or constraint check expressions
  * to an existing relation.  This is defined to do both for efficiency in
  * DefineRelation, but of course you can do just one or the other by passing
  * empty lists.
@@ -2280,7 +2280,7 @@ AddRelationNewConstraints(Relation rel,
 			ListCell   *cell2;
 
 			ccname = cdef->conname;
-			/* Check against other new__ constraints */
+			/* Check against other new constraints */
 			/* Needed because we don't do CommandCounterIncrement in loop */
 			foreach(cell2, checknames)
 			{
@@ -2381,7 +2381,7 @@ AddRelationNewConstraints(Relation rel,
 
 /*
  * Check for a pre-existing check constraint that conflicts with a proposed
- * new__ one, and either adjust its conislocal/coninhcount settings or throw
+ * new one, and either adjust its conislocal/coninhcount settings or throw
  * error as needed.
  *
  * Returns TRUE if merged (constraint is a duplicate), or FALSE if it's
@@ -2954,7 +2954,7 @@ heap_truncate_find_FKs(List *relationIds)
 
 /*
  * insert_ordered_unique_oid
- *		Insert a new__ Oid into a sorted list of Oids, preserving ordering,
+ *		Insert a new Oid into a sorted list of Oids, preserving ordering,
  *		and eliminating duplicates
  *
  * Building the ordered list this__ way is O(N^2), but with a pretty small

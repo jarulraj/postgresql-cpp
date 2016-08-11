@@ -106,7 +106,7 @@ static char *domainAddConstraint(Oid domainOid, Oid domainNamespace,
 
 /*
  * DefineType
- *		Registers a new__ base type.
+ *		Registers a new base type.
  */
 ObjectAddress
 DefineType(List *names, List *parameters)
@@ -216,7 +216,7 @@ DefineType(List *names, List *parameters)
 	{
 		address = TypeShellMake(typename__, typeNamespace, GetUserId());
 		typoid = address.objectId;
-		/* Make new__ shell type visible for modification below */
+		/* Make new shell type visible for modification below */
 		CommandCounterIncrement();
 
 		/*
@@ -547,7 +547,7 @@ DefineType(List *names, List *parameters)
 	 * There is a general assumption that I/O functions are stable or
 	 * immutable; this__ allows us for example to mark record_in/record_out
 	 * stable rather than volatile.  Ideally we would throw errors not just
-	 * warnings here; but since this__ check is new__ as of 9.5, and since the
+	 * warnings here; but since this__ check is new as of 9.5, and since the
 	 * volatility marking might be just an error-of-omission and not a true
 	 * indication of how the function behaves, we'll let it pass as a warning
 	 * for now.
@@ -717,7 +717,7 @@ RemoveTypeById(Oid typeOid)
 
 /*
  * DefineDomain
- *		Registers a new__ domain.
+ *		Registers a new domain.
  */
 ObjectAddress
 DefineDomain(CreateDomainStmt *stmt)
@@ -1095,7 +1095,7 @@ DefineDomain(CreateDomainStmt *stmt)
 
 /*
  * DefineEnum
- *		Registers a new__ enum.
+ *		Registers a new enum.
  */
 ObjectAddress
 DefineEnum(CreateEnumStmt *stmt)
@@ -1216,7 +1216,7 @@ DefineEnum(CreateEnumStmt *stmt)
 
 /*
  * AlterEnum
- *		Adds a new__ label to an existing enum.
+ *		Adds a new label to an existing enum.
  */
 ObjectAddress
 AlterEnum(AlterEnumStmt *stmt, bool isTopLevel)
@@ -1256,7 +1256,7 @@ AlterEnum(AlterEnumStmt *stmt, bool isTopLevel)
 	/* Check it's an enum and check user has permission to ALTER the enum */
 	checkEnumOwner(tup);
 
-	/* Add the new__ label */
+	/* Add the new label */
 	AddEnumLabel(enum_type_oid, stmt->newVal,
 				 stmt->newValNeighbor, stmt->newValIsAfter,
 				 stmt->skipIfExists);
@@ -1297,7 +1297,7 @@ checkEnumOwner(HeapTuple tup)
 
 /*
  * DefineRange
- *		Registers a new__ range type.
+ *		Registers a new range type.
  */
 ObjectAddress
 DefineRange(CreateRangeStmt *stmt)
@@ -1363,7 +1363,7 @@ DefineRange(CreateRangeStmt *stmt)
 	{
 		address = TypeShellMake(typename__, typeNamespace, GetUserId());
 		typoid = address.objectId;
-		/* Make new__ shell type visible for modification below */
+		/* Make new shell type visible for modification below */
 		CommandCounterIncrement();
 	}
 
@@ -1561,7 +1561,7 @@ DefineRange(CreateRangeStmt *stmt)
 /*
  * Because there may exist several range types over the same subtype, the
  * range type can't be uniquely determined from the subtype.  So it's
- * impossible to define a polymorphic constructor; we have to generate new__
+ * impossible to define a polymorphic constructor; we have to generate new
  * constructor functions explicitly for each range type.
  *
  * We actually define 4 functions, with 0 through 3 arguments.  This is just
@@ -2064,7 +2064,7 @@ AssignTypeArrayOid(void)
  * If the relation already exists, then 'DefineRelation' will abort
  * the xact...
  *
- * Return type is the new__ type's object address.
+ * Return type is the new type's object address.
  *-------------------------------------------------------------------
  */
 ObjectAddress
@@ -2156,12 +2156,12 @@ AlterDomainDefault(List *names, Node *defaultRaw)
 	/* Check it's a domain and check user has permission for ALTER DOMAIN */
 	checkDomainOwner(tup);
 
-	/* Setup new__ tuple */
+	/* Setup new tuple */
 	MemSet(new_record, (Datum) 0, sizeof(new_record));
 	MemSet(new_record_nulls, false, sizeof(new_record_nulls));
 	MemSet(new_record_repl, false, sizeof(new_record_repl));
 
-	/* Store the new__ default into the tuple */
+	/* Store the new default into the tuple */
 	if (defaultRaw)
 	{
 		/* Create a dummy ParseState for transformExpr */
@@ -2201,7 +2201,7 @@ AlterDomainDefault(List *names, Node *defaultRaw)
 											  NIL, false, false);
 
 			/*
-			 * Form an updated tuple with the new__ default and write it back.
+			 * Form an updated tuple with the new default and write it back.
 			 */
 			new_record[Anum_pg_type_typdefaultbin - 1] = CStringGetTextDatum(nodeToString(defaultExpr));
 
@@ -2751,7 +2751,7 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
 					 */
 					ereport(ERROR,
 							(errcode(ERRCODE_CHECK_VIOLATION),
-							 errmsg("column \"%s\" of table \"%s\" contains values that violate the new__ constraint",
+							 errmsg("column \"%s\" of table \"%s\" contains values that violate the new constraint",
 								NameStr(tupdesc->attrs[attnum - 1]->attname),
 									RelationGetRelationName(testrel)),
 							 errtablecol(testrel, attnum)));
@@ -2800,7 +2800,7 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
  * the same approach, but it'd be nicer to fix it properly.
  *
  * Generally used for retrieving a list of tests when adding
- * new__ constraints to a domain.
+ * new constraints to a domain.
  */
 static List *
 get_rels_with_domain(Oid domainOid, LOCKMODE lockmode)
@@ -3248,7 +3248,7 @@ AlterTypeOwner(List *names, Oid newOwnerId, ObjectType objecttype)
 						 format_type_be(typTup->typelem))));
 
 	/*
-	 * If the new__ owner is the same as the existing owner, consider the
+	 * If the new owner is the same as the existing owner, consider the
 	 * command to have succeeded.  This is for dump restoration purposes.
 	 */
 	if (typTup->typowner != newOwnerId)
@@ -3260,10 +3260,10 @@ AlterTypeOwner(List *names, Oid newOwnerId, ObjectType objecttype)
 			if (!pg_type_ownercheck(HeapTupleGetOid(tup), GetUserId()))
 				aclcheck_error_type(ACLCHECK_NOT_OWNER, HeapTupleGetOid(tup));
 
-			/* Must be able to become new__ owner */
+			/* Must be able to become new owner */
 			check_is_member_of_role(GetUserId(), newOwnerId);
 
-			/* new__ owner must have CREATE privilege on namespace__ */
+			/* new owner must have CREATE privilege on namespace__ */
 			aclresult = pg_namespace_aclcheck(typTup->typnamespace,
 											  newOwnerId,
 											  ACL_CREATE);
@@ -3452,7 +3452,7 @@ AlterTypeNamespace_oid(Oid typeOid, Oid nspOid, ObjectAddresses *objsMoved)
 }
 
 /*
- * Move specified type to new__ namespace__.
+ * Move specified type to new namespace__.
  *
  * Caller must have already checked privileges.
  *
@@ -3461,7 +3461,7 @@ AlterTypeNamespace_oid(Oid typeOid, Oid nspOid, ObjectAddresses *objsMoved)
  * recursion (outside callers must never try to move an array type directly).
  *
  * If errorOnTableType is TRUE, the function errors out if the type is
- * a table type.  ALTER TABLE has to be used to move a table to a new__
+ * a table type.  ALTER TABLE has to be used to move a table to a new
  * namespace__.
  *
  * Returns the type's old namespace__ OID.

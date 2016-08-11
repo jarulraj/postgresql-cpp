@@ -466,7 +466,7 @@ SPI_execute_plan_with_paramlist(SPIPlanPtr plan, ParamListInfo params,
  * for use by RI triggers.
  *
  * Passing snapshot == InvalidSnapshot will select the normal behavior of
- * fetching a new__ snapshot for each query.
+ * fetching a new snapshot for each query.
  */
 int
 SPI_execute_snapshot(SPIPlanPtr plan,
@@ -1981,7 +1981,7 @@ _SPI_prepare_oneshot_plan(const char *src, SPIPlanPtr plan)
  * Execute the given plan with the given parameter values
  *
  * snapshot: query snapshot to use, or InvalidSnapshot for the normal
- *		behavior of taking a new__ snapshot for each query.
+ *		behavior of taking a new snapshot for each query.
  * crosscheck_snapshot: for RI use, all others pass InvalidSnapshot
  * read_only: TRUE for read-only execution (no CommandCounterIncrement)
  * fire_triggers: TRUE to fire AFTER triggers at end of query (normal case);
@@ -2023,7 +2023,7 @@ _SPI_execute_plan(SPIPlanPtr plan, ParamListInfo paramLI,
 	 * snapshot == InvalidSnapshot, read_only = true: use the entry-time
 	 * ActiveSnapshot, if any (if there isn't one, we run with no snapshot).
 	 *
-	 * snapshot == InvalidSnapshot, read_only = false: take a full new__
+	 * snapshot == InvalidSnapshot, read_only = false: take a full new
 	 * snapshot for each user command, and advance its command ID before each
 	 * querytree within the command.
 	 *
@@ -2104,7 +2104,7 @@ _SPI_execute_plan(SPIPlanPtr plan, ParamListInfo paramLI,
 		stmt_list = cplan->stmt_list;
 
 		/*
-		 * In the default non-read-only case, get a new__ snapshot, replacing
+		 * In the default non-read-only case, get a new snapshot, replacing
 		 * any that we pushed in a previous cycle.
 		 */
 		if (snapshot == InvalidSnapshot && !read_only)
@@ -2589,7 +2589,7 @@ _SPI_checktuples(void)
  * is in or under the current SPI executor context.  Copy the plan into the
  * SPI procedure context so it will survive _SPI_end_call().  To minimize
  * data copying, this__ destructively modifies the input plan, by taking the
- * plancache entries away from it and reparenting them to the new__ SPIPlan.
+ * plancache entries away from it and reparenting them to the new SPIPlan.
  */
 static SPIPlanPtr
 _SPI_make_plan_non_temp(SPIPlanPtr plan)
@@ -2618,7 +2618,7 @@ _SPI_make_plan_non_temp(SPIPlanPtr plan)
 									ALLOCSET_SMALL_MAXSIZE);
 	oldcxt = MemoryContextSwitchTo(plancxt);
 
-	/* Copy the SPI_plan struct and subsidiary data into the new__ context */
+	/* Copy the SPI_plan struct and subsidiary data into the new context */
 	newplan = (SPIPlanPtr) palloc(sizeof(_SPI_plan));
 	newplan->magic = _SPI_PLAN_MAGIC;
 	newplan->saved = false;
@@ -2649,7 +2649,7 @@ _SPI_make_plan_non_temp(SPIPlanPtr plan)
 
 		CachedPlanSetParentContext(plansource, parentcxt);
 
-		/* Build new__ list, with list cells in plancxt */
+		/* Build new list, with list cells in plancxt */
 		newplan->plancache_list = lappend(newplan->plancache_list, plansource);
 	}
 

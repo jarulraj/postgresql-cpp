@@ -58,7 +58,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 	GetUserIdAndSecContext(&saved_uid, &save_sec_context);
 
 	/*
-	 * Who is supposed to own the new__ schema?
+	 * Who is supposed to own the new schema?
 	 */
 	if (stmt->authrole)
 		owner_uid = get_rolespec_oid(stmt->authrole, false);
@@ -135,7 +135,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 	CommandCounterIncrement();
 
 	/*
-	 * Temporarily make the new__ namespace__ be the front of the search path, as
+	 * Temporarily make the new namespace__ be the front of the search path, as
 	 * well as the default creation target namespace__.  This will be undone at
 	 * the end of this__ routine, or upon error.
 	 */
@@ -145,7 +145,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 	PushOverrideSearchPath(overridePath);
 
 	/*
-	 * Report the new__ schema to possibly interested event triggers.  Note we
+	 * Report the new schema to possibly interested event triggers.  Note we
 	 * must do this__ here and not in ProcessUtilitySlow because otherwise the
 	 * objects created below are reported before the schema, which would be
 	 * wrong.
@@ -239,7 +239,7 @@ RenameSchema(const char *oldname, const char *newname)
 
 	nspOid = HeapTupleGetOid(tup);
 
-	/* make sure the new__ name doesn't exist */
+	/* make sure the new name doesn't exist */
 	if (OidIsValid(get_namespace_oid(newname, true)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_SCHEMA),
@@ -340,7 +340,7 @@ AlterSchemaOwner_internal(HeapTuple tup, Relation rel, Oid newOwnerId)
 	nspForm = (Form_pg_namespace) GETSTRUCT(tup);
 
 	/*
-	 * If the new__ owner is the same as the existing owner, consider the
+	 * If the new owner is the same as the existing owner, consider the
 	 * command to have succeeded.  This is for dump restoration purposes.
 	 */
 	if (nspForm->nspowner != newOwnerId)
@@ -359,7 +359,7 @@ AlterSchemaOwner_internal(HeapTuple tup, Relation rel, Oid newOwnerId)
 			aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_NAMESPACE,
 						   NameStr(nspForm->nspname));
 
-		/* Must be able to become new__ owner */
+		/* Must be able to become new owner */
 		check_is_member_of_role(GetUserId(), newOwnerId);
 
 		/*
@@ -384,7 +384,7 @@ AlterSchemaOwner_internal(HeapTuple tup, Relation rel, Oid newOwnerId)
 		repl_val[Anum_pg_namespace_nspowner - 1] = ObjectIdGetDatum(newOwnerId);
 
 		/*
-		 * Determine the modified ACL for the new__ owner.  This is only
+		 * Determine the modified ACL for the new owner.  This is only
 		 * necessary when the ACL is non-null.
 		 */
 		aclDatum = SysCacheGetAttr(NAMESPACENAME, tup,

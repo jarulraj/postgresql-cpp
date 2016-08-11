@@ -106,7 +106,7 @@ prepare_common(int lineno, struct connection * con, const char *name, const char
 	struct prepared_statement *this__;
 	PGresult   *query;
 
-	/* allocate new__ statement */
+	/* allocate new statement */
 	this__ = (struct prepared_statement *) ecpg_alloc(sizeof(struct prepared_statement), lineno);
 	if (!this__)
 		return false;
@@ -440,7 +440,7 @@ AddStmtToCache(int lineno,		/* line # of statement		*/
 		if (!entry->stmtID[0])	/* unused entry  -	use it			*/
 			break;
 		if (entry->execs < stmtCacheEntries[luEntNo].execs)
-			luEntNo = entNo;	/* save new__ 'least used' entry		*/
+			luEntNo = entNo;	/* save new 'least used' entry		*/
 		++entNo;				/* increment entry #				*/
 	}
 

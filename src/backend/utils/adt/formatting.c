@@ -2301,7 +2301,7 @@ seq_search(char *name, const char *const * array, int type, int max, int *len)
 				break;
 
 			/*
-			 * Convert (but convert new__ chars only)
+			 * Convert (but convert new chars only)
 			 */
 			if (i > last)
 			{
@@ -3309,7 +3309,7 @@ datetime_to_char_body(TmToChar *tmtc, text *fmt, bool is_interval, Oid collid)
 	*result = '\0';
 
 	/*
-	 * Allocate new__ memory if format picture is bigger than static cache and
+	 * Allocate new memory if format picture is bigger than static cache and
 	 * not use cache (call parser always)
 	 */
 	if (fmt_len > DCH_CACHE_SIZE)
@@ -3336,7 +3336,7 @@ datetime_to_char_body(TmToChar *tmtc, text *fmt, bool is_interval, Oid collid)
 			ent = DCH_cache_getnew(fmt_str);
 
 			/*
-			 * Not in the cache, must run parser and save a new__ format-picture
+			 * Not in the cache, must run parser and save a new format-picture
 			 * to the cache.
 			 */
 			parse_format(ent->format, fmt_str, DCH_keywords,
@@ -3565,7 +3565,7 @@ do_to_timestamp(text *date_txt, text *fmt,
 		fmt_str = text_to_cstring(fmt);
 
 		/*
-		 * Allocate new__ memory if format picture is bigger than static cache
+		 * Allocate new memory if format picture is bigger than static cache
 		 * and not use cache (call parser always)
 		 */
 		if (fmt_len > DCH_CACHE_SIZE)
@@ -3592,7 +3592,7 @@ do_to_timestamp(text *date_txt, text *fmt,
 				ent = DCH_cache_getnew(fmt_str);
 
 				/*
-				 * Not in the cache, must run parser and save a new__
+				 * Not in the cache, must run parser and save a new
 				 * format-picture to the cache.
 				 */
 				parse_format(ent->format, fmt_str, DCH_keywords,
@@ -3938,7 +3938,7 @@ NUM_cache(int len, NUMDesc *Num, text *pars_str, bool *shouldFree)
 	str = text_to_cstring(pars_str);
 
 	/*
-	 * Allocate new__ memory if format picture is bigger than static cache and
+	 * Allocate new memory if format picture is bigger than static cache and
 	 * not use cache (call parser always). This branches sets shouldFree to
 	 * true, accordingly.
 	 */
@@ -3969,7 +3969,7 @@ NUM_cache(int len, NUMDesc *Num, text *pars_str, bool *shouldFree)
 			ent = NUM_cache_getnew(str);
 
 			/*
-			 * Not in the cache, must run parser and save a new__ format-picture
+			 * Not in the cache, must run parser and save a new format-picture
 			 * to the cache.
 			 */
 			parse_format(ent->format, str, NUM_keywords,

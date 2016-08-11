@@ -25,7 +25,7 @@ struct sqlvar_compat
 	int			sqlsourceid;	/* extended id of source type	*/
 
 	/*
-	 * sqlilongdata is new__.  It supports data that exceeds the 32k limit.
+	 * sqlilongdata is new.  It supports data that exceeds the 32k limit.
 	 * sqlilen and sqlidata are for backward compatibility and they have
 	 * maximum value of <32K.
 	 */

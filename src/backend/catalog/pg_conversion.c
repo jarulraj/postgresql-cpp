@@ -35,7 +35,7 @@
 /*
  * ConversionCreate
  *
- * Add a new__ tuple to pg_conversion.
+ * Add a new tuple to pg_conversion.
  */
 ObjectAddress
 ConversionCreate(const char *conname, Oid connamespace,
@@ -104,7 +104,7 @@ ConversionCreate(const char *conname, Oid connamespace,
 
 	tup = heap_form_tuple(tupDesc, values, nulls);
 
-	/* insert a new__ tuple */
+	/* insert a new tuple */
 	simple_heap_insert(rel, tup);
 
 	/* update the index if any */
@@ -133,7 +133,7 @@ ConversionCreate(const char *conname, Oid connamespace,
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ conversion */
+	/* Post creation hook for new conversion */
 	InvokeObjectPostCreateHook(ConversionRelationId, HeapTupleGetOid(tup), 0);
 
 	heap_freetuple(tup);

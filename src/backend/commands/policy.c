@@ -597,7 +597,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		/* We should have only removed the one role */
 		Assert(j == num_roles);
 
-		/* This is the array for the new__ tuple */
+		/* This is the array for the new tuple */
 		role_ids = construct_array(role_oids, num_roles, OIDOID,
 								   sizeof(Oid), true, 'i');
 
@@ -615,7 +615,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		/* Remove all old dependencies. */
 		deleteDependencyRecordsFor(PolicyRelationId, policy_id, false);
 
-		/* Record the new__ set of dependencies */
+		/* Record the new set of dependencies */
 		target.classId = RelationRelationId;
 		target.objectId = relid;
 		target.objectSubId = 0;
@@ -638,7 +638,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		/* Remove all the old shared dependencies (roles) */
 		deleteSharedDependencyRecordsFor(PolicyRelationId, policy_id, 0);
 
-		/* Record the new__ shared dependencies (roles) */
+		/* Record the new shared dependencies (roles) */
 		target.classId = AuthIdRelationId;
 		target.objectSubId = 0;
 		for (i = 0; i < num_roles; i++)

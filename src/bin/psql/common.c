@@ -74,7 +74,7 @@ openQueryOutputFile(const char *fname, FILE **fout, bool *is_pipe)
  * setQFout
  * -- handler for -o command line option and \o command
  *
- * On success, updates pset with the new__ output file and returns true.
+ * On success, updates pset with the new output file and returns true.
  * On failure, returns false without changing pset state.
  */
 bool
@@ -83,7 +83,7 @@ setQFout(const char *fname)
 	FILE	   *fout;
 	bool		is_pipe;
 
-	/* First make sure we can open the new__ output file/pipe */
+	/* First make sure we can open the new output file/pipe */
 	if (!openQueryOutputFile(fname, &fout, &is_pipe))
 		return false;
 
@@ -1497,7 +1497,7 @@ skip_white_space(const char *query)
 
 /*
  * Check whether a command is one of those for which we should NOT start
- * a new__ transaction block (ie, send a preceding BEGIN).
+ * a new transaction block (ie, send a preceding BEGIN).
  *
  * These include the transaction control statements themselves, plus
  * certain statements that the backend disallows inside transaction blocks.

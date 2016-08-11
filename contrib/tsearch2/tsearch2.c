@@ -53,7 +53,7 @@ static Oid	current_parser_oid = InvalidOid;
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),\
 				 errmsg("function %s is no longer supported", \
 						format_procedure(fcinfo->flinfo->fn_oid)), \
-				 errhint("Switch to new__ tsearch functionality."))); \
+				 errhint("Switch to new tsearch functionality."))); \
 		/* keep compiler quiet */						\
 		PG_RETURN_NULL();								\
 	}													\
@@ -87,7 +87,7 @@ PG_FUNCTION_INFO_V1(tsa_rewrite_finish);
  *
  * The parser and dictionary functions are defined only so that the former
  * contents of pg_ts_parser and pg_ts_dict can be loaded into the system,
- * for ease of reference while creating the new__ tsearch configuration.
+ * for ease of reference while creating the new tsearch configuration.
  */
 
 UNSUPPORTED_FUNCTION(tsa_dex_init);

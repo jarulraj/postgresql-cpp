@@ -49,7 +49,7 @@ sepgsql_schema_post_create(Oid namespaceId)
 	StringInfoData audit_name;
 
 	/*
-	 * Compute a default security label when we create a new__ schema object
+	 * Compute a default security label when we create a new schema object
 	 * under the working database.
 	 *
 	 * XXX - uncoming version of libselinux supports to take object name to
@@ -96,7 +96,7 @@ sepgsql_schema_post_create(Oid namespaceId)
 	heap_close(rel, AccessShareLock);
 
 	/*
-	 * Assign the default security label on a new__ procedure
+	 * Assign the default security label on a new procedure
 	 */
 	object.classId = NamespaceRelationId;
 	object.objectId = namespaceId;

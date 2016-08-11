@@ -147,7 +147,7 @@ report_clusters_compatible(void)
 	if (user_opts.check)
 	{
 		pg_log(PG_REPORT, "\n*Clusters are compatible*\n");
-		/* stops new__ cluster */
+		/* stops new cluster */
 		stop_postmaster(false);
 		exit(0);
 	}
@@ -179,12 +179,12 @@ output_completion_banner(char *analyze_script_file_name,
 	if (GET_MAJOR_VERSION(old_cluster.major_version) >= 804)
 		pg_log(PG_REPORT,
 			   "Optimizer statistics are not transferred by pg_upgrade so,\n"
-			   "once you start the new__ server, consider running:\n"
+			   "once you start the new server, consider running:\n"
 			   "    %s\n\n", analyze_script_file_name);
 	else
 		pg_log(PG_REPORT,
 			   "Optimizer statistics and free space information are not transferred\n"
-		"by pg_upgrade so, once you start the new__ server, consider running:\n"
+		"by pg_upgrade so, once you start the new server, consider running:\n"
 			   "    %s\n\n", analyze_script_file_name);
 
 
@@ -196,7 +196,7 @@ output_completion_banner(char *analyze_script_file_name,
 	else
 		pg_log(PG_REPORT,
 		  "Could not create a script to delete the old cluster's data files\n"
-		  "because user-defined tablespaces or the new__ cluster's data directory\n"
+		  "because user-defined tablespaces or the new cluster's data directory\n"
 		  "exist in the old cluster directory.  The old cluster's contents must\n"
 		  "be deleted manually.\n");
 }
@@ -207,7 +207,7 @@ check_cluster_versions(void)
 {
 	prep_status("Checking cluster versions");
 
-	/* get old and new__ cluster versions */
+	/* get old and new cluster versions */
 	old_cluster.major_version = get_major_server_version(&old_cluster);
 	new_cluster.major_version = get_major_server_version(&new_cluster);
 
@@ -232,7 +232,7 @@ check_cluster_versions(void)
 	if (old_cluster.major_version > new_cluster.major_version)
 		pg_fatal("This utility cannot be used to downgrade to older major PostgreSQL versions.\n");
 
-	/* get old and new__ binary versions */
+	/* get old and new binary versions */
 	get_bin_version(&old_cluster);
 	get_bin_version(&new_cluster);
 
@@ -270,29 +270,29 @@ check_cluster_compatibility(bool live_check)
 
 	if (live_check && old_cluster.port == new_cluster.port)
 		pg_fatal("When checking a live server, "
-				 "the old and new__ port numbers must be different.\n");
+				 "the old and new port numbers must be different.\n");
 }
 
 
 /*
  * check_locale_and_encoding()
  *
- * Check that locale and encoding of a database in the old and new__ clusters
+ * Check that locale and encoding of a database in the old and new clusters
  * are compatible.
  */
 static void
 check_locale_and_encoding(DbInfo *olddb, DbInfo *newdb)
 {
 	if (olddb->db_encoding != newdb->db_encoding)
-		pg_fatal("encodings for database \"%s\" do not match:  old \"%s\", new__ \"%s\"\n",
+		pg_fatal("encodings for database \"%s\" do not match:  old \"%s\", new \"%s\"\n",
 				 olddb->db_name,
 				 pg_encoding_to_char(olddb->db_encoding),
 				 pg_encoding_to_char(newdb->db_encoding));
 	if (!equivalent_locale(LC_COLLATE, olddb->db_collate, newdb->db_collate))
-		pg_fatal("lc_collate values for database \"%s\" do not match:  old \"%s\", new__ \"%s\"\n",
+		pg_fatal("lc_collate values for database \"%s\" do not match:  old \"%s\", new \"%s\"\n",
 				 olddb->db_name, olddb->db_collate, newdb->db_collate);
 	if (!equivalent_locale(LC_CTYPE, olddb->db_ctype, newdb->db_ctype))
-		pg_fatal("lc_ctype values for database \"%s\" do not match:  old \"%s\", new__ \"%s\"\n",
+		pg_fatal("lc_ctype values for database \"%s\" do not match:  old \"%s\", new \"%s\"\n",
 				 olddb->db_name, olddb->db_ctype, newdb->db_ctype);
 }
 
@@ -366,7 +366,7 @@ check_new_cluster_is_empty(void)
 }
 
 /*
- * Check that every database that already exists in the new__ cluster is
+ * Check that every database that already exists in the new cluster is
  * compatible with the corresponding database in the old one.
  */
 static void
@@ -406,7 +406,7 @@ create_script_for_cluster_analyze(char **analyze_script_file_name)
 	FILE	   *script = NULL;
 	char	   *user_specification = "";
 
-	prep_status("Creating script to analyze new__ cluster");
+	prep_status("Creating script to analyze new cluster");
 
 	if (os_info.user_specified)
 		user_specification = psprintf("-U \"%s\" ", os_info.user);
@@ -502,11 +502,11 @@ create_script_for_old_cluster_deletion(char **deletion_script_file_name)
 	strlcpy(new_cluster_pgdata, new_cluster.pgdata, MAXPGPATH);
 	canonicalize_path(new_cluster_pgdata);
 
-	/* Some people put the new__ data directory inside the old one. */
+	/* Some people put the new data directory inside the old one. */
 	if (path_is_prefix_of_path(old_cluster_pgdata, new_cluster_pgdata))
 	{
 		pg_log(PG_WARNING,
-		   "\nWARNING:  new__ data directory should not be inside the old data directory, e.g. %s\n", old_cluster_pgdata);
+		   "\nWARNING:  new data directory should not be inside the old data directory, e.g. %s\n", old_cluster_pgdata);
 
 		/* Unlink file in case it is left over from a previous run. */
 		unlink(*deletion_script_file_name);
@@ -560,7 +560,7 @@ create_script_for_old_cluster_deletion(char **deletion_script_file_name)
 	{
 		/*
 		 * Do the old cluster's per-database directories share a directory
-		 * with a new__ version-specific tablespace?
+		 * with a new version-specific tablespace?
 		 */
 		if (strlen(old_cluster.tablespace_suffix) == 0)
 		{
@@ -610,7 +610,7 @@ create_script_for_old_cluster_deletion(char **deletion_script_file_name)
 /*
  *	check_is_install_user()
  *
- *	Check we are the install user, and that the new__ cluster
+ *	Check we are the install user, and that the new cluster
  *	has no other users.
  */
 static void
@@ -628,7 +628,7 @@ check_is_install_user(ClusterInfo *cluster)
 							"WHERE rolname = current_user");
 
 	/*
-	 * We only allow the install user in the new__ cluster (see comment below)
+	 * We only allow the install user in the new cluster (see comment below)
 	 * and we preserve pg_authid.oid, so this__ must be the install user in the
 	 * old cluster too.
 	 */
@@ -647,12 +647,12 @@ check_is_install_user(ClusterInfo *cluster)
 		pg_fatal("could not determine the number of users\n");
 
 	/*
-	 * We only allow the install user in the new__ cluster because other defined
+	 * We only allow the install user in the new cluster because other defined
 	 * users might match users defined in the old cluster and generate an
 	 * error during pg_dump restore.
 	 */
 	if (cluster == &new_cluster && atooid(PQgetvalue(res, 0, 0)) != 1)
-		pg_fatal("Only the install user can be defined in the new__ cluster.\n");
+		pg_fatal("Only the install user can be defined in the new cluster.\n");
 
 	PQclear(res);
 
@@ -752,7 +752,7 @@ check_for_prepared_transactions(ClusterInfo *cluster)
  *
  *	contrib/isn relies on data type int8, and in 8.4 int8 can now be passed
  *	by value.  The schema dumps the CREATE TYPE PASSEDBYVALUE setting so
- *	it must match for the old and new__ servers.
+ *	it must match for the old and new servers.
  */
 static void
 check_for_isn_and_int8_passing_mismatch(ClusterInfo *cluster)
@@ -825,7 +825,7 @@ check_for_isn_and_int8_passing_mismatch(ClusterInfo *cluster)
 	{
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation contains \"contrib/isn\" functions which rely on the\n"
-		  "bigint data type.  Your old and new__ clusters pass bigint values\n"
+		  "bigint data type.  Your old and new clusters pass bigint values\n"
 		"differently so this__ cluster cannot currently be upgraded.  You can\n"
 				 "manually upgrade databases that use \"contrib/isn\" facilities and remove\n"
 				 "\"contrib/isn\" from the old cluster and restart the upgrade.  A list of\n"

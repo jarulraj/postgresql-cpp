@@ -106,7 +106,7 @@ sepgsql_get_client_label(void)
  * sepgsql_set_client_label
  *
  * This routine tries to switch the current security label of the client, and
- * checks related permissions.  The supplied new__ label shall be added to the
+ * checks related permissions.  The supplied new label shall be added to the
  * client_label_pending list, then saved at transaction-commit time to ensure
  * transaction-awareness.
  */
@@ -345,7 +345,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 				MemoryContextSwitchTo(oldcxt);
 
 				/*
-				 * process:transition permission between old and new__ label,
+				 * process:transition permission between old and new label,
 				 * when user tries to switch security label of the client on
 				 * execution of trusted procedure.
 				 *

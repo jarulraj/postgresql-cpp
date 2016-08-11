@@ -113,7 +113,7 @@ sepgsql_database_post_create(Oid databaseId, const char *dtemplate)
 	heap_close(rel, AccessShareLock);
 
 	/*
-	 * Assign the default security label on the new__ database
+	 * Assign the default security label on the new database
 	 */
 	object.classId = DatabaseRelationId;
 	object.objectId = databaseId;

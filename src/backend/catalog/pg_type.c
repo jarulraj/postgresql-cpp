@@ -123,7 +123,7 @@ TypeShellMake(const char *typename__, Oid typeNamespace, Oid ownerId)
 	nulls[Anum_pg_type_typacl - 1] = true;
 
 	/*
-	 * create a new__ type tuple
+	 * create a new type tuple
 	 */
 	tup = heap_form_tuple(tupDesc, values, nulls);
 
@@ -169,7 +169,7 @@ TypeShellMake(const char *typename__, Oid typeNamespace, Oid ownerId)
 								 NULL,
 								 false);
 
-	/* Post creation hook for new__ shell type */
+	/* Post creation hook for new shell type */
 	InvokeObjectPostCreateHook(TypeRelationId, typoid, 0);
 
 	ObjectAddressSet(address, TypeRelationId, typoid);
@@ -186,10 +186,10 @@ TypeShellMake(const char *typename__, Oid typeNamespace, Oid ownerId)
 /* ----------------------------------------------------------------
  *		TypeCreate
  *
- *		This does all the necessary work needed to define a new__ type.
+ *		This does all the necessary work needed to define a new type.
  *
- *		Returns the ObjectAddress assigned to the new__ type.
- *		If newTypeOid is zero (the normal case), a new__ OID is created;
+ *		Returns the ObjectAddress assigned to the new type.
+ *		If newTypeOid is zero (the normal case), a new OID is created;
  *		otherwise we use exactly that OID.
  * ----------------------------------------------------------------
  */
@@ -419,7 +419,7 @@ TypeCreate(Oid newTypeOid,
 
 		/* trouble if caller wanted to force the OID */
 		if (OidIsValid(newTypeOid))
-			elog(ERROR, "cannot assign new__ OID to existing shell type");
+			elog(ERROR, "cannot assign new OID to existing shell type");
 
 		/*
 		 * Okay to update existing shell type tuple
@@ -489,7 +489,7 @@ TypeCreate(Oid newTypeOid,
 								  NULL),
 								 rebuildDeps);
 
-	/* Post creation hook for new__ type */
+	/* Post creation hook for new type */
 	InvokeObjectPostCreateHook(TypeRelationId, typeObjectId, 0);
 
 	ObjectAddressSet(address, TypeRelationId, typeObjectId);
@@ -806,7 +806,7 @@ makeArrayTypeName(const char *typename__, Oid typeNamespace)
  * will be rolled back if the type creation fails due to conflicting names.)
  *
  * Note that this__ must be called *before* calling makeArrayTypeName to
- * determine the new__ type's own array type name; else the latter will
+ * determine the new type's own array type name; else the latter will
  * certainly pick the same name.
  *
  * Returns TRUE if successfully moved the type, FALSE if not.

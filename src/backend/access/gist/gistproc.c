@@ -389,7 +389,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 		else if (context->dim == dimNum)
 		{
 			/*
-			 * Within the same dimension, choose the new__ split if it has a
+			 * Within the same dimension, choose the new split if it has a
 			 * smaller overlap, or same overlap but better ratio.
 			 */
 			if (overlap < context->overlap ||
@@ -399,7 +399,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 		else
 		{
 			/*
-			 * Across dimensions, choose the new__ split if it has a smaller
+			 * Across dimensions, choose the new split if it has a smaller
 			 * *non-negative* overlap, or same *non-negative* overlap but
 			 * bigger range. This condition differs from the one described in
 			 * the article. On the datasets where leaf MBRs don't overlap
@@ -436,7 +436,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 }
 
 /*
- * Return increase of original BOX area by new__ BOX area insertion.
+ * Return increase of original BOX area by new BOX area insertion.
  */
 static double
 box_penalty(BOX *original, BOX *new__)
@@ -491,7 +491,7 @@ common_entry_cmp(const void *i1, const void *i2)
  * The common entries are distributed by minimizing penalty.
  *
  * For details see:
- * "A new__ double sorting-based node splitting algorithm for R-tree", A. Korotkov
+ * "A new double sorting-based node splitting algorithm for R-tree", A. Korotkov
  * http://syrcose.ispras.ru/2011/files/SYRCoSE2011_Proceedings.pdf#page=36
  * --------------------------------------------------------------------------
  */
@@ -1199,7 +1199,7 @@ gist_point_compress(PG_FUNCTION_ARGS)
 /*
  * GiST Fetch method for point
  *
- * Get point coordinates from its bounding box coordinates and form new__
+ * Get point coordinates from its bounding box coordinates and form new
  * gistentry.
  */
 Datum

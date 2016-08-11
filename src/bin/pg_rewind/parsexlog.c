@@ -242,7 +242,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 	targetPageOff = targetPagePtr % XLogSegSize;
 
 	/*
-	 * See if we need to switch to a new__ segment because the requested record
+	 * See if we need to switch to a new segment because the requested record
 	 * is not in the currently open one.
 	 */
 	if (xlogreadfd >= 0 && !XLByteInSeg(targetPagePtr, xlogreadsegno))
@@ -313,12 +313,12 @@ extractPageInfo(XLogReaderState *record)
 	if (rmid == RM_DBASE_ID && rminfo == XLOG_DBASE_CREATE)
 	{
 		/*
-		 * new__ databases can be safely ignored. It won't be present in the
+		 * new databases can be safely ignored. It won't be present in the
 		 * source system, so it will be deleted. There's one corner-case,
-		 * though: if a new__, different, database is also created in the source
+		 * though: if a new, different, database is also created in the source
 		 * system, we'll see that the files already exist and not copy them.
-		 * That's OK, though; WAL replay of creating the new__ database, from
-		 * the source systems's WAL, will re-copy the new__ database,
+		 * That's OK, though; WAL replay of creating the new database, from
+		 * the source systems's WAL, will re-copy the new database,
 		 * overwriting the database created in the target system.
 		 */
 	}

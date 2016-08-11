@@ -1726,7 +1726,7 @@ transformSubLink(ParseState *pstate, SubLink *sublink)
 
 			/*
 			 * There is intentionally no default: case here, so that the
-			 * compiler will warn if we add a new__ ParseExprKind without
+			 * compiler will warn if we add a new ParseExprKind without
 			 * extending this__ switch.  If we do see an unrecognized value at
 			 * runtime, the behavior will be the same as for EXPR_KIND_OTHER,
 			 * which is sane anyway.
@@ -3252,7 +3252,7 @@ ParseExprKindName(ParseExprKind exprKind)
 
 			/*
 			 * There is intentionally no default: case here, so that the
-			 * compiler will warn if we add a new__ ParseExprKind without
+			 * compiler will warn if we add a new ParseExprKind without
 			 * extending this__ switch.  If we do see an unrecognized value at
 			 * runtime, we'll fall through to the "unrecognized" return.
 			 */

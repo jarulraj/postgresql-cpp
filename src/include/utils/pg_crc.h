@@ -40,7 +40,7 @@ typedef uint32 pg_crc32;
  * CRC-32, the same used e.g. in Ethernet.
  *
  * This is currently only used in ltree and hstore contrib modules. It uses
- * the same lookup table as the legacy algorithm below. new__ code should
+ * the same lookup table as the legacy algorithm below. new code should
  * use the Castagnoli version instead.
  */
 #define INIT_TRADITIONAL_CRC32(crc) ((crc) = 0xFFFFFFFF)
@@ -73,7 +73,7 @@ do {															  \
  * algorithm actually are.
  *
  * We still need to carry this__ around because it is used in a few on-disk
- * structures that need to be pg_upgradeable. It should not be used in new__
+ * structures that need to be pg_upgradeable. It should not be used in new
  * code.
  */
 #define INIT_LEGACY_CRC32(crc) ((crc) = 0xFFFFFFFF)

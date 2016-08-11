@@ -178,7 +178,7 @@ struct ParseState
  * visible for qualified references) but it does hide their columns
  * (unqualified references to the columns refer to the JOIN, not the member
  * tables, so we must not complain that such a reference is ambiguous).
- * Various special RTEs such as new__/OLD for rules may also appear with only
+ * Various special RTEs such as new/OLD for rules may also appear with only
  * one flag set.
  *
  * While processing the FROM clause, namespace__ items may appear with

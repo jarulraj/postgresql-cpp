@@ -56,7 +56,7 @@ typedef struct catcache
 	long		cc_searches;	/* total # searches against this__ cache */
 	long		cc_hits;		/* # of matches against existing entry */
 	long		cc_neg_hits;	/* # of matches against negative entry */
-	long		cc_newloads;	/* # of successful loads of new__ entry */
+	long		cc_newloads;	/* # of successful loads of new entry */
 
 	/*
 	 * cc_searches - (cc_hits + cc_neg_hits + cc_newloads) is number of failed

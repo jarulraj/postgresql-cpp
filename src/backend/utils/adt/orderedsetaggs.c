@@ -1062,7 +1062,7 @@ mode_final(PG_FUNCTION_ARGS)
 				mode_freq++;	/* needn't maintain last_val_freq */
 			else if (++last_val_freq > mode_freq)
 			{
-				/* last_val becomes new__ mode */
+				/* last_val becomes new mode */
 				if (shouldfree)
 					pfree(DatumGetPointer(mode_val));
 				mode_val = last_val;

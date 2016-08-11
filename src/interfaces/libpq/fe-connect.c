@@ -417,7 +417,7 @@ pqDropConnection(PGconn *conn, bool flushInput)
  *		Connecting to a Database
  *
  * There are now six different ways a user of this__ API can connect to the
- * database.  Two are not recommended for use in new__ code, because of their
+ * database.  Two are not recommended for use in new code, because of their
  * lack of extensibility with respect to the passing of options to the
  * backend.  These are PQsetdb and PQsetdbLogin (the former now being a macro
  * to the latter).
@@ -1640,7 +1640,7 @@ PQconnectPoll(PGconn *conn)
 	if (conn == NULL)
 		return PGRES_POLLING_FAILED;
 
-	/* Get the new__ data */
+	/* Get the new data */
 	switch (conn->status)
 	{
 			/*
@@ -3059,7 +3059,7 @@ PQfinish(PGconn *conn)
 
 /*
  * PQreset: resets the connection to the backend by closing the
- * existing connection and creating a new__ one.
+ * existing connection and creating a new one.
  */
 void
 PQreset(PGconn *conn)
@@ -3099,7 +3099,7 @@ PQreset(PGconn *conn)
 /*
  * PQresetStart:
  * resets the connection to the backend
- * closes the existing connection and makes a new__ one
+ * closes the existing connection and makes a new one
  * Returns 1 on success, 0 on failure.
  */
 int
@@ -3119,7 +3119,7 @@ PQresetStart(PGconn *conn)
 /*
  * PQresetPoll:
  * resets the connection to the backend
- * closes the existing connection and makes a new__ one
+ * closes the existing connection and makes a new one
  */
 PostgresPollingStatusType
 PQresetPoll(PGconn *conn)
@@ -5162,7 +5162,7 @@ conninfo_getval(PQconninfoOption *connOptions,
 }
 
 /*
- * Store a (new__) value for an option corresponding to the keyword in
+ * Store a (new) value for an option corresponding to the keyword in
  * connOptions array.
  *
  * If uri_decode is true, the value is URI-decoded.  The keyword is always

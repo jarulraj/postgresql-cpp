@@ -365,7 +365,7 @@ error_duplicate_filter_variable(const char *defname)
 }
 
 /*
- * Insert the new__ pg_event_trigger row and record dependencies.
+ * Insert the new pg_event_trigger row and record dependencies.
  */
 static Oid
 insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
@@ -384,7 +384,7 @@ insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
 	/* Open pg_event_trigger. */
 	tgrel = heap_open(EventTriggerRelationId, RowExclusiveLock);
 
-	/* Build the new__ pg_trigger tuple. */
+	/* Build the new pg_trigger tuple. */
 	memset(nulls, false, sizeof(nulls));
 	namestrcpy(&evtnamedata, trigname);
 	values[Anum_pg_event_trigger_evtname - 1] = NameGetDatum(&evtnamedata);
@@ -421,7 +421,7 @@ insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
 	/* Depend on extension, if any. */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ event trigger */
+	/* Post creation hook for new event trigger */
 	InvokeObjectPostCreateHook(EventTriggerRelationId, trigoid, 0);
 
 	/* Close pg_event_trigger. */
@@ -609,7 +609,7 @@ AlterEventTriggerOwner_internal(Relation rel, HeapTuple tup, Oid newOwnerId)
 		aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_EVENT_TRIGGER,
 					   NameStr(form->evtname));
 
-	/* new__ owner must be a superuser */
+	/* new owner must be a superuser */
 	if (!superuser_arg(newOwnerId))
 		ereport(ERROR,
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
@@ -1202,7 +1202,7 @@ EventTriggerSupportsGrantObjectType(GrantObjectType objtype)
 }
 
 /*
- * Prepare event trigger state for a new__ complete query to run, if necessary;
+ * Prepare event trigger state for a new complete query to run, if necessary;
  * returns whether this__ was done.  If it was, EventTriggerEndCompleteQuery must
  * be called when the query is done, regardless of whether it succeeds or fails
  * -- so use of a PG_TRY block is mandatory.
@@ -1287,7 +1287,7 @@ trackDroppedObjectsNeeded(void)
  * Support for dropped objects information on event trigger functions.
  *
  * We keep the list of objects dropped by the current command in current
- * state's SQLDropList (comprising SQLDropObject items).  Each time a new__
+ * state's SQLDropList (comprising SQLDropObject items).  Each time a new
  * command is to start, a clean EventTriggerQueryState is created; commands
  * that drop objects do the dependency.c dance to drop objects, which
  * populates the current state's SQLDropList; when the event triggers are

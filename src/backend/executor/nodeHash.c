@@ -700,7 +700,7 @@ ExecHashIncreaseNumBatches(HashJoinTable hashtable)
 
 			if (batchno == curbatch)
 			{
-				/* keep tuple in memory - copy it into the new__ chunk */
+				/* keep tuple in memory - copy it into the new chunk */
 				HashJoinTuple copyTuple;
 
 				copyTuple = (HashJoinTuple) dense_alloc(hashtable, hashTupleSize);
@@ -783,7 +783,7 @@ ExecHashIncreaseNumBuckets(HashJoinTable hashtable)
 	/*
 	 * Just reallocate the proper number of buckets - we don't need to walk
 	 * through them - we can walk the dense-allocated chunks (just like in
-	 * ExecHashIncreaseNumBatches, but without all the copying into new__
+	 * ExecHashIncreaseNumBatches, but without all the copying into new
 	 * chunks)
 	 */
 	hashtable->buckets =
@@ -1071,7 +1071,7 @@ ExecScanHashBucket(HashJoinState *hjstate,
 
 	/*
 	 * hj_CurTuple is the address of the tuple last returned from the current
-	 * bucket, or NULL if it's time to start scanning a new__ bucket.
+	 * bucket, or NULL if it's time to start scanning a new bucket.
 	 *
 	 * If the tuple hashed to a skew bucket then scan the skew bucket
 	 * otherwise scan the standard hashtable bucket.
@@ -1151,7 +1151,7 @@ ExecScanHashTableForUnmatched(HashJoinState *hjstate, ExprContext *econtext)
 	{
 		/*
 		 * hj_CurTuple is the address of the tuple last returned from the
-		 * current bucket, or NULL if it's time to start scanning a new__
+		 * current bucket, or NULL if it's time to start scanning a new
 		 * bucket.
 		 */
 		if (hashTuple != NULL)
@@ -1207,7 +1207,7 @@ ExecScanHashTableForUnmatched(HashJoinState *hjstate, ExprContext *econtext)
 /*
  * ExecHashTableReset
  *
- *		reset hash table header for new__ batch
+ *		reset hash table header for new batch
  */
 void
 ExecHashTableReset(HashJoinTable hashtable)
@@ -1217,7 +1217,7 @@ ExecHashTableReset(HashJoinTable hashtable)
 
 	/*
 	 * Release all the hash buckets and tuples acquired in the prior pass, and
-	 * reinitialize the context for a new__ pass.
+	 * reinitialize the context for a new pass.
 	 */
 	MemoryContextReset(hashtable->batchCxt);
 	oldcxt = MemoryContextSwitchTo(hashtable->batchCxt);
@@ -1416,7 +1416,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 			if (hashtable->skewBucket[bucket] != NULL)
 				continue;
 
-			/* Okay, create a new__ skew bucket for this__ hashvalue. */
+			/* Okay, create a new skew bucket for this__ hashvalue. */
 			hashtable->skewBucket[bucket] = (HashSkewBucket *)
 				MemoryContextAlloc(hashtable->batchCxt,
 								   sizeof(HashSkewBucket));
@@ -1656,7 +1656,7 @@ dense_alloc(HashJoinTable hashtable, Size size)
 	 */
 	if (size > HASH_CHUNK_THRESHOLD)
 	{
-		/* allocate new__ chunk and put it at the beginning of the list */
+		/* allocate new chunk and put it at the beginning of the list */
 		newChunk = (HashMemoryChunk) MemoryContextAlloc(hashtable->batchCxt,
 								 offsetof(HashMemoryChunkData, data) + size);
 		newChunk->maxlen = size;
@@ -1691,7 +1691,7 @@ dense_alloc(HashJoinTable hashtable, Size size)
 	if ((hashtable->chunks == NULL) ||
 		(hashtable->chunks->maxlen - hashtable->chunks->used) < size)
 	{
-		/* allocate new__ chunk and put it at the beginning of the list */
+		/* allocate new chunk and put it at the beginning of the list */
 		newChunk = (HashMemoryChunk) MemoryContextAlloc(hashtable->batchCxt,
 					  offsetof(HashMemoryChunkData, data) + HASH_CHUNK_SIZE);
 

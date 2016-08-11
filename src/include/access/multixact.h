@@ -75,7 +75,7 @@ typedef struct MultiXactMember
 
 typedef struct xl_multixact_create
 {
-	MultiXactId mid;			/* new__ MultiXact's ID */
+	MultiXactId mid;			/* new MultiXact's ID */
 	MultiXactOffset moff;		/* its starting offset in members file */
 	int32		nmembers;		/* number of member XIDs */
 	MultiXactMember members[FLEXIBLE_ARRAY_MEMBER];

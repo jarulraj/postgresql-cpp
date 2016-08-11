@@ -63,7 +63,7 @@ sepgsql_attribute_post_create(Oid relOid, AttrNumber attnum)
 		return;
 
 	/*
-	 * Compute a default security label of the new__ column underlying the
+	 * Compute a default security label of the new column underlying the
 	 * specified relation, and check permission to create it.
 	 */
 	rel = heap_open(AttributeRelationId, AccessShareLock);
@@ -111,7 +111,7 @@ sepgsql_attribute_post_create(Oid relOid, AttrNumber attnum)
 								  true);
 
 	/*
-	 * Assign the default security label on a new__ procedure
+	 * Assign the default security label on a new procedure
 	 */
 	object.classId = RelationRelationId;
 	object.objectId = relOid;
@@ -252,7 +252,7 @@ sepgsql_relation_post_create(Oid relOid)
 	StringInfoData audit_name;
 
 	/*
-	 * Fetch catalog record of the new__ relation. Because pg_class entry is not
+	 * Fetch catalog record of the new relation. Because pg_class entry is not
 	 * visible right now, we need to scan the catalog using SnapshotSelf.
 	 */
 	rel = heap_open(RelationRelationId, AccessShareLock);
@@ -309,7 +309,7 @@ sepgsql_relation_post_create(Oid relOid)
 	}
 
 	/*
-	 * Compute a default security label when we create a new__ relation object
+	 * Compute a default security label when we create a new relation object
 	 * under the specified namespace__.
 	 */
 	scontext = sepgsql_get_client_label();
@@ -333,7 +333,7 @@ sepgsql_relation_post_create(Oid relOid)
 								  true);
 
 	/*
-	 * Assign the default security label on the new__ relation
+	 * Assign the default security label on the new relation
 	 */
 	object.classId = RelationRelationId;
 	object.objectId = relOid;
@@ -341,7 +341,7 @@ sepgsql_relation_post_create(Oid relOid)
 	SetSecurityLabel(&object, SEPGSQL_LABEL_TAG, rcontext);
 
 	/*
-	 * We also assigns a default security label on columns of the new__ regular
+	 * We also assigns a default security label on columns of the new regular
 	 * tables.
 	 */
 	if (classForm->relkind == RELKIND_RELATION)

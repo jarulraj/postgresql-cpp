@@ -241,7 +241,7 @@ sepgsql_avc_compute(const char *scontext, const char *tcontext, uint16 tclass)
 	 * 'scontext' executes a procedure labeled as 'tcontext', not only access
 	 * control decision on the procedure. The security label to be switched
 	 * shall be computed uniquely on a pair of 'scontext' and 'tcontext',
-	 * thus, it is reasonable to cache the new__ label on avc, and enables to
+	 * thus, it is reasonable to cache the new label on avc, and enables to
 	 * reduce unnecessary system calls. It shall be referenced at
 	 * sepgsql_needs_fmgr_hook to check whether the supplied function is a
 	 * trusted procedure, or not.
@@ -300,7 +300,7 @@ sepgsql_avc_compute(const char *scontext, const char *tcontext, uint16 tclass)
  * sepgsql_avc_lookup
  *
  * Look up a cache entry that matches the supplied security contexts and
- * object class__.  If not found, create a new__ cache entry.
+ * object class__.  If not found, create a new cache entry.
  */
 static avc_cache *
 sepgsql_avc_lookup(const char *scontext, const char *tcontext, uint16 tclass)
@@ -326,7 +326,7 @@ sepgsql_avc_lookup(const char *scontext, const char *tcontext, uint16 tclass)
 			return cache;
 		}
 	}
-	/* not found, so insert a new__ cache */
+	/* not found, so insert a new cache */
 	return sepgsql_avc_compute(scontext, tcontext, tclass);
 }
 

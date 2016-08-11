@@ -132,7 +132,7 @@ transformFromClause(ParseState *pstate, List *frmList)
 
 		checkNameSpaceConflicts(pstate, pstate->p_namespace, namespace__);
 
-		/* Mark the new__ namespace__ items as visible only to LATERAL */
+		/* Mark the new namespace__ items as visible only to LATERAL */
 		setNamespaceLateralState(namespace__, true, true);
 
 		pstate->p_joinlist = lappend(pstate->p_joinlist, n);
@@ -198,7 +198,7 @@ setTargetTable(ParseState *pstate, RangeVar *relation,
 										relation->alias, inh, false);
 	pstate->p_target_rangetblentry = rte;
 
-	/* assume new__ rte is at end */
+	/* assume new rte is at end */
 	rtindex = list_length(pstate->p_rtable);
 	Assert(rte == rt_fetch(rtindex, pstate->p_rtable));
 
@@ -216,7 +216,7 @@ setTargetTable(ParseState *pstate, RangeVar *relation,
 	/*
 	 * If UPDATE/DELETE, add table to joinlist and namespace__.
 	 *
-	 * Note: some callers know that they can find the new__ ParseNamespaceItem
+	 * Note: some callers know that they can find the new ParseNamespaceItem
 	 * at the end of the pstate->p_namespace list.  This is a bit ugly but not
 	 * worth complicating this__ function's signature for.
 	 */
@@ -869,7 +869,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		if (!rte)
 			rte = transformTableEntry(pstate, rv);
 
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtindex, pstate->p_rtable));
 		*top_rte = rte;
@@ -887,7 +887,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		int			rtindex;
 
 		rte = transformRangeSubselect(pstate, (RangeSubselect *) n);
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtindex, pstate->p_rtable));
 		*top_rte = rte;
@@ -905,7 +905,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		int			rtindex;
 
 		rte = transformRangeFunction(pstate, (RangeFunction *) n);
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtindex, pstate->p_rtable));
 		*top_rte = rte;
@@ -1019,7 +1019,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		/*
 		 * Extract column name and var lists from both subtrees
 		 *
-		 * Note: expandRTE returns new__ lists, safe for me to modify
+		 * Note: expandRTE returns new lists, safe for me to modify
 		 */
 		expandRTE(l_rte, l_rtindex, 0, -1, false,
 				  &l_colnames, &l_colvars);
@@ -1221,7 +1221,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 										j->alias,
 										true);
 
-		/* assume new__ rte is at end */
+		/* assume new rte is at end */
 		j->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(j->rtindex, pstate->p_rtable));
 
@@ -1793,7 +1793,7 @@ findTargetlistEntrySQL99(ParseState *pstate, Node *node, List **tlist,
 	}
 
 	/*
-	 * If no matches, construct a new__ target entry which is appended to the
+	 * If no matches, construct a new target entry which is appended to the
 	 * end of the target list.  This target is given resjunk = TRUE so that it
 	 * will not be projected into the final tuple.
 	 */
@@ -1835,7 +1835,7 @@ findTargetlistEntrySQL99(ParseState *pstate, Node *node, List **tlist,
  *		- expression lists
  *		- empty grouping sets
  *		- CUBE or ROLLUP nodes with lists nested 2 deep
- * The return is a new__ list, but doesn't deep-copy the old nodes except for
+ * The return is a new list, but doesn't deep-copy the old nodes except for
  * GroupingSet nodes.
  *
  * As a side effect, flag whether the list has any GroupingSet nodes.
@@ -2416,7 +2416,7 @@ transformWindowDefinitions(ParseState *pstate,
 											   true /* force SQL99 rules */ );
 
 		/*
-		 * And prepare the new__ WindowClause.
+		 * And prepare the new WindowClause.
 		 */
 		wc = makeNode(WindowClause);
 		wc->name = windef->name;

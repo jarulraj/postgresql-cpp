@@ -75,7 +75,7 @@ InitArchiveFmt_Null(ArchiveHandle *AH)
 }
 
 /*
- * - Start a new__ TOC entry
+ * - Start a new TOC entry
  */
 
 /*

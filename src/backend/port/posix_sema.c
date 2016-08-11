@@ -51,7 +51,7 @@ static void ReleaseSemaphores(int status, Datum arg);
 /*
  * PosixSemaphoreCreate
  *
- * Attempt to create a new__ named semaphore.
+ * Attempt to create a new named semaphore.
  *
  * If we fail with a failure code other than collision-with-existing-sema,
  * print out an error and abort.  Other types of errors suggest nonrecoverable
@@ -104,7 +104,7 @@ PosixSemaphoreCreate(void)
 /*
  * PosixSemaphoreCreate
  *
- * Attempt to create a new__ unnamed semaphore.
+ * Attempt to create a new unnamed semaphore.
  */
 static void
 PosixSemaphoreCreate(sem_t * sem)
@@ -201,7 +201,7 @@ PGSemaphoreCreate(PGSemaphore sema)
 	newsem = sema;
 #endif
 
-	/* Remember new__ sema for ReleaseSemaphores */
+	/* Remember new sema for ReleaseSemaphores */
 	mySemPointers[numSems++] = newsem;
 }
 

@@ -510,7 +510,7 @@ tablesample_getnext(SampleScanState *scanstate)
 				blockno = 0;
 
 			/*
-			 * Report our new__ scan position for synchronization purposes.
+			 * Report our new scan position for synchronization purposes.
 			 *
 			 * Note: we do this__ before checking for end of scan so that the
 			 * final state of the position hint is back at the start of the
@@ -542,7 +542,7 @@ tablesample_getnext(SampleScanState *scanstate)
 		Assert(blockno < scan->rs_nblocks);
 		heapgetpage(scan, blockno);
 
-		/* Re-establish state for new__ page */
+		/* Re-establish state for new page */
 		if (!pagemode)
 			LockBuffer(scan->rs_cbuf, BUFFER_LOCK_SHARE);
 

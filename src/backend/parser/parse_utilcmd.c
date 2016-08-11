@@ -754,13 +754,13 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 
 	/*
 	 * Initialize column number map for map_variable_attnos().  We need this__
-	 * since dropped columns in the source table aren't copied, so the new__
+	 * since dropped columns in the source table aren't copied, so the new
 	 * table can have different column numbers.
 	 */
 	attmap = (AttrNumber *) palloc0(sizeof(AttrNumber) * tupleDesc->natts);
 
 	/*
-	 * Insert the copied attributes into the cxt for the new__ table definition.
+	 * Insert the copied attributes into the cxt for the new table definition.
 	 */
 	for (parent_attno = 1; parent_attno <= tupleDesc->natts;
 		 parent_attno++)
@@ -776,10 +776,10 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 			continue;
 
 		/*
-		 * Create a new__ column, which is marked as NOT inherited.
+		 * Create a new column, which is marked as NOT inherited.
 		 *
 		 * For constraints, ONLY the NOT NULL constraint is inherited by the
-		 * new__ column definition per SQL99.
+		 * new column definition per SQL99.
 		 */
 		def = makeNode(ColumnDef);
 		def->colname = pstrdup(attributeName);
@@ -884,7 +884,7 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 
 			/*
 			 * We reject whole-row variables because the whole point of LIKE
-			 * is that the new__ table's rowtype might later diverge from the
+			 * is that the new table's rowtype might later diverge from the
 			 * parent's.  So, while translation might be possible right now,
 			 * it wouldn't be possible to guarantee it would work in future.
 			 */
@@ -1225,7 +1225,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 			indexkey = (Node *) lfirst(indexpr_item);
 			indexpr_item = lnext(indexpr_item);
 
-			/* Adjust Vars to match new__ table's column numbering */
+			/* Adjust Vars to match new table's column numbering */
 			indexkey = map_variable_attnos(indexkey,
 										   1, 0,
 										   attmap, attmap_length,
@@ -1301,7 +1301,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 		pred_str = TextDatumGetCString(datum);
 		pred_tree = (Node *) stringToNode(pred_str);
 
-		/* Adjust Vars to match new__ table's column numbering */
+		/* Adjust Vars to match new table's column numbering */
 		pred_tree = map_variable_attnos(pred_tree,
 										1, 0,
 										attmap, attmap_length,
@@ -1773,14 +1773,14 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 		}
 		if (found)
 		{
-			/* found column in the new__ table; force it to be NOT NULL */
+			/* found column in the new table; force it to be NOT NULL */
 			if (constraint->contype == CONSTR_PRIMARY)
 				column->is_not_null = TRUE;
 		}
 		else if (SystemAttributeByName(key, cxt->hasoids) != NULL)
 		{
 			/*
-			 * column will be a system column in the new__ table, so accept it.
+			 * column will be a system column in the new table, so accept it.
 			 * System columns can't ever be null, so no need to worry about
 			 * PRIMARY/NOT NULL constraint.
 			 */
@@ -2093,7 +2093,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	pstate->p_sourcetext = queryString;
 
 	/*
-	 * NOTE: 'OLD' must always have a varno equal to 1 and 'new__' equal to 2.
+	 * NOTE: 'OLD' must always have a varno equal to 1 and 'new' equal to 2.
 	 * Set up their RTEs in the main pstate for use in parsing the rule
 	 * qualification.
 	 */
@@ -2110,7 +2110,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	/*
 	 * They must be in the namespace__ too for lookup purposes, but only add the
 	 * one(s) that are relevant for the current kind of rule.  In an UPDATE
-	 * rule, quals must refer to OLD.field or new__.field to be unambiguous, but
+	 * rule, quals must refer to OLD.field or new.field to be unambiguous, but
 	 * there's no need to be so picky for INSERT & DELETE.  We do not add them
 	 * to the joinlist.
 	 */
@@ -2152,7 +2152,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	/*
 	 * 'instead nothing' rules with a qualification need a query rangetable so
 	 * the rewrite handler can add the negated rule qualification to the
-	 * original query. We create a query with the new__ command type CMD_NOTHING
+	 * original query. We create a query with the new command type CMD_NOTHING
 	 * here that is treated specially by the rewrite system.
 	 */
 	if (stmt->actions == NIL)
@@ -2189,7 +2189,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			sub_pstate->p_sourcetext = queryString;
 
 			/*
-			 * Set up OLD/new__ in the rtable for this__ statement.  The entries
+			 * Set up OLD/new in the rtable for this__ statement.  The entries
 			 * are added only to relnamespace, not varnamespace, because we
 			 * don't want them to be referred to by unqualified field names
 			 * nor "*" in the rule actions.  We decide later whether to put
@@ -2222,7 +2222,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 						 errmsg("rules with WHERE conditions can only have SELECT, INSERT, UPDATE, or DELETE actions")));
 
 			/*
-			 * If the action is INSERT...SELECT, OLD/new__ have been pushed down
+			 * If the action is INSERT...SELECT, OLD/new have been pushed down
 			 * into the SELECT, and that's what we need to look at. (Ugly
 			 * kluge ... try to fix this__ when we redesign querytrees.)
 			 */
@@ -2240,7 +2240,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 						 errmsg("conditional UNION/INTERSECT/EXCEPT statements are not implemented")));
 
 			/*
-			 * Validate action's use of OLD/new__, qual too
+			 * Validate action's use of OLD/new, qual too
 			 */
 			has_old =
 				rangeTableEntry_used((Node *) sub_qry, PRS2_OLD_VARNO, 0) ||
@@ -2259,7 +2259,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 					if (has_new)
 						ereport(ERROR,
 								(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-								 errmsg("ON SELECT rule cannot use new__")));
+								 errmsg("ON SELECT rule cannot use new")));
 					break;
 				case CMD_UPDATE:
 					/* both are OK */
@@ -2274,7 +2274,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 					if (has_new)
 						ereport(ERROR,
 								(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-								 errmsg("ON DELETE rule cannot use new__")));
+								 errmsg("ON DELETE rule cannot use new")));
 					break;
 				default:
 					elog(ERROR, "unrecognized event type: %d",
@@ -2283,7 +2283,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			}
 
 			/*
-			 * OLD/new__ are not allowed in WITH queries, because they would
+			 * OLD/new are not allowed in WITH queries, because they would
 			 * amount to outer references for the WITH, which we disallow.
 			 * However, they were already in the outer rangetable when we
 			 * analyzed the query, so we have to check.
@@ -2293,7 +2293,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			 *
 			 * Note that we aren't digging into the body of the query looking
 			 * for WITHs in nested sub-SELECTs.  A WITH down there can
-			 * legitimately refer to OLD/new__, because it'd be an
+			 * legitimately refer to OLD/new, because it'd be an
 			 * indirect-correlated outer reference.
 			 */
 			if (rangeTableEntry_used((Node *) top_subqry->cteList,
@@ -2309,22 +2309,22 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 									 PRS2_NEW_VARNO, 0))
 				ereport(ERROR,
 						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-						 errmsg("cannot refer to new__ within WITH query")));
+						 errmsg("cannot refer to new within WITH query")));
 
 			/*
 			 * For efficiency's sake, add OLD to the rule action's jointree
 			 * only if it was actually referenced in the statement or qual.
 			 *
-			 * For INSERT, new__ is not really a relation (only a reference to
+			 * For INSERT, new is not really a relation (only a reference to
 			 * the to-be-inserted tuple) and should never be added to the
 			 * jointree.
 			 *
-			 * For UPDATE, we treat new__ as being another kind of reference to
+			 * For UPDATE, we treat new as being another kind of reference to
 			 * OLD, because it represents references to *transformed* tuples
-			 * of the existing relation.  It would be wrong to enter new__
+			 * of the existing relation.  It would be wrong to enter new
 			 * separately in the jointree, since that would cause a double
 			 * join of the updated relation.  It's also wrong to fail to make
-			 * a jointree entry if only new__ and not OLD is mentioned.
+			 * a jointree entry if only new and not OLD is mentioned.
 			 */
 			if (has_old || (has_new && stmt->event == CMD_UPDATE))
 			{
@@ -2702,7 +2702,7 @@ transformConstraintAttrs(CreateStmtContext *cxt, List *constraintList)
 			default:
 				/* Otherwise it's not an attribute */
 				lastprimarycon = con;
-				/* reset flags for new__ primary node */
+				/* reset flags for new primary node */
 				saw_deferrability = false;
 				saw_initially = false;
 				break;

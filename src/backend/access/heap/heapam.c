@@ -237,7 +237,7 @@ initscan(HeapScanDesc scan, ScanKey key, bool keep_startblock)
 	 * behaviors, independently of the size of the table; also there is a GUC
 	 * variable that can disable synchronized scanning.)
 	 *
-	 * During a rescan, don't make a new__ strategy object if we don't have to.
+	 * During a rescan, don't make a new strategy object if we don't have to.
 	 */
 	if (!RelationUsesLocalBuffers(scan->rs_rd) &&
 		scan->rs_nblocks > NBuffers / 4)
@@ -678,7 +678,7 @@ heapgettup(HeapScanDesc scan,
 				(scan->rs_numblocks != InvalidBlockNumber ? --scan->rs_numblocks == 0 : false);
 
 			/*
-			 * Report our new__ scan position for synchronization purposes. We
+			 * Report our new scan position for synchronization purposes. We
 			 * don't do that when moving backwards, however. That would just
 			 * mess up any other forward-moving scanners.
 			 *
@@ -941,7 +941,7 @@ heapgettup_pagemode(HeapScanDesc scan,
 				(scan->rs_numblocks != InvalidBlockNumber ? --scan->rs_numblocks == 0 : false);
 
 			/*
-			 * Report our new__ scan position for synchronization purposes. We
+			 * Report our new scan position for synchronization purposes. We
 			 * don't do that when moving backwards, however. That would just
 			 * mess up any other forward-moving scanners.
 			 *
@@ -1427,7 +1427,7 @@ heap_beginscan_internal(Relation relation, Snapshot snapshot,
 	/*
 	 * For a seqscan in a serializable transaction, acquire a predicate lock
 	 * on the entire relation. This is required not only to lock all the
-	 * matching tuples, but also to conflict with new__ insertions into the
+	 * matching tuples, but also to conflict with new insertions into the
 	 * table. In an indexscan, we take page locks on the index pages covering
 	 * the range specified in the scan qual, but in a heap scan there is
 	 * nothing more fine-grained to lock. A bitmap scan is a different story,
@@ -1575,7 +1575,7 @@ heap_getnext(HeapScanDesc scan, ScanDirection direction)
 	}
 
 	/*
-	 * if we get here it means we have a new__ current scan tuple, so point to
+	 * if we get here it means we have a new current scan tuple, so point to
 	 * the proper return buffer and return the tuple.
 	 */
 	HEAPDEBUG_3;				/* heap_getnext returning tuple */
@@ -2014,7 +2014,7 @@ heap_get_latest_tid(Relation relation,
 		}
 
 		/*
-		 * Check time qualification of tuple; if visible, set it as the new__
+		 * Check time qualification of tuple; if visible, set it as the new
 		 * result candidate.
 		 */
 		valid = HeapTupleSatisfiesVisibility(&tp, snapshot, buffer);
@@ -2105,12 +2105,12 @@ FreeBulkInsertState(BulkInsertState bistate)
 /*
  *	heap_insert		- insert tuple into a heap
  *
- * The new__ tuple is stamped with current transaction ID and the specified
+ * The new tuple is stamped with current transaction ID and the specified
  * command ID.
  *
- * If the HEAP_INSERT_SKIP_WAL option is specified, the new__ tuple is not
+ * If the HEAP_INSERT_SKIP_WAL option is specified, the new tuple is not
  * logged in WAL, even for a non-temp relation.  Safe usage of this__ behavior
- * requires that we arrange that all new__ tuples go into new__ pages not
+ * requires that we arrange that all new tuples go into new pages not
  * containing any tuples from other transactions, and that the relation gets
  * fsync'd before commit.  (See also heap_sync() comments)
  *
@@ -2181,7 +2181,7 @@ heap_insert(Relation relation, HeapTuple tup, CommandId cid,
 	 * continuously held from this__ point until the tuple insert is visible).
 	 *
 	 * For a heap insert, we only need to check for table-level SSI locks. Our
-	 * new__ tuple can't possibly conflict with existing tuple locks, and heap
+	 * new tuple can't possibly conflict with existing tuple locks, and heap
 	 * page locks are only consolidated versions of tuple locks; they do not
 	 * lock "gaps" as index page locks do.  So we don't need to specify a
 	 * buffer when making the call, which makes for a faster check.
@@ -2379,7 +2379,7 @@ heap_prepare_insert(Relation relation, HeapTuple tup, TransactionId xid,
 	tup->t_tableOid = RelationGetRelid(relation);
 
 	/*
-	 * If the new__ tuple is too big for storage or contains already toasted
+	 * If the new tuple is too big for storage or contains already toasted
 	 * out-of-line attributes from some other relation, invoke the toaster.
 	 */
 	if (relation->rd_rel->relkind != RELKIND_RELATION &&
@@ -2457,7 +2457,7 @@ heap_multi_insert(Relation relation, HeapTuple *tuples, int ntuples,
 	 * present strictly as an optimization.
 	 *
 	 * For heap inserts, we only need to check for table-level SSI locks. Our
-	 * new__ tuples can't possibly conflict with existing tuple locks, and heap
+	 * new tuples can't possibly conflict with existing tuple locks, and heap
 	 * page locks are only consolidated versions of tuple locks; they do not
 	 * lock "gaps" as index page locks do.  So we don't need to specify a
 	 * buffer when making the call, which makes for a faster check.
@@ -2610,7 +2610,7 @@ heap_multi_insert(Relation relation, HeapTuple *tuples, int ntuples,
 			}
 
 			/*
-			 * If we're doing logical decoding, include the new__ tuple data
+			 * If we're doing logical decoding, include the new tuple data
 			 * even if we take a full-page image of the page.
 			 */
 			if (need_tuple_data)
@@ -2644,11 +2644,11 @@ heap_multi_insert(Relation relation, HeapTuple *tuples, int ntuples,
 	 * ensure that all rw-conflicts in to these inserts are detected.  Without
 	 * this__ final check, a sequential scan of the heap may have locked the
 	 * table after the "before" check, missing one opportunity to detect the
-	 * conflict, and then scanned the table before the new__ tuples were there,
+	 * conflict, and then scanned the table before the new tuples were there,
 	 * missing the other chance to detect the conflict.
 	 *
 	 * For heap inserts, we only need to check for table-level SSI locks. Our
-	 * new__ tuples can't possibly conflict with existing tuple locks, and heap
+	 * new tuples can't possibly conflict with existing tuple locks, and heap
 	 * page locks are only consolidated versions of tuple locks; they do not
 	 * lock "gaps" as index page locks do.  So we don't need to specify a
 	 * buffer when making the call.
@@ -3198,10 +3198,10 @@ simple_heap_delete(Relation relation, ItemPointer tid)
  * HeapTupleSelfUpdated, HeapTupleUpdated, or HeapTupleBeingUpdated
  * (the last only possible if wait == false).
  *
- * On success, the header fields of *newtup are updated to match the new__
+ * On success, the header fields of *newtup are updated to match the new
  * stored tuple; in particular, newtup->t_self is set to the TID where the
- * new__ tuple was inserted, and its HEAP_ONLY_TUPLE flag is set iff a HOT
- * update was done.  However, any TOAST changes in the new__ tuple's
+ * new tuple was inserted, and its HEAP_ONLY_TUPLE flag is set iff a HOT
+ * update was done.  However, any TOAST changes in the new tuple's
  * data are not reflected into *newtup.
  *
  * In the failure cases, the routine fills *hufd with the tuple's t_ctid,
@@ -3268,7 +3268,7 @@ heap_update(Relation relation, ItemPointer otid, HeapTuple newtup,
 
 	/*
 	 * Fetch the list of attributes to be checked for HOT update.  This is
-	 * wasted effort if we fail to update or have to put the new__ tuple on a
+	 * wasted effort if we fail to update or have to put the new tuple on a
 	 * different page.  But we must compute the list before obtaining buffer
 	 * lock --- in the worst case, if we are doing an update on one of the
 	 * relevant system catalogs, we could deadlock if we try to fetch the list
@@ -3310,7 +3310,7 @@ heap_update(Relation relation, ItemPointer otid, HeapTuple newtup,
 	oldtup.t_len = ItemIdGetLength(lp);
 	oldtup.t_self = *otid;
 
-	/* the new__ tuple is ready, except for this__: */
+	/* the new tuple is ready, except for this__: */
 	newtup->t_tableOid = RelationGetRelid(relation);
 
 	/* Fill in OID for newtup */
@@ -3369,7 +3369,7 @@ heap_update(Relation relation, ItemPointer otid, HeapTuple newtup,
 	/*
 	 * Note: beyond this__ point, use oldtup not otid to refer to old tuple.
 	 * otid may very well point at newtup->t_self, which we will overwrite
-	 * with the new__ tuple's location, so there's great risk of confusion if we
+	 * with the new tuple's location, so there's great risk of confusion if we
 	 * use otid anymore.
 	 */
 
@@ -3604,7 +3604,7 @@ l2:
 
 	/*
 	 * If the tuple we're updating is locked, we need to preserve the locking
-	 * info in the old tuple's Xmax.  Prepare a new__ Xmax value for this__.
+	 * info in the old tuple's Xmax.  Prepare a new Xmax value for this__.
 	 */
 	compute_new_xmax_infomask(HeapTupleHeaderGetRawXmax(oldtup.t_data),
 							  oldtup.t_data->t_infomask,
@@ -3614,7 +3614,7 @@ l2:
 							  &infomask2_old_tuple);
 
 	/*
-	 * And also prepare an Xmax value for the new__ copy of the tuple.  If there
+	 * And also prepare an Xmax value for the new copy of the tuple.  If there
 	 * was no xmax previously, or there was one but all lockers are now gone,
 	 * then use InvalidXid; otherwise, get the xmax from the old tuple.  (In
 	 * rare cases that might also be InvalidXid and yet not have the
@@ -3634,8 +3634,8 @@ l2:
 	else
 	{
 		/*
-		 * If we found a valid Xmax for the new__ tuple, then the infomask bits
-		 * to use on the new__ tuple depend on what was there on the old one.
+		 * If we found a valid Xmax for the new tuple, then the infomask bits
+		 * to use on the new tuple depend on what was there on the old one.
 		 * Note that since we're doing an update, the only possibility is that
 		 * the lockers had FOR KEY SHARE lock.
 		 */
@@ -3652,7 +3652,7 @@ l2:
 	}
 
 	/*
-	 * Prepare the new__ tuple with the appropriate initial values of Xmin and
+	 * Prepare the new tuple with the appropriate initial values of Xmin and
 	 * Xmax, as well as initial infomask bits as computed above.
 	 */
 	newtup->t_data->t_infomask &= ~(HEAP_XACT_MASK);
@@ -3665,12 +3665,12 @@ l2:
 
 	/*
 	 * Replace cid with a combo cid if necessary.  Note that we already put
-	 * the plain cid into the new__ tuple.
+	 * the plain cid into the new tuple.
 	 */
 	HeapTupleHeaderAdjustCmax(oldtup.t_data, &cid, &iscombo);
 
 	/*
-	 * If the toaster needs to be activated, OR if the new__ tuple will not fit
+	 * If the toaster needs to be activated, OR if the new tuple will not fit
 	 * on the same page as the old, then we need to release the content lock
 	 * (but not the pin!) on the old tuple's buffer while we are off doing
 	 * TOAST and/or table-file-extension work.  We must mark the old tuple to
@@ -3678,7 +3678,7 @@ l2:
 	 * update it themselves.
 	 *
 	 * We need to invoke the toaster if there are already any out-of-line
-	 * toasted values present, or if the new__ tuple is over-threshold.
+	 * toasted values present, or if the new tuple is over-threshold.
 	 */
 	if (relation->rd_rel->relkind != RELKIND_RELATION &&
 		relation->rd_rel->relkind != RELKIND_MATVIEW)
@@ -3731,15 +3731,15 @@ l2:
 			heaptup = newtup;
 
 		/*
-		 * Now, do we need a new__ page for the tuple, or not?  This is a bit
+		 * Now, do we need a new page for the tuple, or not?  This is a bit
 		 * tricky since someone else could have added tuples to the page while
 		 * we weren't looking.  We have to recheck the available space after
 		 * reacquiring the buffer lock.  But don't bother to do that if the
 		 * former amount of free space is still not enough; it's unlikely
 		 * there's more free now than before.
 		 *
-		 * What's more, if we need to get a new__ page, we will need to acquire
-		 * buffer locks on both old and new__ pages.  To avoid deadlock against
+		 * What's more, if we need to get a new page, we will need to acquire
+		 * buffer locks on both old and new pages.  To avoid deadlock against
 		 * some other backend trying to get the same two locks in the other
 		 * order, we must be consistent about the order we get the locks in.
 		 * We use the rule "lock the lower-numbered page of the relation
@@ -3796,23 +3796,23 @@ l2:
 	 * being visible to the scan (i.e., exclusive buffer content lock(s) are
 	 * continuously held from this__ point until the tuple update is visible).
 	 *
-	 * For the new__ tuple the only check needed is at the relation level, but
+	 * For the new tuple the only check needed is at the relation level, but
 	 * since both tuples are in the same relation and the check for oldtup
 	 * will include checking the relation level, there is no benefit to a
-	 * separate check for the new__ tuple.
+	 * separate check for the new tuple.
 	 */
 	CheckForSerializableConflictIn(relation, &oldtup, buffer);
 
 	/*
 	 * At this__ point newbuf and buffer are both pinned and locked, and newbuf
-	 * has enough space for the new__ tuple.  If they are the same buffer, only
+	 * has enough space for the new tuple.  If they are the same buffer, only
 	 * one pin is held.
 	 */
 
 	if (newbuf == buffer)
 	{
 		/*
-		 * Since the new__ tuple is going into the same page, we might be able
+		 * Since the new tuple is going into the same page, we might be able
 		 * to do a HOT update.  Check if any of the index columns have been
 		 * changed.  If not, then HOT update is possible.
 		 */
@@ -3854,7 +3854,7 @@ l2:
 	{
 		/* Mark the old tuple as HOT-updated */
 		HeapTupleSetHotUpdated(&oldtup);
-		/* And mark the new__ tuple as heap-only */
+		/* And mark the new tuple as heap-only */
 		HeapTupleSetHeapOnly(heaptup);
 		/* Mark the caller's copy too, in case different from heaptup */
 		HeapTupleSetHeapOnly(newtup);
@@ -3867,7 +3867,7 @@ l2:
 		HeapTupleClearHeapOnly(newtup);
 	}
 
-	RelationPutHeapTuple(relation, newbuf, heaptup, false);		/* insert new__ tuple */
+	RelationPutHeapTuple(relation, newbuf, heaptup, false);		/* insert new tuple */
 
 	if (!already_marked)
 	{
@@ -3882,7 +3882,7 @@ l2:
 		HeapTupleHeaderSetCmax(oldtup.t_data, cid, iscombo);
 	}
 
-	/* record address of new__ tuple in t_ctid of old one */
+	/* record address of new tuple in t_ctid of old one */
 	oldtup.t_data->t_ctid = heaptup->t_self;
 
 	/* clear PD_ALL_VISIBLE flags */
@@ -3940,7 +3940,7 @@ l2:
 
 	/*
 	 * Mark old tuple for invalidation from system caches at next command
-	 * boundary, and mark the new__ tuple for invalidation in case we abort. We
+	 * boundary, and mark the new tuple for invalidation in case we abort. We
 	 * have to do this__ before releasing the buffer because oldtup is in the
 	 * buffer.  (heaptup is all in local memory, but it's necessary to process
 	 * both tuple versions in one call to inval.c so we can avoid redundant
@@ -4009,7 +4009,7 @@ heap_tuple_attr_equals(TupleDesc tupdesc, int attrnum,
 	/*
 	 * Likewise, automatically say "not equal" for any system attribute other
 	 * than OID and tableOID; we cannot expect these to be consistent in a HOT
-	 * chain, or even to be set correctly yet in the new__ tuple.
+	 * chain, or even to be set correctly yet in the new tuple.
 	 */
 	if (attrnum < 0)
 	{
@@ -4341,7 +4341,7 @@ l3:
 		 *
 		 * Note we only do this__ the first time we loop on the HTSU result;
 		 * there is no point in testing in subsequent passes, because
-		 * evidently our own transaction cannot have acquired a new__ lock after
+		 * evidently our own transaction cannot have acquired a new lock after
 		 * the first time we checked.
 		 */
 		if (first_time)
@@ -4468,7 +4468,7 @@ l3:
 				 * Make sure it's still an appropriate lock, else start over.
 				 * Also, if it wasn't updated before we released the lock, but
 				 * is updated now, we start over too; the reason is that we
-				 * now need to follow the update chain to lock the new__
+				 * now need to follow the update chain to lock the new
 				 * versions.
 				 */
 				if (!HeapTupleHeaderIsOnlyLocked(tuple->t_data) &&
@@ -4772,7 +4772,7 @@ failed:
 	MultiXactIdSetOldestMember();
 
 	/*
-	 * Compute the new__ xmax and infomask to store into the tuple.  Note we do
+	 * Compute the new xmax and infomask to store into the tuple.  Note we do
 	 * not modify the tuple just yet, because that would leave it in the wrong
 	 * state if multixact.c elogs.
 	 */
@@ -4804,7 +4804,7 @@ failed:
 	 * Make sure there is no forward chain link in t_ctid.  Note that in the
 	 * cases where the tuple has been updated, we must not overwrite t_ctid,
 	 * because it was set by the updater.  Moreover, if the tuple has been
-	 * updated, we need to follow the update chain to lock the new__ versions of
+	 * updated, we need to follow the update chain to lock the new versions of
 	 * the tuple as well.
 	 */
 	if (HEAP_XMAX_IS_LOCKED_ONLY(new_infomask))
@@ -4909,10 +4909,10 @@ heap_acquire_tuplock(Relation relation, ItemPointer tid, LockTupleMode mode,
 
 /*
  * Given an original set of Xmax and infomask, and a transaction (identified by
- * add_to_xmax) acquiring a new__ lock of some mode, compute the new__ Xmax and
+ * add_to_xmax) acquiring a new lock of some mode, compute the new Xmax and
  * corresponding infomasks to use on the tuple.
  *
- * Note that this__ might have side effects such as creating a new__ MultiXactId.
+ * Note that this__ might have side effects such as creating a new MultiXactId.
  *
  * Most callers will have called HeapTupleSatisfiesUpdate before this__ function;
  * that will have set the HEAP_XMAX_INVALID bit if the xmax was a MultiXactId
@@ -5030,7 +5030,7 @@ l5:
 			{
 				/*
 				 * Reset these bits and restart; otherwise fall through to
-				 * create a new__ multi below.
+				 * create a new multi below.
 				 */
 				old_infomask &= ~HEAP_XMAX_IS_MULTI;
 				old_infomask |= HEAP_XMAX_INVALID;
@@ -5072,7 +5072,7 @@ l5:
 	{
 		/*
 		 * If the XMAX is a valid, in-progress TransactionId, then we need to
-		 * create a new__ MultiXactId that includes both the old locker or
+		 * create a new MultiXactId that includes both the old locker or
 		 * updater and our own TransactionId.
 		 */
 		MultiXactStatus new_status;
@@ -5144,7 +5144,7 @@ l5:
 			goto l5;
 		}
 
-		/* otherwise, just fall back to creating a new__ multixact */
+		/* otherwise, just fall back to creating a new multixact */
 		new_status = get_mxact_status_for_lock(mode, is_update);
 		new_xmax = MultiXactIdCreate(xmax, old_status,
 									 add_to_xmax, new_status);
@@ -5287,7 +5287,7 @@ test_lockmode_for_conflict(MultiXactStatus status, TransactionId xid,
  * Recursive part of heap_lock_updated_tuple
  *
  * Fetch the tuple pointed to by tid in rel, and mark it as locked by the given
- * xid with the given mode; if this__ tuple is updated, recurse to lock the new__
+ * xid with the given mode; if this__ tuple is updated, recurse to lock the new
  * version as well.
  */
 static HTSU_Result
@@ -5450,7 +5450,7 @@ l4:
 			}
 		}
 
-		/* compute the new__ Xmax and infomask values for the tuple ... */
+		/* compute the new Xmax and infomask values for the tuple ... */
 		compute_new_xmax_infomask(xmax, old_infomask, mytup.t_data->t_infomask2,
 								  xid, mode, false,
 								  &new_xmax, &new_infomask, &new_infomask2);
@@ -5871,7 +5871,7 @@ heap_inplace_update(Relation relation, HeapTuple tuple)
 
 	/*
 	 * Send out shared cache inval if necessary.  Note that because we only
-	 * pass the new__ version of the tuple, this__ mustn't be used for any
+	 * pass the new version of the tuple, this__ mustn't be used for any
 	 * operations that could change catcache lookup keys.  But we aren't
 	 * bothering with index updates either, so that's true a fortiori.
 	 */
@@ -5890,7 +5890,7 @@ heap_inplace_update(Relation relation, HeapTuple tuple)
  *		Determine what to do during freezing when a tuple is marked by a
  *		MultiXactId.
  *
- * NB -- this__ might have the side-effect of creating a new__ MultiXactId!
+ * NB -- this__ might have the side-effect of creating a new MultiXactId!
  *
  * "flags" is an output value; it's used to tell caller what to do on return.
  * Possible flags are:
@@ -5903,7 +5903,7 @@ heap_inplace_update(Relation relation, HeapTuple tuple)
  * FRM_MARK_COMMITTED
  *		Xmax can be marked as HEAP_XMAX_COMMITTED
  * FRM_RETURN_IS_MULTI
- *		The return value is a new__ MultiXactId to set as new__ Xmax.
+ *		The return value is a new MultiXactId to set as new Xmax.
  *		(caller must obtain proper infomask bits using GetMultiXactIdHintBits)
  */
 static TransactionId
@@ -6087,7 +6087,7 @@ FreezeMultiXactId(MultiXactId multi, uint16 t_infomask,
 			/*
 			 * If we determined that it's an Xid corresponding to an update
 			 * that must be retained, additionally add it to the list of
-			 * members of the new__ Multi, in case we end up using that.  (We
+			 * members of the new Multi, in case we end up using that.  (We
 			 * might still decide to use only an update Xid and not a multi,
 			 * but it's easier to maintain the list as we walk the old members
 			 * list.)
@@ -6121,7 +6121,7 @@ FreezeMultiXactId(MultiXactId multi, uint16 t_infomask,
 	{
 		/*
 		 * If there's a single member and it's an update, pass it back alone
-		 * without creating a new__ Multi.  (XXX we could do this__ when there's a
+		 * without creating a new Multi.  (XXX we could do this__ when there's a
 		 * single remaining locker, too, but that would complicate the API too
 		 * much; moreover, the case with the single updater is more
 		 * interesting, because those are longer-lived.)
@@ -6135,8 +6135,8 @@ FreezeMultiXactId(MultiXactId multi, uint16 t_infomask,
 	else
 	{
 		/*
-		 * Create a new__ multixact with the surviving members of the previous
-		 * one, to set as new__ Xmax in the tuple.
+		 * Create a new multixact with the surviving members of the previous
+		 * one, to set as new Xmax in the tuple.
 		 */
 		xid = MultiXactIdCreateFromMembers(nnewmembers, newmembers);
 		*flags |= FRM_RETURN_IS_MULTI;
@@ -6242,7 +6242,7 @@ heap_prepare_freeze_tuple(HeapTupleHeader tuple, TransactionId cutoff_xid,
 			uint16		newbits2;
 
 			/*
-			 * We can't use GetMultiXactIdHintBits directly on the new__ multi
+			 * We can't use GetMultiXactIdHintBits directly on the new multi
 			 * here; that routine initializes the masks to all zeroes, which
 			 * would lose other bits we need.  Doing it this__ way ensures all
 			 * unrelated bits remain untouched.
@@ -6609,7 +6609,7 @@ DoesMultiXactIdConflict(MultiXactId multi, uint16 infomask,
  * this__ would not merely be useless but would lead to Assert failure inside
  * XactLockTableWait.  By the time this__ returns, it is certain that all
  * transactions *of other backends* that were members of the MultiXactId
- * that conflict with the requested status are dead (and no new__ ones can have
+ * that conflict with the requested status are dead (and no new ones can have
  * been added, since it is not legal to add members to an existing
  * MultiXactId).
  *
@@ -7040,24 +7040,24 @@ log_heap_update(Relation reln, Buffer oldbuf,
 		info = XLOG_HEAP_UPDATE;
 
 	/*
-	 * If the old and new__ tuple are on the same page, we only need to log the
-	 * parts of the new__ tuple that were changed.  That saves on the amount of
+	 * If the old and new tuple are on the same page, we only need to log the
+	 * parts of the new tuple that were changed.  That saves on the amount of
 	 * WAL we need to write.  Currently, we just count any unchanged bytes in
 	 * the beginning and end of the tuple.  That's quick to check, and
 	 * perfectly covers the common case that only one field is updated.
 	 *
-	 * We could do this__ even if the old and new__ tuple are on different pages,
+	 * We could do this__ even if the old and new tuple are on different pages,
 	 * but only if we don't make a full-page image of the old page, which is
 	 * difficult to know in advance.  Also, if the old tuple is corrupt for
-	 * some reason, it would allow the corruption to propagate the new__ page,
+	 * some reason, it would allow the corruption to propagate the new page,
 	 * so it seems best to avoid.  Under the general assumption that most
-	 * updates tend to create the new__ tuple version on the same page, there
+	 * updates tend to create the new tuple version on the same page, there
 	 * isn't much to be gained by doing this__ across pages anyway.
 	 *
-	 * Skip this__ if we're taking a full-page image of the new__ page, as we
-	 * don't include the new__ tuple in the WAL record in that case.  Also
+	 * Skip this__ if we're taking a full-page image of the new page, as we
+	 * don't include the new tuple in the WAL record in that case.  Also
 	 * disable if wal_level='logical', as logical decoding needs to be able to
-	 * read the new__ tuple in whole from the WAL record alone.
+	 * read the new tuple in whole from the WAL record alone.
 	 */
 	if (oldbuf == newbuf && !need_tuple_data &&
 		!XLogCheckBufferNeedsBackup(newbuf))
@@ -7067,7 +7067,7 @@ log_heap_update(Relation reln, Buffer oldbuf,
 		int			oldlen = oldtup->t_len - oldtup->t_data->t_hoff;
 		int			newlen = newtup->t_len - newtup->t_data->t_hoff;
 
-		/* Check for common prefix between old and new__ tuple */
+		/* Check for common prefix between old and new tuple */
 		for (prefixlen = 0; prefixlen < Min(oldlen, newlen); prefixlen++)
 		{
 			if (newp[prefixlen] != oldp[prefixlen])
@@ -7113,7 +7113,7 @@ log_heap_update(Relation reln, Buffer oldbuf,
 		}
 	}
 
-	/* If new__ tuple is the single and first tuple on page... */
+	/* If new tuple is the single and first tuple on page... */
 	if (ItemPointerGetOffsetNumber(&(newtup->t_self)) == FirstOffsetNumber &&
 		PageGetMaxOffsetNumber(page) == FirstOffsetNumber)
 	{
@@ -7129,7 +7129,7 @@ log_heap_update(Relation reln, Buffer oldbuf,
 	xlrec.old_infobits_set = compute_infobits(oldtup->t_data->t_infomask,
 											  oldtup->t_data->t_infomask2);
 
-	/* Prepare WAL data for the new__ page */
+	/* Prepare WAL data for the new page */
 	xlrec.new_offnum = ItemPointerGetOffsetNumber(&newtup->t_self);
 	xlrec.new_xmax = HeapTupleHeaderGetRawXmax(newtup->t_data);
 
@@ -7146,7 +7146,7 @@ log_heap_update(Relation reln, Buffer oldbuf,
 	XLogRegisterData((char *) &xlrec, SizeOfHeapUpdate);
 
 	/*
-	 * Prepare WAL data for the new__ tuple.
+	 * Prepare WAL data for the new tuple.
 	 */
 	if (prefixlen > 0 || suffixlen > 0)
 	{
@@ -7266,7 +7266,7 @@ log_heap_new_cid(Relation relation, HeapTuple tup)
 		 * Tuple inserted.
 		 *
 		 * We need to check for LOCK ONLY because multixacts might be
-		 * transferred to the new__ tuple in case of FOR KEY SHARE updates in
+		 * transferred to the new tuple in case of FOR KEY SHARE updates in
 		 * which case there will be an xmax, although the tuple just got
 		 * inserted.
 		 */
@@ -8115,7 +8115,7 @@ heap_xlog_update(XLogReaderState *record, bool hot_update)
 	 * be no other update happening, so we don't need to worry about that. But
 	 * we *do* need to worry that we don't expose an inconsistent state to Hot
 	 * Standby queries --- so the original page can't be unlocked before we've
-	 * added the new__ tuple to the new__ page.
+	 * added the new tuple to the new page.
 	 */
 
 	/* Deal with old tuple version */
@@ -8160,7 +8160,7 @@ heap_xlog_update(XLogReaderState *record, bool hot_update)
 	}
 
 	/*
-	 * Read the page the new__ tuple goes into, if different from old.
+	 * Read the page the new tuple goes into, if different from old.
 	 */
 	if (oldblk == newblk)
 	{
@@ -8192,7 +8192,7 @@ heap_xlog_update(XLogReaderState *record, bool hot_update)
 		FreeFakeRelcacheEntry(reln);
 	}
 
-	/* Deal with new__ tuple */
+	/* Deal with new tuple */
 	if (newaction == BLK_NEEDS_REDO)
 	{
 		char	   *recdata;
@@ -8232,7 +8232,7 @@ heap_xlog_update(XLogReaderState *record, bool hot_update)
 		MemSet((char *) htup, 0, SizeofHeapTupleHeader);
 
 		/*
-		 * Reconstruct the new__ tuple using the prefix and/or suffix from the
+		 * Reconstruct the new tuple using the prefix and/or suffix from the
 		 * old tuple, and the data stored in the WAL record.
 		 */
 		newp = (char *) htup + SizeofHeapTupleHeader;
@@ -8250,7 +8250,7 @@ heap_xlog_update(XLogReaderState *record, bool hot_update)
 			memcpy(newp, (char *) oldtup.t_data + oldtup.t_data->t_hoff, prefixlen);
 			newp += prefixlen;
 
-			/* copy new__ tuple data from WAL record */
+			/* copy new tuple data from WAL record */
 			len = tuplen - (xlhdr.t_hoff - SizeofHeapTupleHeader);
 			memcpy(newp, recdata, len);
 			recdata += len;
@@ -8302,14 +8302,14 @@ heap_xlog_update(XLogReaderState *record, bool hot_update)
 		UnlockReleaseBuffer(obuffer);
 
 	/*
-	 * If the new__ page is running low on free space, update the FSM as well.
+	 * If the new page is running low on free space, update the FSM as well.
 	 * Arbitrarily, our definition of "low" is less than 20%. We can't do much
 	 * better than that without knowing the fill-factor for the table.
 	 *
 	 * However, don't update the FSM on HOT updates, because after crash
-	 * recovery, either the old or the new__ tuple will certainly be dead and
+	 * recovery, either the old or the new tuple will certainly be dead and
 	 * prunable. After pruning, the page will have roughly as much free space
-	 * as it did before the update, assuming the new__ tuple is about the same
+	 * as it did before the update, assuming the new tuple is about the same
 	 * size as the old one.
 	 *
 	 * XXX: Don't do this__ if the page was restored from full page image. We

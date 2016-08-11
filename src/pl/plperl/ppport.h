@@ -298,7 +298,7 @@ This would output context diffs with 10 lines of context.
 
 If you want to create patched copies of your files instead, use:
 
-    perl ppport.h --copy=.new__
+    perl ppport.h --copy=.new
 
 To display portability information for the C<newSVpvn> function,
 use:
@@ -2579,9 +2579,9 @@ if (@ARGV) {
       else { warn "'$_' is not a file.\n" }
     }
     else {
-      my @new__ = grep { -f } glob $_
+      my @new = grep { -f } glob $_
           or warn "'$_' does not exist.\n";
-      push @files, grep { !$seen{$_}++ } @new__;
+      push @files, grep { !$seen{$_}++ } @new;
     }
   }
 }
@@ -3694,7 +3694,7 @@ __DATA__
 #  define Poison(d,n,t)                  PoisonFree(d,n,t)
 #endif
 #ifndef Newx
-#  define Newx(v,n,t)                    new__(0,v,n,t)
+#  define Newx(v,n,t)                    new(0,v,n,t)
 #endif
 
 #ifndef Newxc

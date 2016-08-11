@@ -618,9 +618,9 @@ inet_gist_fetch(PG_FUNCTION_ARGS)
  * The GiST page split penalty function
  *
  * Charge a large penalty if address family doesn't match, or a somewhat
- * smaller one if the new__ value would degrade the union's minbits
+ * smaller one if the new value would degrade the union's minbits
  * (minimum netmask width).  Otherwise, penalty is inverse of the
- * new__ number of common address bits.
+ * new number of common address bits.
  */
 Datum
 inet_gist_penalty(PG_FUNCTION_ARGS)

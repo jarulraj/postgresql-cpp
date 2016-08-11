@@ -608,7 +608,7 @@ read_extension_control_file(const char *extname)
 /*
  * Read the auxiliary control file for the specified extension and version.
  *
- * Returns a new__ modified ExtensionControlFile struct; the original struct
+ * Returns a new modified ExtensionControlFile struct; the original struct
  * (reflecting just the primary control file) is not modified.
  */
 static ExtensionControlFile *
@@ -1374,7 +1374,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 			CreateSchemaCommand(csstmt, NULL);
 
 			/*
-			 * CreateSchemaCommand includes CommandCounterIncrement, so new__
+			 * CreateSchemaCommand includes CommandCounterIncrement, so new
 			 * schema is now visible
 			 */
 			schemaOid = get_namespace_oid(schemaName, false);
@@ -1439,7 +1439,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 	}
 
 	/*
-	 * Insert new__ tuple into pg_extension, and create dependency entries.
+	 * Insert new tuple into pg_extension, and create dependency entries.
 	 */
 	address = InsertExtensionTuple(control->name, extowner,
 								   schemaOid, control->relocatable,
@@ -1476,8 +1476,8 @@ CreateExtension(CreateExtensionStmt *stmt)
 /*
  * InsertExtensionTuple
  *
- * Insert the new__ pg_extension row, and create extension's dependency entries.
- * Return the OID assigned to the new__ row.
+ * Insert the new pg_extension row, and create extension's dependency entries.
+ * Return the OID assigned to the new row.
  *
  * This is exported for the benefit of pg_upgrade, which has to create a
  * pg_extension entry (and the extension-level dependencies) without
@@ -1560,7 +1560,7 @@ InsertExtensionTuple(const char *extName, Oid extOwner,
 
 		recordDependencyOn(&myself, &otherext, DEPENDENCY_NORMAL);
 	}
-	/* Post creation hook for new__ extension */
+	/* Post creation hook for new extension */
 	InvokeObjectPostCreateHook(ExtensionRelationId, extensionOid, 0);
 
 	return myself;
@@ -2573,7 +2573,7 @@ AlterExtensionNamespace(List *names, const char *newschema, Oid *oldschema)
 
 	heap_close(extRel, RowExclusiveLock);
 
-	/* update dependencies to point to the new__ schema */
+	/* update dependencies to point to the new schema */
 	changeDependencyFor(ExtensionRelationId, extensionOid,
 						NamespaceRelationId, oldNspOid, nspOid);
 

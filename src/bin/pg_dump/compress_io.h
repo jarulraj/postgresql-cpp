@@ -36,8 +36,8 @@ typedef void (*WriteFunc) (ArchiveHandle *AH, const char *buf, size_t len);
  * ReadDataFromArchive will call the read function repeatedly, until it
  * returns 0 to signal EOF. ReadDataFromArchive passes a buffer to read the
  * data into in *buf, of length *buflen. If that's not big enough for the
- * callback function, it can free() it and malloc() a new__ one, returning the
- * new__ buffer and its size in *buf and *buflen.
+ * callback function, it can free() it and malloc() a new one, returning the
+ * new buffer and its size in *buf and *buflen.
  *
  * Returns the number of bytes read into *buf, or 0 on EOF.
  */

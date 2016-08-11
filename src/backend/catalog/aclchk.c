@@ -1158,7 +1158,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 	if (old_acl != NULL)
 	{
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.  Collect data before
 		 * merge_acl_with_grant throws away old_acl.
 		 */
@@ -1174,7 +1174,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 	}
 
 	/*
-	 * Generate new__ ACL.  Grantor of rights is always the same as the target
+	 * Generate new ACL.  Grantor of rights is always the same as the target
 	 * role.
 	 */
 	new_acl = merge_acl_with_grant(old_acl,
@@ -1221,7 +1221,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 
 		if (isNew)
 		{
-			/* insert new__ entry */
+			/* insert new entry */
 			values[Anum_pg_default_acl_defaclrole - 1] = ObjectIdGetDatum(iacls->roleid);
 			values[Anum_pg_default_acl_defaclnamespace - 1] = ObjectIdGetDatum(iacls->nspid);
 			values[Anum_pg_default_acl_defaclobjtype - 1] = CharGetDatum(objtype);
@@ -1600,7 +1600,7 @@ ExecGrant_Attribute(InternalGrant *istmt, Oid relOid, const char *relname,
 
 	/*
 	 * In select_best_grantor we should consider existing table-level ACL bits
-	 * as well as the per-column ACL.  Build a new__ ACL that is their
+	 * as well as the per-column ACL.  Build a new ACL that is their
 	 * concatenation.  (This is a bit cheap and dirty compared to merging them
 	 * properly with no duplications, but it's all we need here.)
 	 */
@@ -1630,7 +1630,7 @@ ExecGrant_Attribute(InternalGrant *istmt, Oid relOid, const char *relname,
 								 NameStr(pg_attribute_tuple->attname));
 
 	/*
-	 * Generate new__ ACL.
+	 * Generate new ACL.
 	 */
 	new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 								   istmt->grant_option,
@@ -1639,12 +1639,12 @@ ExecGrant_Attribute(InternalGrant *istmt, Oid relOid, const char *relname,
 								   ownerId);
 
 	/*
-	 * We need the members of both old and new__ ACLs so we can correct the
+	 * We need the members of both old and new ACLs so we can correct the
 	 * shared dependency information.
 	 */
 	nnewmembers = aclmembers(new_acl, &newmembers);
 
-	/* finished building new__ ACL value, now insert it */
+	/* finished building new ACL value, now insert it */
 	MemSet(values, 0, sizeof(values));
 	MemSet(nulls, false, sizeof(nulls));
 	MemSet(replaces, false, sizeof(replaces));
@@ -1906,7 +1906,7 @@ ExecGrant_Relation(InternalGrant *istmt)
 										 0, NULL);
 
 			/*
-			 * Generate new__ ACL.
+			 * Generate new ACL.
 			 */
 			new_acl = merge_acl_with_grant(old_acl,
 										   istmt->is_grant,
@@ -1918,12 +1918,12 @@ ExecGrant_Relation(InternalGrant *istmt)
 										   ownerId);
 
 			/*
-			 * We need the members of both old and new__ ACLs so we can correct
+			 * We need the members of both old and new ACLs so we can correct
 			 * the shared dependency information.
 			 */
 			nnewmembers = aclmembers(new_acl, &newmembers);
 
-			/* finished building new__ ACL value, now insert it */
+			/* finished building new ACL value, now insert it */
 			MemSet(values, 0, sizeof(values));
 			MemSet(nulls, false, sizeof(nulls));
 			MemSet(replaces, false, sizeof(replaces));
@@ -2100,7 +2100,7 @@ ExecGrant_Database(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2108,12 +2108,12 @@ ExecGrant_Database(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2225,7 +2225,7 @@ ExecGrant_Fdw(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2233,12 +2233,12 @@ ExecGrant_Fdw(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2350,7 +2350,7 @@ ExecGrant_ForeignServer(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2358,12 +2358,12 @@ ExecGrant_ForeignServer(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2474,7 +2474,7 @@ ExecGrant_Function(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2482,12 +2482,12 @@ ExecGrant_Function(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2604,7 +2604,7 @@ ExecGrant_Language(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2612,12 +2612,12 @@ ExecGrant_Language(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2742,7 +2742,7 @@ ExecGrant_Largeobject(InternalGrant *istmt)
 									 loname, 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2750,12 +2750,12 @@ ExecGrant_Largeobject(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2868,7 +2868,7 @@ ExecGrant_Namespace(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -2876,12 +2876,12 @@ ExecGrant_Namespace(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -2992,7 +2992,7 @@ ExecGrant_Tablespace(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -3000,12 +3000,12 @@ ExecGrant_Tablespace(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));
@@ -3129,7 +3129,7 @@ ExecGrant_Type(InternalGrant *istmt)
 									 0, NULL);
 
 		/*
-		 * Generate new__ ACL.
+		 * Generate new ACL.
 		 */
 		new_acl = merge_acl_with_grant(old_acl, istmt->is_grant,
 									   istmt->grant_option, istmt->behavior,
@@ -3137,12 +3137,12 @@ ExecGrant_Type(InternalGrant *istmt)
 									   grantorId, ownerId);
 
 		/*
-		 * We need the members of both old and new__ ACLs so we can correct the
+		 * We need the members of both old and new ACLs so we can correct the
 		 * shared dependency information.
 		 */
 		nnewmembers = aclmembers(new_acl, &newmembers);
 
-		/* finished building new__ ACL value, now insert it */
+		/* finished building new ACL value, now insert it */
 		MemSet(values, 0, sizeof(values));
 		MemSet(nulls, false, sizeof(nulls));
 		MemSet(replaces, false, sizeof(replaces));

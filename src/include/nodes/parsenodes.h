@@ -744,7 +744,7 @@ typedef struct XmlSerialize
  *
  *	  inFromCl marks those range variables that are listed in the FROM clause.
  *	  It's false for RTEs that are added to a query behind the scenes, such
- *	  as the new__ and OLD variables for a rule, or the subqueries of a UNION.
+ *	  as the new and OLD variables for a rule, or the subqueries of a UNION.
  *	  This flag is not used anymore during parsing, since the parser now uses
  *	  a separate "namespace" data structure to control visibility, but it is
  *	  needed by ruleutils.c to determine whether RTEs should be shown in
@@ -913,7 +913,7 @@ typedef struct TableSampleClause
 
 /*
  * WithCheckOption -
- *		representation of WITH CHECK OPTION checks to be applied to new__ tuples
+ *		representation of WITH CHECK OPTION checks to be applied to new tuples
  *		when inserting/updating an auto-updatable view, or RLS WITH CHECK
  *		policies to be applied when inserting/updating a relation with RLS.
  */
@@ -1535,7 +1535,7 @@ typedef struct AlterTableCmd	/* one subcommand of an ALTER TABLE */
 	char	   *name;			/* column, constraint, or trigger to act on,
 								 * or tablespace */
 	Node	   *newowner;		/* RoleSpec */
-	Node	   *def;			/* definition of new__ column, index,
+	Node	   *def;			/* definition of new column, index,
 								 * constraint, or parent table */
 	DropBehavior behavior;		/* RESTRICT or CASCADE for DROP cases */
 	bool		missing_ok;		/* skip error if missing? */
@@ -1771,7 +1771,7 @@ typedef struct CreateStmt
  *
  * If skip_validation is true then we skip checking that the existing rows
  * in the table satisfy the constraint, and just install the catalog entries
- * for the constraint.  A new__ FK constraint is marked as valid iff
+ * for the constraint.  A new FK constraint is marked as valid iff
  * initially_valid is true.  (Usually skip_validation and initially_valid
  * are inverses, but we can set both true if the table is known empty.)
  *
@@ -1853,7 +1853,7 @@ typedef struct Constraint
 
 	/* Fields used for constraints that allow a NOT VALID specification */
 	bool		skip_validation;	/* skip validation of existing rows? */
-	bool		initially_valid;	/* mark the new__ constraint as valid? */
+	bool		initially_valid;	/* mark the new constraint as valid? */
 } Constraint;
 
 /* ----------------------
@@ -2335,7 +2335,7 @@ typedef struct SecLabelStmt
 	List	   *objname;		/* Qualified name of the object */
 	List	   *objargs;		/* Arguments if needed (eg, for functions) */
 	char	   *provider;		/* Label provider (or NULL) */
-	char	   *label;			/* new__ security label to be assigned */
+	char	   *label;			/* new security label to be assigned */
 } SecLabelStmt;
 
 /* ----------------------
@@ -2414,7 +2414,7 @@ typedef struct FetchStmt
 typedef struct IndexStmt
 {
 	NodeTag		type;
-	char	   *idxname;		/* name of new__ index, or NULL for default */
+	char	   *idxname;		/* name of new index, or NULL for default */
 	RangeVar   *relation;		/* relation to build index on */
 	char	   *accessMethod;	/* name of access method (eg. btree) */
 	char	   *tableSpace;		/* tablespace, or NULL for default */
@@ -2510,7 +2510,7 @@ typedef struct RenameStmt
 	List	   *objarg;			/* argument types, if applicable */
 	char	   *subname;		/* name of contained object (column, rule,
 								 * trigger, etc) */
-	char	   *newname;		/* the new__ name */
+	char	   *newname;		/* the new name */
 	DropBehavior behavior;		/* RESTRICT or CASCADE behavior */
 	bool		missing_ok;		/* skip error if missing? */
 } RenameStmt;
@@ -2526,7 +2526,7 @@ typedef struct AlterObjectSchemaStmt
 	RangeVar   *relation;		/* in case it's a table */
 	List	   *object;			/* in case it's some other object */
 	List	   *objarg;			/* argument types, if applicable */
-	char	   *newschema;		/* the new__ schema */
+	char	   *newschema;		/* the new schema */
 	bool		missing_ok;		/* skip error if missing? */
 } AlterObjectSchemaStmt;
 
@@ -2541,7 +2541,7 @@ typedef struct AlterOwnerStmt
 	RangeVar   *relation;		/* in case it's a table */
 	List	   *object;			/* in case it's some other object */
 	List	   *objarg;			/* argument types, if applicable */
-	Node	   *newowner;		/* the new__ owner */
+	Node	   *newowner;		/* the new owner */
 } AlterOwnerStmt;
 
 
@@ -2659,9 +2659,9 @@ typedef struct AlterEnumStmt
 {
 	NodeTag		type;
 	List	   *typename__;		/* qualified name (list of Value strings) */
-	char	   *newVal;			/* new__ enum value's name */
+	char	   *newVal;			/* new enum value's name */
 	char	   *newValNeighbor; /* neighboring enum value, if specified */
-	bool		newValIsAfter;	/* place new__ enum value after neighbor? */
+	bool		newValIsAfter;	/* place new enum value after neighbor? */
 	bool		skipIfExists;	/* no error if label already exists */
 } AlterEnumStmt;
 

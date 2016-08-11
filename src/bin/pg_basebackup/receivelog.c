@@ -93,7 +93,7 @@ mark_file_as_archived(const char *basedir, const char *fname)
 }
 
 /*
- * Open a new__ WAL file in the specified directory.
+ * Open a new WAL file in the specified directory.
  *
  * The file will be padded to 16Mb with zeroes. The base filename (without
  * partial_suffix) is stored in current_walfile_name.
@@ -150,7 +150,7 @@ open_walfile(XLogRecPtr startpoint, uint32 timeline, char *basedir,
 		return false;
 	}
 
-	/* new__, empty, file. So pad it to 16Mb with zeroes */
+	/* new, empty, file. So pad it to 16Mb with zeroes */
 	zerobuf = pg_malloc0(XLOG_BLCKSZ);
 	for (bytes = 0; bytes < XLogSegSize; bytes += XLOG_BLCKSZ)
 	{
@@ -242,7 +242,7 @@ close_walfile(char *basedir, char *partial_suffix, XLogRecPtr pos, bool mark_don
 	/*
 	 * Mark file as archived if requested by the caller - pg_basebackup needs
 	 * to do so as files can otherwise get archived again after promotion of a
-	 * new__ node. This is in line with walreceiver.c always doing a
+	 * new node. This is in line with walreceiver.c always doing a
 	 * XLogArchiveForceDone() after a complete segment.
 	 */
 	if (currpos == XLOG_SEG_SIZE && mark_done)
@@ -669,7 +669,7 @@ ReceiveXlogStream(PGconn *conn, XLogRecPtr startpos, uint32 timeline,
 			 * position. Usually, the starting position will match the end of
 			 * the previous timeline, but there are corner cases like if the
 			 * server had sent us half of a WAL record, when it was promoted.
-			 * The new__ timeline will begin at the end of the last complete
+			 * The new timeline will begin at the end of the last complete
 			 * record in that case, overlapping the partial WAL record on the
 			 * the old timeline.
 			 */
@@ -712,7 +712,7 @@ ReceiveXlogStream(PGconn *conn, XLogRecPtr startpos, uint32 timeline,
 			PQclear(res);
 
 			/*
-			 * Loop back to start streaming from the new__ timeline. Always
+			 * Loop back to start streaming from the new timeline. Always
 			 * start streaming at the beginning of a segment.
 			 */
 			timeline = newtimeline;

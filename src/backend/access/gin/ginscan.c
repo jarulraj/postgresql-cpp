@@ -57,7 +57,7 @@ ginbeginscan(PG_FUNCTION_ARGS)
 }
 
 /*
- * Create a new__ GinScanEntry, unless an equivalent one already exists,
+ * Create a new GinScanEntry, unless an equivalent one already exists,
  * in which case just return it
  */
 static GinScanEntry
@@ -99,7 +99,7 @@ ginFillScanEntry(GinScanOpaque so, OffsetNumber attnum,
 		}
 	}
 
-	/* Nope, create a new__ entry */
+	/* Nope, create a new entry */
 	scanEntry = (GinScanEntry) palloc(sizeof(GinScanEntryData));
 	scanEntry->queryKey = queryKey;
 	scanEntry->queryCategory = queryCategory;

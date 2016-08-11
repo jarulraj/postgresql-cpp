@@ -91,7 +91,7 @@ typedef struct
  * type information.  We could also have both forms, if we've deconstructed
  * the original array for access purposes but not yet changed it.  For pass-
  * by-reference element types, the Datums would point into the flat array in
- * this__ situation.  Once we start modifying array elements, new__ pass-by-ref
+ * this__ situation.  Once we start modifying array elements, new pass-by-ref
  * elements are separately palloc'd within the memory context.
  */
 #define EA_MAGIC 689375833		/* ID for debugging crosschecks */

@@ -664,7 +664,7 @@ adjust_relid_set(Relids relids, int oldrelid, int newrelid)
 	{
 		/* Ensure we have a modifiable copy */
 		relids = bms_copy(relids);
-		/* Remove old, add new__ */
+		/* Remove old, add new */
 		relids = bms_del_member(relids, oldrelid);
 		relids = bms_add_member(relids, newrelid);
 	}
@@ -934,7 +934,7 @@ getInsertSelectQuery(Query *parsetree, Query ***subquery_ptr)
 
 	/*
 	 * Currently, this__ is ONLY applied to rule-action queries, and so we
-	 * expect to find the OLD and new__ placeholder entries in the given query.
+	 * expect to find the OLD and new placeholder entries in the given query.
 	 * If they're not there, it must be an INSERT/SELECT in which they've been
 	 * pushed down to the SELECT.
 	 */
@@ -1096,7 +1096,7 @@ replace_rte_variables(Node *node, int target_varno, int sublevels_up,
 
 	/*
 	 * We try to initialize inserted_sublink to true if there is no need to
-	 * detect new__ sublinks because the query already has some.
+	 * detect new sublinks because the query already has some.
 	 */
 	if (node && IsA(node, Query))
 		context.inserted_sublink = ((Query *) node)->hasSubLinks;
@@ -1421,7 +1421,7 @@ ReplaceVarsFromTargetList_callback(Var *var,
 		/*
 		 * Check to see if the tlist item contains a PARAM_MULTIEXPR Param,
 		 * and throw error if so.  This case could only happen when expanding
-		 * an ON UPDATE rule's new__ variable and the referenced tlist item in
+		 * an ON UPDATE rule's new variable and the referenced tlist item in
 		 * the original UPDATE command is part of a multiple assignment. There
 		 * seems no practical way to handle such cases without multiple
 		 * evaluation of the multiple assignment's sub-select, which would

@@ -185,7 +185,7 @@ create_toast_table(Relation rel, Oid toastOid, Oid toastIndexOid,
 		 * TOAST file, even if the table seems not to need one.
 		 *
 		 * Contrariwise, if the old cluster did not have a TOAST table, we
-		 * should be able to get along without one even if the new__ version's
+		 * should be able to get along without one even if the new version's
 		 * needs_toast_table rules suggest we should have one.  There is a lot
 		 * of daylight between where we will create a TOAST table and where
 		 * one is really necessary to avoid failures, so small cross-version

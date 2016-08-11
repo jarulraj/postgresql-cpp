@@ -522,7 +522,7 @@ pgss_shmem_startup(void)
 	/* Unlink query text file possibly left over from crash */
 	unlink(PGSS_TEXT_FILE);
 
-	/* Allocate new__ query text temp file */
+	/* Allocate new query text temp file */
 	qfile = AllocateFile(PGSS_TEXT_FILE, PG_BINARY_W);
 	if (qfile == NULL)
 		goto write_error;
@@ -614,7 +614,7 @@ pgss_shmem_startup(void)
 
 	/*
 	 * Remove the persisted stats file so it's not included in
-	 * backups/replication slaves, etc.  A new__ file will be written on next
+	 * backups/replication slaves, etc.  A new file will be written on next
 	 * shutdown.
 	 *
 	 * Note: it's okay if the PGSS_TEXT_FILE is included in a basebackup,
@@ -1138,7 +1138,7 @@ pgss_store(const char *query, uint32 queryId,
 
 	entry = (pgssEntry *) hash_search(pgss_hash, &key, HASH_FIND, NULL);
 
-	/* Create new__ entry, if not present */
+	/* Create new entry, if not present */
 	if (!entry)
 	{
 		Size		query_offset;
@@ -1147,7 +1147,7 @@ pgss_store(const char *query, uint32 queryId,
 		bool		do_gc;
 
 		/*
-		 * Create a new__, normalized query string if caller asked.  We don't
+		 * Create a new, normalized query string if caller asked.  We don't
 		 * need to hold the lock while doing this__ work.  (Note: in any case,
 		 * it's possible that someone else creates a duplicate hashtable entry
 		 * in the interval where we don't hold the lock below.  That case is
@@ -1162,7 +1162,7 @@ pgss_store(const char *query, uint32 queryId,
 			LWLockAcquire(pgss->lock, LW_SHARED);
 		}
 
-		/* Append new__ query text to file with only shared lock held */
+		/* Append new query text to file with only shared lock held */
 		stored = qtext_store(norm_query ? norm_query : query, query_len,
 							 &query_offset, &gc_count);
 
@@ -1173,7 +1173,7 @@ pgss_store(const char *query, uint32 queryId,
 		 */
 		do_gc = need_gc_qtexts();
 
-		/* Need exclusive lock to make a new__ hashtable entry - promote */
+		/* Need exclusive lock to make a new hashtable entry - promote */
 		LWLockRelease(pgss->lock);
 		LWLockAcquire(pgss->lock, LW_EXCLUSIVE);
 
@@ -1192,7 +1192,7 @@ pgss_store(const char *query, uint32 queryId,
 		if (!stored)
 			goto done;
 
-		/* OK to create a new__ hashtable entry */
+		/* OK to create a new hashtable entry */
 		entry = entry_alloc(&key, query_offset, query_len, encoding,
 							jstate != NULL);
 
@@ -1449,7 +1449,7 @@ pg_stat_statements_internal(FunctionCallInfo fcinfo,
 	 * iterate over the hashtable entries.
 	 *
 	 * With a large hash table, we might be holding the lock rather longer
-	 * than one could wish.  However, this__ only blocks creation of new__ hash
+	 * than one could wish.  However, this__ only blocks creation of new hash
 	 * table entries, and the larger the hash table the less likely that is to
 	 * be needed.  So we can hope this__ is okay.  Perhaps someday we'll decide
 	 * we need to partition the hash table to limit the time spent holding any
@@ -1633,12 +1633,12 @@ pgss_memsize(void)
 }
 
 /*
- * Allocate a new__ hashtable entry.
+ * Allocate a new hashtable entry.
  * caller must hold an exclusive lock on pgss->lock
  *
  * "query" need not be null-terminated; we rely on query_len instead
  *
- * If "sticky" is true, make the new__ entry artificially sticky so that it will
+ * If "sticky" is true, make the new entry artificially sticky so that it will
  * probably still be there when the query finishes execution.  We do this__ by
  * giving it a median usage value rather than the normal value.  (Strictly
  * speaking, query strings are normalized on a best effort basis, though it
@@ -1665,7 +1665,7 @@ entry_alloc(pgssHashKey *key, Size query_offset, int query_len, int encoding,
 
 	if (!found)
 	{
-		/* new__ entry, initialize it */
+		/* new entry, initialize it */
 
 		/* reset the statistics */
 		memset(&entry->counters, 0, sizeof(Counters));
@@ -1724,7 +1724,7 @@ entry_dealloc(void)
 	 * Note that the mean query length is almost immediately obsolete, since
 	 * we compute it before not after discarding the least-used entries.
 	 * Hopefully, that doesn't affect the mean too much; it doesn't seem worth
-	 * making two passes to get a more current result.  Likewise, the new__
+	 * making two passes to get a more current result.  Likewise, the new
 	 * cur_median_usage includes the entries we're about to zap.
 	 */
 
@@ -1776,13 +1776,13 @@ entry_dealloc(void)
 }
 
 /*
- * Given a null-terminated string, allocate a new__ entry in the external query
+ * Given a null-terminated string, allocate a new entry in the external query
  * text file and store the string there.
  *
  * Although we could compute the string length via strlen(), callers already
  * have it handy, so we require them to pass it too.
  *
- * If successful, returns true, and stores the new__ entry's offset in the file
+ * If successful, returns true, and stores the new entry's offset in the file
  * into *query_offset.  Also, if gc_count isn't NULL, *gc_count is set to the
  * number of garbage collections that have occurred so far.
  *
@@ -2172,14 +2172,14 @@ gc_fail:
 	}
 
 	/*
-	 * Destroy the query text file and create a new__, empty one
+	 * Destroy the query text file and create a new, empty one
 	 */
 	(void) unlink(PGSS_TEXT_FILE);
 	qfile = AllocateFile(PGSS_TEXT_FILE, PG_BINARY_W);
 	if (qfile == NULL)
 		ereport(LOG,
 				(errcode_for_file_access(),
-			  errmsg("could not write new__ pg_stat_statement file \"%s\": %m",
+			  errmsg("could not write new pg_stat_statement file \"%s\": %m",
 					 PGSS_TEXT_FILE)));
 	else
 		FreeFile(qfile);
@@ -2187,14 +2187,14 @@ gc_fail:
 	/* Reset the shared extent pointer */
 	pgss->extent = 0;
 
-	/* Reset mean_query_len to match the new__ state */
+	/* Reset mean_query_len to match the new state */
 	pgss->mean_query_len = ASSUMED_LENGTH_INIT;
 
 	/*
 	 * Bump the GC count even though we failed.
 	 *
 	 * This is needed to make concurrent readers of file without any lock on
-	 * pgss->lock notice existence of new__ version of file.  Once readers
+	 * pgss->lock notice existence of new version of file.  Once readers
 	 * subsequently observe a change in GC count with pgss->lock held, that
 	 * forces a safe reopen of file.  Writers also require that we bump here,
 	 * of course.  (As required by locking protocol, readers and writers don't
@@ -2223,7 +2223,7 @@ entry_reset(void)
 	}
 
 	/*
-	 * Write new__ empty query file, perhaps even creating a new__ one to recover
+	 * Write new empty query file, perhaps even creating a new one to recover
 	 * if the file was missing.
 	 */
 	qfile = AllocateFile(PGSS_TEXT_FILE, PG_BINARY_W);

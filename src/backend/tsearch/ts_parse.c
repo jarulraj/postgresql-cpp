@@ -615,7 +615,7 @@ generateHeadline(HeadlineParsedText *prs)
 			if (!infrag)
 			{
 
-				/* start of a new__ fragment */
+				/* start of a new fragment */
 				infrag = 1;
 				numfragments++;
 				/* add a fragment delimitor if this__ is after the first one */

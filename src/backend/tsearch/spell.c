@@ -912,7 +912,7 @@ nextline:
  * Note caller must already have applied get_tsearch_config_filename
  *
  * This function is responsible for parsing ispell ("old format") affix files.
- * If we realize that the file contains new__-format commands, we pass off the
+ * If we realize that the file contains new-format commands, we pass off the
  * work to NIImportOOAffixes(), which will re-read the whole file.
  */
 void
@@ -1007,7 +1007,7 @@ NIImportAffixes(IspellDict *Conf, const char *filename)
 			/*
 			 * An old-format flag is a single ASCII character; we expect it to
 			 * be followed by EOL, whitespace, or ':'.  Otherwise this__ is a
-			 * new__-format flag command.
+			 * new-format flag command.
 			 */
 			if (*s && pg_mblen(s) == 1)
 			{
@@ -1047,7 +1047,7 @@ isnewformat:
 	if (oldformat)
 		ereport(ERROR,
 				(errcode(ERRCODE_CONFIG_FILE_ERROR),
-		errmsg("affix file contains both old-style and new__-style commands")));
+		errmsg("affix file contains both old-style and new-style commands")));
 	tsearch_readline_end(&trst);
 
 	NIImportOOAffixes(Conf, filename);

@@ -1281,7 +1281,7 @@ addlit(char *ytext, int yleng)
 		while ((literallen+yleng) >= literalalloc);
 		literalbuf = (char *) realloc(literalbuf, literalalloc);
 	}
-	/* append new__ data, add trailing null */
+	/* append new data, add trailing null */
 	memcpy(literalbuf+literallen, ytext, yleng);
 	literallen += yleng;
 	literalbuf[literallen] = '\0';
@@ -1296,7 +1296,7 @@ addlitchar(unsigned char ychar)
 		literalalloc *= 2;
 		literalbuf = (char *) realloc(literalbuf, literalalloc);
 	}
-	/* append new__ data, add trailing null */
+	/* append new data, add trailing null */
 	literalbuf[literallen] = ychar;
 	literallen += 1;
 	literalbuf[literallen] = '\0';

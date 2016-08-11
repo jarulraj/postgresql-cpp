@@ -138,7 +138,7 @@ spgRedoAddLeaf(XLogReaderState *record)
 	{
 		page = BufferGetPage(buffer);
 
-		/* insert new__ tuple */
+		/* insert new tuple */
 		if (xldata->offnumLeaf != xldata->offnumHeadLeaf)
 		{
 			/* normal cases, tuple was added by SpGistPageAddNewItem */
@@ -365,11 +365,11 @@ spgRedoAddNode(XLogReaderState *record)
 		 * In normal operation we would have all three pages (source, dest,
 		 * and parent) locked simultaneously; but in WAL replay it should be
 		 * safe to update them one at a time, as long as we do it in the right
-		 * order. We must insert the new__ tuple before replacing the old tuple
+		 * order. We must insert the new tuple before replacing the old tuple
 		 * with the redirect tuple.
 		 */
 
-		/* Install new__ tuple first so redirect is valid */
+		/* Install new tuple first so redirect is valid */
 		if (xldata->newPage)
 		{
 			/* AddNode is not used for nulls pages */
@@ -600,7 +600,7 @@ spgRedoPickSplit(XLogReaderState *record)
 
 	if (xldata->isRootSplit)
 	{
-		/* when splitting root, we touch it only in the guise of new__ inner */
+		/* when splitting root, we touch it only in the guise of new inner */
 		srcBuffer = InvalidBuffer;
 		srcPage = NULL;
 	}
@@ -619,7 +619,7 @@ spgRedoPickSplit(XLogReaderState *record)
 		/*
 		 * Delete the specified tuples from source page.  (In case we're in
 		 * Hot Standby, we need to hold lock on the page till we're done
-		 * inserting leaf tuples and the new__ inner tuple, else the added
+		 * inserting leaf tuples and the new inner tuple, else the added
 		 * redirect tuple will be a dangling link.)
 		 */
 		srcPage = NULL;
@@ -710,7 +710,7 @@ spgRedoPickSplit(XLogReaderState *record)
 		MarkBufferDirty(destBuffer);
 	}
 
-	/* restore new__ inner tuple */
+	/* restore new inner tuple */
 	if (xldata->initInner)
 	{
 		innerBuffer = XLogInitBufferForRedo(record, 2);

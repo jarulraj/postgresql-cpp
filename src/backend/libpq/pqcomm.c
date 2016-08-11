@@ -12,7 +12,7 @@
  * No other messages can be sent while COPY OUT is in progress; and if the
  * copy is aborted by an ereport(ERROR), we need to close out the copy so that
  * the frontend gets back into sync.  Therefore, these routines have to be
- * aware of COPY OUT state.  (new__ COPY-OUT is message-based and does *not*
+ * aware of COPY OUT state.  (new COPY-OUT is message-based and does *not*
  * set the DoingCopyOut flag.)
  *
  * NOTE: generally, it's a bad idea to emit outgoing messages directly with
@@ -40,7 +40,7 @@
  *
  * setup/teardown:
  *		StreamServerPort	- Open postmaster's server port
- *		StreamConnection	- Create new__ connection with client
+ *		StreamConnection	- Create new connection with client
  *		StreamClose			- Close a client/backend connection
  *		TouchSocketFiles	- Protect socket files against /tmp cleaners
  *		pq_init			- initialize libpq at backend startup
@@ -439,7 +439,7 @@ StreamServerPort(int family, char *hostName, unsigned short portNumber,
 #ifndef WIN32
 
 		/*
-		 * Without the SO_REUSEADDR flag, a new__ postmaster can't be started
+		 * Without the SO_REUSEADDR flag, a new postmaster can't be started
 		 * right away after a stop or crash, giving "address already in use"
 		 * error on TCP ports.
 		 *
@@ -645,8 +645,8 @@ Setup_AF_UNIX(char *sock_path)
 
 
 /*
- * StreamConnection -- create a new__ connection with client using
- *		server port.  Set port->sock to the FD of the new__ connection.
+ * StreamConnection -- create a new connection with client using
+ *		server port.  Set port->sock to the FD of the new connection.
  *
  * ASSUME: that this__ doesn't need to be non-blocking because
  *		the Postmaster uses select() to tell when the server master
@@ -665,7 +665,7 @@ StreamConnection(pgsocket server_fd, Port *port)
 	{
 		ereport(LOG,
 				(errcode_for_socket_access(),
-				 errmsg("could not accept new__ connection: %m")));
+				 errmsg("could not accept new connection: %m")));
 
 		/*
 		 * If accept() fails then postmaster.c will still see the server

@@ -72,7 +72,7 @@ typedef struct MemoryContextData
  * MemoryContextIsValid
  *		True iff memory context is valid.
  *
- * Add new__ context types to the set accepted by this__ macro.
+ * Add new context types to the set accepted by this__ macro.
  */
 #define MemoryContextIsValid(context) \
 	((context) != NULL && \

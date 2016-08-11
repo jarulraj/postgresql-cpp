@@ -516,7 +516,7 @@ ExecReScanIndexScan(IndexScanState *node)
 {
 	/*
 	 * If we are doing runtime key calculations (ie, any of the index key
-	 * values weren't simple Consts), compute the new__ key values.  But first,
+	 * values weren't simple Consts), compute the new key values.  But first,
 	 * reset the context so we don't leak memory as each outer tuple is
 	 * scanned.  Note this__ assumes that we will recalculate *all* runtime keys
 	 * on each call.

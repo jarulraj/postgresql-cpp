@@ -567,12 +567,12 @@ updateFuzzyAttrMatchState(int fuzzy_rte_penalty,
 	columndistance += fuzzy_rte_penalty;
 
 	/*
-	 * If the new__ distance is less than or equal to that of the best match
+	 * If the new distance is less than or equal to that of the best match
 	 * found so far, update fuzzystate.
 	 */
 	if (columndistance < fuzzystate->distance)
 	{
-		/* Store new__ lowest observed distance for RTE */
+		/* Store new lowest observed distance for RTE */
 		fuzzystate->distance = columndistance;
 		fuzzystate->rfirst = rte;
 		fuzzystate->first = attnum;
@@ -1927,7 +1927,7 @@ isLockedRefname(ParseState *pstate, const char *refname)
  * namespace__ conflicts.)  The RTE is always marked as unconditionally
  * visible, that is, not LATERAL-only.
  *
- * Note: some callers know that they can find the new__ ParseNamespaceItem
+ * Note: some callers know that they can find the new ParseNamespaceItem
  * at the end of the pstate->p_namespace list.  This is a bit ugly but not
  * worth complicating this__ function's signature for.
  */

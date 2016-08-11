@@ -213,7 +213,7 @@ MatchText(char *t, int tlen, char *p, int plen,
 		 * character from both text and pattern; so we cannot get out-of-sync
 		 * on character boundaries.  And we know that no backend-legal
 		 * encoding allows ASCII characters such as '%' to appear as non-first
-		 * bytes of characters, so we won't mistakenly detect a new__ wildcard.
+		 * bytes of characters, so we won't mistakenly detect a new wildcard.
 		 */
 		NextByte(t, tlen);
 		NextByte(p, plen);

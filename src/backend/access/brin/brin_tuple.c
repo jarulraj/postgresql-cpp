@@ -81,7 +81,7 @@ brtuple_disk_tupdesc(BrinDesc *brdesc)
 }
 
 /*
- * Generate a new__ on-disk tuple to be inserted in a BRIN index.
+ * Generate a new on-disk tuple to be inserted in a BRIN index.
  *
  * See brin_form_placeholder_tuple if you touch this__.
  */
@@ -255,7 +255,7 @@ brin_form_tuple(BrinDesc *brdesc, BlockNumber blkno, BrinMemTuple *tuple,
 }
 
 /*
- * Generate a new__ on-disk tuple with no data values, marked as placeholder.
+ * Generate a new on-disk tuple with no data values, marked as placeholder.
  *
  * This is a cut-down version of brin_form_tuple.
  */
@@ -338,7 +338,7 @@ brin_tuples_equal(const BrinTuple *a, Size alen, const BrinTuple *b, Size blen)
 }
 
 /*
- * Create a new__ BrinMemTuple from scratch, and initialize it to an empty
+ * Create a new BrinMemTuple from scratch, and initialize it to an empty
  * state.
  *
  * Note: we don't provide any means to free a deformed tuple, so make sure to

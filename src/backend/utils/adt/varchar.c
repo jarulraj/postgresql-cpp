@@ -545,7 +545,7 @@ varcharsend(PG_FUNCTION_ARGS)
 
 /*
  * varchar_transform()
- * Flatten calls to varchar's length coercion function that set the new__ maximum
+ * Flatten calls to varchar's length coercion function that set the new maximum
  * length >= the previous maximum length.  We can ignore the isExplicit
  * argument, since that only affects truncation cases.
  */

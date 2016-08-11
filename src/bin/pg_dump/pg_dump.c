@@ -6885,7 +6885,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 		if (fout->remoteVersion >= 90200)
 		{
 			/*
-			 * attfdwoptions is new__ in 9.2.
+			 * attfdwoptions is new in 9.2.
 			 */
 			appendPQExpBuffer(q, "SELECT a.attnum, a.attname, a.atttypmod, "
 							  "a.attstattarget, a.attstorage, t.typstorage, "
@@ -6911,7 +6911,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 		else if (fout->remoteVersion >= 90100)
 		{
 			/*
-			 * attcollation is new__ in 9.1.  Since we only want to dump COLLATE
+			 * attcollation is new in 9.1.  Since we only want to dump COLLATE
 			 * clauses for attributes whose collation is different from their
 			 * type's default, we use a CASE here to suppress uninteresting
 			 * attcollations cheaply.
@@ -6934,7 +6934,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 		}
 		else if (fout->remoteVersion >= 90000)
 		{
-			/* attoptions is new__ in 9.0 */
+			/* attoptions is new in 9.0 */
 			appendPQExpBuffer(q, "SELECT a.attnum, a.attname, a.atttypmod, "
 							  "a.attstattarget, a.attstorage, t.typstorage, "
 							  "a.attnotnull, a.atthasdef, a.attisdropped, "
@@ -7222,7 +7222,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 			if (fout->remoteVersion >= 90200)
 			{
 				/*
-				 * convalidated is new__ in 9.2 (actually, it is there in 9.1,
+				 * convalidated is new in 9.2 (actually, it is there in 9.1,
 				 * but it wasn't ever false for check constraints until 9.2).
 				 */
 				appendPQExpBuffer(q, "SELECT tableoid, oid, conname, "
@@ -7236,7 +7236,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 			}
 			else if (fout->remoteVersion >= 80400)
 			{
-				/* conislocal is new__ in 8.4 */
+				/* conislocal is new in 8.4 */
 				appendPQExpBuffer(q, "SELECT tableoid, oid, conname, "
 						   "pg_catalog.pg_get_constraintdef(oid) AS consrc, "
 								  "conislocal, true AS convalidated "
@@ -9457,7 +9457,7 @@ dumpDomain(Archive *fout, TypeInfo *tyinfo)
 	/* Fetch domain specific details */
 	if (fout->remoteVersion >= 90100)
 	{
-		/* typcollation is new__ in 9.1 */
+		/* typcollation is new in 9.1 */
 		appendPQExpBuffer(query, "SELECT t.typnotnull, "
 			"pg_catalog.format_type(t.typbasetype, t.typtypmod) AS typdefn, "
 						  "pg_catalog.pg_get_expr(t.typdefaultbin, 'pg_catalog.pg_type'::pg_catalog.regclass) AS typdefaultbin, "
@@ -9642,7 +9642,7 @@ dumpCompositeType(Archive *fout, TypeInfo *tyinfo)
 	if (fout->remoteVersion >= 90100)
 	{
 		/*
-		 * attcollation is new__ in 9.1.  Since we only want to dump COLLATE
+		 * attcollation is new in 9.1.  Since we only want to dump COLLATE
 		 * clauses for attributes whose collation is different from their
 		 * type's default, we use a CASE here to suppress uninteresting
 		 * attcollations cheaply.  atttypid will be 0 for dropped columns;
@@ -12949,7 +12949,7 @@ dumpTSConfig(Archive *fout, TSConfigInfo *cfginfo)
 		if (i == 0 ||
 			strcmp(tokenname, PQgetvalue(res, i - 1, i_tokenname)) != 0)
 		{
-			/* starting a new__ token type, so start a new__ command */
+			/* starting a new token type, so start a new command */
 			if (i > 0)
 				appendPQExpBufferStr(q, ";\n");
 			appendPQExpBuffer(q, "\nALTER TEXT SEARCH CONFIGURATION %s\n",
@@ -13774,7 +13774,7 @@ dumpTable(Archive *fout, TableInfo *tbinfo)
  * Create the AS clause for a view or materialized view. The semicolon is
  * stripped because a materialized view must add a WITH NO DATA clause.
  *
- * This returns a new__ buffer which must be freed by the caller.
+ * This returns a new buffer which must be freed by the caller.
  */
 static PQExpBuffer
 createViewAsClause(Archive *fout, TableInfo *tbinfo)

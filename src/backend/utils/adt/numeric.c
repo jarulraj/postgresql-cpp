@@ -3173,7 +3173,7 @@ makeNumericAggState(FunctionCallInfo fcinfo, bool calcSumX2)
 }
 
 /*
- * Accumulate a new__ input value for numeric aggregate functions.
+ * Accumulate a new input value for numeric aggregate functions.
  */
 static void
 do_numeric_accum(NumericAggState *state, Numeric newval)
@@ -3242,7 +3242,7 @@ do_numeric_accum(NumericAggState *state, Numeric newval)
  *
  * If we aggregate the values 1.01 and 2 then the result will be 3.01.
  * If we are then asked to un-aggregate the 1.01 then we must fail as we
- * won't be able to tell what the new__ aggregated value's dscale should be.
+ * won't be able to tell what the new aggregated value's dscale should be.
  * We don't want to return 2.00 (dscale = 2), since the sum's dscale would
  * have been zero if we'd really aggregated only 2.
  *
@@ -3291,7 +3291,7 @@ do_numeric_discard(NumericAggState *state, Numeric newval)
 		}
 		else
 		{
-			/* Correct new__ maxScale is uncertain, must fail */
+			/* Correct new maxScale is uncertain, must fail */
 			return false;
 		}
 	}
@@ -3439,7 +3439,7 @@ makeInt128AggState(FunctionCallInfo fcinfo, bool calcSumX2)
 }
 
 /*
- * Accumulate a new__ input value for 128-bit aggregate functions.
+ * Accumulate a new input value for 128-bit aggregate functions.
  */
 static void
 do_int128_accum(Int128AggState *state, int128 newval)
@@ -4116,7 +4116,7 @@ int2_sum(PG_FUNCTION_ARGS)
 	/*
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to avoid palloc overhead. If not, we need to return
-	 * the new__ value of the transition variable. (If int8 is pass-by-value,
+	 * the new value of the transition variable. (If int8 is pass-by-value,
 	 * then of course this__ is useless as well as incorrect, so just ifdef it
 	 * out.)
 	 */
@@ -4125,7 +4125,7 @@ int2_sum(PG_FUNCTION_ARGS)
 	{
 		int64	   *oldsum = (int64 *) PG_GETARG_POINTER(0);
 
-		/* Leave the running sum unchanged in the new__ input is null */
+		/* Leave the running sum unchanged in the new input is null */
 		if (!PG_ARGISNULL(1))
 			*oldsum = *oldsum + (int64) PG_GETARG_INT16(1);
 
@@ -4136,7 +4136,7 @@ int2_sum(PG_FUNCTION_ARGS)
 	{
 		int64		oldsum = PG_GETARG_INT64(0);
 
-		/* Leave sum unchanged if new__ input is null. */
+		/* Leave sum unchanged if new input is null. */
 		if (PG_ARGISNULL(1))
 			PG_RETURN_INT64(oldsum);
 
@@ -4165,7 +4165,7 @@ int4_sum(PG_FUNCTION_ARGS)
 	/*
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to avoid palloc overhead. If not, we need to return
-	 * the new__ value of the transition variable. (If int8 is pass-by-value,
+	 * the new value of the transition variable. (If int8 is pass-by-value,
 	 * then of course this__ is useless as well as incorrect, so just ifdef it
 	 * out.)
 	 */
@@ -4174,7 +4174,7 @@ int4_sum(PG_FUNCTION_ARGS)
 	{
 		int64	   *oldsum = (int64 *) PG_GETARG_POINTER(0);
 
-		/* Leave the running sum unchanged in the new__ input is null */
+		/* Leave the running sum unchanged in the new input is null */
 		if (!PG_ARGISNULL(1))
 			*oldsum = *oldsum + (int64) PG_GETARG_INT32(1);
 
@@ -4185,7 +4185,7 @@ int4_sum(PG_FUNCTION_ARGS)
 	{
 		int64		oldsum = PG_GETARG_INT64(0);
 
-		/* Leave sum unchanged if new__ input is null. */
+		/* Leave sum unchanged if new input is null. */
 		if (PG_ARGISNULL(1))
 			PG_RETURN_INT64(oldsum);
 
@@ -4223,7 +4223,7 @@ int8_sum(PG_FUNCTION_ARGS)
 
 	oldsum = PG_GETARG_NUMERIC(0);
 
-	/* Leave sum unchanged if new__ input is null. */
+	/* Leave sum unchanged if new input is null. */
 	if (PG_ARGISNULL(1))
 		PG_RETURN_NUMERIC(oldsum);
 
@@ -5829,7 +5829,7 @@ mul_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 				dig[i] = newdig;
 			}
 			Assert(carry == 0);
-			/* Reset maxdig to indicate new__ worst-case */
+			/* Reset maxdig to indicate new worst-case */
 			maxdig = 1 + var1digit;
 		}
 
@@ -6325,7 +6325,7 @@ div_var_fast(NumericVar *var1, NumericVar *var2, NumericVar *result,
 				maxdiv = Max(maxdiv, 1);
 
 				/*
-				 * Recompute the quotient digit since new__ info may have
+				 * Recompute the quotient digit since new info may have
 				 * propagated into the top four dividend digits
 				 */
 				fdividend = (double) div[qi];

@@ -334,7 +334,7 @@ do_convert_tuple(HeapTuple tuple, TupleConversionMap *map)
 	heap_deform_tuple(tuple, map->indesc, invalues + 1, inisnull + 1);
 
 	/*
-	 * Transpose into proper fields of the new__ tuple.
+	 * Transpose into proper fields of the new tuple.
 	 */
 	for (i = 0; i < outnatts; i++)
 	{
@@ -345,7 +345,7 @@ do_convert_tuple(HeapTuple tuple, TupleConversionMap *map)
 	}
 
 	/*
-	 * Now form the new__ tuple.
+	 * Now form the new tuple.
 	 */
 	return heap_form_tuple(map->outdesc, outvalues, outisnull);
 }

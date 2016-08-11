@@ -543,7 +543,7 @@ PLy_spi_exception_set(PyObject *excclass, ErrorData *edata)
 	if (!args)
 		goto failure;
 
-	/* create a new__ SPI exception with the error message as the parameter */
+	/* create a new SPI exception with the error message as the parameter */
 	spierror = PyObject_CallObject(excclass, args);
 	if (!spierror)
 		goto failure;

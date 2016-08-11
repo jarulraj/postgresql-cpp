@@ -513,7 +513,7 @@ mdcbuf_refill(struct MDCBufData * st, PullFilter *src)
 		memmove(st->buf, st->pos, st->avail);
 	st->pos = st->buf;
 
-	/* read new__ data */
+	/* read new data */
 	need = st->buflen + 22 - st->avail - st->mdc_avail;
 	res = pullf_read(src, need, &data);
 	if (res < 0)

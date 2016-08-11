@@ -194,7 +194,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 	 *
 	 * 3. We find just one.  Add the other to its EC.
 	 *
-	 * 4. We find neither.  Make a new__, two-entry EC.
+	 * 4. We find neither.  Make a new, two-entry EC.
 	 *
 	 * Note: since all ECs are built through this__ process or the similar
 	 * search in get_eclass_for_sort_expr(), it's impossible that we'd match
@@ -352,7 +352,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 	}
 	else
 	{
-		/* Case 4: make a new__, two-entry EC */
+		/* Case 4: make a new, two-entry EC */
 		EquivalenceClass *ec = makeNode(EquivalenceClass);
 
 		ec->ec_opfamilies = opfamilies;
@@ -435,11 +435,11 @@ canonicalize_ec_expression(Expr *expr, Oid req_type, Oid req_collation)
 		exprCollation((Node *) expr) != req_collation)
 	{
 		/*
-		 * Strip any existing RelabelType, then add a new__ one if needed. This
+		 * Strip any existing RelabelType, then add a new one if needed. This
 		 * is to preserve the invariant of no redundant RelabelTypes.
 		 *
 		 * If we have to change the exposed type of the stripped expression,
-		 * set typmod to -1 (since the new__ type may not have the same typmod
+		 * set typmod to -1 (since the new type may not have the same typmod
 		 * interpretation).  If we only have to change collation, preserve the
 		 * exposed typmod.
 		 */
@@ -464,7 +464,7 @@ canonicalize_ec_expression(Expr *expr, Oid req_type, Oid req_collation)
 }
 
 /*
- * add_eq_member - build a new__ EquivalenceMember and add it to an EC
+ * add_eq_member - build a new EquivalenceMember and add it to an EC
  */
 static EquivalenceMember *
 add_eq_member(EquivalenceClass *ec, Expr *expr, Relids relids,
@@ -507,7 +507,7 @@ add_eq_member(EquivalenceClass *ec, Expr *expr, Relids relids,
 /*
  * get_eclass_for_sort_expr
  *	  Given an expression and opfamily/collation info, find an existing
- *	  equivalence class__ it is a member of; if none, optionally build a new__
+ *	  equivalence class__ it is a member of; if none, optionally build a new
  *	  single-member EquivalenceClass for it.
  *
  * expr is the expression, and nullable_relids is the set of base relids
@@ -529,7 +529,7 @@ add_eq_member(EquivalenceClass *ec, Expr *expr, Relids relids,
  * so for now we live with just reporting the first match.  See also
  * generate_implied_equalities_for_column and match_pathkeys_to_index.)
  *
- * If create_it is TRUE, we'll build a new__ EquivalenceClass when there is no
+ * If create_it is TRUE, we'll build a new EquivalenceClass when there is no
  * match.  If create_it is FALSE, we just return NULL when no match.
  *
  * This can be used safely both before and after EquivalenceClass merging;
@@ -621,7 +621,7 @@ get_eclass_for_sort_expr(PlannerInfo *root,
 		return NULL;
 
 	/*
-	 * OK, build a new__ single-member EC
+	 * OK, build a new single-member EC
 	 *
 	 * Here, we must be sure that we construct the EC in the right context.
 	 */
@@ -1446,7 +1446,7 @@ create_join_clause(PlannerInfo *root,
  * accumulated for us by distribute_qual_to_rels.
  *
  * When we find one of these cases, we implement the changes we want by
- * generating a new__ equivalence clause INNERVAR = CONSTANT (or LEFTVAR, etc)
+ * generating a new equivalence clause INNERVAR = CONSTANT (or LEFTVAR, etc)
  * and pushing it into the EquivalenceClass structures.  This is because we
  * may already know that INNERVAR is equivalenced to some other var(s), and
  * we'd like the constant to propagate to them too.  Note that it would be

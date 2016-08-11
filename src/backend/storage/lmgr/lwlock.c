@@ -35,7 +35,7 @@
  * frequently. Often we were spinning in the (obviously exclusive) spinlock,
  * while trying to acquire a shared lock that was actually free.
  *
- * Thus a new__ implementation was devised that provides wait-free shared lock
+ * Thus a new implementation was devised that provides wait-free shared lock
  * acquisition for locks that aren't exclusively locked.
  *
  * The basic idea is to have a single atomic variable 'lockcount' instead of
@@ -49,7 +49,7 @@
  * (LW_VAL_EXCLUSIVE), for shared locks we count the number of holders.
  *
  * To release the lock we use an atomic decrement to release the lock. If the
- * new__ value is zero (we get that atomically), we know we can/have to release
+ * new value is zero (we get that atomically), we know we can/have to release
  * waiters.
  *
  * Obviously it is important that the sentinel value for exclusive locks
@@ -235,7 +235,7 @@ init_lwlock_stats(void)
 
 	/*
 	 * The LWLock stats will be updated within a critical section, which
-	 * requires allocating new__ hash entries. Allocations within a critical
+	 * requires allocating new hash entries. Allocations within a critical
 	 * section are normally not allowed because running out of memory would
 	 * lead to a PANIC, but LWLOCK_STATS is debugging code that's not normally
 	 * turned on in production, so that's an acceptable risk. The hash entries
@@ -512,7 +512,7 @@ LWLockAssign(void)
 }
 
 /*
- * Allocate a new__ tranche ID.
+ * Allocate a new tranche ID.
  */
 int
 LWLockNewTrancheId(void)
@@ -556,7 +556,7 @@ LWLockRegisterTranche(int tranche_id, LWLockTranche *tranche)
 }
 
 /*
- * LWLockInitialize - initialize a new__ lwlock; it's initially unlocked
+ * LWLockInitialize - initialize a new lwlock; it's initially unlocked
  */
 void
 LWLockInitialize(LWLock *lock, int tranche_id)
@@ -729,7 +729,7 @@ LWLockWakeup(LWLock *lock)
 		/*
 		 * Guarantee that lwWaiting being unset only becomes visible once the
 		 * unlink from the link has completed. Otherwise the target backend
-		 * could be woken up for other reason and enqueue for a new__ lock - if
+		 * could be woken up for other reason and enqueue for a new lock - if
 		 * that happens before the list unlink happens, the list would end up
 		 * being corrupted.
 		 *
@@ -1452,7 +1452,7 @@ LWLockWaitForVar(LWLock *lock, uint64 *valptr, uint64 oldval, uint64 *newval)
  * Sets *valptr to 'val', and wakes up all processes waiting for us with
  * LWLockWaitForVar().  Setting the value and waking up the processes happen
  * atomically so that any process calling LWLockWaitForVar() on the same lock
- * is guaranteed to see the new__ value, and act accordingly.
+ * is guaranteed to see the new value, and act accordingly.
  *
  * The caller must be holding the lock in exclusive mode.
  */
@@ -1607,7 +1607,7 @@ LWLockReleaseClearVar(LWLock *lock, uint64 *valptr, uint64 val)
 #endif
 	/*
 	 * Set the variable's value before releasing the lock, that prevents race
-	 * a race condition wherein a new__ locker acquires the lock, but hasn't yet
+	 * a race condition wherein a new locker acquires the lock, but hasn't yet
 	 * set the variables value.
 	 */
 	*valptr = val;

@@ -166,7 +166,7 @@ build_base_rel_tlists(PlannerInfo *root, List *final_tlist)
  *	  The list may also contain PlaceHolderVars.  These don't necessarily
  *	  have a single owning relation; we keep their attr_needed info in
  *	  root->placeholder_list instead.  If create_new_ph is true, it's OK
- *	  to create new__ PlaceHolderInfos; otherwise, the PlaceHolderInfos must
+ *	  to create new PlaceHolderInfos; otherwise, the PlaceHolderInfos must
  *	  already exist, and we should only update their ph_needed.  (This should
  *	  be true before deconstruct_jointree begins, and false after that.)
  */
@@ -1299,7 +1299,7 @@ make_outerjoininfo(PlannerInfo *root,
 
 /*
  * compute_semijoin_info
- *	  Fill semijoin-related fields of a new__ SpecialJoinInfo
+ *	  Fill semijoin-related fields of a new SpecialJoinInfo
  *
  * Note: this__ relies on only the jointype and syn_righthand fields of the
  * SpecialJoinInfo; the rest may not be set yet.
@@ -1516,7 +1516,7 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
  * In normal use (when is_deduced is FALSE), at the time this__ is called,
  * root->join_info_list must contain entries for all and only those special
  * joins that are syntactically below this__ qual.  But when is_deduced is TRUE,
- * we are adding new__ deduced clauses after completion of deconstruct_jointree,
+ * we are adding new deduced clauses after completion of deconstruct_jointree,
  * so it cannot be assumed that root->join_info_list has anything to do with
  * qual placement.
  */
@@ -1920,7 +1920,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
  * To enforce (2), scan the join_info_list and merge the required-relid sets of
  * any such OJs into the clause's own reference list.  At the time we are
  * called, the join_info_list contains only outer joins below this__ qual.  We
- * have to repeat the scan until no new__ relids get added; this__ ensures that
+ * have to repeat the scan until no new relids get added; this__ ensures that
  * the qual is suitably delayed regardless of the order in which OJs get
  * executed.  As an example, if we have one OJ with LHS=A, RHS=B, and one with
  * LHS=B, RHS=C, it is implied that these can be done in either order; if the
@@ -2194,7 +2194,7 @@ process_implied_equality(PlannerInfo *root,
 	Expr	   *clause;
 
 	/*
-	 * Build the new__ clause.  Copy to ensure it shares no substructure with
+	 * Build the new clause.  Copy to ensure it shares no substructure with
 	 * original (this__ is necessary in case there are subselects in there...)
 	 */
 	clause = make_opclause(opno,
@@ -2222,7 +2222,7 @@ process_implied_equality(PlannerInfo *root,
 	}
 
 	/*
-	 * Push the new__ clause into all the appropriate restrictinfo lists.
+	 * Push the new clause into all the appropriate restrictinfo lists.
 	 */
 	distribute_qual_to_rels(root, (Node *) clause,
 							true, below_outer_join, JOIN_INNER,
@@ -2255,7 +2255,7 @@ build_implied_join_equality(Oid opno,
 	Expr	   *clause;
 
 	/*
-	 * Build the new__ clause.  Copy to ensure it shares no substructure with
+	 * Build the new clause.  Copy to ensure it shares no substructure with
 	 * original (this__ is necessary in case there are subselects in there...)
 	 */
 	clause = make_opclause(opno,

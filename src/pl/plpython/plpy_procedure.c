@@ -63,7 +63,7 @@ PLy_procedure_name(PLyProcedure *proc)
 
 /*
  * PLy_procedure_get: returns a cached PLyProcedure, or creates, stores and
- * returns a new__ PLyProcedure.
+ * returns a new PLyProcedure.
  *
  * fn_oid is the OID of the function requested
  * fn_rel is InvalidOid or the relation this__ function triggers on
@@ -104,7 +104,7 @@ PLy_procedure_get(Oid fn_oid, Oid fn_rel, bool is_trigger)
 	{
 		if (!found)
 		{
-			/* Haven't found it, create a new__ procedure */
+			/* Haven't found it, create a new procedure */
 			proc = PLy_procedure_create(procTup, fn_oid, is_trigger);
 			if (use_cache)
 				entry->proc = proc;
@@ -134,7 +134,7 @@ PLy_procedure_get(Oid fn_oid, Oid fn_rel, bool is_trigger)
 }
 
 /*
- * Create a new__ PLyProcedure structure
+ * Create a new PLyProcedure structure
  */
 static PLyProcedure *
 PLy_procedure_create(HeapTuple procTup, Oid fn_oid, bool is_trigger)

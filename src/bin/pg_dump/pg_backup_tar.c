@@ -251,7 +251,7 @@ InitArchiveFmt_Tar(ArchiveHandle *AH)
 }
 
 /*
- * - Start a new__ TOC entry
+ * - Start a new TOC entry
  *	 Setup the output file name.
  */
 static void

@@ -1755,7 +1755,7 @@ PrescanPreparedTransactions(TransactionId **xids_p, int *nxids_p)
 
 			xid = (TransactionId) strtoul(clde->d_name, NULL, 16);
 
-			/* Reject XID if too new__ */
+			/* Reject XID if too new */
 			if (TransactionIdFollowsOrEquals(xid, origNextXid))
 			{
 				ereport(WARNING,

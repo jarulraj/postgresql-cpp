@@ -365,10 +365,10 @@ aclparse(const char *s, AclItem *aip)
 
 /*
  * allocacl
- *		Allocates storage for a new__ Acl with 'n' entries.
+ *		Allocates storage for a new Acl with 'n' entries.
  *
  * RETURNS:
- *		the new__ Acl
+ *		the new Acl
  */
 static Acl *
 allocacl(int n)
@@ -553,11 +553,11 @@ check_acl(const Acl *acl)
 
 /*
  * aclitemin
- *		Allocates storage for, and fills in, a new__ AclItem given a string
+ *		Allocates storage for, and fills in, a new AclItem given a string
  *		's' that contains an ACL specification.  See aclparse for details.
  *
  * RETURNS:
- *		the new__ AclItem
+ *		the new AclItem
  */
 Datum
 aclitemin(PG_FUNCTION_ARGS)
@@ -579,11 +579,11 @@ aclitemin(PG_FUNCTION_ARGS)
 
 /*
  * aclitemout
- *		Allocates storage for, and fills in, a new__ null-delimited string
+ *		Allocates storage for, and fills in, a new null-delimited string
  *		containing a formatted ACL specification.  See aclparse for details.
  *
  * RETURNS:
- *		the new__ string
+ *		the new string
  */
 Datum
 aclitemout(PG_FUNCTION_ARGS)
@@ -937,7 +937,7 @@ aclupdate(const Acl *old_acl, const AclItem *mod_aip,
 	/*
 	 * Search the ACL for an existing entry for this__ grantee and grantor. If
 	 * one exists, just modify the entry in-place (well, in the same position,
-	 * since we actually return a copy); otherwise, insert the new__ entry at
+	 * since we actually return a copy); otherwise, insert the new entry at
 	 * the end.
 	 */
 
@@ -955,12 +955,12 @@ aclupdate(const Acl *old_acl, const AclItem *mod_aip,
 
 	if (dst == num)
 	{
-		/* need to append a new__ item */
+		/* need to append a new item */
 		new_acl = allocacl(num + 1);
 		new_aip = ACL_DAT(new_acl);
 		memcpy(new_aip, old_aip, num * sizeof(AclItem));
 
-		/* initialize the new__ entry with no permissions */
+		/* initialize the new entry with no permissions */
 		new_aip[dst].ai_grantee = mod_aip->ai_grantee;
 		new_aip[dst].ai_grantor = mod_aip->ai_grantor;
 		ACLITEM_SET_PRIVS_GOPTIONS(new_aip[dst],
@@ -1024,7 +1024,7 @@ aclupdate(const Acl *old_acl, const AclItem *mod_aip,
  *
  *	old_acl: the input ACL array (must not be NULL)
  *	oldOwnerId: Oid of the old object owner
- *	newOwnerId: Oid of the new__ object owner
+ *	newOwnerId: Oid of the new object owner
  *
  * The result is a modified copy; the input object is not changed.
  *
@@ -1048,8 +1048,8 @@ aclnewowner(const Acl *old_acl, Oid oldOwnerId, Oid newOwnerId)
 	check_acl(old_acl);
 
 	/*
-	 * Make a copy of the given ACL, substituting new__ owner ID for old
-	 * wherever it appears as either grantor or grantee.  Also note if the new__
+	 * Make a copy of the given ACL, substituting new owner ID for old
+	 * wherever it appears as either grantor or grantee.  Also note if the new
 	 * owner ID is already present.
 	 */
 	num = ACL_NUM(old_acl);
@@ -1070,7 +1070,7 @@ aclnewowner(const Acl *old_acl, Oid oldOwnerId, Oid newOwnerId)
 	}
 
 	/*
-	 * If the old ACL contained any references to the new__ owner, then we may
+	 * If the old ACL contained any references to the new owner, then we may
 	 * now have generated an ACL containing duplicate entries.  Find them and
 	 * merge them so that there are not duplicates.  (This is relatively
 	 * expensive since we use a stupid O(N^2) algorithm, but it's unlikely to

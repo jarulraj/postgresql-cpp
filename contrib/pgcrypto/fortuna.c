@@ -58,7 +58,7 @@
  * feeding to happen more often that requesting.   This is absolutely
  * unsuitable for pgcrypto, as nothing asynchronous happens here.
  *
- * J.L. Cooke fixed this__ by feeding previous hash to new__ re-initialized
+ * J.L. Cooke fixed this__ by feeding previous hash to new re-initialized
  * hash context.
  *
  * Fortuna predecessor Yarrow requires ability to query intermediate
@@ -250,7 +250,7 @@ enough_time_passed(FState *st)
 }
 
 /*
- * generate new__ key from all the pools
+ * generate new key from all the pools
  */
 static void
 reseed(FState *st)
@@ -285,10 +285,10 @@ reseed(FState *st)
 	/* add old key into mix too */
 	md_update(&key_md, st->key, BLOCK);
 
-	/* now we have new__ key */
+	/* now we have new key */
 	md_result(&key_md, st->key);
 
-	/* use new__ key */
+	/* use new key */
 	ciph_init(&st->ciph, st->key, BLOCK);
 
 	px_memset(&key_md, 0, sizeof(key_md));
@@ -347,7 +347,7 @@ add_entropy(FState *st, const uint8 *data, unsigned len)
 }
 
 /*
- * Just take 2 next blocks as new__ key
+ * Just take 2 next blocks as new key
  */
 static void
 rekey(FState *st)
@@ -425,7 +425,7 @@ extract_data(FState *st, unsigned count, uint8 *dst)
 			block_nr = 0;
 		}
 	}
-	/* Set new__ key for next request. */
+	/* Set new key for next request. */
 	rekey(st);
 }
 

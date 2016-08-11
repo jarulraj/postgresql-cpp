@@ -36,7 +36,7 @@ static void pcb_error_callback(void *arg);
 
 /*
  * make_parsestate
- *		Allocate and initialize a new__ ParseState.
+ *		Allocate and initialize a new ParseState.
  *
  * Caller should eventually release the ParseState via free_parsestate().
  */
@@ -269,7 +269,7 @@ transformArrayType(Oid *arrayType, int32 *arrayTypmod)
  *
  * In an array assignment, we are given a destination array value plus a
  * source value that is to be assigned to a single element or a slice of
- * that array.  We produce an expression that represents the new__ array value
+ * that array.  We produce an expression that represents the new array value
  * with the source data inserted into the right part of the array.
  *
  * For both cases, if the source array is of a domain-over-array type,

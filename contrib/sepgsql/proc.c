@@ -53,7 +53,7 @@ sepgsql_proc_post_create(Oid functionId)
 	Form_pg_proc proForm;
 
 	/*
-	 * Fetch namespace__ of the new__ procedure. Because pg_proc entry is not
+	 * Fetch namespace__ of the new procedure. Because pg_proc entry is not
 	 * visible right now, we need to scan the catalog using SnapshotSelf.
 	 */
 	rel = heap_open(ProcedureRelationId, AccessShareLock);
@@ -90,7 +90,7 @@ sepgsql_proc_post_create(Oid functionId)
 
 
 	/*
-	 * Compute a default security label when we create a new__ procedure object
+	 * Compute a default security label when we create a new procedure object
 	 * under the specified namespace__.
 	 */
 	scontext = sepgsql_get_client_label();
@@ -130,7 +130,7 @@ sepgsql_proc_post_create(Oid functionId)
 								  true);
 
 	/*
-	 * Assign the default security label on a new__ procedure
+	 * Assign the default security label on a new procedure
 	 */
 	object.classId = ProcedureRelationId;
 	object.objectId = functionId;

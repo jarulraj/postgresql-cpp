@@ -78,7 +78,7 @@ static void pgfdw_subxact_callback(SubXactEvent event,
 
 /*
  * Get a PGconn which can be used to execute queries on the remote PostgreSQL
- * server with the user's authorization.  A new__ connection is established
+ * server with the user's authorization.  A new connection is established
  * if we don't already have a suitable one, and a transaction is opened at
  * the right subtransaction nesting depth if we didn't do that already.
  *
@@ -136,7 +136,7 @@ GetConnection(ForeignServer *server, UserMapping *user,
 	entry = hash_search(ConnectionHash, &key, HASH_ENTER, &found);
 	if (!found)
 	{
-		/* initialize new__ hashtable entry (key is already filled in) */
+		/* initialize new hashtable entry (key is already filled in) */
 		entry->conn = NULL;
 		entry->xact_depth = 0;
 		entry->have_prep_stmt = false;
@@ -150,7 +150,7 @@ GetConnection(ForeignServer *server, UserMapping *user,
 	 */
 
 	/*
-	 * If cache entry doesn't have a connection, we have to establish a new__
+	 * If cache entry doesn't have a connection, we have to establish a new
 	 * connection.  (If connect_pg_server throws an error, the cache entry
 	 * will be left in a valid empty state.)
 	 */
@@ -165,7 +165,7 @@ GetConnection(ForeignServer *server, UserMapping *user,
 	}
 
 	/*
-	 * Start a new__ transaction or subtransaction if needed.
+	 * Start a new transaction or subtransaction if needed.
 	 */
 	begin_remote_xact(entry);
 
@@ -253,7 +253,7 @@ connect_pg_server(ForeignServer *server, UserMapping *user)
 				   errdetail("Non-superuser cannot connect if the server does not request a password."),
 				   errhint("Target server's authentication method must be changed.")));
 
-		/* Prepare new__ session for use */
+		/* Prepare new session for use */
 		configure_remote_session(conn);
 
 		pfree(keywords);
@@ -626,7 +626,7 @@ pgfdw_xact_callback(XactEvent event, void *arg)
 
 		/*
 		 * If the connection isn't in a good idle state, discard it to
-		 * recover. Next GetConnection will open a new__ connection.
+		 * recover. Next GetConnection will open a new connection.
 		 */
 		if (PQstatus(entry->conn) != CONNECTION_OK ||
 			PQtransactionStatus(entry->conn) != PQTRANS_IDLE)

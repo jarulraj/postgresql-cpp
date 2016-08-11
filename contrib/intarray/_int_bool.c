@@ -131,7 +131,7 @@ gettoken(WORKSTATE *state, int32 *val)
 }
 
 /*
- * push new__ one in polish notation reverse view
+ * push new one in polish notation reverse view
  */
 static void
 pushquery(WORKSTATE *state, int32 type, int32 val)

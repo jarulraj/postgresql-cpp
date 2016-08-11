@@ -732,7 +732,7 @@ xpath_table(PG_FUNCTION_ARGS)
 			}
 			else
 			{
-				/* new__ loop here - we have to deal with nodeset results */
+				/* new loop here - we have to deal with nodeset results */
 				rownr = 0;
 
 				do

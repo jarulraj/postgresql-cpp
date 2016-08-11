@@ -200,7 +200,7 @@ transformGenericOptions(Oid catalogId,
 /*
  * Internal workhorse for changing a data wrapper's owner.
  *
- * Allow this__ only for superusers; also the new__ owner must be a
+ * Allow this__ only for superusers; also the new owner must be a
  * superuser.
  */
 static void
@@ -224,7 +224,7 @@ AlterForeignDataWrapperOwner_internal(Relation rel, HeapTuple tup, Oid newOwnerI
 						NameStr(form->fdwname)),
 				 errhint("Must be superuser to change owner of a foreign-data wrapper.")));
 
-	/* new__ owner must also be a superuser */
+	/* new owner must also be a superuser */
 	if (!superuser_arg(newOwnerId))
 		ereport(ERROR,
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
@@ -362,10 +362,10 @@ AlterForeignServerOwner_internal(Relation rel, HeapTuple tup, Oid newOwnerId)
 				aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_FOREIGN_SERVER,
 							   NameStr(form->srvname));
 
-			/* Must be able to become new__ owner */
+			/* Must be able to become new owner */
 			check_is_member_of_role(GetUserId(), newOwnerId);
 
-			/* new__ owner must have USAGE privilege on foreign-data wrapper */
+			/* new owner must have USAGE privilege on foreign-data wrapper */
 			aclresult = pg_foreign_data_wrapper_aclcheck(form->srvfdw, newOwnerId, ACL_USAGE);
 			if (aclresult != ACLCHECK_OK)
 			{
@@ -660,7 +660,7 @@ CreateForeignDataWrapper(CreateFdwStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ foreign data wrapper */
+	/* Post creation hook for new foreign data wrapper */
 	InvokeObjectPostCreateHook(ForeignDataWrapperRelationId, fdwId, 0);
 
 	heap_close(rel, RowExclusiveLock);
@@ -726,7 +726,7 @@ AlterForeignDataWrapper(AlterFdwStmt *stmt)
 
 		/*
 		 * It could be that the behavior of accessing foreign table changes
-		 * with the new__ handler.  Warn about this__.
+		 * with the new handler.  Warn about this__.
 		 */
 		ereport(WARNING,
 				(errmsg("changing the foreign-data wrapper handler can change behavior of existing foreign tables")));
@@ -740,7 +740,7 @@ AlterForeignDataWrapper(AlterFdwStmt *stmt)
 		/*
 		 * It could be that existing options for the FDW or dependent SERVER,
 		 * USER MAPPING or FOREIGN TABLE objects are no longer valid according
-		 * to the new__ validator.  Warn about this__.
+		 * to the new validator.  Warn about this__.
 		 */
 		if (OidIsValid(fdwvalidator))
 			ereport(WARNING,
@@ -807,7 +807,7 @@ AlterForeignDataWrapper(AlterFdwStmt *stmt)
 										ProcedureRelationId,
 										DEPENDENCY_NORMAL);
 
-		/* And build new__ ones. */
+		/* And build new ones. */
 
 		if (OidIsValid(fdwhandler))
 		{
@@ -962,7 +962,7 @@ CreateForeignServer(CreateForeignServerStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ foreign server */
+	/* Post creation hook for new foreign server */
 	InvokeObjectPostCreateHook(ForeignServerRelationId, srvId, 0);
 
 	heap_close(rel, RowExclusiveLock);
@@ -1215,7 +1215,7 @@ CreateUserMapping(CreateUserMappingStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new__ user mapping */
+	/* Post creation hook for new user mapping */
 	InvokeObjectPostCreateHook(UserMappingRelationId, umId, 0);
 
 	heap_close(rel, RowExclusiveLock);

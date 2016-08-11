@@ -1,12 +1,12 @@
 /*
  * contrib/hstore/hstore_compat.c
  *
- * Notes on old/new__ hstore format disambiguation.
+ * Notes on old/new hstore format disambiguation.
  *
  * There are three formats to consider:
  * 1) old contrib/hstore (referred to as hstore-old)
  * 2) prerelease pgfoundry hstore
- * 3) new__ contrib/hstore
+ * 3) new contrib/hstore
  *
  * (2) and (3) are identical except for the HS_FLAG_NEWVERSION
  * bit, which is set in (3) but not (2).
@@ -17,7 +17,7 @@
  *
  * To stress a point: we ONLY get here with possibly-ambiguous
  * values if we're doing some sort of in-place migration from an
- * old prerelease pgfoundry hstore-new__; and we explicitly don't
+ * old prerelease pgfoundry hstore-new; and we explicitly don't
  * support that without fixing up any potentially padded values
  * first. Most of the code here is serious overkill, but the
  * performance penalty isn't serious (especially compared to the
@@ -36,7 +36,7 @@
  * comments in hstoreUpgrade):
  *
  * First, since there must be at least one entry, we look at
- * how the bits line up. The new__ format looks like:
+ * how the bits line up. The new format looks like:
  *
  * 10kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk  (k..k = keylen)
  * 0nvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  (v..v = keylen+vallen)
@@ -61,11 +61,11 @@
  * We can obviously see that either keylen or vallen must be >32768
  * for there to be any ambiguity (which is why lengths less than that
  * are fasttracked in hstore.h) Since "pos"==0, the "v" field in the
- * new__-format interpretation can only be 0 or 1, which constrains all
+ * new-format interpretation can only be 0 or 1, which constrains all
  * but three bits of the old-format's k and v fields. But in addition
  * to all of this__, the data length implied by the keylen and vallen
  * must fit in the varlena size. So the only ambiguous edge case for
- * hstores with only one entry occurs between a new__-format entry with
+ * hstores with only one entry occurs between a new-format entry with
  * an excess (~32k) of padding, and an old-format entry. But we know
  * which format to use in that case based on how we were compiled, so
  * no actual data corruption can occur.
@@ -88,9 +88,9 @@
 
 /*
  * This is the structure used for entries in the old contrib/hstore
- * implementation. Notice that this__ is the same size as the new__ entry
+ * implementation. Notice that this__ is the same size as the new entry
  * (two 32-bit words per key/value pair) and that the header is the
- * same, so the old and new__ versions of ARRPTR, STRPTR, CALCDATASIZE
+ * same, so the old and new versions of ARRPTR, STRPTR, CALCDATASIZE
  * etc. are compatible.
  *
  * If the above statement isn't true on some bizarre platform, we're
@@ -110,7 +110,7 @@ static int	hstoreValidOldFormat(HStore *hs);
 
 
 /*
- * Validity test for a new__-format hstore.
+ * Validity test for a new-format hstore.
  *	0 = not valid
  *	1 = valid but with "slop" in the length
  *	2 = exactly valid
@@ -179,7 +179,7 @@ hstoreValidOldFormat(HStore *hs)
 	if (hs->size_ & HS_FLAG_NEWVERSION)
 		return 0;
 
-	/* new__ format uses an HEntry for key and another for value */
+	/* new format uses an HEntry for key and another for value */
 	StaticAssertStmt(sizeof(HOldEntry) == 2 * sizeof(HEntry),
 					 "old hstore format is not upward-compatible");
 
@@ -258,7 +258,7 @@ hstoreUpgrade(Datum orig)
 			/*
 			 * force the "new version" flag and the correct varlena length,
 			 * but only if we have a writable copy already (which we almost
-			 * always will, since short new__-format values won't come through
+			 * always will, since short new-format values won't come through
 			 * here)
 			 */
 			if (writable)
@@ -278,18 +278,18 @@ hstoreUpgrade(Datum orig)
 	 * this__ is the tricky edge case. It is only possible in some quite extreme
 	 * cases (the hstore must have had a lot of wasted padding space at the
 	 * end). But the only way a "new" hstore value could get here is if we're
-	 * upgrading in place from a pre-release version of hstore-new__ (NOT
+	 * upgrading in place from a pre-release version of hstore-new (NOT
 	 * contrib/hstore), so we work off the following assumptions: 1. If you're
-	 * moving from old contrib/hstore to hstore-new__, you're required to fix up
+	 * moving from old contrib/hstore to hstore-new, you're required to fix up
 	 * any potential conflicts first, e.g. by running ALTER TABLE ... USING
 	 * col::text::hstore; on all hstore columns before upgrading. 2. If you're
-	 * moving from old contrib/hstore to new__ contrib/hstore, then "new" values
-	 * are impossible here 3. If you're moving from pre-release hstore-new__ to
-	 * hstore-new__, then "old" values are impossible here 4. If you're moving
-	 * from pre-release hstore-new__ to new__ contrib/hstore, you're not doing so
+	 * moving from old contrib/hstore to new contrib/hstore, then "new" values
+	 * are impossible here 3. If you're moving from pre-release hstore-new to
+	 * hstore-new, then "old" values are impossible here 4. If you're moving
+	 * from pre-release hstore-new to new contrib/hstore, you're not doing so
 	 * as an in-place upgrade, so there is no issue So the upshot of all this__
 	 * is that we can treat all the edge cases as "new" if we're being built
-	 * as hstore-new__, and "old" if we're being built as contrib/hstore.
+	 * as hstore-new, and "old" if we're being built as contrib/hstore.
 	 *
 	 * XXX the WARNING can probably be downgraded to DEBUG1 once this__ has been
 	 * beta-tested. But for now, it would be very useful to know if anyone can
@@ -299,12 +299,12 @@ hstoreUpgrade(Datum orig)
 	if (valid_new)
 	{
 #if HSTORE_IS_HSTORE_NEW
-		elog(WARNING, "ambiguous hstore value resolved as hstore-new__");
+		elog(WARNING, "ambiguous hstore value resolved as hstore-new");
 
 		/*
 		 * force the "new version" flag and the correct varlena length, but
 		 * only if we have a writable copy already (which we almost always
-		 * will, since short new__-format values won't come through here)
+		 * will, since short new-format values won't come through here)
 		 */
 		if (writable)
 		{
@@ -318,7 +318,7 @@ hstoreUpgrade(Datum orig)
 	}
 
 	/*
-	 * must have an old-style value. Overwrite it in place as a new__-style one,
+	 * must have an old-style value. Overwrite it in place as a new-style one,
 	 * making sure we have a writable copy first.
 	 */
 
