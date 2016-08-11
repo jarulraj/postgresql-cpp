@@ -1932,7 +1932,7 @@ do_autovacuum(void)
 
 	/*
 	 * Find the pg_database entry and select the default freeze ages. We use
-	 * zero in template and nonconnectable databases, else the system-wide
+	 * zero in template__ and nonconnectable databases, else the system-wide
 	 * default.
 	 */
 	tuple = SearchSysCache1(DATABASEOID, ObjectIdGetDatum(MyDatabaseId));

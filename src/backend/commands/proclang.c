@@ -72,8 +72,8 @@ CreateProceduralLanguage(CreatePLangStmt *stmt)
 	Oid			funcargtypes[1];
 
 	/*
-	 * If we have template information for the language, ignore the supplied
-	 * parameters (if any) and use the template information.
+	 * If we have template__ information for the language, ignore the supplied
+	 * parameters (if any) and use the template__ information.
 	 */
 	if ((pltemplate = find_language_template(stmt->plname)) != NULL)
 	{
@@ -239,8 +239,8 @@ CreateProceduralLanguage(CreatePLangStmt *stmt)
 	else
 	{
 		/*
-		 * No template, so use the provided information.  If there's no
-		 * handler clause, the user is trying to rely on a template that we
+		 * No template__, so use the provided information.  If there's no
+		 * handler clause, the user is trying to rely on a template__ that we
 		 * don't have, so complain accordingly.
 		 */
 		if (!stmt->plhandler)
@@ -444,7 +444,7 @@ create_proc_lang(const char *languageName, bool replace,
 }
 
 /*
- * Look to see if we have template information for the given language name.
+ * Look to see if we have template__ information for the given language name.
  */
 static PLTemplate *
 find_language_template(const char *languageName)
@@ -496,7 +496,7 @@ find_language_template(const char *languageName)
 		if (!isnull)
 			result->tmpllibrary = TextDatumGetCString(datum);
 
-		/* Ignore template if handler or library info is missing */
+		/* Ignore template__ if handler or library info is missing */
 		if (!result->tmplhandler || !result->tmpllibrary)
 			result = NULL;
 	}
@@ -512,7 +512,7 @@ find_language_template(const char *languageName)
 
 
 /*
- * This just returns TRUE if we have a valid template for a given language
+ * This just returns TRUE if we have a valid template__ for a given language
  */
 bool
 PLTemplateExists(const char *languageName)

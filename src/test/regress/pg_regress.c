@@ -327,13 +327,13 @@ signal_remove_temp(int signum)
 static const char *
 make_temp_sockdir(void)
 {
-	char	   *template = strdup("/tmp/pg_regress-XXXXXX");
+	char	   *template__ = strdup("/tmp/pg_regress-XXXXXX");
 
-	temp_sockdir = mkdtemp(template);
+	temp_sockdir = mkdtemp(template__);
 	if (temp_sockdir == NULL)
 	{
 		fprintf(stderr, _("%s: could not create directory \"%s\": %s\n"),
-				progname, template, strerror(errno));
+				progname, template__, strerror(errno));
 		exit(2);
 	}
 

@@ -2601,7 +2601,7 @@ CopyFromInsertBatch(CopyState cstate, EState *estate, CommandId mycid,
 /*
  * Setup to read tuples from a file for COPY FROM.
  *
- * 'rel': Used as a template for the tuples
+ * 'rel': Used as a template__ for the tuples
  * 'filename': Name of server-local file to read
  * 'attnamelist': List of char *, columns to include. NIL selects all cols.
  * 'options': List of DefElem. See copy_opt_item in gram.y for selections.

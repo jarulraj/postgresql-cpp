@@ -1245,7 +1245,7 @@ dumpCreateDB(PGconn *conn)
 						   "FROM pg_database "
 						   "WHERE datname = 'template1'");
 
-	/* If for some reason the template DB isn't there, treat as unknown */
+	/* If for some reason the template__ DB isn't there, treat as unknown */
 	if (PQntuples(res) > 0)
 	{
 		if (!PQgetisnull(res, 0, 0))
@@ -1393,7 +1393,7 @@ dumpCreateDB(PGconn *conn)
 
 			/*
 			 * Output tablespace if it isn't the default.  For default, it
-			 * uses the default from the template database.  If tablespace is
+			 * uses the default from the template__ database.  If tablespace is
 			 * specified and tablespace creation failed earlier, (e.g. no such
 			 * directory), the database creation will fail too.  One solution
 			 * would be to use 'SET default_tablespace' like we do in pg_dump

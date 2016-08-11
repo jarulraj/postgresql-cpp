@@ -47,7 +47,7 @@ typedef struct
 	NodeTag		cmdtype;
 
 	/*
-	 * Name of the template database given by users on CREATE DATABASE
+	 * Name of the template__ database given by users on CREATE DATABASE
 	 * command. Elsewhere (including the case of default) NULL.
 	 */
 	const char *createdb_dtemplate;
@@ -328,7 +328,7 @@ sepgsql_utility_command(Node *parsetree,
 				{
 					DefElem    *defel = (DefElem *) lfirst(cell);
 
-					if (strcmp(defel->defname, "template") == 0)
+					if (strcmp(defel->defname, "template__") == 0)
 					{
 						sepgsql_context_info.createdb_dtemplate
 							= strVal(defel->arg);

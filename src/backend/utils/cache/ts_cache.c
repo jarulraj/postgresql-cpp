@@ -249,7 +249,7 @@ lookup_ts_dictionary_cache(Oid dictId)
 		HeapTuple	tpdict,
 					tptmpl;
 		Form_pg_ts_dict dict;
-		Form_pg_ts_template template;
+		Form_pg_ts_template template__;
 		MemoryContext saveCtx;
 
 		tpdict = SearchSysCache1(TSDICTOID, ObjectIdGetDatum(dictId));
@@ -262,24 +262,24 @@ lookup_ts_dictionary_cache(Oid dictId)
 		 * Sanity checks
 		 */
 		if (!OidIsValid(dict->dicttemplate))
-			elog(ERROR, "text search dictionary %u has no template", dictId);
+			elog(ERROR, "text search dictionary %u has no template__", dictId);
 
 		/*
-		 * Retrieve dictionary's template
+		 * Retrieve dictionary's template__
 		 */
 		tptmpl = SearchSysCache1(TSTEMPLATEOID,
 								 ObjectIdGetDatum(dict->dicttemplate));
 		if (!HeapTupleIsValid(tptmpl))
-			elog(ERROR, "cache lookup failed for text search template %u",
+			elog(ERROR, "cache lookup failed for text search template__ %u",
 				 dict->dicttemplate);
-		template = (Form_pg_ts_template) GETSTRUCT(tptmpl);
+		template__ = (Form_pg_ts_template) GETSTRUCT(tptmpl);
 
 		/*
 		 * Sanity checks
 		 */
-		if (!OidIsValid(template->tmpllexize))
-			elog(ERROR, "text search template %u has no lexize method",
-				 template->tmpllexize);
+		if (!OidIsValid(template__->tmpllexize))
+			elog(ERROR, "text search template__ %u has no lexize method",
+				 template__->tmpllexize);
 
 		if (entry == NULL)
 		{
@@ -310,9 +310,9 @@ lookup_ts_dictionary_cache(Oid dictId)
 		entry->dictId = dictId;
 		entry->dictCtx = saveCtx;
 
-		entry->lexizeOid = template->tmpllexize;
+		entry->lexizeOid = template__->tmpllexize;
 
-		if (OidIsValid(template->tmplinit))
+		if (OidIsValid(template__->tmplinit))
 		{
 			List	   *dictoptions;
 			Datum		opt;
@@ -334,7 +334,7 @@ lookup_ts_dictionary_cache(Oid dictId)
 				dictoptions = deserialize_deflist(opt);
 
 			entry->dictData =
-				DatumGetPointer(OidFunctionCall1(template->tmplinit,
+				DatumGetPointer(OidFunctionCall1(template__->tmplinit,
 											  PointerGetDatum(dictoptions)));
 
 			MemoryContextSwitchTo(oldcontext);

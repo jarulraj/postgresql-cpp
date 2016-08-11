@@ -282,7 +282,7 @@ prepare_new_databases(void)
 	 * We have to create the databases first so we can install support
 	 * functions in all the other databases.  Ideally we could create the
 	 * support functions in template1 but pg_dumpall creates database using
-	 * the template0 template.
+	 * the template0 template__.
 	 */
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/psql\" " EXEC_PSQL_ARGS " %s -f \"%s\"",

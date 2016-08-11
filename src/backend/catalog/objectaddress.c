@@ -589,7 +589,7 @@ static const struct object_type_map
 	},
 	/* OCLASS_TSTEMPLATE */
 	{
-		"text search template", OBJECT_TSTEMPLATE
+		"text search template__", OBJECT_TSTEMPLATE
 	},
 	/* OCLASS_TSCONFIG */
 	{
@@ -2896,9 +2896,9 @@ getObjectDescription(const ObjectAddress *object)
 				tup = SearchSysCache1(TSTEMPLATEOID,
 									  ObjectIdGetDatum(object->objectId));
 				if (!HeapTupleIsValid(tup))
-					elog(ERROR, "cache lookup failed for text search template %u",
+					elog(ERROR, "cache lookup failed for text search template__ %u",
 						 object->objectId);
-				appendStringInfo(&buffer, _("text search template %s"),
+				appendStringInfo(&buffer, _("text search template__ %s"),
 				  NameStr(((Form_pg_ts_template) GETSTRUCT(tup))->tmplname));
 				ReleaseSysCache(tup);
 				break;
@@ -3557,7 +3557,7 @@ getObjectTypeDescription(const ObjectAddress *object)
 			break;
 
 		case OCLASS_TSTEMPLATE:
-			appendStringInfoString(&buffer, "text search template");
+			appendStringInfoString(&buffer, "text search template__");
 			break;
 
 		case OCLASS_TSCONFIG:
@@ -4281,7 +4281,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 				tup = SearchSysCache1(TSTEMPLATEOID,
 									  ObjectIdGetDatum(object->objectId));
 				if (!HeapTupleIsValid(tup))
-					elog(ERROR, "cache lookup failed for text search template %u",
+					elog(ERROR, "cache lookup failed for text search template__ %u",
 						 object->objectId);
 				formTmpl = (Form_pg_ts_template) GETSTRUCT(tup);
 				schema = get_namespace_name_or_temp(formTmpl->tmplnamespace);

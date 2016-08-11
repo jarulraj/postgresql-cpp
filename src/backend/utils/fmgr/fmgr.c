@@ -683,190 +683,126 @@ fmgr_oldstyle(PG_FUNCTION_ARGS)
 	}
 	fcinfo->isnull = isnull;
 
-	user_fn = fnextra->func;
+	// Peloton
 
-	switch (n_arguments)
-	{
-		case 0:
-			returnValue = (char *) (*user_fn) ();
-			break;
-		case 1:
+	// user_fn = fnextra->func;   // Peloton porting: define this for each cases
 
-			/*
-			 * nullvalue() used to use isNull to check if arg is NULL; perhaps
-			 * there are other functions still out there that also rely on
-			 * this undocumented hack?
-			 */
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   &fcinfo->isnull);
-			break;
-		case 2:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1]);
-			break;
-		case 3:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2]);
-			break;
-		case 4:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3]);
-			break;
-		case 5:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4]);
-			break;
-		case 6:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5]);
-			break;
-		case 7:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6]);
-			break;
-		case 8:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7]);
-			break;
-		case 9:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8]);
-			break;
-		case 10:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9]);
-			break;
-		case 11:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9],
-											   fcinfo->arg[10]);
-			break;
-		case 12:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9],
-											   fcinfo->arg[10],
-											   fcinfo->arg[11]);
-			break;
-		case 13:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9],
-											   fcinfo->arg[10],
-											   fcinfo->arg[11],
-											   fcinfo->arg[12]);
-			break;
-		case 14:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9],
-											   fcinfo->arg[10],
-											   fcinfo->arg[11],
-											   fcinfo->arg[12],
-											   fcinfo->arg[13]);
-			break;
-		case 15:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9],
-											   fcinfo->arg[10],
-											   fcinfo->arg[11],
-											   fcinfo->arg[12],
-											   fcinfo->arg[13],
-											   fcinfo->arg[14]);
-			break;
-		case 16:
-			returnValue = (char *) (*user_fn) (fcinfo->arg[0],
-											   fcinfo->arg[1],
-											   fcinfo->arg[2],
-											   fcinfo->arg[3],
-											   fcinfo->arg[4],
-											   fcinfo->arg[5],
-											   fcinfo->arg[6],
-											   fcinfo->arg[7],
-											   fcinfo->arg[8],
-											   fcinfo->arg[9],
-											   fcinfo->arg[10],
-											   fcinfo->arg[11],
-											   fcinfo->arg[12],
-											   fcinfo->arg[13],
-											   fcinfo->arg[14],
-											   fcinfo->arg[15]);
-			break;
-		default:
+  switch (n_arguments) {
+    case 0: {
+      func_ptr0 user_fn = reinterpret_cast<func_ptr0>(fnextra->func);
+      returnValue = (char *)(*user_fn)();
+    } break;
+    case 1: {
+      /*
+       * nullvalue() used to use isNull to check if arg is NULL; perhaps
+       * there are other functions still out there that also rely on
+       * this undocumented hack?
+       */
+      func_ptr1 user_fn = reinterpret_cast<func_ptr1>(fnextra->func);
+      returnValue = (char *)(*user_fn)(fcinfo->arg[0], &fcinfo->isnull);
+    } break;
+    case 2: {
+      func_ptr2 user_fn = reinterpret_cast<func_ptr2>(fnextra->func);
+      returnValue = (char *)(*user_fn)(fcinfo->arg[0], fcinfo->arg[1]);
+    } break;
+    case 3: {
+      func_ptr3 user_fn = reinterpret_cast<func_ptr3>(fnextra->func);
+      returnValue =
+          (char *)(*user_fn)(fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2]);
+    } break;
+    case 4: {
+      func_ptr4 user_fn = reinterpret_cast<func_ptr4>(fnextra->func);
+      returnValue = (char *)(*user_fn)(fcinfo->arg[0], fcinfo->arg[1],
+                                       fcinfo->arg[2], fcinfo->arg[3]);
+    } break;
+    case 5: {
+      func_ptr5 user_fn = reinterpret_cast<func_ptr5>(fnextra->func);
+      returnValue =
+          (char *)(*user_fn)(fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2],
+                             fcinfo->arg[3], fcinfo->arg[4]);
+    } break;
+    case 6: {
+      func_ptr6 user_fn = reinterpret_cast<func_ptr6>(fnextra->func);
+      returnValue =
+          (char *)(*user_fn)(fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2],
+                             fcinfo->arg[3], fcinfo->arg[4], fcinfo->arg[5]);
+    } break;
+    case 7: {
+      func_ptr7 user_fn = reinterpret_cast<func_ptr7>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6]);
+      break;
+    }
+    case 8: {
+      func_ptr8 user_fn = reinterpret_cast<func_ptr8>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7]);
+      break;
+    }
+    case 9: {
+      func_ptr9 user_fn = reinterpret_cast<func_ptr9>(fnextra->func);
+      returnValue =
+          (char *)(*user_fn)(fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2],
+                             fcinfo->arg[3], fcinfo->arg[4], fcinfo->arg[5],
+                             fcinfo->arg[6], fcinfo->arg[7], fcinfo->arg[8]);
+    } break;
+    case 10: {
+      func_ptr10 user_fn = reinterpret_cast<func_ptr10>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9]);
+    } break;
+    case 11: {
+      func_ptr11 user_fn = reinterpret_cast<func_ptr11>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9], fcinfo->arg[10]);
+    } break;
+    case 12: {
+      func_ptr12 user_fn = reinterpret_cast<func_ptr12>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9], fcinfo->arg[10], fcinfo->arg[11]);
+    } break;
+    case 13: {
+      func_ptr13 user_fn = reinterpret_cast<func_ptr13>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9], fcinfo->arg[10], fcinfo->arg[11],
+          fcinfo->arg[12]);
+    } break;
+    case 14: {
+      func_ptr14 user_fn = reinterpret_cast<func_ptr14>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9], fcinfo->arg[10], fcinfo->arg[11],
+          fcinfo->arg[12], fcinfo->arg[13]);
+    } break;
+    case 15: {
+      func_ptr15 user_fn = reinterpret_cast<func_ptr15>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9], fcinfo->arg[10], fcinfo->arg[11],
+          fcinfo->arg[12], fcinfo->arg[13], fcinfo->arg[14]);
+    } break;
+    case 16: {
+      func_ptr16 user_fn = reinterpret_cast<func_ptr16>(fnextra->func);
+      returnValue = (char *)(*user_fn)(
+          fcinfo->arg[0], fcinfo->arg[1], fcinfo->arg[2], fcinfo->arg[3],
+          fcinfo->arg[4], fcinfo->arg[5], fcinfo->arg[6], fcinfo->arg[7],
+          fcinfo->arg[8], fcinfo->arg[9], fcinfo->arg[10], fcinfo->arg[11],
+          fcinfo->arg[12], fcinfo->arg[13], fcinfo->arg[14], fcinfo->arg[15]);
+    } break;
 
+    default:
 			/*
 			 * Increasing FUNC_MAX_ARGS doesn't automatically add cases to the
 			 * above code, so mention the actual value in this error not

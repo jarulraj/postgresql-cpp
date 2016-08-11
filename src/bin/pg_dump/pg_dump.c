@@ -10007,7 +10007,7 @@ dumpProcLang(Archive *fout, ProcLangInfo *plang)
 	 * find them --- if the functions are in the pg_catalog schema, as is
 	 * standard in 8.1 and up, then we won't have loaded them. (In this case
 	 * we will emit a parameterless CREATE LANGUAGE command, which will
-	 * require PL template knowledge in the backend to reload.)
+	 * require PL template__ knowledge in the backend to reload.)
 	 */
 
 	funcInfo = findFuncByOid(plang->lanplcallfoid);
@@ -12742,7 +12742,7 @@ dumpTSDictionary(Archive *fout, TSDictInfo *dictinfo)
 	labelq = createPQExpBuffer();
 	query = createPQExpBuffer();
 
-	/* Fetch name and namespace__ of the dictionary's template */
+	/* Fetch name and namespace__ of the dictionary's template__ */
 	selectSourceSchema(fout, "pg_catalog");
 	appendPQExpBuffer(query, "SELECT nspname, tmplname "
 					  "FROM pg_ts_template p, pg_namespace n "
@@ -12808,7 +12808,7 @@ dumpTSDictionary(Archive *fout, TSDictInfo *dictinfo)
 
 /*
  * dumpTSTemplate
- *	  write out a single text search template
+ *	  write out a single text search template__
  */
 static void
 dumpTSTemplate(Archive *fout, TSTemplateInfo *tmplinfo)
