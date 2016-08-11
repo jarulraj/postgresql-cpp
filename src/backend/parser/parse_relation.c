@@ -3147,12 +3147,12 @@ isQueryUsingTempRelation_walker(Node *node, void *context)
 		}
 
 		return query_tree_walker(query,
-								 isQueryUsingTempRelation_walker,
-								 context,
-								 QTW_IGNORE_JOINALIASES);
+		                         reinterpret_cast<query_tree_walker_fptr>(isQueryUsingTempRelation_walker),
+		                         context,
+		                         QTW_IGNORE_JOINALIASES);
 	}
 
 	return expression_tree_walker(node,
-								  isQueryUsingTempRelation_walker,
-								  context);
+	                              reinterpret_cast<expression_tree_walker_fptr>(isQueryUsingTempRelation_walker),
+	                              context);
 }

@@ -1289,7 +1289,7 @@ find_unaggregated_cols_walker(Node *node, Bitmapset **colnos)
 		/* do not descend into aggregate exprs */
 		return false;
 	}
-	return expression_tree_walker(node, find_unaggregated_cols_walker,
+	return expression_tree_walker(node, reinterpret_cast<expression_tree_walker_fptr>(find_unaggregated_cols_walker),
 								  (void *) colnos);
 }
 

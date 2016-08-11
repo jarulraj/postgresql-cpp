@@ -269,9 +269,9 @@ optimize_minmax_aggregates(PlannerInfo *root, List *tlist,
 	 * now, those won't be examined after this point.
 	 */
 	mutate_eclass_expressions(root,
-							  replace_aggs_with_params_mutator,
-							  (void *) root,
-							  false);
+	                replace_aggs_with_params_mutator,
+	                (void *) root,
+	                false);
 
 	/*
 	 * Generate the output plan --- basically just a Result
@@ -384,7 +384,7 @@ find_minmax_aggs_walker(Node *node, List **context)
 		return false;
 	}
 	Assert(!IsA(node, SubLink));
-	return expression_tree_walker(node, find_minmax_aggs_walker,
+	return expression_tree_walker(node, reinterpret_cast<expression_tree_walker_fptr>(find_minmax_aggs_walker),
 								  (void *) context);
 }
 
@@ -621,7 +621,7 @@ replace_aggs_with_params_mutator(Node *node, PlannerInfo *root)
 		elog(ERROR, "failed to re-find MinMaxAggInfo record");
 	}
 	Assert(!IsA(node, SubLink));
-	return expression_tree_mutator(node, replace_aggs_with_params_mutator,
+	return expression_tree_mutator(node, reinterpret_cast<expression_tree_mutator_fptr>(replace_aggs_with_params_mutator),
 								   (void *) root);
 }
 

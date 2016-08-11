@@ -558,11 +558,11 @@ check_agg_arguments(ParseState *pstate,
 	context.sublevels_up = 0;
 
 	(void) expression_tree_walker((Node *) args,
-								  check_agg_arguments_walker,
+	                reinterpret_cast<expression_tree_walker_fptr>(check_agg_arguments_walker),
 								  (void *) &context);
 
 	(void) expression_tree_walker((Node *) filter,
-								  check_agg_arguments_walker,
+	                reinterpret_cast<expression_tree_walker_fptr>(check_agg_arguments_walker),
 								  (void *) &context);
 
 	/*
@@ -611,7 +611,7 @@ check_agg_arguments(ParseState *pstate,
 		context.min_varlevel = -1;
 		context.min_agglevel = -1;
 		(void) expression_tree_walker((Node *) directargs,
-									  check_agg_arguments_walker,
+		                reinterpret_cast<expression_tree_walker_fptr>(check_agg_arguments_walker),
 									  (void *) &context);
 		if (context.min_varlevel >= 0 && context.min_varlevel < agglevel)
 			ereport(ERROR,
@@ -697,7 +697,7 @@ check_agg_arguments_walker(Node *node,
 
 		context->sublevels_up++;
 		result = query_tree_walker((Query *) node,
-								   check_agg_arguments_walker,
+		               reinterpret_cast<expression_tree_walker_fptr>(check_agg_arguments_walker),
 								   (void *) context,
 								   0);
 		context->sublevels_up--;
@@ -705,8 +705,8 @@ check_agg_arguments_walker(Node *node,
 	}
 
 	return expression_tree_walker(node,
-								  check_agg_arguments_walker,
-								  (void *) context);
+	                              reinterpret_cast<expression_tree_walker_fptr>(check_agg_arguments_walker),
+	                              (void *) context);
 }
 
 /*
