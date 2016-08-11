@@ -160,7 +160,7 @@ cluster(ClusterStmt *stmt, bool isTopLevel)
 		else
 		{
 			/*
-			 * The index is expected to be in the same namespace__ as the
+			 * The index is expected to be in the same namespace as the
 			 * relation.
 			 */
 			indexOid = get_relname_relid(stmt->indexname,
@@ -645,10 +645,10 @@ make_new_heap(Oid OIDOldHeap, Oid NewTableSpace, char relpersistence,
 		namespaceid = RelationGetNamespace(OldHeap);
 
 	/*
-	 * Create the new heap, using a temporary name in the same namespace__ as
+	 * Create the new heap, using a temporary name in the same namespace as
 	 * the existing table.  NOTE: there is some risk of collision with user
 	 * relnames.  Working around this__ seems more trouble than it's worth; in
-	 * particular, we can't create the new heap in a different namespace__ from
+	 * particular, we can't create the new heap in a different namespace from
 	 * the old, or we will have problems with the TEMP status of temp tables.
 	 *
 	 * Note: the new heap is not a shared relation, even if we are rebuilding

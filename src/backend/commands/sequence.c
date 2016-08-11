@@ -1428,7 +1428,7 @@ init_params(List *options, bool isInit,
  *
  * Ownership permissions on the sequence are already checked,
  * but if we are establishing a new owned-by dependency, we must
- * enforce that the referenced table has the same owner and namespace__
+ * enforce that the referenced table has the same owner and namespace
  * as the sequence.
  */
 static void

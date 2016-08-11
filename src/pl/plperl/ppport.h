@@ -249,14 +249,14 @@ same function or variable in your project.
     vnewSVpvf()               NEED_vnewSVpvf               NEED_vnewSVpvf_GLOBAL
     warner()                  NEED_warner                  NEED_warner_GLOBAL
 
-To avoid namespace__ conflicts, you can change the namespace__ of the
+To avoid namespace conflicts, you can change the namespace of the
 explicitly exported functions / variables using the C<DPPP_NAMESPACE>
 macro. Just C<#define> the macro before including C<ppport.h>:
 
     #define DPPP_NAMESPACE MyOwnNamespace_
     #include "ppport.h"
 
-The default namespace__ is C<DPPP_>.
+The default namespace is C<DPPP_>.
 
 =back
 

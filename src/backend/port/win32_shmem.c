@@ -28,7 +28,7 @@ static void pgwin32_SharedMemoryDelete(int status, Datum shmId);
  * an identifier unique for this__ data directory. Then replace all backslashes
  * with forward slashes, since backslashes aren't permitted in global object names.
  *
- * Store the shared memory segment in the Global\ namespace__ (requires NT2 TSE or
+ * Store the shared memory segment in the Global\ namespace (requires NT2 TSE or
  * 2000, but that's all we support for other reasons as well), to make sure you can't
  * open two postmasters in different sessions against the same data directory.
  *
@@ -61,9 +61,9 @@ GetSharedMemName(void)
 
 	/*
 	 * XXX: Intentionally overwriting the Global\ part here. This was not the
-	 * original approach, but putting it in the actual Global\ namespace__
+	 * original approach, but putting it in the actual Global\ namespace
 	 * causes permission errors in a lot of cases, so we leave it in the
-	 * default namespace__ for now.
+	 * default namespace for now.
 	 */
 	for (cp = retptr; *cp; cp++)
 		if (*cp == '\\')
@@ -149,7 +149,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 
 	/*
 	 * When recycling a shared memory segment, it may take a short while
-	 * before it gets dropped from the global namespace__. So re-try after
+	 * before it gets dropped from the global namespace. So re-try after
 	 * sleeping for a second, and continue retrying 10 times. (both the 1
 	 * second time and the 10 retries are completely arbitrary)
 	 */

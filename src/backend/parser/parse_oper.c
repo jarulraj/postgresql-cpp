@@ -37,7 +37,7 @@
  * must be zero-padded and any unused entries in search_path must be zero.
  *
  * search_path contains the actual search_path with which the entry was
- * derived (minus temp namespace__ if any), or else the single specified
+ * derived (minus temp namespace if any), or else the single specified
  * schema OID if we are looking up an explicitly-qualified operator__ name.
  *
  * search_path has to be fixed-length since the hashtable code insists on
@@ -92,7 +92,7 @@ static void InvalidateOprCacheCallBack(Datum arg, int cacheid, uint32 hashvalue)
  * a postfix op.
  *
  * If the operator__ name is not schema-qualified, it is sought in the current
- * namespace__ search path.
+ * namespace search path.
  *
  * If the operator__ is not found, we return InvalidOid if noError is true,
  * else raise an error.  pstate and location are used only to report the

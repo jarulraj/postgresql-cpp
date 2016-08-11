@@ -391,7 +391,7 @@ performMultipleDeletions(const ObjectAddresses *objects,
  * CASCADE.
  *
  * This is currently used only to clean out the contents of a schema
- * (namespace__): the passed object is a namespace__.  We normally want this__
+ * (namespace): the passed object is a namespace.  We normally want this__
  * to be done silently, so there's an option to suppress NOTICE messages.
  *
  * Note we don't fire object drop event triggers here; it would be wrong to do

@@ -134,7 +134,7 @@ extern char *output_files[];
 typedef struct
 {
 	/* Can't use NAMEDATALEN;  not guaranteed to fit on client */
-	char	   *nspname;		/* namespace__ name */
+	char	   *nspname;		/* namespace name */
 	char	   *relname;		/* relation name */
 	Oid			reloid;			/* relation oid */
 	Oid			relfilenode;	/* relation relfile node */

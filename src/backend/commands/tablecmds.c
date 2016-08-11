@@ -489,10 +489,10 @@ DefineRelation(CreateStmt *stmt, char relkind, Oid ownerId,
 				 errmsg("ON COMMIT can only be used on temporary tables")));
 
 	/*
-	 * Look up the namespace__ in which we are supposed to create the relation,
+	 * Look up the namespace in which we are supposed to create the relation,
 	 * check we have permission to create there, lock it against concurrent
 	 * drop, and mark stmt->relation as RELPERSISTENCE_TEMP if a temporary
-	 * namespace__ is selected.
+	 * namespace is selected.
 	 */
 	namespaceId =
 		RangeVarGetAndCheckCreationNamespace(stmt->relation, NoLock, NULL);
@@ -883,7 +883,7 @@ RemoveRelations(DropStmt *drop)
 		 */
 		AcceptInvalidationMessages();
 
-		/* Look up the appropriate relation using namespace__ search. */
+		/* Look up the appropriate relation using namespace search. */
 		state.relkind = relkind;
 		state.heapOid = InvalidOid;
 		state.concurrent = drop->concurrent;
@@ -8997,7 +8997,7 @@ ATExecChangeOwner(Oid relationOid, Oid newOwnerId, bool recursing, LOCKMODE lock
 				/* Must be able to become new owner */
 				check_is_member_of_role(GetUserId(), newOwnerId);
 
-				/* new owner must have CREATE privilege on namespace__ */
+				/* new owner must have CREATE privilege on namespace */
 				aclresult = pg_namespace_aclcheck(namespaceOid, newOwnerId,
 												  ACL_CREATE);
 				if (aclresult != ACLCHECK_OK)
@@ -11390,7 +11390,7 @@ AlterTableNamespace(AlterObjectSchemaStmt *stmt, Oid *oldschema)
 }
 
 /*
- * The guts of relocating a table or materialized view to another namespace__:
+ * The guts of relocating a table or materialized view to another namespace:
  * besides moving the relation itself, its dependent objects are relocated to
  * the new schema.
  */
@@ -11427,7 +11427,7 @@ AlterTableNamespaceInternal(Relation rel, Oid oldNspOid, Oid nspOid,
 }
 
 /*
- * The guts of relocating a relation to another namespace__: fix the pg_class
+ * The guts of relocating a relation to another namespace: fix the pg_class
  * entry, and the pg_depend entry if any.  Caller must already have
  * opened and write-locked pg_class.
  */
@@ -11491,7 +11491,7 @@ AlterRelationNamespaceInternal(Relation classRel, Oid relOid,
 }
 
 /*
- * Move all indexes for the specified relation to another namespace__.
+ * Move all indexes for the specified relation to another namespace.
  *
  * Note: we assume adequate permission checking was done by the caller,
  * and that the caller has a suitable lock on the owning relation.
@@ -11516,7 +11516,7 @@ AlterIndexNamespaces(Relation classRel, Relation rel,
 
 		/*
 		 * Note: currently, the index will not have its own dependency on the
-		 * namespace__, so we don't need to do changeDependencyFor(). There's no
+		 * namespace, so we don't need to do changeDependencyFor(). There's no
 		 * row type in pg_type, either.
 		 *
 		 * XXX this__ objsMoved test may be pointless -- surely we have a single
@@ -11536,7 +11536,7 @@ AlterIndexNamespaces(Relation classRel, Relation rel,
 
 /*
  * Move all SERIAL-column sequences of the specified relation to another
- * namespace__.
+ * namespace.
  *
  * Note: we assume adequate permission checking was done by the caller,
  * and that the caller has a suitable lock on the owning relation.
@@ -11600,7 +11600,7 @@ AlterSeqNamespaces(Relation classRel, Relation rel,
 
 		/*
 		 * Sequences have entries in pg_type. We need to be careful to move
-		 * them to the new namespace__, too.
+		 * them to the new namespace, too.
 		 */
 		AlterTypeNamespaceInternal(RelationGetForm(seqRel)->reltype,
 								   newNspOid, false, false, objsMoved);
@@ -11935,7 +11935,7 @@ RangeVarCallbackForAlterRelation(const RangeVar *rv, Oid relid, Oid oldrelid,
 	 * Extract the specified relation type from the statement parse tree.
 	 *
 	 * Also, for ALTER .. RENAME, check permissions: the user must (still)
-	 * have CREATE rights on the containing namespace__.
+	 * have CREATE rights on the containing namespace.
 	 */
 	if (IsA(stmt, RenameStmt))
 	{

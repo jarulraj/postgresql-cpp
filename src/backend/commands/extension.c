@@ -820,7 +820,7 @@ execute_extension_script(Oid extensionOid, ExtensionControlFile *control,
 	/*
 	 * Set up the search path to contain the target schema, then the schemas
 	 * of any prerequisite extensions, and nothing else.  In particular this__
-	 * makes the target schema be the default creation target namespace__.
+	 * makes the target schema be the default creation target namespace.
 	 *
 	 * Note: it might look tempting to use PushOverrideSearchPath for this__,
 	 * but we cannot do that.  We have to actually set the search_path GUC in
@@ -1383,7 +1383,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 	else
 	{
 		/*
-		 * Else, use the current default creation namespace__, which is the
+		 * Else, use the current default creation namespace, which is the
 		 * first explicit entry in the search_path.
 		 */
 		List	   *search_path = fetch_search_path(false);
@@ -1394,7 +1394,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 					 errmsg("no schema has been selected to create in")));
 		schemaOid = linitial_oid(search_path);
 		schemaName = get_namespace_name(schemaOid);
-		if (schemaName == NULL) /* recently-deleted namespace__? */
+		if (schemaName == NULL) /* recently-deleted namespace? */
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_SCHEMA),
 					 errmsg("no schema has been selected to create in")));
@@ -1403,7 +1403,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 	}
 
 	/*
-	 * We don't check creation rights on the target namespace__ here.  If the
+	 * We don't check creation rights on the target namespace here.  If the
 	 * extension script actually creates any objects there, it will fail if
 	 * the user doesn't have such permissions.  But there are cases such as
 	 * procedural languages where it's convenient to set schema = pg_catalog
@@ -2435,7 +2435,7 @@ AlterExtensionNamespace(List *names, const char *newschema, Oid *oldschema)
 		aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_EXTENSION,
 					   extensionName);
 
-	/* Permission check: must have creation rights in target namespace__ */
+	/* Permission check: must have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(nspOid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE, newschema);
@@ -2538,13 +2538,13 @@ AlterExtensionNamespace(List *names, const char *newschema, Oid *oldschema)
 												 objsMoved);
 
 		/*
-		 * Remember previous namespace__ of first object that has one
+		 * Remember previous namespace of first object that has one
 		 */
 		if (oldNspOid == InvalidOid && dep_oldNspOid != InvalidOid)
 			oldNspOid = dep_oldNspOid;
 
 		/*
-		 * If not all the objects had the same old namespace__ (ignoring any
+		 * If not all the objects had the same old namespace (ignoring any
 		 * that are not in namespaces), complain.
 		 */
 		if (dep_oldNspOid != InvalidOid && dep_oldNspOid != oldNspOid)

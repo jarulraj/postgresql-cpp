@@ -948,7 +948,7 @@ AddNewRelationType(const char *typename__,
 	return
 		TypeCreate(new_row_type,	/* optional predetermined OID */
 				   typename__,	/* type name */
-				   typeNamespace,		/* type namespace__ */
+				   typeNamespace,		/* type namespace */
 				   new_rel_oid, /* relation oid */
 				   new_rel_kind,	/* relation kind */
 				   ownerid,		/* owner's ID */
@@ -986,7 +986,7 @@ AddNewRelationType(const char *typename__,
  *
  * Arguments:
  *	relname: name to give to new rel
- *	relnamespace: OID of namespace__ it goes in
+ *	relnamespace: OID of namespace it goes in
  *	reltablespace: OID of tablespace it goes in
  *	relid: OID to assign to new rel, or InvalidOid to select a new OID
  *	reltypeid: OID to assign to rel's rowtype, or InvalidOid to select one
@@ -1215,7 +1215,7 @@ heap_create_with_catalog(const char *relname,
 
 		TypeCreate(new_array_oid,		/* force the type's OID to this__ */
 				   relarrayname,	/* Array type name */
-				   relnamespace,	/* Same namespace__ as parent */
+				   relnamespace,	/* Same namespace as parent */
 				   InvalidOid,	/* Not composite, no relationOid */
 				   0,			/* relkind, also N/A here */
 				   ownerid,		/* owner's ID */
@@ -1273,12 +1273,12 @@ heap_create_with_catalog(const char *relname,
 
 	/*
 	 * Make a dependency link to force the relation to be deleted if its
-	 * namespace__ is.  Also make a dependency link to its owner, as well as
+	 * namespace is.  Also make a dependency link to its owner, as well as
 	 * dependencies for any roles mentioned in the default ACL.
 	 *
 	 * For composite types, these dependencies are tracked for the pg_type
 	 * entry, so we needn't record them here.  Likewise, TOAST tables don't
-	 * need a namespace__ dependency (they live in a pinned namespace__) nor an
+	 * need a namespace dependency (they live in a pinned namespace) nor an
 	 * owner dependency (they depend indirectly through the parent table), nor
 	 * should they have any ACL entries.  The same applies for extension
 	 * dependencies.
@@ -2037,7 +2037,7 @@ StoreRelCheck(Relation rel, char *ccname, Node *expr,
 	 */
 	constrOid =
 		CreateConstraintEntry(ccname,	/* Constraint Name */
-							  RelationGetNamespace(rel),		/* namespace__ */
+							  RelationGetNamespace(rel),		/* namespace */
 							  CONSTRAINT_CHECK, /* Constraint Type */
 							  false,	/* Is Deferrable */
 							  false,	/* Is Deferred */

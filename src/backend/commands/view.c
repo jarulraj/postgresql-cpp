@@ -129,10 +129,10 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 				 errmsg("view must have at least one column")));
 
 	/*
-	 * Look up, check permissions on, and lock the creation namespace__; also
+	 * Look up, check permissions on, and lock the creation namespace; also
 	 * check for a preexisting view with the same name.  This will also set
 	 * relation->relpersistence to RELPERSISTENCE_TEMP if the selected
-	 * namespace__ is temporary.
+	 * namespace is temporary.
 	 */
 	lockmode = replace ? AccessExclusiveLock : NoLock;
 	(void) RangeVarGetAndCheckCreationNamespace(relation, lockmode, &viewOid);
@@ -159,7 +159,7 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 		CheckTableNotInUse(rel, "CREATE OR REPLACE VIEW");
 
 		/*
-		 * Due to the namespace__ visibility rules for temporary objects, we
+		 * Due to the namespace visibility rules for temporary objects, we
 		 * should only end up replacing a temporary view with another
 		 * temporary view, and similarly for permanent views.
 		 */

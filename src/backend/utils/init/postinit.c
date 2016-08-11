@@ -998,7 +998,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	 * selected the active user and gotten the right GUC settings.
 	 */
 
-	/* set default namespace__ search path */
+	/* set default namespace search path */
 	InitializeSearchPath();
 
 	/* initialize client encoding */

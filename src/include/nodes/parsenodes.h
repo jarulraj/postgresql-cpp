@@ -641,7 +641,7 @@ typedef struct IndexElem
  * In some contexts the name can be qualified.  Also, certain SQL commands
  * allow a SET/ADD/DROP action to be attached to option settings, so it's
  * convenient to carry a field for that too.  (Note: currently, it is our
- * practice that the grammar allows namespace__ and action only in statements
+ * practice that the grammar allows namespace and action only in statements
  * where they are relevant; C code can just ignore those fields in other
  * statements.)
  */
@@ -1591,7 +1591,7 @@ typedef enum GrantObjectType
 	ACL_OBJECT_FUNCTION,		/* function */
 	ACL_OBJECT_LANGUAGE,		/* procedural language */
 	ACL_OBJECT_LARGEOBJECT,		/* largeobject */
-	ACL_OBJECT_NAMESPACE,		/* namespace__ */
+	ACL_OBJECT_NAMESPACE,		/* namespace */
 	ACL_OBJECT_TABLESPACE,		/* tablespace */
 	ACL_OBJECT_TYPE				/* type */
 } GrantObjectType;

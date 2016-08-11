@@ -1157,7 +1157,7 @@ relation_openrv(const RangeVar *relation, LOCKMODE lockmode)
 	if (lockmode != NoLock)
 		AcceptInvalidationMessages();
 
-	/* Look up and lock the appropriate relation using namespace__ search */
+	/* Look up and lock the appropriate relation using namespace search */
 	relOid = RangeVarGetRelid(relation, lockmode, false);
 
 	/* Let relation_open do the rest */
@@ -1186,7 +1186,7 @@ relation_openrv_extended(const RangeVar *relation, LOCKMODE lockmode,
 	if (lockmode != NoLock)
 		AcceptInvalidationMessages();
 
-	/* Look up and lock the appropriate relation using namespace__ search */
+	/* Look up and lock the appropriate relation using namespace search */
 	relOid = RangeVarGetRelid(relation, lockmode, missing_ok);
 
 	/* Return NULL on not-found */

@@ -36,7 +36,7 @@
 CATALOG(pg_proc,1255) BKI_BOOTSTRAP BKI_ROWTYPE_OID(81) BKI_SCHEMA_MACRO
 {
 	NameData	proname;		/* procedure name */
-	Oid			pronamespace;	/* OID of namespace__ containing this__ proc */
+	Oid			pronamespace;	/* OID of namespace containing this__ proc */
 	Oid			proowner;		/* procedure owner */
 	Oid			prolang;		/* OID of pg_language entry */
 	float4		procost;		/* estimated execution cost */
@@ -3512,7 +3512,7 @@ DESCR("I/O");
 DATA(insert OID = 4085 (  regnamespaceout	PGNSP PGUID 12 1 0 0 0 f f f f t f s 1 0 2275 "4089" _null_ _null_ _null_ _null_ _null_ regnamespaceout _null_ _null_ _null_ ));
 DESCR("I/O");
 DATA(insert OID = 4086 (  to_regnamespace	PGNSP PGUID 12 1 0 0 0 f f f f t f s 1 0 4089 "2275" _null_ _null_ _null_ _null_ _null_ to_regnamespace _null_ _null_ _null_ ));
-DESCR("convert namespace__ name to regnamespace");
+DESCR("convert namespace name to regnamespace");
 
 DATA(insert OID = 2246 ( fmgr_internal_validator PGNSP PGUID 12 1 0 0 0 f f f f t f s 1 0 2278 "26" _null_ _null_ _null_ _null_ _null_ fmgr_internal_validator _null_ _null_ _null_ ));
 DESCR("(internal)");
@@ -4359,7 +4359,7 @@ DATA(insert OID = 2614 (  xmlexists  PGNSP PGUID 12 1 0 0 0 f f f f t f i 2 0 16
 DESCR("test XML value against XPath expression");
 
 DATA(insert OID = 3049 (  xpath_exists	 PGNSP PGUID 12 1 0 0 0 f f f f t f i 3 0 16 "25 142 1009" _null_ _null_ _null_ _null_ _null_ xpath_exists _null_ _null_ _null_ ));
-DESCR("test XML value against XPath expression, with namespace__ support");
+DESCR("test XML value against XPath expression, with namespace support");
 DATA(insert OID = 3050 (  xpath_exists	 PGNSP PGUID 14 1 0 0 0 f f f f t f i 2 0 16 "25 142" _null_ _null_ _null_ _null_ _null_ "select pg_catalog.xpath_exists($1, $2, ''{}''::pg_catalog.text[])" _null_ _null_ _null_ ));
 DESCR("test XML value against XPath expression");
 DATA(insert OID = 3051 (  xml_is_well_formed			 PGNSP PGUID 12 1 0 0 0 f f f f t f s 1 0 16 "25" _null_ _null_ _null_ _null_ _null_ xml_is_well_formed _null_ _null_ _null_ ));

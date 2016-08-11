@@ -34,7 +34,7 @@
 CATALOG(pg_operator,2617)
 {
 	NameData	oprname;		/* name of operator__ */
-	Oid			oprnamespace;	/* OID of namespace__ containing this__ oper */
+	Oid			oprnamespace;	/* OID of namespace containing this__ oper */
 	Oid			oprowner;		/* operator__ owner */
 	char		oprkind;		/* 'l', 'r', or 'b' */
 	bool		oprcanmerge;	/* can be used in merge join? */

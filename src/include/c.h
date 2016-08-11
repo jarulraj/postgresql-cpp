@@ -6,7 +6,7 @@
  *
  *	  Note that the definitions here are not intended to be exposed to clients
  *	  of the frontend interface libraries --- so we don't worry much about
- *	  polluting the namespace__ with lots of stuff...
+ *	  polluting the namespace with lots of stuff...
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

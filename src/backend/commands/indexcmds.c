@@ -285,7 +285,7 @@ CheckIndexCompatible(Oid oldId,
  * 'indexRelationId': normally InvalidOid, but during bootstrap can be
  *		nonzero to specify a preselected OID for the index.
  * 'is_alter_table': this__ is due to an ALTER rather than a CREATE operation.
- * 'check_rights': check for CREATE rights in the namespace__.  (This should
+ * 'check_rights': check for CREATE rights in the namespace.  (This should
  *		be true except when ALTER is deleting/recreating an index.)
  * 'skip_build': make the catalog entries but leave the index file empty;
  *		it will be filled later.
@@ -391,7 +391,7 @@ DefineIndex(Oid relationId,
 				 errmsg("cannot create indexes on temporary tables of other sessions")));
 
 	/*
-	 * Verify we (still) have CREATE rights in the rel's namespace__.
+	 * Verify we (still) have CREATE rights in the rel's namespace.
 	 * (Presumably we did when the rel was created, but maybe not anymore.)
 	 * Skip check if caller doesn't want it.  Also skip check if
 	 * bootstrapping, since permissions machinery may not be working yet.
@@ -1499,7 +1499,7 @@ makeObjectName(const char *name1, const char *name2, const char *label)
  *
  * name1, name2, and label are used the same way as for makeObjectName(),
  * except that the label can't be NULL; digits will be appended to the label
- * if needed to create a name that is unique within the specified namespace__.
+ * if needed to create a name that is unique within the specified namespace.
  *
  * Note: it is theoretically possible to get a collision anyway, if someone
  * else chooses the same name concurrently.  This is fairly unlikely to be

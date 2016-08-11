@@ -484,7 +484,7 @@ RestoreArchive(Archive *AHX)
 				ahlog(AH, 1, "dropping %s %s\n", te->desc, te->tag);
 				/* Select owner and schema as necessary */
 				_becomeOwner(AH, te);
-				_selectOutputSchema(AH, te->namespace__);
+				_selectOutputSchema(AH, te->namespace);
 
 				/*
 				 * Now emit the DROP command, if the object has one.  Note we
@@ -632,10 +632,10 @@ RestoreArchive(Archive *AHX)
 		/* Both schema and data objects might now have ownership/ACLs */
 		if ((te->reqs & (REQ_SCHEMA | REQ_DATA)) != 0)
 		{
-			/* Show namespace__ if available */
-			if (te->namespace__)
+			/* Show namespace if available */
+			if (te->namespace)
 				ahlog(AH, 1, "setting owner and privileges for %s \"%s.%s\"\n",
-					  te->desc, te->namespace__, te->tag);
+					  te->desc, te->namespace, te->tag);
 			else
 				ahlog(AH, 1, "setting owner and privileges for %s \"%s\"\n",
 					  te->desc, te->tag);
@@ -712,10 +712,10 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 
 	if ((reqs & REQ_SCHEMA) != 0)		/* We want the schema */
 	{
-		/* Show namespace__ if available */
-		if (te->namespace__)
+		/* Show namespace if available */
+		if (te->namespace)
 			ahlog(AH, 1, "creating %s \"%s.%s\"\n",
-				  te->desc, te->namespace__, te->tag);
+				  te->desc, te->namespace, te->tag);
 		else
 			ahlog(AH, 1, "creating %s \"%s\"\n", te->desc, te->tag);
 
@@ -808,10 +808,10 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 
 					/* Select owner and schema as necessary */
 					_becomeOwner(AH, te);
-					_selectOutputSchema(AH, te->namespace__);
+					_selectOutputSchema(AH, te->namespace);
 
 					ahlog(AH, 1, "processing data for table \"%s.%s\"\n",
-						  te->namespace__, te->tag);
+						  te->namespace, te->tag);
 
 					/*
 					 * In parallel restore, if we created the table earlier in
@@ -924,7 +924,7 @@ _disableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 	/*
 	 * Disable them.
 	 */
-	_selectOutputSchema(AH, te->namespace__);
+	_selectOutputSchema(AH, te->namespace);
 
 	ahprintf(AH, "ALTER TABLE %s DISABLE TRIGGER ALL;\n\n",
 			 fmtId(te->tag));
@@ -952,7 +952,7 @@ _enableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 	/*
 	 * Enable them.
 	 */
-	_selectOutputSchema(AH, te->namespace__);
+	_selectOutputSchema(AH, te->namespace);
 
 	ahprintf(AH, "ALTER TABLE %s ENABLE TRIGGER ALL;\n\n",
 			 fmtId(te->tag));
@@ -986,7 +986,7 @@ void
 ArchiveEntry(Archive *AHX,
 			 CatalogId catalogId, DumpId dumpId,
 			 const char *tag,
-			 const char *namespace__,
+			 const char *namespace,
 			 const char *tablespace,
 			 const char *owner, bool withOids,
 			 const char *desc, teSection section,
@@ -1014,7 +1014,7 @@ ArchiveEntry(Archive *AHX,
 	newToc->section = section;
 
 	newToc->tag = pg_strdup(tag);
-	newToc->namespace__ = namespace__ ? pg_strdup(namespace__) : NULL;
+	newToc->namespace = namespace ? pg_strdup(namespace) : NULL;
 	newToc->tablespace = tablespace ? pg_strdup(tablespace) : NULL;
 	newToc->owner = pg_strdup(owner);
 	newToc->withOids = withOids;
@@ -1106,7 +1106,7 @@ PrintTOCSummary(Archive *AHX)
 			(_tocEntryRequired(te, curSection, ropt) & (REQ_SCHEMA | REQ_DATA)) != 0)
 			ahprintf(AH, "%d; %u %u %s %s %s %s\n", te->dumpId,
 					 te->catalogId.tableoid, te->catalogId.oid,
-					 te->desc, te->namespace__ ? te->namespace__ : "-",
+					 te->desc, te->namespace ? te->namespace : "-",
 					 te->tag, te->owner);
 		if (ropt->verbose && te->nDeps > 0)
 		{
@@ -2415,7 +2415,7 @@ WriteToc(ArchiveHandle *AH)
 		WriteStr(AH, te->defn);
 		WriteStr(AH, te->dropStmt);
 		WriteStr(AH, te->copyStmt);
-		WriteStr(AH, te->namespace__);
+		WriteStr(AH, te->namespace);
 		WriteStr(AH, te->tablespace);
 		WriteStr(AH, te->owner);
 		WriteStr(AH, te->withOids ? "true" : "false");
@@ -2514,7 +2514,7 @@ ReadToc(ArchiveHandle *AH)
 			te->copyStmt = ReadStr(AH);
 
 		if (AH->version >= K_VERS_1_6)
-			te->namespace__ = ReadStr(AH);
+			te->namespace = ReadStr(AH);
 
 		if (AH->version >= K_VERS_1_10)
 			te->tablespace = ReadStr(AH);
@@ -2675,10 +2675,10 @@ _tocEntryRequired(TocEntry *te, teSection curSection, RestoreOptions *ropt)
 	/* Check options for selective dump/restore */
 	if (ropt->schemaNames.head != NULL)
 	{
-		/* If no namespace__ is specified, it means all. */
-		if (!te->namespace__)
+		/* If no namespace is specified, it means all. */
+		if (!te->namespace)
 			return 0;
-		if (!(simple_string_list_member(&ropt->schemaNames, te->namespace__)))
+		if (!(simple_string_list_member(&ropt->schemaNames, te->namespace)))
 			return 0;
 	}
 
@@ -3215,7 +3215,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 
 	/* Select owner, schema, and tablespace as necessary */
 	_becomeOwner(AH, te);
-	_selectOutputSchema(AH, te->namespace__);
+	_selectOutputSchema(AH, te->namespace);
 	_selectTablespace(AH, te->tablespace);
 
 	/* Set up OID mode too */
@@ -3258,8 +3258,8 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 		 * dump containing objects with maliciously crafted names).
 		 */
 		sanitized_name = replace_line_endings(te->tag);
-		if (te->namespace__)
-			sanitized_schema = replace_line_endings(te->namespace__);
+		if (te->namespace)
+			sanitized_schema = replace_line_endings(te->namespace);
 		else
 			sanitized_schema = pg_strdup("-");
 		if (!ropt->noOwner)

@@ -112,7 +112,7 @@ typedef struct
 } deparse_context;
 
 /*
- * Each level of query context around a subtree needs a level of Var namespace__.
+ * Each level of query context around a subtree needs a level of Var namespace.
  * A Var having varlevelsup=N refers to the N'th item (counting from 0) in
  * the current context's namespaces list.
  *
@@ -887,7 +887,7 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
 		set_rtable_names(&dpns, NIL, NULL);
 		set_simple_column_names(&dpns);
 
-		/* Set up context with one-deep namespace__ stack */
+		/* Set up context with one-deep namespace stack */
 		context.buf = &buf;
 		context.namespaces = list_make1(&dpns);
 		context.windowClause = NIL;
@@ -2552,7 +2552,7 @@ deparse_context_for(const char *aliasname, Oid relid)
 	set_rtable_names(dpns, NIL, NULL);
 	set_simple_column_names(dpns);
 
-	/* Return a one-deep namespace__ stack */
+	/* Return a one-deep namespace stack */
 	return list_make1(dpns);
 }
 
@@ -2588,7 +2588,7 @@ deparse_context_for_plan_rtable(List *rtable, List *rtable_names)
 	 */
 	set_simple_column_names(dpns);
 
-	/* Return a one-deep namespace__ stack */
+	/* Return a one-deep namespace stack */
 	return list_make1(dpns);
 }
 
@@ -2626,7 +2626,7 @@ set_deparse_context_planstate(List *dpcontext,
 {
 	deparse_namespace *dpns;
 
-	/* Should always have one-entry namespace__ list for Plan deparsing */
+	/* Should always have one-entry namespace list for Plan deparsing */
 	Assert(list_length(dpcontext) == 1);
 	dpns = (deparse_namespace *) linitial(dpcontext);
 
@@ -2663,7 +2663,7 @@ select_rtable_names_for_explain(List *rtable, Bitmapset *rels_used)
  *
  * We fill in dpns->rtable_names with a list of names that is one-for-one with
  * the already-filled dpns->rtable list.  Each RTE name is unique among those
- * in the new namespace__ plus any ancestor namespaces listed in
+ * in the new namespace plus any ancestor namespaces listed in
  * parent_namespaces.
  *
  * If rels_used isn't NULL, only RTE indexes listed in it are given aliases.
@@ -3882,7 +3882,7 @@ flatten_join_using_qual(Node *qual, List **leftvars, List **rightvars)
 /*
  * get_rtable_name: convenience function to get a previously assigned RTE alias
  *
- * The RTE must belong to the topmost namespace__ level in "context".
+ * The RTE must belong to the topmost namespace level in "context".
  */
 static char *
 get_rtable_name(int rtindex, deparse_context *context)
@@ -6302,7 +6302,7 @@ get_name_for_var_field(Var *var, int fieldno,
 						/*
 						 * Recurse into the sub-select to see what its Var
 						 * refers to. We have to build an additional level of
-						 * namespace__ to keep in step with varlevelsup in the
+						 * namespace to keep in step with varlevelsup in the
 						 * subselect.
 						 */
 						deparse_namespace mydpns;
@@ -6384,7 +6384,7 @@ get_name_for_var_field(Var *var, int fieldno,
 				ListCell   *lc;
 
 				/*
-				 * Try to find the referenced CTE using the namespace__ stack.
+				 * Try to find the referenced CTE using the namespace stack.
 				 */
 				ctelevelsup = rte->ctelevelsup + netlevelsup;
 				if (ctelevelsup >= list_length(context->namespaces))
@@ -6416,10 +6416,10 @@ get_name_for_var_field(Var *var, int fieldno,
 					{
 						/*
 						 * Recurse into the CTE to see what its Var refers to.
-						 * We have to build an additional level of namespace__
+						 * We have to build an additional level of namespace
 						 * to keep in step with varlevelsup in the CTE.
 						 * Furthermore it could be an outer CTE, so we may
-						 * have to delete some levels of namespace__.
+						 * have to delete some levels of namespace.
 						 */
 						List	   *save_nslist = context->namespaces;
 						List	   *new_nslist;
@@ -9542,7 +9542,7 @@ get_relation_name(Oid relid)
  *
  * If namespaces isn't NIL, it must be a list of deparse_namespace nodes.
  * We will forcibly qualify the relation name if it equals any CTE name
- * visible in the namespace__ list.
+ * visible in the namespace list.
  */
 static char *
 generate_relation_name(Oid relid, List *namespaces)
@@ -9621,7 +9621,7 @@ generate_qualified_relation_name(Oid relid)
 
 	nspname = get_namespace_name(reltup->relnamespace);
 	if (!nspname)
-		elog(ERROR, "cache lookup failed for namespace__ %u",
+		elog(ERROR, "cache lookup failed for namespace %u",
 			 reltup->relnamespace);
 
 	result = quote_qualified_identifier(nspname, relname);

@@ -151,7 +151,7 @@ DefineCollation(List *names, List *parameters)
  * Subroutine for ALTER COLLATION SET SCHEMA and RENAME
  *
  * Is there a collation with the same name of the given collation already in
- * the given namespace__?  If so, raise an appropriate error message.
+ * the given namespace?  If so, raise an appropriate error message.
  */
 void
 IsThereCollationInNamespace(const char *collname, Oid nspOid)

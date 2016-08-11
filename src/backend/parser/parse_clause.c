@@ -97,7 +97,7 @@ static Node *transformFrameOffset(ParseState *pstate, int frameOptions,
 /*
  * transformFromClause -
  *	  Process the FROM clause and add items to the query's range table,
- *	  joinlist, and namespace__.
+ *	  joinlist, and namespace.
  *
  * Note: we assume that the pstate's p_rtable, p_joinlist, and p_namespace
  * lists were initialized to NIL when the pstate was created.
@@ -113,7 +113,7 @@ transformFromClause(ParseState *pstate, List *frmList)
 	 * The grammar will have produced a list of RangeVars, RangeSubselects,
 	 * RangeFunctions, and/or JoinExprs. Transform each one (possibly adding
 	 * entries to the rtable), check for duplicate refnames, and then add it
-	 * to the joinlist and namespace__.
+	 * to the joinlist and namespace.
 	 *
 	 * Note we must process the items left-to-right for proper handling of
 	 * LATERAL references.
@@ -132,7 +132,7 @@ transformFromClause(ParseState *pstate, List *frmList)
 
 		checkNameSpaceConflicts(pstate, pstate->p_namespace, namespace__);
 
-		/* Mark the new namespace__ items as visible only to LATERAL */
+		/* Mark the new namespace items as visible only to LATERAL */
 		setNamespaceLateralState(namespace__, true, true);
 
 		pstate->p_joinlist = lappend(pstate->p_joinlist, n);
@@ -140,9 +140,9 @@ transformFromClause(ParseState *pstate, List *frmList)
 	}
 
 	/*
-	 * We're done parsing the FROM list, so make all namespace__ items
+	 * We're done parsing the FROM list, so make all namespace items
 	 * unconditionally visible.  Note that this__ will also reset lateral_only
-	 * for any namespace__ items that were already present when we were called;
+	 * for any namespace items that were already present when we were called;
 	 * but those should have been that way already.
 	 */
 	setNamespaceLateralState(pstate->p_namespace, false, true);
@@ -159,10 +159,10 @@ transformFromClause(ParseState *pstate, List *frmList)
  *	  the write lock before any read lock.
  *
  *	  If alsoSource is true, add the target to the query's joinlist and
- *	  namespace__.  For INSERT, we don't want the target to be joined to;
+ *	  namespace.  For INSERT, we don't want the target to be joined to;
  *	  it's a destination of tuples, not a source.   For UPDATE/DELETE,
  *	  we do need to scan or join the target.  (NOTE: we do not bother
- *	  to check for namespace__ conflict; we assume that the namespace__ was
+ *	  to check for namespace conflict; we assume that the namespace was
  *	  initially empty in these cases.)
  *
  *	  Finally, we mark the relation as requiring the permissions specified
@@ -214,7 +214,7 @@ setTargetTable(ParseState *pstate, RangeVar *relation,
 	rte->requiredPerms = requiredPerms;
 
 	/*
-	 * If UPDATE/DELETE, add table to joinlist and namespace__.
+	 * If UPDATE/DELETE, add table to joinlist and namespace.
 	 *
 	 * Note: some callers know that they can find the new ParseNamespaceItem
 	 * at the end of the pstate->p_namespace list.  This is a bit ugly but not
@@ -405,11 +405,11 @@ transformJoinOnClause(ParseState *pstate, JoinExpr *j, List *namespace__)
 	List	   *save_namespace;
 
 	/*
-	 * The namespace__ that the join expression should see is just the two
+	 * The namespace that the join expression should see is just the two
 	 * subtrees of the JOIN plus any outer references from upper pstate
-	 * levels.  Temporarily set this__ pstate's namespace__ accordingly.  (We need
+	 * levels.  Temporarily set this__ pstate's namespace accordingly.  (We need
 	 * not check for refname conflicts, because transformFromClauseItem()
-	 * already did.)  All namespace__ items are marked visible regardless of
+	 * already did.)  All namespace items are marked visible regardless of
 	 * LATERAL state.
 	 */
 	setNamespaceLateralState(namespace__, false, true);
@@ -837,7 +837,7 @@ transformRangeTableSample(ParseState *pstate, RangeTableSample *rts)
  *
  * *top_rti: receives the rangetable index of top_rte.  (Ditto.)
  *
- * *namespace__: receives a List of ParseNamespaceItems for the RTEs exposed
+ * *namespace: receives a List of ParseNamespaceItems for the RTEs exposed
  * as table/column names by this__ item.  (The lateral_only flags in these items
  * are indeterminate and should be explicitly set by the caller before use.)
  */
@@ -975,14 +975,14 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 
 		/*
 		 * Make the left-side RTEs available for LATERAL access within the
-		 * right side, by temporarily adding them to the pstate's namespace__
+		 * right side, by temporarily adding them to the pstate's namespace
 		 * list.  Per SQL:2008, if the join type is not INNER or LEFT then the
 		 * left-side names must still be exposed, but it's an error to
 		 * reference them.  (Stupid design, but that's what it says.)  Hence,
-		 * we always push them into the namespace__, but mark them as not
+		 * we always push them into the namespace, but mark them as not
 		 * lateral_ok if the jointype is wrong.
 		 *
-		 * Notice that we don't require the merged namespace__ list to be
+		 * Notice that we don't require the merged namespace list to be
 		 * conflict-free.  See the comments for scanNameSpaceForRefname().
 		 *
 		 * NB: this__ coding relies on the fact that list_concat is not
@@ -1000,19 +1000,19 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 										  &r_rtindex,
 										  &r_namespace);
 
-		/* Remove the left-side RTEs from the namespace__ list again */
+		/* Remove the left-side RTEs from the namespace list again */
 		pstate->p_namespace = list_truncate(pstate->p_namespace,
 											sv_namespace_length);
 
 		/*
 		 * Check for conflicting refnames in left and right subtrees. Must do
 		 * this__ because higher levels will assume I hand back a self-
-		 * consistent namespace__ list.
+		 * consistent namespace list.
 		 */
 		checkNameSpaceConflicts(pstate, l_namespace, r_namespace);
 
 		/*
-		 * Generate combined namespace__ info for possible use below.
+		 * Generate combined namespace info for possible use below.
 		 */
 		my_namespace = list_concat(l_namespace, r_namespace);
 
@@ -1235,7 +1235,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		Assert(list_length(pstate->p_joinexprs) == j->rtindex);
 
 		/*
-		 * Prepare returned namespace__ list.  If the JOIN has an alias then it
+		 * Prepare returned namespace list.  If the JOIN has an alias then it
 		 * hides the contained RTEs completely; otherwise, the contained RTEs
 		 * are still visible as table names, but are not visible for
 		 * unqualified column-name access.
@@ -1408,7 +1408,7 @@ makeNamespaceItem(RangeTblEntry *rte, bool rel_visible, bool cols_visible,
 
 /*
  * setNamespaceColumnVisibility -
- *	  Convenience subroutine to update cols_visible flags in a namespace__ list.
+ *	  Convenience subroutine to update cols_visible flags in a namespace list.
  */
 static void
 setNamespaceColumnVisibility(List *namespace__, bool cols_visible)
@@ -1425,7 +1425,7 @@ setNamespaceColumnVisibility(List *namespace__, bool cols_visible)
 
 /*
  * setNamespaceLateralState -
- *	  Convenience subroutine to update LATERAL flags in a namespace__ list.
+ *	  Convenience subroutine to update LATERAL flags in a namespace list.
  */
 static void
 setNamespaceLateralState(List *namespace__, bool lateral_only, bool lateral_ok)

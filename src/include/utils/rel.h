@@ -360,14 +360,14 @@ typedef struct ViewOptions
  * RelationGetRelationName
  *		Returns the rel's name.
  *
- * Note that the name is only unique within the containing namespace__.
+ * Note that the name is only unique within the containing namespace.
  */
 #define RelationGetRelationName(relation) \
 	(NameStr((relation)->rd_rel->relname))
 
 /*
  * RelationGetNamespace
- *		Returns the rel's namespace__ OID.
+ *		Returns the rel's namespace OID.
  */
 #define RelationGetNamespace(relation) \
 	((relation)->rd_rel->relnamespace)

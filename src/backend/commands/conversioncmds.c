@@ -49,11 +49,11 @@ CreateConversionCommand(CreateConversionStmt *stmt)
 	static const Oid funcargs[] = {INT4OID, INT4OID, CSTRINGOID, INTERNALOID, INT4OID};
 	char		result[1];
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceId = QualifiedNameGetCreationNamespace(stmt->conversion_name,
 													&conversion_name);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(namespaceId, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,

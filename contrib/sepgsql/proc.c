@@ -53,7 +53,7 @@ sepgsql_proc_post_create(Oid functionId)
 	Form_pg_proc proForm;
 
 	/*
-	 * Fetch namespace__ of the new procedure. Because pg_proc entry is not
+	 * Fetch namespace of the new procedure. Because pg_proc entry is not
 	 * visible right now, we need to scan the catalog using SnapshotSelf.
 	 */
 	rel = heap_open(ProcedureRelationId, AccessShareLock);
@@ -73,7 +73,7 @@ sepgsql_proc_post_create(Oid functionId)
 	proForm = (Form_pg_proc) GETSTRUCT(tuple);
 
 	/*
-	 * check db_schema:{add_name} permission of the namespace__
+	 * check db_schema:{add_name} permission of the namespace
 	 */
 	object.classId = NamespaceRelationId;
 	object.objectId = proForm->pronamespace;
@@ -91,7 +91,7 @@ sepgsql_proc_post_create(Oid functionId)
 
 	/*
 	 * Compute a default security label when we create a new procedure object
-	 * under the specified namespace__.
+	 * under the specified namespace.
 	 */
 	scontext = sepgsql_get_client_label();
 	tcontext = sepgsql_get_label(NamespaceRelationId,
@@ -273,7 +273,7 @@ sepgsql_proc_setattr(Oid functionId)
 	oldform = (Form_pg_proc) GETSTRUCT(oldtup);
 
 	/*
-	 * Does this__ ALTER command takes operation to namespace__?
+	 * Does this__ ALTER command takes operation to namespace?
 	 */
 	if (newform->pronamespace != oldform->pronamespace)
 	{

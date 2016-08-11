@@ -986,7 +986,7 @@ plperl_trusted_init(void)
 	 */
 	PL_op_mask = plperl_opmask;
 
-	/* delete the DynaLoader:: namespace__ so extensions can't be loaded */
+	/* delete the DynaLoader:: namespace so extensions can't be loaded */
 	stash = gv_stashpv("DynaLoader", GV_ADDWARN);
 	hv_iterinit(stash);
 	while ((sv = hv_iternextsv(stash, &key, &klen)))

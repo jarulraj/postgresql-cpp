@@ -600,8 +600,8 @@ add_string_reloption(bits32 kinds, char *name, char *desc, char *default_val,
 /*
  * Transform a relation options list (list of DefElem) into the text array
  * format that is kept in pg_class.reloptions, including only those options
- * that are in the passed namespace__.  The output values do not include the
- * namespace__.
+ * that are in the passed namespace.  The output values do not include the
+ * namespace.
  *
  * This is used for three cases: CREATE TABLE/INDEX, ALTER TABLE SET, and
  * ALTER TABLE RESET.  In the ALTER cases, oldOptions is the existing
@@ -613,9 +613,9 @@ add_string_reloption(bits32 kinds, char *name, char *desc, char *default_val,
  *
  * Note that this__ is not responsible for determining whether the options
  * are valid, but it does check that namespaces for all the options given are
- * listed in validnsps.  The NULL namespace__ is always valid and need not be
+ * listed in validnsps.  The NULL namespace is always valid and need not be
  * explicitly listed.  Passing a NULL pointer means that only the NULL
- * namespace__ is valid.
+ * namespace is valid.
  *
  * Both oldOptions and the result are text arrays (or NULL for "default"),
  * but we declare them as Datums to avoid including array.h in reloptions.h.
@@ -658,7 +658,7 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 				DefElem    *def = (DefElem *) lfirst(cell);
 				int			kw_len;
 
-				/* ignore if not in the same namespace__ */
+				/* ignore if not in the same namespace */
 				if (namspace == NULL)
 				{
 					if (def->defnamespace != NULL)
@@ -707,7 +707,7 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 			Size		len;
 
 			/*
-			 * Error out if the namespace__ is not valid.  A NULL namespace__ is
+			 * Error out if the namespace is not valid.  A NULL namespace is
 			 * always valid.
 			 */
 			if (def->defnamespace != NULL)
@@ -731,14 +731,14 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 				if (!valid)
 					ereport(ERROR,
 							(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-							 errmsg("unrecognized parameter namespace__ \"%s\"",
+							 errmsg("unrecognized parameter namespace \"%s\"",
 									def->defnamespace)));
 			}
 
 			if (ignoreOids && pg_strcasecmp(def->defname, "oids") == 0)
 				continue;
 
-			/* ignore if not in the same namespace__ */
+			/* ignore if not in the same namespace */
 			if (namspace == NULL)
 			{
 				if (def->defnamespace != NULL)
@@ -752,7 +752,7 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 			/*
 			 * Flatten the DefElem into a text string like "name=arg". If we
 			 * have just "name", assume "name=true" is meant.  Note: the
-			 * namespace__ is not output.
+			 * namespace is not output.
 			 */
 			if (def->arg != NULL)
 				value = defGetString(def);

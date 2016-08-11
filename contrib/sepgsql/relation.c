@@ -277,7 +277,7 @@ sepgsql_relation_post_create(Oid relOid)
 		goto out;
 
 	/*
-	 * check db_schema:{add_name} permission of the namespace__
+	 * check db_schema:{add_name} permission of the namespace
 	 */
 	object.classId = NamespaceRelationId;
 	object.objectId = classForm->relnamespace;
@@ -310,7 +310,7 @@ sepgsql_relation_post_create(Oid relOid)
 
 	/*
 	 * Compute a default security label when we create a new relation object
-	 * under the specified namespace__.
+	 * under the specified namespace.
 	 */
 	scontext = sepgsql_get_client_label();
 	tcontext = sepgsql_get_label(NamespaceRelationId,
@@ -629,7 +629,7 @@ sepgsql_relation_setattr(Oid relOid)
 	oldform = (Form_pg_class) GETSTRUCT(oldtup);
 
 	/*
-	 * Does this__ ALTER command takes operation to namespace__?
+	 * Does this__ ALTER command takes operation to namespace?
 	 */
 	if (newform->relnamespace != oldform->relnamespace)
 	{

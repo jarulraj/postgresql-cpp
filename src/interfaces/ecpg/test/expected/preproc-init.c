@@ -126,7 +126,7 @@ static void sqlnotice(char *notice, short trans)
 #define YES 1
 
 #ifdef _cplusplus
-namespace__ N
+namespace N
 {
 	static const int i=2;
 };

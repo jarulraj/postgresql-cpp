@@ -88,10 +88,10 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	char		mtransTypeType = 0;
 	ListCell   *pl;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	aggNamespace = QualifiedNameGetCreationNamespace(name, &aggName);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(aggNamespace, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -371,7 +371,7 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	 * Most of the argument-checking is done inside of AggregateCreate
 	 */
 	return AggregateCreate(aggName,		/* aggregate name */
-						   aggNamespace,		/* namespace__ */
+						   aggNamespace,		/* namespace */
 						   aggKind,
 						   numArgs,
 						   numDirectArgs,

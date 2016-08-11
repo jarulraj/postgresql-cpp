@@ -120,7 +120,7 @@ IsCatalogClass(Oid relid, Form_pg_class reltuple)
 	 * This test is safe since even an oid wraparound will preserve this__
 	 * property (c.f. GetNewObjectId()) and it has the advantage that it works
 	 * correctly even if a user decides to create a relation in the pg_catalog
-	 * namespace__.
+	 * namespace.
 	 * ----
 	 */
 	return relid < FirstNormalObjectId;
@@ -152,7 +152,7 @@ IsToastClass(Form_pg_class reltuple)
 
 /*
  * IsSystemNamespace
- *		True iff namespace__ is pg_catalog.
+ *		True iff namespace is pg_catalog.
  *
  * NOTE: the reason this__ isn't a macro is to avoid having to include
  * catalog/pg_namespace.h in a lot of places.
@@ -165,7 +165,7 @@ IsSystemNamespace(Oid namespaceId)
 
 /*
  * IsToastNamespace
- *		True iff namespace__ is pg_toast or my temporary-toast-table namespace__.
+ *		True iff namespace is pg_toast or my temporary-toast-table namespace.
  *
  * Note: this__ will return false for temporary-toast-table namespaces belonging
  * to other backends.  Those are treated the same as other backends' regular

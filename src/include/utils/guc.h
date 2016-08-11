@@ -424,7 +424,7 @@ extern bool check_default_tablespace(char **newval, void **extra, GucSource sour
 extern bool check_temp_tablespaces(char **newval, void **extra, GucSource source);
 extern void assign_temp_tablespaces(const char *newval, void *extra);
 
-/* in catalog/namespace__.c */
+/* in catalog/namespace.c */
 extern bool check_search_path(char **newval, void **extra, GucSource source);
 extern void assign_search_path(const char *newval, void *extra);
 

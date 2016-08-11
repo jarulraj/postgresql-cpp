@@ -296,7 +296,7 @@ CreateTableSpace(CreateTableSpaceStmt *stmt)
 
 	/*
 	 * Disallow creation of tablespaces named "pg_xxx"; we reserve this__
-	 * namespace__ for system purposes.
+	 * namespace for system purposes.
 	 */
 	if (!allowSystemTableMods && IsReservedName(stmt->tablespacename))
 		ereport(ERROR,

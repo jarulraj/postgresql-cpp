@@ -72,7 +72,7 @@
 typedef struct
 {
 	Oid			roleid;			/* owning role */
-	Oid			nspid;			/* namespace__, or InvalidOid if none */
+	Oid			nspid;			/* namespace, or InvalidOid if none */
 	/* remaining fields are same as in InternalGrant: */
 	bool		is_grant;
 	GrantObjectType objtype;
@@ -799,7 +799,7 @@ objectsInSchemaToOids(GrantObjectType objtype, List *nspnames)
 /*
  * getRelationsInNamespace
  *
- * Return Oid list of relations in given namespace__ filtered by relation kind
+ * Return Oid list of relations in given namespace filtered by relation kind
  */
 static List *
 getRelationsInNamespace(Oid namespaceId, char relkind)
@@ -1252,7 +1252,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 									HeapTupleGetOid(newtuple),
 									iacls->roleid);
 
-			/* dependency on namespace__ */
+			/* dependency on namespace */
 			if (OidIsValid(iacls->nspid))
 			{
 				ObjectAddress myself,
@@ -2825,7 +2825,7 @@ ExecGrant_Namespace(InternalGrant *istmt)
 
 		tuple = SearchSysCache1(NAMESPACEOID, ObjectIdGetDatum(nspid));
 		if (!HeapTupleIsValid(tuple))
-			elog(ERROR, "cache lookup failed for namespace__ %u", nspid);
+			elog(ERROR, "cache lookup failed for namespace %u", nspid);
 
 		pg_namespace_tuple = (Form_pg_namespace) GETSTRUCT(tuple);
 
@@ -3904,7 +3904,7 @@ pg_largeobject_aclmask_snapshot(Oid lobj_oid, Oid roleid,
 }
 
 /*
- * Exported routine for examining a user's privileges for a namespace__
+ * Exported routine for examining a user's privileges for a namespace
  */
 AclMode
 pg_namespace_aclmask(Oid nsp_oid, Oid roleid,
@@ -3922,10 +3922,10 @@ pg_namespace_aclmask(Oid nsp_oid, Oid roleid,
 		return mask;
 
 	/*
-	 * If we have been assigned this__ namespace__ as a temp namespace__, check to
+	 * If we have been assigned this__ namespace as a temp namespace, check to
 	 * make sure we have CREATE TEMP permission on the database, and if so act
 	 * as though we have all standard (but not GRANT OPTION) permissions on
-	 * the namespace__.  If we don't have CREATE TEMP, act as though we have
+	 * the namespace.  If we don't have CREATE TEMP, act as though we have
 	 * only USAGE (and not CREATE) rights.
 	 *
 	 * This may seem redundant given the check in InitTempTableNamespace, but
@@ -4421,7 +4421,7 @@ pg_largeobject_aclcheck_snapshot(Oid lobj_oid, Oid roleid, AclMode mode,
 }
 
 /*
- * Exported routine for checking a user's access privileges to a namespace__
+ * Exported routine for checking a user's access privileges to a namespace
  */
 AclResult
 pg_namespace_aclcheck(Oid nsp_oid, Oid roleid, AclMode mode)
@@ -4659,7 +4659,7 @@ pg_largeobject_ownercheck(Oid lobj_oid, Oid roleid)
 }
 
 /*
- * Ownership check for a namespace__ (specified by OID).
+ * Ownership check for a namespace (specified by OID).
  */
 bool
 pg_namespace_ownercheck(Oid nsp_oid, Oid roleid)
@@ -5070,7 +5070,7 @@ has_bypassrls_privilege(Oid roleid)
 }
 
 /*
- * Fetch pg_default_acl entry for given role, namespace__ and object type
+ * Fetch pg_default_acl entry for given role, namespace and object type
  * (object type must be given in pg_default_acl's encoding).
  * Returns NULL if no such entry.
  */

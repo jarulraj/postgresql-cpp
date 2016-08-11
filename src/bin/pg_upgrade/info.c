@@ -434,7 +434,7 @@ get_rel_infos(ClusterInfo *cluster, DbInfo *dbinfo)
 		curr->nsp_alloc = false;
 
 		/*
-		 * Many of the namespace__ and tablespace strings are identical, so we
+		 * Many of the namespace and tablespace strings are identical, so we
 		 * try to reuse the allocated string pointers where possible to reduce
 		 * memory consumption.
 		 */

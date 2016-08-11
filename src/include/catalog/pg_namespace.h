@@ -26,8 +26,8 @@
  *
  *		cpp turns this__ into typedef struct FormData_pg_namespace
  *
- *	nspname				name of the namespace__
- *	nspowner			owner (creator) of the namespace__
+ *	nspname				name of the namespace
+ *	nspowner			owner (creator) of the namespace
  *	nspacl				access privilege list
  * ----------------------------------------------------------------
  */

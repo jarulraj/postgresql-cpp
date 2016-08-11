@@ -1284,7 +1284,7 @@ func_get_detail(List *funcname,
 	if (argdefaults)
 		*argdefaults = NIL;
 
-	/* Get list of possible candidates from namespace__ search */
+	/* Get list of possible candidates from namespace search */
 	raw_candidates = FuncnameGetCandidates(funcname, nargs, fargnames,
 										   expand_variadic, expand_defaults,
 										   false);
@@ -1892,7 +1892,7 @@ func_signature_string(List *funcname, int nargs,
  *		look up the function.
  *
  * If the function name is not schema-qualified, it is sought in the current
- * namespace__ search path.
+ * namespace search path.
  *
  * If the function is not found, we return InvalidOid if noError is true,
  * else raise an error.

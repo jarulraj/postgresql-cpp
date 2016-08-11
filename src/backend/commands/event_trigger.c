@@ -2096,7 +2096,7 @@ pg_event_trigger_ddl_commands(PG_FUNCTION_ARGS)
 										 RelationGetDescr(catalog), &isnull);
 							if (isnull)
 								elog(ERROR,
-								 "invalid null namespace__ in object %u/%u/%d",
+								 "invalid null namespace in object %u/%u/%d",
 									 addr.classId, addr.objectId, addr.objectSubId);
 							/* XXX not quite get_namespace_name_or_temp */
 							if (isAnyTempNamespace(schema_oid))

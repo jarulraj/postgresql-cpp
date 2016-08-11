@@ -28,7 +28,7 @@
  * and can use SnapshotSelf to get the new version of the tuple.
  *
  * OAT_NAMESPACE_SEARCH should be invoked prior to object name lookup under
- * a particular namespace__. This event is equivalent to usage permission
+ * a particular namespace. This event is equivalent to usage permission
  * on a schema under the default access control mechanism.
  *
  * OAT_FUNCTION_EXECUTE should be invoked prior to function execution.

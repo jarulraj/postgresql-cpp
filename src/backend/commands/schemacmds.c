@@ -128,15 +128,15 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 		SetUserIdAndSecContext(owner_uid,
 							save_sec_context | SECURITY_LOCAL_USERID_CHANGE);
 
-	/* Create the schema's namespace__ */
+	/* Create the schema's namespace */
 	namespaceId = NamespaceCreate(schemaName, owner_uid, false);
 
-	/* Advance cmd counter to make the namespace__ visible */
+	/* Advance cmd counter to make the namespace visible */
 	CommandCounterIncrement();
 
 	/*
-	 * Temporarily make the new namespace__ be the front of the search path, as
-	 * well as the default creation target namespace__.  This will be undone at
+	 * Temporarily make the new namespace be the front of the search path, as
+	 * well as the default creation target namespace.  This will be undone at
 	 * the end of this__ routine, or upon error.
 	 */
 	overridePath = GetOverrideSearchPath(CurrentMemoryContext);
@@ -207,7 +207,7 @@ RemoveSchemaById(Oid schemaOid)
 	tup = SearchSysCache1(NAMESPACEOID,
 						  ObjectIdGetDatum(schemaOid));
 	if (!HeapTupleIsValid(tup)) /* should not happen */
-		elog(ERROR, "cache lookup failed for namespace__ %u", schemaOid);
+		elog(ERROR, "cache lookup failed for namespace %u", schemaOid);
 
 	simple_heap_delete(relation, &tup->t_self);
 

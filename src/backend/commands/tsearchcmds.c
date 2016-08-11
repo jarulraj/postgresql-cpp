@@ -135,7 +135,7 @@ makeParserDependencies(HeapTuple tuple)
 	myself.objectId = HeapTupleGetOid(tuple);
 	myself.objectSubId = 0;
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = prs->prsnamespace;
 	referenced.objectSubId = 0;
@@ -191,10 +191,10 @@ DefineTSParser(List *names, List *parameters)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 				 errmsg("must be superuser to create text search parsers")));
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &prsname);
 
-	/* initialize tuple fields with name/namespace__ */
+	/* initialize tuple fields with name/namespace */
 	memset(values, 0, sizeof(values));
 	memset(nulls, false, sizeof(nulls));
 
@@ -328,7 +328,7 @@ makeDictionaryDependencies(HeapTuple tuple)
 	myself.objectId = HeapTupleGetOid(tuple);
 	myself.objectSubId = 0;
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = dict->dictnamespace;
 	referenced.objectSubId = 0;
@@ -424,10 +424,10 @@ DefineTSDictionary(List *names, List *parameters)
 	char	   *dictname;
 	ObjectAddress address;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &dictname);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(namespaceoid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -703,7 +703,7 @@ makeTSTemplateDependencies(HeapTuple tuple)
 	myself.objectId = HeapTupleGetOid(tuple);
 	myself.objectSubId = 0;
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = tmpl->tmplnamespace;
 	referenced.objectSubId = 0;
@@ -751,7 +751,7 @@ DefineTSTemplate(List *names, List *parameters)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 			   errmsg("must be superuser to create text search templates")));
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &tmplname);
 
 	for (i = 0; i < Natts_pg_ts_template; i++)
@@ -904,7 +904,7 @@ makeConfigurationDependencies(HeapTuple tuple, bool removeOld,
 	 */
 	addrs = new_object_addresses();
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = cfg->cfgnamespace;
 	referenced.objectSubId = 0;
@@ -982,10 +982,10 @@ DefineTSConfiguration(List *names, List *parameters, ObjectAddress *copied)
 	ListCell   *pl;
 	ObjectAddress address;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &cfgname);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(namespaceoid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,

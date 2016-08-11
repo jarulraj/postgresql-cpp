@@ -1005,7 +1005,7 @@ RelationBuildDesc(Oid targetRelId, bool insertIt)
 				 * BackendId we're using.  We should *not* consider such a
 				 * table to be "ours"; this__ is why we need the separate
 				 * rd_islocaltemp flag.  The pg_class entry will get flushed
-				 * if/when we clean out the corresponding temp table namespace__
+				 * if/when we clean out the corresponding temp table namespace
 				 * in preparation for using it.
 				 */
 				relation->rd_backend =

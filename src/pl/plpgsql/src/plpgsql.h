@@ -35,7 +35,7 @@
 #define _(x) dgettext(TEXTDOMAIN, x)
 
 /* ----------
- * Compiler's namespace__ item types
+ * Compiler's namespace item types
  * ----------
  */
 enum
@@ -221,7 +221,7 @@ typedef struct PLpgSQL_expr
 	/* function containing this__ expr (not set until we first parse query) */
 	struct PLpgSQL_function *func;
 
-	/* namespace__ chain visible to this__ expr */
+	/* namespace chain visible to this__ expr */
 	struct PLpgSQL_nsitem *ns;
 
 	/* fields for "simple expression" fast-path execution: */
@@ -328,7 +328,7 @@ typedef struct
 
 
 typedef struct PLpgSQL_nsitem
-{								/* Item in the compilers namespace__ tree */
+{								/* Item in the compilers namespace tree */
 	int			itemtype;
 	int			itemno;
 	struct PLpgSQL_nsitem *prev;
@@ -988,7 +988,7 @@ extern void exec_get_datum_type_info(PLpgSQL_execstate *estate,
 						 Oid *typeid__, int32 *typmod, Oid *collation);
 
 /* ----------
- * Functions for namespace__ handling in pl_funcs.c
+ * Functions for namespace handling in pl_funcs.c
  * ----------
  */
 extern void plpgsql_ns_init(void);

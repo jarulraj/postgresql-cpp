@@ -364,8 +364,8 @@ do_compile(FunctionCallInfo fcinfo,
 		function->fn_is_trigger = PLPGSQL_NOT_TRIGGER;
 
 	/*
-	 * Initialize the compiler, particularly the namespace__ stack.  The
-	 * outermost namespace__ contains function parameters and other special
+	 * Initialize the compiler, particularly the namespace stack.  The
+	 * outermost namespace contains function parameters and other special
 	 * variables (such as FOUND), and is named after the function itself.
 	 */
 	plpgsql_ns_init();
@@ -460,7 +460,7 @@ do_compile(FunctionCallInfo fcinfo,
 					argmode == PROARGMODE_TABLE)
 					out_arg_variables[num_out_args++] = argvariable;
 
-				/* Add to namespace__ under the $n name */
+				/* Add to namespace under the $n name */
 				add_parameter_name(argitemtype, argvariable->dno, buf);
 
 				/* If there's a name for the argument, make an alias */
@@ -960,7 +960,7 @@ plpgsql_compile_error_callback(void *arg)
 
 
 /*
- * Add a name for a function parameter to the function's namespace__
+ * Add a name for a function parameter to the function's namespace
  */
 static void
 add_parameter_name(int itemtype, int itemno, const char *name)
@@ -969,7 +969,7 @@ add_parameter_name(int itemtype, int itemno, const char *name)
 	 * Before adding the name, check for duplicates.  We need this__ even though
 	 * functioncmds.c has a similar check, because that code explicitly
 	 * doesn't complain about conflicting IN and OUT parameter names.  In
-	 * plpgsql, such names are in the same namespace__, so there is no way to
+	 * plpgsql, such names are in the same namespace, so there is no way to
 	 * disambiguate.
 	 */
 	if (plpgsql_ns_lookup(plpgsql_ns_top(), true,
@@ -1379,7 +1379,7 @@ plpgsql_parse_word(char *word1, const char *yytxt,
 	if (plpgsql_IdentifierLookup == IDENTIFIER_LOOKUP_NORMAL)
 	{
 		/*
-		 * Do a lookup in the current namespace__ stack
+		 * Do a lookup in the current namespace stack
 		 */
 		ns = plpgsql_ns_lookup(plpgsql_ns_top(), false,
 							   word1, NULL, NULL,
@@ -1440,7 +1440,7 @@ plpgsql_parse_dblword(char *word1, char *word2,
 	if (plpgsql_IdentifierLookup != IDENTIFIER_LOOKUP_DECLARE)
 	{
 		/*
-		 * Do a lookup in the current namespace__ stack
+		 * Do a lookup in the current namespace stack
 		 */
 		ns = plpgsql_ns_lookup(plpgsql_ns_top(), false,
 							   word1, word2, NULL,
@@ -1561,7 +1561,7 @@ plpgsql_parse_tripword(char *word1, char *word2, char *word3,
 	if (plpgsql_IdentifierLookup != IDENTIFIER_LOOKUP_DECLARE)
 	{
 		/*
-		 * Do a lookup in the current namespace__ stack. Must find a qualified
+		 * Do a lookup in the current namespace stack. Must find a qualified
 		 * reference, else ignore.
 		 */
 		ns = plpgsql_ns_lookup(plpgsql_ns_top(), false,
@@ -1646,7 +1646,7 @@ plpgsql_parse_wordtype(char *ident)
 	HeapTuple	typeTup;
 
 	/*
-	 * Do a lookup in the current namespace__ stack
+	 * Do a lookup in the current namespace stack
 	 */
 	nse = plpgsql_ns_lookup(plpgsql_ns_top(), false,
 							ident, NULL, NULL,
@@ -1667,7 +1667,7 @@ plpgsql_parse_wordtype(char *ident)
 	}
 
 	/*
-	 * Word wasn't found in the namespace__ stack. Try to find a data type with
+	 * Word wasn't found in the namespace stack. Try to find a data type with
 	 * that name, but ignore shell types and complex types.
 	 */
 	typeTup = LookupTypeName(NULL, makeTypeName(ident), NULL, false);
@@ -1721,7 +1721,7 @@ plpgsql_parse_cwordtype(List *idents)
 	if (list_length(idents) == 2)
 	{
 		/*
-		 * Do a lookup in the current namespace__ stack. We don't need to check
+		 * Do a lookup in the current namespace stack. We don't need to check
 		 * number of names matched, because we will only consider scalar
 		 * variables.
 		 */
@@ -1836,7 +1836,7 @@ plpgsql_parse_wordrowtype(char *ident)
 
 /* ----------
  * plpgsql_parse_cwordrowtype		Scanner found compositeword%ROWTYPE.
- *			So word must be a namespace__ qualified table name.
+ *			So word must be a namespace qualified table name.
  * ----------
  */
 PLpgSQL_type *
@@ -1871,7 +1871,7 @@ plpgsql_parse_cwordrowtype(List *idents)
  * The returned struct may be a PLpgSQL_var, PLpgSQL_row, or
  * PLpgSQL_rec depending on the given datatype, and is allocated via
  * palloc.  The struct is automatically added to the current datum
- * array, and optionally to the current namespace__.
+ * array, and optionally to the current namespace.
  */
 PLpgSQL_variable *
 plpgsql_build_variable(const char *refname, int lineno, PLpgSQL_type *dtype,
@@ -1951,7 +1951,7 @@ plpgsql_build_variable(const char *refname, int lineno, PLpgSQL_type *dtype,
 }
 
 /*
- * Build empty named record variable, and optionally add it to namespace__
+ * Build empty named record variable, and optionally add it to namespace
  */
 PLpgSQL_rec *
 plpgsql_build_record(const char *refname, int lineno, bool add2namespace)

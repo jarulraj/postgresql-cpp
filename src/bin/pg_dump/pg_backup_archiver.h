@@ -342,7 +342,7 @@ struct _tocEntry
 	bool		hadDumper;		/* Archiver was passed a dumper routine (used
 								 * in restore) */
 	char	   *tag;			/* index tag */
-	char	   *namespace__;		/* null or empty string if not in a schema */
+	char	   *namespace;		/* null or empty string if not in a schema */
 	char	   *tablespace;		/* null if not in a tablespace; empty string
 								 * means use database default */
 	char	   *owner;

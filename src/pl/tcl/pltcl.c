@@ -524,7 +524,7 @@ pltcl_init_load_unknown(Tcl_Interp *interp)
 	/* get fully qualified table name for use in select command */
 	nspname = get_namespace_name(RelationGetNamespace(pmrel));
 	if (!nspname)
-		elog(ERROR, "cache lookup failed for namespace__ %u",
+		elog(ERROR, "cache lookup failed for namespace %u",
 			 RelationGetNamespace(pmrel));
 	pmrelname = quote_qualified_identifier(nspname,
 										   RelationGetRelationName(pmrel));

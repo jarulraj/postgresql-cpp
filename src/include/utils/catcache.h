@@ -136,7 +136,7 @@ typedef struct catclist
 	 *
 	 * If "ordered" is true then the member tuples appear in the order of the
 	 * cache's underlying index.  This will be true in normal operation, but
-	 * might not be true during bootstrap or recovery operations. (namespace__.c
+	 * might not be true during bootstrap or recovery operations. (namespace.c
 	 * is able to save some cycles when it is true.)
 	 */
 	dlist_node	cache_elem;		/* list member of per-catcache list */

@@ -292,7 +292,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 	myself.objectId = opfamilyoid;
 	myself.objectSubId = 0;
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = namespaceoid;
 	referenced.objectSubId = 0;
@@ -323,7 +323,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	Oid			amoid,			/* our AM's oid */
 				typeoid,		/* indexable datatype oid */
 				storageoid,		/* storage datatype oid, if any */
-				namespaceoid,	/* namespace__ to create opclass in */
+				namespaceoid,	/* namespace to create opclass in */
 				opfamilyoid,	/* oid of containing opfamily */
 				opclassoid;		/* oid of opclass we create */
 	int			maxOpNumber,	/* amstrategies value */
@@ -342,11 +342,11 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	ObjectAddress myself,
 				referenced;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceoid = QualifiedNameGetCreationNamespace(stmt->opclassname,
 													 &opcname);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(namespaceoid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -418,7 +418,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	}
 	else
 	{
-		/* Lookup existing family of same name and namespace__ */
+		/* Lookup existing family of same name and namespace */
 		tup = SearchSysCache3(OPFAMILYAMNAMENSP,
 							  ObjectIdGetDatum(amoid),
 							  PointerGetDatum(opcname),
@@ -677,7 +677,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	myself.objectId = opclassoid;
 	myself.objectSubId = 0;
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = namespaceoid;
 	referenced.objectSubId = 0;
@@ -728,14 +728,14 @@ DefineOpFamily(CreateOpFamilyStmt *stmt)
 {
 	char	   *opfname;		/* name of opfamily we're creating */
 	Oid			amoid,			/* our AM's oid */
-				namespaceoid;	/* namespace__ to create opfamily in */
+				namespaceoid;	/* namespace to create opfamily in */
 	AclResult	aclresult;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceoid = QualifiedNameGetCreationNamespace(stmt->opfamilyname,
 													 &opfname);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(namespaceoid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -1689,7 +1689,7 @@ get_am_name(Oid amOid)
  * Subroutine for ALTER operator__ class__ SET SCHEMA/RENAME
  *
  * Is there an operator__ class__ with the given name and signature already
- * in the given namespace__?	If so, raise an appropriate error message.
+ * in the given namespace?	If so, raise an appropriate error message.
  */
 void
 IsThereOpClassInNamespace(const char *opcname, Oid opcmethod,
@@ -1712,7 +1712,7 @@ IsThereOpClassInNamespace(const char *opcname, Oid opcmethod,
  * Subroutine for ALTER operator__ FAMILY SET SCHEMA/RENAME
  *
  * Is there an operator__ family with the given name and signature already
- * in the given namespace__?	If so, raise an appropriate error message.
+ * in the given namespace?	If so, raise an appropriate error message.
  */
 void
 IsThereOpFamilyInNamespace(const char *opfname, Oid opfmethod,

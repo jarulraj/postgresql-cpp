@@ -5855,7 +5855,7 @@ dot_pg_pass_warning(PGconn *conn)
  *
  * This is essentially the same as get_home_path(), but we don't use that
  * because we don't want to pull path.c into libpq (it pollutes application
- * namespace__)
+ * namespace)
  */
 bool
 pqGetHomeDirectory(char *buf, int bufsize)

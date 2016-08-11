@@ -202,7 +202,7 @@ regprocout(PG_FUNCTION_ARGS)
 		char	   *proname = NameStr(procform->proname);
 
 		/*
-		 * In bootstrap mode, skip the fancy namespace__ stuff and just return
+		 * In bootstrap mode, skip the fancy namespace stuff and just return
 		 * the proc name.  (This path is only needed for debugging output
 		 * anyway.)
 		 */
@@ -295,7 +295,7 @@ regprocedurein(PG_FUNCTION_ARGS)
 
 	/*
 	 * Else it's a name and arguments.  Parse the name and arguments, look up
-	 * potential matches in the current namespace__ search list, and scan to see
+	 * potential matches in the current namespace search list, and scan to see
 	 * which one exactly matches the given argument types.  (There will not be
 	 * more than one match.)
 	 *
@@ -339,7 +339,7 @@ to_regprocedure(PG_FUNCTION_ARGS)
 
 	/*
 	 * Parse the name and arguments, look up potential matches in the current
-	 * namespace__ search list, and scan to see which one exactly matches the
+	 * namespace search list, and scan to see which one exactly matches the
 	 * given argument types.    (There will not be more than one match.)
 	 */
 	parseNameAndArgTypes(pro_name, false, &names, &nargs, argtypes);
@@ -661,7 +661,7 @@ regoperout(PG_FUNCTION_ARGS)
 		char	   *oprname = NameStr(operform->oprname);
 
 		/*
-		 * In bootstrap mode, skip the fancy namespace__ stuff and just return
+		 * In bootstrap mode, skip the fancy namespace stuff and just return
 		 * the oper name.  (This path is only needed for debugging output
 		 * anyway.)
 		 */
@@ -759,7 +759,7 @@ regoperatorin(PG_FUNCTION_ARGS)
 
 	/*
 	 * Else it's a name and arguments.  Parse the name and arguments, look up
-	 * potential matches in the current namespace__ search list, and scan to see
+	 * potential matches in the current namespace search list, and scan to see
 	 * which one exactly matches the given argument types.  (There will not be
 	 * more than one match.)
 	 *
@@ -805,7 +805,7 @@ to_regoperator(PG_FUNCTION_ARGS)
 
 	/*
 	 * Parse the name and arguments, look up potential matches in the current
-	 * namespace__ search list, and scan to see which one exactly matches the
+	 * namespace search list, and scan to see which one exactly matches the
 	 * given argument types.    (There will not be more than one match.)
 	 */
 	parseNameAndArgTypes(opr_name_or_oid, true, &names, &nargs, argtypes);
@@ -1104,7 +1104,7 @@ regclassout(PG_FUNCTION_ARGS)
 		char	   *classname = NameStr(classform->relname);
 
 		/*
-		 * In bootstrap mode, skip the fancy namespace__ stuff and just return
+		 * In bootstrap mode, skip the fancy namespace stuff and just return
 		 * the class__ name.  (This path is only needed for debugging output
 		 * anyway.)
 		 */
@@ -1287,7 +1287,7 @@ regtypeout(PG_FUNCTION_ARGS)
 		Form_pg_type typeform = (Form_pg_type) GETSTRUCT(typetup);
 
 		/*
-		 * In bootstrap mode, skip the fancy namespace__ stuff and just return
+		 * In bootstrap mode, skip the fancy namespace stuff and just return
 		 * the type name.  (This path is only needed for debugging output
 		 * anyway.)
 		 */
@@ -1678,7 +1678,7 @@ regrolesend(PG_FUNCTION_ARGS)
 }
 
 /*
- * regnamespacein		- converts "nspname" to namespace__ OID
+ * regnamespacein		- converts "nspname" to namespace OID
  *
  * We also accept a numeric OID, for symmetry with the output routine.
  *
@@ -1720,7 +1720,7 @@ regnamespacein(PG_FUNCTION_ARGS)
 }
 
 /*
- * to_regnamespace		- converts "nspname" to namespace__ OID
+ * to_regnamespace		- converts "nspname" to namespace OID
  *
  * If the name is not found, we return NULL.
  */
@@ -1747,7 +1747,7 @@ to_regnamespace(PG_FUNCTION_ARGS)
 }
 
 /*
- * regnamespaceout		- converts namespace__ OID to "nsp_name"
+ * regnamespaceout		- converts namespace OID to "nsp_name"
  */
 Datum
 regnamespaceout(PG_FUNCTION_ARGS)
@@ -1770,7 +1770,7 @@ regnamespaceout(PG_FUNCTION_ARGS)
 	}
 	else
 	{
-		/* If OID doesn't match any namespace__, return it numerically */
+		/* If OID doesn't match any namespace, return it numerically */
 		result = (char *) palloc(NAMEDATALEN);
 		snprintf(result, NAMEDATALEN, "%u", nspid);
 	}

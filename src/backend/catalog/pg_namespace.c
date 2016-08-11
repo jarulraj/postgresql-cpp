@@ -28,7 +28,7 @@
 /* ----------------
  * NamespaceCreate
  *
- * Create a namespace__ (schema) with the given name and owner OID.
+ * Create a namespace (schema) with the given name and owner OID.
  *
  * If isTemp is true, this__ schema is a per-backend schema for holding
  * temporary tables.  Currently, the only effect of that is to prevent it
@@ -52,9 +52,9 @@ NamespaceCreate(const char *nspName, Oid ownerId, bool isTemp)
 
 	/* sanity checks */
 	if (!nspName)
-		elog(ERROR, "no namespace__ name supplied");
+		elog(ERROR, "no namespace name supplied");
 
-	/* make sure there is no existing namespace__ of same name */
+	/* make sure there is no existing namespace of same name */
 	if (SearchSysCacheExists1(NAMESPACENAME, PointerGetDatum(nspName)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_SCHEMA),

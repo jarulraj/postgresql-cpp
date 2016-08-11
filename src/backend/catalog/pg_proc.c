@@ -614,7 +614,7 @@ ProcedureCreate(const char *procedureName,
 	myself.objectId = retval;
 	myself.objectSubId = 0;
 
-	/* dependency on namespace__ */
+	/* dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = procNamespace;
 	referenced.objectSubId = 0;

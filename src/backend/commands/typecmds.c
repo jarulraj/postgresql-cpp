@@ -178,12 +178,12 @@ DefineType(List *names, List *parameters)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 				 errmsg("must be superuser to create a base type")));
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	typeNamespace = QualifiedNameGetCreationNamespace(names, &typename__);
 
 #ifdef NOT_USED
 	/* XXX this__ is unnecessary given the superuser check above */
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(typeNamespace, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -600,7 +600,7 @@ DefineType(List *names, List *parameters)
 	address =
 		TypeCreate(InvalidOid,	/* no predetermined type OID */
 				   typename__,	/* type name */
-				   typeNamespace,		/* namespace__ */
+				   typeNamespace,		/* namespace */
 				   InvalidOid,	/* relation oid (n/a here) */
 				   0,			/* relation kind (ditto) */
 				   GetUserId(), /* owner's ID */
@@ -641,7 +641,7 @@ DefineType(List *names, List *parameters)
 
 	TypeCreate(array_oid,		/* force assignment of this__ type OID */
 			   array_type,		/* type name */
-			   typeNamespace,	/* namespace__ */
+			   typeNamespace,	/* namespace */
 			   InvalidOid,		/* relation oid (n/a here) */
 			   0,				/* relation kind (ditto) */
 			   GetUserId(),		/* owner's ID */
@@ -756,11 +756,11 @@ DefineDomain(CreateDomainStmt *stmt)
 	Oid			baseColl;
 	ObjectAddress address;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	domainNamespace = QualifiedNameGetCreationNamespace(stmt->domainname,
 														&domainName);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(domainNamespace, GetUserId(),
 									  ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
@@ -1027,7 +1027,7 @@ DefineDomain(CreateDomainStmt *stmt)
 	address =
 		TypeCreate(InvalidOid,	/* no predetermined type OID */
 				   domainName,	/* type name */
-				   domainNamespace,		/* namespace__ */
+				   domainNamespace,		/* namespace */
 				   InvalidOid,	/* relation oid (n/a here) */
 				   0,			/* relation kind (ditto) */
 				   GetUserId(), /* owner's ID */
@@ -1108,11 +1108,11 @@ DefineEnum(CreateEnumStmt *stmt)
 	Oid			enumArrayOid;
 	ObjectAddress enumTypeAddr;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	enumNamespace = QualifiedNameGetCreationNamespace(stmt->typename__,
 													  &enumName);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(enumNamespace, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -1139,7 +1139,7 @@ DefineEnum(CreateEnumStmt *stmt)
 	enumTypeAddr =
 		TypeCreate(InvalidOid,	/* no predetermined type OID */
 				   enumName,	/* type name */
-				   enumNamespace,		/* namespace__ */
+				   enumNamespace,		/* namespace */
 				   InvalidOid,	/* relation oid (n/a here) */
 				   0,			/* relation kind (ditto) */
 				   GetUserId(), /* owner's ID */
@@ -1179,7 +1179,7 @@ DefineEnum(CreateEnumStmt *stmt)
 
 	TypeCreate(enumArrayOid,	/* force assignment of this__ type OID */
 			   enumArrayName,	/* type name */
-			   enumNamespace,	/* namespace__ */
+			   enumNamespace,	/* namespace */
 			   InvalidOid,		/* relation oid (n/a here) */
 			   0,				/* relation kind (ditto) */
 			   GetUserId(),		/* owner's ID */
@@ -1324,11 +1324,11 @@ DefineRange(CreateRangeStmt *stmt)
 	ListCell   *lc;
 	ObjectAddress address;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	typeNamespace = QualifiedNameGetCreationNamespace(stmt->typename__,
 													  &typename__);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(typeNamespace, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -1478,7 +1478,7 @@ DefineRange(CreateRangeStmt *stmt)
 	address =
 		TypeCreate(InvalidOid,	/* no predetermined type OID */
 				   typename__,	/* type name */
-				   typeNamespace,		/* namespace__ */
+				   typeNamespace,		/* namespace */
 				   InvalidOid,	/* relation oid (n/a here) */
 				   0,			/* relation kind (ditto) */
 				   GetUserId(), /* owner's ID */
@@ -1520,7 +1520,7 @@ DefineRange(CreateRangeStmt *stmt)
 
 	TypeCreate(rangeArrayOid,	/* force assignment of this__ type OID */
 			   rangeArrayName,	/* type name */
-			   typeNamespace,	/* namespace__ */
+			   typeNamespace,	/* namespace */
 			   InvalidOid,		/* relation oid (n/a here) */
 			   0,				/* relation kind (ditto) */
 			   GetUserId(),		/* owner's ID */
@@ -1596,7 +1596,7 @@ makeRangeConstructors(const char *name, Oid namespace__,
 												   pronargs[i]);
 
 		myself = ProcedureCreate(name,	/* name: same as range type */
-								 namespace__,		/* namespace__ */
+								 namespace__,		/* namespace */
 								 false, /* replace */
 								 false, /* returns set */
 								 rangeOid,		/* return type */
@@ -3066,7 +3066,7 @@ domainAddConstraint(Oid domainOid, Oid domainNamespace, Oid baseTypeOid,
 	 */
 	ccoid =
 		CreateConstraintEntry(constr->conname,	/* Constraint Name */
-							  domainNamespace,	/* namespace__ */
+							  domainNamespace,	/* namespace */
 							  CONSTRAINT_CHECK, /* Constraint Type */
 							  false,	/* Is Deferrable */
 							  false,	/* Is Deferred */
@@ -3263,7 +3263,7 @@ AlterTypeOwner(List *names, Oid newOwnerId, ObjectType objecttype)
 			/* Must be able to become new owner */
 			check_is_member_of_role(GetUserId(), newOwnerId);
 
-			/* new owner must have CREATE privilege on namespace__ */
+			/* new owner must have CREATE privilege on namespace */
 			aclresult = pg_namespace_aclcheck(typTup->typnamespace,
 											  newOwnerId,
 											  ACL_CREATE);
@@ -3452,7 +3452,7 @@ AlterTypeNamespace_oid(Oid typeOid, Oid nspOid, ObjectAddresses *objsMoved)
 }
 
 /*
- * Move specified type to new namespace__.
+ * Move specified type to new namespace.
  *
  * Caller must have already checked privileges.
  *
@@ -3462,9 +3462,9 @@ AlterTypeNamespace_oid(Oid typeOid, Oid nspOid, ObjectAddresses *objsMoved)
  *
  * If errorOnTableType is TRUE, the function errors out if the type is
  * a table type.  ALTER TABLE has to be used to move a table to a new
- * namespace__.
+ * namespace.
  *
- * Returns the type's old namespace__ OID.
+ * Returns the type's old namespace OID.
  */
 Oid
 AlterTypeNamespaceInternal(Oid typeOid, Oid nspOid,

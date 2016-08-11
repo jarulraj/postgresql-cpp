@@ -125,7 +125,7 @@ validOperatorName(const char *name)
 /*
  * OperatorGet
  *
- *		finds an operator__ given an exact specification (name, namespace__,
+ *		finds an operator__ given an exact specification (name, namespace,
  *		left and right type IDs).
  *
  *		*defined is set TRUE if defined (not a shell)
@@ -296,7 +296,7 @@ OperatorShellMake(const char *operatorName,
  *
  * "X" indicates an optional argument (i.e. one that can be NULL or 0)
  *		operatorName			name for new operator__
- *		operatorNamespace		namespace__ for new operator__
+ *		operatorNamespace		namespace for new operator__
  *		leftTypeId				X left type ID
  *		rightTypeId				X right type ID
  *		procedureId				procedure ID for operator__
@@ -784,7 +784,7 @@ makeOperatorDependencies(HeapTuple tuple)
 	deleteDependencyRecordsFor(myself.classId, myself.objectId, true);
 	deleteSharedDependencyRecordsFor(myself.classId, myself.objectId, 0);
 
-	/* Dependency on namespace__ */
+	/* Dependency on namespace */
 	if (OidIsValid(oper->oprnamespace))
 	{
 		referenced.classId = NamespaceRelationId;

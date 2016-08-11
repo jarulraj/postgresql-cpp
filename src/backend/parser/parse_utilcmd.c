@@ -162,10 +162,10 @@ transformCreateStmt(CreateStmt *stmt, const char *queryString)
 	pstate->p_sourcetext = queryString;
 
 	/*
-	 * Look up the creation namespace__.  This also checks permissions on the
-	 * target namespace__, locks it against concurrent drops, checks for a
-	 * preexisting relation in that namespace__ with the same name, and updates
-	 * stmt->relation->relpersistence if the selected namespace__ is temporary.
+	 * Look up the creation namespace.  This also checks permissions on the
+	 * target namespace, locks it against concurrent drops, checks for a
+	 * preexisting relation in that namespace with the same name, and updates
+	 * stmt->relation->relpersistence if the selected namespace is temporary.
 	 */
 	setup_parser_errposition_callback(&pcbstate, pstate,
 									  stmt->relation->location);
@@ -379,7 +379,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 		List	   *attnamelist;
 
 		/*
-		 * Determine namespace__ and name to use for the sequence.
+		 * Determine namespace and name to use for the sequence.
 		 *
 		 * Although we use ChooseRelationName, it's not guaranteed that the
 		 * selected sequence name won't conflict; given sufficiently long
@@ -2108,7 +2108,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	newrte->requiredPerms = 0;
 
 	/*
-	 * They must be in the namespace__ too for lookup purposes, but only add the
+	 * They must be in the namespace too for lookup purposes, but only add the
 	 * one(s) that are relevant for the current kind of rule.  In an UPDATE
 	 * rule, quals must refer to OLD.field or new.field to be unambiguous, but
 	 * there's no need to be so picky for INSERT & DELETE.  We do not add them

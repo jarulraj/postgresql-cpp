@@ -719,7 +719,7 @@ index_create(Relation heapRelation,
 	pg_class = heap_open(RelationRelationId, RowExclusiveLock);
 
 	/*
-	 * The index will be in the same namespace__ as its parent table, and is
+	 * The index will be in the same namespace as its parent table, and is
 	 * shared across databases if and only if the parent is.  Likewise, it
 	 * will use the relfilenode map if and only if the parent does; and it
 	 * inherits the parent's relpersistence.
@@ -912,7 +912,7 @@ index_create(Relation heapRelation,
 	 * linked to the table.  If it's not a CONSTRAINT, we need to make a
 	 * dependency directly on the table.
 	 *
-	 * We don't need a dependency on the namespace__, because there'll be an
+	 * We don't need a dependency on the namespace, because there'll be an
 	 * indirect dependency via our parent table.
 	 *
 	 * During bootstrap we can't register any dependencies, and we don't try

@@ -99,10 +99,10 @@ typedef struct SchemaQuery
 	const char *viscondition;
 
 	/*
-	 * namespace__ --- name of field to join to pg_namespace.oid. For example,
+	 * namespace --- name of field to join to pg_namespace.oid. For example,
 	 * "c.relnamespace".
 	 */
-	const char *namespace__;
+	const char *namespace;
 
 	/*
 	 * Result --- the appropriately-quoted name to return, in the case of an
@@ -239,7 +239,7 @@ static const SchemaQuery Query_for_list_of_aggregates = {
 	"p.proisagg",
 	/* viscondition */
 	"pg_catalog.pg_function_is_visible(p.oid)",
-	/* namespace__ */
+	/* namespace */
 	"p.pronamespace",
 	/* result */
 	"pg_catalog.quote_ident(p.proname)",
@@ -256,7 +256,7 @@ static const SchemaQuery Query_for_list_of_datatypes = {
 	"AND t.typname !~ '^_'",
 	/* viscondition */
 	"pg_catalog.pg_type_is_visible(t.oid)",
-	/* namespace__ */
+	/* namespace */
 	"t.typnamespace",
 	/* result */
 	"pg_catalog.format_type(t.oid, NULL)",
@@ -271,7 +271,7 @@ static const SchemaQuery Query_for_list_of_domains = {
 	"t.typtype = 'd'",
 	/* viscondition */
 	"pg_catalog.pg_type_is_visible(t.oid)",
-	/* namespace__ */
+	/* namespace */
 	"t.typnamespace",
 	/* result */
 	"pg_catalog.quote_ident(t.typname)",
@@ -286,7 +286,7 @@ static const SchemaQuery Query_for_list_of_functions = {
 	NULL,
 	/* viscondition */
 	"pg_catalog.pg_function_is_visible(p.oid)",
-	/* namespace__ */
+	/* namespace */
 	"p.pronamespace",
 	/* result */
 	"pg_catalog.quote_ident(p.proname)",
@@ -301,7 +301,7 @@ static const SchemaQuery Query_for_list_of_indexes = {
 	"c.relkind IN ('i')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -316,7 +316,7 @@ static const SchemaQuery Query_for_list_of_sequences = {
 	"c.relkind IN ('S')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -331,7 +331,7 @@ static const SchemaQuery Query_for_list_of_foreign_tables = {
 	"c.relkind IN ('f')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -346,7 +346,7 @@ static const SchemaQuery Query_for_list_of_tables = {
 	"c.relkind IN ('r')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -361,7 +361,7 @@ static const SchemaQuery Query_for_list_of_constraints_with_schema = {
 	"c.conrelid <> 0",
 	/* viscondition */
 	"true",						/* there is no pg_constraint_is_visible */
-	/* namespace__ */
+	/* namespace */
 	"c.connamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.conname)",
@@ -377,7 +377,7 @@ static const SchemaQuery Query_for_list_of_updatables = {
 	"c.relkind IN ('r', 'f', 'v')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -392,7 +392,7 @@ static const SchemaQuery Query_for_list_of_relations = {
 	NULL,
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -407,7 +407,7 @@ static const SchemaQuery Query_for_list_of_tsvmf = {
 	"c.relkind IN ('r', 'S', 'v', 'm', 'f')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -422,7 +422,7 @@ static const SchemaQuery Query_for_list_of_tmf = {
 	"c.relkind IN ('r', 'm', 'f')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -437,7 +437,7 @@ static const SchemaQuery Query_for_list_of_tm = {
 	"c.relkind IN ('r', 'm')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -452,7 +452,7 @@ static const SchemaQuery Query_for_list_of_views = {
 	"c.relkind IN ('v')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -467,7 +467,7 @@ static const SchemaQuery Query_for_list_of_matviews = {
 	"c.relkind IN ('m')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace__ */
+	/* namespace */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -4251,7 +4251,7 @@ _complete_from_query(int is_schema_query, const char *text, int state)
 							  "WHERE %s = n.oid AND ",
 							  qualresult,
 							  completion_squery->catname,
-							  completion_squery->namespace__);
+							  completion_squery->namespace);
 			if (completion_squery->selcondition)
 				appendPQExpBuffer(&query_buffer, "%s AND ",
 								  completion_squery->selcondition);

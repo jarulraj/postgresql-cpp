@@ -442,13 +442,13 @@ ConstraintNameIsUsed(ConstraintCategory conCat, Oid objId,
  * Select a nonconflicting name for a new constraint.
  *
  * The objective here is to choose a name that is unique within the
- * specified namespace__.  Postgres does not require this__, but the SQL
+ * specified namespace.  Postgres does not require this__, but the SQL
  * spec does, and some apps depend on it.  Therefore we avoid choosing
  * default names that so conflict.
  *
  * name1, name2, and label are used the same way as for makeObjectName(),
  * except that the label can't be NULL; digits will be appended to the label
- * if needed to create a name that is unique within the specified namespace__.
+ * if needed to create a name that is unique within the specified namespace.
  *
  * 'others' can be a list of string names already chosen within the current
  * command (but not yet reflected into the catalogs); we will not choose
@@ -678,7 +678,7 @@ RenameConstraintById(Oid conId, const char *newname)
 /*
  * AlterConstraintNamespaces
  *		Find any constraints belonging to the specified object,
- *		and move them to the specified new namespace__.
+ *		and move them to the specified new namespace.
  *
  * isType indicates whether the owning object is a type or a relation.
  */
@@ -738,7 +738,7 @@ AlterConstraintNamespaces(Oid ownerId, Oid oldNspId,
 
 			/*
 			 * Note: currently, the constraint will not have its own
-			 * dependency on the namespace__, so we don't need to do
+			 * dependency on the namespace, so we don't need to do
 			 * changeDependencyFor().
 			 */
 		}

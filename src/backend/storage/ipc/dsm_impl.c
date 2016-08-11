@@ -16,12 +16,12 @@
  * several implementations of this__ facility.  Many systems implement
  * POSIX shared memory (shm_open etc.), which is well-suited to our needs
  * in this__ area, with the exception that shared memory identifiers live
- * in a flat system-wide namespace__, raising the uncomfortable prospect of
+ * in a flat system-wide namespace, raising the uncomfortable prospect of
  * name collisions with other processes (including other copies of
  * PostgreSQL) running on the same system.  Some systems only support
  * the older System V shared memory interface (shmget etc.) which is
  * also usable; however, the default allocation limits are often quite
- * small, and the namespace__ is even more restricted.
+ * small, and the namespace is even more restricted.
  *
  * We also provide an mmap-based shared memory implementation.  This may
  * be useful on systems that provide shared memory via a special-purpose
@@ -233,7 +233,7 @@ dsm_impl_can_resize(void)
  * segment, are performed as if the shared memory segments were files.
  *
  * Indeed, on some platforms, they may be implemented that way.  While
- * POSIX shared memory segments seem intended to exist in a flat namespace__,
+ * POSIX shared memory segments seem intended to exist in a flat namespace,
  * some operating systems may implement them as files, even going so far
  * to treat a request for /xyz as a request to create a file by that name
  * in the root directory.  Users of such broken platforms should select
@@ -435,7 +435,7 @@ dsm_impl_sysv(dsm_op op, dsm_handle handle, Size request_size,
 	snprintf(name, 64, "%u", handle);
 
 	/*
-	 * The System V shared memory namespace__ is very restricted; names are of
+	 * The System V shared memory namespace is very restricted; names are of
 	 * type key_t, which is expected to be some sort of integer data type, but
 	 * not necessarily the same one as dsm_handle.  Since we use dsm_handle to
 	 * identify shared memory segments across processes, this__ might seem like
@@ -625,7 +625,7 @@ dsm_impl_windows(dsm_op op, dsm_handle handle, Size request_size,
 		return true;
 
 	/*
-	 * Storing the shared memory segment in the Global\ namespace__, can allow
+	 * Storing the shared memory segment in the Global\ namespace, can allow
 	 * any process running in any session to access that file mapping object
 	 * provided that the caller has the required access rights. But to avoid
 	 * issues faced in main shared memory, we are using the naming convention

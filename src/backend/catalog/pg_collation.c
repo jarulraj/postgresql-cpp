@@ -122,7 +122,7 @@ CollationCreate(const char *collname, Oid collnamespace,
 	myself.objectId = oid;
 	myself.objectSubId = 0;
 
-	/* create dependency on namespace__ */
+	/* create dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = collnamespace;
 	referenced.objectSubId = 0;

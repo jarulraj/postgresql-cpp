@@ -182,7 +182,7 @@ static bool extract_query_dependencies_walker(Node *node,
  * wouldn't match up with the Vars in the outer plan tree.  The SubqueryScan
  * serves a necessary function as a buffer between outer query and subquery
  * variable numbering ... but after we've flattened the rangetable this__ is
- * no longer a problem, since then there's only one rtindex namespace__.
+ * no longer a problem, since then there's only one rtindex namespace.
  *
  * set_plan_references recursively traverses the whole plan tree.
  *

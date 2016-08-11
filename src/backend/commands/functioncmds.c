@@ -859,11 +859,11 @@ CreateFunction(CreateFunctionStmt *stmt, const char *queryString)
 	Form_pg_language languageStruct;
 	List	   *as_clause;
 
-	/* Convert list of names to a name and namespace__ */
+	/* Convert list of names to a name and namespace */
 	namespaceId = QualifiedNameGetCreationNamespace(stmt->funcname,
 													&funcname);
 
-	/* Check we have creation rights in target namespace__ */
+	/* Check we have creation rights in target namespace */
 	aclresult = pg_namespace_aclcheck(namespaceId, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -1997,7 +1997,7 @@ DropTransformById(Oid transformOid)
  * Subroutine for ALTER FUNCTION/AGGREGATE SET SCHEMA/RENAME
  *
  * Is there a function with the given name and signature already in the given
- * namespace__?  If so, raise an appropriate error message.
+ * namespace?  If so, raise an appropriate error message.
  */
 void
 IsThereFunctionInNamespace(const char *proname, int pronargs,

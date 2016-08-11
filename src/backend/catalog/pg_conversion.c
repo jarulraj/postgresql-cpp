@@ -120,7 +120,7 @@ ConversionCreate(const char *conname, Oid connamespace,
 	referenced.objectSubId = 0;
 	recordDependencyOn(&myself, &referenced, DEPENDENCY_NORMAL);
 
-	/* create dependency on namespace__ */
+	/* create dependency on namespace */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = connamespace;
 	referenced.objectSubId = 0;
@@ -179,7 +179,7 @@ RemoveConversionById(Oid conversionOid)
  * FindDefaultConversion
  *
  * Find "default" conversion proc by for_encoding and to_encoding in the
- * given namespace__.
+ * given namespace.
  *
  * If found, returns the procedure's oid, otherwise InvalidOid.  Note that
  * you get the procedure's OID not the conversion's OID!

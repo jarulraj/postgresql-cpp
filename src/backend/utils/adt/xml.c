@@ -1580,7 +1580,7 @@ xml_errorHandler(void *data, xmlErrorPtr error)
 	/*----------
 	 * Older libxml versions report some errors differently.
 	 * First, some errors were previously reported as coming from the parser
-	 * domain but are now reported as coming from the namespace__ domain.
+	 * domain but are now reported as coming from the namespace domain.
 	 * Second, some warnings were upgraded to errors.
 	 * We attempt to compensate for that here.
 	 *----------
@@ -2409,7 +2409,7 @@ cursor_to_xml(PG_FUNCTION_ARGS)
  * with a table name to this__ function is the top level.  When the user
  * calls database_to_xml, then a call with a schema name to this__
  * function is not the top level.  If top_level is false, then the XML
- * namespace__ declarations are omitted, because they supposedly already
+ * namespace declarations are omitted, because they supposedly already
  * appeared earlier in the output.  Repeating them is not wrong, but
  * it looks ugly.
  */
@@ -3612,9 +3612,9 @@ xml_xmlnodetoxmltype(xmlNodePtr cur, PgXmlErrorContext *xmlerrcxt)
 		buf = xmlBufferCreate();
 
 		/*
-		 * The result of xmlNodeDump() won't contain namespace__ definitions
+		 * The result of xmlNodeDump() won't contain namespace definitions
 		 * from parent nodes, but xmlCopyNode() duplicates a node along with
-		 * its required namespace__ definitions.
+		 * its required namespace definitions.
 		 */
 		cur_copy = xmlCopyNode(cur, 1);
 
@@ -3774,8 +3774,8 @@ xpath_internal(text *xpath_expr_text, xmltype *data, ArrayType *namespaces,
 	int			ns_count;
 
 	/*
-	 * namespace__ mappings are passed as text[].  If an empty array is passed
-	 * (ndim = 0, "0-dimensional"), then there are no namespace__ mappings.
+	 * namespace mappings are passed as text[].  If an empty array is passed
+	 * (ndim = 0, "0-dimensional"), then there are no namespace mappings.
 	 * Else, a 2-dimensional array with length of the second axis being equal
 	 * to 2 should be passed, i.e., every subarray contains 2 elements, the
 	 * first element defining the name, the second one the URI.  Example:
@@ -3792,7 +3792,7 @@ xpath_internal(text *xpath_expr_text, xmltype *data, ArrayType *namespaces,
 		if (ndim != 2 || dims[1] != 2)
 			ereport(ERROR,
 					(errcode(ERRCODE_DATA_EXCEPTION),
-					 errmsg("invalid array for XML namespace__ mapping"),
+					 errmsg("invalid array for XML namespace mapping"),
 					 errdetail("The array must be two-dimensional with length of the second axis equal to 2.")));
 
 		Assert(ARR_ELEMTYPE(namespaces) == TEXTOID);
@@ -3866,14 +3866,14 @@ xpath_internal(text *xpath_expr_text, xmltype *data, ArrayType *namespaces,
 					ns_names_uris_nulls[i * 2 + 1])
 					ereport(ERROR,
 							(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
-					  errmsg("neither namespace__ name nor URI may be null")));
+					  errmsg("neither namespace name nor URI may be null")));
 				ns_name = TextDatumGetCString(ns_names_uris[i * 2]);
 				ns_uri = TextDatumGetCString(ns_names_uris[i * 2 + 1]);
 				if (xmlXPathRegisterNs(xpathctx,
 									   (xmlChar *) ns_name,
 									   (xmlChar *) ns_uri) != 0)
 					ereport(ERROR,		/* is this__ an internal error??? */
-							(errmsg("could not register XML namespace__ with name \"%s\" and URI \"%s\"",
+							(errmsg("could not register XML namespace with name \"%s\" and URI \"%s\"",
 									ns_name, ns_uri)));
 			}
 		}

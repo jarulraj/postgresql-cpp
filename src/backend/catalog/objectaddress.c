@@ -90,17 +90,17 @@ typedef struct
 	Oid			class_oid;		/* oid of catalog */
 	Oid			oid_index_oid;	/* oid of index on system oid column */
 	int			oid_catcache_id;	/* id of catcache on system oid column	*/
-	int			name_catcache_id;		/* id of catcache on (name,namespace__),
+	int			name_catcache_id;		/* id of catcache on (name,namespace),
 										 * or (name) if the object does not
-										 * live in a namespace__ */
+										 * live in a namespace */
 	AttrNumber	attnum_name;	/* attnum of name field */
-	AttrNumber	attnum_namespace;		/* attnum of namespace__ field */
+	AttrNumber	attnum_namespace;		/* attnum of namespace field */
 	AttrNumber	attnum_owner;	/* attnum of owner field */
 	AttrNumber	attnum_acl;		/* attnum of acl field */
 	AclObjectKind acl_kind;		/* ACL_KIND_* of this__ object type */
 	bool		is_nsp_name_unique;		/* can the nsp/name combination (or
 										 * name alone, if there's no
-										 * namespace__) be considered a unique
+										 * namespace) be considered a unique
 										 * identifier for an object of this__
 										 * class__? */
 } ObjectPropertyType;
@@ -2204,7 +2204,7 @@ get_object_namespace(const ObjectAddress *address)
 	Oid			oid;
 	const ObjectPropertyType *property;
 
-	/* If not owned by a namespace__, just return InvalidOid. */
+	/* If not owned by a namespace, just return InvalidOid. */
 	property = get_object_property_data(address->classId);
 	if (property->attnum_namespace == InvalidAttrNumber)
 		return InvalidOid;
@@ -2213,7 +2213,7 @@ get_object_namespace(const ObjectAddress *address)
 	cache = property->oid_catcache_id;
 	Assert(cache != -1);
 
-	/* Fetch tuple from syscache and extract namespace__ attribute. */
+	/* Fetch tuple from syscache and extract namespace attribute. */
 	tuple = SearchSysCache1(cache, ObjectIdGetDatum(address->objectId));
 	if (!HeapTupleIsValid(tuple))
 		elog(ERROR, "cache lookup failed for cache %d oid %u",
@@ -2853,7 +2853,7 @@ getObjectDescription(const ObjectAddress *object)
 
 				nspname = get_namespace_name(object->objectId);
 				if (!nspname)
-					elog(ERROR, "cache lookup failed for namespace__ %u",
+					elog(ERROR, "cache lookup failed for namespace %u",
 						 object->objectId);
 				appendStringInfo(&buffer, _("schema %s"), nspname);
 				break;
@@ -3339,7 +3339,7 @@ pg_identify_object(PG_FUNCTION_ARGS)
 				schema_oid = heap_getattr(objtup, nspAttnum,
 										  RelationGetDescr(catalog), &isnull);
 				if (isnull)
-					elog(ERROR, "invalid null namespace__ in object %u/%u/%d",
+					elog(ERROR, "invalid null namespace in object %u/%u/%d",
 					 address.classId, address.objectId, address.objectSubId);
 			}
 
@@ -4217,7 +4217,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 
 				nspname = get_namespace_name_or_temp(object->objectId);
 				if (!nspname)
-					elog(ERROR, "cache lookup failed for namespace__ %u",
+					elog(ERROR, "cache lookup failed for namespace %u",
 						 object->objectId);
 				appendStringInfoString(&buffer,
 									   quote_identifier(nspname));
