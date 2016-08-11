@@ -102,7 +102,7 @@ gin_extract_jsonb(PG_FUNCTION_ARGS)
 				break;
 			case WJB_ELEM:
 				/* Pretend string array elements are keys, see jsonb.h */
-				entries[i++] = make_scalar_key(&v, (v.type == jbvString));
+				entries[i++] = make_scalar_key(&v, (v.type == JsonbValue::jbvString));
 				break;
 			case WJB_VALUE:
 				entries[i++] = make_scalar_key(&v, false);
@@ -570,16 +570,16 @@ make_scalar_key(const JsonbValue *scalarVal, bool is_key)
 
 	switch (scalarVal->type)
 	{
-		case jbvNull:
+		case JsonbValue::jbvNull:
 			Assert(!is_key);
 			item = make_text_key(JGINFLAG_NULL, "", 0);
 			break;
-		case jbvBool:
+		case JsonbValue::jbvBool:
 			Assert(!is_key);
 			item = make_text_key(JGINFLAG_BOOL,
 								 scalarVal->val.boolean ? "t" : "f", 1);
 			break;
-		case jbvNumeric:
+		case JsonbValue::jbvNumeric:
 			Assert(!is_key);
 
 			/*
@@ -596,7 +596,7 @@ make_scalar_key(const JsonbValue *scalarVal, bool is_key)
 			item = make_text_key(JGINFLAG_NUM, cstr, strlen(cstr));
 			pfree(cstr);
 			break;
-		case jbvString:
+		case JsonbValue::jbvString:
 			item = make_text_key(is_key ? JGINFLAG_KEY : JGINFLAG_STR,
 								 scalarVal->val.string.val,
 								 scalarVal->val.string.len);

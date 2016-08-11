@@ -541,19 +541,19 @@ jsonb_object_field_text(PG_FUNCTION_ARGS)
 
 		switch (v->type)
 		{
-			case jbvNull:
+			case JsonbValue::jbvNull:
 				break;
-			case jbvBool:
+			case JsonbValue::jbvBool:
 				result = cstring_to_text(v->val.boolean ? "true" : "false");
 				break;
-			case jbvString:
+			case JsonbValue::jbvString:
 				result = cstring_to_text_with_len(v->val.string.val, v->val.string.len);
 				break;
-			case jbvNumeric:
+			case JsonbValue::jbvNumeric:
 				result = cstring_to_text(DatumGetCString(DirectFunctionCall1(numeric_out,
 										  PointerGetDatum(v->val.numeric))));
 				break;
-			case jbvBinary:
+			case JsonbValue::jbvBinary:
 				{
 					StringInfo	jtext = makeStringInfo();
 
@@ -658,19 +658,19 @@ jsonb_array_element_text(PG_FUNCTION_ARGS)
 
 		switch (v->type)
 		{
-			case jbvNull:
+			case JsonbValue::jbvNull:
 				break;
-			case jbvBool:
+			case JsonbValue::jbvBool:
 				result = cstring_to_text(v->val.boolean ? "true" : "false");
 				break;
-			case jbvString:
+			case JsonbValue::jbvString:
 				result = cstring_to_text_with_len(v->val.string.val, v->val.string.len);
 				break;
-			case jbvNumeric:
+			case JsonbValue::jbvNumeric:
 				result = cstring_to_text(DatumGetCString(DirectFunctionCall1(numeric_out,
 										  PointerGetDatum(v->val.numeric))));
 				break;
-			case jbvBinary:
+			case JsonbValue::jbvBinary:
 				{
 					StringInfo	jtext = makeStringInfo();
 
@@ -1280,7 +1280,7 @@ get_jsonb_path_all(FunctionCallInfo fcinfo, bool as_text)
 		else if (i == npath - 1)
 			break;
 
-		if (jbvp->type == jbvBinary)
+		if (jbvp->type == JsonbValue::jbvBinary)
 		{
 			JsonbIterator *it = JsonbIteratorInit((JsonbContainer *) jbvp->val.binary.data);
 			JsonbIteratorToken r;
@@ -1292,18 +1292,18 @@ get_jsonb_path_all(FunctionCallInfo fcinfo, bool as_text)
 		}
 		else
 		{
-			have_object = jbvp->type == jbvObject;
-			have_array = jbvp->type == jbvArray;
+			have_object = jbvp->type == JsonbValue::jbvObject;
+			have_array = jbvp->type == JsonbValue::jbvArray;
 		}
 	}
 
 	if (as_text)
 	{
 		/* special-case outputs for string and null values */
-		if (jbvp->type == jbvString)
+		if (jbvp->type == JsonbValue::jbvString)
 			PG_RETURN_TEXT_P(cstring_to_text_with_len(jbvp->val.string.val,
 													  jbvp->val.string.len));
-		if (jbvp->type == jbvNull)
+		if (jbvp->type == JsonbValue::jbvNull)
 			PG_RETURN_NULL();
 	}
 
@@ -1526,7 +1526,7 @@ each_worker_jsonb(FunctionCallInfo fcinfo, const char *funcname, bool as_text)
 
 			if (as_text)
 			{
-				if (v.type == jbvNull)
+				if (v.type == JsonbValue::jbvNull)
 				{
 					/* a json null is an sql null in text mode */
 					nulls[1] = true;
@@ -1536,7 +1536,7 @@ each_worker_jsonb(FunctionCallInfo fcinfo, const char *funcname, bool as_text)
 				{
 					text	   *sv;
 
-					if (v.type == jbvString)
+					if (v.type == JsonbValue::jbvString)
 					{
 						/* In text mode, scalar strings should be dequoted */
 						sv = cstring_to_text_with_len(v.val.string.val, v.val.string.len);
@@ -1840,7 +1840,7 @@ elements_worker_jsonb(FunctionCallInfo fcinfo, const char *funcname,
 			}
 			else
 			{
-				if (v.type == jbvNull)
+				if (v.type == JsonbValue::jbvNull)
 				{
 					/* a json null is an sql null in text mode */
 					nulls[0] = true;
@@ -1850,7 +1850,7 @@ elements_worker_jsonb(FunctionCallInfo fcinfo, const char *funcname,
 				{
 					text	   *sv;
 
-					if (v.type == jbvString)
+					if (v.type == JsonbValue::jbvString)
 					{
 						/* in text mode scalar strings should be dequoted */
 						sv = cstring_to_text_with_len(v.val.string.val, v.val.string.len);
@@ -2314,7 +2314,7 @@ populate_record_worker(FunctionCallInfo fcinfo, const char *funcname,
 			column_info->column_type = column_type;
 		}
 		if ((jtype == JSONOID && (hashentry == NULL || hashentry->isnull)) ||
-			(jtype == JSONBOID && (v == NULL || v->type == jbvNull)))
+			(jtype == JSONBOID && (v == NULL || v->type == JsonbValue::jbvNull)))
 		{
 			/*
 			 * need InputFunctionCall to happen even for nulls, so that domain
@@ -2336,14 +2336,14 @@ populate_record_worker(FunctionCallInfo fcinfo, const char *funcname,
 			}
 			else
 			{
-				if (v->type == jbvString)
+				if (v->type == JsonbValue::jbvString)
 					s = pnstrdup(v->val.string.val, v->val.string.len);
-				else if (v->type == jbvBool)
+				else if (v->type == JsonbValue::jbvBool)
 					s = pnstrdup((v->val.boolean) ? "t" : "f", 1);
-				else if (v->type == jbvNumeric)
+				else if (v->type == JsonbValue::jbvNumeric)
 					s = DatumGetCString(DirectFunctionCall1(numeric_out,
 										   PointerGetDatum(v->val.numeric)));
-				else if (v->type == jbvBinary)
+				else if (v->type == JsonbValue::jbvBinary)
 					s = JsonbToCString(NULL, (JsonbContainer *) v->val.binary.data, v->val.binary.len);
 				else
 					elog(ERROR, "unrecognized jsonb type: %d", (int) v->type);
@@ -2614,7 +2614,7 @@ make_row_from_rec_and_jsonb(Jsonb *element, PopulateRecordsetState *state)
 						  state->fn_mcxt);
 			column_info->column_type = column_type;
 		}
-		if (v == NULL || v->type == jbvNull)
+		if (v == NULL || v->type == JsonbValue::jbvNull)
 		{
 			/*
 			 * Need InputFunctionCall to happen even for nulls, so that domain
@@ -2629,14 +2629,14 @@ make_row_from_rec_and_jsonb(Jsonb *element, PopulateRecordsetState *state)
 		{
 			char	   *s = NULL;
 
-			if (v->type == jbvString)
+			if (v->type == JsonbValue::jbvString)
 				s = pnstrdup(v->val.string.val, v->val.string.len);
-			else if (v->type == jbvBool)
+			else if (v->type == JsonbValue::jbvBool)
 				s = pnstrdup((v->val.boolean) ? "t" : "f", 1);
-			else if (v->type == jbvNumeric)
+			else if (v->type == JsonbValue::jbvNumeric)
 				s = DatumGetCString(DirectFunctionCall1(numeric_out,
 										   PointerGetDatum(v->val.numeric)));
-			else if (v->type == jbvBinary)
+			else if (v->type == JsonbValue::jbvBinary)
 				s = JsonbToCString(NULL, (JsonbContainer *) v->val.binary.data, v->val.binary.len);
 			else
 				elog(ERROR, "unrecognized jsonb type: %d", (int) v->type);
@@ -3082,7 +3082,7 @@ findJsonbValueFromContainerLen(JsonbContainer *container, uint32 flags,
 {
 	JsonbValue	k;
 
-	k.type = jbvString;
+	k.type = JsonbValue::jbvString;
 	k.val.string.val = key;
 	k.val.string.len = keylen;
 
@@ -3258,7 +3258,7 @@ jsonb_strip_nulls(PG_FUNCTION_ARGS)
 			last_was_key = false;
 
 			/* skip this field if value is null */
-			if (type == WJB_VALUE && v.type == jbvNull)
+			if (type == WJB_VALUE && v.type == JsonbValue::jbvNull)
 				continue;
 
 			/* otherwise, do a delayed push of the key */
@@ -3295,7 +3295,7 @@ addJsonbToParseState(JsonbParseState **jbps, Jsonb *jb)
 
 	it = JsonbIteratorInit(&jb->root);
 
-	Assert(o->type == jbvArray || o->type == jbvObject);
+	Assert(o->type == JsonbValue::jbvArray || o->type == JsonbValue::jbvObject);
 
 	if (JB_ROOT_IS_SCALAR(jb))
 	{
@@ -3304,10 +3304,10 @@ addJsonbToParseState(JsonbParseState **jbps, Jsonb *jb)
 
 		switch (o->type)
 		{
-			case jbvArray:
+			case JsonbValue::jbvArray:
 				(void) pushJsonbValue(jbps, WJB_ELEM, &v);
 				break;
-			case jbvObject:
+			case JsonbValue::jbvObject:
 				(void) pushJsonbValue(jbps, WJB_VALUE, &v);
 				break;
 			default:
@@ -3418,7 +3418,7 @@ jsonb_delete(PG_FUNCTION_ARGS)
 		skipNested = true;
 
 		if ((r == WJB_ELEM || r == WJB_KEY) &&
-			(v.type == jbvString && keylen == v.val.string.len &&
+			(v.type == JsonbValue::jbvString && keylen == v.val.string.len &&
 			 memcmp(keyptr, v.val.string.val, keylen) == 0))
 		{
 			/* skip corresponding value as well */
@@ -3786,7 +3786,7 @@ setPathObject(JsonbIterator **it, Datum *path_elems, bool *path_nulls,
 	{
 		JsonbValue	newkey;
 
-		newkey.type = jbvString;
+		newkey.type = JsonbValue::jbvString;
 		newkey.val.string.len = VARSIZE_ANY_EXHDR(path_elems[level]);
 		newkey.val.string.val = VARDATA_ANY(path_elems[level]);
 
@@ -3828,7 +3828,7 @@ setPathObject(JsonbIterator **it, Datum *path_elems, bool *path_nulls,
 			{
 				JsonbValue	newkey;
 
-				newkey.type = jbvString;
+				newkey.type = JsonbValue::jbvString;
 				newkey.val.string.len = VARSIZE_ANY_EXHDR(path_elems[level]);
 				newkey.val.string.val = VARDATA_ANY(path_elems[level]);
 
