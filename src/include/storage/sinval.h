@@ -17,6 +17,10 @@
 #include <signal.h>
 
 #include "storage/relfilenode.h"
+// Peloton : for std::memcpy
+#ifdef __cplusplus
+#include <cstring>
+#endif
 
 /*
  * We support several types of shared-invalidation messages:
@@ -109,16 +113,46 @@ typedef struct
 	Oid			relId;			/* relation ID */
 } SharedInvalSnapshotMsg;
 
+#ifdef __cplusplus
+union SharedInvalidationMessage
+{
+  int8    id;       /* type field --- must be first */
+  SharedInvalCatcacheMsg cc;
+  SharedInvalCatalogMsg cat;
+  SharedInvalRelcacheMsg rc;
+  SharedInvalSmgrMsg sm;
+  SharedInvalRelmapMsg rm;
+  SharedInvalSnapshotMsg sn;
+
+  // Peloton : sm has non-trivial ctor
+  // This union's default ctor is implictly deleted
+  // The work around is to manually define ctor and dtor
+  SharedInvalidationMessage() : sm() {}
+  ~SharedInvalidationMessage() {};
+
+  SharedInvalidationMessage(const SharedInvalidationMessage &rhs) {
+    if (this == &rhs) return;
+    std::memcpy(this, &rhs, sizeof(SharedInvalidationMessage));
+  }
+
+  SharedInvalidationMessage &operator=(const SharedInvalidationMessage &rhs) {
+    if (this == &rhs) return *this;
+    std::memcpy(this, &rhs, sizeof(SharedInvalidationMessage));
+    return *this;
+  }
+};
+#else
 typedef union
 {
-	int8		id;				/* type field --- must be first */
-	SharedInvalCatcacheMsg cc;
-	SharedInvalCatalogMsg cat;
-	SharedInvalRelcacheMsg rc;
-	SharedInvalSmgrMsg sm;
-	SharedInvalRelmapMsg rm;
-	SharedInvalSnapshotMsg sn;
+  int8    id;       /* type field --- must be first */
+  SharedInvalCatcacheMsg cc;
+  SharedInvalCatalogMsg cat;
+  SharedInvalRelcacheMsg rc;
+  SharedInvalSmgrMsg sm;
+  SharedInvalRelmapMsg rm;
+  SharedInvalSnapshotMsg sn;
 } SharedInvalidationMessage;
+#endif
 
 
 /* Counter of messages processed; don't worry about overflow. */

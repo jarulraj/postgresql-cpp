@@ -178,11 +178,25 @@ typedef struct AsyncQueueEntry
 /*
  * Struct describing a queue position, and assorted macros for working with it
  */
-typedef struct QueuePosition
+// Peloton :: Add new ctor and operator= for this; remove typedef
+struct QueuePosition
 {
-	int			page;			/* SLRU page number */
-	int			offset;			/* byte offset within page */
-} QueuePosition;
+  int     page;     /* SLRU page number */
+  int     offset;     /* byte offset within page */
+
+  QueuePosition() {}
+
+  QueuePosition(volatile QueuePosition &rhs)
+  : page(rhs.page), offset(rhs.offset) {}
+
+  QueuePosition &operator=(volatile QueuePosition &rhs) {
+    if (this == &rhs) return *this;
+    this->page = rhs.page;
+    this->offset = rhs.offset;
+    return *this;
+  }
+
+};
 
 #define QUEUE_POS_PAGE(x)		((x).page)
 #define QUEUE_POS_OFFSET(x)		((x).offset)
