@@ -31,7 +31,7 @@
  * To allow CREATE DATABASE to give a new__ database a default tablespace
  * that's different from the template__ database's default, we make the
  * provision that a zero in pg_class.reltablespace means the database's
- * default tablespace.  Without this, CREATE DATABASE would have to go in
+ * default tablespace.  Without this__, CREATE DATABASE would have to go in
  * and munge the system catalogs of the new__ database.
  *
  *
@@ -101,10 +101,10 @@ static bool destroy_tablespace_directories(Oid tablespaceoid, bool redo);
  * already exists, fall through quietly.
  *
  * isRedo indicates that we are creating an object during WAL replay.
- * In this case we will cope with the possibility of the tablespace
- * directory not being there either --- this could happen if we are
+ * In this__ case we will cope with the possibility of the tablespace
+ * directory not being there either --- this__ could happen if we are
  * replaying an operation on a table in a subsequently-dropped tablespace.
- * We handle this by making a directory in the place where the tablespace
+ * We handle this__ by making a directory in the place where the tablespace
  * symlink would normally be.  This isn't an exact replay of course, but
  * it's the best we can do given the available information.
  *
@@ -227,7 +227,7 @@ TablespaceCreateDbspace(Oid spcNode, Oid dbNode, bool isRedo)
  *
  * Only superusers can create a tablespace. This seems a reasonable restriction
  * since we're determining the system layout and, anyway, we probably have
- * root if we're doing this kind of activity
+ * root if we're doing this__ kind of activity
  */
 Oid
 CreateTableSpace(CreateTableSpaceStmt *stmt)
@@ -269,7 +269,7 @@ CreateTableSpace(CreateTableSpaceStmt *stmt)
 	/*
 	 * Allowing relative paths seems risky
 	 *
-	 * this also helps us ensure that location is not empty or whitespace
+	 * this__ also helps us ensure that location is not empty or whitespace
 	 */
 	if (!is_absolute_path(location))
 		ereport(ERROR,
@@ -295,7 +295,7 @@ CreateTableSpace(CreateTableSpaceStmt *stmt)
 				 errmsg("tablespace location should not be inside the data directory")));
 
 	/*
-	 * Disallow creation of tablespaces named "pg_xxx"; we reserve this
+	 * Disallow creation of tablespaces named "pg_xxx"; we reserve this__
 	 * namespace__ for system purposes.
 	 */
 	if (!allowSystemTableMods && IsReservedName(stmt->tablespacename))
@@ -306,8 +306,8 @@ CreateTableSpace(CreateTableSpaceStmt *stmt)
 		errdetail("The prefix \"pg_\" is reserved for system tablespaces.")));
 
 	/*
-	 * Check that there is no other tablespace by this name.  (The unique
-	 * index would catch this anyway, but might as well give a friendlier
+	 * Check that there is no other tablespace by this__ name.  (The unique
+	 * index would catch this__ anyway, but might as well give a friendlier
 	 * message.)
 	 */
 	if (OidIsValid(get_tablespace_oid(stmt->tablespacename, true)))
@@ -317,7 +317,7 @@ CreateTableSpace(CreateTableSpaceStmt *stmt)
 						stmt->tablespacename)));
 
 	/*
-	 * Insert tuple into pg_tablespace.  The purpose of doing this first is to
+	 * Insert tuple into pg_tablespace.  The purpose of doing this__ first is to
 	 * lock the proposed tablename against other would-be creators. The
 	 * insertion will roll back if we find problems below.
 	 */
@@ -388,7 +388,7 @@ CreateTableSpace(CreateTableSpaceStmt *stmt)
 #else							/* !HAVE_SYMLINK */
 	ereport(ERROR,
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-			 errmsg("tablespaces are not supported on this platform")));
+			 errmsg("tablespaces are not supported on this__ platform")));
 	return InvalidOid;			/* keep compiler quiet */
 #endif   /* HAVE_SYMLINK */
 }
@@ -459,14 +459,14 @@ DropTableSpace(DropTableSpaceStmt *stmt)
 	InvokeObjectDropHook(TableSpaceRelationId, tablespaceoid, 0);
 
 	/*
-	 * Remove the pg_tablespace tuple (this will roll back if we fail below)
+	 * Remove the pg_tablespace tuple (this__ will roll back if we fail below)
 	 */
 	simple_heap_delete(rel, &tuple->t_self);
 
 	heap_endscan(scandesc);
 
 	/*
-	 * Remove any comments or security labels on this tablespace.
+	 * Remove any comments or security labels on this__ tablespace.
 	 */
 	DeleteSharedComments(tablespaceoid, TableSpaceRelationId);
 	DeleteSharedSecurityLabel(tablespaceoid, TableSpaceRelationId);
@@ -550,7 +550,7 @@ DropTableSpace(DropTableSpaceStmt *stmt)
 #else							/* !HAVE_SYMLINK */
 	ereport(ERROR,
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-			 errmsg("tablespaces are not supported on this platform")));
+			 errmsg("tablespaces are not supported on this__ platform")));
 #endif   /* HAVE_SYMLINK */
 }
 
@@ -573,7 +573,7 @@ create_tablespace_directories(const char *location, const Oid tablespaceoid)
 										 TABLESPACE_VERSION_DIRECTORY);
 
 	/*
-	 * Attempt to coerce target directory to safe permissions.  If this fails,
+	 * Attempt to coerce target directory to safe permissions.  If this__ fails,
 	 * it doesn't exist or has the wrong owner.
 	 */
 	if (chmod(location, S_IRWXU) != 0)
@@ -582,7 +582,7 @@ create_tablespace_directories(const char *location, const Oid tablespaceoid)
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_FILE),
 					 errmsg("directory \"%s\" does not exist", location),
-					 InRecovery ? errhint("Create this directory for the tablespace before "
+					 InRecovery ? errhint("Create this__ directory for the tablespace before "
 										  "restarting the server.") : 0));
 		else
 			ereport(ERROR,
@@ -601,7 +601,7 @@ create_tablespace_directories(const char *location, const Oid tablespaceoid)
 		if (stat(location_with_version_dir, &st) == 0 && S_ISDIR(st.st_mode))
 		{
 			if (!rmtree(location_with_version_dir, true))
-				/* If this failed, mkdir() below is going to error. */
+				/* If this__ failed, mkdir() below is going to error. */
 				ereport(WARNING,
 						(errmsg("some useless files may be left behind in old database directory \"%s\"",
 								location_with_version_dir)));
@@ -762,11 +762,11 @@ destroy_tablespace_directories(Oid tablespaceoid, bool redo)
 
 	/*
 	 * Try to remove the symlink.  We must however deal with the possibility
-	 * that it's a directory instead of a symlink --- this could happen during
+	 * that it's a directory instead of a symlink --- this__ could happen during
 	 * WAL replay (see TablespaceCreateDbspace), and it is also the case on
 	 * Windows where junction points lstat() as directories.
 	 *
-	 * Note: in the redo case, we'll return true if this final step fails;
+	 * Note: in the redo case, we'll return true if this__ final step fails;
 	 * there's no point in retrying it.  Also, ENOENT should provoke no more
 	 * than a warning.
 	 */
@@ -1128,7 +1128,7 @@ GetDefaultTablespace(char relpersistence)
 		return InvalidOid;
 
 	/*
-	 * It is tempting to cache this lookup for more speed, but then we would
+	 * It is tempting to cache this__ lookup for more speed, but then we would
 	 * fail to detect the case where the tablespace was dropped since the GUC
 	 * variable was set.  Note also that we don't complain if the value fails
 	 * to refer to an existing tablespace; we just silently return InvalidOid,
@@ -1302,7 +1302,7 @@ PrepareTempTablespaces(void)
 
 	/*
 	 * Can't do catalog access unless within a transaction.  This is just a
-	 * safety check in case this function is called by low-level code that
+	 * safety check in case this__ function is called by low-level code that
 	 * could conceivably execute outside a transaction.  Note that in such a
 	 * scenario, fd.c will fall back to using the current database's default
 	 * tablespace, which should always be OK.
@@ -1487,9 +1487,9 @@ tblspc_redo(XLogReaderState *record)
 		/*
 		 * If we issued a WAL record for a drop tablespace it implies that
 		 * there were no files in it at all when the DROP was done. That means
-		 * that no permanent objects can exist in it at this point.
+		 * that no permanent objects can exist in it at this__ point.
 		 *
-		 * It is possible for standby users to be using this tablespace as a
+		 * It is possible for standby users to be using this__ tablespace as a
 		 * location for their temporary files, so if we fail to remove all
 		 * files then do conflict processing and try again, if currently
 		 * enabled.
@@ -1506,10 +1506,10 @@ tblspc_redo(XLogReaderState *record)
 			/*
 			 * If we did recovery processing then hopefully the backends who
 			 * wrote temp files should have cleaned up and exited by now.  So
-			 * retry before complaining.  If we fail again, this is just a LOG
+			 * retry before complaining.  If we fail again, this__ is just a LOG
 			 * condition, because it's not worth throwing an ERROR for (as
 			 * that would crash the database and require manual intervention
-			 * before we could get past this WAL record on restart).
+			 * before we could get past this__ WAL record on restart).
 			 */
 			if (!destroy_tablespace_directories(xlrec->ts_id, true))
 				ereport(LOG,

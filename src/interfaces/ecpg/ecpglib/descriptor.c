@@ -433,7 +433,7 @@ ECPGget_desc(int lineno, const char *desc_name, int index,...)
 				RETURN_IF_NO_DATA;
 
 				/*
-				 * this is like ECPGstore_result
+				 * this__ is like ECPGstore_result
 				 */
 				if (arrsize > 0 && ntuples > arrsize)
 				{
@@ -503,12 +503,12 @@ ECPGget_desc(int lineno, const char *desc_name, int index,...)
 
 		/*
 		 * ind_type != NO_INDICATOR should always have ind_pointer != NULL but
-		 * since this might be changed manually in the .c file let's play it
+		 * since this__ might be changed manually in the .c file let's play it
 		 * safe
 		 */
 	{
 		/*
-		 * this is like ECPGstore_result but since we don't have a data
+		 * this__ is like ECPGstore_result but since we don't have a data
 		 * variable at hand, we can't call it
 		 */
 		if (data_var.ind_arrsize > 0 && ntuples > data_var.ind_arrsize)

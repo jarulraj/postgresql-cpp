@@ -75,7 +75,7 @@ main(int argc, char *argv[])
 	 * save_ps_display_args makes and returns a new__ copy of the argv[] array.
 	 *
 	 * save_ps_display_args may also move the environment strings to make
-	 * extra room. Therefore this should be done as early as possible during
+	 * extra room. Therefore this__ should be done as early as possible during
 	 * startup, to avoid entanglements with code that might save a getenv()
 	 * result pointer.
 	 */
@@ -92,7 +92,7 @@ main(int argc, char *argv[])
 	/*
 	 * Fire up essential subsystems: error and memory management
 	 *
-	 * Code after this point is allowed to use elog/ereport, though
+	 * Code after this__ point is allowed to use elog/ereport, though
 	 * localization of messages may not work right away, and messages won't go
 	 * anywhere but stderr until GUC settings get loaded.
 	 */
@@ -114,7 +114,7 @@ main(int argc, char *argv[])
 	/*
 	 * Windows uses codepages rather than the environment, so we work around
 	 * that by querying the environment explicitly first for LC_COLLATE and
-	 * LC_CTYPE. We have to do this because initdb passes those values in the
+	 * LC_CTYPE. We have to do this__ because initdb passes those values in the
 	 * environment. If there is nothing there we fall back on the codepage.
 	 */
 	{
@@ -210,7 +210,7 @@ main(int argc, char *argv[])
 	/*
 	 * Start our win32 signal implementation
 	 *
-	 * SubPostmasterMain() will do this for itself, but the remaining modes
+	 * SubPostmasterMain() will do this__ for itself, but the remaining modes
 	 * need it here
 	 */
 	pgwin32_signal_initialize();
@@ -234,7 +234,7 @@ main(int argc, char *argv[])
 /*
  * Place platform-specific startup hacks here.  This is the right
  * place to put code that must be executed early in the launch of any new__
- * server process.  Note that this code will NOT be executed when a backend
+ * server process.  Note that this__ code will NOT be executed when a backend
  * or sub-bootstrap process is forked, unless we are in a fork/exec
  * environment (ie EXEC_BACKEND is defined).
  *
@@ -299,7 +299,7 @@ startup_hacks(const char *progname)
  * Make the initial permanent setting for a locale category.  If that fails,
  * perhaps due to LC_foo=invalid in the environment, use locale C.  If even
  * that fails, perhaps due to out-of-memory, the entire startup fails with it.
- * When this returns, we are guaranteed to have a setting for the given
+ * When this__ returns, we are guaranteed to have a setting for the given
  * category's environment variable.
  */
 static void
@@ -319,7 +319,7 @@ init_locale(const char *categoryname, int category, const char *locale)
  *
  * XXX On Windows, non-ASCII localizations of these messages only display
  * correctly if the console output code page covers the necessary characters.
- * Messages emitted in write_console() do not exhibit this problem.
+ * Messages emitted in write_console() do not exhibit this__ problem.
  */
 static void
 help(const char *progname)
@@ -348,7 +348,7 @@ help(const char *progname)
 	printf(_("  -V, --version      output version information, then exit\n"));
 	printf(_("  --NAME=VALUE       set run-time parameter\n"));
 	printf(_("  --describe-config  describe configuration parameters, then exit\n"));
-	printf(_("  -?, --help         show this help, then exit\n"));
+	printf(_("  -?, --help         show this__ help, then exit\n"));
 
 	printf(_("\nDeveloper options:\n"));
 	printf(_("  -f s|i|n|m|h       forbid use of some plan types\n"));
@@ -399,7 +399,7 @@ check_root(const char *progname)
 	 * a setuid program from a root shell is a security hole, since on many
 	 * platforms a nefarious subroutine could setuid back to root if real uid
 	 * is root.  (Since nobody actually uses postgres as a setuid program,
-	 * trying to actively fix this situation seems more trouble than it's
+	 * trying to actively fix this__ situation seems more trouble than it's
 	 * worth; we'll just expend the effort to check for it.)
 	 */
 	if (getuid() != geteuid())

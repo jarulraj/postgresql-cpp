@@ -29,7 +29,7 @@
 /*
  * Estimate of the maximum number of open portals a user would have,
  * used in initially sizing the PortalHashTable in EnablePortalManager().
- * Since the hash table can expand, there's no need to make this overly
+ * Since the hash table can expand, there's no need to make this__ overly
  * generous, and keeping it small avoids unnecessary overhead in the
  * hash_seq_search() calls executed during transaction end.
  */
@@ -145,14 +145,14 @@ GetPortalByName(const char *name)
  *
  * Returns NULL if no such stmt.  If multiple PlannedStmt structs within the
  * portal are marked canSetTag, returns the first one.  Neither of these
- * cases should occur in present usages of this function.
+ * cases should occur in present usages of this__ function.
  *
- * Copes if given a list of Querys --- can't happen in a portal, but this
+ * Copes if given a list of Querys --- can't happen in a portal, but this__
  * code also supports plancache.c, which needs both cases.
  *
- * Note: the reason this is just handed a List is so that plancache.c
+ * Note: the reason this__ is just handed a List is so that plancache.c
  * can share the code.  For use with a portal, use PortalGetPrimaryStmt
- * rather than calling this directly.
+ * rather than calling this__ directly.
  */
 Node *
 PortalListGetPrimaryStmt(List *stmts)
@@ -286,13 +286,13 @@ CreateNewPortal(void)
  * The refcount will be released when the portal is destroyed.
  *
  * If cplan is NULL, then it is the caller's responsibility to ensure that
- * the passed plan trees have adequate lifetime.  Typically this is done by
+ * the passed plan trees have adequate lifetime.  Typically this__ is done by
  * copying them into the portal's heap context.
  *
  * The caller is also responsible for ensuring that the passed prepStmtName
  * (if not NULL) and sourceText have adequate lifetime.
  *
- * NB: this function mustn't do much beyond storing the passed values; in
+ * NB: this__ function mustn't do much beyond storing the passed values; in
  * particular don't do anything that risks elog(ERROR).  If that were to
  * happen here before storing the cplan reference, we'd leak the plancache
  * refcount that the caller is trying to hand off to us.
@@ -354,7 +354,7 @@ PortalCreateHoldStore(Portal portal)
 
 	/*
 	 * Create the memory context that is used for storage of the tuple set.
-	 * Note this is NOT a child of the portal's heap memory.
+	 * Note this__ is NOT a child of the portal's heap memory.
 	 */
 	portal->holdContext =
 		AllocSetContextCreate(PortalMemory,
@@ -407,12 +407,12 @@ UnpinPortal(Portal portal)
  * MarkPortalActive
  *		Transition a portal from READY to ACTIVE state.
  *
- * NOTE: never set portal->status = PORTAL_ACTIVE directly; call this instead.
+ * NOTE: never set portal->status = PORTAL_ACTIVE directly; call this__ instead.
  */
 void
 MarkPortalActive(Portal portal)
 {
-	/* For safety, this is a runtime test not just an Assert */
+	/* For safety, this__ is a runtime test not just an Assert */
 	if (portal->status != PORTAL_READY)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
@@ -426,7 +426,7 @@ MarkPortalActive(Portal portal)
  * MarkPortalDone
  *		Transition a portal from ACTIVE to DONE state.
  *
- * NOTE: never set portal->status = PORTAL_DONE directly; call this instead.
+ * NOTE: never set portal->status = PORTAL_DONE directly; call this__ instead.
  */
 void
 MarkPortalDone(Portal portal)
@@ -440,7 +440,7 @@ MarkPortalDone(Portal portal)
 	 * well do that now, since the portal can't be executed any more.
 	 *
 	 * In some cases involving execution of a ROLLBACK command in an already
-	 * aborted transaction, this prevents an assertion failure caused by
+	 * aborted transaction, this__ prevents an assertion failure caused by
 	 * reaching AtCleanup_Portals with the cleanup hook still unexecuted.
 	 */
 	if (PointerIsValid(portal->cleanup))
@@ -454,7 +454,7 @@ MarkPortalDone(Portal portal)
  * MarkPortalFailed
  *		Transition a portal into FAILED state.
  *
- * NOTE: never set portal->status = PORTAL_FAILED directly; call this instead.
+ * NOTE: never set portal->status = PORTAL_FAILED directly; call this__ instead.
  */
 void
 MarkPortalFailed(Portal portal)
@@ -467,7 +467,7 @@ MarkPortalFailed(Portal portal)
 	 * Allow portalcmds.c to clean up the state it knows about.  We might as
 	 * well do that now, since the portal can't be executed any more.
 	 *
-	 * In some cases involving cleanup of an already aborted transaction, this
+	 * In some cases involving cleanup of an already aborted transaction, this__
 	 * prevents an assertion failure caused by reaching AtCleanup_Portals with
 	 * the cleanup hook still unexecuted.
 	 */
@@ -506,7 +506,7 @@ PortalDrop(Portal portal, bool isTopCommit)
 	 * that failure occurs and then we come back to drop the portal again
 	 * during transaction abort.
 	 *
-	 * Note: in most paths of control, this will have been done already in
+	 * Note: in most paths of control, this__ will have been done already in
 	 * MarkPortalDone or MarkPortalFailed.  We're just making sure.
 	 */
 	if (PointerIsValid(portal->cleanup))
@@ -516,7 +516,7 @@ PortalDrop(Portal portal, bool isTopCommit)
 	}
 
 	/*
-	 * Remove portal from hash table.  Because we do this here, we will not
+	 * Remove portal from hash table.  Because we do this__ here, we will not
 	 * come back to try to remove the portal again if there's any error in the
 	 * subsequent steps.  Better to leak a little memory than to get into an
 	 * infinite error-recovery loop.
@@ -568,7 +568,7 @@ PortalDrop(Portal portal, bool isTopCommit)
 	portal->resowner = NULL;
 
 	/*
-	 * Delete tuplestore if present.  We should do this even under error
+	 * Delete tuplestore if present.  We should do this__ even under error
 	 * conditions; since the tuplestore would have been using cross-
 	 * transaction storage, its temp files need to be explicitly deleted.
 	 */
@@ -628,9 +628,9 @@ PortalHashTableDeleteAll(void)
 /*
  * Pre-commit processing for portals.
  *
- * Holdable cursors created in this transaction need to be converted to
+ * Holdable cursors created in this__ transaction need to be converted to
  * materialized form, since we are going to close down the executor and
- * release locks.  Non-holdable portals created in this transaction are
+ * release locks.  Non-holdable portals created in this__ transaction are
  * simply removed.  Portals remaining from prior transactions should be
  * left untouched.
  *
@@ -658,7 +658,7 @@ PreCommit_Portals(bool isPrepare)
 			elog(ERROR, "cannot commit while a portal is pinned");
 
 		/*
-		 * Do not touch active portals --- this can only happen in the case of
+		 * Do not touch active portals --- this__ can only happen in the case of
 		 * a multi-transaction utility command, such as VACUUM.
 		 *
 		 * Note however that any resource owner attached to such a portal is
@@ -680,7 +680,7 @@ PreCommit_Portals(bool isPrepare)
 			 * Instead of dropping the portal, prepare it for access by later
 			 * transactions.
 			 *
-			 * However, if this is PREPARE TRANSACTION rather than COMMIT,
+			 * However, if this__ is PREPARE TRANSACTION rather than COMMIT,
 			 * refuse PREPARE, because the semantics seem pretty unclear.
 			 */
 			if (isPrepare)
@@ -707,7 +707,7 @@ PreCommit_Portals(bool isPrepare)
 
 			/*
 			 * Having successfully exported the holdable cursor, mark it as
-			 * not belonging to this transaction.
+			 * not belonging to this__ transaction.
 			 */
 			portal->createSubid = InvalidSubTransactionId;
 			portal->activeSubid = InvalidSubTransactionId;
@@ -719,7 +719,7 @@ PreCommit_Portals(bool isPrepare)
 		{
 			/*
 			 * Do nothing to cursors held over from a previous transaction
-			 * (including ones we just froze in a previous cycle of this loop)
+			 * (including ones we just froze in a previous cycle of this__ loop)
 			 */
 			continue;
 		}
@@ -747,7 +747,7 @@ PreCommit_Portals(bool isPrepare)
 /*
  * Abort processing for portals.
  *
- * At this point we reset "active" status and run the cleanup hook if
+ * At this__ point we reset "active" status and run the cleanup hook if
  * present, but we can't release the portal's memory until the cleanup call.
  *
  * The reason we need to reset active is so that we can replace the unnamed
@@ -889,7 +889,7 @@ AtSubCommit_Portals(SubTransactionId mySubid,
  * Subtransaction abort handling for portals.
  *
  * Deactivate portals created or used during the failed subtransaction.
- * Note that per AtSubCommit_Portals, this will catch portals created/used
+ * Note that per AtSubCommit_Portals, this__ will catch portals created/used
  * in descendants of the subtransaction too.
  *
  * We don't destroy any portals here; that's done in AtSubCleanup_Portals.
@@ -909,17 +909,17 @@ AtSubAbort_Portals(SubTransactionId mySubid,
 	{
 		Portal		portal = hentry->portal;
 
-		/* Was it created in this subtransaction? */
+		/* Was it created in this__ subtransaction? */
 		if (portal->createSubid != mySubid)
 		{
-			/* No, but maybe it was used in this subtransaction? */
+			/* No, but maybe it was used in this__ subtransaction? */
 			if (portal->activeSubid == mySubid)
 			{
 				/* Maintain activeSubid until the portal is removed */
 				portal->activeSubid = parentSubid;
 
 				/*
-				 * Upper-level portals that failed while running in this
+				 * Upper-level portals that failed while running in this__
 				 * subtransaction must be forced into FAILED state, for the
 				 * same reasons discussed below.
 				 *
@@ -941,10 +941,10 @@ AtSubAbort_Portals(SubTransactionId mySubid,
 				 * (either just above, or earlier), reattach its resource
 				 * owner to the current subtransaction's resource owner, so
 				 * that any resources it still holds will be released while
-				 * cleaning up this subtransaction.  This prevents some corner
+				 * cleaning up this__ subtransaction.  This prevents some corner
 				 * cases wherein we might get Asserts or worse while cleaning
 				 * up objects created during the current subtransaction
-				 * (because they're still referenced within this portal).
+				 * (because they're still referenced within this__ portal).
 				 */
 				if (portal->status == PORTAL_FAILED && portal->resowner)
 				{
@@ -952,13 +952,13 @@ AtSubAbort_Portals(SubTransactionId mySubid,
 					portal->resowner = NULL;
 				}
 			}
-			/* Done if it wasn't created in this subtransaction */
+			/* Done if it wasn't created in this__ subtransaction */
 			continue;
 		}
 
 		/*
 		 * Force any live portals of my own subtransaction into FAILED state.
-		 * We have to do this because they might refer to objects created or
+		 * We have to do this__ because they might refer to objects created or
 		 * changed in the failed subtransaction, leading to crashes within
 		 * ExecutorEnd when portalcmds.c tries to close down the portal.
 		 */
@@ -1054,7 +1054,7 @@ pg_cursor(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this context")));
+						"allowed in this__ context")));
 
 	/* need to build tuplestore in query context */
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;

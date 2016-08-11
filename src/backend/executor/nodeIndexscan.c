@@ -86,7 +86,7 @@ IndexNext(IndexScanState *node)
 	 */
 	estate = node->ss.ps.state;
 	direction = estate->es_direction;
-	/* flip direction if this is an overall backward scan */
+	/* flip direction if this__ is an overall backward scan */
 	if (ScanDirectionIsBackward(((IndexScan *) node->ss.ps.plan)->indexorderdir))
 	{
 		if (ScanDirectionIsForward(direction))
@@ -143,7 +143,7 @@ IndexNext(IndexScanState *node)
 /* ----------------------------------------------------------------
  *		IndexNextWithReorder
  *
- *		Like IndexNext, but this version can also re-check ORDER BY
+ *		Like IndexNext, but this__ version can also re-check ORDER BY
  *		expressions, and reorder the tuples as necessary.
  * ----------------------------------------------------------------
  */
@@ -285,10 +285,10 @@ next_indextuple:
 		}
 
 		/*
-		 * Can we return this tuple immediately, or does it need to be pushed
+		 * Can we return this__ tuple immediately, or does it need to be pushed
 		 * to the reorder queue?  If the ORDER BY expression values returned
 		 * by the index were inaccurate, we can't return it yet, because the
-		 * next tuple from the index might need to come before this one. Also,
+		 * next tuple from the index might need to come before this__ one. Also,
 		 * we can't return it yet if there are any smaller tuples in the queue
 		 * already.
 		 */
@@ -298,13 +298,13 @@ next_indextuple:
 													  topmost->orderbynulls,
 													  node) > 0))
 		{
-			/* Put this tuple to the queue */
+			/* Put this__ tuple to the queue */
 			reorderqueue_push(node, tuple, lastfetched_vals, lastfetched_nulls);
 			continue;
 		}
 		else
 		{
-			/* Can return this tuple immediately. */
+			/* Can return this__ tuple immediately. */
 			return slot;
 		}
 	}
@@ -518,7 +518,7 @@ ExecReScanIndexScan(IndexScanState *node)
 	 * If we are doing runtime key calculations (ie, any of the index key
 	 * values weren't simple Consts), compute the new__ key values.  But first,
 	 * reset the context so we don't leak memory as each outer tuple is
-	 * scanned.  Note this assumes that we will recalculate *all* runtime keys
+	 * scanned.  Note this__ assumes that we will recalculate *all* runtime keys
 	 * on each call.
 	 */
 	if (node->iss_NumRuntimeKeys != 0)
@@ -578,12 +578,12 @@ ExecIndexEvalRuntimeKeys(ExprContext *econtext,
 		 * Note: the result of the eval could be a pass-by-ref value that's
 		 * stored in some outer scan's tuple, not in
 		 * econtext->ecxt_per_tuple_memory.  We assume that the outer tuple
-		 * will stay put throughout our scan.  If this is wrong, we could copy
+		 * will stay put throughout our scan.  If this__ is wrong, we could copy
 		 * the result into our context explicitly, but I think that's not
 		 * necessary.
 		 *
 		 * It's also entirely possible that the result of the eval is a
-		 * toasted value.  In this case we should forcibly detoast it, to
+		 * toasted value.  In this__ case we should forcibly detoast it, to
 		 * avoid repeat detoastings each time the value is examined by an
 		 * index support function.
 		 */
@@ -655,7 +655,7 @@ ExecIndexEvalArrayKeys(ExprContext *econtext,
 			break;				/* no point in evaluating more */
 		}
 		arrayval = DatumGetArrayTypeP(arraydatum);
-		/* We could cache this data, but not clear it's worth it */
+		/* We could cache this__ data, but not clear it's worth it */
 		get_typlenbyvalalign(ARR_ELEMTYPE(arrayval),
 							 &elmlen, &elmbyval, &elmalign);
 		deconstruct_array(arrayval,
@@ -1111,10 +1111,10 @@ ExecIndexBuildScanKeys(PlanState *planstate, Relation index,
 	scan_keys = (ScanKey) palloc(n_scan_keys * sizeof(ScanKeyData));
 
 	/*
-	 * runtime_keys array is dynamically resized as needed.  We handle it this
+	 * runtime_keys array is dynamically resized as needed.  We handle it this__
 	 * way so that the same runtime keys array can be shared between
 	 * indexquals and indexorderbys, which will be processed in separate calls
-	 * of this function.  Caller must be sure to pass in NULL/0 for first
+	 * of this__ function.  Caller must be sure to pass in NULL/0 for first
 	 * call.
 	 */
 	runtime_keys = *runtimeKeys;
@@ -1204,7 +1204,7 @@ ExecIndexBuildScanKeys(PlanState *planstate, Relation index,
 			}
 			else
 			{
-				/* Need to treat this one as a runtime key */
+				/* Need to treat this__ one as a runtime key */
 				if (n_runtime_keys >= max_runtime_keys)
 				{
 					if (max_runtime_keys == 0)
@@ -1331,7 +1331,7 @@ ExecIndexBuildScanKeys(PlanState *planstate, Relation index,
 				}
 				else
 				{
-					/* Need to treat this one as a runtime key */
+					/* Need to treat this__ one as a runtime key */
 					if (n_runtime_keys >= max_runtime_keys)
 					{
 						if (max_runtime_keys == 0)
@@ -1438,7 +1438,7 @@ ExecIndexBuildScanKeys(PlanState *planstate, Relation index,
 
 			if (index->rd_am->amsearcharray)
 			{
-				/* Index AM will handle this like a simple operator__ */
+				/* Index AM will handle this__ like a simple operator__ */
 				flags |= SK_SEARCHARRAY;
 				if (IsA(rightop, Const))
 				{
@@ -1449,7 +1449,7 @@ ExecIndexBuildScanKeys(PlanState *planstate, Relation index,
 				}
 				else
 				{
-					/* Need to treat this one as a runtime key */
+					/* Need to treat this__ one as a runtime key */
 					if (n_runtime_keys >= max_runtime_keys)
 					{
 						if (max_runtime_keys == 0)
@@ -1551,7 +1551,7 @@ ExecIndexBuildScanKeys(PlanState *planstate, Relation index,
 								   InvalidStrategy,		/* no strategy */
 								   InvalidOid,	/* no strategy subtype */
 								   InvalidOid,	/* no collation */
-								   InvalidOid,	/* no reg proc for this */
+								   InvalidOid,	/* no reg proc for this__ */
 								   (Datum) 0);	/* constant */
 		}
 		else

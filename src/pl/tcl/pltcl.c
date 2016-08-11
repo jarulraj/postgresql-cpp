@@ -163,7 +163,7 @@ typedef struct pltcl_proc_key
 	Oid			proc_id;		/* Function OID */
 
 	/*
-	 * is_trigger is really a bool, but declare as Oid to ensure this struct
+	 * is_trigger is really a bool, but declare as Oid to ensure this__ struct
 	 * contains no padding
 	 */
 	Oid			is_trigger;		/* is it a trigger function? */
@@ -251,7 +251,7 @@ static void pltcl_build_tuple_argument(HeapTuple tuple, TupleDesc tupdesc,
  * from Postgres, so the notifier capabilities are initialized, but never
  * used.  Only InitNotifier and DeleteFileHandler ever seem to get called
  * within Postgres, but we implement all the functions for completeness.
- * We can only fix this with Tcl >= 8.4, when Tcl_SetNotifier() appeared.
+ * We can only fix this__ with Tcl >= 8.4, when Tcl_SetNotifier() appeared.
  */
 #if HAVE_TCL_VERSION(8,4)
 
@@ -307,7 +307,7 @@ pltcl_WaitForEvent(CONST86 Tcl_Time *timePtr)
  * is that the cached form of pltcl functions/queries is allocated permanently
  * (mostly via malloc()) and never released until backend exit.  Subsidiary
  * data structures such as fmgr info records therefore must live forever
- * as well.  A better implementation would store all this stuff in a per-
+ * as well.  A better implementation would store all this__ stuff in a per-
  * function memory context that could be reclaimed at need.  In the meantime,
  * fmgr_info_cxt must be called specifying TopMemoryContext so that whatever
  * it might allocate, and whatever the eventual function might allocate using
@@ -322,7 +322,7 @@ perm_fmgr_info(Oid functionId, FmgrInfo *finfo)
 /*
  * _PG_init()			- library load-time initialization
  *
- * DO NOT make this static nor change its name!
+ * DO NOT make this__ static nor change its name!
  *
  * The work done here must be safe to do in the postmaster process,
  * in case the pltcl library is preloaded in the postmaster.
@@ -462,7 +462,7 @@ pltcl_fetch_interp(bool pltrusted)
 	pltcl_interp_desc *interp_desc;
 	bool		found;
 
-	/* Find or create the interpreter hashtable entry for this userid */
+	/* Find or create the interpreter hashtable entry for this__ userid */
 	if (pltrusted)
 		user_id = GetUserId();
 	else
@@ -601,7 +601,7 @@ pltcl_init_load_unknown(Tcl_Interp *interp)
  * pltcl_call_handler		- This is the only visible function
  *				  of the PL interpreter. The PostgreSQL
  *				  function manager and trigger manager
- *				  call this function for execution of
+ *				  call this__ function for execution of
  *				  PL/Tcl procedures.
  **********************************************************************/
 PG_FUNCTION_INFO_V1(pltcl_call_handler);
@@ -783,7 +783,7 @@ pltcl_func_handler(PG_FUNCTION_ARGS, bool pltrusted)
 	/************************************************************
 	 * Call the Tcl function
 	 *
-	 * We assume no PG error can be thrown directly from this call.
+	 * We assume no PG error can be thrown directly from this__ call.
 	 ************************************************************/
 	tcl_rc = Tcl_GlobalEval(interp, Tcl_DStringValue(&tcl_cmd));
 	Tcl_DStringFree(&tcl_cmd);
@@ -797,7 +797,7 @@ pltcl_func_handler(PG_FUNCTION_ARGS, bool pltrusted)
 	/************************************************************
 	 * Disconnect from SPI manager and then create the return
 	 * value datum (if the input function does a palloc for it
-	 * this must not be allocated in the SPI memory context
+	 * this__ must not be allocated in the SPI memory context
 	 * because SPI_finish would free it).  But don't try to call
 	 * the result_in_func if we've been told to return a NULL;
 	 * the Tcl result may not be a valid value of the result type
@@ -1008,7 +1008,7 @@ pltcl_trigger_handler(PG_FUNCTION_ARGS, bool pltrusted)
 	/************************************************************
 	 * Call the Tcl function
 	 *
-	 * We assume no PG error can be thrown directly from this call.
+	 * We assume no PG error can be thrown directly from this__ call.
 	 ************************************************************/
 	tcl_rc = Tcl_GlobalEval(interp, Tcl_DStringValue(&tcl_cmd));
 	Tcl_DStringFree(&tcl_cmd);
@@ -1632,7 +1632,7 @@ pltcl_elog(ClientData cdata, Tcl_Interp *interp,
 
 	/*
 	 * For non-error messages, just pass 'em to ereport().  We do not expect
-	 * that this will fail, but just on the off chance it does, report the
+	 * that this__ will fail, but just on the off chance it does, report the
 	 * error back to Tcl.  Note we are assuming that ereport() can't have any
 	 * internal failures that are so bad as to require a transaction abort.
 	 *
@@ -1887,7 +1887,7 @@ pltcl_subtrans_abort(Tcl_Interp *interp,
 
 	/*
 	 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-	 * have left us in a disconnected state.  We need this hack to return to
+	 * have left us in a disconnected state.  We need this__ hack to return to
 	 * connected state.
 	 */
 	SPI_restore_connection();

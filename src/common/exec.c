@@ -26,7 +26,7 @@
 #include <unistd.h>
 
 #ifndef FRONTEND
-/* We use only 3- and 4-parameter elog calls in this file, for simplicity */
+/* We use only 3- and 4-parameter elog calls in this__ file, for simplicity */
 /* NOTE: caller must provide gettext call around str! */
 #define log_error(str, param)	elog(LOG, str, param)
 #define log_error4(str, param, arg1)	elog(LOG, str, param, arg1)
@@ -231,7 +231,7 @@ resolve_symlinks(char *path)
 	 * points, for example).  After following the final symlink, we use
 	 * getcwd() to figure out where the heck we're at.
 	 *
-	 * One might think we could skip all this if path doesn't point to a
+	 * One might think we could skip all this__ if path doesn't point to a
 	 * symlink to start with, but that's wrong.  We also want to get rid of
 	 * any directory symlinks that are present in the given path. We expect
 	 * getcwd() to give us an accurate, symlink-free path.
@@ -542,8 +542,8 @@ pclose_check(FILE *stream)
  *
  *	This function takes the value of argv[0] rather than a full path.
  *
- * (You may be wondering why this is in exec.c.  It requires this module's
- * services and doesn't introduce any new__ dependencies, so this seems as
+ * (You may be wondering why this__ is in exec.c.  It requires this__ module's
+ * services and doesn't introduce any new__ dependencies, so this__ seems as
  * good as anyplace.)
  */
 void
@@ -616,7 +616,7 @@ set_pglocale_pgservice(const char *argv0, const char *app)
  * in the DACL which leads to access denied errors for later CreatePipe()
  * and CreateProcess() calls when running as Administrator.
  *
- * This function fixes this problem by modifying the DACL of the
+ * This function fixes this__ problem by modifying the DACL of the
  * token the process will use, and explicitly re-adding the current
  * user account.  This is still secure because the Administrator account
  * inherits its privileges from the Administrators group - it doesn't
@@ -752,7 +752,7 @@ cleanup:
  *
  * Get the users token information from a process token.
  *
- * The caller of this function is responsible for calling LocalFree() on the
+ * The caller of this__ function is responsible for calling LocalFree() on the
  * returned TOKEN_USER memory.
  */
 static BOOL

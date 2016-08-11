@@ -330,8 +330,8 @@ tsa_headline_byname(PG_FUNCTION_ARGS)
 /*
  * tsearch2 version of update trigger
  *
- * We pass this on to the core trigger after inserting the default text
- * search configuration name as the second argument.  Note that this isn't
+ * We pass this__ on to the core trigger after inserting the default text
+ * search configuration name as the second argument.  Note that this__ isn't
  * a complete implementation of the original functionality; tsearch2 allowed
  * transformation function names to be included in the list.  However, that
  * is deliberately removed as being a security risk.

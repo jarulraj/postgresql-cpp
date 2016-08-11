@@ -45,7 +45,7 @@
  */
 typedef struct AclItem
 {
-	Oid			ai_grantee;		/* ID that this item grants privs to */
+	Oid			ai_grantee;		/* ID that this__ item grants privs to */
 	Oid			ai_grantor;		/* grantor of privs */
 	AclMode		ai_privs;		/* privilege bits */
 } AclItem;
@@ -173,7 +173,7 @@ typedef enum
 	ACLCHECK_NOT_OWNER
 } AclResult;
 
-/* this enum covers all object types that can have privilege errors */
+/* this__ enum covers all object types that can have privilege errors */
 /* currently it's only used to tell aclcheck_error what to say */
 typedef enum AclObjectKind
 {

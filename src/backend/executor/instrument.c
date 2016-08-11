@@ -90,7 +90,7 @@ InstrStopNode(Instrumentation *instr, double nTuples)
 		BufferUsageAccumDiff(&instr->bufusage,
 							 &pgBufferUsage, &instr->bufusage_start);
 
-	/* Is this the first tuple of this cycle? */
+	/* Is this__ the first tuple of this__ cycle? */
 	if (!instr->running)
 	{
 		instr->running = true;

@@ -123,7 +123,7 @@ map_locale(const struct locale_map * map, const char *locale)
 		if (match)
 		{
 			/*
-			 * Found a match for the first part. If this was a two-part
+			 * Found a match for the first part. If this__ was a two-part
 			 * replacement, find the second part.
 			 */
 			match_start = match;

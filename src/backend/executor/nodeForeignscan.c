@@ -92,7 +92,7 @@ ForeignRecheck(ForeignScanState *node, TupleTableSlot *slot)
 	 * to NULL upon recheck.  Otherwise, it shouldn't need to change the slot
 	 * contents, just return true or false to indicate whether the quals still
 	 * pass.  For simple cases, setting fdw_recheck_quals may be easier than
-	 * providing this callback.
+	 * providing this__ callback.
 	 */
 	if (fdwroutine->RecheckForeignScan &&
 		!fdwroutine->RecheckForeignScan(node, slot))

@@ -111,7 +111,7 @@ typedef struct IntoClause
  *
  * All node types that are used in executable expression trees should derive
  * from Expr (that is, have Expr as their first field).  Since Expr only
- * contains NodeTag, this is a formality, but it is an easy form of
+ * contains NodeTag, this__ is a formality, but it is an easy form of
  * documentation.  See also the ExprState node types in execnodes.h.
  */
 typedef struct Expr
@@ -148,11 +148,11 @@ typedef struct Expr
 typedef struct Var
 {
 	Expr		xpr;
-	Index		varno;			/* index of this var's relation in the range
+	Index		varno;			/* index of this__ var's relation in the range
 								 * table, or INNER_VAR/OUTER_VAR/INDEX_VAR */
-	AttrNumber	varattno;		/* attribute number of this var, or zero for
+	AttrNumber	varattno;		/* attribute number of this__ var, or zero for
 								 * all */
-	Oid			vartype;		/* pg_type OID for the type of this var */
+	Oid			vartype;		/* pg_type OID for the type of this__ var */
 	int32		vartypmod;		/* pg_attribute typmod value */
 	Oid			varcollid;		/* OID of collation, or InvalidOid if none */
 	Index		varlevelsup;	/* for subquery variables referencing outer
@@ -181,7 +181,7 @@ typedef struct Const
 	Datum		constvalue;		/* the constant's value */
 	bool		constisnull;	/* whether the constant is null (if true,
 								 * constvalue is undefined) */
-	bool		constbyval;		/* whether this datatype is passed by value.
+	bool		constbyval;		/* whether this__ datatype is passed by value.
 								 * If true, then all the information is stored
 								 * in the Datum. If false, then the Datum
 								 * contains a pointer to the information. */
@@ -192,7 +192,7 @@ typedef struct Const
  * Param
  *
  *		paramkind specifies the kind of parameter. The possible values
- *		for this field are:
+ *		for this__ field are:
  *
  *		PARAM_EXTERN:  The parameter value is supplied from outside the plan.
  *				Such parameters are numbered from 1 to n.
@@ -252,7 +252,7 @@ typedef struct Param
  *
  * For an ordered-set aggregate, the args list represents the WITHIN GROUP
  * (aggregated) arguments, all of which will be listed in the aggorder list.
- * DISTINCT is not supported in this case, so aggdistinct will be NIL.
+ * DISTINCT is not supported in this__ case, so aggdistinct will be NIL.
  * The direct arguments appear in aggdirectargs (as a list of plain
  * expressions, not TargetEntry nodes).
  */
@@ -388,7 +388,7 @@ typedef enum CoercionContext
 /*
  * CoercionForm - how to display a node that could have come from a cast
  *
- * NB: equal() ignores CoercionForm fields, therefore this *must* not carry
+ * NB: equal() ignores CoercionForm fields, therefore this__ *must* not carry
  * any semantically significant information.  We need that behavior so that
  * the planner will consider equivalent implicit and explicit casts to be
  * equivalent.  In cases where those actually behave differently, the coercion
@@ -412,7 +412,7 @@ typedef struct FuncExpr
 	bool		funcretset;		/* true if function returns set */
 	bool		funcvariadic;	/* true if variadic arguments have been
 								 * combined into an array last argument */
-	CoercionForm funcformat;	/* how to display this function call */
+	CoercionForm funcformat;	/* how to display this__ function call */
 	Oid			funccollid;		/* OID of collation of result */
 	Oid			inputcollid;	/* OID of collation that function should use */
 	List	   *args;			/* arguments to the function */
@@ -445,7 +445,7 @@ typedef struct NamedArgExpr
 /*
  * OpExpr - expression node for an operator__ invocation
  *
- * Semantically, this is essentially the same as a function call.
+ * Semantically, this__ is essentially the same as a function call.
  *
  * Note that opfuncid is not necessarily filled in immediately on creation
  * of the node.  The planner makes sure it is valid before passing the node
@@ -467,7 +467,7 @@ typedef struct OpExpr
 /*
  * DistinctExpr - expression node for "x IS DISTINCT FROM y"
  *
- * Except for the nodetag, this is represented identically to an OpExpr
+ * Except for the nodetag, this__ is represented identically to an OpExpr
  * referencing the "=" operator__ for x and y.
  * We use "=", not the more obvious "<>", because more datatypes have "="
  * than "<>".  This means the executor must invert the operator__ result.
@@ -479,7 +479,7 @@ typedef OpExpr DistinctExpr;
 /*
  * NullIfExpr - a NULLIF expression
  *
- * Like DistinctExpr, this is represented the same as an OpExpr referencing
+ * Like DistinctExpr, this__ is represented the same as an OpExpr referencing
  * the "=" operator__ for x and y.
  */
 typedef OpExpr NullIfExpr;
@@ -521,7 +521,7 @@ typedef struct BoolExpr
 {
 	Expr		xpr;
 	BoolExprType boolop;
-	List	   *args;			/* arguments to this expression */
+	List	   *args;			/* arguments to this__ expression */
 	int			location;		/* token location, or -1 if unknown */
 } BoolExpr;
 
@@ -621,7 +621,7 @@ typedef struct SubLink
  * If the sub-select becomes an initplan rather than a subplan, the executable
  * expression is part of the outer plan's expression tree (and the SubPlan
  * node itself is not, but rather is found in the outer plan's initPlan
- * list).  In this case testexpr is NULL to avoid duplication.
+ * list).  In this__ case testexpr is NULL to avoid duplication.
  *
  * The planner also derives lists of the values that need to be passed into
  * and out of the subplan.  Input values are represented as a list "args" of
@@ -659,7 +659,7 @@ typedef struct SubPlan
 	bool		useHashTable;	/* TRUE to store subselect output in a hash
 								 * table (implies we are doing "IN") */
 	bool		unknownEqFalse; /* TRUE if it's okay to return FALSE when the
-								 * spec result is UNKNOWN; this allows much
+								 * spec result is UNKNOWN; this__ allows much
 								 * simpler handling of null values */
 	/* Information for passing params into and out of the subselect: */
 	/* setParam and parParam are lists of integers (param IDs) */
@@ -700,7 +700,7 @@ typedef struct FieldSelect
 	Expr		xpr;
 	Expr	   *arg;			/* input expression */
 	AttrNumber	fieldnum;		/* attribute number of field to extract */
-	Oid			resulttype;		/* type of the field (result type of this
+	Oid			resulttype;		/* type of the field (result type of this__
 								 * node) */
 	int32		resulttypmod;	/* output typmod (usually -1) */
 	Oid			resultcollid;	/* OID of collation of the field */
@@ -711,7 +711,7 @@ typedef struct FieldSelect
  *
  * FieldStore represents the operation of modifying one field in a tuple
  * value, yielding a new__ tuple value (the input is not touched!).  Like
- * the assign case of ArrayRef, this is used to implement UPDATE of a
+ * the assign case of ArrayRef, this__ is used to implement UPDATE of a
  * portion of a column.
  *
  * A single FieldStore can actually represent updates of several different
@@ -751,7 +751,7 @@ typedef struct RelabelType
 	Oid			resulttype;		/* output type of coercion expression */
 	int32		resulttypmod;	/* output typmod (usually -1) */
 	Oid			resultcollid;	/* OID of collation, or InvalidOid if none */
-	CoercionForm relabelformat; /* how to display this node */
+	CoercionForm relabelformat; /* how to display this__ node */
 	int			location;		/* token location, or -1 if unknown */
 } RelabelType;
 
@@ -771,7 +771,7 @@ typedef struct CoerceViaIO
 	Oid			resulttype;		/* output type of coercion */
 	/* output typmod is not stored, but is presumed -1 */
 	Oid			resultcollid;	/* OID of collation, or InvalidOid if none */
-	CoercionForm coerceformat;	/* how to display this node */
+	CoercionForm coerceformat;	/* how to display this__ node */
 	int			location;		/* token location, or -1 if unknown */
 } CoerceViaIO;
 
@@ -796,7 +796,7 @@ typedef struct ArrayCoerceExpr
 	int32		resulttypmod;	/* output typmod (also element typmod) */
 	Oid			resultcollid;	/* OID of collation, or InvalidOid if none */
 	bool		isExplicit;		/* conversion semantics flag to pass to func */
-	CoercionForm coerceformat;	/* how to display this node */
+	CoercionForm coerceformat;	/* how to display this__ node */
 	int			location;		/* token location, or -1 if unknown */
 } ArrayCoerceExpr;
 
@@ -818,7 +818,7 @@ typedef struct ConvertRowtypeExpr
 	Expr	   *arg;			/* input expression */
 	Oid			resulttype;		/* output type (always a composite type) */
 	/* Like RowExpr, we deliberately omit a typmod and collation here */
-	CoercionForm convertformat; /* how to display this node */
+	CoercionForm convertformat; /* how to display this__ node */
 	int			location;		/* token location, or -1 if unknown */
 } ConvertRowtypeExpr;
 
@@ -886,7 +886,7 @@ typedef struct CaseWhen
  * This is effectively like a Param, but can be implemented more simply
  * since we need only one replacement value at a time.
  *
- * We also use this in nested UPDATE expressions.
+ * We also use this__ in nested UPDATE expressions.
  * See transformAssignmentIndirection().
  */
 typedef struct CaseTestExpr
@@ -954,7 +954,7 @@ typedef struct RowExpr
 	 * We don't need to store a collation either.  The result type is
 	 * necessarily composite, and composite types never have a collation.
 	 */
-	CoercionForm row_format;	/* how to display this node */
+	CoercionForm row_format;	/* how to display this__ node */
 	List	   *colnames;		/* list of String, or NIL */
 	int			location;		/* token location, or -1 if unknown */
 } RowExpr;
@@ -963,7 +963,7 @@ typedef struct RowExpr
  * RowCompareExpr - row-wise comparison, such as (a, b) <= (1, 2)
  *
  * We support row comparison for any operator__ that can be determined to
- * act like =, <>, <, <=, >, or >= (we determine this by looking for the
+ * act like =, <>, <, <=, >, or >= (we determine this__ by looking for the
  * operator__ in btree opfamilies).  Note that the same operator__ name might
  * map to a different operator__ for each pair of row elements, since the
  * element datatypes can vary.
@@ -975,7 +975,7 @@ typedef struct RowExpr
  */
 typedef enum RowCompareType
 {
-	/* Values of this enum are chosen to match btree strategy numbers */
+	/* Values of this__ enum are chosen to match btree strategy numbers */
 	ROWCOMPARE_LT = 1,			/* BTLessStrategyNumber */
 	ROWCOMPARE_LE = 2,			/* BTLessEqualStrategyNumber */
 	ROWCOMPARE_EQ = 3,			/* BTEqualStrategyNumber */
@@ -1076,7 +1076,7 @@ typedef struct XmlExpr
  * NullTest represents the operation of testing a value for NULLness.
  * The appropriate test is performed and returned as a boolean Datum.
  *
- * NOTE: the semantics of this for rowtype inputs are noticeably different
+ * NOTE: the semantics of this__ for rowtype inputs are noticeably different
  * from the scalar case.  We provide an "argisrow" flag to reflect that.
  * ----------------
  */
@@ -1123,7 +1123,7 @@ typedef struct BooleanTest
  * CoerceToDomain represents the operation of coercing a value to a domain
  * type.  At runtime (and not before) the precise set of constraints to be
  * checked will be determined.  If the value passes, it is returned as the
- * result; if not, an error is raised.  Note that this is equivalent to
+ * result; if not, an error is raised.  Note that this__ is equivalent to
  * RelabelType in the scenario where no constraints are applied.
  */
 typedef struct CoerceToDomain
@@ -1133,7 +1133,7 @@ typedef struct CoerceToDomain
 	Oid			resulttype;		/* domain type ID (result type) */
 	int32		resulttypmod;	/* output typmod (currently always -1) */
 	Oid			resultcollid;	/* OID of collation, or InvalidOid if none */
-	CoercionForm coercionformat;	/* how to display this node */
+	CoercionForm coercionformat;	/* how to display this__ node */
 	int			location;		/* token location, or -1 if unknown */
 } CoerceToDomain;
 
@@ -1175,7 +1175,7 @@ typedef struct SetToDefault
  * Node representing [WHERE] CURRENT OF cursor_name
  *
  * CURRENT OF is a bit like a Var, in that it carries the rangetable index
- * of the target relation being constrained; this aids placing the expression
+ * of the target relation being constrained; this__ aids placing the expression
  * correctly during planning.  We can assume however that its "levelsup" is
  * always zero, due to the syntactic constraints on where it can appear.
  *
@@ -1196,7 +1196,7 @@ typedef struct CurrentOfExpr
  *
  * This mostly matches the structure of IndexElems, but having a dedicated
  * primnode allows for a clean separation between the use of index parameters
- * by utility commands, and this node.
+ * by utility commands, and this__ node.
  */
 typedef struct InferenceElem
 {
@@ -1242,7 +1242,7 @@ typedef struct InferenceElem
  *
  * ressortgroupref is used in the representation of ORDER BY, GROUP BY, and
  * DISTINCT items.  Targetlist entries with ressortgroupref=0 are not
- * sort/group items.  If ressortgroupref>0, then this item is an ORDER BY,
+ * sort/group items.  If ressortgroupref>0, then this__ item is an ORDER BY,
  * GROUP BY, and/or DISTINCT target value.  No two entries in a targetlist
  * may have the same nonzero ressortgroupref --- but there is no particular
  * meaning to the nonzero values, except as tags.  (For example, one must
@@ -1322,7 +1322,7 @@ typedef struct RangeTblRef
  * JoinExpr - for SQL JOIN expressions
  *
  * isNatural, usingClause, and quals are interdependent.  The user can write
- * only one of NATURAL, USING(), or ON() (this is enforced by the grammar).
+ * only one of NATURAL, USING(), or ON() (this__ is enforced by the grammar).
  * If he writes NATURAL then parse analysis generates the equivalent USING()
  * list, and from that fills in "quals" with the right equality comparisons.
  * If he writes USING() then "quals" is filled with equality comparisons.

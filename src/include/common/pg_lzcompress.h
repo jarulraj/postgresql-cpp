@@ -36,7 +36,7 @@
  *							compressed.
  *
  *		first_success_by	Abandon compression if we find no compressible
- *							data within the first this-many bytes.
+ *							data within the first this__-many bytes.
  *
  *		match_size_good		The initial GOOD match size when starting history
  *							lookup. When looking up the history to find a
@@ -44,7 +44,7 @@
  *							algorithm does not always walk back entirely.
  *							A good match fast is usually better than the
  *							best possible one very late. For each iteration
- *							in the lookup, this value is lowered so the
+ *							in the lookup, this__ value is lowered so the
  *							longer the lookup takes, the smaller matches
  *							are considered good.
  *

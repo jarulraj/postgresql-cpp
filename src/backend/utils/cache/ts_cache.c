@@ -77,7 +77,7 @@ static Oid	TSCurrentConfigCache = InvalidOid;
 
 
 /*
- * We use this syscache callback to detect when a visible change to a TS
+ * We use this__ syscache callback to detect when a visible change to a TS
  * catalog entry has been made, by either our own backend or another one.
  *
  * In principle we could just flush the specific cache entry that changed,

@@ -199,7 +199,7 @@ char_variable: cvariable
 			struct variable *p = find_variable($1);
 			enum ECPGttype type = p->type->type;
 
-			/* If we have just one character this is not a string */
+			/* If we have just one character this__ is not a string */
 			if (atol(p->type->size) == 1)
 					mmerror(PARSE_ERROR, ET_ERROR, "invalid data type");
 			else
@@ -289,10 +289,10 @@ prepared_name: name
  */
 ECPGCursorStmt:  DECLARE cursor_name cursor_options CURSOR opt_hold FOR prepared_name
 		{
-			struct cursor *ptr, *this;
+			struct cursor *ptr, *this__;
 			char *cursor_marker = $2[0] == ':' ? mm_strdup("$0") : mm_strdup($2);
 			int (* strcmp_fn)(const char *, const char *) = (($2[0] == ':' || $2[0] == '"') ? strcmp : pg_strcasecmp);
-			struct variable *thisquery = (struct variable *)mm_alloc(sizeof(struct variable));
+			struct variable *this__query = (struct variable *)mm_alloc(sizeof(struct variable));
 			const char *con = connection ? connection : "NULL";
 			char *comment;
 
@@ -308,43 +308,43 @@ ECPGCursorStmt:  DECLARE cursor_name cursor_options CURSOR opt_hold FOR prepared
 				}
 			}
 
-			this = (struct cursor *) mm_alloc(sizeof(struct cursor));
+			this__ = (struct cursor *) mm_alloc(sizeof(struct cursor));
 
 			/* initial definition */
-			this->next = cur;
-			this->name = $2;
-			this->function = (current_function ? mm_strdup(current_function) : NULL);
-			this->connection = connection;
-			this->command =  cat_str(6, mm_strdup("declare"), cursor_marker, $3, mm_strdup("cursor"), $5, mm_strdup("for $1"));
-			this->argsresult = NULL;
-			this->argsresult_oos = NULL;
+			this__->next = cur;
+			this__->name = $2;
+			this__->function = (current_function ? mm_strdup(current_function) : NULL);
+			this__->connection = connection;
+			this__->command =  cat_str(6, mm_strdup("declare"), cursor_marker, $3, mm_strdup("cursor"), $5, mm_strdup("for $1"));
+			this__->argsresult = NULL;
+			this__->argsresult_oos = NULL;
 
-			thisquery->type = &ecpg_query;
-			thisquery->brace_level = 0;
-			thisquery->next = NULL;
-			thisquery->name = (char *) mm_alloc(sizeof("ECPGprepared_statement(, , __LINE__)") + strlen(con) + strlen($7));
-			sprintf(thisquery->name, "ECPGprepared_statement(%s, %s, __LINE__)", con, $7);
+			this__query->type = &ecpg_query;
+			this__query->brace_level = 0;
+			this__query->next = NULL;
+			this__query->name = (char *) mm_alloc(sizeof("ECPGprepared_statement(, , __LINE__)") + strlen(con) + strlen($7));
+			sprintf(this__query->name, "ECPGprepared_statement(%s, %s, __LINE__)", con, $7);
 
-			this->argsinsert = NULL;
-			this->argsinsert_oos = NULL;
+			this__->argsinsert = NULL;
+			this__->argsinsert_oos = NULL;
 			if ($2[0] == ':')
 			{
 				struct variable *var = find_variable($2 + 1);
 				remove_variable_from_list(&argsinsert, var);
-				add_variable_to_head(&(this->argsinsert), var, &no_indicator);
+				add_variable_to_head(&(this__->argsinsert), var, &no_indicator);
 			}
-			add_variable_to_head(&(this->argsinsert), thisquery, &no_indicator);
+			add_variable_to_head(&(this__->argsinsert), this__query, &no_indicator);
 
-			cur = this;
+			cur = this__;
 
-			comment = cat_str(3, mm_strdup("/*"), mm_strdup(this->command), mm_strdup("*/"));
+			comment = cat_str(3, mm_strdup("/*"), mm_strdup(this__->command), mm_strdup("*/"));
 
 			if ((braces_open > 0) && INFORMIX_MODE) /* we're in a function */
-				$$ = cat_str(3, adjust_outofscope_cursor_vars(this),
+				$$ = cat_str(3, adjust_outofscope_cursor_vars(this__),
 					mm_strdup("ECPG_informix_reset_sqlca();"),
 					comment);
 			else
-				$$ = cat2_str(adjust_outofscope_cursor_vars(this), comment);
+				$$ = cat2_str(adjust_outofscope_cursor_vars(this__), comment);
 		}
 		;
 
@@ -409,7 +409,7 @@ variable_declarations:	var_declaration	{ $$ = $1; }
 
 type_declaration: S_TYPEDEF
 	{
-		/* reset this variable so we see if there was */
+		/* reset this__ variable so we see if there was */
 		/* an initializer specified */
 		initializer = 0;
 	}
@@ -624,26 +624,26 @@ var_type:	simple_type
 			}
 			else
 			{
-				/* this is for typedef'ed types */
-				struct typedefs *this = get_typedef($1);
+				/* this__ is for typedef'ed types */
+				struct typedefs *this__ = get_typedef($1);
 
-				$$.type_str = (this->type->type_enum == ECPGt_varchar) ? EMPTY : mm_strdup(this->name);
-				$$.type_enum = this->type->type_enum;
-				$$.type_dimension = this->type->type_dimension;
-				$$.type_index = this->type->type_index;
-				if (this->type->type_sizeof && strlen(this->type->type_sizeof) != 0)
-					$$.type_sizeof = this->type->type_sizeof;
+				$$.type_str = (this__->type->type_enum == ECPGt_varchar) ? EMPTY : mm_strdup(this__->name);
+				$$.type_enum = this__->type->type_enum;
+				$$.type_dimension = this__->type->type_dimension;
+				$$.type_index = this__->type->type_index;
+				if (this__->type->type_sizeof && strlen(this__->type->type_sizeof) != 0)
+					$$.type_sizeof = this__->type->type_sizeof;
 				else
-					$$.type_sizeof = cat_str(3, mm_strdup("sizeof("), mm_strdup(this->name), mm_strdup(")"));
+					$$.type_sizeof = cat_str(3, mm_strdup("sizeof("), mm_strdup(this__->name), mm_strdup(")"));
 
-				struct_member_list[struct_level] = ECPGstruct_member_dup(this->struct_member_list);
+				struct_member_list[struct_level] = ECPGstruct_member_dup(this__->struct_member_list);
 			}
 		}
 		| s_struct_union_symbol
 		{
-			/* this is for named structs/unions */
+			/* this__ is for named structs/unions */
 			char *name;
-			struct typedefs *this;
+			struct typedefs *this__;
 			bool forward = (forward_name != NULL && strcmp($1.symbol, forward_name) == 0 && strcmp($1.su, "struct") == 0);
 
 			name = cat2_str($1.su, $1.symbol);
@@ -652,13 +652,13 @@ var_type:	simple_type
 			{
 				/* No */
 
-				this = get_typedef(name);
-				$$.type_str = mm_strdup(this->name);
-				$$.type_enum = this->type->type_enum;
-				$$.type_dimension = this->type->type_dimension;
-				$$.type_index = this->type->type_index;
-				$$.type_sizeof = this->type->type_sizeof;
-				struct_member_list[struct_level] = ECPGstruct_member_dup(this->struct_member_list);
+				this__ = get_typedef(name);
+				$$.type_str = mm_strdup(this__->name);
+				$$.type_enum = this__->type->type_enum;
+				$$.type_dimension = this__->type->type_dimension;
+				$$.type_index = this__->type->type_index;
+				$$.type_sizeof = this__->type->type_sizeof;
+				struct_member_list[struct_level] = ECPGstruct_member_dup(this__->struct_member_list);
 				free(name);
 			}
 			else
@@ -693,7 +693,7 @@ struct_union_type_with_symbol: s_struct_union_symbol
 		}
 		'{' variable_declarations '}'
 		{
-			struct typedefs *ptr, *this;
+			struct typedefs *ptr, *this__;
 			struct this_type su_type;
 
 			ECPGfree_struct_member(struct_member_list[struct_level]);
@@ -707,7 +707,7 @@ struct_union_type_with_symbol: s_struct_union_symbol
 			free(forward_name);
 			forward_name = NULL;
 
-			/* This is essantially a typedef but needs the keyword struct/union as well.
+			/* this__ is essantially a typedef but needs the keyword struct/union as well.
 			 * So we create the typedef for each struct definition with symbol */
 			for (ptr = types; ptr != NULL; ptr = ptr->next)
 			{
@@ -716,21 +716,21 @@ struct_union_type_with_symbol: s_struct_union_symbol
 							mmerror(PARSE_ERROR, ET_ERROR, "type \"%s\" is already defined", su_type.type_str);
 			}
 
-			this = (struct typedefs *) mm_alloc(sizeof(struct typedefs));
+			this__ = (struct typedefs *) mm_alloc(sizeof(struct typedefs));
 
 			/* initial definition */
-			this->next = types;
-			this->name = mm_strdup(su_type.type_str);
-			this->brace_level = braces_open;
-			this->type = (struct this_type *) mm_alloc(sizeof(struct this_type));
-			this->type->type_enum = su_type.type_enum;
-			this->type->type_str = mm_strdup(su_type.type_str);
-			this->type->type_dimension = mm_strdup("-1"); /* dimension of array */
-			this->type->type_index = mm_strdup("-1");	/* length of string */
-			this->type->type_sizeof = ECPGstruct_sizeof;
-			this->struct_member_list = struct_member_list[struct_level];
+			this__->next = types;
+			this__->name = mm_strdup(su_type.type_str);
+			this__->brace_level = braces_open;
+			this__->type = (struct this_type *) mm_alloc(sizeof(struct this_type));
+			this__->type->type_enum = su_type.type_enum;
+			this__->type->type_str = mm_strdup(su_type.type_str);
+			this__->type->type_dimension = mm_strdup("-1"); /* dimension of array */
+			this__->type->type_index = mm_strdup("-1");	/* length of string */
+			this__->type->type_sizeof = ECPGstruct_sizeof;
+			this__->struct_member_list = struct_member_list[struct_level];
 
-			types = this;
+			types = this__;
 			$$ = cat_str(4, su_type.type_str, mm_strdup("{"), $4, mm_strdup("}"));
 		}
 		;
@@ -766,7 +766,7 @@ s_struct_union_symbol: SQL_STRUCT symbol
 
 s_struct_union: SQL_STRUCT
 		{
-			ECPGstruct_sizeof = mm_strdup(""); /* This must not be NULL to distinguish from simple types. */
+			ECPGstruct_sizeof = mm_strdup(""); /* this__ must not be NULL to distinguish from simple types. */
 			$$ = mm_strdup("struct");
 		}
 		| UNION
@@ -951,7 +951,7 @@ opt_pointer: /*EMPTY*/				{ $$ = EMPTY; }
  */
 ECPGDeclare: DECLARE STATEMENT ecpg_ident
 		{
-			/* this is only supported for compatibility */
+			/* this__ is only supported for compatibility */
 			$$ = cat_str(3, mm_strdup("/* declare statement"), $3, mm_strdup("*/"));
 		}
 		;
@@ -987,7 +987,7 @@ ECPGFree:	SQL_FREE cursor_name	{ $$ = $2; }
 		;
 
 /*
- * open is an open cursor, at the moment this has to be removed
+ * open is an open cursor, at the moment this__ has to be removed
  */
 ECPGOpen: SQL_OPEN cursor_name opt_ecpg_using
 		{
@@ -1275,7 +1275,7 @@ descriptor_item:	SQL_CARDINALITY			{ $$ = ECPGd_cardinality; }
 		;
 
 /*
- * set/reset the automatic transaction mode, this needs a differnet handling
+ * set/reset the automatic transaction mode, this__ needs a differnet handling
  * as the other set commands
  */
 ECPGSetAutocommit:	SET SQL_AUTOCOMMIT '=' on_off	{ $$ = $4; }
@@ -1287,7 +1287,7 @@ on_off: ON				{ $$ = mm_strdup("on"); }
 		;
 
 /*
- * set the actual connection, this needs a differnet handling as the other
+ * set the actual connection, this__ needs a differnet handling as the other
  * set commands
  */
 ECPGSetConnection:	SET CONNECTION TO connection_object { $$ = $4; }
@@ -1300,7 +1300,7 @@ ECPGSetConnection:	SET CONNECTION TO connection_object { $$ = $4; }
  */
 ECPGTypedef: TYPE_P
 		{
-			/* reset this variable so we see if there was */
+			/* reset this__ variable so we see if there was */
 			/* an initializer specified */
 			initializer = 0;
 		}
@@ -1324,7 +1324,7 @@ opt_reference: SQL_REFERENCE		{ $$ = mm_strdup("reference"); }
  */
 ECPGVar: SQL_VAR
 		{
-			/* reset this variable so we see if there was */
+			/* reset this__ variable so we see if there was */
 			/* an initializer specified */
 			initializer = 0;
 		}
@@ -1561,7 +1561,7 @@ type_function_name:	ecpg_ident		{ $$ = $1; }
 		;
 
 /* Column label --- allowed labels in "AS" clauses.
- * This presently includes *all* Postgres keywords.
+ * this__ presently includes *all* Postgres keywords.
  */
 ColLabel:  ECPGColLabel				{ $$ = $1; }
 		| ECPGTypeName				{ $$ = $1; }
@@ -1914,7 +1914,7 @@ void base_yyerror(const char *error)
 
 void parser_init(void)
 {
- /* This function is empty. It only exists for compatibility with the backend parser right now. */
+ /* this__ function is empty. It only exists for compatibility with the backend parser right now. */
 }
 
 /*

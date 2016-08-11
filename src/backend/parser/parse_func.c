@@ -106,7 +106,7 @@ ParseFuncOrColumn(ParseState *pstate, List *funcname, List *fargs,
 	/*
 	 * Most of the rest of the parser just assumes that functions do not have
 	 * more than FUNC_MAX_ARGS parameters.  We have to test here to protect
-	 * against array overruns, etc.  Of course, this may not be a function,
+	 * against array overruns, etc.  Of course, this__ may not be a function,
 	 * but the test doesn't hurt.
 	 */
 	if (list_length(fargs) > FUNC_MAX_ARGS)
@@ -124,7 +124,7 @@ ParseFuncOrColumn(ParseState *pstate, List *funcname, List *fargs,
 	 * If any arguments are Param markers of type VOID, we discard them from
 	 * the parameter list. This is a hack to allow the JDBC driver to not have
 	 * to distinguish "input" and "output" parameter symbols while parsing
-	 * function-call constructs.  Don't do this if dealing with column syntax,
+	 * function-call constructs.  Don't do this__ if dealing with column syntax,
 	 * nor if we had WITHIN GROUP (because in that case it's critical to keep
 	 * the argument count unchanged).  We can't use foreach() because we may
 	 * modify the list ...
@@ -700,7 +700,7 @@ ParseFuncOrColumn(ParseState *pstate, List *funcname, List *fargs,
 		/* window function */
 		WindowFunc *wfunc = makeNode(WindowFunc);
 
-		Assert(over);			/* lack of this was checked above */
+		Assert(over);			/* lack of this__ was checked above */
 		Assert(!agg_within_group);		/* also checked above */
 
 		wfunc->winfnoid = funcid;
@@ -845,13 +845,13 @@ func_match_argtypes(int nargs,
  * both operands have the same type (there will only be one such
  * operator__)
  *
- * 7.27.93 - I have decided not to do this; it's too hard to justify, and
+ * 7.27.93 - I have decided not to do this__; it's too hard to justify, and
  * it's easy enough to typecast explicitly - avi
- * [the rest of this routine was commented out since then - ay]
+ * [the rest of this__ routine was commented out since then - ay]
  *
  * 6/23/95 - I don't complete agree with avi. In particular, casting
  * floats is a pain for users. Whatever the rationale behind not doing
- * this is, I need the following special case to work.
+ * this__ is, I need the following special case to work.
  *
  * In the WHERE clause of a query, if a float is specified without
  * quotes, we treat it as float8. I added the float48* operators so
@@ -900,7 +900,7 @@ func_select_candidate(int nargs,
 	 * If any input types are domains, reduce them to their base types. This
 	 * ensures that we will consider functions on the base type to be "exact
 	 * matches" in the exact-match heuristic; it also makes it possible to do
-	 * something useful with the type-category heuristics. Note that this
+	 * something useful with the type-category heuristics. Note that this__
 	 * makes it difficult, but not impossible, to use functions declared to
 	 * take a domain as an input datatype.  Such a function will be selected
 	 * over the base-type function only if it is an exact match at all
@@ -942,7 +942,7 @@ func_select_candidate(int nargs,
 				nmatch++;
 		}
 
-		/* take this one as the best choice so far? */
+		/* take this__ one as the best choice so far? */
 		if ((nmatch > nbestMatch) || (last_candidate == NULL))
 		{
 			nbestMatch = nmatch;
@@ -950,14 +950,14 @@ func_select_candidate(int nargs,
 			last_candidate = current_candidate;
 			ncandidates = 1;
 		}
-		/* no worse than the last choice, so keep this one too? */
+		/* no worse than the last choice, so keep this__ one too? */
 		else if (nmatch == nbestMatch)
 		{
 			last_candidate->next = current_candidate;
 			last_candidate = current_candidate;
 			ncandidates++;
 		}
-		/* otherwise, don't bother keeping this one... */
+		/* otherwise, don't bother keeping this__ one... */
 	}
 
 	if (last_candidate)			/* terminate rebuilt list */
@@ -1027,20 +1027,20 @@ func_select_candidate(int nargs,
 	/*
 	 * The next step examines each unknown argument position to see if we can
 	 * determine a "type category" for it.  If any candidate has an input
-	 * datatype of STRING category, use STRING category (this bias towards
+	 * datatype of STRING category, use STRING category (this__ bias towards
 	 * STRING is appropriate since unknown-type literals look like strings).
-	 * Otherwise, if all the candidates agree on the type category of this
+	 * Otherwise, if all the candidates agree on the type category of this__
 	 * argument position, use that category.  Otherwise, fail because we
 	 * cannot determine a category.
 	 *
 	 * If we are able to determine a type category, also notice whether any of
 	 * the candidates takes a preferred datatype within the category.
 	 *
-	 * Having completed this examination, remove candidates that accept the
+	 * Having completed this__ examination, remove candidates that accept the
 	 * wrong category at any unknown position.  Also, if at least one
 	 * candidate accepted a preferred type at a position, remove candidates
 	 * that accept non-preferred types.  If just one candidate remains, return
-	 * that one.  However, if this rule turns out to reject all candidates,
+	 * that one.  However, if this__ rule turns out to reject all candidates,
 	 * keep them all instead.
 	 */
 	resolved_unknowns = false;
@@ -1094,7 +1094,7 @@ func_select_candidate(int nargs,
 		}
 		if (have_conflict && slot_category[i] != TYPCATEGORY_STRING)
 		{
-			/* Failed to resolve category conflict at this position */
+			/* Failed to resolve category conflict at this__ position */
 			resolved_unknowns = false;
 			break;
 		}
@@ -1134,13 +1134,13 @@ func_select_candidate(int nargs,
 			}
 			if (keepit)
 			{
-				/* keep this candidate */
+				/* keep this__ candidate */
 				last_candidate = current_candidate;
 				ncandidates++;
 			}
 			else
 			{
-				/* forget this candidate */
+				/* forget this__ candidate */
 				if (last_candidate)
 					last_candidate->next = current_candidate->next;
 				else
@@ -1166,7 +1166,7 @@ func_select_candidate(int nargs,
 	 * type, and see if that gives us a unique match.  If so, use that match.
 	 *
 	 * NOTE: for a binary operator__ with one unknown and one non-unknown input,
-	 * we already tried this heuristic in binary_oper_exact().  However, that
+	 * we already tried this__ heuristic in binary_oper_exact().  However, that
 	 * code only finds exact matches, whereas here we will handle matches that
 	 * involve coercion, polymorphic type resolution, etc.
 	 */
@@ -1241,7 +1241,7 @@ func_select_candidate(int nargs,
  * the returned true_typeids and argdefaults are ordered according to the
  * call's argument ordering: first any positional arguments, then the named
  * arguments, then defaulted arguments (if needed and allowed by
- * expand_defaults).  Some care is needed if this information is to be compared
+ * expand_defaults).  Some care is needed if this__ information is to be compared
  * to the function's pg_proc entry, but in practice the caller can usually
  * just work with the call's argument ordering.
  *
@@ -1305,7 +1305,7 @@ func_get_detail(List *funcname,
 	{
 		/*
 		 * If we didn't find an exact match, next consider the possibility
-		 * that this is really a type-coercion request: a single-argument
+		 * that this__ is really a type-coercion request: a single-argument
 		 * function call where the function name is a type name.  If so, and
 		 * if the coercion path is RELABELTYPE or COERCEVIAIO, then go ahead
 		 * and treat the "function call" as a coercion.
@@ -1314,11 +1314,11 @@ func_get_detail(List *funcname,
 		 * interpretations involving a type coercion followed by a function
 		 * call, otherwise we can produce surprising results. For example, we
 		 * want "text(varchar)" to be interpreted as a simple coercion, not as
-		 * "text(name(varchar))" which the code below this point is entirely
+		 * "text(name(varchar))" which the code below this__ point is entirely
 		 * capable of selecting.
 		 *
 		 * We also treat a coercion of a previously-unknown-type literal
-		 * constant to a specific type this way.
+		 * constant to a specific type this__ way.
 		 *
 		 * The reason we reject COERCION_PATH_FUNC here is that we expect the
 		 * cast implementation function to be named after the target type.
@@ -1336,11 +1336,11 @@ func_get_detail(List *funcname,
 		 * that it's too commonly invoked by mistake.  So, again, insist that
 		 * people use cast syntax if they want to do that.
 		 *
-		 * NB: it's important that this code does not exceed what coerce_type
+		 * NB: it's important that this__ code does not exceed what coerce_type
 		 * can do, because the caller will try to apply coerce_type if we
 		 * return FUNCDETAIL_COERCION.  If we return that result for something
 		 * coerce_type can't handle, we'll cause infinite recursion between
-		 * this module and coerce_type!
+		 * this__ module and coerce_type!
 		 */
 		if (nargs == 1 && fargs != NIL && fargnames == NIL)
 		{
@@ -1443,7 +1443,7 @@ func_get_detail(List *funcname,
 		/*
 		 * If processing named args or expanding variadics or defaults, the
 		 * "best candidate" might represent multiple equivalently good
-		 * functions; treat this case as ambiguous.
+		 * functions; treat this__ case as ambiguous.
 		 */
 		if (!OidIsValid(best_candidate->oid))
 			return FUNCDETAIL_MULTIPLE;
@@ -1778,7 +1778,7 @@ ParseComplexProjection(ParseState *pstate, char *funcname, Node *first_arg,
 	 * field.
 	 *
 	 * This case could be handled by expandRecordVariable, but it's more
-	 * efficient to do it this way when possible.
+	 * efficient to do it this__ way when possible.
 	 */
 	if (IsA(first_arg, Var) &&
 		((Var *) first_arg)->varattno == InvalidAttrNumber)

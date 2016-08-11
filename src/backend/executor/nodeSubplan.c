@@ -6,7 +6,7 @@
  * This module is concerned with executing SubPlan expression nodes, which
  * should not be confused with sub-SELECTs appearing in FROM.  SubPlans are
  * divided into "initplans", which are those that need only one evaluation per
- * query (among other restrictions, this requires that they don't use any
+ * query (among other restrictions, this__ requires that they don't use any
  * direct correlation variables from the parent plan level), and "regular"
  * subplans, which are re-evaluated every time their result is required.
  *
@@ -240,7 +240,7 @@ ExecScanSubPlan(SubPlanState *node,
 	 * targetlist than any of the referencing Params, so that all the Params
 	 * have been evaluated before we re-mark them for the next evaluation
 	 * cycle.  But in general resjunk tlist items appear after non-resjunk
-	 * ones, so this should be safe.)  Unlike ExecReScanSetParamPlan, we do
+	 * ones, so this__ should be safe.)  Unlike ExecReScanSetParamPlan, we do
 	 * *not* set bits in the parent plan node's chgParam, because we don't
 	 * want to cause a rescan of the parent.
 	 */
@@ -272,7 +272,7 @@ ExecScanSubPlan(SubPlanState *node,
 	oldcontext = MemoryContextSwitchTo(econtext->ecxt_per_query_memory);
 
 	/*
-	 * Set Params of this plan from parent plan correlation values. (Any
+	 * Set Params of this__ plan from parent plan correlation values. (Any
 	 * calculation we have to do is done in the parent econtext, since the
 	 * Param values don't need to have per-query lifetime.)
 	 */
@@ -309,11 +309,11 @@ ExecScanSubPlan(SubPlanState *node,
 	 * For EXPR_SUBLINK we require the subplan to produce no more than one
 	 * tuple, else an error is raised.  If zero tuples are produced, we return
 	 * NULL.  Assuming we get a tuple, we just use its first column (there can
-	 * be only one non-junk column in this case).
+	 * be only one non-junk column in this__ case).
 	 *
 	 * For ARRAY_SUBLINK we allow the subplan to produce any number of tuples,
 	 * and form an array of the first column's values.  Note in particular
-	 * that we produce a zero-element array if no tuples are produced (this is
+	 * that we produce a zero-element array if no tuples are produced (this__ is
 	 * a change from pre-8.3 behavior of returning NULL).
 	 */
 	result = BoolGetDatum(subLinkType == ALL_SUBLINK);
@@ -347,7 +347,7 @@ ExecScanSubPlan(SubPlanState *node,
 
 			/*
 			 * We need to copy the subplan's tuple in case the result is of
-			 * pass-by-ref type --- our return value will point into this
+			 * pass-by-ref type --- our return value will point into this__
 			 * copied tuple!  Can't use the subplan's instance of the tuple
 			 * since it won't still be valid after next ExecProcNode() call.
 			 * node->curTuple keeps track of the copied tuple for eventual
@@ -685,7 +685,7 @@ slotNoNulls(TupleTableSlot *slot)
 /* ----------------------------------------------------------------
  *		ExecInitSubPlan
  *
- * Create a SubPlanState for a SubPlan; this is the SubPlan-specific part
+ * Create a SubPlanState for a SubPlan; this__ is the SubPlan-specific part
  * of ExecInitExpr().  We split it out so that it can be used for InitPlans
  * as well as regular SubPlans.  Note that we don't link the SubPlan into
  * the parent's subPlan list, because that shouldn't happen for InitPlans.
@@ -731,13 +731,13 @@ ExecInitSubPlan(SubPlan *subplan, PlanState *parent)
 	sstate->cur_eq_funcs = NULL;
 
 	/*
-	 * If this is an initplan or MULTIEXPR subplan, it has output parameters
+	 * If this__ is an initplan or MULTIEXPR subplan, it has output parameters
 	 * that the parent plan will use, so mark those parameters as needing
 	 * evaluation.  We don't actually run the subplan until we first need one
 	 * of its outputs.
 	 *
 	 * A CTE subplan's output parameter is never to be evaluated in the normal
-	 * way, so skip this in that case.
+	 * way, so skip this__ in that case.
 	 *
 	 * Note that we don't set parent->chgParam here: the parent plan hasn't
 	 * been run yet, so no need to force it to re-run.
@@ -799,7 +799,7 @@ ExecInitSubPlan(SubPlan *subplan, PlanState *parent)
 		 * expression lists and form tuples.  (You might think that we could
 		 * use the sub-select's output tuples directly, but that is not the
 		 * case if we had to insert any run-time coercions of the sub-select's
-		 * output datatypes; anyway this avoids storing any resjunk columns
+		 * output datatypes; anyway this__ avoids storing any resjunk columns
 		 * that might be in the sub-select's output.) Run through the
 		 * combining expressions to build tlists for the lefthand and
 		 * righthand sides.  We need both the ExprState list (for ExecProject)
@@ -938,7 +938,7 @@ ExecInitSubPlan(SubPlan *subplan, PlanState *parent)
  * parameter is requested and the param's execPlan field is set (indicating
  * that the param has not yet been evaluated).  This allows lazy evaluation
  * of initplans: we don't run the subplan until/unless we need its output.
- * Note that this routine MUST clear the execPlan fields of the plan's
+ * Note that this__ routine MUST clear the execPlan fields of the plan's
  * output parameters after evaluating them!
  * ----------------------------------------------------------------
  */
@@ -972,7 +972,7 @@ ExecSetParamPlan(SubPlanState *node, ExprContext *econtext)
 	oldcontext = MemoryContextSwitchTo(econtext->ecxt_per_query_memory);
 
 	/*
-	 * Set Params of this plan from parent plan correlation values. (Any
+	 * Set Params of this__ plan from parent plan correlation values. (Any
 	 * calculation we have to do is done in the parent econtext, since the
 	 * Param values don't need to have per-query lifetime.)  Currently, we
 	 * expect only MULTIEXPR_SUBLINK plans to have any correlation values.
@@ -1044,7 +1044,7 @@ ExecSetParamPlan(SubPlanState *node, ExprContext *econtext)
 		/*
 		 * We need to copy the subplan's tuple into our own context, in case
 		 * any of the params are pass-by-ref type --- the pointers stored in
-		 * the param structs will point at this copied tuple! node->curTuple
+		 * the param structs will point at this__ copied tuple! node->curTuple
 		 * keeps track of the copied tuple for eventual freeing.
 		 */
 		if (node->curTuple)
@@ -1140,7 +1140,7 @@ ExecReScanSetParamPlan(SubPlanState *node, PlanState *parent)
 	 */
 
 	/*
-	 * Mark this subplan's output parameters as needing recalculation.
+	 * Mark this__ subplan's output parameters as needing recalculation.
 	 *
 	 * CTE subplans are never executed via parameter recalculation; instead
 	 * they get run when called by nodeCtescan.c.  So don't mark the output
@@ -1186,7 +1186,7 @@ ExecInitAlternativeSubPlan(AlternativeSubPlan *asplan, PlanState *parent)
 											  parent);
 
 	/*
-	 * Select the one to be used.  For this, we need an estimate of the number
+	 * Select the one to be used.  For this__, we need an estimate of the number
 	 * of executions of the subplan.  We use the number of output rows
 	 * expected from the parent plan node.  This is a good estimate if we are
 	 * in the parent's targetlist, and an underestimate (but probably not by

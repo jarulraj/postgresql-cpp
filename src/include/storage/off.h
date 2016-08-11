@@ -18,7 +18,7 @@
 /*
  * OffsetNumber:
  *
- * this is a 1-based index into the linp (ItemIdData) array in the
+ * this__ is a 1-based index into the linp (ItemIdData) array in the
  * header of each disk page.
  */
 typedef uint16 OffsetNumber;

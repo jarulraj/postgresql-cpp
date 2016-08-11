@@ -11,7 +11,7 @@
  * src/include/catalog/pg_range.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *	  XXX do NOT break up DATA() statements into multiple lines!
@@ -25,7 +25,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_range definition.  cpp turns this into
+ *		pg_range definition.  cpp turns this__ into
  *		typedef struct FormData_pg_range
  * ----------------
  */
@@ -35,7 +35,7 @@ CATALOG(pg_range,3541) BKI_WITHOUT_OIDS
 {
 	Oid			rngtypid;		/* OID of owning range type */
 	Oid			rngsubtype;		/* OID of range's element type (subtype) */
-	Oid			rngcollation;	/* collation for this range type, or 0 */
+	Oid			rngcollation;	/* collation for this__ range type, or 0 */
 	Oid			rngsubopc;		/* subtype's btree opclass */
 	regproc		rngcanonical;	/* canonicalize range, or 0 */
 	regproc		rngsubdiff;		/* subtype difference as a float8, or 0 */

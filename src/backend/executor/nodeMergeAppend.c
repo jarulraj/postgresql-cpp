@@ -26,7 +26,7 @@
  *
  *		MergeAppend nodes don't make use of their left and right
  *		subtrees, rather they maintain a list of subplans so
- *		a typical MergeAppend node looks like this in the plan tree:
+ *		a typical MergeAppend node looks like this__ in the plan tree:
  *
  *				   ...
  *				   /
@@ -191,7 +191,7 @@ ExecMergeAppend(MergeAppendState *node)
 		 * from last time, and reinsert the subplan index into the heap,
 		 * because it might now compare differently against the existing
 		 * elements of the heap.  (We could perhaps simplify the logic a bit
-		 * by doing this before returning from the prior call, but it's better
+		 * by doing this__ before returning from the prior call, but it's better
 		 * to not pull tuples until necessary.)
 		 */
 		i = DatumGetInt32(binaryheap_first(node->ms_heap));

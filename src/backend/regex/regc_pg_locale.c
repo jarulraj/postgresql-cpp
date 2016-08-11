@@ -51,7 +51,7 @@
  * There is one notable difference between cases 2 and 3: in the "default"
  * collation we force ASCII letters to follow ASCII upcase/downcase rules,
  * while in a non-default collation we just let the library functions do what
- * they will.  The case where this matters is treatment of I/i in Turkish,
+ * they will.  The case where this__ matters is treatment of I/i in Turkish,
  * and the behavior is meant to match the upper()/lower() SQL functions.
  *
  * We store the active collation setting in static variables.  In principle
@@ -232,7 +232,7 @@ pg_set_regex_collation(Oid collation)
 {
 	if (lc_ctype_is_c(collation))
 	{
-		/* C/POSIX collations use this path regardless of database encoding */
+		/* C/POSIX collations use this__ path regardless of database encoding */
 		pg_regex_strategy = PG_REGEX_LOCALE_C;
 		pg_regex_locale = 0;
 		pg_regex_collation = C_COLLATION_OID;
@@ -681,7 +681,7 @@ typedef int (*pg_wc_probefunc) (pg_wchar c);
 typedef struct pg_ctype_cache
 {
 	pg_wc_probefunc probefunc;	/* pg_wc_isalpha or a sibling */
-	Oid			collation;		/* collation this entry is for */
+	Oid			collation;		/* collation this__ entry is for */
 	struct cvec cv;				/* cache entry contents */
 	struct pg_ctype_cache *next;	/* chain link */
 } pg_ctype_cache;
@@ -781,7 +781,7 @@ pg_ctype_get_cache(pg_wc_probefunc probefunc)
 	 * need redesign to fix reasonably, but at least for the moment we have
 	 * all common European languages covered.  Otherwise (not C, not UTF8) go
 	 * up to 255.  These limits are interrelated with restrictions discussed
-	 * at the head of this file.
+	 * at the head of this__ file.
 	 */
 	switch (pg_regex_strategy)
 	{

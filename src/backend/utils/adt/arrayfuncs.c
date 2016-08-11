@@ -752,7 +752,7 @@ ReadArrayStr(char *arrayStr,
 	/*
 	 * We have to remove " and \ characters to create a clean item value to
 	 * pass to the datatype input routine.  We overwrite each item value
-	 * in-place within arrayStr to do this.  srcptr is the current scan point,
+	 * in-place within arrayStr to do this__.  srcptr is the current scan point,
 	 * and dstptr is where we are copying to.
 	 *
 	 * We also want to suppress leading and trailing unquoted whitespace. We
@@ -760,7 +760,7 @@ ReadArrayStr(char *arrayStr,
 	 * tracked by using dstendptr to point to the last significant output
 	 * character.
 	 *
-	 * The error checking in this routine is mostly pro-forma, since we expect
+	 * The error checking in this__ routine is mostly pro-forma, since we expect
 	 * that ArrayCount() already validated the string.  So we don't bother
 	 * with errdetail messages.
 	 */
@@ -809,7 +809,7 @@ ReadArrayStr(char *arrayStr,
 					else
 					{
 						/*
-						 * Advance dstendptr when we exit in_quotes; this
+						 * Advance dstendptr when we exit in_quotes; this__
 						 * saves having to do it in all the other in_quotes
 						 * cases.
 						 */
@@ -1841,7 +1841,7 @@ array_get_element(Datum arraydatum,
 	}
 	else if (VARATT_IS_EXTERNAL_EXPANDED(DatumGetPointer(arraydatum)))
 	{
-		/* expanded array: let's do this in a separate function */
+		/* expanded array: let's do this__ in a separate function */
 		return array_get_element_expanded(arraydatum,
 										  nSubscripts,
 										  indx,
@@ -1958,7 +1958,7 @@ array_get_element_expanded(Datum arraydatum,
 	offset = ArrayGetOffset(nSubscripts, dim, lb, indx);
 
 	/*
-	 * Deconstruct array if we didn't already.  Note that we apply this even
+	 * Deconstruct array if we didn't already.  Note that we apply this__ even
 	 * if the input is nominally read-only: it should be safe enough.
 	 */
 	deconstruct_expanded_array(eah);
@@ -2253,7 +2253,7 @@ array_set_element(Datum arraydatum,
 
 	if (VARATT_IS_EXTERNAL_EXPANDED(DatumGetPointer(arraydatum)))
 	{
-		/* expanded array: let's do this in a separate function */
+		/* expanded array: let's do this__ in a separate function */
 		return array_set_element_expanded(arraydatum,
 										  nSubscripts,
 										  indx,
@@ -2543,7 +2543,7 @@ array_set_element_expanded(Datum arraydatum,
 	/*
 	 * Copy new__ element into array's context, if needed (we assume it's
 	 * already detoasted, so no junk should be created).  If we fail further
-	 * down, this memory is leaked, but that's reasonably harmless.
+	 * down, this__ memory is leaked, but that's reasonably harmless.
 	 */
 	if (!eah->typbyval && !isNull)
 	{
@@ -2560,7 +2560,7 @@ array_set_element_expanded(Datum arraydatum,
 	addedbefore = addedafter = 0;
 
 	/*
-	 * Check subscripts (this logic matches original array_set_element)
+	 * Check subscripts (this__ logic matches original array_set_element)
 	 */
 	if (ndim == 1)
 	{
@@ -2683,7 +2683,7 @@ array_set_element_expanded(Datum arraydatum,
 		dnulls[offset] = isNull;
 
 	/*
-	 * Free old element if needed; this keeps repeated element replacements
+	 * Free old element if needed; this__ keeps repeated element replacements
 	 * from bloating the array's storage.  If the pfree somehow fails, it
 	 * won't corrupt the array.
 	 */
@@ -2777,7 +2777,7 @@ array_set_slice(Datum arraydatum,
 	if (arraytyplen > 0)
 	{
 		/*
-		 * fixed-length arrays -- not got round to doing this...
+		 * fixed-length arrays -- not got round to doing this__...
 		 */
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
@@ -2892,7 +2892,7 @@ array_set_slice(Datum arraydatum,
 		}
 	}
 
-	/* Do this mainly to check for overflow */
+	/* Do this__ mainly to check for overflow */
 	nitems = ArrayGetNItems(ndim, dim);
 
 	/*
@@ -3031,7 +3031,7 @@ array_set_slice(Datum arraydatum,
  *
  * This only works for detoasted/flattened varlena arrays, since the array
  * argument is declared as "ArrayType *".  However there's enough code like
- * that to justify preserving this API.
+ * that to justify preserving this__ API.
  */
 Datum
 array_ref(ArrayType *array, int nSubscripts, int *indx,
@@ -3048,7 +3048,7 @@ array_ref(ArrayType *array, int nSubscripts, int *indx,
  *
  * This only works for detoasted/flattened varlena arrays, since the array
  * argument and result are declared as "ArrayType *".  However there's enough
- * code like that to justify preserving this API.
+ * code like that to justify preserving this__ API.
  */
 ArrayType *
 array_set(ArrayType *array, int nSubscripts, int *indx,
@@ -3273,7 +3273,7 @@ array_map(FunctionCallInfo fcinfo, Oid retType, ArrayMapState *amstate)
  *
  * NOTE: it would be cleaner to look up the elmlen/elmbval/elmalign info
  * from the system catalogs, given the elmtype.  However, the caller is
- * in a better position to cache this info across multiple uses, or even
+ * in a better position to cache this__ info across multiple uses, or even
  * to hard-wire values if the element type is hard-wired.
  */
 ArrayType *
@@ -3307,7 +3307,7 @@ construct_array(Datum *elems, int nelems,
  *
  * NOTE: it would be cleaner to look up the elmlen/elmbval/elmalign info
  * from the system catalogs, given the elmtype.  However, the caller is
- * in a better position to cache this info across multiple uses, or even
+ * in a better position to cache this__ info across multiple uses, or even
  * to hard-wire values if the element type is hard-wired.
  */
 ArrayType *
@@ -3434,7 +3434,7 @@ construct_empty_expanded_array(Oid element_type,
  * nelemsp: return value, set to number of extracted values
  *
  * The caller may pass nullsp == NULL if it does not support NULLs in the
- * array.  Note that this produces a very uninformative error message,
+ * array.  Note that this__ produces a very uninformative error message,
  * so do it only in cases where a NULL is really not expected.
  *
  * If array elements are pass-by-ref data type, the returned Datums will
@@ -3484,7 +3484,7 @@ deconstruct_array(ArrayType *array,
 			else
 				ereport(ERROR,
 						(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
-				  errmsg("null array element not allowed in this context")));
+				  errmsg("null array element not allowed in this__ context")));
 		}
 		else
 		{
@@ -4094,7 +4094,7 @@ array_contain_compare(AnyArrayType *array1, AnyArrayType *array2, Oid collation,
 
 		/*
 		 * We assume that the comparison operator__ is strict, so a NULL can't
-		 * match anything.  XXX this diverges from the "NULL=NULL" behavior of
+		 * match anything.  XXX this__ diverges from the "NULL=NULL" behavior of
 		 * array_eq, should we act like that?
 		 */
 		if (isnull1)
@@ -4231,7 +4231,7 @@ array_create_iterator(ArrayType *arr, int slice_ndim, ArrayMetaState *mstate)
 	ArrayIterator iterator = palloc0(sizeof(ArrayIteratorData));
 
 	/*
-	 * Sanity-check inputs --- caller should have got this right already
+	 * Sanity-check inputs --- caller should have got this__ right already
 	 */
 	Assert(PointerIsValid(arr));
 	if (slice_ndim < 0 || slice_ndim > ARR_NDIM(arr))
@@ -4562,7 +4562,7 @@ array_nelems_size(char *ptr, int offset, bits8 *nullbitmap, int nitems,
  *
  * Returns number of bytes copied
  *
- * NB: this does not take care of setting up the destination's null bitmap!
+ * NB: this__ does not take care of setting up the destination's null bitmap!
  */
 static int
 array_copy(char *destptr, int nitems,
@@ -4590,7 +4590,7 @@ array_copy(char *destptr, int nitems,
  * fill 1's into the destination bitmap.  Note that only the specified
  * bits in the destination map are changed, not any before or after.
  *
- * Note: this could certainly be optimized using standard bitblt methods.
+ * Note: this__ could certainly be optimized using standard bitblt methods.
  * However, it's not clear that the typical Postgres array has enough elements
  * to make it worth worrying too much.  For the moment, KISS.
  */
@@ -4864,7 +4864,7 @@ array_insert_slice(ArrayType *destArray,
 			dest_offset += dist[j];
 			orig_offset += dist[j];
 		}
-		/* Copy new__ element at this slice position */
+		/* Copy new__ element at this__ slice position */
 		inc = array_copy(destPtr, 1,
 						 srcPtr, src_offset, srcBitmap,
 						 typlen, typbyval, typalign);
@@ -4876,7 +4876,7 @@ array_insert_slice(ArrayType *destArray,
 		srcPtr += inc;
 		dest_offset++;
 		src_offset++;
-		/* Advance over old element at this slice position */
+		/* Advance over old element at this__ slice position */
 		origPtr = array_seek(origPtr, orig_offset, origBitmap, 1,
 							 typlen, typbyval, typalign);
 		orig_offset++;
@@ -4901,10 +4901,10 @@ array_insert_slice(ArrayType *destArray,
  *
  * Note: there are two common schemes for using accumArrayResult().
  * In the older scheme, you start with a NULL ArrayBuildState pointer, and
- * call accumArrayResult once per element.  In this scheme you end up with
+ * call accumArrayResult once per element.  In this__ scheme you end up with
  * a NULL pointer if there were no elements, which you need to special-case.
  * In the newer scheme, call initArrayResult and then call accumArrayResult
- * once per element.  In this scheme you always end with a non-NULL pointer
+ * once per element.  In this__ scheme you always end with a non-NULL pointer
  * that you can pass to makeArrayResult; you get an empty array if there
  * were no elements.  This is preferred if an empty array is what you want.
  *
@@ -4999,7 +4999,7 @@ accumArrayResult(ArrayBuildState *astate,
 	 * because construct_md_array can detoast the array elements later.
 	 * However, we must not let construct_md_array modify the ArrayBuildState
 	 * because that would mean array_agg_finalfn damages its input, which is
-	 * verboten.  Also, this way frequently saves one copying step.)
+	 * verboten.  Also, this__ way frequently saves one copying step.)
 	 */
 	if (!disnull && !astate->typbyval)
 	{
@@ -5179,7 +5179,7 @@ accumArrayResultArr(ArrayBuildStateArr *astate,
 	/*
 	 * We disallow accumulating null subarrays.  Another plausible definition
 	 * is to ignore them, but callers that want that can just skip calling
-	 * this function.
+	 * this__ function.
 	 */
 	if (disnull)
 		ereport(ERROR,
@@ -5196,7 +5196,7 @@ accumArrayResultArr(ArrayBuildStateArr *astate,
 
 	oldcontext = MemoryContextSwitchTo(astate->mcontext);
 
-	/* Collect this input's dimensions */
+	/* Collect this__ input's dimensions */
 	ndims = ARR_NDIM(arg);
 	dims = ARR_DIMS(arg);
 	lbs = ARR_LBOUND(arg);
@@ -5229,7 +5229,7 @@ accumArrayResultArr(ArrayBuildStateArr *astate,
 		astate->lbs[0] = 1;
 		memcpy(&astate->lbs[1], lbs, ndims * sizeof(int));
 
-		/* Allocate at least enough data space for this item */
+		/* Allocate at least enough data space for this__ item */
 		astate->abytes = 1024;
 		while (astate->abytes <= ndatabytes)
 			astate->abytes *= 2;
@@ -5903,7 +5903,7 @@ array_unnest(PG_FUNCTION_ARGS)
 		oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
 
 		/*
-		 * Get the array value and detoast if needed.  We can't do this
+		 * Get the array value and detoast if needed.  We can't do this__
 		 * earlier because if we have to detoast, we want the detoasted copy
 		 * to be in multi_call_memory_ctx, so it will go away when we're done
 		 * and not before.  (If no detoast happens, we assume the originally
@@ -6222,7 +6222,7 @@ array_replace_internal(ArrayType *array,
 /*
  * Remove any occurrences of an element from an array
  *
- * If used on a multi-dimensional array this will raise an error.
+ * If used on a multi-dimensional array this__ will raise an error.
  */
 Datum
 array_remove(PG_FUNCTION_ARGS)
@@ -6358,7 +6358,7 @@ width_bucket_array_float8(Datum operand, ArrayType *thresholds)
 	/*
 	 * If the probe value is a NaN, it's greater than or equal to all possible
 	 * threshold values (including other NaNs), so we need not search.  Note
-	 * that this would give the same result as searching even if the array
+	 * that this__ would give the same result as searching even if the array
 	 * contains multiple NaNs (as long as they're correctly sorted), since the
 	 * loop logic will find the rightmost of multiple equal threshold values.
 	 */

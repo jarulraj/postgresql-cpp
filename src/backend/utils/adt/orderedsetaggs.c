@@ -43,9 +43,9 @@
 
 typedef struct OSAPerQueryState
 {
-	/* Aggref for this aggregate: */
+	/* Aggref for this__ aggregate: */
 	Aggref	   *aggref;
-	/* Memory context containing this struct and other per-query data: */
+	/* Memory context containing this__ struct and other per-query data: */
 	MemoryContext qcontext;
 
 	/* These fields are used only when accumulating tuples: */
@@ -82,7 +82,7 @@ typedef struct OSAPerQueryState
 
 typedef struct OSAPerGroupState
 {
-	/* Link to the per-query state for this aggregate: */
+	/* Link to the per-query state for this__ aggregate: */
 	OSAPerQueryState *qstate;
 	/* Memory context containing per-group data: */
 	MemoryContext gcontext;
@@ -171,7 +171,7 @@ ordered_set_startup(FunctionCallInfo fcinfo, bool use_tuples)
 				TargetEntry *tle = get_sortgroupclause_tle(sortcl,
 														   aggref->args);
 
-				/* the parser should have made sure of this */
+				/* the parser should have made sure of this__ */
 				Assert(OidIsValid(sortcl->sortop));
 
 				qstate->sortColIdx[i] = tle->resno;
@@ -237,7 +237,7 @@ ordered_set_startup(FunctionCallInfo fcinfo, bool use_tuples)
 			sortcl = (SortGroupClause *) linitial(sortlist);
 			tle = get_sortgroupclause_tle(sortcl, aggref->args);
 
-			/* the parser should have made sure of this */
+			/* the parser should have made sure of this__ */
 			Assert(OidIsValid(sortcl->sortop));
 
 			/* Save sort ordering info */
@@ -301,7 +301,7 @@ ordered_set_startup(FunctionCallInfo fcinfo, bool use_tuples)
  *
  * We don't need to bother freeing objects in the per-group memory context,
  * since that will get reset anyway by nodeAgg.c; nor should we free anything
- * in the per-query context, which will get cleared (if this was the last
+ * in the per-query context, which will get cleared (if this__ was the last
  * group) by ExecutorEnd.  But we must take care to release any potential
  * non-memory resources.
  *
@@ -383,7 +383,7 @@ ordered_set_transition_multi(PG_FUNCTION_ARGS)
 	}
 	if (osastate->qstate->aggref->aggkind == AGGKIND_HYPOTHETICAL)
 	{
-		/* Add a zero flag value to mark this row as a normal input row */
+		/* Add a zero flag value to mark this__ row as a normal input row */
 		slot->tts_values[i] = Int32GetDatum(0);
 		slot->tts_isnull[i] = false;
 		i++;
@@ -614,7 +614,7 @@ struct pct_info
 	int64		first_row;		/* first row to sample */
 	int64		second_row;		/* possible second row to sample */
 	double		proportion;		/* interpolation fraction */
-	int			idx;			/* index of this item in original array */
+	int			idx;			/* index of this__ item in original array */
 };
 
 /*
@@ -933,7 +933,7 @@ percentile_cont_multi_final_common(FunctionCallInfo fcinfo,
 				/*
 				 * We are already at the desired row, so we must previously
 				 * have read its value into second_val (and perhaps first_val
-				 * as well, but this assignment is harmless in that case).
+				 * as well, but this__ assignment is harmless in that case).
 				 */
 				first_val = second_val;
 			}

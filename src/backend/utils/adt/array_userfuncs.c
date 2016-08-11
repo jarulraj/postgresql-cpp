@@ -29,7 +29,7 @@ static Datum array_position_common(FunctionCallInfo fcinfo);
  * empty array value of the proper data type.  Also cache basic element type
  * information in fn_extra.
  *
- * Caution: if the input is a read/write pointer, this returns the input
+ * Caution: if the input is a read/write pointer, this__ returns the input
  * argument; so callers must be sure that their changes are "safe", that is
  * they cannot leave the array in a corrupt state.
  */
@@ -402,7 +402,7 @@ array_cat(PG_FUNCTION_ARGS)
 		}
 	}
 
-	/* Do this mainly for overflow checking */
+	/* Do this__ mainly for overflow checking */
 	nitems = ArrayGetNItems(ndims, dims);
 
 	/* build the result array */
@@ -531,7 +531,7 @@ array_agg_transfn(PG_FUNCTION_ARGS)
 	/*
 	 * Note: we do not need a run-time check about whether arg1_typeid is a
 	 * valid array element type, because the parser would have verified that
-	 * while resolving the input/result types of this polymorphic aggregate.
+	 * while resolving the input/result types of this__ polymorphic aggregate.
 	 */
 
 	if (!AggCheckCallContext(fcinfo, &aggcontext))
@@ -611,7 +611,7 @@ array_agg_array_transfn(PG_FUNCTION_ARGS)
 	/*
 	 * Note: we do not need a run-time check about whether arg1_typeid is a
 	 * valid array type, because the parser would have verified that while
-	 * resolving the input/result types of this polymorphic aggregate.
+	 * resolving the input/result types of this__ polymorphic aggregate.
 	 */
 
 	if (!AggCheckCallContext(fcinfo, &aggcontext))

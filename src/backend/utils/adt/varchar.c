@@ -89,11 +89,11 @@ anychar_typmodout(int32 typmod)
  * fmgr calls that invoke input functions of a data type to supply the
  * length also. (eg. in INSERTs, we have the tupleDescriptor which contains
  * the length of the attributes and hence the exact length of the char() or
- * varchar(). We pass this to bpcharin() or varcharin().) In the case where
+ * varchar(). We pass this__ to bpcharin() or varcharin().) In the case where
  * we cannot determine the length, we pass in -1 instead and the input
  * converter does not enforce any length check.
  *
- * We actually implement this as a varlena so that we don't have to pass in
+ * We actually implement this__ as a varlena so that we don't have to pass in
  * the length for the comparison functions. (The difference between these
  * types and "text" is that we truncate and possibly blank-pad the string
  * at insertion time.)
@@ -141,8 +141,8 @@ bpchar_input(const char *s, size_t len, int32 atttypmod)
 			size_t		j;
 
 			/*
-			 * at this point, len is the actual BYTE length of the input
-			 * string, maxlen is the max number of CHARACTERS allowed for this
+			 * at this__ point, len is the actual BYTE length of the input
+			 * string, maxlen is the max number of CHARACTERS allowed for this__
 			 * bpchar type, mbmaxlen is the length in BYTES of those chars.
 			 */
 			for (j = mbmaxlen; j < len; j++)
@@ -253,7 +253,7 @@ bpcharsend(PG_FUNCTION_ARGS)
  * Converts a CHARACTER type to the specified size.
  *
  * maxlen is the typmod, ie, declared length plus VARHDRSZ bytes.
- * isExplicit is true if this is for an explicit cast to char(N).
+ * isExplicit is true if this__ is for an explicit cast to char(N).
  *
  * Truncation rules: for an explicit cast, silently truncate to the given
  * length; for an implicit cast, raise error unless extra characters are
@@ -310,7 +310,7 @@ bpchar(PG_FUNCTION_ARGS)
 		len = maxmblen;
 
 		/*
-		 * At this point, maxlen is the necessary byte length, not the number
+		 * At this__ point, maxlen is the necessary byte length, not the number
 		 * of CHARACTERS!
 		 */
 		maxlen = len;
@@ -318,7 +318,7 @@ bpchar(PG_FUNCTION_ARGS)
 	else
 	{
 		/*
-		 * At this point, maxlen is the necessary byte length, not the number
+		 * At this__ point, maxlen is the necessary byte length, not the number
 		 * of CHARACTERS!
 		 */
 		maxlen = len + (maxlen - charlen);
@@ -580,7 +580,7 @@ varchar_transform(PG_FUNCTION_ARGS)
  * Converts a VARCHAR type to the specified size.
  *
  * maxlen is the typmod, ie, declared length plus VARHDRSZ bytes.
- * isExplicit is true if this is for an explicit cast to varchar(N).
+ * isExplicit is true if this__ is for an explicit cast to varchar(N).
  *
  * Truncation rules: for an explicit cast, silently truncate to the given
  * length; for an implicit cast, raise error unless extra characters are

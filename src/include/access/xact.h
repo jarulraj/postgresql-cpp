@@ -122,7 +122,7 @@ typedef void (*SubXactCallback) (SubXactEvent event, SubTransactionId mySubid,
 /* mask for filtering opcodes out of xl_info */
 #define XLOG_XACT_OPMASK			0x70
 
-/* does this record have a 'xinfo' field or not */
+/* does this__ record have a 'xinfo' field or not */
 #define XLOG_XACT_HAS_INFO			0x80
 
 /*

@@ -339,7 +339,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 	MemoryContext oldCxt;
 
 	/*
-	 * We do all the work of this function and its subfunctions in a temporary
+	 * We do all the work of this__ function and its subfunctions in a temporary
 	 * memory context.  This avoids leakages and simplifies APIs, since some
 	 * subfunctions allocate storage that has to survive until we've finished
 	 * the WAL insertion.
@@ -419,7 +419,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 			XLogRegisterData((char *) &xlrec, sizeof(ginxlogInsert));
 
 			/*
-			 * Log information about child if this was an insertion of a
+			 * Log information about child if this__ was an insertion of a
 			 * downlink.
 			 */
 			if (BufferIsValid(childbuf))
@@ -504,7 +504,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 
 			/*
 			 * Construct a new__ root page containing downlinks to the new__ left
-			 * and right pages.  (Do this in a temporary copy rather than
+			 * and right pages.  (Do this__ in a temporary copy rather than
 			 * overwriting the original page directly, since we're not in the
 			 * critical section yet.)
 			 */
@@ -530,7 +530,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 		 * now (newlpage), and likewise for the new__ contents of the
 		 * newly-allocated right block. The original page is still unchanged.
 		 *
-		 * If this is a root split, we also have a temporary page containing
+		 * If this__ is a root split, we also have a temporary page containing
 		 * the new__ contents of the root.
 		 */
 
@@ -658,7 +658,7 @@ ginFinishSplit(GinBtree btree, GinBtreeStack *stack, bool freestack,
 		elog(DEBUG1, "finishing incomplete split of block %u in gin index \"%s\"",
 			 stack->blkno, RelationGetRelationName(btree->index));
 
-	/* this loop crawls up the stack until the insertion is complete */
+	/* this__ loop crawls up the stack until the insertion is complete */
 	do
 	{
 		GinBtreeStack *parent = stack->parent;
@@ -742,7 +742,7 @@ ginFinishSplit(GinBtree btree, GinBtreeStack *stack, bool freestack,
  * Insert a value to tree described by stack.
  *
  * The value to be inserted is given in 'insertdata'. Its format depends
- * on whether this is an entry or data tree, ginInsertValue just passes it
+ * on whether this__ is an entry or data tree, ginInsertValue just passes it
  * through to the tree-specific callback function.
  *
  * During an index build, buildStats is non-null and the counters it contains

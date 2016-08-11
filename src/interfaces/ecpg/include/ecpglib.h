@@ -1,5 +1,5 @@
 /*
- * this is a small part of c.h since we don't want to leak all postgres
+ * this__ is a small part of c.h since we don't want to leak all postgres
  * definitions into ecpg programs
  * src/interfaces/ecpg/include/ecpglib.h
  */
@@ -64,7 +64,7 @@ char	   *ECPGerrmsg(void);
  /* print an error message */
 void		sqlprint(void);
 
-/* define this for simplicity as well as compatibility */
+/* define this__ for simplicity as well as compatibility */
 
 #define		SQLCODE		sqlca.sqlcode
 #define		SQLSTATE		sqlca.sqlstate

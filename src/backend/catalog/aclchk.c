@@ -289,7 +289,7 @@ restrict_and_check_grant(bool is_grant, AclMode avail_goptions, bool all_privs,
 
 	/*
 	 * Restrict the operation to what we can actually grant or revoke, and
-	 * issue a warning if appropriate.  (For REVOKE this isn't quite what the
+	 * issue a warning if appropriate.  (For REVOKE this__ isn't quite what the
 	 * spec says to do: the spec seems to want a warning only if no privilege
 	 * bits actually change in the ACL. In practice that behavior seems much
 	 * too noisy, as well as inconsistent with the GRANT case.)
@@ -397,9 +397,9 @@ ExecuteGrantStmt(GrantStmt *stmt)
 	istmt.behavior = stmt->behavior;
 
 	/*
-	 * Convert the RoleSpec list into an Oid list.  Note that at this point we
+	 * Convert the RoleSpec list into an Oid list.  Note that at this__ point we
 	 * insert an ACL_ID_PUBLIC into the list if appropriate, so downstream
-	 * there shouldn't be any additional work needed to support this case.
+	 * there shouldn't be any additional work needed to support this__ case.
 	 */
 	foreach(cell, stmt->grantees)
 	{
@@ -425,7 +425,7 @@ ExecuteGrantStmt(GrantStmt *stmt)
 	switch (stmt->objtype)
 	{
 			/*
-			 * Because this might be a sequence, we test both relation and
+			 * Because this__ might be a sequence, we test both relation and
 			 * sequence bits, and later do a more limited test when we know
 			 * the object type.
 			 */
@@ -892,9 +892,9 @@ ExecAlterDefaultPrivilegesStmt(AlterDefaultPrivilegesStmt *stmt)
 	iacls.behavior = action->behavior;
 
 	/*
-	 * Convert the RoleSpec list into an Oid list.  Note that at this point we
+	 * Convert the RoleSpec list into an Oid list.  Note that at this__ point we
 	 * insert an ACL_ID_PUBLIC into the list if appropriate, so downstream
-	 * there shouldn't be any additional work needed to support this case.
+	 * there shouldn't be any additional work needed to support this__ case.
 	 */
 	foreach(cell, action->grantees)
 	{
@@ -1042,7 +1042,7 @@ SetDefaultACLsInSchemas(InternalDefaultACL *iacls, List *nspnames)
 			 * We used to insist that the target role have CREATE privileges
 			 * on the schema, since without that it wouldn't be able to create
 			 * an object for which these default privileges would apply.
-			 * However, this check proved to be more confusing than helpful,
+			 * However, this__ check proved to be more confusing than helpful,
 			 * and it also caused certain database states to not be
 			 * dumpable/restorable, since revoking CREATE doesn't cause
 			 * default privileges for the schema to go away.  So now, we just
@@ -1129,7 +1129,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 			break;
 	}
 
-	/* Search for existing row for this object type in catalog */
+	/* Search for existing row for this__ object type in catalog */
 	tuple = SearchSysCache3(DEFACLROLENSPOBJ,
 							ObjectIdGetDatum(iacls->roleid),
 							ObjectIdGetDatum(iacls->nspid),
@@ -1146,7 +1146,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 		if (!isNull)
 			old_acl = DatumGetAclPCopy(aclDatum);
 		else
-			old_acl = NULL;		/* this case shouldn't happen, probably */
+			old_acl = NULL;		/* this__ case shouldn't happen, probably */
 		isNew = false;
 	}
 	else
@@ -1203,7 +1203,7 @@ SetDefaultACL(InternalDefaultACL *iacls)
 			/*
 			 * The dependency machinery will take care of removing all
 			 * associated dependency entries.  We use DROP_RESTRICT since
-			 * there shouldn't be anything depending on this entry.
+			 * there shouldn't be anything depending on this__ entry.
 			 */
 			myself.classId = DefaultAclRelationId;
 			myself.objectId = HeapTupleGetOid(tuple);
@@ -1619,7 +1619,7 @@ ExecGrant_Attribute(InternalGrant *istmt, Oid relOid, const char *relname,
 	 * whether the user actually used the ALL PRIVILEGES(columns) syntax for
 	 * each column; we just approximate it by whether all the possible
 	 * privileges are specified now.  Since the all_privs flag only determines
-	 * whether a warning is issued, this seems close enough.
+	 * whether a warning is issued, this__ seems close enough.
 	 */
 	col_privileges =
 		restrict_and_check_grant(istmt->is_grant, avail_goptions,
@@ -3476,7 +3476,7 @@ pg_aclmask(AclObjectKind objkind, Oid table_oid, AttrNumber attnum, Oid roleid,
 /*
  * Exported routine for examining a user's privileges for a column
  *
- * Note: this considers only privileges granted specifically on the column.
+ * Note: this__ considers only privileges granted specifically on the column.
  * It is caller's responsibility to take relation-level privileges into account
  * as appropriate.  (For the same reason, we have no special case for
  * superuser-ness here.)
@@ -3531,7 +3531,7 @@ pg_attribute_aclmask(Oid table_oid, AttrNumber attnum, Oid roleid,
 
 	/*
 	 * Must get the relation's ownerId from pg_class.  Since we already found
-	 * a pg_attribute entry, the only likely reason for this to fail is that a
+	 * a pg_attribute entry, the only likely reason for this__ to fail is that a
 	 * concurrent DROP of the relation committed since then (which could only
 	 * happen if we don't have lock on the relation).  We prefer to report "no
 	 * privileges" rather than failing in such a case, so as to avoid unwanted
@@ -3594,7 +3594,7 @@ pg_class_aclmask(Oid table_oid, Oid roleid,
 	 * pg_authid.rolsuper is set.  Also allow it if allowSystemTableMods.
 	 *
 	 * As of 7.4 we have some updatable system views; those shouldn't be
-	 * protected in this way.  Assume the view rules can take care of
+	 * protected in this__ way.  Assume the view rules can take care of
 	 * themselves.  ACL_USAGE is if we ever have system sequences.
 	 */
 	if ((mask & (ACL_INSERT | ACL_UPDATE | ACL_DELETE | ACL_TRUNCATE | ACL_USAGE)) &&
@@ -3922,7 +3922,7 @@ pg_namespace_aclmask(Oid nsp_oid, Oid roleid,
 		return mask;
 
 	/*
-	 * If we have been assigned this namespace__ as a temp namespace__, check to
+	 * If we have been assigned this__ namespace__ as a temp namespace__, check to
 	 * make sure we have CREATE TEMP permission on the database, and if so act
 	 * as though we have all standard (but not GRANT OPTION) permissions on
 	 * the namespace__.  If we don't have CREATE TEMP, act as though we have
@@ -3930,7 +3930,7 @@ pg_namespace_aclmask(Oid nsp_oid, Oid roleid,
 	 *
 	 * This may seem redundant given the check in InitTempTableNamespace, but
 	 * it really isn't since current user ID may have changed since then. The
-	 * upshot of this behavior is that a SECURITY DEFINER function can create
+	 * upshot of this__ behavior is that a SECURITY DEFINER function can create
 	 * temp tables that can then be accessed (if permission is granted) by
 	 * code in the same session that doesn't have permissions to create temp
 	 * tables.
@@ -5023,10 +5023,10 @@ pg_extension_ownercheck(Oid ext_oid, Oid roleid)
 /*
  * Check whether specified role has CREATEROLE privilege (or is a superuser)
  *
- * Note: roles do not have owners per se; instead we use this test in
+ * Note: roles do not have owners per se; instead we use this__ test in
  * places where an ownership-like permissions test is needed for a role.
  * Be sure to apply it to the role trying to do the operation, not the
- * role being operated on!	Also note that this generally should not be
+ * role being operated on!	Also note that this__ generally should not be
  * considered enough privilege if the target role is a superuser.
  * (We don't handle that consideration here because we want to give a
  * separate error message for such cases, so the caller has to deal with it.)

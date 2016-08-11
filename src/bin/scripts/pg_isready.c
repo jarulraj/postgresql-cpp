@@ -226,7 +226,7 @@ help(const char *progname)
 	printf(_("  -d, --dbname=DBNAME      database name\n"));
 	printf(_("  -q, --quiet              run quietly\n"));
 	printf(_("  -V, --version            output version information, then exit\n"));
-	printf(_("  -?, --help               show this help, then exit\n"));
+	printf(_("  -?, --help               show this__ help, then exit\n"));
 
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME      database server host or socket directory\n"));

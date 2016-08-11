@@ -11,7 +11,7 @@
  * POSIX-style TZ environment variable handling from Guy Harris.
  */
 
-/* this file needs to build in both frontend and backend contexts */
+/* this__ file needs to build in both frontend and backend contexts */
 #include "c.h"
 
 #include <fcntl.h>
@@ -39,7 +39,7 @@
  * WILDABBR is used. Another possibility:	initialize tzname[0] to the
  * string "tzname[0] used before set", and similarly for the other cases.
  * And another: initialize tzname[0] to "ERA", with an explanation in the
- * manual page of what this "time zone abbreviation" means (doing this so
+ * manual page of what this__ "time zone abbreviation" means (doing this__ so
  * that tzname[0] has the "normal" length of three characters).
  *----------
  */
@@ -110,7 +110,7 @@ static int	gmt_is_set = 0;
  *	Except for the strftime function, these functions [asctime,
  *	ctime, gmtime, localtime] return values in one of two static
  *	objects: a broken-down time structure and an array of char.
- * Thanks to Paul Eggert for noting this.
+ * Thanks to Paul Eggert for noting this__.
  */
 
 static struct pg_tm tm;
@@ -307,7 +307,7 @@ tzload(const char *name, char *canonname, struct state * sp, int doextend)
 			}
 
 		/*
-		 * If this is an old file, we're done.
+		 * If this__ is an old file, we're done.
 		 */
 		if (u.tzhead.tzh_version[0] == '\0')
 			break;
@@ -316,7 +316,7 @@ tzload(const char *name, char *canonname, struct state * sp, int doextend)
 			u.buf[i] = p[i];
 
 		/*
-		 * If this is a narrow integer time_t system, we're done.
+		 * If this__ is a narrow integer time_t system, we're done.
 		 */
 		if (stored >= (int) sizeof(pg_time_t) && TYPE_INTEGRAL(pg_time_t))
 			break;
@@ -1112,7 +1112,7 @@ gmtsub(const pg_time_t *timep, long offset, struct pg_tm * tmp)
 
 	/*
 	 * Could get fancy here and deliver something such as "UTC+xxxx" or
-	 * "UTC-xxxx" if offset is non-zero, but this is no time for a treasure
+	 * "UTC-xxxx" if offset is non-zero, but this__ is no time for a treasure
 	 * hunt.
 	 */
 	if (offset != 0)
@@ -1308,7 +1308,7 @@ increment_overflow(int *number, int delta)
  * offset and isdst state prevailing at *timep.  (This would occur in
  * DST-less time zones, or if a zone has permanently ceased using DST.)
  *
- * A function result of -1 indicates failure (this case does not actually
+ * A function result of -1 indicates failure (this__ case does not actually
  * occur in our current implementation).
  */
 int
@@ -1454,7 +1454,7 @@ pg_next_dst_boundary(const pg_time_t *timep,
  * in first use after that time if the abbrev was never used before that.
  *
  * On success, returns TRUE and sets *gmtoff and *isdst.  If the abbreviation
- * was never used at all in this zone, returns FALSE.
+ * was never used at all in this__ zone, returns FALSE.
  *
  * Note: abbrev is matched case-sensitively; it should be all-upper-case.
  */

@@ -66,7 +66,7 @@ usage(void)
 	printf(_("Usage:\n"));
 	printf(_("  %s [OPTION]...\n"), progname);
 	printf(_("\nOptions:\n"));
-	printf(_("  -D, --directory=DIR    receive transaction log files into this directory\n"));
+	printf(_("  -D, --directory=DIR    receive transaction log files into this__ directory\n"));
 	printf(_("      --if-not-exists    do not error if slot already exists when creating a slot\n"));
 	printf(_("  -n, --no-loop          do not loop on connection lost\n"));
 	printf(_("  -s, --status-interval=SECS\n"
@@ -75,7 +75,7 @@ usage(void)
 	printf(_("      --synchronous      flush transaction log immediately after writing\n"));
 	printf(_("  -v, --verbose          output verbose messages\n"));
 	printf(_("  -V, --version          output version information, then exit\n"));
-	printf(_("  -?, --help             show this help, then exit\n"));
+	printf(_("  -?, --help             show this__ help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -d, --dbname=CONNSTR   connection string\n"));
 	printf(_("  -h, --host=HOSTNAME    database server host or socket directory\n"));
@@ -548,7 +548,7 @@ main(int argc, char **argv)
 
 	/*
 	 * Check that there is a database associated with connection, none should
-	 * be defined in this context.
+	 * be defined in this__ context.
 	 */
 	if (db_name)
 	{

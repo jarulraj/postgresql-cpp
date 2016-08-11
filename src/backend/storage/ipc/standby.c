@@ -56,8 +56,8 @@ static void LogAccessExclusiveLocks(int nlocks, xl_standby_lock *locks);
  * vxact entry like a real transaction. We could create and delete
  * lock table entries for each transaction but its simpler just to create
  * one permanent entry and leave it there all the time. Locks are then
- * acquired and released as needed. Yes, this means you can see the
- * Startup process in pg_locks once we have run this.
+ * acquired and released as needed. Yes, this__ means you can see the
+ * Startup process in pg_locks once we have run this__.
  */
 void
 InitRecoveryTransactionEnvironment(void)
@@ -167,7 +167,7 @@ WaitExceedsMaxStandbyDelay(void)
 		return true;
 
 	/*
-	 * Sleep a bit (this is essential to avoid busy-waiting).
+	 * Sleep a bit (this__ is essential to avoid busy-waiting).
 	 */
 	pg_usleep(standbyWait_us);
 
@@ -271,7 +271,7 @@ ResolveRecoveryConflictWithSnapshot(TransactionId latestRemovedXid, RelFileNode 
 	 * but it is theoretically possible in normal running. It also happens
 	 * when replaying already applied WAL records after a standby crash or
 	 * restart. If latestRemovedXid is invalid then there is no conflict. That
-	 * rule applies across all record types that suffer from this conflict.
+	 * rule applies across all record types that suffer from this__ conflict.
 	 */
 	if (!TransactionIdIsValid(latestRemovedXid))
 		return;
@@ -289,7 +289,7 @@ ResolveRecoveryConflictWithTablespace(Oid tsid)
 	VirtualTransactionId *temp_file_users;
 
 	/*
-	 * Standby users may be currently using this tablespace for their
+	 * Standby users may be currently using this__ tablespace for their
 	 * temporary files. We only care about current users because
 	 * temp_tablespace parameter will just ignore tablespaces that no longer
 	 * exist.
@@ -298,7 +298,7 @@ ResolveRecoveryConflictWithTablespace(Oid tsid)
 	 * temp files remain and we can remove the tablespace. Nuke the entire
 	 * site from orbit, it's the only way to be sure.
 	 *
-	 * XXX: We could work out the pids of active backends using this
+	 * XXX: We could work out the pids of active backends using this__
 	 * tablespace by examining the temp filenames in the directory. We would
 	 * then convert the pids into VirtualXIDs before attempting to cancel
 	 * them.
@@ -317,11 +317,11 @@ ResolveRecoveryConflictWithDatabase(Oid dbid)
 	/*
 	 * We don't do ResolveRecoveryConflictWithVirtualXIDs() here since that
 	 * only waits for transactions and completely idle sessions would block
-	 * us. This is rare enough that we do this as simply as possible: no wait,
+	 * us. This is rare enough that we do this__ as simply as possible: no wait,
 	 * just force them off immediately.
 	 *
 	 * No locking is required here because we already acquired
-	 * AccessExclusiveLock. Anybody trying to connect while we do this will
+	 * AccessExclusiveLock. Anybody trying to connect while we do this__ will
 	 * block during InitPostgres() and then disconnect when they see the
 	 * database has been removed.
 	 */
@@ -350,7 +350,7 @@ ResolveRecoveryConflictWithLock(Oid dbOid, Oid relOid)
 	/*
 	 * If blowing away everybody with conflicting locks doesn't work, after
 	 * the first two attempts then we just start blowing everybody away until
-	 * it does work. We do this because its likely that we either have too
+	 * it does work. We do this__ because its likely that we either have too
 	 * many locks and we just can't get one at all, or that there are many
 	 * people crowding for the same table. Recovery must win; the end
 	 * justifies the means.
@@ -445,7 +445,7 @@ ResolveRecoveryConflictWithBufferPin(void)
 
 	/*
 	 * Clear any timeout requests established above.  We assume here that the
-	 * Startup process doesn't have any other timeouts than what this function
+	 * Startup process doesn't have any other timeouts than what this__ function
 	 * uses.  If that stops being true, we could cancel the timeouts
 	 * individually, but that'd be slower.
 	 */
@@ -472,10 +472,10 @@ SendRecoveryConflictWithBufferPin(ProcSignalReason reason)
  * wait if we are about to sleep while holding the buffer pin that Startup
  * process is waiting for.
  *
- * Note: this code is pessimistic, because there is no way for it to
+ * Note: this__ code is pessimistic, because there is no way for it to
  * determine whether an actual deadlock condition is present: the lock we
  * need to wait for might be unrelated to any held by the Startup process.
- * Sooner or later, this mechanism should get ripped out in favor of somehow
+ * Sooner or later, this__ mechanism should get ripped out in favor of somehow
  * accounting for buffer locks in DeadLockCheck().  However, errors here
  * seem to be very low-probability in practice, so for now it's not worth
  * the trouble.
@@ -490,7 +490,7 @@ CheckRecoveryConflictDeadlock(void)
 
 	/*
 	 * Error message should match ProcessInterrupts() but we avoid calling
-	 * that because we aren't handling an interrupt at this point. Note that
+	 * that because we aren't handling an interrupt at this__ point. Note that
 	 * we only cancel the current transaction here, so if we are in a
 	 * subtransaction and the pin is held by a parent, then the Startup
 	 * process will continue to wait even though we have avoided deadlock.
@@ -541,7 +541,7 @@ StandbyTimeoutHandler(void)
  * All locks are held by the Startup process using a single virtual
  * transaction. This implementation is both simpler and in some senses,
  * more correct. The locks held mean "some original transaction held
- * this lock, so query access is not allowed at this time". So the Startup
+ * this__ lock, so query access is not allowed at this__ time". So the Startup
  * process is the proxy by which the original locks are implemented.
  *
  * We only keep track of AccessExclusiveLocks, which are only ever held by
@@ -809,7 +809,7 @@ standby_redo(XLogReaderState *record)
  * start from a shutdown checkpoint because we know nothing was running
  * at that time and our recovery snapshot is known empty. In the more
  * typical case of an online checkpoint we need to jump through a few
- * hoops to get a correct recovery snapshot and this requires a two or
+ * hoops to get a correct recovery snapshot and this__ requires a two or
  * sometimes a three stage process.
  *
  * The initial snapshot must contain all running xids and all current
@@ -825,7 +825,7 @@ standby_redo(XLogReaderState *record)
  * that we must resolve, since xids and locks may enter or leave the
  * snapshot during that window. This creates the issue that an xid or
  * lock may start *after* the snapshot has been derived yet *before* the
- * snapshot is logged in the running xacts WAL record. We resolve this by
+ * snapshot is logged in the running xacts WAL record. We resolve this__ by
  * starting to accumulate changes at a point just prior to when we derive
  * the snapshot on the primary, then ignore duplicates when we later apply
  * the snapshot from the running xacts record. This is implemented during
@@ -833,7 +833,7 @@ standby_redo(XLogReaderState *record)
  * our starting point and then write the running xacts record immediately
  * before writing the main checkpoint WAL record. Since we always start
  * up from a checkpoint and are immediately at our starting point, we
- * unconditionally move to STANDBY_INITIALIZED. After this point we
+ * unconditionally move to STANDBY_INITIALIZED. After this__ point we
  * must do 4 things:
  *	* move shared nextXid forwards as we see new__ xids
  *	* extend the clog and subtrans with each new__ xid
@@ -860,7 +860,7 @@ standby_redo(XLogReaderState *record)
  * For logical decoding only the running xacts information is needed;
  * there's no need to look at the locking information, but it's logged anyway,
  * as there's no independent knob to just enable logical decoding. For
- * details of how this is used, check snapbuild.c's introductory comment.
+ * details of how this__ is used, check snapbuild.c's introductory comment.
  *
  *
  * Returns the RecPtr of the last inserted record.
@@ -885,20 +885,20 @@ LogStandbySnapshot(void)
 
 	/*
 	 * Log details of all in-progress transactions. This should be the last
-	 * record we write, because standby will open up when it sees this.
+	 * record we write, because standby will open up when it sees this__.
 	 */
 	running = GetRunningTransactionData();
 
 	/*
 	 * GetRunningTransactionData() acquired ProcArrayLock, we must release it.
-	 * For Hot Standby this can be done before inserting the WAL record
+	 * For Hot Standby this__ can be done before inserting the WAL record
 	 * because ProcArrayApplyRecoveryInfo() rechecks the commit status using
 	 * the clog. For logical decoding, though, the lock can't be released
 	 * early because the clog might be "in the future" from the POV of the
 	 * historic snapshot. This would allow for situations where we're waiting
 	 * for the end of a transaction listed in the xl_running_xacts record
 	 * which, according to the WAL, has committed before the xl_running_xacts
-	 * record. Fortunately this routine isn't executed frequently, and it's
+	 * record. Fortunately this__ routine isn't executed frequently, and it's
 	 * only a shared lock.
 	 */
 	if (wal_level < WAL_LEVEL_LOGICAL)
@@ -1025,7 +1025,7 @@ void
 LogAccessExclusiveLockPrepare(void)
 {
 	/*
-	 * Ensure that a TransactionId has been assigned to this transaction, for
+	 * Ensure that a TransactionId has been assigned to this__ transaction, for
 	 * two reasons, both related to lock release on the standby. First, we
 	 * must assign an xid so that RecordTransactionCommit() and
 	 * RecordTransactionAbort() do not optimise away the transaction

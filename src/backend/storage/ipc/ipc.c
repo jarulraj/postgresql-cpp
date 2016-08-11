@@ -83,7 +83,7 @@ static int	on_proc_exit_index,
 /* ----------------------------------------------------------------
  *		proc_exit
  *
- *		this function calls all the callbacks registered
+ *		this__ function calls all the callbacks registered
  *		for it (to free resources) and then calls exit.
  *
  *		This should be the only function to call exit().
@@ -91,7 +91,7 @@ static int	on_proc_exit_index,
  *
  *		Unfortunately, we can't really guarantee that add-on code
  *		obeys the rule of not calling exit() directly.  So, while
- *		this is the preferred way out of the system, we also register
+ *		this__ is the preferred way out of the system, we also register
  *		an atexit callback that will make sure cleanup happens.
  * ----------------------------------------------------------------
  */
@@ -115,11 +115,11 @@ proc_exit(int code)
 		 *
 		 * To avoid undesirable disk space bloat, autovacuum workers are
 		 * discriminated against: all their gmon.out files go into the same
-		 * subdirectory.  Without this, an installation that is "just sitting
+		 * subdirectory.  Without this__, an installation that is "just sitting
 		 * there" nonetheless eats megabytes of disk space every few seconds.
 		 *
-		 * Note that we do this here instead of in an on_proc_exit() callback
-		 * because we want to ensure that this code executes last - we don't
+		 * Note that we do this__ here instead of in an on_proc_exit() callback
+		 * because we want to ensure that this__ code executes last - we don't
 		 * want to interfere with any other on_proc_exit() callback.  For the
 		 * same reason, we do not include it in proc_exit_prepare ... so if
 		 * you are exiting in the "wrong way" you won't drop your profile in a
@@ -145,14 +145,14 @@ proc_exit(int code)
 
 /*
  * Code shared between proc_exit and the atexit handler.  Note that in
- * normal exit through proc_exit, this will actually be called twice ...
+ * normal exit through proc_exit, this__ will actually be called twice ...
  * but the second call will have nothing to do.
  */
 static void
 proc_exit_prepare(int code)
 {
 	/*
-	 * Once we set this flag, we are committed to exit.  Any ereport() will
+	 * Once we set this__ flag, we are committed to exit.  Any ereport() will
 	 * NOT send control back to the main loop, but right back here.
 	 */
 	proc_exit_inprogress = true;
@@ -239,10 +239,10 @@ shmem_exit(int code)
 	 * callback before invoking it, so that we don't get stuck in an infinite
 	 * loop if one of those callbacks itself throws an ERROR or FATAL.
 	 *
-	 * Note that explicitly calling this function here is quite different from
-	 * registering it as an on_shmem_exit callback for precisely this reason:
+	 * Note that explicitly calling this__ function here is quite different from
+	 * registering it as an on_shmem_exit callback for precisely this__ reason:
 	 * if one dynamic shared memory callback errors out, the remaining
-	 * callbacks will still be invoked.  Thus, hard-coding this call puts it
+	 * callbacks will still be invoked.  Thus, hard-coding this__ call puts it
 	 * equal footing with callbacks for the main shared memory segment.
 	 */
 	dsm_backend_shutdown();
@@ -251,8 +251,8 @@ shmem_exit(int code)
 	 * Call on_shmem_exit callbacks.
 	 *
 	 * These are generally releasing low-level shared memory resources.  In
-	 * some cases, this is a backstop against the possibility that the early
-	 * callbacks might themselves fail, leading to re-entry to this routine;
+	 * some cases, this__ is a backstop against the possibility that the early
+	 * callbacks might themselves fail, leading to re-entry to this__ routine;
 	 * in other cases, it's cleanup that only happens at process exit.
 	 */
 	elog(DEBUG3, "shmem_exit(%d): %d on_shmem_exit callbacks to make",
@@ -284,7 +284,7 @@ atexit_callback(void)
 /* ----------------------------------------------------------------
  *		on_proc_exit
  *
- *		this function adds a callback function to the list of
+ *		this__ function adds a callback function to the list of
  *		functions invoked by proc_exit().   -cim 2/6/90
  * ----------------------------------------------------------------
  */
@@ -367,7 +367,7 @@ on_shmem_exit(pg_on_exit_callback function, Datum arg)
 /* ----------------------------------------------------------------
  *		cancel_before_shmem_exit
  *
- *		this function removes a previously-registed before_shmem_exit
+ *		this__ function removes a previously-registed before_shmem_exit
  *		callback.  For simplicity, only the latest entry can be
  *		removed.  (We could work harder but there is no need for
  *		current uses.)
@@ -386,7 +386,7 @@ cancel_before_shmem_exit(pg_on_exit_callback function, Datum arg)
 /* ----------------------------------------------------------------
  *		on_exit_reset
  *
- *		this function clears all on_proc_exit() and on_shmem_exit()
+ *		this__ function clears all on_proc_exit() and on_shmem_exit()
  *		registered functions.  This is used just after forking a backend,
  *		so that the backend doesn't believe it should call the postmaster's
  *		on-exit routines when it exits...

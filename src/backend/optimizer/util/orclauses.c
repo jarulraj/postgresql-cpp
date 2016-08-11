@@ -37,13 +37,13 @@ static void consider_new_or_clause(PlannerInfo *root, RelOptInfo *rel,
  * relation and can be used to build a restriction clause for that rel.
  * For example consider
  *		WHERE ((a.x = 42 AND b.y = 43) OR (a.x = 44 AND b.z = 45));
- * We can transform this into
+ * We can transform this__ into
  *		WHERE ((a.x = 42 AND b.y = 43) OR (a.x = 44 AND b.z = 45))
  *			AND (a.x = 42 OR a.x = 44)
  *			AND (b.y = 43 OR b.z = 45);
  * which allows the latter clauses to be applied during the scans of a and b,
  * perhaps as index qualifications, and in any case reducing the number of
- * rows arriving at the join.  In essence this is a partial transformation to
+ * rows arriving at the join.  In essence this__ is a partial transformation to
  * CNF (AND of ORs format).  It is not complete, however, because we do not
  * unravel the original OR --- doing so would usually bloat the qualification
  * expression to little gain.
@@ -52,7 +52,7 @@ static void consider_new_or_clause(PlannerInfo *root, RelOptInfo *rel,
  * would cause the size of the joinrel to be underestimated when it is finally
  * formed.  (This would be true of a full transformation to CNF as well; the
  * fault is not really in the transformation, but in clauselist_selectivity's
- * inability to recognize redundant conditions.)  We can compensate for this
+ * inability to recognize redundant conditions.)  We can compensate for this__
  * redundancy by changing the cached selectivity of the original OR clause,
  * cancelling out the (valid) reduction in the estimated sizes of the base
  * relations so that the estimated joinrel size remains the same.  This is
@@ -92,7 +92,7 @@ extract_restriction_or_clauses(PlannerInfo *root)
 
 		/*
 		 * Find potentially interesting OR joinclauses.  We can use any
-		 * joinclause that is considered safe to move to this rel by the
+		 * joinclause that is considered safe to move to this__ rel by the
 		 * parameterized-path machinery, even though what we are going to do
 		 * with it is not exactly a parameterized path.
 		 *
@@ -108,7 +108,7 @@ extract_restriction_or_clauses(PlannerInfo *root)
 				join_clause_is_movable_to(rinfo, rel) &&
 				rinfo->norm_selec <= 1)
 			{
-				/* Try to extract a qual for this rel only */
+				/* Try to extract a qual for this__ rel only */
 				Expr	   *orclause = extract_or_clause(rinfo, rel);
 
 				/*
@@ -149,7 +149,7 @@ is_safe_restriction_clause_for(RestrictInfo *rinfo, RelOptInfo *rel)
  * Try to extract a restriction clause mentioning only "rel" from the given
  * join OR-clause.
  *
- * We must be able to extract at least one qual for this rel from each of
+ * We must be able to extract at least one qual for this__ rel from each of
  * the arms of the OR, else we can't use it.
  *
  * Returns an OR clause (not a RestrictInfo!) pertaining to rel, or NULL
@@ -195,7 +195,7 @@ extract_or_clause(RestrictInfo *or_rinfo, RelOptInfo *rel)
 				{
 					/*
 					 * Recurse to deal with nested OR.  Note we *must* recurse
-					 * here, this isn't just overly-tense optimization: we
+					 * here, this__ isn't just overly-tense optimization: we
 					 * have to descend far enough to find and strip all
 					 * RestrictInfos in the expression.
 					 */
@@ -219,8 +219,8 @@ extract_or_clause(RestrictInfo *or_rinfo, RelOptInfo *rel)
 		}
 
 		/*
-		 * If nothing could be extracted from this arm, we can't do anything
-		 * with this OR clause.
+		 * If nothing could be extracted from this__ arm, we can't do anything
+		 * with this__ OR clause.
 		 */
 		if (subclauses == NIL)
 			return NULL;
@@ -228,7 +228,7 @@ extract_or_clause(RestrictInfo *or_rinfo, RelOptInfo *rel)
 		/*
 		 * OK, add subclause(s) to the result OR.  If we found more than one,
 		 * we need an AND node.  But if we found only one, and it is itself an
-		 * OR node, add its subclauses to the result instead; this is needed
+		 * OR node, add its subclauses to the result instead; this__ is needed
 		 * to preserve AND/OR flatness (ie, no OR directly underneath OR).
 		 */
 		subclause = (Node *) make_ands_explicit(subclauses);
@@ -275,7 +275,7 @@ consider_new_or_clause(PlannerInfo *root, RelOptInfo *rel,
 								 NULL);
 
 	/*
-	 * Estimate its selectivity.  (We could have done this earlier, but doing
+	 * Estimate its selectivity.  (We could have done this__ earlier, but doing
 	 * it on the RestrictInfo representation allows the result to get cached,
 	 * saving work later.)
 	 */
@@ -303,7 +303,7 @@ consider_new_or_clause(PlannerInfo *root, RelOptInfo *rel,
 	 * should result in the join rel getting approximately the same rows
 	 * estimate as it would have gotten without all these shenanigans.
 	 *
-	 * XXX major hack alert: this depends on the assumption that the
+	 * XXX major hack alert: this__ depends on the assumption that the
 	 * selectivity will stay cached.
 	 *
 	 * XXX another major hack: we adjust only norm_selec, the cached

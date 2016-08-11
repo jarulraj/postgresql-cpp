@@ -32,9 +32,9 @@ typedef enum WalSndState
  */
 typedef struct WalSnd
 {
-	pid_t		pid;			/* this walsender's process id, or 0 */
-	WalSndState state;			/* this walsender's state */
-	XLogRecPtr	sentPtr;		/* WAL has been sent up to this point */
+	pid_t		pid;			/* this__ walsender's process id, or 0 */
+	WalSndState state;			/* this__ walsender's state */
+	XLogRecPtr	sentPtr;		/* WAL has been sent up to this__ point */
 	bool		needreload;		/* does currently-open file need to be
 								 * reloaded? */
 
@@ -51,13 +51,13 @@ typedef struct WalSnd
 	slock_t		mutex;
 
 	/*
-	 * Pointer to the walsender's latch. Used by backends to wake up this
+	 * Pointer to the walsender's latch. Used by backends to wake up this__
 	 * walsender when it has work to do. NULL if the walsender isn't active.
 	 */
 	Latch	   *latch;
 
 	/*
-	 * The priority order of the standby managed by this WALSender, as listed
+	 * The priority order of the standby managed by this__ WALSender, as listed
 	 * in synchronous_standby_names, or 0 if not-listed. Protected by
 	 * SyncRepLock.
 	 */
@@ -77,13 +77,13 @@ typedef struct
 
 	/*
 	 * Current location of the head of the queue. All waiters should have a
-	 * waitLSN that follows this value. Protected by SyncRepLock.
+	 * waitLSN that follows this__ value. Protected by SyncRepLock.
 	 */
 	XLogRecPtr	lsn[NUM_SYNC_REP_WAIT_MODE];
 
 	/*
 	 * Are any sync standbys defined?  Waiting backends can't reload the
-	 * config file safely, so checkpointer updates this value as needed.
+	 * config file safely, so checkpointer updates this__ value as needed.
 	 * Protected by SyncRepLock.
 	 */
 	bool		sync_standbys_defined;

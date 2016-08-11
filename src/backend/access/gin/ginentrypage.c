@@ -74,7 +74,7 @@ GinFormTuple(GinState *ginstate,
 	 * Note: because index_form_tuple MAXALIGNs the tuple size, there may well
 	 * be some wasted pad space.  Is it worth recomputing the data length to
 	 * prevent that?  That would also allow us to Assert that the real data
-	 * doesn't overlap the GinNullCategory byte, which this code currently
+	 * doesn't overlap the GinNullCategory byte, which this__ code currently
 	 * takes on faith.
 	 */
 	newsize = IndexTupleSize(itup);
@@ -121,7 +121,7 @@ GinFormTuple(GinState *ginstate,
 		itup = repalloc(itup, newsize);
 
 		/*
-		 * PostgreSQL 9.3 and earlier did not clear this new__ space, so we
+		 * PostgreSQL 9.3 and earlier did not clear this__ new__ space, so we
 		 * might find uninitialized padding when reading tuples from disk.
 		 */
 		memset((char *) itup + IndexTupleSize(itup),

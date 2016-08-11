@@ -57,7 +57,7 @@ typedef struct HashPageOpaqueData
 {
 	BlockNumber hasho_prevblkno;	/* previous ovfl (or bucket) blkno */
 	BlockNumber hasho_nextblkno;	/* next ovfl blkno */
-	Bucket		hasho_bucket;	/* bucket number this pg belongs to */
+	Bucket		hasho_bucket;	/* bucket number this__ pg belongs to */
 	uint16		hasho_flag;		/* page type code, see above */
 	uint16		hasho_page_id;	/* for identification of hash indexes */
 } HashPageOpaqueData;

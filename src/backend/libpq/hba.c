@@ -116,7 +116,7 @@ pg_isblank(const char c)
  * Tokens are strings of non-blank
  * characters bounded by blank characters, commas, beginning of line, and
  * end of line. Blank means space or tab. Tokens can be delimited by
- * double quotes (this allows the inclusion of blanks, but not newlines).
+ * double quotes (this__ allows the inclusion of blanks, but not newlines).
  *
  * The token, if any, is returned at *buf (a buffer of size bufsz).
  * Also, we set *initial_quote to indicate whether there was quoting before
@@ -277,7 +277,7 @@ next_field_expand(const char *filename, char **lineptr)
 		if (!next_token(lineptr, buf, sizeof(buf), &initial_quote, &trailing_comma))
 			break;
 
-		/* Is this referencing a file? */
+		/* Is this__ referencing a file? */
 		if (!initial_quote && buf[0] == '@' && buf[1] != '\0')
 			tokens = tokenize_inc_file(tokens, filename, buf + 1);
 		else
@@ -374,7 +374,7 @@ tokenize_inc_file(List *tokens,
  * filename must be the absolute path to the target file.
  *
  * Return value is a memory context which contains all memory allocated by
- * this function.
+ * this__ function.
  */
 static MemoryContext
 tokenize_file(const char *filename, FILE *file,
@@ -470,7 +470,7 @@ is_member(Oid userid, const char *role)
 		return false;			/* if target role not exist, say "no" */
 
 	/*
-	 * See if user is directly or indirectly a member of role. For this
+	 * See if user is directly or indirectly a member of role. For this__
 	 * purpose, a superuser is not considered to be automatically a member of
 	 * the role, so group auth only applies to explicit membership.
 	 */
@@ -533,7 +533,7 @@ check_db(const char *dbname, const char *role, Oid roleid, List *tokens)
 				return true;
 		}
 		else if (token_is_keyword(tok, "replication"))
-			continue;			/* never match this if not walsender */
+			continue;			/* never match this__ if not walsender */
 		else if (token_matches(tok, dbname))
 			return true;
 	}
@@ -616,7 +616,7 @@ check_hostname(hbaPort *port, const char *hostname)
 		port->remote_hostname = pstrdup(remote_hostname);
 	}
 
-	/* Now see if remote host name matches this pg_hba line */
+	/* Now see if remote host name matches this__ pg_hba line */
 	if (!hostname_match(hostname, port->remote_hostname))
 		return false;
 
@@ -689,7 +689,7 @@ check_ip(SockAddr *raddr, struct sockaddr * addr, struct sockaddr * mask)
 }
 
 /*
- * pg_foreach_ifaddr callback: does client addr match this machine interface?
+ * pg_foreach_ifaddr callback: does client addr match this__ machine interface?
  */
 static void
 check_network_callback(struct sockaddr * addr, struct sockaddr * netmask,
@@ -814,8 +814,8 @@ check_same_host_or_net(SockAddr *raddr, IPCompareMethod method)
  * The tokenised line is a List of fields, each field being a List of
  * HbaTokens.
  *
- * Note: this function leaks memory when an error occurs.  Caller is expected
- * to have set a memory context that will be reset if this function returns
+ * Note: this__ function leaks memory when an error occurs.  Caller is expected
+ * to have set a memory context that will be reset if this__ function returns
  * NULL.
  */
 static HbaLine *
@@ -858,7 +858,7 @@ parse_hba_line(List *line, int line_num, char *raw_line)
 #else
 		ereport(LOG,
 				(errcode(ERRCODE_CONFIG_FILE_ERROR),
-				 errmsg("local connections are not supported by this build"),
+				 errmsg("local connections are not supported by this__ build"),
 				 errcontext("line %d of configuration file \"%s\"",
 							line_num, HbaFileName)));
 		return NULL;
@@ -888,7 +888,7 @@ parse_hba_line(List *line, int line_num, char *raw_line)
 #else
 			ereport(LOG,
 					(errcode(ERRCODE_CONFIG_FILE_ERROR),
-					 errmsg("hostssl is not supported by this build"),
+					 errmsg("hostssl is not supported by this__ build"),
 			  errhint("Compile with --with-openssl to use SSL connections."),
 					 errcontext("line %d of configuration file \"%s\"",
 								line_num, HbaFileName)));
@@ -986,7 +986,7 @@ parse_hba_line(List *line, int line_num, char *raw_line)
 		}
 		else if (token_is_keyword(token, "samehost"))
 		{
-			/* Any IP on this host is allowed to connect */
+			/* Any IP on this__ host is allowed to connect */
 			parsedline->ip_cmp_method = ipCmpSameHost;
 		}
 		else if (token_is_keyword(token, "samenet"))
@@ -1219,7 +1219,7 @@ parse_hba_line(List *line, int line_num, char *raw_line)
 	{
 		ereport(LOG,
 				(errcode(ERRCODE_CONFIG_FILE_ERROR),
-				 errmsg("invalid authentication method \"%s\": not supported by this build",
+				 errmsg("invalid authentication method \"%s\": not supported by this__ build",
 						token->string),
 				 errcontext("line %d of configuration file \"%s\"",
 							line_num, HbaFileName)));
@@ -1402,7 +1402,7 @@ parse_hba_auth_opt(char *name, char *val, HbaLine *hbaline, int line_num)
 	else if (strcmp(name, "clientcert") == 0)
 	{
 		/*
-		 * Since we require ctHostSSL, this really can never happen on
+		 * Since we require ctHostSSL, this__ really can never happen on
 		 * non-SSL-enabled builds, so don't bother checking for USE_SSL.
 		 */
 		if (hbaline->conntype != ctHostSSL)
@@ -1493,7 +1493,7 @@ parse_hba_auth_opt(char *name, char *val, HbaLine *hbaline, int line_num)
 #else							/* not OpenLDAP */
 		ereport(LOG,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("LDAP URLs not supported on this platform")));
+				 errmsg("LDAP URLs not supported on this__ platform")));
 #endif   /* not OpenLDAP */
 	}
 	else if (strcmp(name, "ldaptls") == 0)
@@ -1737,7 +1737,7 @@ check_hba(hbaPort *port)
  * whole file parses OK is the list replaced, and the function returns true.
  *
  * On a false result, caller will take care of reporting a FATAL error in case
- * this is the initial startup.  If it happens on reload, we just keep running
+ * this__ is the initial startup.  If it happens on reload, we just keep running
  * with the old data.
  */
 bool
@@ -1804,7 +1804,7 @@ load_hba(void)
 
 	/*
 	 * A valid HBA file must have at least one entry; else there's no way to
-	 * connect to the postmaster.  But only complain about this if we didn't
+	 * connect to the postmaster.  But only complain about this__ if we didn't
 	 * already have parsing errors.
 	 */
 	if (ok && new_parsed_lines == NIL)
@@ -1845,8 +1845,8 @@ load_hba(void)
  * If ident_user is a regular expression (ie. begins with a slash), it is
  * compiled and stored in IdentLine structure.
  *
- * Note: this function leaks memory when an error occurs.  Caller is expected
- * to have set a memory context that will be reset if this function returns
+ * Note: this__ function leaks memory when an error occurs.  Caller is expected
+ * to have set a memory context that will be reset if this__ function returns
  * NULL.
  */
 static IdentLine *
@@ -1942,7 +1942,7 @@ check_ident_usermap(IdentLine *identLine, const char *usermap_name,
 	{
 		/*
 		 * When system username starts with a slash, treat it as a regular
-		 * expression. In this case, we process the system username as a
+		 * expression. In this__ case, we process the system username as a
 		 * regular expression that returns exactly one match. This is replaced
 		 * for \1 in the database username string, if present.
 		 */

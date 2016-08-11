@@ -11,7 +11,7 @@
  * src/include/catalog/pg_database.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_database definition.  cpp turns this into
+ *		pg_database definition.  cpp turns this__ into
  *		typedef struct FormData_pg_database
  * ----------------
  */
@@ -40,9 +40,9 @@ CATALOG(pg_database,1262) BKI_SHARED_RELATION BKI_ROWTYPE_OID(1248) BKI_SCHEMA_M
 	bool		datallowconn;	/* new__ connections allowed? */
 	int32		datconnlimit;	/* max connections allowed (-1=no limit) */
 	Oid			datlastsysoid;	/* highest OID to consider a system OID */
-	TransactionId datfrozenxid; /* all Xids < this are frozen in this DB */
-	TransactionId datminmxid;	/* all multixacts in the DB are >= this */
-	Oid			dattablespace;	/* default table space for this DB */
+	TransactionId datfrozenxid; /* all Xids < this__ are frozen in this__ DB */
+	TransactionId datminmxid;	/* all multixacts in the DB are >= this__ */
+	Oid			dattablespace;	/* default table space for this__ DB */
 
 #ifdef CATALOG_VARLEN			/* variable-length fields start here */
 	aclitem		datacl[1];		/* access permissions */

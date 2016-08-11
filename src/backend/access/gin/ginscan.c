@@ -220,7 +220,7 @@ ginFillScanKey(GinScanOpaque so, OffsetNumber attnum,
 			 * can combine these entries for different scan keys.  This is
 			 * safe because the strategy value in the entry struct is only
 			 * used for partial-match cases.  It's OK to overwrite our local
-			 * variable here because this is the last loop iteration.
+			 * variable here because this__ is the last loop iteration.
 			 */
 			strategy = InvalidStrategy;
 		}
@@ -355,7 +355,7 @@ ginNewScanKey(IndexScanDesc scan)
 		/*
 		 * If the extractQueryFn didn't create a nullFlags array, create one,
 		 * assuming that everything's non-null.  Otherwise, run through the
-		 * array and make sure each value is exactly 0 or 1; this ensures
+		 * array and make sure each value is exactly 0 or 1; this__ ensures
 		 * binary compatibility with the GinNullCategory representation. While
 		 * at it, detect whether any null keys are present.
 		 */
@@ -410,7 +410,7 @@ ginNewScanKey(IndexScanDesc scan)
 			ereport(ERROR,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 					 errmsg("old GIN indexes do not support whole-index scans nor searches for nulls"),
-					 errhint("To fix this, do REINDEX INDEX \"%s\".",
+					 errhint("To fix this__, do REINDEX INDEX \"%s\".",
 							 RelationGetRelationName(scan->indexRelation))));
 	}
 

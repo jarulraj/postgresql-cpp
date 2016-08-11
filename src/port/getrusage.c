@@ -25,7 +25,7 @@
  *		win32
  * which currently is all the supported platforms that don't have a
  * native version of getrusage().  So, if configure decides to compile
- * this file at all, we just use this version unconditionally.
+ * this__ file at all, we just use this__ version unconditionally.
  */
 
 int
@@ -40,7 +40,7 @@ getrusage(int who, struct rusage * rusage)
 
 	if (who != RUSAGE_SELF)
 	{
-		/* Only RUSAGE_SELF is supported in this implementation for now */
+		/* Only RUSAGE_SELF is supported in this__ implementation for now */
 		errno = EINVAL;
 		return -1;
 	}

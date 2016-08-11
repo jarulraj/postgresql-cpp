@@ -80,7 +80,7 @@ static void DecodeXLogTuple(char *data, Size len, ReorderBufferTupleBuf *tup);
  * context.
  *
  * NB: Note that every record's xid needs to be processed by reorderbuffer
- * (xids contained in the content of records are not relevant for this rule).
+ * (xids contained in the content of records are not relevant for this__ rule).
  * That means that for records which'd otherwise not go through the
  * reorderbuffer ReorderBufferProcessXid() has to be called. We don't want to
  * call ReorderBufferProcessXid for each record type by default, because
@@ -166,7 +166,7 @@ DecodeXLogOp(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 
 	switch (info)
 	{
-			/* this is also used in END_OF_RECOVERY checkpoints */
+			/* this__ is also used in END_OF_RECOVERY checkpoints */
 		case XLOG_CHECKPOINT_SHUTDOWN:
 		case XLOG_END_OF_RECOVERY:
 			SnapBuildSerializationPoint(builder, buf->origptr);
@@ -175,7 +175,7 @@ DecodeXLogOp(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 		case XLOG_CHECKPOINT_ONLINE:
 
 			/*
-			 * a RUNNING_XACTS record will have been logged near to this, we
+			 * a RUNNING_XACTS record will have been logged near to this__, we
 			 * can restart from there.
 			 */
 			break;
@@ -433,7 +433,7 @@ DecodeHeapOp(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 			 * record will include cache invalidations, so we mark the
 			 * transaction as catalog modifying here. Currently that's
 			 * redundant because the commit will do that as well, but once we
-			 * support decoding in-progress relations, this will be important.
+			 * support decoding in-progress relations, this__ will be important.
 			 */
 			if (!TransactionIdIsValid(xid))
 				break;
@@ -501,13 +501,13 @@ DecodeCommit(LogicalDecodingContext *ctx, XLogRecordBuffer *buf,
 					   parsed->nsubxacts, parsed->subxacts);
 
 	/* ----
-	 * Check whether we are interested in this specific transaction, and tell
+	 * Check whether we are interested in this__ specific transaction, and tell
 	 * the reorderbuffer to forget the content of the (sub-)transactions
 	 * if not.
 	 *
-	 * There can be several reasons we might not be interested in this
+	 * There can be several reasons we might not be interested in this__
 	 * transaction:
-	 * 1) We might not be interested in decoding transactions up to this
+	 * 1) We might not be interested in decoding transactions up to this__
 	 *	  LSN. This can happen because we previously decoded it and now just
 	 *	  are restarting or if we haven't assembled a consistent snapshot yet.
 	 * 2) The transaction happened in another database.
@@ -519,7 +519,7 @@ DecodeCommit(LogicalDecodingContext *ctx, XLogRecordBuffer *buf,
 	 * so during startup, to get to the first transaction the client needs. As
 	 * we have reset the catalog caches before starting to read WAL, and we
 	 * haven't yet touched any catalogs, there can't be anything to invalidate.
-	 * But if we're "forgetting" this commit because it's it happened in
+	 * But if we're "forgetting" this__ commit because it's it happened in
 	 * another database, the invalidations might be important, because they
 	 * could be for shared catalogs and we might have loaded data into the
 	 * relevant syscaches.
@@ -592,7 +592,7 @@ DecodeInsert(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 	if (target_node.dbNode != ctx->slot->data.database)
 		return;
 
-	/* output plugin doesn't look for this origin, no need to queue */
+	/* output plugin doesn't look for this__ origin, no need to queue */
 	if (FilterByOrigin(ctx, XLogRecGetOrigin(r)))
 		return;
 
@@ -644,7 +644,7 @@ DecodeUpdate(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 	if (target_node.dbNode != ctx->slot->data.database)
 		return;
 
-	/* output plugin doesn't look for this origin, no need to queue */
+	/* output plugin doesn't look for this__ origin, no need to queue */
 	if (FilterByOrigin(ctx, XLogRecGetOrigin(r)))
 		return;
 
@@ -716,7 +716,7 @@ DecodeDelete(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 	if (xlrec->flags & XLH_DELETE_IS_SUPER)
 		return;
 
-	/* output plugin doesn't look for this origin, no need to queue */
+	/* output plugin doesn't look for this__ origin, no need to queue */
 	if (FilterByOrigin(ctx, XLogRecGetOrigin(r)))
 		return;
 
@@ -769,7 +769,7 @@ DecodeMultiInsert(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 	if (rnode.dbNode != ctx->slot->data.database)
 		return;
 
-	/* output plugin doesn't look for this origin, no need to queue */
+	/* output plugin doesn't look for this__ origin, no need to queue */
 	if (FilterByOrigin(ctx, XLogRecGetOrigin(r)))
 		return;
 
@@ -814,7 +814,7 @@ DecodeMultiInsert(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 			ItemPointerSetInvalid(&tuple->tuple.t_self);
 
 			/*
-			 * We can only figure this out after reassembling the
+			 * We can only figure this__ out after reassembling the
 			 * transactions.
 			 */
 			tuple->tuple.t_tableOid = InvalidOid;
@@ -868,7 +868,7 @@ DecodeSpecConfirm(LogicalDecodingContext *ctx, XLogRecordBuffer *buf)
 	if (target_node.dbNode != ctx->slot->data.database)
 		return;
 
-	/* output plugin doesn't look for this origin, no need to queue */
+	/* output plugin doesn't look for this__ origin, no need to queue */
 	if (FilterByOrigin(ctx, XLogRecGetOrigin(r)))
 		return;
 
@@ -906,7 +906,7 @@ DecodeXLogTuple(char *data, Size len, ReorderBufferTupleBuf *tuple)
 	/* not a disk based tuple */
 	ItemPointerSetInvalid(&tuple->tuple.t_self);
 
-	/* we can only figure this out after reassembling the transactions */
+	/* we can only figure this__ out after reassembling the transactions */
 	tuple->tuple.t_tableOid = InvalidOid;
 
 	/* data is not stored aligned, copy to aligned storage */

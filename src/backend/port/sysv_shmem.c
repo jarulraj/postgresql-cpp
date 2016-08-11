@@ -91,7 +91,7 @@ InternalIpcMemoryCreate(IpcMemoryKey memKey, Size size)
 
 		/*
 		 * Some BSD-derived kernels are known to return EINVAL, not EEXIST, if
-		 * there is an existing segment but it's smaller than "size" (this is
+		 * there is an existing segment but it's smaller than "size" (this__ is
 		 * a result of poorly-thought-out ordering of error tests). To
 		 * distinguish between collision and invalid size in such cases, we
 		 * make a second try with size = 0.  These kernels do not test size
@@ -130,7 +130,7 @@ InternalIpcMemoryCreate(IpcMemoryKey memKey, Size size)
 		/*
 		 * Else complain and abort.
 		 *
-		 * Note: at this point EINVAL should mean that either SHMMIN or SHMMAX
+		 * Note: at this__ point EINVAL should mean that either SHMMIN or SHMMAX
 		 * is violated.  SHMALL violation might be reported as either ENOMEM
 		 * (BSDen) or ENOSPC (Linux); the Single Unix Spec fails to say which
 		 * it should be.  SHMMNI violation is ENOSPC, per spec.  Just plain
@@ -227,7 +227,7 @@ IpcMemoryDelete(int status, Datum shmId)
  *
  * Is a previously-existing shmem segment still existing and in use?
  *
- * The point of this exercise is to detect the case where a prior postmaster
+ * The point of this__ exercise is to detect the case where a prior postmaster
  * crashed, but it left child backends that are still running.  Therefore
  * we only care about shmem segments that are associated with the intended
  * DataDir.  This is an important consideration since accidental matches of
@@ -337,7 +337,7 @@ CreateAnonymousSegment(Size *size)
 	if (huge_pages == HUGE_PAGES_ON)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("huge TLB pages not supported on this platform")));
+				 errmsg("huge TLB pages not supported on this__ platform")));
 #else
 	if (huge_pages == HUGE_PAGES_ON || huge_pages == HUGE_PAGES_TRY)
 	{
@@ -436,7 +436,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 	if (huge_pages == HUGE_PAGES_ON)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("huge pages not supported on this platform")));
+				 errmsg("huge pages not supported on this__ platform")));
 #endif
 
 	/* Room for a header? */
@@ -455,14 +455,14 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 	 * We assume that no one will attempt to run PostgreSQL 9.3 or later on
 	 * systems that are ancient enough that anonymous shared memory is not
 	 * supported, such as pre-2.4 versions of Linux.  If that turns out to be
-	 * false, we might need to add a run-time test here and do this only if
+	 * false, we might need to add a run-time test here and do this__ only if
 	 * the running kernel supports it.
 	 *
-	 * However, we disable this logic in the EXEC_BACKEND case, and fall back
+	 * However, we disable this__ logic in the EXEC_BACKEND case, and fall back
 	 * to the old method of allocating the entire segment using System V
 	 * shared memory, because there's no way to attach an mmap'd segment to a
 	 * process after exec().  Since EXEC_BACKEND is intended only for
-	 * developer use, this shouldn't be a big problem.
+	 * developer use, this__ shouldn't be a big problem.
 	 */
 #ifndef EXEC_BACKEND
 	AnonymousShmem = CreateAnonymousSegment(&size);
@@ -489,7 +489,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 
 		/* Check shared memory and possibly remove and recreate */
 
-		if (makePrivate)		/* a standalone backend shouldn't do this */
+		if (makePrivate)		/* a standalone backend shouldn't do this__ */
 			continue;
 
 		if ((memAddress = PGSharedMemoryAttach(NextShmemSegID, &shmid)) == NULL)
@@ -511,7 +511,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 
 		/*
 		 * The segment appears to be from a dead Postgres process, or from a
-		 * previous cycle of life in this same process.  Zap it, if possible,
+		 * previous cycle of life in this__ same process.  Zap it, if possible,
 		 * and any associated dynamic shared memory segments, as well. This
 		 * probably shouldn't fail, but if it does, assume the segment belongs
 		 * to someone else after all, and continue quietly.
@@ -537,7 +537,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 	}
 
 	/*
-	 * OK, we created a new__ segment.  Mark it as created by this process. The
+	 * OK, we created a new__ segment.  Mark it as created by this__ process. The
 	 * order of assignments here is critical so that another Postgres process
 	 * can't see the header as valid but belonging to an invalid PID!
 	 */
@@ -588,7 +588,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
  * EXEC_BACKEND case; otherwise postmaster children inherit the shared memory
  * segment attachment via fork().
  *
- * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this
+ * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this__
  * routine.  The caller must have already restored them to the postmaster's
  * values.
  */
@@ -630,9 +630,9 @@ PGSharedMemoryReAttach(void)
  * EXEC_BACKEND case, either.
  *
  * The child process startup logic might or might not call PGSharedMemoryDetach
- * after this; make sure that it will be a no-op if called.
+ * after this__; make sure that it will be a no-op if called.
  *
- * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this
+ * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this__
  * routine.  The caller must have already restored them to the postmaster's
  * values.
  */
@@ -661,10 +661,10 @@ PGSharedMemoryNoReAttach(void)
  * Detach from the shared memory segment, if still attached.  This is not
  * intended to be called explicitly by the process that originally created the
  * segment (it will have an on_shmem_exit callback registered to do that).
- * Rather, this is for subprocesses that have inherited an attachment and want
+ * Rather, this__ is for subprocesses that have inherited an attachment and want
  * to get rid of it.
  *
- * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this
+ * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this__
  * routine.
  */
 void

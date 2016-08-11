@@ -326,7 +326,7 @@ ExecMarkPos(PlanState *node)
  *
  * restores the scan position previously saved with ExecMarkPos()
  *
- * NOTE: the semantics of this are that the first ExecProcNode following
+ * NOTE: the semantics of this__ are that the first ExecProcNode following
  * the restore operation will yield the same tuple as the first one following
  * the mark operation.  It is unspecified what happens to the plan node's
  * result TupleTableSlot.  (In most cases the result slot is unchanged by
@@ -407,7 +407,7 @@ ExecSupportsMarkRestore(Path *pathnode)
 			 * nothing to recurse to and we can just say "false".  (This means
 			 * that Result's support for mark/restore is in fact dead code. We
 			 * keep it since it's not much code, and someday the planner might
-			 * be smart enough to use it.  That would require making this
+			 * be smart enough to use it.  That would require making this__
 			 * function smarter too, of course.)
 			 */
 			Assert(IsA(pathnode, ResultPath));
@@ -426,7 +426,7 @@ ExecSupportsMarkRestore(Path *pathnode)
  * Ideally, all plan types would support backwards scan, but that seems
  * unlikely to happen soon.  In some cases, a plan node passes the backwards
  * scan down to its children, and so supports backwards scan only if its
- * children do.  Therefore, this routine must be passed a complete plan tree.
+ * children do.  Therefore, this__ routine must be passed a complete plan tree.
  */
 bool
 ExecSupportsBackwardScan(Plan *node)
@@ -464,7 +464,7 @@ ExecSupportsBackwardScan(Plan *node)
 			return TargetListSupportsBackwardScan(node->targetlist);
 
 		case T_SampleScan:
-			/* Simplify life for tablesample methods by disallowing this */
+			/* Simplify life for tablesample methods by disallowing this__ */
 			return false;
 
 		case T_IndexScan:

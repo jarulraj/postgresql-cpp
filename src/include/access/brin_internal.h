@@ -27,7 +27,7 @@
 /* struct returned by "OpcInfo" amproc */
 typedef struct BrinOpcInfo
 {
-	/* Number of columns stored in an index column of this opclass */
+	/* Number of columns stored in an index column of this__ opclass */
 	uint16		oi_nstored;
 
 	/* Opaque pointer for the opclass' private__ use */

@@ -11,7 +11,7 @@
  * src/include/catalog/pg_am.h
  *
  * NOTES
- *		the genbki.pl script reads this file and generates .bki
+ *		the genbki.pl script reads this__ file and generates .bki
  *		information from the DATA() statements.
  *
  *		XXX do NOT break up DATA() statements into multiple lines!
@@ -25,7 +25,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_am definition.  cpp turns this into
+ *		pg_am definition.  cpp turns this__ into
  *		typedef struct FormData_pg_am
  * ----------------
  */
@@ -35,10 +35,10 @@ CATALOG(pg_am,2601)
 {
 	NameData	amname;			/* access method name */
 	int16		amstrategies;	/* total number of strategies (operators) by
-								 * which we can traverse/search this AM. Zero
+								 * which we can traverse/search this__ AM. Zero
 								 * if AM does not have a fixed set of strategy
 								 * assignments. */
-	int16		amsupport;		/* total number of support functions that this
+	int16		amsupport;		/* total number of support functions that this__
 								 * AM uses */
 	bool		amcanorder;		/* does AM support order by column value? */
 	bool		amcanorderbyop; /* does AM support order by operator__ result? */
@@ -52,7 +52,7 @@ CATALOG(pg_am,2601)
 	bool		amclusterable;	/* does AM support cluster command? */
 	bool		ampredlocks;	/* does AM handle predicate locks? */
 	Oid			amkeytype;		/* type of data in index, or InvalidOid */
-	regproc		aminsert;		/* "insert this tuple" function */
+	regproc		aminsert;		/* "insert this__ tuple" function */
 	regproc		ambeginscan;	/* "prepare for index scan" function */
 	regproc		amgettuple;		/* "next valid tuple" function, or 0 */
 	regproc		amgetbitmap;	/* "fetch all valid tuples" function, or 0 */

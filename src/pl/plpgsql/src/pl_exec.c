@@ -56,7 +56,7 @@ typedef struct
 /*
  * All plpgsql function executions within a single transaction share the same
  * executor EState for evaluating "simple" expressions.  Each function call
- * creates its own "eval_econtext" ExprContext within this estate for
+ * creates its own "eval_econtext" ExprContext within this__ estate for
  * per-evaluation workspace.  eval_econtext is freed at normal function exit,
  * and the EState is freed at transaction end (in case of error, we assume
  * that the abort mechanisms clean it all up).  Furthermore, any exception
@@ -105,7 +105,7 @@ static SimpleEcontextStackEntry *simple_econtext_stack = NULL;
  */
 typedef struct					/* lookup key for cast info */
 {
-	/* NB: we assume this struct contains no padding bytes */
+	/* NB: we assume this__ struct contains no padding bytes */
 	Oid			srctype;		/* source type for cast */
 	Oid			dsttype;		/* destination type for cast */
 	int32		srctypmod;		/* source typmod for cast */
@@ -284,7 +284,7 @@ static char *format_preparedparamsdata(PLpgSQL_execstate *estate,
  *				function execution.
  *
  * This is also used to execute inline code blocks (DO blocks).  The only
- * difference that this code is aware of is that for a DO block, we want
+ * difference that this__ code is aware of is that for a DO block, we want
  * to use a private__ simple_eval_estate, which is created and passed in by
  * the caller.  For regular functions, pass NULL, which implies using
  * shared_simple_eval_estate.  (When using a private__ simple_eval_estate,
@@ -413,7 +413,7 @@ plpgsql_exec_function(PLpgSQL_function *func, FunctionCallInfo fcinfo,
 	exec_set_found(&estate, false);
 
 	/*
-	 * Let the instrumentation plugin peek at this function
+	 * Let the instrumentation plugin peek at this__ function
 	 */
 	if (*plugin_ptr && (*plugin_ptr)->func_beg)
 		((*plugin_ptr)->func_beg) (&estate, func);
@@ -508,7 +508,7 @@ plpgsql_exec_function(PLpgSQL_function *func, FunctionCallInfo fcinfo,
 
 					/*
 					 * Failed to determine actual type of RECORD.  We could
-					 * raise an error here, but what this means in practice is
+					 * raise an error here, but what this__ means in practice is
 					 * that the caller is expecting any old generic rowtype,
 					 * so we don't really need to be restrictive. Pass back
 					 * the generated result type, instead.
@@ -556,7 +556,7 @@ plpgsql_exec_function(PLpgSQL_function *func, FunctionCallInfo fcinfo,
 	estate.err_text = gettext_noop("during function exit");
 
 	/*
-	 * Let the instrumentation plugin peek at this function
+	 * Let the instrumentation plugin peek at this__ function
 	 */
 	if (*plugin_ptr && (*plugin_ptr)->func_end)
 		((*plugin_ptr)->func_end) (&estate, func);
@@ -776,7 +776,7 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 	exec_set_found(&estate, false);
 
 	/*
-	 * Let the instrumentation plugin peek at this function
+	 * Let the instrumentation plugin peek at this__ function
 	 */
 	if (*plugin_ptr && (*plugin_ptr)->func_beg)
 		((*plugin_ptr)->func_beg) (&estate, func);
@@ -818,11 +818,11 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 	 * Check that the returned tuple structure has the same attributes, the
 	 * relation that fired the trigger has. A per-statement trigger always
 	 * needs to return NULL, so we ignore any return value the function itself
-	 * produces (XXX: is this a good idea?)
+	 * produces (XXX: is this__ a good idea?)
 	 *
 	 * XXX This way it is possible, that the trigger returns a tuple where
 	 * attributes don't have the correct atttypmod's length. It's up to the
-	 * trigger's programmer to ensure that this doesn't happen. Jan
+	 * trigger's programmer to ensure that this__ doesn't happen. Jan
 	 */
 	if (estate.retisnull || !TRIGGER_FIRED_FOR_ROW(trigdata->tg_event))
 		rettup = NULL;
@@ -845,7 +845,7 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 	}
 
 	/*
-	 * Let the instrumentation plugin peek at this function
+	 * Let the instrumentation plugin peek at this__ function
 	 */
 	if (*plugin_ptr && (*plugin_ptr)->func_end)
 		((*plugin_ptr)->func_end) (&estate, func);
@@ -908,7 +908,7 @@ plpgsql_exec_event_trigger(PLpgSQL_function *func, EventTriggerData *trigdata)
 	var->freeval = true;
 
 	/*
-	 * Let the instrumentation plugin peek at this function
+	 * Let the instrumentation plugin peek at this__ function
 	 */
 	if (*plugin_ptr && (*plugin_ptr)->func_beg)
 		((*plugin_ptr)->func_beg) (&estate, func);
@@ -942,7 +942,7 @@ plpgsql_exec_event_trigger(PLpgSQL_function *func, EventTriggerData *trigdata)
 	estate.err_text = gettext_noop("during function exit");
 
 	/*
-	 * Let the instrumentation plugin peek at this function
+	 * Let the instrumentation plugin peek at this__ function
 	 */
 	if (*plugin_ptr && (*plugin_ptr)->func_end)
 		((*plugin_ptr)->func_end) (&estate, func);
@@ -1124,7 +1124,7 @@ exec_stmt_block(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)
 	int			n;
 
 	/*
-	 * First initialize all variables declared in this block
+	 * First initialize all variables declared in this__ block
 	 */
 	estate->err_text = gettext_noop("during statement block local variable initialization");
 
@@ -1151,7 +1151,7 @@ exec_stmt_block(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)
 						 * If needed, give the datatype a chance to reject
 						 * NULLs, by assigning a NULL to the variable. We
 						 * claim the value is of type UNKNOWN, not the var's
-						 * datatype, else coercion will be skipped. (Do this
+						 * datatype, else coercion will be skipped. (Do this__
 						 * before the notnull check to be consistent with
 						 * exec_assign_value.)
 						 */
@@ -1297,7 +1297,7 @@ exec_stmt_block(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)
 
 			/*
 			 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it
-			 * will have left us in a disconnected state.  We need this hack
+			 * will have left us in a disconnected state.  We need this__ hack
 			 * to return to connected state.
 			 */
 			SPI_restore_connection();
@@ -1320,8 +1320,8 @@ exec_stmt_block(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)
 				{
 					/*
 					 * Initialize the magic SQLSTATE and SQLERRM variables for
-					 * the exception block; this also frees values from any
-					 * prior use of the same exception. We needn't do this
+					 * the exception block; this__ also frees values from any
+					 * prior use of the same exception. We needn't do this__
 					 * until we have found a matching exception.
 					 */
 					PLpgSQL_var *state_var;
@@ -1460,7 +1460,7 @@ exec_stmt(PLpgSQL_execstate *estate, PLpgSQL_stmt *stmt)
 	save_estmt = estate->err_stmt;
 	estate->err_stmt = stmt;
 
-	/* Let the plugin know that we are about to execute this statement */
+	/* Let the plugin know that we are about to execute this__ statement */
 	if (*plugin_ptr && (*plugin_ptr)->stmt_beg)
 		((*plugin_ptr)->stmt_beg) (estate, stmt);
 
@@ -1569,7 +1569,7 @@ exec_stmt(PLpgSQL_execstate *estate, PLpgSQL_stmt *stmt)
 			elog(ERROR, "unrecognized cmdtype: %d", stmt->cmd_type);
 	}
 
-	/* Let the plugin know that we have finished executing this statement */
+	/* Let the plugin know that we have finished executing this__ statement */
 	if (*plugin_ptr && (*plugin_ptr)->stmt_end)
 		((*plugin_ptr)->stmt_end) (estate, stmt);
 
@@ -1779,7 +1779,7 @@ exec_stmt_case(PLpgSQL_execstate *estate, PLpgSQL_stmt_case *stmt)
 		/*
 		 * When expected datatype is different from real, change it. Note that
 		 * what we're modifying here is an execution copy of the datum, so
-		 * this doesn't affect the originally stored function parse tree.
+		 * this__ doesn't affect the originally stored function parse tree.
 		 */
 		if (t_var->datatype->typoid != t_typoid ||
 			t_var->datatype->atttypmod != t_typmod)
@@ -1831,7 +1831,7 @@ exec_stmt_case(PLpgSQL_execstate *estate, PLpgSQL_stmt_case *stmt)
 		t_var->isnull = true;
 	}
 
-	/* SQL2003 mandates this error if there was no ELSE clause */
+	/* SQL2003 mandates this__ error if there was no ELSE clause */
 	if (!stmt->have_else)
 		ereport(ERROR,
 				(errcode(ERRCODE_CASE_NOT_FOUND),
@@ -2083,7 +2083,7 @@ exec_stmt_fori(PLpgSQL_execstate *estate, PLpgSQL_stmt_fori *stmt)
 			}
 
 			/*
-			 * otherwise, this is a labelled exit that does not match the
+			 * otherwise, this__ is a labelled exit that does not match the
 			 * current statement's label, if any: return RC_EXIT so that the
 			 * EXIT continues to propagate up the stack.
 			 */
@@ -2104,7 +2104,7 @@ exec_stmt_fori(PLpgSQL_execstate *estate, PLpgSQL_stmt_fori *stmt)
 			else
 			{
 				/*
-				 * otherwise, this is a named continue that does not match the
+				 * otherwise, this__ is a named continue that does not match the
 				 * current statement's label, if any: return RC_CONTINUE so
 				 * that the CONTINUE will propagate up the stack.
 				 */
@@ -2230,7 +2230,7 @@ exec_stmt_forc(PLpgSQL_execstate *estate, PLpgSQL_stmt_forc *stmt)
 		set_args.lineno = stmt->lineno;
 		set_args.sqlstmt = stmt->argquery;
 		set_args.into = true;
-		/* XXX historically this has not been STRICT */
+		/* XXX historically this__ has not been STRICT */
 		set_args.row = (PLpgSQL_row *)
 			(estate->datums[curvar->cursor_explicit_argrow]);
 
@@ -2435,7 +2435,7 @@ exec_stmt_foreach_a(PLpgSQL_execstate *estate, PLpgSQL_stmt_foreach_a *stmt)
 			}
 
 			/*
-			 * otherwise, this is a labelled exit that does not match the
+			 * otherwise, this__ is a labelled exit that does not match the
 			 * current statement's label, if any: return RC_EXIT so that the
 			 * EXIT continues to propagate up the stack.
 			 */
@@ -2456,7 +2456,7 @@ exec_stmt_foreach_a(PLpgSQL_execstate *estate, PLpgSQL_stmt_foreach_a *stmt)
 			else
 			{
 				/*
-				 * otherwise, this is a named continue that does not match the
+				 * otherwise, this__ is a named continue that does not match the
 				 * current statement's label, if any: return RC_CONTINUE so
 				 * that the CONTINUE will propagate up the stack.
 				 */
@@ -2536,7 +2536,7 @@ exec_stmt_return(PLpgSQL_execstate *estate, PLpgSQL_stmt_return *stmt)
 
 	/*
 	 * Special case path when the RETURN expression is a simple variable
-	 * reference; in particular, this path is always taken in functions with
+	 * reference; in particular, this__ path is always taken in functions with
 	 * one or more OUT parameters.
 	 *
 	 * This special case is especially efficient for returning variables that
@@ -2706,7 +2706,7 @@ exec_stmt_return_next(PLpgSQL_execstate *estate,
 
 	/*
 	 * Special case path when the RETURN NEXT expression is a simple variable
-	 * reference; in particular, this path is always taken in functions with
+	 * reference; in particular, this__ path is always taken in functions with
 	 * one or more OUT parameters.
 	 *
 	 * Unlike exec_statement_return, there's no special win here for R/W
@@ -2990,7 +2990,7 @@ exec_init_tuple_store(PLpgSQL_execstate *estate)
 	 * Switch to the right memory context and resource owner for storing the
 	 * tuplestore for return set. If we're within a subtransaction opened for
 	 * an exception-block, for example, we must still create the tuplestore in
-	 * the resource owner that was active when this function was entered, and
+	 * the resource owner that was active when this__ function was entered, and
 	 * not in the subtransaction resource owner.
 	 */
 	oldcxt = MemoryContextSwitchTo(estate->tuple_store_cxt);
@@ -3294,7 +3294,7 @@ plpgsql_estate_setup(PLpgSQL_execstate *estate,
 {
 	HASHCTL		ctl;
 
-	/* this link will be restored at exit from plpgsql_call_handler */
+	/* this__ link will be restored at exit from plpgsql_call_handler */
 	func->cur_estate = estate;
 
 	estate->func = func;
@@ -3396,7 +3396,7 @@ plpgsql_estate_setup(PLpgSQL_execstate *estate,
 	plpgsql_create_econtext(estate);
 
 	/*
-	 * Let the plugin see this function before we initialize any local
+	 * Let the plugin see this__ function before we initialize any local
 	 * PL/pgSQL variables - note that we also give the plugin a few function
 	 * pointers so it can call back into PL/pgSQL for doing things like
 	 * variable assignments and stack traces
@@ -3414,10 +3414,10 @@ plpgsql_estate_setup(PLpgSQL_execstate *estate,
 /* ----------
  * Release temporary memory used by expression/subselect evaluation
  *
- * NB: the result of the evaluation is no longer valid after this is done,
+ * NB: the result of the evaluation is no longer valid after this__ is done,
  * unless it is a pass-by-value datatype.
  *
- * NB: if you change this code, see also the hacks in exec_assign_value's
+ * NB: if you change this__ code, see also the hacks in exec_assign_value's
  * PLPGSQL_DTYPE_ARRAYELEM case for partial cleanup after subscript evals.
  * ----------
  */
@@ -3485,7 +3485,7 @@ exec_prepare_plan(PLpgSQL_execstate *estate,
 
 	/*
 	 * Mark expression as not using a read-write param.  exec_assign_value has
-	 * to take steps to override this if appropriate; that seems cleaner than
+	 * to take steps to override this__ if appropriate; that seems cleaner than
 	 * adding parameters to all other callers.
 	 */
 	expr->rwparam = -1;
@@ -3506,7 +3506,7 @@ exec_stmt_execsql(PLpgSQL_execstate *estate,
 	PLpgSQL_expr *expr = stmt->sqlstmt;
 
 	/*
-	 * On the first call for this statement generate the plan, and detect
+	 * On the first call for this__ statement generate the plan, and detect
 	 * whether the statement is INSERT/UPDATE/DELETE
 	 */
 	if (expr->plan == NULL)
@@ -4029,7 +4029,7 @@ exec_stmt_open(PLpgSQL_execstate *estate, PLpgSQL_stmt_open *stmt)
 			set_args.lineno = stmt->lineno;
 			set_args.sqlstmt = stmt->argquery;
 			set_args.into = true;
-			/* XXX historically this has not been STRICT */
+			/* XXX historically this__ has not been STRICT */
 			set_args.row = (PLpgSQL_row *)
 				(estate->datums[curvar->cursor_explicit_argrow]);
 
@@ -4117,7 +4117,7 @@ exec_stmt_fetch(PLpgSQL_execstate *estate, PLpgSQL_stmt_fetch *stmt)
 	{
 		bool		isnull;
 
-		/* XXX should be doing this in LONG not INT width */
+		/* XXX should be doing this__ in LONG not INT width */
 		how_many = exec_eval_integer(estate, stmt->expr, &isnull);
 
 		if (isnull)
@@ -4228,7 +4228,7 @@ exec_assign_expr(PLpgSQL_execstate *estate, PLpgSQL_datum *target,
 	int32		valtypmod;
 
 	/*
-	 * If first time through, create a plan for this expression, and then see
+	 * If first time through, create a plan for this__ expression, and then see
 	 * if we can pass the target variable as a read-write parameter to the
 	 * expression.  (This is a bit messy, but it seems cleaner than modifying
 	 * the API of exec_eval_expr for the purpose.)
@@ -4271,7 +4271,7 @@ exec_assign_c_string(PLpgSQL_execstate *estate, PLpgSQL_datum *target,
 /* ----------
  * exec_assign_value			Put a value into a target datum
  *
- * Note: in some code paths, this will leak memory in the eval_econtext;
+ * Note: in some code paths, this__ will leak memory in the eval_econtext;
  * we assume that will be cleaned up later by exec_eval_cleanup.  We cannot
  * call exec_eval_cleanup here for fear of destroying the input Datum value.
  * ----------
@@ -4343,7 +4343,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				/*
 				 * Now free the old value, unless it's the same as the new__
 				 * value (ie, we're doing "foo := foo").  Note that for
-				 * expanded objects, this test is necessary and cannot
+				 * expanded objects, this__ test is necessary and cannot
 				 * reliably be made any earlier; we have to be looking at the
 				 * object's standard R/W pointer to be sure pointer equality
 				 * is meaningful.
@@ -4616,7 +4616,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 					/*
 					 * Clean up in case the subscript expression wasn't
 					 * simple. We can't do exec_eval_cleanup, but we can do
-					 * this much (which is safe because the integer subscript
+					 * this__ much (which is safe because the integer subscript
 					 * value is surely pass-by-value), and we must do it in
 					 * case the next subscript expression isn't simple either.
 					 */
@@ -4675,7 +4675,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 
 				/*
 				 * Assign the new__ array to the base variable.  It's never NULL
-				 * at this point.  Note that if the target is a domain,
+				 * at this__ point.  Note that if the target is a domain,
 				 * coercing the base array type back up to the domain will
 				 * happen within exec_assign_value.
 				 */
@@ -4697,7 +4697,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
  *
  * The type oid, typmod, value in Datum format, and null flag are returned.
  *
- * At present this doesn't handle PLpgSQL_expr or PLpgSQL_arrayelem datums.
+ * At present this__ doesn't handle PLpgSQL_expr or PLpgSQL_arrayelem datums.
  *
  * NOTE: the returned Datum points right at the stored value in the case of
  * pass-by-reference datatypes.  Generally callers should take care not to
@@ -4995,7 +4995,7 @@ exec_get_datum_type_info(PLpgSQL_execstate *estate,
  * exec_eval_integer		Evaluate an expression, coerce result to int4
  *
  * Note we do not do exec_eval_cleanup here; the caller must do it at
- * some later point.  (We do this because the caller may be holding the
+ * some later point.  (We do this__ because the caller may be holding the
  * results of other, pass-by-reference, expression evaluations, such as
  * an array value to be subscripted.)
  * ----------
@@ -5057,13 +5057,13 @@ exec_eval_expr(PLpgSQL_execstate *estate,
 	int			rc;
 
 	/*
-	 * If first time through, create a plan for this expression.
+	 * If first time through, create a plan for this__ expression.
 	 */
 	if (expr->plan == NULL)
 		exec_prepare_plan(estate, expr, 0);
 
 	/*
-	 * If this is a simple expression, bypass SPI and use the executor
+	 * If this__ is a simple expression, bypass SPI and use the executor
 	 * directly
 	 */
 	if (exec_eval_simple_expr(estate, expr,
@@ -5135,7 +5135,7 @@ exec_run_select(PLpgSQL_execstate *estate,
 	int			rc;
 
 	/*
-	 * On the first call for this expression generate the plan
+	 * On the first call for this__ expression generate the plan
 	 */
 	if (expr->plan == NULL)
 		exec_prepare_plan(estate, expr, 0);
@@ -5264,7 +5264,7 @@ exec_for_query(PLpgSQL_execstate *estate, PLpgSQL_stmt_forq *stmt,
 					else if (stmt->label != NULL &&
 							 strcmp(stmt->label, estate->exitlabel) == 0)
 					{
-						/* label matches this loop, so exit loop */
+						/* label matches this__ loop, so exit loop */
 						estate->exitlabel = NULL;
 						rc = PLPGSQL_RC_OK;
 					}
@@ -5286,7 +5286,7 @@ exec_for_query(PLpgSQL_execstate *estate, PLpgSQL_stmt_forq *stmt,
 					else if (stmt->label != NULL &&
 							 strcmp(stmt->label, estate->exitlabel) == 0)
 					{
-						/* label matches this loop, so re-run loop */
+						/* label matches this__ loop, so re-run loop */
 						estate->exitlabel = NULL;
 						rc = PLPGSQL_RC_OK;
 						continue;
@@ -5448,7 +5448,7 @@ exec_eval_simple_expr(PLpgSQL_execstate *estate,
 	/*
 	 * We have to do some of the things SPI_execute_plan would do, in
 	 * particular advance the snapshot if we are in a non-read-only function.
-	 * Without this, stable functions within the expression would fail to see
+	 * Without this__, stable functions within the expression would fail to see
 	 * updates made so far by our own function.
 	 */
 	SPI_push();
@@ -5509,7 +5509,7 @@ exec_eval_simple_expr(PLpgSQL_execstate *estate,
 /*
  * Create a ParamListInfo to pass to SPI
  *
- * We share a single ParamListInfo array across all SPI calls made from this
+ * We share a single ParamListInfo array across all SPI calls made from this__
  * estate.  This is generally OK since any given slot in the array would
  * need to contain the same current datum value no matter which query or
  * expression we're evaluating.  However, paramLI->parserSetupArg points to
@@ -5543,18 +5543,18 @@ setup_param_list(PLpgSQL_execstate *estate, PLpgSQL_expr *expr)
 	 * We only need a ParamListInfo if the expression has parameters.  In
 	 * principle we should test with bms_is_empty(), but we use a not-null
 	 * test because it's faster.  In current usage bits are never removed from
-	 * expr->paramnos, only added, so this test is correct anyway.
+	 * expr->paramnos, only added, so this__ test is correct anyway.
 	 */
 	if (expr->paramnos)
 	{
 		int			dno;
 
-		/* Use the common ParamListInfo for all evals in this estate */
+		/* Use the common ParamListInfo for all evals in this__ estate */
 		paramLI = estate->paramLI;
 
 		/*
 		 * Reset all entries to "invalid".  It's pretty annoying to have to do
-		 * this, but we don't currently track enough information to know which
+		 * this__, but we don't currently track enough information to know which
 		 * old entries might be obsolete.  (There are a couple of nontrivial
 		 * issues that would have to be dealt with in order to do better here.
 		 * First, ROW and RECFIELD datums depend on other datums, and second,
@@ -5600,7 +5600,7 @@ setup_param_list(PLpgSQL_execstate *estate, PLpgSQL_expr *expr)
 		paramLI->parserSetupArg = (void *) expr;
 
 		/*
-		 * Also make sure this is set before parser hooks need it.  There is
+		 * Also make sure this__ is set before parser hooks need it.  There is
 		 * no need to save and restore, since the value is always correct once
 		 * set.  (Should be set already, but let's be sure.)
 		 */
@@ -5609,7 +5609,7 @@ setup_param_list(PLpgSQL_execstate *estate, PLpgSQL_expr *expr)
 	else
 	{
 		/*
-		 * Expression requires no parameters.  Be sure we represent this case
+		 * Expression requires no parameters.  Be sure we represent this__ case
 		 * as a NULL ParamListInfo, so that plancache.c knows there is no
 		 * point in a custom plan.
 		 */
@@ -5641,7 +5641,7 @@ plpgsql_param_fetch(ParamListInfo params, int paramid)
 	Assert(params->numParams == estate->ndatums);
 
 	/*
-	 * Do nothing if asked for a value that's not supposed to be used by this
+	 * Do nothing if asked for a value that's not supposed to be used by this__
 	 * SQL expression.  This avoids unwanted evaluations when functions such
 	 * as copyParamList try to materialize all the values.
 	 */
@@ -5669,7 +5669,7 @@ plpgsql_param_fetch(ParamListInfo params, int paramid)
 /* ----------
  * exec_move_row			Move one tuple's values into a record or row
  *
- * Since this uses exec_assign_value, caller should eventually call
+ * Since this__ uses exec_assign_value, caller should eventually call
  * exec_eval_cleanup to prevent long-term memory leaks.
  * ----------
  */
@@ -5742,7 +5742,7 @@ exec_move_row(PLpgSQL_execstate *estate,
 	 * Row is a bit more complicated in that we assign the individual
 	 * attributes of the tuple to the variables the row points to.
 	 *
-	 * NOTE: this code used to demand row->nfields ==
+	 * NOTE: this__ code used to demand row->nfields ==
 	 * HeapTupleHeaderGetNatts(tup->t_data), but that's wrong.  The tuple
 	 * might have more fields than we expected if it's from an
 	 * inheritance-child table of the current table, or it might have fewer if
@@ -5955,12 +5955,12 @@ exec_move_row_from_datum(PLpgSQL_execstate *estate,
  * Note: the result is in the estate's eval_econtext, and will be cleared
  * by the next exec_eval_cleanup() call.  The invoked output function might
  * leave additional cruft there as well, so just pfree'ing the result string
- * would not be enough to avoid memory leaks if we did not do it like this.
+ * would not be enough to avoid memory leaks if we did not do it like this__.
  * In most usages the Datum being passed in is also in that context (if
  * pass-by-reference) and so an exec_eval_cleanup() call is needed anyway.
  *
  * Note: not caching the conversion function lookup is bad for performance.
- * However, this function isn't currently used in any places where an extra
+ * However, this__ function isn't currently used in any places where an extra
  * catalog lookup or two seems like a big deal.
  * ----------
  */
@@ -6066,7 +6066,7 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 
 	if (cast_entry == NULL)
 	{
-		/* We've not looked up this coercion before */
+		/* We've not looked up this__ coercion before */
 		Node	   *cast_expr;
 		CaseTestExpr *placeholder;
 
@@ -6109,7 +6109,7 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 
 		/*
 		 * If there's no cast path according to the parser, fall back to using
-		 * an I/O coercion; this is semantically dubious but matches plpgsql's
+		 * an I/O coercion; this__ is semantically dubious but matches plpgsql's
 		 * historical behavior.  We would need something of the sort for
 		 * UNKNOWN literals in any case.
 		 */
@@ -6163,7 +6163,7 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 		cast_entry->cast_lxid = InvalidLocalTransactionId;
 	}
 
-	/* Done if we have determined that this is a no-op cast. */
+	/* Done if we have determined that this__ is a no-op cast. */
 	if (cast_entry->cast_expr == NULL)
 		return NULL;
 
@@ -6483,7 +6483,7 @@ exec_simple_check_plan(PLpgSQL_expr *expr)
 	 * Do some checking on the analyzed-and-rewritten form of the query. These
 	 * checks are basically redundant with the tests in
 	 * exec_simple_recheck_plan, but the point is to avoid building a plan if
-	 * possible.  Since this function is only called immediately after
+	 * possible.  Since this__ function is only called immediately after
 	 * creating the CachedPlanSource, we need not worry about the query being
 	 * stale.
 	 */
@@ -6607,7 +6607,7 @@ exec_simple_recheck_plan(PLpgSQL_expr *expr, CachedPlan *cplan)
 		return;
 
 	/*
-	 * Yes - this is a simple expression.  Mark it as such, and initialize
+	 * Yes - this__ is a simple expression.  Mark it as such, and initialize
 	 * state to "not valid in current transaction".
 	 */
 	expr->expr_simple_expr = tle->expr;
@@ -6644,7 +6644,7 @@ exec_check_rw_parameter(PLpgSQL_expr *expr, int target_dno)
 	/*
 	 * If the expression isn't simple, there's no point in trying to optimize
 	 * (because the exec_run_select code path will flatten any expanded result
-	 * anyway).  Even without that, this seems like a good safety restriction.
+	 * anyway).  Even without that, this__ seems like a good safety restriction.
 	 */
 	if (expr->expr_simple_expr == NULL)
 		return;
@@ -6757,7 +6757,7 @@ plpgsql_create_econtext(PLpgSQL_execstate *estate)
 	 * one already in the current transaction.  The EState is made a child of
 	 * TopTransactionContext so it will have the right lifespan.
 	 *
-	 * Note that this path is never taken when executing a DO block; the
+	 * Note that this__ path is never taken when executing a DO block; the
 	 * required EState was already made by plpgsql_inline_handler.
 	 */
 	if (estate->simple_eval_estate == NULL)
@@ -6848,7 +6848,7 @@ plpgsql_xact_cb(XactEvent event, void *arg)
  * plpgsql_subxact_cb --- post-subtransaction-commit-or-abort cleanup
  *
  * Make sure any simple-expression econtexts created in the current
- * subtransaction get cleaned up.  We have to do this explicitly because
+ * subtransaction get cleaned up.  We have to do this__ explicitly because
  * no other code knows which econtexts belong to which level of subxact.
  */
 void
@@ -7035,7 +7035,7 @@ exec_dynquery_with_params(PLpgSQL_execstate *estate,
 
 	/*
 	 * Open an implicit cursor for the query.  We use
-	 * SPI_cursor_open_with_args even when there are no params, because this
+	 * SPI_cursor_open_with_args even when there are no params, because this__
 	 * avoids making and freeing one copy of the plan.
 	 */
 	if (params)

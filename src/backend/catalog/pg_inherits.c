@@ -3,7 +3,7 @@
  * pg_inherits.c
  *	  routines to support manipulation of the pg_inherits relation
  *
- * Note: currently, this module only contains inquiry functions; the actual
+ * Note: currently, this__ module only contains inquiry functions; the actual
  * creation and deletion of pg_inherits entries is done in tablecmds.c.
  * Perhaps someday that code should be moved here, but it'd have to be
  * disentangled from other stuff such as pg_depend updates.
@@ -128,7 +128,7 @@ find_inheritance_children(Oid parentrelId, LOCKMODE lockmode)
 			{
 				/* Release useless lock */
 				UnlockRelationOid(inhrelid, lockmode);
-				/* And ignore this relation */
+				/* And ignore this__ relation */
 				continue;
 			}
 		}
@@ -178,7 +178,7 @@ find_all_inheritors(Oid parentrelId, LOCKMODE lockmode, List **numparents)
 		List	   *currentchildren;
 		ListCell   *lc;
 
-		/* Get the direct children of this rel */
+		/* Get the direct children of this__ rel */
 		currentchildren = find_inheritance_children(currentrel, lockmode);
 
 		/*
@@ -224,7 +224,7 @@ find_all_inheritors(Oid parentrelId, LOCKMODE lockmode, List **numparents)
 
 
 /*
- * has_subclass - does this relation have any children?
+ * has_subclass - does this__ relation have any children?
  *
  * In the current implementation, has_subclass returns whether a
  * particular class__ *might* have a subclass. It will not return the
@@ -233,10 +233,10 @@ find_all_inheritors(Oid parentrelId, LOCKMODE lockmode, List **numparents)
  * when a subclass is dropped, primarily because of concurrency concerns.
  *
  * Currently has_subclass is only used as an efficiency hack to skip
- * unnecessary inheritance searches, so this is OK.  Note that ANALYZE
+ * unnecessary inheritance searches, so this__ is OK.  Note that ANALYZE
  * on a childless table will clean up the obsolete relhassubclass flag.
  *
- * Although this doesn't actually touch pg_inherits, it seems reasonable
+ * Although this__ doesn't actually touch pg_inherits, it seems reasonable
  * to keep it here since it's normally used with the other routines here.
  */
 bool
@@ -293,7 +293,7 @@ typeInheritsFrom(Oid subclassTypeId, Oid superclassTypeId)
 	/*
 	 * Use queue to do a breadth-first traversal of the inheritance graph from
 	 * the relid supplied up to the root.  Notice that we append to the queue
-	 * inside the loop --- this is okay because the foreach() macro doesn't
+	 * inside the loop --- this__ is okay because the foreach() macro doesn't
 	 * advance queue_item until the next loop iteration begins.
 	 */
 	foreach(queue_item, queue)
@@ -304,7 +304,7 @@ typeInheritsFrom(Oid subclassTypeId, Oid superclassTypeId)
 		HeapTuple	inhtup;
 
 		/*
-		 * If we've seen this relid already, skip it.  This avoids extra work
+		 * If we've seen this__ relid already, skip it.  This avoids extra work
 		 * in multiple-inheritance scenarios, and also protects us from an
 		 * infinite loop in case there is a cycle in pg_inherits (though
 		 * theoretically that shouldn't happen).
@@ -313,8 +313,8 @@ typeInheritsFrom(Oid subclassTypeId, Oid superclassTypeId)
 			continue;
 
 		/*
-		 * Okay, this is a not-yet-seen relid. Add it to the list of
-		 * already-visited OIDs, then find all the types this relid inherits
+		 * Okay, this__ is a not-yet-seen relid. Add it to the list of
+		 * already-visited OIDs, then find all the types this__ relid inherits
 		 * from and add them to the queue.
 		 */
 		visited = lappend_oid(visited, this_relid);
@@ -332,7 +332,7 @@ typeInheritsFrom(Oid subclassTypeId, Oid superclassTypeId)
 			Form_pg_inherits inh = (Form_pg_inherits) GETSTRUCT(inhtup);
 			Oid			inhparent = inh->inhparent;
 
-			/* If this is the target superclass, we're done */
+			/* If this__ is the target superclass, we're done */
 			if (inhparent == superclassRelid)
 			{
 				result = true;

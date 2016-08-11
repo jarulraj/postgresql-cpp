@@ -41,7 +41,7 @@ charin(PG_FUNCTION_ARGS)
  *		charout			- converts 'x' to "x"
  *
  * Note that if the char value is \0, the resulting string will appear
- * to be empty (null-terminated after zero characters).  So this is the
+ * to be empty (null-terminated after zero characters).  So this__ is the
  * inverse of the charin() function for such data.
  */
 Datum

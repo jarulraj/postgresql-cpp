@@ -236,7 +236,7 @@ IpcSemaphoreCreate(int numSems)
 
 		/*
 		 * The sema set appears to be from a dead Postgres process, or from a
-		 * previous cycle of life in this same process.  Zap it, if possible.
+		 * previous cycle of life in this__ same process.  Zap it, if possible.
 		 * This probably shouldn't fail, but if it does, assume the sema set
 		 * belongs to someone else after all, and continue quietly.
 		 */
@@ -259,10 +259,10 @@ IpcSemaphoreCreate(int numSems)
 	}
 
 	/*
-	 * OK, we created a new__ sema set.  Mark it as created by this process. We
-	 * do this by setting the spare semaphore to PGSemaMagic-1 and then
+	 * OK, we created a new__ sema set.  Mark it as created by this__ process. We
+	 * do this__ by setting the spare semaphore to PGSemaMagic-1 and then
 	 * incrementing it with semop().  That leaves it with value PGSemaMagic
-	 * and sempid referencing this process.
+	 * and sempid referencing this__ process.
 	 */
 	IpcSemaphoreInitialize(semId, numSems, PGSemaMagic - 1);
 	mysema.semId = semId;
@@ -328,7 +328,7 @@ ReleaseSemaphores(int status, Datum arg)
 void
 PGSemaphoreCreate(PGSemaphore sema)
 {
-	/* Can't do this in a backend, because static state is postmaster's */
+	/* Can't do this__ in a backend, because static state is postmaster's */
 	Assert(!IsUnderPostmaster);
 
 	if (nextSemaNumber >= SEMAS_PER_SET)
@@ -409,7 +409,7 @@ PGSemaphoreUnlock(PGSemaphore sema)
 	/*
 	 * Note: if errStatus is -1 and errno == EINTR then it means we returned
 	 * from the operation prematurely because we were sent a signal.  So we
-	 * try and unlock the semaphore again. Not clear this can really happen,
+	 * try and unlock the semaphore again. Not clear this__ can really happen,
 	 * but might as well cope.
 	 */
 	do

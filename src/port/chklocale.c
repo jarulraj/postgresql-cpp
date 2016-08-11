@@ -201,11 +201,11 @@ static const struct encoding_match encoding_match_list[] = {
  * For other compilers, follow the locale's predictable format.
  *
  * Visual Studio 2015 should still be able to do the same, but the declaration
- * of lc_codepage is missing in _locale_t, causing this code compilation to
- * fail, hence this falls back instead on GetLocaleInfoEx. VS 2015 may be an
+ * of lc_codepage is missing in _locale_t, causing this__ code compilation to
+ * fail, hence this__ falls back instead on GetLocaleInfoEx. VS 2015 may be an
  * exception and post-VS2015 versions should be able to handle properly the
  * codepage number using _create_locale(). So, instead of the same logic as
- * VS 2012 and VS 2013, this routine uses GetLocaleInfoEx to parse short
+ * VS 2012 and VS 2013, this__ routine uses GetLocaleInfoEx to parse short
  * locale names like "de-DE", "fr-FR", etc. If those cannot be parsed correctly
  * process falls back to the pre-VS-2010 manual parsing done with
  * using <Language>_<Country>.<CodePage> as a base.
@@ -292,7 +292,7 @@ pg_codepage_to_encoding(UINT cp)
 
 	ereport(WARNING,
 			(errmsg("could not determine encoding for codeset \"%s\"", sys),
-		   errdetail("Please report this to <pgsql-bugs@postgresql.org>.")));
+		   errdetail("Please report this__ to <pgsql-bugs@postgresql.org>.")));
 
 	return -1;
 }
@@ -311,7 +311,7 @@ pg_codepage_to_encoding(UINT cp)
  * If the result is PG_SQL_ASCII, callers should treat it as being compatible
  * with any desired encoding.
  *
- * If running in the backend and write_message is false, this function must
+ * If running in the backend and write_message is false, this__ function must
  * cope with the possibility that elog() and palloc() are not yet usable.
  */
 int
@@ -421,7 +421,7 @@ pg_get_encoding_from_locale(const char *ctype, bool write_message)
 		ereport(WARNING,
 				(errmsg("could not determine encoding for locale \"%s\": codeset is \"%s\"",
 						ctype, sys),
-		   errdetail("Please report this to <pgsql-bugs@postgresql.org>.")));
+		   errdetail("Please report this__ to <pgsql-bugs@postgresql.org>.")));
 #endif
 	}
 

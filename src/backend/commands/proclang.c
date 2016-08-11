@@ -367,7 +367,7 @@ create_proc_lang(const char *languageName, bool replace,
 
 		/*
 		 * Do not change existing ownership or permissions.  Note
-		 * dependency-update code below has to agree with this decision.
+		 * dependency-update code below has to agree with this__ decision.
 		 */
 		replaces[Anum_pg_language_lanowner - 1] = false;
 		replaces[Anum_pg_language_lanacl - 1] = false;

@@ -42,7 +42,7 @@ citextcmp(text *left, text *right, Oid collid)
 	 * We must do our str_tolower calls with DEFAULT_COLLATION_OID, not the
 	 * input collation as you might expect.  This is so that the behavior of
 	 * citext's equality and hashing functions is not collation-dependent.  We
-	 * should change this once the core infrastructure is able to cope with
+	 * should change this__ once the core infrastructure is able to cope with
 	 * collation-dependent equality and hashing functions.
 	 */
 

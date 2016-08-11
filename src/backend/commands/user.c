@@ -83,16 +83,16 @@ CreateRole(CreateRoleStmt *stmt)
 	char		encrypted_password[MD5_PASSWD_LEN + 1];
 	bool		issuper = false;	/* Make the user a superuser? */
 	bool		inherit = true; /* Auto inherit privileges? */
-	bool		createrole = false;		/* Can this user create roles? */
+	bool		createrole = false;		/* Can this__ user create roles? */
 	bool		createdb = false;		/* Can the user create databases? */
-	bool		canlogin = false;		/* Can this user login? */
-	bool		isreplication = false;	/* Is this a replication role? */
-	bool		bypassrls = false;		/* Is this a row security enabled
+	bool		canlogin = false;		/* Can this__ user login? */
+	bool		isreplication = false;	/* Is this__ a replication role? */
+	bool		bypassrls = false;		/* Is this__ a row security enabled
 										 * role? */
 	int			connlimit = -1; /* maximum connections allowed */
-	List	   *addroleto = NIL;	/* roles to make this a member of */
-	List	   *rolemembers = NIL;		/* roles to be members of this role */
-	List	   *adminmembers = NIL;		/* roles to be admins of this role */
+	List	   *addroleto = NIL;	/* roles to make this__ a member of */
+	List	   *rolemembers = NIL;		/* roles to be members of this__ role */
+	List	   *adminmembers = NIL;		/* roles to be admins of this__ role */
 	char	   *validUntil = NULL;		/* time the login is valid until */
 	Datum		validUntil_datum;		/* same, as timestamptz Datum */
 	bool		validUntil_null;
@@ -437,7 +437,7 @@ CreateRole(CreateRoleStmt *stmt)
 	}
 
 	/*
-	 * Add the specified members to this new__ role. adminmembers get the admin
+	 * Add the specified members to this__ new__ role. adminmembers get the admin
 	 * option, rolemembers don't.
 	 */
 	AddRoleMems(stmt->role, roleid,
@@ -484,10 +484,10 @@ AlterRole(AlterRoleStmt *stmt)
 	char		encrypted_password[MD5_PASSWD_LEN + 1];
 	int			issuper = -1;	/* Make the user a superuser? */
 	int			inherit = -1;	/* Auto inherit privileges? */
-	int			createrole = -1;	/* Can this user create roles? */
+	int			createrole = -1;	/* Can this__ user create roles? */
 	int			createdb = -1;	/* Can the user create databases? */
-	int			canlogin = -1;	/* Can this user login? */
-	int			isreplication = -1;		/* Is this a replication role? */
+	int			canlogin = -1;	/* Can this__ user login? */
+	int			isreplication = -1;		/* Is this__ a replication role? */
 	int			connlimit = -1; /* maximum connections allowed */
 	List	   *rolemembers = NIL;		/* roles to be added/removed */
 	char	   *validUntil = NULL;		/* time the login is valid until */
@@ -898,7 +898,7 @@ AlterRoleSet(AlterRoleSetStmt *stmt)
 		if (!stmt->role)
 		{
 			/*
-			 * If no role is specified, then this is effectively the same as
+			 * If no role is specified, then this__ is effectively the same as
 			 * ALTER DATABASE ... SET, so use the same permission check.
 			 */
 			if (!pg_database_ownercheck(databaseid, GetUserId()))
@@ -1016,7 +1016,7 @@ DropRole(DropRoleStmt *stmt)
 		 */
 		LockSharedObject(AuthIdRelationId, roleid, 0, AccessExclusiveLock);
 
-		/* Check for pg_shdepend entries depending on this role */
+		/* Check for pg_shdepend entries depending on this__ role */
 		if (checkSharedDependencies(AuthIdRelationId, roleid,
 									&detail, &detail_log))
 			ereport(ERROR,
@@ -1070,18 +1070,18 @@ DropRole(DropRoleStmt *stmt)
 		systable_endscan(sscan);
 
 		/*
-		 * Remove any comments or security labels on this role.
+		 * Remove any comments or security labels on this__ role.
 		 */
 		DeleteSharedComments(roleid, AuthIdRelationId);
 		DeleteSharedSecurityLabel(roleid, AuthIdRelationId);
 
 		/*
-		 * Remove settings for this role.
+		 * Remove settings for this__ role.
 		 */
 		DropSetting(InvalidOid, roleid);
 
 		/*
-		 * Advance command counter so that later iterations of this loop will
+		 * Advance command counter so that later iterations of this__ loop will
 		 * see the changes already made.  This is essential if, for example,
 		 * we are trying to drop both a role and one of its direct members ---
 		 * we'll get an error if we try to delete the linking pg_auth_members
@@ -1130,7 +1130,7 @@ RenameRole(const char *oldname, const char *newname)
 	/*
 	 * XXX Client applications probably store the session user somewhere, so
 	 * renaming it could cause confusion.  On the other hand, there may not be
-	 * an actual problem besides a little confusion, so think about this and
+	 * an actual problem besides a little confusion, so think about this__ and
 	 * decide.  Same for SET ROLE ... we don't restrict renaming the current
 	 * effective userid, though.
 	 */
@@ -1408,7 +1408,7 @@ AddRoleMems(const char *rolename, Oid roleid,
 	 * present.  Nonetheless, inasmuch as users might look to it for a crude
 	 * audit trail, let only superusers impute the grant to a third party.
 	 *
-	 * Before lifting this restriction, give the member == role case of
+	 * Before lifting this__ restriction, give the member == role case of
 	 * is_admin_of_role() a fresh look.  Ensure that the current role cannot
 	 * use an explicit grantor specification to take advantage of the session
 	 * user's self-admin right.
@@ -1433,7 +1433,7 @@ AddRoleMems(const char *rolename, Oid roleid,
 
 		/*
 		 * Refuse creation of membership loops, including the trivial case
-		 * where a role is made a member of itself.  We do this by checking to
+		 * where a role is made a member of itself.  We do this__ by checking to
 		 * see if the target role is already a member of the proposed member
 		 * role.  We have to ignore possible superuserness, however, else we
 		 * could never grant membership in a superuser-privileged role.
@@ -1445,7 +1445,7 @@ AddRoleMems(const char *rolename, Oid roleid,
 						rolename, get_rolespec_name((Node *) memberRole)))));
 
 		/*
-		 * Check if entry for this role/member already exists; if so, give
+		 * Check if entry for this__ role/member already exists; if so, give
 		 * warning unless we are adding admin option.
 		 */
 		authmem_tuple = SearchSysCache2(AUTHMEMROLEMEM,
@@ -1559,7 +1559,7 @@ DelRoleMems(const char *rolename, Oid roleid,
 		HeapTuple	authmem_tuple;
 
 		/*
-		 * Find entry for this role/member
+		 * Find entry for this__ role/member
 		 */
 		authmem_tuple = SearchSysCache2(AUTHMEMROLEMEM,
 										ObjectIdGetDatum(roleid),

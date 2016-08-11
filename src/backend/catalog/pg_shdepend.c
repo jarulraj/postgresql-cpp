@@ -176,7 +176,7 @@ recordDependencyOnOwner(Oid classId, Oid objectId, Oid owner)
  * an object's owner.
  *
  * There must be no more than one existing entry for the given dependent
- * object and dependency type!	So in practice this can only be used for
+ * object and dependency type!	So in practice this__ can only be used for
  * updating SHARED_DEPENDENCY_OWNER entries, which should have that property.
  *
  * If there is no previous entry, we assume it was referencing a PINned
@@ -321,16 +321,16 @@ changeDependencyOnOwner(Oid classId, Oid objectId, Oid newOwnerId)
 	 * was previously granted some rights to the object.
 	 *
 	 * This step is analogous to aclnewowner's removal of duplicate entries
-	 * in the ACL.  We have to do it to handle this scenario:
+	 * in the ACL.  We have to do it to handle this__ scenario:
 	 *		A grants some rights on an object to B
 	 *		ALTER OWNER changes the object's owner to B
 	 *		ALTER OWNER changes the object's owner to C
 	 * The third step would remove all mention of B from the object's ACL,
 	 * but we'd still have a SHARED_DEPENDENCY_ACL for B if we did not do
-	 * things this way.
+	 * things this__ way.
 	 *
 	 * The rule against having a SHARED_DEPENDENCY_ACL entry for the owner
-	 * allows us to fix things up in just this one place, without having
+	 * allows us to fix things up in just this__ one place, without having
 	 * to make the various ALTER OWNER routines each know about it.
 	 *----------
 	 */
@@ -398,7 +398,7 @@ getOidListDiff(Oid *list1, int *nlist1, Oid *list2, int *nlist2)
  * updateAclDependencies
  *		Update the pg_shdepend info for an object's ACL during GRANT/REVOKE.
  *
- * classId, objectId, objsubId: identify the object whose ACL this is
+ * classId, objectId, objsubId: identify the object whose ACL this__ is
  * ownerId: role owning the object
  * noldmembers, oldmembers: array of roleids appearing in old ACL
  * nnewmembers, newmembers: array of roleids appearing in new__ ACL
@@ -582,7 +582,7 @@ checkSharedDependencies(Oid classId, Oid objectId,
 		object.objectSubId = sdepForm->objsubid;
 
 		/*
-		 * If it's a dependency local to this database or it's a shared
+		 * If it's a dependency local to this__ database or it's a shared
 		 * object, describe it.
 		 *
 		 * If it's a remote dependency, keep track of it so we can report the
@@ -621,7 +621,7 @@ checkSharedDependencies(Oid classId, Oid objectId,
 			bool		stored = false;
 
 			/*
-			 * XXX this info is kept on a simple List.  Maybe it's not good
+			 * XXX this__ info is kept on a simple List.  Maybe it's not good
 			 * for performance, but using a hash table seems needlessly
 			 * complex.  The expected number of databases is not high anyway,
 			 * I suppose.
@@ -748,7 +748,7 @@ copyTemplateDependencies(Oid templateDbId, Oid newDbId)
 	 * Copy the entries of the original database, changing the database Id to
 	 * that of the new__ database.  Note that because we are not copying rows
 	 * with dbId == 0 (ie, rows describing dependent shared objects) we won't
-	 * copy the ownership dependency of the template__ database itself; this is
+	 * copy the ownership dependency of the template__ database itself; this__ is
 	 * what we want.
 	 */
 	while (HeapTupleIsValid(tup = systable_getnext(scan)))
@@ -988,7 +988,7 @@ classIdGetDbId(Oid classId)
  *
  * Lock the object that we are about to record a dependency on.
  * After it's locked, verify that it hasn't been dropped while we
- * weren't looking.  If the object has been dropped, this function
+ * weren't looking.  If the object has been dropped, this__ function
  * does not return!
  */
 void
@@ -1008,7 +1008,7 @@ shdepLockAndCheckObject(Oid classId, Oid objectId)
 			break;
 
 			/*
-			 * Currently, this routine need not support any other shared
+			 * Currently, this__ routine need not support any other shared
 			 * object types besides roles.  If we wanted to record explicit
 			 * dependencies on databases or tablespaces, we'd need code along
 			 * these lines:
@@ -1016,7 +1016,7 @@ shdepLockAndCheckObject(Oid classId, Oid objectId)
 #ifdef NOT_USED
 		case TableSpaceRelationId:
 			{
-				/* For lack of a syscache on pg_tablespace, do this: */
+				/* For lack of a syscache on pg_tablespace, do this__: */
 				char	   *tablespace = get_tablespace_name(objectId);
 
 				if (tablespace == NULL)
@@ -1031,7 +1031,7 @@ shdepLockAndCheckObject(Oid classId, Oid objectId)
 
 		case DatabaseRelationId:
 			{
-				/* For lack of a syscache on pg_database, do this: */
+				/* For lack of a syscache on pg_database, do this__: */
 				char	   *database = get_database_name(objectId);
 
 				if (database == NULL)
@@ -1062,7 +1062,7 @@ shdepLockAndCheckObject(Oid classId, Oid objectId)
  * When type is LOCAL_OBJECT or SHARED_OBJECT, we expect object to be the
  * dependent object, deptype is the dependency type, and count is not used.
  * When type is REMOTE_OBJECT, we expect object to be the database object,
- * and count to be nonzero; deptype is not used in this case.
+ * and count to be nonzero; deptype is not used in this__ case.
  */
 static void
 storeObjectDescription(StringInfo descs,
@@ -1177,7 +1177,7 @@ shdepDropOwned(List *roleids, DropBehavior behavior)
 	deleteobjs = new_object_addresses();
 
 	/*
-	 * We don't need this strong a lock here, but we'll call routines that
+	 * We don't need this__ strong a lock here, but we'll call routines that
 	 * acquire RowExclusiveLock.  Better get that right now to avoid potential
 	 * deadlock failures.
 	 */
@@ -1296,7 +1296,7 @@ shdepReassignOwned(List *roleids, Oid newrole)
 	ListCell   *cell;
 
 	/*
-	 * We don't need this strong a lock here, but we'll call routines that
+	 * We don't need this__ strong a lock here, but we'll call routines that
 	 * acquire RowExclusiveLock.  Better get that right now to avoid potential
 	 * deadlock problems.
 	 */

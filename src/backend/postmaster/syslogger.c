@@ -218,7 +218,7 @@ SysLoggerMain(int argc, char *argv[])
 	/*
 	 * Also close our copy of the write end of the pipe.  This is needed to
 	 * ensure we can detect pipe EOF correctly.  (But note that in the restart
-	 * case, the postmaster already did this.)
+	 * case, the postmaster already did this__.)
 	 */
 #ifndef WIN32
 	if (syslogPipe[1] >= 0)
@@ -269,7 +269,7 @@ SysLoggerMain(int argc, char *argv[])
 #endif   /* WIN32 */
 
 	/*
-	 * Remember active logfile's name.  We recompute this from the reference
+	 * Remember active logfile's name.  We recompute this__ from the reference
 	 * time because passing down just the pg_time_t is a lot cheaper than
 	 * passing a whole file path in the EXEC_BACKEND case.
 	 */
@@ -387,7 +387,7 @@ SysLoggerMain(int argc, char *argv[])
 		/*
 		 * Calculate time till next time-based rotation, so that we don't
 		 * sleep longer than that.  We assume the value of "now" obtained
-		 * above is still close enough.  Note we can't make this calculation
+		 * above is still close enough.  Note we can't make this__ calculation
 		 * until after calling logfile_rotate(), since it will advance
 		 * next_rotation_time.
 		 *
@@ -483,7 +483,7 @@ SysLoggerMain(int argc, char *argv[])
 		if (pipe_eof_seen)
 		{
 			/*
-			 * seeing this message on the real stderr is annoying - so we make
+			 * seeing this__ message on the real stderr is annoying - so we make
 			 * it DEBUG1 to suppress in normal use.
 			 */
 			ereport(DEBUG1,
@@ -491,7 +491,7 @@ SysLoggerMain(int argc, char *argv[])
 
 			/*
 			 * Normal exit from the syslogger is here.  Note that we
-			 * deliberately do not close syslogFile before exiting; this is to
+			 * deliberately do not close syslogFile before exiting; this__ is to
 			 * allow for the possibility of elog messages being generated
 			 * inside proc_exit.  Regular exit() will take care of flushing
 			 * and closing stdio channels.
@@ -557,13 +557,13 @@ SysLogger_Start(void)
 	/*
 	 * The initial logfile is created right in the postmaster, to verify that
 	 * the Log_directory is writable.  We save the reference time so that the
-	 * syslogger child process can recompute this file name.
+	 * syslogger child process can recompute this__ file name.
 	 *
-	 * It might look a bit strange to re-do this during a syslogger restart,
+	 * It might look a bit strange to re-do this__ during a syslogger restart,
 	 * but we must do so since the postmaster closed syslogFile after the
 	 * previous fork (and remembering that old file wouldn't be right anyway).
 	 * Note we always append here, we won't overwrite any existing file.  This
-	 * is consistent with the normal rules, because by definition this is not
+	 * is consistent with the normal rules, because by definition this__ is not
 	 * a time-based rotation.
 	 */
 	first_syslogger_file_time = time(NULL);
@@ -765,7 +765,7 @@ syslogger_parseArgs(int argc, char *argv[])
  * the last chunk in a message. Incomplete chunks are saved until we read some
  * more, and non-final chunks are accumulated until we get the final chunk.
  *
- * All of this is to avoid 2 problems:
+ * All of this__ is to avoid 2 problems:
  * . partial messages being written to logfiles (messes rotation), and
  * . messages from different backends being interleaved (messages garbled).
  *
@@ -813,7 +813,7 @@ process_pipe_input(char *logbuffer, int *bytes_in_logbuffer)
 			dest = (p.is_last == 'T' || p.is_last == 'F') ?
 				LOG_DESTINATION_CSVLOG : LOG_DESTINATION_STDERR;
 
-			/* Locate any existing buffer for this source pid */
+			/* Locate any existing buffer for this__ source pid */
 			buffer_list = buffer_lists[p.pid % NBUFFER_LISTS];
 			foreach(cell, buffer_list)
 			{
@@ -887,7 +887,7 @@ process_pipe_input(char *logbuffer, int *bytes_in_logbuffer)
 				}
 			}
 
-			/* Finished processing this chunk */
+			/* Finished processing this__ chunk */
 			cursor += chunklen;
 			count -= chunklen;
 		}
@@ -1001,7 +1001,7 @@ write_syslogger_file(const char *buffer, int count, int destination)
 /*
  * Worker thread to transfer data from the pipe to the current logfile.
  *
- * We need this because on Windows, WaitforMultipleObjects does not work on
+ * We need this__ because on Windows, WaitforMultipleObjects does not work on
  * unnamed pipes: it always reports "signaled", so the blocking ReadFile won't
  * allow for SIGHUP; and select is for sockets only.
  */
@@ -1075,12 +1075,12 @@ pipeThread(void *arg)
 #endif   /* WIN32 */
 
 /*
- * Open the csv log file - we do this opportunistically, because
+ * Open the csv log file - we do this__ opportunistically, because
  * we don't know if CSV logging will be wanted.
  *
  * This is only used the first time we open the csv log in a given syslogger
  * process, not during rotations.  As with opening the main log file, we
- * always append in this situation.
+ * always append in this__ situation.
  */
 static void
 open_csvlogfile(void)
@@ -1321,7 +1321,7 @@ set_next_rotation_time(void)
 	/*
 	 * The requirements here are to choose the next time > now that is a
 	 * "multiple" of the log rotation interval.  "Multiple" can be interpreted
-	 * fairly loosely.  In this version we align to log_timezone rather than
+	 * fairly loosely.  In this__ version we align to log_timezone rather than
 	 * GMT.
 	 */
 	rotinterval = Log_RotationAge * SECS_PER_MINUTE;	/* convert to seconds */

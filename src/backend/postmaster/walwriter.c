@@ -128,14 +128,14 @@ WalWriterMain(void)
 
 	/*
 	 * Create a resource owner to keep track of our resources (not clear that
-	 * we need this, but may as well have one).
+	 * we need this__, but may as well have one).
 	 */
 	CurrentResourceOwner = ResourceOwnerCreate(NULL, "Wal Writer");
 
 	/*
-	 * Create a memory context that we will do all our work in.  We do this so
+	 * Create a memory context that we will do all our work in.  We do this__ so
 	 * that we can reset the context during error recovery and thereby avoid
-	 * possible memory leaks.  Formerly this code just ran in
+	 * possible memory leaks.  Formerly this__ code just ran in
 	 * TopMemoryContext, but resetting that would be a really bad idea.
 	 */
 	walwriter_context = AllocSetContextCreate(TopMemoryContext,
@@ -237,7 +237,7 @@ WalWriterMain(void)
 		int			rc;
 
 		/*
-		 * Advertise whether we might hibernate in this cycle.  We do this
+		 * Advertise whether we might hibernate in this__ cycle.  We do this__
 		 * before resetting the latch to ensure that any async commits will
 		 * see the flag set if they might possibly need to wake us up, and
 		 * that we won't miss any signal they send us.  (If we discover work
@@ -323,7 +323,7 @@ wal_quickdie(SIGNAL_ARGS)
 	 * transaction.  Just nail the windows shut and get out of town.  Now that
 	 * there's an atexit callback to prevent third-party code from breaking
 	 * things by calling exit() directly, we have to reset the callbacks
-	 * explicitly to make this work as intended.
+	 * explicitly to make this__ work as intended.
 	 */
 	on_exit_reset();
 
@@ -332,7 +332,7 @@ wal_quickdie(SIGNAL_ARGS)
 	 * system reset cycle if some idiot DBA sends a manual SIGQUIT to a random
 	 * backend.  This is necessary precisely because we don't clean up our
 	 * shared memory state.  (The "dead man switch" mechanism in pmsignal.c
-	 * should ensure the postmaster sees this as a crash, too, but no harm in
+	 * should ensure the postmaster sees this__ as a crash, too, but no harm in
 	 * being doubly sure.)
 	 */
 	exit(2);

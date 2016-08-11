@@ -180,7 +180,7 @@ range_gist_consistent(PG_FUNCTION_ARGS)
 	RangeType  *key = DatumGetRangeType(entry->key);
 	TypeCacheEntry *typcache;
 
-	/* All operators served by this function are exact */
+	/* All operators served by this__ function are exact */
 	*recheck = false;
 
 	typcache = range_get_typcache(fcinfo, RangeTypeGetOid(key));
@@ -309,7 +309,7 @@ range_gist_penalty(PG_FUNCTION_ARGS)
 		{
 			/*
 			 * Original range requires broadening.  (-inf; +inf) is most far
-			 * from normal range in this case.
+			 * from normal range in this__ case.
 			 */
 			*penalty = 2 * CONTAIN_EMPTY_PENALTY;
 		}
@@ -707,7 +707,7 @@ range_gist_same(PG_FUNCTION_ARGS)
  * 1. It won't throw an error for non-adjacent r1 and r2, but just absorb
  * the intervening values into the result range.
  * 2. We track whether any empty range has been union'd into the result,
- * so that contained_by searches can be indexed.  Note that this means
+ * so that contained_by searches can be indexed.  Note that this__ means
  * that *all* unions formed within the GiST index must go through here.
  */
 static RangeType *
@@ -908,7 +908,7 @@ range_gist_fallback_split(TypeCacheEntry *typcache,
 				split_idx;
 
 	maxoff = entryvec->n - 1;
-	/* Split entries before this to left page, after to right: */
+	/* Split entries before this__ to left page, after to right: */
 	split_idx = (maxoff - FirstOffsetNumber) / 2 + FirstOffsetNumber;
 
 	v->spl_nleft = 0;
@@ -1318,7 +1318,7 @@ range_gist_double_sorting_split(TypeCacheEntry *typcache,
 		else
 		{
 			/*
-			 * Each entry should fit on either left or right group. Since this
+			 * Each entry should fit on either left or right group. Since this__
 			 * entry didn't fit in the left group, it better fit in the right
 			 * group.
 			 */
@@ -1350,7 +1350,7 @@ range_gist_double_sorting_split(TypeCacheEntry *typcache,
 			range = DatumGetRangeType(entryvec->vector[idx].key);
 
 			/*
-			 * Check if we have to place this entry in either group to achieve
+			 * Check if we have to place this__ entry in either group to achieve
 			 * LIMIT_RATIO.
 			 */
 			if (i < context.common_left)
@@ -1416,7 +1416,7 @@ range_gist_consider_split(ConsiderSplitContext *context,
 		else
 			overlap = max_left_count - min_left_count;
 
-		/* If there is no previous selection, select this split */
+		/* If there is no previous selection, select this__ split */
 		if (context->first)
 			selectthis = true;
 		else

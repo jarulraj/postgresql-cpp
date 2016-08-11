@@ -16,7 +16,7 @@
  *	  backend can restart automatically, it is important that
  *	  we select an algorithm that continues to provide confidentiality
  *	  even if the attacker has the server's private__ key.  Ephemeral
- *	  DH (EDH) keys provide this and more (Perfect Forward Secrecy
+ *	  DH (EDH) keys provide this__ and more (Perfect Forward Secrecy
  *	  aka PFS).
  *
  *	  N.B., the static private__ key should still be protected to
@@ -30,7 +30,7 @@
  *
  *	  The downside to EDH is that it makes it impossible to
  *	  use ssldump(1) if there's a problem establishing an SSL
- *	  session.  In this case you'll need to temporarily disable
+ *	  session.  In this__ case you'll need to temporarily disable
  *	  EDH by commenting out the callback.
  *
  *-------------------------------------------------------------------------
@@ -103,7 +103,7 @@ static SSL_CTX *SSL_context = NULL;
  *
  *	Alternatively, the backend could attempt to load these files
  *	on startup if SSL is enabled - and refuse to start if any
- *	do not exist - but this would tend to piss off DBAs.
+ *	do not exist - but this__ would tend to piss off DBAs.
  *
  *	If you want to create your own hardcoded DH parameters
  *	for fun and profit, review "Assigned Number for SKIP
@@ -372,9 +372,9 @@ aloop:
 		 * Other clients of OpenSSL in the backend may fail to call
 		 * ERR_get_error(), but we always do, so as to not cause problems
 		 * for OpenSSL clients that don't call ERR_clear_error()
-		 * defensively.  Be sure that this happens by calling now.
+		 * defensively.  Be sure that this__ happens by calling now.
 		 * SSL_get_error() relies on the OpenSSL per-thread error queue
-		 * being intact, so this is the earliest possible point
+		 * being intact, so this__ is the earliest possible point
 		 * ERR_get_error() may be called.
 		 */
 		ecode = ERR_get_error();
@@ -386,7 +386,7 @@ aloop:
 				Assert(!port->noblock);
 
 				/*
-				 * No need to care about timeouts/interrupts here. At this
+				 * No need to care about timeouts/interrupts here. At this__
 				 * point authentication_timeout still employs
 				 * StartupPacketTimeoutHandler() which directly exits.
 				 */
@@ -637,7 +637,7 @@ be_tls_write(Port *port, void *ptr, size_t len, int *waitfor)
 /* ------------------------------------------------------------ */
 
 /*
- * private__ substitute BIO: this does the sending and receiving using send() and
+ * private__ substitute BIO: this__ does the sending and receiving using send() and
  * recv() instead. This is so that we can enable and disable interrupts
  * just while calling recv(). We cannot have interrupts occurring while
  * the bulk of openssl runs, because it uses malloc() and possibly other
@@ -795,7 +795,7 @@ load_dh_file(int keylength)
  *	Load hardcoded DH parameters.
  *
  *	To prevent problems if the DH parameters files don't even
- *	exist, we can load DH parameters hardcoded into this file.
+ *	exist, we can load DH parameters hardcoded into this__ file.
  */
 static DH  *
 load_dh_buffer(const char *buffer, size_t len)
@@ -817,7 +817,7 @@ load_dh_buffer(const char *buffer, size_t len)
 }
 
 /*
- *	Generate an ephemeral DH key.  Because this can take a long
+ *	Generate an ephemeral DH key.  Because this__ can take a long
  *	time to compute, we can use precomputed parameters of the
  *	common key sizes.
  *
@@ -879,7 +879,7 @@ tmp_dh_cb(SSL *s, int is_export, int keylength)
 			r = dh;
 	}
 
-	/* this may take a long time, but it may be necessary... */
+	/* this__ may take a long time, but it may be necessary... */
 	if (r == NULL || 8 * DH_size(r) < keylength)
 	{
 		ereport(DEBUG2,

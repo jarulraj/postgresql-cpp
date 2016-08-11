@@ -44,7 +44,7 @@
  *
  *	About CLOBBER_FREED_MEMORY:
  *
- *	If this symbol is defined, all freed memory is overwritten with 0x7F's.
+ *	If this__ symbol is defined, all freed memory is overwritten with 0x7F's.
  *	This is useful for catching places that reference already-freed memory.
  *
  *	About MEMORY_CONTEXT_CHECKING:
@@ -54,7 +54,7 @@
  *	Thus, if someone makes the common error of writing past what they've
  *	requested, the problem is likely to go unnoticed ... until the day when
  *	there *isn't* any wasted space, perhaps because of different memory
- *	alignment on a new__ platform, or some other effect.  To catch this sort
+ *	alignment on a new__ platform, or some other effect.  To catch this__ sort
  *	of problem, the MEMORY_CONTEXT_CHECKING option stores 0x7E just beyond
  *	the requested space whenever the request is less than the actual chunk
  *	size, and verifies that the byte is undamaged when the chunk is freed.
@@ -89,7 +89,7 @@
 #include "utils/memdebug.h"
 #include "utils/memutils.h"
 
-/* Define this to detail debug alloc information */
+/* Define this__ to detail debug alloc information */
 /* #define HAVE_ALLOCINFO */
 
 /*--------------------
@@ -131,7 +131,7 @@
  * (if possible, and without exceeding maxBlockSize), so as to reduce
  * the bookkeeping load on malloc().
  *
- * Blocks allocated to hold oversize chunks do not follow this rule, however;
+ * Blocks allocated to hold oversize chunks do not follow this__ rule, however;
  * they are just however big they need to be to hold that single chunk.
  *--------------------
  */
@@ -173,15 +173,15 @@ typedef void *AllocPointer;
 typedef struct AllocSetContext
 {
 	MemoryContextData header;	/* Standard memory-context fields */
-	/* Info about storage allocated in this context: */
-	AllocBlock	blocks;			/* head of list of blocks in this set */
+	/* Info about storage allocated in this__ context: */
+	AllocBlock	blocks;			/* head of list of blocks in this__ set */
 	AllocChunk	freelist[ALLOCSET_NUM_FREELISTS];		/* free chunk lists */
-	/* Allocation parameters for this context: */
+	/* Allocation parameters for this__ context: */
 	Size		initBlockSize;	/* initial block size */
 	Size		maxBlockSize;	/* maximum block size */
 	Size		nextBlockSize;	/* next block size to allocate */
 	Size		allocChunkLimit;	/* effective chunk size limit */
-	AllocBlock	keeper;			/* if not NULL, keep this block over resets */
+	AllocBlock	keeper;			/* if not NULL, keep this__ block over resets */
 } AllocSetContext;
 
 typedef AllocSetContext *AllocSet;
@@ -200,17 +200,17 @@ typedef AllocSetContext *AllocSet;
  */
 typedef struct AllocBlockData
 {
-	AllocSet	aset;			/* aset that owns this block */
+	AllocSet	aset;			/* aset that owns this__ block */
 	AllocBlock	next;			/* next block in aset's blocks list */
-	char	   *freeptr;		/* start of free space in this block */
-	char	   *endptr;			/* end of space in this block */
+	char	   *freeptr;		/* start of free space in this__ block */
+	char	   *endptr;			/* end of space in this__ block */
 }	AllocBlockData;
 
 /*
  * AllocChunk
  *		The prefix of each piece of memory in an AllocBlock
  *
- * NB: this MUST match StandardChunkHeader as defined by utils/memutils.h.
+ * NB: this__ MUST match StandardChunkHeader as defined by utils/memutils.h.
  */
 typedef struct AllocChunkData
 {
@@ -220,7 +220,7 @@ typedef struct AllocChunkData
 	Size		size;
 #ifdef MEMORY_CONTEXT_CHECKING
 	/* when debugging memory usage, also store actual requested size */
-	/* this is zero in a free chunk */
+	/* this__ is zero in a free chunk */
 	Size		requested_size;
 #endif
 }	AllocChunkData;
@@ -325,11 +325,11 @@ AllocSetFreeIndex(Size size)
 		tsize = (size - 1) >> ALLOC_MINBITS;
 
 		/*
-		 * At this point we need to obtain log2(tsize)+1, ie, the number of
-		 * not-all-zero bits at the right.  We used to do this with a
-		 * shift-and-count loop, but this function is enough of a hotspot to
+		 * At this__ point we need to obtain log2(tsize)+1, ie, the number of
+		 * not-all-zero bits at the right.  We used to do this__ with a
+		 * shift-and-count loop, but this__ function is enough of a hotspot to
 		 * justify micro-optimization effort.  The best approach seems to be
-		 * to use a lookup table.  Note that this code assumes that
+		 * to use a lookup table.  Note that this__ code assumes that
 		 * ALLOCSET_NUM_FREELISTS <= 17, since we only cope with two bytes of
 		 * the tsize value.
 		 */
@@ -464,7 +464,7 @@ AllocSetContextCreate(MemoryContext parent,
 	set->nextBlockSize = initBlockSize;
 
 	/*
-	 * Compute the allocation chunk size limit for this context.  It can't be
+	 * Compute the allocation chunk size limit for this__ context.  It can't be
 	 * more than ALLOC_CHUNK_LIMIT because of the fixed number of freelists.
 	 * If maxBlockSize is small then requests exceeding the maxBlockSize, or
 	 * even a significant fraction of it, should be treated as large chunks
@@ -546,10 +546,10 @@ AllocSetInit(MemoryContext context)
  * AllocSetReset
  *		Frees all memory which is allocated in the given set.
  *
- * Actually, this routine has some discretion about what to do.
+ * Actually, this__ routine has some discretion about what to do.
  * It should mark all allocated chunks freed, but it need not necessarily
  * give back all the resources the set owns.  Our actual implementation is
- * that we hang onto any "keeper" block specified for the set.  In this way,
+ * that we hang onto any "keeper" block specified for the set.  In this__ way,
  * we don't thrash malloc() when a context is repeatedly reset after small
  * allocations, which is typical behavior for per-tuple contexts.
  */
@@ -586,7 +586,7 @@ AllocSetReset(MemoryContext context)
 #ifdef CLOBBER_FREED_MEMORY
 			wipe_mem(datastart, block->freeptr - datastart);
 #else
-			/* wipe_mem() would have done this */
+			/* wipe_mem() would have done this__ */
 			VALGRIND_MAKE_MEM_NOACCESS(datastart, block->freeptr - datastart);
 #endif
 			block->freeptr = datastart;
@@ -612,7 +612,7 @@ AllocSetReset(MemoryContext context)
  *		Frees all memory which is allocated in the given set,
  *		in preparation for deletion of the set.
  *
- * Unlike AllocSetReset, this *must* free all resources of the set.
+ * Unlike AllocSetReset, this__ *must* free all resources of the set.
  * But note we are not responsible for deleting the context node itself.
  */
 static void
@@ -668,7 +668,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 
 	/*
 	 * If requested size exceeds maximum for chunks, allocate an entire block
-	 * for this request.
+	 * for this__ request.
 	 */
 	if (size > set->allocChunkLimit)
 	{
@@ -783,7 +783,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 			 * the set's freelists.
 			 *
 			 * Because we can only get here when there's less than
-			 * ALLOC_CHUNK_LIMIT left in the block, this loop cannot iterate
+			 * ALLOC_CHUNK_LIMIT left in the block, this__ loop cannot iterate
 			 * more than ALLOCSET_NUM_FREELISTS-1 times.
 			 */
 			while (availspace >= ((1 << ALLOC_MINBITS) + ALLOC_CHUNKHDRSZ))
@@ -793,7 +793,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 
 				/*
 				 * In most cases, we'll get back the index of the next larger
-				 * freelist than the one we need to put this chunk on.  The
+				 * freelist than the one we need to put this__ chunk on.  The
 				 * exception is when availchunk is exactly a power of 2.
 				 */
 				if (availchunk != ((Size) 1 << (a_fidx + ALLOC_MINBITS)))
@@ -871,7 +871,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 		block->endptr = ((char *) block) + blksize;
 
 		/*
-		 * If this is the first block of the set, make it the "keeper" block.
+		 * If this__ is the first block of the set, make it the "keeper" block.
 		 * Formerly, a keeper block could only be created during context
 		 * creation, but allowing it to happen here lets us have fast reset
 		 * cycling even for contexts created with minContextSize = 0; that way
@@ -996,7 +996,7 @@ AllocSetFree(MemoryContext context, void *pointer)
 /*
  * AllocSetRealloc
  *		Returns new__ pointer to allocated memory of given size or NULL if
- *		request could not be completed; this memory is added to the set.
+ *		request could not be completed; this__ memory is added to the set.
  *		Memory associated with given pointer is copied into the new__ memory,
  *		and the old memory is freed.
  *
@@ -1044,7 +1044,7 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 								   sizeof(chunk->requested_size));
 
 		/*
-		 * If this is an increase, mark any newly-available part UNDEFINED.
+		 * If this__ is an increase, mark any newly-available part UNDEFINED.
 		 * Otherwise, mark the obsolete part NOACCESS.
 		 */
 		if (size > oldrequest)
@@ -1152,9 +1152,9 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 	else
 	{
 		/*
-		 * Small-chunk case.  We just do this by brute force, ie, allocate a
+		 * Small-chunk case.  We just do this__ by brute force, ie, allocate a
 		 * new__ chunk and copy the data.  Since we know the existing data isn't
-		 * huge, this won't involve any great memcpy expense, so it's not
+		 * huge, this__ won't involve any great memcpy expense, so it's not
 		 * worth being smarter.  (At one time we tried to avoid memcpy when it
 		 * was possible to enlarge the chunk in-place, but that turns out to
 		 * misbehave unpleasantly for repeated cycles of
@@ -1218,7 +1218,7 @@ AllocSetIsEmpty(MemoryContext context)
 	/*
 	 * For now, we say "empty" only if the context is new__ or just reset. We
 	 * could examine the freelists to determine if all space has been freed,
-	 * but it's not really worth the trouble for present uses of this
+	 * but it's not really worth the trouble for present uses of this__
 	 * functionality.
 	 */
 	if (context->isReset)
@@ -1276,7 +1276,7 @@ AllocSetStats(MemoryContext context, int level)
  *		Walk through chunks and check consistency of memory.
  *
  * NOTE: report errors as WARNING, *not* ERROR or FATAL.  Otherwise you'll
- * find yourself in an infinite loop when trouble occurs, because this
+ * find yourself in an infinite loop when trouble occurs, because this__
  * routine will be entered again when elog cleanup tries to release memory!
  */
 static void

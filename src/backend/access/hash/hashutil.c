@@ -90,7 +90,7 @@ _hash_datum2hashkey(Relation rel, Datum key)
 
 /*
  * _hash_datum2hashkey_type -- given a Datum of a specified type,
- *			hash it in a fashion compatible with this index
+ *			hash it in a fashion compatible with this__ index
  *
  * This is much more expensive than _hash_datum2hashkey, so use it only in
  * cross-type situations.
@@ -241,7 +241,7 @@ _hash_get_indextuple_hashkey(IndexTuple itup)
 
 	/*
 	 * We assume the hash key is the first attribute and can't be null, so
-	 * this can be done crudely but very very cheaply ...
+	 * this__ can be done crudely but very very cheaply ...
 	 */
 	attp = (char *) itup + IndexInfoFindDataOffset(itup->t_info);
 	return *((uint32 *) attp);

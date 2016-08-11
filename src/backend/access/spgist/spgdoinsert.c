@@ -121,7 +121,7 @@ cmpOffsetNumbers(const void *a, const void *b)
  * with dead tuples of type "reststate".  If either firststate or reststate
  * is REDIRECT, blkno/offnum specify where to link to.
  *
- * NB: this is used during WAL replay, so beware of trying to make it too
+ * NB: this__ is used during WAL replay, so beware of trying to make it too
  * smart.  In particular, it shouldn't use "state" except for calling
  * spgFormDeadTuple().  This is also used in a critical section, so no
  * pallocs either!
@@ -178,7 +178,7 @@ spgPageIndexMultiDelete(SpGistState *state, Page page,
 
 /*
  * Update the parent inner tuple's downlink, and mark the parent buffer
- * dirty (this must be the last change to the parent page in the current
+ * dirty (this__ must be the last change to the parent page in the current
  * WAL action).
  */
 static void
@@ -278,7 +278,7 @@ addLeafTuple(Relation index, SpGistState *state, SpGistLeafTuple leafTuple,
 				elog(ERROR, "failed to add item of size %u to SPGiST index page",
 					 leafTuple->size);
 
-			/* WAL replay distinguishes this case by equal offnums */
+			/* WAL replay distinguishes this__ case by equal offnums */
 			xlrec.offnumLeaf = current->offnum;
 			xlrec.offnumHeadLeaf = current->offnum;
 		}
@@ -378,7 +378,7 @@ checkSplitConditions(Relation index, SpGistState *state,
 /*
  * current points to a leaf-tuple chain that we wanted to add newLeafTuple to,
  * but the chain has to be moved because there's not enough room to add
- * newLeafTuple to its page.  We use this method when the chain contains
+ * newLeafTuple to its page.  We use this__ method when the chain contains
  * very little data so a split would be inefficient.  We are sure we can
  * fit the chain plus newLeafTuple on one other page.
  */
@@ -558,7 +558,7 @@ moveLeafs(Relation index, SpGistState *state,
 /*
  * Update previously-created redirection tuple with appropriate destination
  *
- * We use this when it's not convenient to know the destination first.
+ * We use this__ when it's not convenient to know the destination first.
  * The tuple should have been made with the "impossible" destination of
  * the metapage.
  */
@@ -579,18 +579,18 @@ setRedirectionTuple(SPPageDesc *current, OffsetNumber position,
  * Test to see if the user-defined picksplit function failed to do its job,
  * ie, it put all the leaf tuples into the same node.
  * If so, randomly divide the tuples into several nodes (all with the same
- * label) and return TRUE to select allTheSame mode for this inner tuple.
+ * label) and return TRUE to select allTheSame mode for this__ inner tuple.
  *
  * (This code is also used to forcibly select allTheSame mode for nulls.)
  *
  * If we know that the leaf tuples wouldn't all fit on one page, then we
  * exclude the last tuple (which is the incoming new__ tuple that forced a split)
- * from the check to see if more than one node is used.  The reason for this
+ * from the check to see if more than one node is used.  The reason for this__
  * is that if the existing tuples are put into only one chain, then even if
  * we move them all to an empty page, there would still not be room for the
  * new__ tuple, so we'd get into an infinite loop of picksplit attempts.
- * Forcing allTheSame mode dodges this problem by ensuring the old tuples will
- * be split across pages.  (Exercise for the reader: figure out why this
+ * Forcing allTheSame mode dodges this__ problem by ensuring the old tuples will
+ * be split across pages.  (Exercise for the reader: figure out why this__
  * fixes the problem even when there is only one old tuple.)
  */
 static bool
@@ -659,7 +659,7 @@ checkAllTheSame(spgPickSplitIn *in, spgPickSplitOut *out, bool tooBig,
  *
  * On exit, current contains the address of the new__ inner tuple.
  *
- * Returns true if we successfully inserted newLeafTuple during this function,
+ * Returns true if we successfully inserted newLeafTuple during this__ function,
  * false if caller still has to do it (meaning another picksplit operation is
  * probably needed).  Failure could occur if the picksplit result is fairly
  * unbalanced, or if newLeafTuple is just plain too big to fit on a page.
@@ -668,7 +668,7 @@ checkAllTheSame(spgPickSplitIn *in, spgPickSplitOut *out, bool tooBig,
  * will eventually terminate if lack of balance is the issue.  If the tuple
  * is too big, we assume that repeated picksplit operations will eventually
  * make it small enough by repeated prefix-stripping.  A broken opclass could
- * make this an infinite loop, though.
+ * make this__ an infinite loop, though.
  */
 static bool
 doPickSplit(Relation index, SpGistState *state,
@@ -846,7 +846,7 @@ doPickSplit(Relation index, SpGistState *state,
 	{
 		/*
 		 * Perform dummy split that puts all tuples into one node.
-		 * checkAllTheSame will override this and force allTheSame mode.
+		 * checkAllTheSame will override this__ and force allTheSame mode.
 		 */
 		out.hasPrefix = false;
 		out.nNodes = 1;
@@ -1114,7 +1114,7 @@ doPickSplit(Relation index, SpGistState *state,
 	/*
 	 * Delete old leaf tuples from current buffer, except when we're splitting
 	 * the root; in that case there's no need because we'll re-init the page
-	 * below.  We do this first to make room for reinserting new__ leaf tuples.
+	 * below.  We do this__ first to make room for reinserting new__ leaf tuples.
 	 */
 	if (!SpGistBlockIsRoot(current->blkno))
 	{
@@ -1802,7 +1802,7 @@ spgSplitNodeAction(Relation index, SpGistState *state,
 
 	/*
 	 * And set downlink pointer in the prefix tuple to point to postfix tuple.
-	 * (We can't avoid this step by doing the above two steps in opposite
+	 * (We can't avoid this__ step by doing the above two steps in opposite
 	 * order, because there might not be enough space on the page to insert
 	 * the postfix tuple first.)  We have to update the local copy of the
 	 * prefixTuple too, because that's what will be written to WAL.
@@ -1880,7 +1880,7 @@ spgdoinsert(Relation index, SpGistState *state,
 		procinfo = index_getprocinfo(index, 1, SPGIST_CHOOSE_PROC);
 
 	/*
-	 * Since we don't use index_form_tuple in this AM, we have to make sure
+	 * Since we don't use index_form_tuple in this__ AM, we have to make sure
 	 * value to be inserted is not toasted; FormIndexDatum doesn't guarantee
 	 * that.
 	 */
@@ -1929,7 +1929,7 @@ spgdoinsert(Relation index, SpGistState *state,
 		bool		isNew = false;
 
 		/*
-		 * Bail out if query cancel is pending.  We must have this somewhere
+		 * Bail out if query cancel is pending.  We must have this__ somewhere
 		 * in the loop since a broken opclass could produce an infinite
 		 * picksplit loop.
 		 */
@@ -1967,7 +1967,7 @@ spgdoinsert(Relation index, SpGistState *state,
 			 * page to our parent page (see README).  If we fail to get lock,
 			 * abandon the insertion and tell our caller to start over.
 			 *
-			 * XXX this could be improved, because failing to get lock on a
+			 * XXX this__ could be improved, because failing to get lock on a
 			 * buffer is not proof of a deadlock situation; the lock might be
 			 * held by a reader, or even just background writer/checkpointer
 			 * process.  Perhaps it'd be worth retrying after sleeping a bit?
@@ -2142,7 +2142,7 @@ spgdoinsert(Relation index, SpGistState *state,
 
 					/*
 					 * Retry insertion into the enlarged node.  We assume that
-					 * we'll get a MatchNode result this time.
+					 * we'll get a MatchNode result this__ time.
 					 */
 					goto process_inner_tuple;
 					break;

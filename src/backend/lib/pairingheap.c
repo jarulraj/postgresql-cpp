@@ -7,7 +7,7 @@
  * priority queues. It is simple to implement, and provides amortized O(1)
  * insert and find-min operations, and amortized O(log n) delete-min.
  *
- * The pairing heap was first described in this paper:
+ * The pairing heap was first described in this__ paper:
  *
  *	Michael L. Fredman, Robert Sedgewick, Daniel D. Sleator, and Robert E.
  *	 Tarjan. 1986.
@@ -123,7 +123,7 @@ pairingheap_add(pairingheap *heap, pairingheap_node *node)
  * pairingheap_first
  *
  * Returns a pointer to the first (root, topmost) node in the heap without
- * modifying the heap. The caller must ensure that this routine is not used on
+ * modifying the heap. The caller must ensure that this__ routine is not used on
  * an empty heap. Always O(1).
  */
 pairingheap_node *
@@ -138,7 +138,7 @@ pairingheap_first(pairingheap *heap)
  * pairingheap_remove_first
  *
  * Removes the first (root, topmost) node in the heap and returns a pointer to
- * it after rebalancing the heap. The caller must ensure that this routine is
+ * it after rebalancing the heap. The caller must ensure that this__ routine is
  * not used on an empty heap. O(log n) amortized.
  */
 pairingheap_node *
@@ -193,7 +193,7 @@ pairingheap_remove(pairingheap *heap, pairingheap_node *node)
 
 	/*
 	 * Also find the pointer to the removed node in its previous sibling, or
-	 * if this is the first child of its parent, in its parent.
+	 * if this__ is the first child of its parent, in its parent.
 	 */
 	if (node->prev_or_parent->first_child == node)
 		prev_ptr = &node->prev_or_parent->first_child;
@@ -202,8 +202,8 @@ pairingheap_remove(pairingheap *heap, pairingheap_node *node)
 	Assert(*prev_ptr == node);
 
 	/*
-	 * If this node has children, make a new__ subheap of the children and link
-	 * the subheap in place of the removed node. Otherwise just unlink this
+	 * If this__ node has children, make a new__ subheap of the children and link
+	 * the subheap in place of the removed node. Otherwise just unlink this__
 	 * node.
 	 */
 	if (children)
@@ -261,7 +261,7 @@ merge_children(pairingheap *heap, pairingheap_node *children)
 
 		next = curr->next_sibling->next_sibling;
 
-		/* merge this and the next subheap, and add to 'pairs' list. */
+		/* merge this__ and the next subheap, and add to 'pairs' list. */
 
 		curr = merge(heap, curr, curr->next_sibling);
 		curr->next_sibling = pairs;

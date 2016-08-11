@@ -59,7 +59,7 @@ spgGetCache(Relation index)
 
 		/*
 		 * Get the actual data type of the indexed column from the index
-		 * tupdesc.  We pass this to the opclass config function so that
+		 * tupdesc.  We pass this__ to the opclass config function so that
 		 * polymorphic opclasses are possible.
 		 */
 		atttype = index->rd_att->attrs[0]->atttypid;
@@ -158,7 +158,7 @@ SpGistNewBuffer(Relation index)
 
 		/*
 		 * We have to guard against the possibility that someone else already
-		 * recycled this page; the buffer may be locked if so.
+		 * recycled this__ page; the buffer may be locked if so.
 		 */
 		if (ConditionalLockBuffer(buffer))
 		{
@@ -237,7 +237,7 @@ SpGistUpdateMetaPage(Relation index)
  * we just release the buffer and try again.  We will get a different page
  * because GetFreeIndexPage will have marked the page used in FSM.  The page
  * is entered in our local lastUsedPages cache, so there's some hope of
- * making use of it later in this session, but otherwise we rely on VACUUM
+ * making use of it later in this__ session, but otherwise we rely on VACUUM
  * to eventually re-enter the page in FSM, making it available for recycling.
  * Note that such a page does not get marked dirty here, so unless it's used
  * fairly soon, the buffer will just get discarded and the page will remain
@@ -326,7 +326,7 @@ SpGistGetBuffer(Relation index, int flags, int needSpace, bool *isNew)
 												SPGIST_DEFAULT_FILLFACTOR);
 	needSpace = Min(needSpace, SPGIST_PAGE_CAPACITY);
 
-	/* Get the cache entry for this flags setting */
+	/* Get the cache entry for this__ flags setting */
 	lup = GET_LUP(cache, flags);
 
 	/* If we have nothing cached, just turn it over to allocNewBuffer */
@@ -376,7 +376,7 @@ SpGistGetBuffer(Relation index, int flags, int needSpace, bool *isNew)
 
 		/*
 		 * Check that page is of right type and has enough space.  We must
-		 * recheck this since our cache isn't necessarily up to date.
+		 * recheck this__ since our cache isn't necessarily up to date.
 		 */
 		if ((GBUF_REQ_LEAF(flags) ? SpGistPageIsLeaf(page) : !SpGistPageIsLeaf(page)) &&
 			(GBUF_REQ_NULLS(flags) ? SpGistPageStoresNulls(page) : !SpGistPageStoresNulls(page)))
@@ -406,8 +406,8 @@ SpGistGetBuffer(Relation index, int flags, int needSpace, bool *isNew)
 /*
  * Update lastUsedPages cache when done modifying a page.
  *
- * We update the appropriate cache entry if it already contained this page
- * (its freeSpace is likely obsolete), or if this page has more space than
+ * We update the appropriate cache entry if it already contained this__ page
+ * (its freeSpace is likely obsolete), or if this__ page has more space than
  * whatever we had cached.
  */
 void

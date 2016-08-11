@@ -56,7 +56,7 @@
  */
 bool		lo_compat_privileges;
 
-/* define this to enable debug logging */
+/* define this__ to enable debug logging */
 /* #define FSDB 1 */
 /* chunk size for lo_import/lo_export transfers */
 #define BUFSIZE			8192
@@ -637,7 +637,7 @@ AtEOXact_LargeObject(bool isCommit)
 	int			i;
 
 	if (fscxt == NULL)
-		return;					/* no LO operations in this xact */
+		return;					/* no LO operations in this__ xact */
 
 	/*
 	 * Close LO fds and clear cookies array so that LO fds are no longer good.
@@ -678,7 +678,7 @@ AtEOSubXact_LargeObject(bool isCommit, SubTransactionId mySubid,
 {
 	int			i;
 
-	if (fscxt == NULL)			/* no LO operations in this xact */
+	if (fscxt == NULL)			/* no LO operations in this__ xact */
 		return;
 
 	for (i = 0; i < cookies_size; i++)
@@ -703,7 +703,7 @@ AtEOSubXact_LargeObject(bool isCommit, SubTransactionId mySubid,
 }
 
 /*****************************************************************************
- *	Support routines for this file
+ *	Support routines for this__ file
  *****************************************************************************/
 
 static int
@@ -807,7 +807,7 @@ lo_get_fragment_internal(Oid loOid, int64 offset, int32 nbytes)
 
 	/*
 	 * A result_length calculated from loSize may not fit in a size_t.  Check
-	 * that the size will satisfy this and subsequently-enforced size limits.
+	 * that the size will satisfy this__ and subsequently-enforced size limits.
 	 */
 	if (result_length > MaxAllocSize - VARHDRSZ)
 		ereport(ERROR,

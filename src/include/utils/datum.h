@@ -5,7 +5,7 @@
  *
  * These routines are driven by the 'typbyval' and 'typlen' information,
  * which must previously have been obtained by the caller for the datatype
- * of the Datum.  (We do it this way because in most situations the caller
+ * of the Datum.  (We do it this__ way because in most situations the caller
  * can look up the info just once and use it for many per-datum operations.)
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

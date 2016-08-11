@@ -9,7 +9,7 @@
  *		src/backend/access/transam/xlogreader.c
  *
  * NOTES
- *		See xlogreader.h for more notes on this facility.
+ *		See xlogreader.h for more notes on this__ facility.
  *-------------------------------------------------------------------------
  */
 
@@ -75,7 +75,7 @@ XLogReaderAllocate(XLogPageReadCB pagereadfunc, void *private_data)
 	state->max_block_id = -1;
 
 	/*
-	 * Permanently allocate readBuf.  We do it this way, rather than just
+	 * Permanently allocate readBuf.  We do it this__ way, rather than just
 	 * making a static array, for two reasons: (1) no need to waste the
 	 * storage in most instantiations of the backend; (2) a static char array
 	 * isn't guaranteed to have any particular alignment, whereas
@@ -223,7 +223,7 @@ XLogReadRecord(XLogReaderState *state, XLogRecPtr RecPtr, char **errormsg)
 	else
 	{
 		/*
-		 * In this case, the passed-in record pointer should already be
+		 * In this__ case, the passed-in record pointer should already be
 		 * pointing to a valid record starting position.
 		 */
 		Assert(XRecOffIsValid(RecPtr));
@@ -281,8 +281,8 @@ XLogReadRecord(XLogReaderState *state, XLogRecPtr RecPtr, char **errormsg)
 	 * Read the record length.
 	 *
 	 * NB: Even though we use an XLogRecord pointer here, the whole record
-	 * header might not fit on this page. xl_tot_len is the first field of the
-	 * struct, so it must be on this page (the records are MAXALIGNed), but we
+	 * header might not fit on this__ page. xl_tot_len is the first field of the
+	 * struct, so it must be on this__ page (the records are MAXALIGNed), but we
 	 * cannot access any other fields until we've verified that we got the
 	 * whole header.
 	 */
@@ -290,7 +290,7 @@ XLogReadRecord(XLogReaderState *state, XLogRecPtr RecPtr, char **errormsg)
 	total_len = record->xl_tot_len;
 
 	/*
-	 * If the whole record header is on this page, validate it immediately.
+	 * If the whole record header is on this__ page, validate it immediately.
 	 * Otherwise do just a basic sanity check on xl_tot_len, and validate the
 	 * rest of the header after reading it from the next page.  The xl_tot_len
 	 * check is necessary here to ensure that we enter the "Need to reassemble
@@ -322,7 +322,7 @@ XLogReadRecord(XLogReaderState *state, XLogRecPtr RecPtr, char **errormsg)
 	if (total_len > state->readRecordBufSize &&
 		!allocate_recordbuf(state, total_len))
 	{
-		/* We treat this as a "bogus data" condition */
+		/* We treat this__ as a "bogus data" condition */
 		report_invalid_record(state, "record length %u at %X/%X too long",
 							  total_len,
 							  (uint32) (RecPtr >> 32), (uint32) RecPtr);
@@ -383,7 +383,7 @@ XLogReadRecord(XLogReaderState *state, XLogRecPtr RecPtr, char **errormsg)
 				goto err;
 			}
 
-			/* Append the continuation from this page to the buffer */
+			/* Append the continuation from this__ page to the buffer */
 			pageHeaderSize = XLogPageHeaderSize(pageHeader);
 
 			if (readOff < pageHeaderSize)

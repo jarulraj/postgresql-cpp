@@ -53,7 +53,7 @@
  *
  * NOTES:
  *
- * linp1..N form an ItemId array.  ItemPointers point into this array
+ * linp1..N form an ItemId array.  ItemPointers point into this__ array
  * rather than pointing directly to a tuple.  Note that OffsetNumbers
  * conventionally start at 1, not 0.
  *
@@ -77,7 +77,7 @@ typedef Pointer Page;
 /*
  * location (byte offset) within a page.
  *
- * note that this is actually limited to 2^15 because we have limited
+ * note that this__ is actually limited to 2^15 because we have limited
  * ItemIdData.lp_off and ItemIdData.lp_len to 15 bits (see itemid.h).
  */
 typedef uint16 LocationIndex;
@@ -103,7 +103,7 @@ typedef struct
  *
  * space management information generic to any page
  *
- *		pd_lsn		- identifies xlog record for last change to this page.
+ *		pd_lsn		- identifies xlog record for last change to this__ page.
  *		pd_checksum - page checksum, if set.
  *		pd_flags	- flag bits.
  *		pd_lower	- offset to start of free space.
@@ -116,7 +116,7 @@ typedef struct
  * "thou shalt write xlog before data".  A dirty buffer cannot be dumped
  * to disk until xlog has been flushed at least as far as the page's LSN.
  *
- * pd_checksum stores the page checksum, if it has been set for this page;
+ * pd_checksum stores the page checksum, if it has been set for this__ page;
  * zero is a valid value for a checksum. If a checksum is not in use then
  * we leave the field unset. This will typically mean the field is zero
  * though non-zero values may also be present if databases have been
@@ -132,7 +132,7 @@ typedef struct
  *
  * The page version number and page size are packed together into a single
  * uint16 field.  This is for historical reasons: before PostgreSQL 7.3,
- * there was no concept of a page version number, and doing it this way
+ * there was no concept of a page version number, and doing it this__ way
  * lets us pretend that pre-7.3 databases have page version number zero.
  * We constrain page sizes to be multiples of 256, leaving the low eight
  * bits available for a version number.
@@ -148,7 +148,7 @@ typedef struct PageHeaderData
 {
 	/* XXX LSN is member of *any* block, not only page-organized ones */
 	PageXLogRecPtr pd_lsn;		/* LSN: next byte after last byte of xlog
-								 * record for last change to this page */
+								 * record for last change to this__ page */
 	uint16		pd_checksum;	/* checksum */
 	uint16		pd_flags;		/* flag bits, see below */
 	LocationIndex pd_lower;		/* offset to start of free space */
@@ -170,8 +170,8 @@ typedef PageHeaderData *PageHeader;
  * changes to it are not WAL-logged.
  *
  * PD_PAGE_FULL is set if an UPDATE doesn't find enough free space in the
- * page for its new__ tuple version; this suggests that a prune is needed.
- * Again, this is just a hint.
+ * page for its new__ tuple version; this__ suggests that a prune is needed.
+ * Again, this__ is just a hint.
  */
 #define PD_HAS_FREE_LINES	0x0001		/* are there any unused line pointers? */
 #define PD_PAGE_FULL		0x0002		/* not enough free space for new__
@@ -236,7 +236,7 @@ typedef PageHeaderData *PageHeader;
  * PageGetContents
  *		To be used in case the page does not contain item pointers.
  *
- * Note: prior to 8.3 this was not guaranteed to yield a MAXALIGN'd result.
+ * Note: prior to 8.3 this__ was not guaranteed to yield a MAXALIGN'd result.
  * Now it is.  Beware of old code that might think the offset to the contents
  * is just SizeOfPageHeaderData rather than MAXALIGN(SizeOfPageHeaderData).
  */
@@ -258,7 +258,7 @@ typedef PageHeaderData *PageHeader;
  * PageGetPageSize
  *		Returns the page size of a page.
  *
- * this can only be called on a formatted page (unlike
+ * this__ can only be called on a formatted page (unlike
  * BufferGetPageSize, which can be called on an unformatted page).
  * however, it can be called on a page that is not stored in a buffer.
  */
@@ -327,12 +327,12 @@ typedef PageHeaderData *PageHeader;
 /*
  * PageGetMaxOffsetNumber
  *		Returns the maximum offset number used by the given page.
- *		Since offset numbers are 1-based, this is also the number
+ *		Since offset numbers are 1-based, this__ is also the number
  *		of items on the page.
  *
  *		NOTE: if the page is not initialized (pd_lower == 0), we must
  *		return zero to ensure sane behavior.  Accept double evaluation
- *		of the argument so that we can ensure this.
+ *		of the argument so that we can ensure this__.
  */
 #define PageGetMaxOffsetNumber(page) \
 	(((PageHeader) (page))->pd_lower <= SizeOfPageHeaderData ? 0 : \

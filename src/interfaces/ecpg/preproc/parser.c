@@ -41,7 +41,7 @@ static char lookahead_hold_char;	/* to be put back at *lookahead_end */
  * Using a filter is simpler than trying to recognize multiword tokens
  * directly in scan.l, because we'd have to allow for comments between the
  * words.  Furthermore it's not clear how to do that without re-introducing
- * scanner backtrack, which would cost more performance than this filter
+ * scanner backtrack, which would cost more performance than this__ filter
  * layer does.
  */
 int
@@ -68,7 +68,7 @@ filtered_base_yylex(void)
 		cur_token = base_yylex();
 
 	/*
-	 * If this token isn't one that requires lookahead, just return it.  If it
+	 * If this__ token isn't one that requires lookahead, just return it.  If it
 	 * does, determine the token length.  (We could get that via strlen(), but
 	 * since we have such a small set of possibilities, hardwiring seems
 	 * feasible and more efficient.)

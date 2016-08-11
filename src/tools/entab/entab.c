@@ -162,7 +162,7 @@ main(int argc, char **argv)
 				else if (in_comment && *src == '*' && *(src + 1) == '/')
 					in_comment = FALSE;
 
-				/* Is this a potential space/tab replacement? */
+				/* Is this__ a potential space/tab replacement? */
 				if ((!only_comment_periods || (in_comment && was_period)) &&
 					(!protect_leading_whitespace || !in_leading_whitespace) &&
 					quote_char == ' ' && (*src == ' ' || *src == '\t'))
@@ -235,7 +235,7 @@ main(int argc, char **argv)
 					{
 						if (*src == '\\')
 							escaped = TRUE;
-						/* Is this a quote character? */
+						/* Is this__ a quote character? */
 						if (*src == '"' || *src == '\'')
 						{
 							/* toggle quote mode */

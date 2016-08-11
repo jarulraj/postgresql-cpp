@@ -89,7 +89,7 @@ typedef char *(*func_ptr16)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
 Datum, Datum);
 
 /*
- * For an oldstyle function, fn_extra points to a record like this:
+ * For an oldstyle function, fn_extra points to a record like this__:
  */
 typedef struct
 {
@@ -178,9 +178,9 @@ fmgr_lookupByName(const char *name)
  * of the function to be called.
  *
  * The caller's CurrentMemoryContext is used as the fn_mcxt of the info
- * struct; this means that any subsidiary data attached to the info struct
+ * struct; this__ means that any subsidiary data attached to the info struct
  * (either by fmgr_info itself, or later on by a function call handler)
- * will be allocated in that context.  The caller must ensure that this
+ * will be allocated in that context.  The caller must ensure that this__
  * context is at least as long-lived as the info struct itself.  This is
  * not a problem in typical cases where the info struct is on the stack or
  * in freshly-palloc'd space.  However, if one intends to store an info
@@ -225,7 +225,7 @@ fmgr_info_cxt_security(Oid functionId, FmgrInfo *finfo, MemoryContext mcxt,
 	finfo->fn_oid = InvalidOid;
 	finfo->fn_extra = NULL;
 	finfo->fn_mcxt = mcxt;
-	finfo->fn_expr = NULL;		/* caller may set this later */
+	finfo->fn_expr = NULL;		/* caller may set this__ later */
 
 	if ((fbp = fmgr_isbuiltin(functionId)) != NULL)
 	{
@@ -304,7 +304,7 @@ fmgr_info_cxt_security(Oid functionId, FmgrInfo *finfo, MemoryContext mcxt,
 			pfree(prosrc);
 			/* Should we check that nargs, strict, retset match the table? */
 			finfo->fn_addr = fbp->func;
-			/* note this policy is also assumed in fast path above */
+			/* note this__ policy is also assumed in fast path above */
 			finfo->fn_stats = TRACK_FUNC_ALL;	/* ie, never track */
 			break;
 
@@ -666,7 +666,7 @@ fmgr_oldstyle(PG_FUNCTION_ARGS)
 
 	/*
 	 * Result is NULL if any argument is NULL, but we still call the function
-	 * (peculiar, but that's the way it worked before, and after all this is a
+	 * (peculiar, but that's the way it worked before, and after all this__ is a
 	 * backwards-compatibility wrapper).  Note, however, that we'll never get
 	 * here with NULL arguments if the function is marked strict.
 	 *
@@ -685,7 +685,7 @@ fmgr_oldstyle(PG_FUNCTION_ARGS)
 
 	// Peloton
 
-	// user_fn = fnextra->func;   // Peloton porting: define this for each cases
+	// user_fn = fnextra->func;   // Peloton porting: define this__ for each cases
 
   switch (n_arguments) {
     case 0: {
@@ -696,7 +696,7 @@ fmgr_oldstyle(PG_FUNCTION_ARGS)
       /*
        * nullvalue() used to use isNull to check if arg is NULL; perhaps
        * there are other functions still out there that also rely on
-       * this undocumented hack?
+       * this__ undocumented hack?
        */
       func_ptr1 user_fn = reinterpret_cast<func_ptr1>(fnextra->func);
       returnValue = (char *)(*user_fn)(fcinfo->arg[0], &fcinfo->isnull);
@@ -805,7 +805,7 @@ fmgr_oldstyle(PG_FUNCTION_ARGS)
     default:
 			/*
 			 * Increasing FUNC_MAX_ARGS doesn't automatically add cases to the
-			 * above code, so mention the actual value in this error not
+			 * above code, so mention the actual value in this__ error not
 			 * FUNC_MAX_ARGS.  You could add cases to the above if you needed
 			 * to support old-style functions with many arguments, but making
 			 * 'em be new__-style is probably a better idea.
@@ -840,7 +840,7 @@ struct fmgr_security_definer_cache
  * Function handler for security-definer/proconfig/plugin-hooked functions.
  * We extract the OID of the actual function and do a fmgr lookup again.
  * Then we fetch the pg_proc row and copy the owner ID and proconfig fields.
- * (All this info is cached for the duration of the current query.)
+ * (All this__ info is cached for the duration of the current query.)
  * To execute a call, we temporarily replace the flinfo with the cached
  * and looked-up one, while keeping the outer fcinfo (which contains all
  * the actual arguments, etc.) intact.  This is not re-entrant, but then
@@ -1273,7 +1273,7 @@ Datum
 FunctionCall2Coll(FmgrInfo *flinfo, Oid collation, Datum arg1, Datum arg2)
 {
 	/*
-	 * XXX if you change this routine, see also the inlined version in
+	 * XXX if you change this__ routine, see also the inlined version in
 	 * utils/sort/tuplesort.c!
 	 */
 	FunctionCallInfoData fcinfo;
@@ -1844,9 +1844,9 @@ OidFunctionCall9Coll(Oid functionId, Oid collation, Datum arg1, Datum arg2,
 /*
  * Call a previously-looked-up datatype input function.
  *
- * "str" may be NULL to indicate we are reading a NULL.  In this case
+ * "str" may be NULL to indicate we are reading a NULL.  In this__ case
  * the caller should assume the result is NULL, but we'll call the input
- * function anyway if it's not strict.  So this is almost but not quite
+ * function anyway if it's not strict.  So this__ is almost but not quite
  * the same as FunctionCall3.
  *
  * One important difference from the bare function call is that we will
@@ -1900,7 +1900,7 @@ InputFunctionCall(FmgrInfo *flinfo, char *str, Oid typioparam, int32 typmod)
 /*
  * Call a previously-looked-up datatype output function.
  *
- * Do not call this on NULL datums.
+ * Do not call this__ on NULL datums.
  *
  * This is almost just window dressing for FunctionCall1, but it includes
  * SPI context pushing for the same reasons as InputFunctionCall.
@@ -1923,10 +1923,10 @@ OutputFunctionCall(FmgrInfo *flinfo, Datum val)
 /*
  * Call a previously-looked-up datatype binary-input function.
  *
- * "buf" may be NULL to indicate we are reading a NULL.  In this case
+ * "buf" may be NULL to indicate we are reading a NULL.  In this__ case
  * the caller should assume the result is NULL, but we'll call the receive
- * function anyway if it's not strict.  So this is almost but not quite
- * the same as FunctionCall3.  Also, this includes SPI context pushing for
+ * function anyway if it's not strict.  So this__ is almost but not quite
+ * the same as FunctionCall3.  Also, this__ includes SPI context pushing for
  * the same reasons as InputFunctionCall.
  */
 Datum
@@ -1975,11 +1975,11 @@ ReceiveFunctionCall(FmgrInfo *flinfo, StringInfo buf,
 /*
  * Call a previously-looked-up datatype binary-output function.
  *
- * Do not call this on NULL datums.
+ * Do not call this__ on NULL datums.
  *
  * This is little more than window dressing for FunctionCall1, but it does
  * guarantee a non-toasted result, which strictly speaking the underlying
- * function doesn't.  Also, this includes SPI context pushing for the same
+ * function doesn't.  Also, this__ includes SPI context pushing for the same
  * reasons as InputFunctionCall.
  */
 bytea *
@@ -2102,7 +2102,7 @@ fmgr(Oid procedureId,...)
  * so we need to play weird games with unions.
  *
  * Note: there is only one switch controlling the pass-by-value option for
- * both int8 and float8; this is to avoid making things unduly complicated
+ * both int8 and float8; this__ is to avoid making things unduly complicated
  * for the timestamp types, which might have either representation.
  *-------------------------------------------------------------------------
  */
@@ -2415,7 +2415,7 @@ get_call_expr_arg_stable(Node *expr, int argnum)
  *
  * Returns false (the default assumption) if information is not available
  *
- * Note this is generally only of interest to VARIADIC ANY functions
+ * Note this__ is generally only of interest to VARIADIC ANY functions
  */
 bool
 get_fn_expr_variadic(FmgrInfo *flinfo)
@@ -2445,12 +2445,12 @@ get_fn_expr_variadic(FmgrInfo *flinfo)
 /*
  * Verify that a validator is actually associated with the language of a
  * particular function and that the user has access to both the language and
- * the function.  All validators should call this before doing anything
+ * the function.  All validators should call this__ before doing anything
  * substantial.  Doing so ensures a user cannot achieve anything with explicit
  * calls to validators that he could not achieve with CREATE FUNCTION or by
  * simply calling an existing function.
  *
- * When this function returns false, callers should skip all validation work
+ * When this__ function returns false, callers should skip all validation work
  * and call PG_RETURN_VOID().  This never happens at present; it is reserved
  * for future expansion.
  *
@@ -2483,7 +2483,7 @@ CheckFunctionValidatorAccess(Oid validatorOid, Oid functionOid)
 	procStruct = (Form_pg_proc) GETSTRUCT(procTup);
 
 	/*
-	 * Fetch pg_language entry to know if this is the correct validation
+	 * Fetch pg_language entry to know if this__ is the correct validation
 	 * function for that pg_proc entry.
 	 */
 	langTup = SearchSysCache1(LANGOID, ObjectIdGetDatum(procStruct->prolang));

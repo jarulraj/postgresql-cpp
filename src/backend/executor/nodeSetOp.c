@@ -313,7 +313,7 @@ setop_retrieve_direct(SetOpState *setopstate)
 				break;
 			}
 
-			/* Still in same group, so count this tuple */
+			/* Still in same group, so count this__ tuple */
 			advance_counts(pergroup,
 						   fetch_tuple_flag(setopstate, outerslot));
 		}
@@ -382,7 +382,7 @@ setop_fill_hash_table(SetOpState *setopstate)
 			/* (still) in first input relation */
 			Assert(in_first_rel);
 
-			/* Find or build hashtable entry for this tuple's group */
+			/* Find or build hashtable entry for this__ tuple's group */
 			entry = (SetOpHashEntry)
 				LookupTupleHashEntry(setopstate->hashtable, outerslot, &isnew);
 
@@ -447,7 +447,7 @@ setop_retrieve_hash_table(SetOpState *setopstate)
 		}
 
 		/*
-		 * See if we should emit any copies of this tuple, and if so return
+		 * See if we should emit any copies of this__ tuple, and if so return
 		 * the first copy.
 		 */
 		set_output_count(setopstate, &entry->pergroup);
@@ -540,7 +540,7 @@ ExecInitSetOp(SetOp *node, EState *estate, int eflags)
 	outerPlanState(setopstate) = ExecInitNode(outerPlan(node), estate, eflags);
 
 	/*
-	 * setop nodes do no projections, so initialize projection info for this
+	 * setop nodes do no projections, so initialize projection info for this__
 	 * node appropriately
 	 */
 	ExecAssignResultTypeFromTL(&setopstate->ps);
@@ -579,7 +579,7 @@ ExecInitSetOp(SetOp *node, EState *estate, int eflags)
  *		ExecEndSetOp
  *
  *		This shuts down the subplan and frees resources allocated
- *		to this node.
+ *		to this__ node.
  * ----------------------------------------------------------------
  */
 void

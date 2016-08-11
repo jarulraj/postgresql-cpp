@@ -215,13 +215,13 @@ typedef struct PLpgSQL_expr
 	int			dno;
 	char	   *query;
 	SPIPlanPtr	plan;
-	Bitmapset  *paramnos;		/* all dnos referenced by this query */
+	Bitmapset  *paramnos;		/* all dnos referenced by this__ query */
 	int			rwparam;		/* dno of read/write param, or -1 if none */
 
-	/* function containing this expr (not set until we first parse query) */
+	/* function containing this__ expr (not set until we first parse query) */
 	struct PLpgSQL_function *func;
 
-	/* namespace__ chain visible to this expr */
+	/* namespace__ chain visible to this__ expr */
 	struct PLpgSQL_nsitem *ns;
 
 	/* fields for "simple expression" fast-path execution: */
@@ -420,7 +420,7 @@ typedef struct
 typedef struct					/* one ELSIF arm of IF statement */
 {
 	int			lineno;
-	PLpgSQL_expr *cond;			/* boolean expression for this case */
+	PLpgSQL_expr *cond;			/* boolean expression for this__ case */
 	List	   *stmts;			/* List of statements */
 } PLpgSQL_if_elsif;
 
@@ -439,7 +439,7 @@ typedef struct					/* CASE statement */
 typedef struct					/* one arm of CASE statement */
 {
 	int			lineno;
-	PLpgSQL_expr *expr;			/* boolean expression for this case */
+	PLpgSQL_expr *expr;			/* boolean expression for this__ case */
 	List	   *stmts;			/* List of statements */
 } PLpgSQL_case_when;
 
@@ -567,7 +567,7 @@ typedef struct
 	FetchDirection direction;	/* fetch direction */
 	long		how_many;		/* count, if constant (expr is NULL) */
 	PLpgSQL_expr *expr;			/* count, if expression */
-	bool		is_move;		/* is this a fetch or move? */
+	bool		is_move;		/* is this__ a fetch or move? */
 	bool		returns_multiple_rows;	/* can return more than one row? */
 } PLpgSQL_stmt_fetch;
 
@@ -584,7 +584,7 @@ typedef struct
 {								/* EXIT or CONTINUE statement			*/
 	int			cmd_type;
 	int			lineno;
-	bool		is_exit;		/* Is this an exit or a continue? */
+	bool		is_exit;		/* Is this__ an exit or a continue? */
 	char	   *label;			/* NULL if it's an unlabelled EXIT/CONTINUE */
 	PLpgSQL_expr *cond;
 } PLpgSQL_stmt_exit;
@@ -673,7 +673,7 @@ typedef struct PLpgSQL_func_hashkey
 
 	bool		isTrigger;		/* true if called as a trigger */
 
-	/* be careful that pad bytes in this struct get zeroed! */
+	/* be careful that pad bytes in this__ struct get zeroed! */
 
 	/*
 	 * For a trigger function, the OID of the relation triggered on is part of
@@ -819,7 +819,7 @@ typedef struct PLpgSQL_execstate
  * To instrument PL/pgSQL, a plugin library must access the rendezvous
  * variable "PLpgSQL_plugin" and set it to point to a PLpgSQL_plugin struct.
  * Typically the struct could just be static data in the plugin library.
- * We expect that a plugin would do this at library load time (_PG_init()).
+ * We expect that a plugin would do this__ at library load time (_PG_init()).
  * It must also be careful to set the rendezvous variable back to NULL
  * if it is unloaded (_PG_fini()).
  *

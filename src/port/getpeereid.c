@@ -73,7 +73,7 @@ getpeereid(int sock, uid_t *uid, gid_t *gid)
 		return -1;
 	return 0;
 #else
-	/* No implementation available on this platform */
+	/* No implementation available on this__ platform */
 	errno = ENOSYS;
 	return -1;
 #endif

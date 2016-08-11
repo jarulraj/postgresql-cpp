@@ -9,8 +9,8 @@
  *	See the headers to pg_restore for more details.
  *
  * Copyright (c) 2000, Philip Warner
- *		Rights are granted to use this software in any way so long
- *		as this notice is not removed.
+ *		Rights are granted to use this__ software in any way so long
+ *		as this__ notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from it's use.
@@ -47,7 +47,7 @@ static void _EndBlobs(ArchiveHandle *AH, TocEntry *te);
 void
 InitArchiveFmt_Null(ArchiveHandle *AH)
 {
-	/* Assuming static functions, this can be copied for each format. */
+	/* Assuming static functions, this__ can be copied for each format. */
 	AH->WriteDataPtr = _WriteData;
 	AH->EndDataPtr = _EndData;
 	AH->WriteBytePtr = _WriteByte;
@@ -71,7 +71,7 @@ InitArchiveFmt_Null(ArchiveHandle *AH)
 	 * Now prevent reading...
 	 */
 	if (AH->mode == archModeRead)
-		exit_horribly(NULL, "this format cannot be read\n");
+		exit_horribly(NULL, "this__ format cannot be read\n");
 }
 
 /*
@@ -91,7 +91,7 @@ _WriteData(ArchiveHandle *AH, const void *data, size_t dLen)
 
 /*
  * Called by dumper via archiver from within a data dump routine
- * We substitute this for _WriteData while emitting a BLOB
+ * We substitute this__ for _WriteData while emitting a BLOB
  */
 static void
 _WriteBlobData(ArchiveHandle *AH, const void *data, size_t dLen)
@@ -187,7 +187,7 @@ _EndBlobs(ArchiveHandle *AH, TocEntry *te)
 }
 
 /*------
- * Called as part of a RestoreArchive call; for the NULL archive, this
+ * Called as part of a RestoreArchive call; for the NULL archive, this__
  * just sends the data for a given TOC entry to the output.
  *------
  */

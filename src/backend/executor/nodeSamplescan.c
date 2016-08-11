@@ -50,7 +50,7 @@ SampleNext(SampleScanState *node)
 	TupleTableSlot *slot;
 
 	/*
-	 * if this is first call within a scan, initialize
+	 * if this__ is first call within a scan, initialize
 	 */
 	if (!node->begun)
 		tablesample_init(node);
@@ -66,7 +66,7 @@ SampleNext(SampleScanState *node)
 		ExecStoreTuple(tuple,	/* tuple to store */
 					   slot,	/* slot to store in */
 					   node->ss.ss_currentScanDesc->rs_cbuf,	/* tuple's buffer */
-					   false);	/* don't pfree this pointer */
+					   false);	/* don't pfree this__ pointer */
 	else
 		ExecClearTuple(slot);
 
@@ -198,7 +198,7 @@ ExecInitSampleScan(SampleScan *node, EState *estate, int eflags)
 
 	/*
 	 * If we don't have a REPEATABLE clause, select a random seed.  We want to
-	 * do this just once, since the seed shouldn't change over rescans.
+	 * do this__ just once, since the seed shouldn't change over rescans.
 	 */
 	if (tsc->repeatable == NULL)
 		scanstate->seed = random();
@@ -380,7 +380,7 @@ tablesample_init(SampleScanState *scanstate)
 /*
  * Get next tuple from TABLESAMPLE method.
  *
- * Note: an awful lot of this is copied-and-pasted from heapam.c.  It would
+ * Note: an awful lot of this__ is copied-and-pasted from heapam.c.  It would
  * perhaps be better to refactor to share more code.
  */
 static HeapTuple
@@ -446,7 +446,7 @@ tablesample_getnext(SampleScanState *scanstate)
 
 		CHECK_FOR_INTERRUPTS();
 
-		/* Ask the tablesample method which tuples to check on this page. */
+		/* Ask the tablesample method which tuples to check on this__ page. */
 		tupoffset = tsm->NextSampleTuple(scanstate,
 										 blockno,
 										 maxoffset);
@@ -470,7 +470,7 @@ tablesample_getnext(SampleScanState *scanstate)
 			else
 				visible = SampleTupleVisible(tuple, tupoffset, scan);
 
-			/* in pagemode, heapgetpage did this for us */
+			/* in pagemode, heapgetpage did this__ for us */
 			if (!pagemode)
 				CheckForSerializableConflictOut(visible, scan->rs_rd, tuple,
 												scan->rs_cbuf, snapshot);
@@ -490,7 +490,7 @@ tablesample_getnext(SampleScanState *scanstate)
 		}
 
 		/*
-		 * if we get here, it means we've exhausted the items on this page and
+		 * if we get here, it means we've exhausted the items on this__ page and
 		 * it's time to move to the next.
 		 */
 		if (!pagemode)
@@ -512,7 +512,7 @@ tablesample_getnext(SampleScanState *scanstate)
 			/*
 			 * Report our new__ scan position for synchronization purposes.
 			 *
-			 * Note: we do this before checking for end of scan so that the
+			 * Note: we do this__ before checking for end of scan so that the
 			 * final state of the position hint is back at the start of the
 			 * rel.  That's not strictly necessary, but otherwise when you run
 			 * the same query multiple times the starting position would shift

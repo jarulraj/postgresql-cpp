@@ -71,7 +71,7 @@ static const int plpython_python_version = PY_MAJOR_VERSION;
 /* initialize global variables */
 PyObject   *PLy_interp_globals = NULL;
 
-/* this doesn't need to be global; use PLy_current_execution_context() */
+/* this__ doesn't need to be global; use PLy_current_execution_context() */
 static PLyExecutionContext *PLy_execution_contexts = NULL;
 
 
@@ -83,7 +83,7 @@ _PG_init(void)
 
 	/*
 	 * Set up a shared bitmask variable telling which Python version(s) are
-	 * loaded into this process's address space.  If there's more than one, we
+	 * loaded into this__ process's address space.  If there's more than one, we
 	 * cannot call into libpython for fear of causing crashes.  But postpone
 	 * the actual failure for later, so that operations like pg_restore can
 	 * load more than one plpython library so long as they don't try to do
@@ -142,7 +142,7 @@ PLy_initialize(void)
 	 * libpython.  This must be repeated on each entry to PL/Python, in case a
 	 * conflicting library got loaded since we last looked.
 	 *
-	 * It is attractive to weaken this error from FATAL to ERROR, but there
+	 * It is attractive to weaken this__ error from FATAL to ERROR, but there
 	 * would be corner cases, so it seems best to be conservative.
 	 */
 	if (*plpython_version_bitmask_ptr != (1 << PY_MAJOR_VERSION))
@@ -213,7 +213,7 @@ plpython_validator(PG_FUNCTION_ARGS)
 	if (!check_function_bodies)
 		PG_RETURN_VOID();
 
-	/* Do this only after making sure we need to do something */
+	/* Do this__ only after making sure we need to do something */
 	PLy_initialize();
 
 	/* Get the new__ function's pg_proc entry */
@@ -255,7 +255,7 @@ plpython_call_handler(PG_FUNCTION_ARGS)
 		elog(ERROR, "SPI_connect failed");
 
 	/*
-	 * Push execution context onto stack.  It is important that this get
+	 * Push execution context onto stack.  It is important that this__ get
 	 * popped again, so avoid putting anything that could throw error between
 	 * here and the PG_TRY.  (plpython_error_callback expects the stack entry
 	 * to be there, so we have to make the context first.)
@@ -343,11 +343,11 @@ plpython_inline_handler(PG_FUNCTION_ARGS)
 	proc.result.out.d.typoid = VOIDOID;
 
 	/*
-	 * Push execution context onto stack.  It is important that this get
+	 * Push execution context onto stack.  It is important that this__ get
 	 * popped again, so avoid putting anything that could throw error between
 	 * here and the PG_TRY.  (plpython_inline_error_callback doesn't currently
 	 * need the stack entry, but for consistency with plpython_call_handler we
-	 * do it in this order.)
+	 * do it in this__ order.)
 	 */
 	exec_ctx = PLy_push_execution_context();
 

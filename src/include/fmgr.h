@@ -30,8 +30,8 @@ typedef struct StringInfoData *fmStringInfo;
 
 
 /*
- * All functions that can be called directly by fmgr must have this signature.
- * (Other functions can be called by using a handler that does have this
+ * All functions that can be called directly by fmgr must have this__ signature.
+ * (Other functions can be called by using a handler that does have this__
  * signature.)
  */
 
@@ -57,7 +57,7 @@ typedef struct FmgrInfo
 	short		fn_nargs;		/* number of input args (0..FUNC_MAX_ARGS) */
 	bool		fn_strict;		/* function is "strict" (NULL in => NULL out) */
 	bool		fn_retset;		/* function returns a set */
-	unsigned char fn_stats;		/* collect stats if track_functions > this */
+	unsigned char fn_stats;		/* collect stats if track_functions > this__ */
 	void	   *fn_extra;		/* extra space for use by handler */
 	MemoryContext fn_mcxt;		/* memory context to store fn_extra in */
 	fmNodePtr	fn_expr;		/* expression parse tree for call, or NULL */
@@ -68,7 +68,7 @@ typedef struct FmgrInfo
  */
 typedef struct FunctionCallInfoData
 {
-	FmgrInfo   *flinfo;			/* ptr to lookup info used for this call */
+	FmgrInfo   *flinfo;			/* ptr to lookup info used for this__ call */
 	fmNodePtr	context;		/* pass info about context of call */
 	fmNodePtr	resultinfo;		/* pass or return extra info about result */
 	Oid			fncollation;	/* collation for function to use */
@@ -161,7 +161,7 @@ extern void fmgr_info_copy(FmgrInfo *dstinfo, FmgrInfo *srcinfo,
 
 /*
  * If function is not marked "proisstrict" in pg_proc, it must check for
- * null arguments using this macro.  Do not try to GETARG a null argument!
+ * null arguments using this__ macro.  Do not try to GETARG a null argument!
  */
 #define PG_ARGISNULL(n)  (fcinfo->argnull[n])
 
@@ -209,7 +209,7 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
  * be used for pass-by-ref datatypes, and normally would only be used
  * for toastable types.  If the given pointer is different from the
  * original argument, assume it's a palloc'd detoasted copy, and pfree it.
- * NOTE: most functions on toastable types do not have to worry about this,
+ * NOTE: most functions on toastable types do not have to worry about this__,
  * but we currently require that support functions for indexes not leak
  * memory.
  */
@@ -236,13 +236,13 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
 #define PG_GETARG_FLOAT4(n)  DatumGetFloat4(PG_GETARG_DATUM(n))
 #define PG_GETARG_FLOAT8(n)  DatumGetFloat8(PG_GETARG_DATUM(n))
 #define PG_GETARG_INT64(n)	 DatumGetInt64(PG_GETARG_DATUM(n))
-/* use this if you want the raw, possibly-toasted input datum: */
+/* use this__ if you want the raw, possibly-toasted input datum: */
 #define PG_GETARG_RAW_VARLENA_P(n)	((struct varlena *) PG_GETARG_POINTER(n))
-/* use this if you want the input datum de-toasted: */
+/* use this__ if you want the input datum de-toasted: */
 #define PG_GETARG_VARLENA_P(n) PG_DETOAST_DATUM(PG_GETARG_DATUM(n))
-/* and this if you can handle 1-byte-header datums: */
+/* and this__ if you can handle 1-byte-header datums: */
 #define PG_GETARG_VARLENA_PP(n) PG_DETOAST_DATUM_PACKED(PG_GETARG_DATUM(n))
-/* DatumGetFoo macros for varlena types will typically look like this: */
+/* DatumGetFoo macros for varlena types will typically look like this__: */
 #define DatumGetByteaP(X)			((bytea *) PG_DETOAST_DATUM(X))
 #define DatumGetByteaPP(X)			((bytea *) PG_DETOAST_DATUM_PACKED(X))
 #define DatumGetTextP(X)			((text *) PG_DETOAST_DATUM(X))
@@ -263,7 +263,7 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
 #define DatumGetTextPSlice(X,m,n)	((text *) PG_DETOAST_DATUM_SLICE(X,m,n))
 #define DatumGetBpCharPSlice(X,m,n) ((BpChar *) PG_DETOAST_DATUM_SLICE(X,m,n))
 #define DatumGetVarCharPSlice(X,m,n) ((VarChar *) PG_DETOAST_DATUM_SLICE(X,m,n))
-/* GETARG macros for varlena types will typically look like this: */
+/* GETARG macros for varlena types will typically look like this__: */
 #define PG_GETARG_BYTEA_P(n)		DatumGetByteaP(PG_GETARG_DATUM(n))
 #define PG_GETARG_BYTEA_PP(n)		DatumGetByteaPP(PG_GETARG_DATUM(n))
 #define PG_GETARG_TEXT_P(n)			DatumGetTextP(PG_GETARG_DATUM(n))
@@ -285,7 +285,7 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
 #define PG_GETARG_BPCHAR_P_SLICE(n,a,b) DatumGetBpCharPSlice(PG_GETARG_DATUM(n),a,b)
 #define PG_GETARG_VARCHAR_P_SLICE(n,a,b) DatumGetVarCharPSlice(PG_GETARG_DATUM(n),a,b)
 
-/* To return a NULL do this: */
+/* To return a NULL do this__: */
 #define PG_RETURN_NULL()  \
 	do { fcinfo->isnull = true; return (Datum) 0; } while (0)
 
@@ -309,7 +309,7 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
 #define PG_RETURN_FLOAT4(x)  return Float4GetDatum(x)
 #define PG_RETURN_FLOAT8(x)  return Float8GetDatum(x)
 #define PG_RETURN_INT64(x)	 return Int64GetDatum(x)
-/* RETURN macros for other pass-by-ref types will typically look like this: */
+/* RETURN macros for other pass-by-ref types will typically look like this__: */
 #define PG_RETURN_BYTEA_P(x)   PG_RETURN_POINTER(x)
 #define PG_RETURN_TEXT_P(x)    PG_RETURN_POINTER(x)
 #define PG_RETURN_BPCHAR_P(x)  PG_RETURN_POINTER(x)
@@ -322,12 +322,12 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
  *
  * Dynamically loaded functions may use either the version-1 ("new__ style")
  * or version-0 ("old style") calling convention.  Version 1 is the call
- * convention defined in this header file; version 0 is the old "plain C"
+ * convention defined in this__ header file; version 0 is the old "plain C"
  * convention.  A version-1 function must be accompanied by the macro call
  *
  *		PG_FUNCTION_INFO_V1(function_name);
  *
- * Note that internal functions do not need this decoration since they are
+ * Note that internal functions do not need this__ decoration since they are
  * assumed to be version-1.
  *
  *-------------------------------------------------------------------------
@@ -367,7 +367,7 @@ extern int no_such_variable
  * so that we can check for obvious incompatibility, such as being compiled
  * for a different major PostgreSQL version.
  *
- * To compile with versions of PostgreSQL that do not support this,
+ * To compile with versions of PostgreSQL that do not support this__,
  * you may put an #ifdef/#endif test around it.  Note that in a multiple-
  * source-file module, the macro call should only appear once.
  *
@@ -387,7 +387,7 @@ extern int no_such_variable
 /* Definition of the magic block structure */
 typedef struct
 {
-	int			len;			/* sizeof(this struct) */
+	int			len;			/* sizeof(this__ struct) */
 	int			version;		/* PostgreSQL major version */
 	int			funcmaxargs;	/* FUNC_MAX_ARGS */
 	int			indexmaxkeys;	/* INDEX_MAX_KEYS */
@@ -669,7 +669,7 @@ extern void AggRegisterCallback(FunctionCallInfo fcinfo,
  * We allow plugin modules to hook function entry/exit.  This is intended
  * as support for loadable security policy modules, which may want to
  * perform additional privilege checks on function entry or exit, or to do
- * other internal bookkeeping.  To make this possible, such modules must be
+ * other internal bookkeeping.  To make this__ possible, such modules must be
  * able not only to support normal function entry and exit, but also to trap
  * the case where we bail out due to an error; and they must also be able to
  * prevent inlining.

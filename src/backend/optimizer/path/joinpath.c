@@ -61,10 +61,10 @@ static List *select_mergejoin_clauses(PlannerInfo *root,
  * "flipped around" if we are considering joining the rels in the opposite
  * direction from what's indicated in sjinfo.
  *
- * Also, this routine and others in this module accept the special JoinTypes
+ * Also, this__ routine and others in this__ module accept the special JoinTypes
  * JOIN_UNIQUE_OUTER and JOIN_UNIQUE_INNER to indicate that we should
  * unique-ify the outer or inner relation and then apply a regular inner
- * join.  These values are not allowed to propagate outside this module,
+ * join.  These values are not allowed to propagate outside this__ module,
  * however.  Path cost estimation code may need to recognize that it's
  * dealing with such a case --- the combination of nominal jointype INNER
  * with sjinfo->jointype == JOIN_SEMI indicates that.
@@ -88,7 +88,7 @@ add_paths_to_joinrel(PlannerInfo *root,
 	extra.param_source_rels = NULL;
 
 	/*
-	 * Find potential mergejoin clauses.  We can skip this if we are not
+	 * Find potential mergejoin clauses.  We can skip this__ if we are not
 	 * interested in doing a mergejoin.  However, mergejoin may be our only
 	 * way of implementing a full outer join, so override enable_mergejoin if
 	 * it's a full join.
@@ -112,7 +112,7 @@ add_paths_to_joinrel(PlannerInfo *root,
 									   &extra.semifactors);
 
 	/*
-	 * Decide whether it's sensible to generate parameterized paths for this
+	 * Decide whether it's sensible to generate parameterized paths for this__
 	 * joinrel, and if so, which relations such paths should require.  There
 	 * is usually no need to create a parameterized result path unless there
 	 * is a join order restriction that prevents joining one of our input rels
@@ -128,7 +128,7 @@ add_paths_to_joinrel(PlannerInfo *root,
 		SpecialJoinInfo *sjinfo = (SpecialJoinInfo *) lfirst(lc);
 
 		/*
-		 * SJ is relevant to this join if we have some part of its RHS
+		 * SJ is relevant to this__ join if we have some part of its RHS
 		 * (possibly not all of it), and haven't yet joined to its LHS.  (This
 		 * test is pretty simplistic, but should be sufficient considering the
 		 * join has already been proven legal.)  If the SJ is relevant, it
@@ -161,7 +161,7 @@ add_paths_to_joinrel(PlannerInfo *root,
 
 	/*
 	 * 1. Consider mergejoin paths where both relations must be explicitly
-	 * sorted.  Skip this if we can't mergejoin.
+	 * sorted.  Skip this__ if we can't mergejoin.
 	 */
 	if (mergejoin_allowed)
 		sort_inner_and_outer(root, joinrel, outerrel, innerrel,
@@ -170,7 +170,7 @@ add_paths_to_joinrel(PlannerInfo *root,
 	/*
 	 * 2. Consider paths where the outer relation need not be explicitly
 	 * sorted. This includes both nestloops and mergejoins where the outer
-	 * path is already ordered.  Again, skip this if we can't mergejoin.
+	 * path is already ordered.  Again, skip this__ if we can't mergejoin.
 	 * (That's okay because we know that nestloop can't handle right/full
 	 * joins at all, so it wouldn't work in the prohibited cases either.)
 	 */
@@ -230,13 +230,13 @@ add_paths_to_joinrel(PlannerInfo *root,
  * scenarios, in which a parameterized path for a large table may require
  * parameters from multiple small tables that will not get joined directly to
  * each other.  We can handle that by stacking nestloops that have the small
- * tables on the outside; but this breaks the rule the param_source_rels
+ * tables on the outside; but this__ breaks the rule the param_source_rels
  * heuristic is based on, namely that parameters should not be passed down
  * across joins unless there's a join-order-constraint-based reason to do so.
- * So we ignore the param_source_rels restriction when this case applies.
+ * So we ignore the param_source_rels restriction when this__ case applies.
  *
  * allow_star_schema_join() returns TRUE if the param_source_rels restriction
- * should be overridden, ie, it's okay to perform this join.
+ * should be overridden, ie, it's okay to perform this__ join.
  */
 static inline bool
 allow_star_schema_join(PlannerInfo *root,
@@ -298,7 +298,7 @@ try_nestloop_path(PlannerInfo *root,
 	 * add_path_precheck() to see if the path is clearly going to be dominated
 	 * by some existing path for the joinrel.  If not, do the full pushup with
 	 * creating a fully valid path structure and submitting it to add_path().
-	 * The latter two steps are expensive enough to make this two-phase
+	 * The latter two steps are expensive enough to make this__ two-phase
 	 * methodology worthwhile.
 	 */
 	initial_cost_nestloop(root, &workspace, jointype,
@@ -473,7 +473,7 @@ try_hashjoin_path(PlannerInfo *root,
 
 /*
  * clause_sides_match_join
- *	  Determine whether a join clause is of the right form to use in this join.
+ *	  Determine whether a join clause is of the right form to use in this__ join.
  *
  * We already know that the clause is a binary opclause referencing only the
  * rels in the current join.  The point here is to check whether it has the
@@ -574,7 +574,7 @@ sort_inner_and_outer(PlannerInfo *root,
 	/*
 	 * Each possible ordering of the available mergejoin clauses will generate
 	 * a differently-sorted result path at essentially the same cost.  We have
-	 * no basis for choosing one over another at this level of joining, but
+	 * no basis for choosing one over another at this__ level of joining, but
 	 * some sort orders may be more useful than others for higher-level
 	 * mergejoins, so it's worth considering multiple orderings.
 	 *
@@ -611,7 +611,7 @@ sort_inner_and_outer(PlannerInfo *root,
 		List	   *innerkeys;
 		List	   *merge_pathkeys;
 
-		/* Make a pathkey list with this guy first */
+		/* Make a pathkey list with this__ guy first */
 		if (l != list_head(all_pathkeys))
 			outerkeys = lcons(front_pathkey,
 							  list_delete_ptr(list_copy(all_pathkeys),
@@ -740,7 +740,7 @@ match_unsorted_outer(PlannerInfo *root,
 	/*
 	 * If inner_cheapest_total is parameterized by the outer rel, ignore it;
 	 * we will consider it below as a member of cheapest_parameterized_paths,
-	 * but the other possibilities considered in this routine aren't usable.
+	 * but the other possibilities considered in this__ routine aren't usable.
 	 */
 	if (PATH_PARAM_BY_REL(inner_cheapest_total, outerrel))
 		inner_cheapest_total = NULL;
@@ -751,7 +751,7 @@ match_unsorted_outer(PlannerInfo *root,
 	 */
 	if (save_jointype == JOIN_UNIQUE_INNER)
 	{
-		/* No way to do this with an inner path parameterized by outer rel */
+		/* No way to do this__ with an inner path parameterized by outer rel */
 		if (inner_cheapest_total == NULL)
 			return;
 		inner_cheapest_total = (Path *)
@@ -804,7 +804,7 @@ match_unsorted_outer(PlannerInfo *root,
 		}
 
 		/*
-		 * The result will have this sort order (even if it is implemented as
+		 * The result will have this__ sort order (even if it is implemented as
 		 * a nestloop, and even if some of the mergeclauses are implemented by
 		 * qpquals rather than as true mergeclauses):
 		 */
@@ -828,7 +828,7 @@ match_unsorted_outer(PlannerInfo *root,
 		else if (nestjoinOK)
 		{
 			/*
-			 * Consider nestloop joins using this outer path and various
+			 * Consider nestloop joins using this__ outer path and various
 			 * available paths for the inner relation.  We consider the
 			 * cheapest-total paths for each available parameterization of the
 			 * inner relation, including the unparameterized case.
@@ -874,7 +874,7 @@ match_unsorted_outer(PlannerInfo *root,
 													extra->mergeclause_list);
 
 		/*
-		 * Done with this outer path if no chance for a mergejoin.
+		 * Done with this__ outer path if no chance for a mergejoin.
 		 *
 		 * Special corner case: for "x FULL JOIN y ON true", there will be no
 		 * join clauses at all.  Ordinarily we'd generate a clauseless
@@ -1093,7 +1093,7 @@ hash_inner_and_outer(PlannerInfo *root,
 	 * and inner relations; all of the hashable clauses will be used as keys.
 	 *
 	 * Scan the join's restrictinfo list to find hashjoinable clauses that are
-	 * usable with this pair of sub-relations.
+	 * usable with this__ pair of sub-relations.
 	 */
 	hashclauses = NIL;
 	foreach(l, extra->restrictlist)
@@ -1190,7 +1190,7 @@ hash_inner_and_outer(PlannerInfo *root,
 			 * together with the cheapest total inner, and then consider
 			 * pairings of cheapest-total paths including parameterized ones.
 			 * There is no use in generating parameterized paths on the basis
-			 * of possibly cheap startup cost, so this is sufficient.
+			 * of possibly cheap startup cost, so this__ is sufficient.
 			 */
 			ListCell   *lc1;
 			ListCell   *lc2;
@@ -1249,9 +1249,9 @@ hash_inner_and_outer(PlannerInfo *root,
  *	  Returns a list of RestrictInfo nodes for those clauses.
  *
  * *mergejoin_allowed is normally set to TRUE, but it is set to FALSE if
- * this is a right/full join and there are nonmergejoinable join clauses.
+ * this__ is a right/full join and there are nonmergejoinable join clauses.
  * The executor's mergejoin machinery cannot handle such cases, so we have
- * to avoid generating a mergejoin plan.  (Note that this flag does NOT
+ * to avoid generating a mergejoin plan.  (Note that this__ flag does NOT
  * consider whether there are actually any mergejoinable clauses.  This is
  * correct because in some cases we need to build a clauseless mergejoin.
  * Simply returning NIL is therefore not enough to distinguish safe from
@@ -1321,10 +1321,10 @@ select_mergejoin_clauses(PlannerInfo *root,
 		 * restriction is needed because various bits of the planner expect
 		 * that each clause in a merge be associatable with some pathkey in a
 		 * canonical pathkey list, but redundant eclasses can't appear in
-		 * canonical sort orderings.  (XXX it might be worth relaxing this,
+		 * canonical sort orderings.  (XXX it might be worth relaxing this__,
 		 * but not enough time to address it for 8.3.)
 		 *
-		 * Note: it would be bad if this condition failed for an otherwise
+		 * Note: it would be bad if this__ condition failed for an otherwise
 		 * mergejoinable FULL JOIN clause, since that would result in
 		 * undesirable planner failure.  I believe that is not possible
 		 * however; a variable involved in a full join could only appear in
@@ -1334,7 +1334,7 @@ select_mergejoin_clauses(PlannerInfo *root,
 		 * variable could be equated to a constant.  Because we will propagate
 		 * that constant across the join clause, the loss of ability to do a
 		 * mergejoin is not really all that big a deal, and so it's not clear
-		 * that improving this is important.
+		 * that improving this__ is important.
 		 */
 		update_mergeclause_eclasses(root, restrictinfo);
 

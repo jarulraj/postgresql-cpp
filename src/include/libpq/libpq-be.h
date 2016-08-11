@@ -4,7 +4,7 @@
  *	  This file contains definitions for structures and externs used
  *	  by the postmaster during client authentication.
  *
- *	  Note that this is backend-internal and is NOT exported to clients.
+ *	  Note that this__ is backend-internal and is NOT exported to clients.
  *	  Structs that need to be client-visible are in pqcomm.h.
  *
  *
@@ -94,7 +94,7 @@ typedef struct
 
 /*
  * This is used by the postmaster in its communication with frontends.  It
- * contains all state information needed during this communication before the
+ * contains all state information needed during this__ communication before the
  * backend is run.  The Port structure is kept in malloc'd memory and is
  * still available when a backend is running (see MyProcPort).  The data
  * it points to must also be malloc'd, or else palloc'd in TopMemoryContext,
@@ -149,7 +149,7 @@ typedef struct Port
 	/*
 	 * Information that really has no business at all being in struct Port,
 	 * but since it gets used by elog.c in the same way as database_name and
-	 * other members of this struct, we may as well keep it here.
+	 * other members of this__ struct, we may as well keep it here.
 	 */
 	TimestampTz SessionStartTime;		/* backend start time */
 

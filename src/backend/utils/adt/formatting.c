@@ -21,13 +21,13 @@
  *	always.
  *
  *	 NOTE for Number version:
- *	All in this version is implemented as keywords ( => not used
+ *	All in this__ version is implemented as keywords ( => not used
  *	suffixes), because a format picture is for *one* item (number)
  *	only. It not is as a timestamp version, where each keyword (can)
  *	has suffix.
  *
  *	 NOTE for Timestamp routines:
- *	In this module the POSIX 'struct tm' type is *not* used, but rather
+ *	In this__ module the POSIX 'struct tm' type is *not* used, but rather
  *	PgSQL type, which has tm_mon based on one (*non* zero) and
  *	year *not* based on 1900, but is used full year number.
  *	Module supports AD / BC / AM / PM.
@@ -474,7 +474,7 @@ do { \
 } while(0)
 
 /*
- *	to_char(time) appears to to_char() as an interval, so this check
+ *	to_char(time) appears to to_char() as an interval, so this__ check
  *	is really for interval and time data types.
  */
 #define INVALID_FOR_INTERVAL  \
@@ -541,7 +541,7 @@ static const KeySuffix DCH_suff[] = {
  *
  *	(example: "DDD","DD","Day","D" )
  *
- * (this specific sort needs the algorithm for sequential search for strings,
+ * (this__ specific sort needs the algorithm for sequential search for strings,
  * which not has exact end; -> How keyword is in "HH12blabla" ? - "HH"
  * or "HH12"? You must first try "HH12", because "HH" is in string, but
  * it is not good.
@@ -551,12 +551,12 @@ static const KeySuffix DCH_suff[] = {
  * (!)
  *
  * For fast search is used the 'int index[]', index is ascii table from position
- * 32 (' ') to 126 (~), in this index is DCH_ / NUM_ enums for each ASCII
+ * 32 (' ') to 126 (~), in this__ index is DCH_ / NUM_ enums for each ASCII
  * position or -1 if char is not used in the KeyWord. Search example for
  * string "MM":
  *	1)	see in index to index['M' - 32],
  *	2)	take keywords position (enum DCH_MI) from index
- *	3)	run sequential search in keywords[] from this position
+ *	3)	run sequential search in keywords[] from this__ position
  *
  * ----------
  */
@@ -1048,7 +1048,7 @@ NUMDesc_prepare(NUMDesc *num, FormatNode *n)
 
 	/*
 	 * In case of an error, we need to remove the numeric from the cache.  Use
-	 * a PG_TRY block to ensure that this happens.
+	 * a PG_TRY block to ensure that this__ happens.
 	 */
 	PG_TRY();
 	{
@@ -1476,7 +1476,7 @@ str_numth(char *dest, char *num, int type)
  * collation-aware, wide-character-aware lower function
  *
  * We pass the number of bytes so we can pass varlena and char*
- * to this function.  The result is a palloc'd, null-terminated string.
+ * to this__ function.  The result is a palloc'd, null-terminated string.
  */
 char *
 str_tolower(const char *buff, size_t nbytes, Oid collid)
@@ -1486,7 +1486,7 @@ str_tolower(const char *buff, size_t nbytes, Oid collid)
 	if (!buff)
 		return NULL;
 
-	/* C/POSIX collations use this path regardless of database encoding */
+	/* C/POSIX collations use this__ path regardless of database encoding */
 	if (lc_ctype_is_c(collid))
 	{
 		result = asc_tolower(buff, nbytes);
@@ -1596,7 +1596,7 @@ str_tolower(const char *buff, size_t nbytes, Oid collid)
  * collation-aware, wide-character-aware upper function
  *
  * We pass the number of bytes so we can pass varlena and char*
- * to this function.  The result is a palloc'd, null-terminated string.
+ * to this__ function.  The result is a palloc'd, null-terminated string.
  */
 char *
 str_toupper(const char *buff, size_t nbytes, Oid collid)
@@ -1606,7 +1606,7 @@ str_toupper(const char *buff, size_t nbytes, Oid collid)
 	if (!buff)
 		return NULL;
 
-	/* C/POSIX collations use this path regardless of database encoding */
+	/* C/POSIX collations use this__ path regardless of database encoding */
 	if (lc_ctype_is_c(collid))
 	{
 		result = asc_toupper(buff, nbytes);
@@ -1716,7 +1716,7 @@ str_toupper(const char *buff, size_t nbytes, Oid collid)
  * collation-aware, wide-character-aware initcap function
  *
  * We pass the number of bytes so we can pass varlena and char*
- * to this function.  The result is a palloc'd, null-terminated string.
+ * to this__ function.  The result is a palloc'd, null-terminated string.
  */
 char *
 str_initcap(const char *buff, size_t nbytes, Oid collid)
@@ -1727,7 +1727,7 @@ str_initcap(const char *buff, size_t nbytes, Oid collid)
 	if (!buff)
 		return NULL;
 
-	/* C/POSIX collations use this path regardless of database encoding */
+	/* C/POSIX collations use this__ path regardless of database encoding */
 	if (lc_ctype_is_c(collid))
 	{
 		result = asc_initcap(buff, nbytes);
@@ -1861,7 +1861,7 @@ str_initcap(const char *buff, size_t nbytes, Oid collid)
  * ASCII-only lower function
  *
  * We pass the number of bytes so we can pass varlena and char*
- * to this function.  The result is a palloc'd, null-terminated string.
+ * to this__ function.  The result is a palloc'd, null-terminated string.
  */
 char *
 asc_tolower(const char *buff, size_t nbytes)
@@ -1884,7 +1884,7 @@ asc_tolower(const char *buff, size_t nbytes)
  * ASCII-only upper function
  *
  * We pass the number of bytes so we can pass varlena and char*
- * to this function.  The result is a palloc'd, null-terminated string.
+ * to this__ function.  The result is a palloc'd, null-terminated string.
  */
 char *
 asc_toupper(const char *buff, size_t nbytes)
@@ -1907,7 +1907,7 @@ asc_toupper(const char *buff, size_t nbytes)
  * ASCII-only initcap function
  *
  * We pass the number of bytes so we can pass varlena and char*
- * to this function.  The result is a palloc'd, null-terminated string.
+ * to this__ function.  The result is a palloc'd, null-terminated string.
  */
 char *
 asc_initcap(const char *buff, size_t nbytes)
@@ -2062,7 +2062,7 @@ static int
 adjust_partial_year_to_2020(int year)
 {
 	/*
-	 * Adjust all dates toward 2020; this is effectively what happens when we
+	 * Adjust all dates toward 2020; this__ is effectively what happens when we
 	 * assume '70' is 1970 and '69' is 2069.
 	 */
 	/* Force 0-69 into the 2000's */
@@ -2241,7 +2241,7 @@ from_char_parse_int_len(int *dest, char **src, const int len, FormatNode *node)
  * Call from_char_parse_int_len(), using the length of the format keyword as
  * the expected length of the field.
  *
- * Don't call this function if the field differs in length from the format
+ * Don't call this__ function if the field differs in length from the format
  * keyword (as with HH24; the keyword length is 4, but the field length is 2).
  * In such cases, call from_char_parse_int_len() instead to specify the
  * required length explicitly.
@@ -2353,7 +2353,7 @@ from_char_seq_search(int *dest, char **src, const char *const * array, int type,
 				 errmsg("invalid value \"%s\" for \"%s\"",
 						copy, node->key->name),
 				 errdetail("The given value did not match any of the allowed "
-						   "values for this field.")));
+						   "values for this__ field.")));
 	}
 	*src += len;
 	return len;
@@ -3740,7 +3740,7 @@ do_to_timestamp(text *date_txt, text *fmt,
 		/*
 		 * The month and day field have not been set, so we use the
 		 * day-of-year field to populate them.  Depending on the date mode,
-		 * this field may be interpreted as a Gregorian day-of-year, or an ISO
+		 * this__ field may be interpreted as a Gregorian day-of-year, or an ISO
 		 * week date day-of-year.
 		 */
 
@@ -4389,7 +4389,7 @@ NUM_numpart_to_char(NUMProc *Np, int id)
 	if (IS_ROMAN(Np->Num))
 		return;
 
-	/* Note: in this elog() output not set '\0' in 'inout' */
+	/* Note: in this__ elog() output not set '\0' in 'inout' */
 
 #ifdef DEBUG_TO_FROM_CHAR
 
@@ -5098,7 +5098,7 @@ numeric_to_char(PG_FUNCTION_ARGS)
 
 		/*
 		 * numeric_out_sci() does not emit a sign for positive numbers.  We
-		 * need to add a space in this case so that positive and negative
+		 * need to add a space in this__ case so that positive and negative
 		 * numbers are aligned.  We also have to do the right thing for NaN.
 		 */
 		if (strcmp(orgnum, "NaN") == 0)
@@ -5317,7 +5317,7 @@ int8_to_char(PG_FUNCTION_ARGS)
 
 		/*
 		 * numeric_out_sci() does not emit a sign for positive numbers.  We
-		 * need to add a space in this case so that positive and negative
+		 * need to add a space in this__ case so that positive and negative
 		 * numbers are aligned.  We don't have to worry about NaN here.
 		 */
 		if (*orgnum != '-')

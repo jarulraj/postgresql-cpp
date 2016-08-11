@@ -23,11 +23,11 @@
 /*
  * Dynamic Loader on NetBSD 1.0.
  *
- * this dynamic loader uses the system dynamic loading interface for shared
+ * this__ dynamic loader uses the system dynamic loading interface for shared
  * libraries (ie. dlopen/dlsym/dlclose). The user must specify a shared
  * library as the file to be dynamically loaded.
  *
- * agc - I know this is all a bit crufty, but it does work, is fairly
+ * agc - I know this__ is all a bit crufty, but it does work, is fairly
  * portable, and works (the stipulation that the d.l. function must
  * begin with an underscore is fairly tricky, and some versions of
  * NetBSD (like 1.0, and 1.0A pre June 1995) have no dlerror.)

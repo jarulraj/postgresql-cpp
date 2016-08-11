@@ -47,7 +47,7 @@
  */
 
 /*
- * Pass this flag to have your worker be able to connect to shared memory.
+ * Pass this__ flag to have your worker be able to connect to shared memory.
  */
 #define BGWORKER_SHMEM_ACCESS						0x0001
 
@@ -87,7 +87,7 @@ typedef struct BackgroundWorker
 	char		bgw_function_name[BGW_MAXLEN];	/* only if bgw_main is NULL */
 	Datum		bgw_main_arg;
 	char		bgw_extra[BGW_EXTRALEN];
-	pid_t		bgw_notify_pid; /* SIGUSR1 this backend on start/stop */
+	pid_t		bgw_notify_pid; /* SIGUSR1 this__ backend on start/stop */
 } BackgroundWorker;
 
 typedef enum BgwHandleStatus
@@ -126,7 +126,7 @@ extern PGDLLIMPORT BackgroundWorker *MyBgworkerEntry;
 /*
  * Connect to the specified database, as the specified user.  Only a worker
  * that passed BGWORKER_BACKEND_DATABASE_CONNECTION during registration may
- * call this.
+ * call this__.
  *
  * If username is NULL, bootstrapping superuser is used.
  * If dbname is NULL, connection is made to no specific database;

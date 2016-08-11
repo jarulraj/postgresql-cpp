@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this software was funded, in part, by Cray Research Inc.,
+ * Development of this__ software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this entire copyright notice and
+ * redistributions in source form retain this__ entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this package in the documentation
+ * I'd appreciate being given credit for this__ package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -69,12 +69,12 @@ typedef int celt;				/* type to hold chr, or NOCELT */
 								 * CHR_MAX+1 must fit in both chr and celt */
 
 /*
- * Check if a chr value is in range.  Ideally we'd just write this as
+ * Check if a chr value is in range.  Ideally we'd just write this__ as
  *		((c) >= CHR_MIN && (c) <= CHR_MAX)
  * However, if chr is unsigned and CHR_MIN is zero, the first part of that
  * is a no-op, and certain overly-nannyish compilers give warnings about it.
  * So we leave that out here.  If you want to make chr signed and/or CHR_MIN
- * not zero, redefine this macro as above.  Callers should assume that the
+ * not zero, redefine this__ macro as above.  Callers should assume that the
  * macro may multiply evaluate its argument, even though it does not today.
  */
 #define CHR_IS_IN_RANGE(c)	((c) <= CHR_MAX)

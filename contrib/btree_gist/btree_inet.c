@@ -126,7 +126,7 @@ gbt_inet_consistent(PG_FUNCTION_ARGS)
 	inetKEY    *kkk = (inetKEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this function are inexact */
+	/* All cases served by this__ function are inexact */
 	*recheck = true;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;

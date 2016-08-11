@@ -12,7 +12,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_policy definition. cpp turns this into
+ *		pg_policy definition. cpp turns this__ into
  *		typedef struct FormData_pg_policy
  * ----------------
  */

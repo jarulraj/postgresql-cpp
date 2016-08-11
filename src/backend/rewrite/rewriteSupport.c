@@ -45,7 +45,7 @@ IsDefinedRewriteRule(Oid owningRel, const char *ruleName)
  *
  * NOTE: caller must be holding an appropriate lock on the relation.
  *
- * NOTE: an important side-effect of this operation is that an SI invalidation
+ * NOTE: an important side-effect of this__ operation is that an SI invalidation
  * message is sent out to all backends --- including me --- causing relcache
  * entries to be flushed or updated with the new__ set of rules for the table.
  * This must happen even if we find that no change is needed in the pg_class
@@ -122,7 +122,7 @@ get_rewrite_oid(Oid relid, const char *rulename, bool missing_ok)
  * Find rule oid, given only a rule name but no rel OID.
  *
  * If there's more than one, it's an error.  If there aren't any, that's an
- * error, too.  In general, this should be avoided - it is provided to support
+ * error, too.  In general, this__ should be avoided - it is provided to support
  * syntax that is compatible with pre-7.3 versions of PG, where rule names
  * were unique across the entire database.
  */

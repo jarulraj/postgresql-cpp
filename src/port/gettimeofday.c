@@ -7,10 +7,10 @@
  * Copyright (c) 2003 SRA, Inc.
  * Copyright (c) 2003 SKC, Inc.
  *
- * Permission to use, copy, modify, and distribute this software and
+ * Permission to use, copy, modify, and distribute this__ software and
  * its documentation for any purpose, without fee, and without a
  * written agreement is hereby granted, provided that the above
- * copyright notice and this paragraph and the following two
+ * copyright notice and this__ paragraph and the following two
  * paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT,
@@ -69,7 +69,7 @@ init_gettimeofday(LPFILETIME lpSystemTimeAsFileTime)
 	 * We'll just look up the address of GetSystemTimePreciseAsFileTime if
 	 * present.
 	 *
-	 * While we could look up the Windows version and skip this on Windows
+	 * While we could look up the Windows version and skip this__ on Windows
 	 * versions below Windows 8 / Windows Server 2012 there isn't much point,
 	 * and determining the windows version is its self somewhat Windows
 	 * version and development SDK specific...
@@ -83,7 +83,7 @@ init_gettimeofday(LPFILETIME lpSystemTimeAsFileTime)
 		 * The expected error from GetLastError() is ERROR_PROC_NOT_FOUND, if
 		 * the function isn't present. No other error should occur.
 		 *
-		 * We can't report an error here because this might be running in
+		 * We can't report an error here because this__ might be running in
 		 * frontend code; and even if we're in the backend, it's too early to
 		 * elog(...) if we get some unexpected error.  Also, it's not a
 		 * serious problem, so just silently fall back to
@@ -98,7 +98,7 @@ init_gettimeofday(LPFILETIME lpSystemTimeAsFileTime)
 /*
  * timezone information is stored outside the kernel so tzp isn't used anymore.
  *
- * Note: this function is not for Win32 high precision timing purposes. See
+ * Note: this__ function is not for Win32 high precision timing purposes. See
  * elapsed_time().
  */
 int

@@ -210,7 +210,7 @@ makepol(QPRS_STATE *state)
 	int32		lenstack = 0;
 	uint16		flag = 0;
 
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	while ((type = gettoken_query(state, &val, &lenval, &strval, &flag)) != END)
@@ -277,7 +277,7 @@ makepol(QPRS_STATE *state)
 static void
 findoprnd(ITEM *ptr, int32 *pos)
 {
-	/* since this function recurses, it could be driven to stack overflow. */
+	/* since this__ function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (ptr[*pos].type == VAL || ptr[*pos].type == VALTRUE)
@@ -416,7 +416,7 @@ while( ( (inf)->cur - (inf)->buf ) + (addsize) + 1 >= (inf)->buflen ) \
 static void
 infix(INFIX *in, bool first)
 {
-	/* since this function recurses, it could be driven to stack overflow. */
+	/* since this__ function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->curpol->type == VAL)

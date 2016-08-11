@@ -4,9 +4,9 @@
  *	  Checksum implementation for data pages.
  *
  * This file exists for the benefit of external programs that may wish to
- * check Postgres page checksums.  They can #include this to get the code
+ * check Postgres page checksums.  They can #include this__ to get the code
  * referenced by storage/checksum.h.  (Note: you may need to redefine
- * Assert() as empty to compile this successfully externally.)
+ * Assert() as empty to compile this__ successfully externally.)
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
@@ -32,7 +32,7 @@
  *
  * PostgreSQL doesn't use FNV-1a hash directly because it has bad mixing of
  * high bits - high order bits in input data only affect high order bits in
- * output data. To resolve this we xor in the value prior to multiplication
+ * output data. To resolve this__ we xor in the value prior to multiplication
  * shifted right by 17 bits. The number 17 was chosen because it doesn't
  * have common denominator with set bit positions in FNV_PRIME and empirically
  * provides the fastest mixing for high order bits of final iterations quickly
@@ -41,7 +41,7 @@
  *
  *	   hash = (hash ^ value) * FNV_PRIME ^ ((hash ^ value) >> 17)
  *
- * The main bottleneck in this calculation is the multiplication latency. To
+ * The main bottleneck in this__ calculation is the multiplication latency. To
  * hide the latency and to make use of SIMD parallelism multiple hash values
  * are calculated in parallel. The page is treated as a 32 column two
  * dimensional array of 32 bit values. Each column is aggregated separately
@@ -56,7 +56,7 @@
  * The partial checksums are then folded together using xor to form a single
  * 32-bit checksum. The caller can safely reduce the value to 16 bits
  * using modulo 2^16-1. That will cause a very slight bias towards lower
- * values but this is not significant for the performance of the
+ * values but this__ is not significant for the performance of the
  * checksum.
  *
  * The algorithm choice was based on what instructions are available in SIMD
@@ -90,7 +90,7 @@
  * The parallelism number 32 was chosen based on the fact that it is the
  * largest state that fits into architecturally visible x86 SSE registers while
  * leaving some free registers for intermediate values. For future processors
- * with 256bit vector registers this will leave some performance on the table.
+ * with 256bit vector registers this__ will leave some performance on the table.
  * When vectorization is not available it might be beneficial to restructure
  * the computation to calculate a subset of the columns at a time and perform
  * multiple passes to avoid register spilling. This optimization opportunity
@@ -189,7 +189,7 @@ pg_checksum_page(char *page, BlockNumber blkno)
 	 * Save pd_checksum and temporarily set it to zero, so that the checksum
 	 * calculation isn't affected by the old checksum stored on the page.
 	 * Restore it after, because actually updating the checksum is NOT part of
-	 * the API of this function.
+	 * the API of this__ function.
 	 */
 	save_checksum = phdr->pd_checksum;
 	phdr->pd_checksum = 0;

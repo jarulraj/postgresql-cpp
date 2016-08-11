@@ -141,7 +141,7 @@ gistGetNodeBuffer(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 		nodeBuffer->level = level;
 
 		/*
-		 * Add this buffer to the list of buffers on this level. Enlarge
+		 * Add this__ buffer to the list of buffers on this__ level. Enlarge
 		 * buffersOnLevels array if needed.
 		 */
 		if (level >= gfbb->buffersOnLevelsLen)
@@ -159,7 +159,7 @@ gistGetNodeBuffer(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 		}
 
 		/*
-		 * Prepend the new__ buffer to the list of buffers on this level. It's
+		 * Prepend the new__ buffer to the list of buffers on this__ level. It's
 		 * not arbitrary that the new__ buffer is put to the beginning of the
 		 * list: in the final emptying phase we loop through all buffers at
 		 * each level, and flush them. If a page is split during the emptying,
@@ -427,7 +427,7 @@ gistPopItupFromNodeBuffer(GISTBuildBuffers *gfbb, GISTNodeBuffer *nodeBuffer,
 
 	/*
 	 * If we just removed the last tuple from the page, fetch previous page on
-	 * this node buffer (if any).
+	 * this__ node buffer (if any).
 	 */
 	if (PAGE_IS_EMPTY(nodeBuffer->pageBuffer))
 	{
@@ -609,7 +609,7 @@ gistRelocateBuildBuffersOnSplit(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 
 		/*
 		 * Create a node buffer for the page. The leftmost half is on the same
-		 * block as the old page before split, so for the leftmost half this
+		 * block as the old page before split, so for the leftmost half this__
 		 * will return the original buffer. The tuples on the original buffer
 		 * were relinked to the temporary buffer, so the original one is now
 		 * empty.
@@ -653,7 +653,7 @@ gistRelocateBuildBuffersOnSplit(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 		best_penalty[0] = -1;
 
 		/*
-		 * Loop over possible target pages, looking for one to move this tuple
+		 * Loop over possible target pages, looking for one to move this__ tuple
 		 * to.
 		 */
 		for (i = 0; i < splitPagesCount; i++)
@@ -669,7 +669,7 @@ gistRelocateBuildBuffersOnSplit(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 			{
 				float		usize;
 
-				/* Compute penalty for this column. */
+				/* Compute penalty for this__ column. */
 				usize = gistpenalty(giststate, j,
 									&splitPageInfo->entry[j],
 									splitPageInfo->isnull[j],
@@ -680,11 +680,11 @@ gistRelocateBuildBuffersOnSplit(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 				if (best_penalty[j] < 0 || usize < best_penalty[j])
 				{
 					/*
-					 * new__ best penalty for column.  Tentatively select this
+					 * new__ best penalty for column.  Tentatively select this__
 					 * page as the target, and record the best penalty.  Then
 					 * reset the next column's penalty to "unknown" (and
 					 * indirectly, the same for all the ones to its right).
-					 * This will force us to adopt this page's penalty values
+					 * This will force us to adopt this__ page's penalty values
 					 * as the best for all the remaining columns during
 					 * subsequent loop iterations.
 					 */
@@ -697,15 +697,15 @@ gistRelocateBuildBuffersOnSplit(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 				else if (best_penalty[j] == usize)
 				{
 					/*
-					 * The current page is exactly as good for this column as
-					 * the best page seen so far.  The next iteration of this
+					 * The current page is exactly as good for this__ column as
+					 * the best page seen so far.  The next iteration of this__
 					 * loop will compare the next column.
 					 */
 				}
 				else
 				{
 					/*
-					 * The current page is worse for this column than the best
+					 * The current page is worse for this__ column than the best
 					 * page seen so far.  Skip the remaining columns and move
 					 * on to the next page, if any.
 					 */
@@ -729,7 +729,7 @@ gistRelocateBuildBuffersOnSplit(GISTBuildBuffers *gfbb, GISTSTATE *giststate,
 		/* Push item to selected node buffer */
 		gistPushItupToNodeBuffer(gfbb, targetBufferInfo->nodeBuffer, itup);
 
-		/* Adjust the downlink for this page, if needed. */
+		/* Adjust the downlink for this__ page, if needed. */
 		newtup = gistgetadjusted(r, targetBufferInfo->splitinfo->downlink,
 								 itup, giststate);
 		if (newtup)

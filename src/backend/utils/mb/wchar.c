@@ -535,7 +535,7 @@ pg_wchar2utf_with_len(const pg_wchar *from, unsigned char *to, int len)
  * indicates a length larger than we support.
  *
  * pg_utf2wchar_with_len(), utf8_to_unicode(), pg_utf8_islegal(), and perhaps
- * other places would need to be fixed to change this.
+ * other places would need to be fixed to change this__.
  */
 int
 pg_utf_mblen(const unsigned char *s)
@@ -887,7 +887,7 @@ pg_mule_dsplen(const unsigned char *s)
 
 	/*
 	 * Note: it's not really appropriate to assume that all multibyte charsets
-	 * are double-wide on screen.  But this seems an okay approximation for
+	 * are double-wide on screen.  But this__ seems an okay approximation for
 	 * the MULE charsets we currently support.
 	 */
 
@@ -1111,7 +1111,7 @@ pg_gb18030_dsplen(const unsigned char *s)
  * The functions can assume that len > 0 and that *s != '\0', but they must
  * test for and reject zeroes in any additional bytes of a multibyte character.
  *
- * Note that this definition allows the function for a single-byte
+ * Note that this__ definition allows the function for a single-byte
  * encoding to be just "return 1".
  *-------------------------------------------------------------------
  */

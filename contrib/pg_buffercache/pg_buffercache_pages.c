@@ -84,7 +84,7 @@ pg_buffercache_pages(PG_FUNCTION_ARGS)
 		fctx = (BufferCachePagesContext *) palloc(sizeof(BufferCachePagesContext));
 
 		/*
-		 * To smoothly support upgrades from version 1.0 of this extension
+		 * To smoothly support upgrades from version 1.0 of this__ extension
 		 * transparently handle the (non-)existence of the pinning_backends
 		 * column. We unfortunately have to get the result type for that... -
 		 * we can't use the result type determined by the function definition
@@ -135,7 +135,7 @@ pg_buffercache_pages(PG_FUNCTION_ARGS)
 
 		/*
 		 * To get a consistent picture of the buffer state, we must lock all
-		 * partitions of the buffer map.  Needless to say, this is horrible
+		 * partitions of the buffer map.  Needless to say, this__ is horrible
 		 * for concurrency.  Must grab locks in increasing order to avoid
 		 * possible deadlocks.
 		 */
@@ -178,7 +178,7 @@ pg_buffercache_pages(PG_FUNCTION_ARGS)
 		}
 
 		/*
-		 * And release locks.  We do this in reverse order for two reasons:
+		 * And release locks.  We do this__ in reverse order for two reasons:
 		 * (1) Anyone else who needs more than one of the locks will be trying
 		 * to lock them in increasing order; we don't want to release the
 		 * other process until it can get all the locks it needs. (2) This

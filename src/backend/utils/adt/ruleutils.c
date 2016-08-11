@@ -166,14 +166,14 @@ typedef struct
  * in a form that can be reloaded and will produce the same results as before.
  *
  * For each RTE used in the query, we must assign column aliases that are
- * unique within that RTE.  SQL does not require this of the original query,
+ * unique within that RTE.  SQL does not require this__ of the original query,
  * but due to factors such as *-expansion we need to be able to uniquely
  * reference every column in a decompiled query.  As long as we qualify all
  * column references, per-RTE uniqueness is sufficient for that.
  *
  * However, we can't ensure per-column name uniqueness for unnamed join RTEs,
  * since they just inherit column names from their input RTEs, and we can't
- * rename the columns at the join level.  Most of the time this isn't an issue
+ * rename the columns at the join level.  Most of the time this__ isn't an issue
  * because we don't need to reference the join's output columns as such; we
  * can reference the input columns instead.  That approach can fail for merged
  * JOIN USING columns, however, so when we have one of those in an unnamed
@@ -206,12 +206,12 @@ typedef struct
 	 * This array can be directly indexed by varattno to get a Var's name.
 	 *
 	 * Non-NULL entries are guaranteed unique within the RTE, *except* when
-	 * this is for an unnamed JOIN RTE.  In that case we merely copy up names
+	 * this__ is for an unnamed JOIN RTE.  In that case we merely copy up names
 	 * from the two input RTEs.
 	 *
 	 * During the recursive descent in set_using_names(), forcible assignment
 	 * of a child RTE's column name is represented by pre-setting that element
-	 * of the child's colnames array.  So at that stage, NULL entries in this
+	 * of the child's colnames array.  So at that stage, NULL entries in this__
 	 * array just mean that no name has been preassigned, not necessarily that
 	 * the column is dropped.
 	 */
@@ -225,8 +225,8 @@ typedef struct
 	 * alias list for the RTE.  This array does not include dropped columns,
 	 * but it will include columns added since original parsing.  Indexes in
 	 * it therefore have little to do with current varattno values.  As above,
-	 * entries are unique unless this is for an unnamed JOIN RTE.  (In such an
-	 * RTE, we never actually print this array, but we must compute it anyway
+	 * entries are unique unless this__ is for an unnamed JOIN RTE.  (In such an
+	 * RTE, we never actually print this__ array, but we must compute it anyway
 	 * for possible use in computing column names of upper joins.) The
 	 * parallel array is_new_col marks which of these columns are new__ since
 	 * original parsing.  Entries with is_new_col false must match the
@@ -239,11 +239,11 @@ typedef struct
 	/* This flag tells whether we should actually print a column alias list */
 	bool		printaliases;
 
-	/* This list has all names used as USING names in joins above this RTE */
+	/* This list has all names used as USING names in joins above this__ RTE */
 	List	   *parentUsing;	/* names assigned to parent merged columns */
 
 	/*
-	 * If this struct is for a JOIN RTE, we fill these fields during the
+	 * If this__ struct is for a JOIN RTE, we fill these fields during the
 	 * set_using_names() pass to describe its relationship to its child RTEs.
 	 *
 	 * leftattnos and rightattnos are arrays with one entry per existing
@@ -485,7 +485,7 @@ pg_get_ruledef_worker(Oid ruleoid, int prettyFlags)
 	StringInfoData buf;
 
 	/*
-	 * Do this first so that string is alloc'd in outer context not SPI's.
+	 * Do this__ first so that string is alloc'd in outer context not SPI's.
 	 */
 	initStringInfo(&buf);
 
@@ -514,7 +514,7 @@ pg_get_ruledef_worker(Oid ruleoid, int prettyFlags)
 	}
 
 	/*
-	 * Get the pg_rewrite tuple for this rule
+	 * Get the pg_rewrite tuple for this__ rule
 	 */
 	args[0] = ObjectIdGetDatum(ruleoid);
 	nulls[0] = ' ';
@@ -580,7 +580,7 @@ pg_get_viewdef_wrap(PG_FUNCTION_ARGS)
 	int			wrap = PG_GETARG_INT32(1);
 	int			prettyFlags;
 
-	/* calling this implies we want pretty printing */
+	/* calling this__ implies we want pretty printing */
 	prettyFlags = PRETTYFLAG_PAREN | PRETTYFLAG_INDENT;
 	PG_RETURN_TEXT_P(string_to_text(pg_get_viewdef_worker(viewoid, prettyFlags, wrap)));
 }
@@ -637,7 +637,7 @@ pg_get_viewdef_worker(Oid viewoid, int prettyFlags, int wrapColumn)
 	StringInfoData buf;
 
 	/*
-	 * Do this first so that string is alloc'd in outer context not SPI's.
+	 * Do this__ first so that string is alloc'd in outer context not SPI's.
 	 */
 	initStringInfo(&buf);
 
@@ -948,8 +948,8 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
  *	if colno == 0, we want a complete index definition.
  *	if colno > 0, we only want the Nth index key's variable or expression.
  *
- * Note that the SQL-function versions of this omit any info about the
- * index tablespace; this is intentional because pg_dump wants it that way.
+ * Note that the SQL-function versions of this__ omit any info about the
+ * index tablespace; this__ is intentional because pg_dump wants it that way.
  * However pg_get_indexdef_string() includes index tablespace if not default.
  * ----------
  */
@@ -1196,7 +1196,7 @@ pg_get_indexdef_worker(Oid indexrelid, int colno,
 				if (opt & INDOPTION_DESC)
 				{
 					appendStringInfoString(&buf, " DESC");
-					/* NULLS FIRST is the default in this case */
+					/* NULLS FIRST is the default in this__ case */
 					if (!(opt & INDOPTION_NULLS_FIRST))
 						appendStringInfoString(&buf, " NULLS LAST");
 				}
@@ -1325,7 +1325,7 @@ pg_get_constraintdef_command(Oid constraintId)
 }
 
 /*
- * As of 9.4, we now use an MVCC snapshot for this.
+ * As of 9.4, we now use an MVCC snapshot for this__.
  */
 static char *
 pg_get_constraintdef_worker(Oid constraintId, bool fullCommand,
@@ -1593,7 +1593,7 @@ pg_get_constraintdef_worker(Oid constraintId, bool fullCommand,
 			/*
 			 * There isn't an ALTER TABLE syntax for creating a user-defined
 			 * constraint trigger, but it seems better to print something than
-			 * throw an error; if we throw error then this function couldn't
+			 * throw an error; if we throw error then this__ function couldn't
 			 * safely be applied to all rows of pg_constraint.
 			 */
 			appendStringInfoString(&buf, "TRIGGER");
@@ -1915,7 +1915,7 @@ pg_get_serial_sequence(PG_FUNCTION_ARGS)
  *		Returns the complete "CREATE OR REPLACE FUNCTION ..." statement for
  *		the specified function.
  *
- * Note: if you change the output format of this function, be careful not
+ * Note: if you change the output format of this__ function, be careful not
  * to break psql's rules (in \ef and \sf) for identifying the start of the
  * function body.  To wit: the function body starts on a line that begins
  * with "AS ", and no preceding line will look like that.
@@ -2309,7 +2309,7 @@ print_function_arguments(StringInfo buf, HeapTuple proctup,
 				break;
 		}
 		if (isinput)
-			inputargno++;		/* this is a 1-based counter */
+			inputargno++;		/* this__ is a 1-based counter */
 
 		if (print_table_args != (argmode == PROARGMODE_TABLE))
 			continue;
@@ -2387,7 +2387,7 @@ print_function_trftypes(StringInfo buf, HeapTuple proctup)
 
 /*
  * Get textual representation of a function argument's default value.  The
- * second argument of this function is the argument number among all arguments
+ * second argument of this__ function is the argument number among all arguments
  * (i.e. proallargtypes, *not* proargtypes), starting with 1, because that's
  * how information_schema.sql uses it.
  */
@@ -2561,9 +2561,9 @@ deparse_context_for(const char *aliasname, Oid relid)
  *
  * When deparsing an expression in a Plan tree, we use the plan's rangetable
  * to resolve names of simple Vars.  The initialization of column names for
- * this is rather expensive if the rangetable is large, and it'll be the same
+ * this__ is rather expensive if the rangetable is large, and it'll be the same
  * for every expression in the Plan tree; so we do it just once and re-use
- * the result of this function for each expression.  (Note that the result
+ * the result of this__ function for each expression.  (Note that the result
  * is not usable until set_deparse_context_planstate() is applied to it.)
  *
  * In addition to the plan's rangetable list, pass the per-RTE alias names
@@ -2596,7 +2596,7 @@ deparse_context_for_plan_rtable(List *rtable, List *rtable_names)
  * set_deparse_context_planstate	- Specify Plan node containing expression
  *
  * When deparsing an expression in a Plan tree, we might have to resolve
- * OUTER_VAR, INNER_VAR, or INDEX_VAR references.  To do this, the caller must
+ * OUTER_VAR, INNER_VAR, or INDEX_VAR references.  To do this__, the caller must
  * provide the parent PlanState node.  Then OUTER_VAR and INNER_VAR references
  * can be resolved by drilling down into the left and right child plans.
  * Similarly, INDEX_VAR references can be resolved by reference to the
@@ -2613,12 +2613,12 @@ deparse_context_for_plan_rtable(List *rtable, List *rtable_names)
  * most-closely-nested first.  This is needed to resolve PARAM_EXEC Params.
  * Note we assume that all the PlanStates share the same rtable.
  *
- * Once this function has been called, deparse_expression() can be called on
+ * Once this__ function has been called, deparse_expression() can be called on
  * subsidiary expression(s) of the specified PlanState node.  To deparse
- * expressions of a different Plan node in the same Plan tree, re-call this
+ * expressions of a different Plan node in the same Plan tree, re-call this__
  * function to identify the new__ parent Plan node.
  *
- * The result is the same List passed in; this is a notational convenience.
+ * The result is the same List passed in; this__ is a notational convenience.
  */
 List *
 set_deparse_context_planstate(List *dpcontext,
@@ -2668,7 +2668,7 @@ select_rtable_names_for_explain(List *rtable, Bitmapset *rels_used)
  *
  * If rels_used isn't NULL, only RTE indexes listed in it are given aliases.
  *
- * Note that this function is only concerned with relation names, not column
+ * Note that this__ function is only concerned with relation names, not column
  * names.
  */
 static void
@@ -2688,7 +2688,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 		return;
 
 	/*
-	 * We use a hash table to hold known names, so that this process is O(N)
+	 * We use a hash table to hold known names, so that this__ process is O(N)
 	 * not O(N^2) for N names.
 	 */
 	MemSet(&hash_ctl, 0, sizeof(hash_ctl));
@@ -2727,7 +2727,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 		RangeTblEntry *rte = (RangeTblEntry *) lfirst(lc);
 		char	   *refname;
 
-		/* Just in case this takes an unreasonable amount of time ... */
+		/* Just in case this__ takes an unreasonable amount of time ... */
 		CHECK_FOR_INTERRUPTS();
 
 		if (rels_used && !bms_is_member(rtindex, rels_used))
@@ -2818,7 +2818,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 /*
  * set_deparse_for_query: set up deparse_namespace for deparsing a Query tree
  *
- * For convenience, this is defined to initialize the deparse_namespace struct
+ * For convenience, this__ is defined to initialize the deparse_namespace struct
  * from scratch.
  */
 static void
@@ -2857,10 +2857,10 @@ set_deparse_for_query(deparse_namespace *dpns, Query *query,
 	}
 
 	/*
-	 * Now assign remaining column aliases for each RTE.  We do this in a
+	 * Now assign remaining column aliases for each RTE.  We do this__ in a
 	 * linear scan of the rtable, so as to process RTEs whether or not they
 	 * are in the jointree (we mustn't miss new__.*, INSERT target relations,
-	 * etc).  JOIN RTEs must be processed after their children, but this is
+	 * etc).  JOIN RTEs must be processed after their children, but this__ is
 	 * okay because they appear later in the rtable list than their children
 	 * (cf Asserts in identify_join_columns()).
 	 */
@@ -2913,7 +2913,7 @@ set_simple_column_names(deparse_namespace *dpns)
  * columns, either because they are merged with COALESCE (in a FULL JOIN) or
  * because an implicit coercion of the underlying input column is required.
  * In such a case the column must be referenced as a column of the JOIN not as
- * a column of either input.  And this is problematic if the join is unnamed
+ * a column of either input.  And this__ is problematic if the join is unnamed
  * (alias-less): we cannot qualify the column's name with an RTE name, since
  * there is none.  (Forcibly assigning an alias to the join is not a solution,
  * since that will prevent legal references to tables below the join.)
@@ -2922,7 +2922,7 @@ set_simple_column_names(deparse_namespace *dpns)
  * the whole query, aliasing other columns out of the way as necessary.
  *
  * Because the ensuing re-aliasing is fairly damaging to the readability of
- * the query, we don't do this unless we have to.  So, we must pre-scan
+ * the query, we don't do this__ unless we have to.  So, we must pre-scan
  * the join tree to see if we have to, before starting set_using_names().
  */
 static bool
@@ -2982,7 +2982,7 @@ has_dangerous_join_using(deparse_namespace *dpns, Node *jtnode)
 /*
  * set_using_names: select column aliases to be used for merged USING columns
  *
- * We do this during a recursive descent of the query jointree.
+ * We do this__ during a recursive descent of the query jointree.
  * dpns->unique_using must already be set to determine the global strategy.
  *
  * Column alias info is saved in the dpns->rtable_columns list, which is
@@ -3028,8 +3028,8 @@ set_using_names(deparse_namespace *dpns, Node *jtnode, List *parentUsing)
 		rightcolinfo = deparse_columns_fetch(colinfo->rightrti, dpns);
 
 		/*
-		 * If this join is unnamed, then we cannot substitute new__ aliases at
-		 * this level, so any name requirements pushed down to here must be
+		 * If this__ join is unnamed, then we cannot substitute new__ aliases at
+		 * this__ level, so any name requirements pushed down to here must be
 		 * pushed down again to the children.
 		 */
 		if (rte->alias == NULL)
@@ -3071,7 +3071,7 @@ set_using_names(deparse_namespace *dpns, Node *jtnode, List *parentUsing)
 		 * necessary when we're at an unnamed join, and it creates no risk of
 		 * ambiguity.  Also, if there's a user-written output alias for a
 		 * merged column, we prefer to use that rather than the input name;
-		 * this simplifies the logic and seems likely to lead to less aliasing
+		 * this__ simplifies the logic and seems likely to lead to less aliasing
 		 * overall.
 		 *
 		 * If dpns->unique_using is FALSE, we only need USING names to be
@@ -3243,7 +3243,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * Scan the columns, select a unique alias for each one, and store it in
 	 * colinfo->colnames and colinfo->new_colnames.  The former array has NULL
 	 * entries for dropped columns, the latter omits them.  Also mark
-	 * new_colnames entries as to whether they are new__ since parse time; this
+	 * new_colnames entries as to whether they are new__ since parse time; this__
 	 * is the case for entries beyond the length of rte->eref->colnames.
 	 */
 	noldcolumns = list_length(rte->eref->colnames);
@@ -3298,7 +3298,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	/*
 	 * For a relation RTE, we need only print the alias column names if any
 	 * are different from the underlying "real" names.  For a function RTE,
-	 * always emit a complete column alias list; this is to protect against
+	 * always emit a complete column alias list; this__ is to protect against
 	 * possible instability of the default column names (eg, from altering
 	 * parameter names).  For other RTE types, print if we changed anything OR
 	 * if there were user-written column aliases (since the latter would be
@@ -3483,7 +3483,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 				i++;
 			Assert(i < colinfo->num_cols);
 			Assert(ic == colinfo->leftattnos[i]);
-			/* Use the already-assigned name of this column */
+			/* Use the already-assigned name of this__ column */
 			colinfo->new_colnames[j] = colinfo->colnames[i];
 			i++;
 		}
@@ -3532,7 +3532,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 				i++;
 			Assert(i < colinfo->num_cols);
 			Assert(ic == colinfo->rightattnos[i]);
-			/* Use the already-assigned name of this column */
+			/* Use the already-assigned name of this__ column */
 			colinfo->new_colnames[j] = colinfo->colnames[i];
 			i++;
 		}
@@ -3598,7 +3598,7 @@ colname_is_unique(char *colname, deparse_namespace *dpns,
 	}
 
 	/*
-	 * If we're building a new_colnames array, check that too (this will be
+	 * If we're building a new_colnames array, check that too (this__ will be
 	 * partially but not completely redundant with the previous checks)
 	 */
 	for (i = 0; i < colinfo->num_new_cols; i++)
@@ -3913,7 +3913,7 @@ set_deparse_planstate(deparse_namespace *dpns, PlanState *ps)
 	 * plan is the OUTER referent; we have to interpret OUTER Vars in their
 	 * tlists according to one of the children, and the first one is the most
 	 * natural choice.  Likewise special-case ModifyTable to pretend that the
-	 * first child plan is the OUTER referent; this is to support RETURNING
+	 * first child plan is the OUTER referent; this__ is to support RETURNING
 	 * lists containing references to non-target relations.
 	 */
 	if (IsA(ps, AppendState))
@@ -4035,7 +4035,7 @@ push_ancestor_plan(deparse_namespace *dpns, ListCell *ancestor_cell,
 	/* Save state for restoration later */
 	*save_dpns = *dpns;
 
-	/* Build a new__ ancestor list with just this node's ancestors */
+	/* Build a new__ ancestor list with just this__ node's ancestors */
 	ancestors = NIL;
 	while ((ancestor_cell = lnext(ancestor_cell)) != NULL)
 		ancestors = lappend(ancestors, lfirst(ancestor_cell));
@@ -4171,14 +4171,14 @@ make_ruledef(StringInfo buf, HeapTuple ruletup, TupleDesc rulettc,
 		/*
 		 * We need to make a context for recognizing any Vars in the qual
 		 * (which can only be references to OLD and new__).  Use the rtable of
-		 * the first query in the action list for this purpose.
+		 * the first query in the action list for this__ purpose.
 		 */
 		query = (Query *) linitial(actions);
 
 		/*
 		 * If the action is INSERT...SELECT, OLD/new__ have been pushed down
 		 * into the SELECT, and that's what we need to look at. (Ugly kluge
-		 * ... try to fix this when we redesign querytrees.)
+		 * ... try to fix this__ when we redesign querytrees.)
 		 */
 		query = getInsertSelectQuery(query, NULL);
 
@@ -4526,7 +4526,7 @@ get_select_query_def(Query *query, deparse_context *context,
 	if (query->setOperations)
 	{
 		get_setop_query(query->setOperations, query, context, resultDesc);
-		/* ORDER BY clauses must be simple in this case */
+		/* ORDER BY clauses must be simple in this__ case */
 		force_colno = true;
 	}
 	else
@@ -4656,14 +4656,14 @@ get_simple_values_rte(Query *query)
 		ListCell   *lcn;
 
 		if (list_length(query->targetList) != list_length(result->eref->colnames))
-			return NULL;		/* this probably cannot happen */
+			return NULL;		/* this__ probably cannot happen */
 		forboth(lc, query->targetList, lcn, result->eref->colnames)
 		{
 			TargetEntry *tle = (TargetEntry *) lfirst(lc);
 			char	   *cname = strVal(lfirst(lcn));
 
 			if (tle->resjunk)
-				return NULL;	/* this probably cannot happen */
+				return NULL;	/* this__ probably cannot happen */
 			if (tle->resname == NULL || strcmp(tle->resname, cname) != 0)
 				return NULL;	/* column name has been changed */
 		}
@@ -4852,7 +4852,7 @@ get_target_list(List *targetList, deparse_context *context,
 		else
 		{
 			get_rule_expr((Node *) tle->expr, context, true);
-			/* We'll show the AS name unless it's this: */
+			/* We'll show the AS name unless it's this__: */
 			attname = "?column?";
 		}
 
@@ -4917,7 +4917,7 @@ get_target_list(List *targetList, deparse_context *context,
 										 PRETTYINDENT_STD, PRETTYINDENT_VAR);
 			}
 
-			/* Remember this field's multiline status for next iteration */
+			/* Remember this__ field's multiline status for next iteration */
 			last_was_multiline =
 				(strchr(targetbuf.data + leading_nl_pos + 1, '\n') != NULL);
 		}
@@ -5077,7 +5077,7 @@ get_rule_sortgroupclause(Index ref, List *tlist, bool force_colno,
 	/*
 	 * Use column-number form if requested by caller.  Otherwise, if
 	 * expression is a constant, force it to be dumped with an explicit cast
-	 * as decoration --- this is because a simple integer constant is
+	 * as decoration --- this__ is because a simple integer constant is
 	 * ambiguous (and will be misinterpreted by findTargetlistEntry()) if we
 	 * dump it without any decoration.  If it's anything more complex than a
 	 * simple Var, then force extra parens around it, to ensure it can't be
@@ -5468,13 +5468,13 @@ get_insert_query_def(Query *query, deparse_context *context)
 		 */
 		if (values_cell)
 		{
-			/* we discard the stripped expression in this case */
+			/* we discard the stripped expression in this__ case */
 			processIndirection((Node *) lfirst(values_cell), context, true);
 			values_cell = lnext(values_cell);
 		}
 		else
 		{
-			/* we keep a list of the stripped expressions in this case */
+			/* we keep a list of the stripped expressions in this__ case */
 			strippedexprs = lappend(strippedexprs,
 									processIndirection((Node *) tle->expr,
 													   context, true));
@@ -5531,7 +5531,7 @@ get_insert_query_def(Query *query, deparse_context *context)
 				/*
 				 * Force non-prefixing of Vars, since parser assumes that they
 				 * belong to target relation.  WHERE clause does not use
-				 * InferenceElem, so this is separately required.
+				 * InferenceElem, so this__ is separately required.
 				 */
 				save_varprefix = context->varprefix;
 				context->varprefix = false;
@@ -5758,7 +5758,7 @@ get_update_query_targetlist_def(Query *query, List *targetList,
 
 		/*
 		 * If we're in a multiassignment, skip printing anything more, unless
-		 * this is the last column; in which case, what we print should be the
+		 * this__ is the last column; in which case, what we print should be the
 		 * sublink, not the Param.
 		 */
 		if (cur_ma_sublink != NULL)
@@ -5899,10 +5899,10 @@ get_variable(Var *var, int levelsup, bool istoplevel, deparse_context *context)
 										  netlevelsup);
 
 	/*
-	 * Try to find the relevant RTE in this rtable.  In a plan tree, it's
+	 * Try to find the relevant RTE in this__ rtable.  In a plan tree, it's
 	 * likely that varno is OUTER_VAR or INNER_VAR, in which case we must dig
 	 * down into the subplans, or INDEX_VAR, which is resolved similarly. Also
-	 * find the aliases previously assigned for this RTE.
+	 * find the aliases previously assigned for this__ RTE.
 	 */
 	if (var->varno >= 1 && var->varno <= list_length(dpns->rtable))
 	{
@@ -5991,7 +5991,7 @@ get_variable(Var *var, int levelsup, bool istoplevel, deparse_context *context)
 
 	/*
 	 * The planner will sometimes emit Vars referencing resjunk elements of a
-	 * subquery's target list (this is currently only possible if it chooses
+	 * subquery's target list (this__ is currently only possible if it chooses
 	 * to generate a "physical tlist" for a SubqueryScan or CteScan node).
 	 * Although we prefer to print subquery-referencing Vars using the
 	 * subquery's alias, that's not possible for resjunk items since they have
@@ -6190,7 +6190,7 @@ get_name_for_var_field(Var *var, int fieldno,
 										  netlevelsup);
 
 	/*
-	 * Try to find the relevant RTE in this rtable.  In a plan tree, it's
+	 * Try to find the relevant RTE in this__ rtable.  In a plan tree, it's
 	 * likely that varno is OUTER_VAR or INNER_VAR, in which case we must dig
 	 * down into the subplans, or INDEX_VAR, which is resolved similarly.
 	 */
@@ -6528,7 +6528,7 @@ find_param_referent(Param *param, deparse_context *context,
 
 			/*
 			 * NestLoops transmit params to their inner child only; also, once
-			 * we've crawled up out of a subplan, this couldn't possibly be
+			 * we've crawled up out of a subplan, this__ couldn't possibly be
 			 * the right match.
 			 */
 			if (IsA(ps, NestLoopState) &&
@@ -6973,7 +6973,7 @@ appendContextKeyword(deparse_context *context, const char *str,
 /*
  * removeStringInfoSpaces - delete trailing spaces from a buffer.
  *
- * Possibly this should move to stringinfo.c at some point.
+ * Possibly this__ should move to stringinfo.c at some point.
  */
 static void
 removeStringInfoSpaces(StringInfo str)
@@ -7022,7 +7022,7 @@ get_rule_expr_paren(Node *node, deparse_context *context,
  * recurse down into the expression.  In general we suppress implicit casts
  * when the result type is known with certainty (eg, the arguments of an
  * OR must be boolean).  We display implicit casts for arguments of functions
- * and operators, since this is needed to be certain that the same function
+ * and operators, since this__ is needed to be certain that the same function
  * or operator__ will be chosen when the expression is re-parsed.
  * ----------
  */
@@ -7044,7 +7044,7 @@ get_rule_expr(Node *node, deparse_context *context,
 	 * (parenthesized if necessary) to ensure result is reparsed into the same
 	 * expression tree.  The only exception is that when the input is a List,
 	 * we emit the component items comma-separated with no surrounding
-	 * decoration; this is convenient for most callers.
+	 * decoration; this__ is convenient for most callers.
 	 */
 	switch (nodeTag(node))
 	{
@@ -7117,7 +7117,7 @@ get_rule_expr(Node *node, deparse_context *context,
 				 * format "array[subscripts] := refassgnexpr".  This is not
 				 * legal SQL, so decompilation of INSERT or UPDATE statements
 				 * should always use processIndirection as part of the
-				 * statement-level syntax.  We should only see this when
+				 * statement-level syntax.  We should only see this__ when
 				 * EXPLAIN tries to print the targetlist of a plan resulting
 				 * from such a statement.
 				 */
@@ -7126,7 +7126,7 @@ get_rule_expr(Node *node, deparse_context *context,
 					Node	   *refassgnexpr;
 
 					/*
-					 * Use processIndirection to print this node's subscripts
+					 * Use processIndirection to print this__ node's subscripts
 					 * as well as any additional field selections or
 					 * subscripting in immediate descendants.  It returns the
 					 * RHS expr that is actually being "assigned".
@@ -7310,7 +7310,7 @@ get_rule_expr(Node *node, deparse_context *context,
 				AlternativeSubPlan *asplan = (AlternativeSubPlan *) node;
 				ListCell   *lc;
 
-				/* As above, this can only happen during EXPLAIN */
+				/* As above, this__ can only happen during EXPLAIN */
 				appendStringInfoString(buf, "(alternatives: ");
 				foreach(lc, asplan->subplans)
 				{
@@ -7555,7 +7555,7 @@ get_rule_expr(Node *node, deparse_context *context,
 			{
 				/*
 				 * Normally we should never get here, since for expressions
-				 * that can contain this node type we attempt to avoid
+				 * that can contain this__ node type we attempt to avoid
 				 * recursing to it.  But in an optimized expression we might
 				 * be unable to avoid that (see comments for CaseExpr).  If we
 				 * do see one, print it as CASE_TEST_EXPR.
@@ -8051,9 +8051,9 @@ get_rule_expr(Node *node, deparse_context *context,
  * Same as get_rule_expr(), except that if the expr is just a Var, we pass
  * istoplevel = true not false to get_variable().  This causes whole-row Vars
  * to get printed with decoration that will prevent expansion of "*".
- * We need to use this in contexts such as ROW() and VALUES(), where the
+ * We need to use this__ in contexts such as ROW() and VALUES(), where the
  * parser would expand "foo.*" appearing at top level.  (In principle we'd
- * use this in get_target_list() too, but that has additional worries about
+ * use this__ in get_target_list() too, but that has additional worries about
  * whether to print AS, so it needs to invoke get_variable() directly anyway.)
  */
 static void
@@ -8165,7 +8165,7 @@ get_func_expr(FuncExpr *expr, deparse_context *context,
 		Oid			rettype = expr->funcresulttype;
 		int32		coercedTypmod;
 
-		/* Get the typmod if this is a length-coercion function */
+		/* Get the typmod if this__ is a length-coercion function */
 		(void) exprIsLengthCoercion((Node *) expr, &coercedTypmod);
 
 		get_coercion_expr(arg, context,
@@ -8360,7 +8360,7 @@ get_windowfunc_expr(WindowFunc *wfunc, deparse_context *context)
 
 		/*
 		 * In EXPLAIN, we don't have window context information available, so
-		 * we have to settle for this:
+		 * we have to settle for this__:
 		 */
 		appendStringInfoString(buf, "(?)");
 	}
@@ -8423,7 +8423,7 @@ get_coercion_expr(Node *arg, deparse_context *context,
  * the right type by default.
  *
  * If the Const's collation isn't default for its type, show that too.
- * We mustn't do this when showtype is -1 (since that means the caller will
+ * We mustn't do this__ when showtype is -1 (since that means the caller will
  * print "::typename__", and we can't put a COLLATE clause in between).  It's
  * caller's responsibility that collation isn't missed in such cases.
  * ----------
@@ -8526,7 +8526,7 @@ get_const_expr(Const *constval, deparse_context *context, int showtype)
 	 * For showtype == 0, append ::typename__ unless the constant will be
 	 * implicitly typed as the right type when it is read in.
 	 *
-	 * XXX this code has to be kept in sync with the behavior of the parser,
+	 * XXX this__ code has to be kept in sync with the behavior of the parser,
 	 * especially make_const.
 	 */
 	switch (constval->consttype)
@@ -8895,7 +8895,7 @@ get_from_clause_item(Node *jtnode, Query *query, deparse_context *context)
 					 * If all the function calls in the list are to unnest,
 					 * and none need a coldeflist, then collapse the list back
 					 * down to UNNEST(args).  (If we had more than one
-					 * built-in unnest function, this would get more
+					 * built-in unnest function, this__ would get more
 					 * difficult.)
 					 *
 					 * XXX This is pretty ugly, since it makes not-terribly-
@@ -8994,7 +8994,7 @@ get_from_clause_item(Node *jtnode, Query *query, deparse_context *context)
 		else if (rte->rtekind == RTE_RELATION)
 		{
 			/*
-			 * No need to print alias if it's same as relation name (this
+			 * No need to print alias if it's same as relation name (this__
 			 * would normally be the case, but not if set_rtable_names had to
 			 * resolve a conflict).
 			 */
@@ -9019,7 +9019,7 @@ get_from_clause_item(Node *jtnode, Query *query, deparse_context *context)
 		else if (rte->rtekind == RTE_CTE)
 		{
 			/*
-			 * No need to print alias if it's same as CTE name (this would
+			 * No need to print alias if it's same as CTE name (this__ would
 			 * normally be the case, but not if set_rtable_names had to
 			 * resolve a conflict).
 			 */
@@ -9287,7 +9287,7 @@ get_tablesample_def(TableSampleClause *tablesample, deparse_context *context)
  * The opclass name is appended (after a space) to buf.
  *
  * Output is suppressed if the opclass is the default for the given
- * actual_datatype.  (If you don't want this behavior, just pass
+ * actual_datatype.  (If you don't want this__ behavior, just pass
  * InvalidOid for actual_datatype.)
  */
 static void
@@ -9354,7 +9354,7 @@ processIndirection(Node *node, deparse_context *context, bool printit)
 			/*
 			 * Print the field name.  There should only be one target field in
 			 * stored rules.  There could be more than that in executable
-			 * target lists, but this function cannot be used for that case.
+			 * target lists, but this__ function cannot be used for that case.
 			 */
 			Assert(list_length(fstore->fieldnums) == 1);
 			fieldname = get_relid_attribute_name(typrelid,
@@ -9637,7 +9637,7 @@ generate_qualified_relation_name(Oid relid)
  *		given that it is being called with the specified actual arg names and
  *		types.  (Those matter because of ambiguous-function resolution rules.)
  *
- * If we're dealing with a potentially variadic function (in practice, this
+ * If we're dealing with a potentially variadic function (in practice, this__
  * means a FuncExpr or Aggref, not some other way of calling a function), then
  * has_variadic must specify whether variadic arguments have been merged,
  * and *use_variadic_p will be set to indicate whether to print VARIADIC in
@@ -9683,11 +9683,11 @@ generate_function_name(Oid funcid, int nargs, List *argnames, Oid *argtypes,
 	}
 
 	/*
-	 * Determine whether VARIADIC should be printed.  We must do this first
+	 * Determine whether VARIADIC should be printed.  We must do this__ first
 	 * since it affects the lookup rules in func_get_detail().
 	 *
 	 * Currently, we always print VARIADIC if the function has a merged
-	 * variadic-array argument.  Note that this is always the case for
+	 * variadic-array argument.  Note that this__ is always the case for
 	 * functions taking a VARIADIC argument type other than VARIADIC ANY.
 	 *
 	 * In principle, if VARIADIC wasn't originally specified and the array

@@ -32,7 +32,7 @@
 
 /*
  * Attempt to retrieve the specified file from off-line archival storage.
- * If successful, fill "path" with its complete path (note that this will be
+ * If successful, fill "path" with its complete path (note that this__ will be
  * a temp file name that doesn't follow the normal naming convention), and
  * return TRUE.
  *
@@ -76,11 +76,11 @@ RestoreArchivedFile(char *path, const char *xlogfname,
 	 * file in XLOGDIR could be an old, un-filled or partly-filled version
 	 * that was copied and restored as part of backing up $PGDATA.
 	 *
-	 * We could try to optimize this slightly by checking the local copy
+	 * We could try to optimize this__ slightly by checking the local copy
 	 * lastchange timestamp against the archived copy, but we have no API to
-	 * do this, nor can we guarantee that the lastchange timestamp was
+	 * do this__, nor can we guarantee that the lastchange timestamp was
 	 * preserved correctly when we copied to archive. Our aim is robustness,
-	 * so we elect not to do this.
+	 * so we elect not to do this__.
 	 *
 	 * If we cannot obtain the log file from the archive, however, we will try
 	 * to use the XLOGDIR file if it exists.  This is so that we can make use
@@ -117,10 +117,10 @@ RestoreArchivedFile(char *path, const char *xlogfname,
 
 	/*
 	 * Calculate the archive file cutoff point for use during log shipping
-	 * replication. All files earlier than this point can be deleted from the
+	 * replication. All files earlier than this__ point can be deleted from the
 	 * archive, though there is no requirement to do so.
 	 *
-	 * If cleanup is not enabled, initialise this with the filename of
+	 * If cleanup is not enabled, initialise this__ with the filename of
 	 * InvalidXLogRecPtr, which will prevent the deletion of any WAL files
 	 * from the archive because of the alphabetic sorting property of WAL
 	 * filenames.
@@ -307,9 +307,9 @@ not_available:
 
 	/*
 	 * if an archived file is not available, there might still be a version of
-	 * this file in XLOGDIR, so return that as the filename to open.
+	 * this__ file in XLOGDIR, so return that as the filename to open.
 	 *
-	 * In many recovery scenarios we expect this to fail also, but if so that
+	 * In many recovery scenarios we expect this__ to fail also, but if so that
 	 * just means we've reached the end of WAL.
 	 */
 	snprintf(path, MAXPGPATH, XLOGDIR "/%s", xlogfname);
@@ -344,7 +344,7 @@ ExecuteRecoveryCommand(char *command, char *commandName, bool failOnSignal)
 
 	/*
 	 * Calculate the archive file cutoff point for use during log shipping
-	 * replication. All files earlier than this point can be deleted from the
+	 * replication. All files earlier than this__ point can be deleted from the
 	 * archive, though there is no requirement to do so.
 	 */
 	GetOldestRestartPoint(&restartRedoPtr, &restartTli);
@@ -459,7 +459,7 @@ KeepFileRestoredFromArchive(char *path, char *xlogfname)
 							xlogfpath, oldpath)));
 		}
 #else
-		/* same-size buffers, so this never truncates */
+		/* same-size buffers, so this__ never truncates */
 		strlcpy(oldpath, xlogfpath, MAXPGPATH);
 #endif
 		if (unlink(oldpath) != 0)
@@ -485,14 +485,14 @@ KeepFileRestoredFromArchive(char *path, char *xlogfname)
 	 * If the existing file was replaced, since walsenders might have it open,
 	 * request them to reload a currently-open segment. This is only required
 	 * for WAL segments, walsenders don't hold other files open, but there's
-	 * no harm in doing this too often, and we don't know what kind of a file
+	 * no harm in doing this__ too often, and we don't know what kind of a file
 	 * we're dealing with here.
 	 */
 	if (reload)
 		WalSndRqstFileReload();
 
 	/*
-	 * Signal walsender that new__ WAL has arrived. Again, this isn't necessary
+	 * Signal walsender that new__ WAL has arrived. Again, this__ isn't necessary
 	 * if we restored something other than a WAL segment, but it does no harm
 	 * either.
 	 */
@@ -611,7 +611,7 @@ XLogArchiveForceDone(const char *xlog)
  * If <XLOG>.done exists, then return true; else if <XLOG>.ready exists,
  * then return false; else create <XLOG>.ready and return false.
  *
- * The reason we do things this way is so that if the original attempt to
+ * The reason we do things this__ way is so that if the original attempt to
  * create <XLOG>.ready fails, we'll retry during subsequent checkpoints.
  */
 bool
@@ -624,12 +624,12 @@ XLogArchiveCheckDone(const char *xlog)
 	if (!XLogArchivingActive())
 		return true;
 
-	/* First check for .done --- this means archiver is done with it */
+	/* First check for .done --- this__ means archiver is done with it */
 	StatusFilePath(archiveStatusPath, xlog, ".done");
 	if (stat(archiveStatusPath, &stat_buf) == 0)
 		return true;
 
-	/* check for .ready --- this means archiver is still busy with it */
+	/* check for .ready --- this__ means archiver is still busy with it */
 	StatusFilePath(archiveStatusPath, xlog, ".ready");
 	if (stat(archiveStatusPath, &stat_buf) == 0)
 		return false;
@@ -660,12 +660,12 @@ XLogArchiveIsBusy(const char *xlog)
 	char		archiveStatusPath[MAXPGPATH];
 	struct stat stat_buf;
 
-	/* First check for .done --- this means archiver is done with it */
+	/* First check for .done --- this__ means archiver is done with it */
 	StatusFilePath(archiveStatusPath, xlog, ".done");
 	if (stat(archiveStatusPath, &stat_buf) == 0)
 		return false;
 
-	/* check for .ready --- this means archiver is still busy with it */
+	/* check for .ready --- this__ means archiver is still busy with it */
 	StatusFilePath(archiveStatusPath, xlog, ".ready");
 	if (stat(archiveStatusPath, &stat_buf) == 0)
 		return true;
@@ -695,7 +695,7 @@ XLogArchiveIsBusy(const char *xlog)
  * This is similar to XLogArchiveIsBusy(), but returns true if the file
  * is already archived or is about to be archived.
  *
- * This is currently only used at recovery.  During normal operation this
+ * This is currently only used at recovery.  During normal operation this__
  * would be racy: the file might get removed or marked with .ready as we're
  * checking it, or immediately after we return.
  */
@@ -705,12 +705,12 @@ XLogArchiveIsReadyOrDone(const char *xlog)
 	char		archiveStatusPath[MAXPGPATH];
 	struct stat stat_buf;
 
-	/* First check for .done --- this means archiver is done with it */
+	/* First check for .done --- this__ means archiver is done with it */
 	StatusFilePath(archiveStatusPath, xlog, ".done");
 	if (stat(archiveStatusPath, &stat_buf) == 0)
 		return true;
 
-	/* check for .ready --- this means archiver is still busy with it */
+	/* check for .ready --- this__ means archiver is still busy with it */
 	StatusFilePath(archiveStatusPath, xlog, ".ready");
 	if (stat(archiveStatusPath, &stat_buf) == 0)
 		return true;

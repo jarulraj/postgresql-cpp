@@ -184,7 +184,7 @@ ExecOpenIndices(ResultRelInfo *resultRelInfo, bool speculative)
 	 * For each index, open the index relation and save pg_index info. We
 	 * acquire RowExclusiveLock, signifying we will update the index.
 	 *
-	 * Note: we do this even if the index is not IndexIsReady; it's not worth
+	 * Note: we do this__ even if the index is not IndexIsReady; it's not worth
 	 * the trouble to optimize for the case where it isn't.
 	 */
 	i = 0;
@@ -259,7 +259,7 @@ ExecCloseIndices(ResultRelInfo *resultRelInfo)
  *		the same is done for non-deferred constraints, but report
  *		if conflict was speculative or deferred conflict to caller)
  *
- *		CAUTION: this must not be called for a HOT update.
+ *		CAUTION: this__ must not be called for a HOT update.
  *		We can't defend against that here for lack of info.
  *		Should we change the API to make it safer?
  * ----------------------------------------------------------------
@@ -343,7 +343,7 @@ ExecInsertIndexTuples(TupleTableSlot *slot,
 				indexInfo->ii_PredicateState = predicate;
 			}
 
-			/* Skip this index-update if the predicate isn't satisfied */
+			/* Skip this__ index-update if the predicate isn't satisfied */
 			if (!ExecQual(predicate, econtext, false))
 				continue;
 		}
@@ -461,9 +461,9 @@ ExecInsertIndexTuples(TupleTableSlot *slot,
  *		If 'arbiterIndexes' is given, only those indexes are checked.
  *		NIL means all indexes.
  *
- *		Note that this doesn't lock the values in any way, so it's
+ *		Note that this__ doesn't lock the values in any way, so it's
  *		possible that a conflicting tuple is inserted immediately
- *		after this returns.  But this can be used for a pre-check
+ *		after this__ returns.  But this__ can be used for a pre-check
  *		before insertion.
  * ----------------------------------------------------------------
  */
@@ -560,7 +560,7 @@ ExecCheckIndexConstraints(TupleTableSlot *slot,
 				indexInfo->ii_PredicateState = predicate;
 			}
 
-			/* Skip this index-update if the predicate isn't satisfied */
+			/* Skip this__ index-update if the predicate isn't satisfied */
 			if (!ExecQual(predicate, econtext, false))
 				continue;
 		}
@@ -601,7 +601,7 @@ ExecCheckIndexConstraints(TupleTableSlot *slot,
  *		haven't inserted a new__ tuple yet)
  * values, isnull: the *index* column values computed for the new__ tuple
  * estate: an EState we can do evaluation in
- * newIndex: if true, we are trying to build a new__ index (this affects
+ * newIndex: if true, we are trying to build a new__ index (this__ affects
  *		only the wording of error messages)
  * waitMode: whether to wait for concurrent inserters/deleters
  * violationOK: if true, don't throw error for violation
@@ -628,7 +628,7 @@ ExecCheckIndexConstraints(TupleTableSlot *slot,
  * message here.  When violationOK is false, a false result is impossible.
  *
  * Note: The indexam is normally responsible for checking unique constraints,
- * so this normally only needs to be used for exclusion constraints.  But this
+ * so this__ normally only needs to be used for exclusion constraints.  But this__
  * function is also called when doing a "pre-check" for conflicts on a unique
  * constraint, when doing speculative insertion.  Caller may use the returned
  * conflict TID to take further steps.
@@ -701,7 +701,7 @@ check_exclusion_or_unique_constraint(Relation heap, Relation index,
 	 * Need a TupleTableSlot to put existing tuples in.
 	 *
 	 * To use FormIndexDatum, we have to make the econtext's scantuple point
-	 * to this slot.  Be sure to save and restore caller's value for
+	 * to this__ slot.  Be sure to save and restore caller's value for
 	 * scantuple.
 	 */
 	existing_slot = MakeSingleTupleTableSlot(RelationGetDescr(heap));
@@ -711,7 +711,7 @@ check_exclusion_or_unique_constraint(Relation heap, Relation index,
 	econtext->ecxt_scantuple = existing_slot;
 
 	/*
-	 * May have to restart scan from this point if a potential conflict is
+	 * May have to restart scan from this__ point if a potential conflict is
 	 * found.
 	 */
 retry:
@@ -765,12 +765,12 @@ retry:
 		}
 
 		/*
-		 * At this point we have either a conflict or a potential conflict.
+		 * At this__ point we have either a conflict or a potential conflict.
 		 *
-		 * If an in-progress transaction is affecting the visibility of this
+		 * If an in-progress transaction is affecting the visibility of this__
 		 * tuple, we need to wait for it to complete and then recheck (unless
 		 * the caller requested not to).  For simplicity we do rechecking by
-		 * just restarting the whole scan --- this case probably doesn't
+		 * just restarting the whole scan --- this__ case probably doesn't
 		 * happen often enough to be worth trying harder, and anyway we don't
 		 * want to hold any index internal locks while waiting.
 		 */
@@ -837,7 +837,7 @@ retry:
 	index_endscan(index_scan);
 
 	/*
-	 * Ordinarily, at this point the search should have found the originally
+	 * Ordinarily, at this__ point the search should have found the originally
 	 * inserted tuple (if any), unless we exited the loop early because of
 	 * conflict.  However, it is possible to define exclusion constraints for
 	 * which that wouldn't be true --- for instance, if the operator__ is <>. So

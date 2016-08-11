@@ -273,7 +273,7 @@ MJExamineQuals(List *mergeclauses,
  *
  * Compute the values of the mergejoined expressions for the current
  * outer tuple.  We also detect whether it's impossible for the current
- * outer tuple to match anything --- this is true if it yields a NULL
+ * outer tuple to match anything --- this__ is true if it yields a NULL
  * input, since we assume mergejoin operators are strict.  If the NULL
  * is in the first join column, and that column sorts nulls last, then
  * we can further conclude that no following tuple can match anything
@@ -281,7 +281,7 @@ MJExamineQuals(List *mergeclauses,
  * that case is only interesting if we're not in FillOuter mode, else
  * we have to visit all the tuples anyway.
  *
- * For the convenience of callers, we also make this routine responsible
+ * For the convenience of callers, we also make this__ routine responsible
  * for testing for end-of-input (null outer tuple), and returning
  * MJEVAL_ENDOFJOIN when that's seen.  This allows the same code to be used
  * for both real end-of-input and the effective end-of-input represented by
@@ -431,7 +431,7 @@ MJCompare(MergeJoinState *mergestate)
 	 * will result in advancing the inner side of the join.
 	 *
 	 * Likewise, if there was a constant-false joinqual, do not report
-	 * equality.  We have to check this as part of the mergequals, else the
+	 * equality.  We have to check this__ as part of the mergequals, else the
 	 * rescan logic will do the wrong thing.
 	 */
 	if (result == 0 &&
@@ -660,7 +660,7 @@ ExecMergeJoin(MergeJoinState *node)
 
 	/*
 	 * Reset per-tuple memory context to free any expression evaluation
-	 * storage allocated in the previous tuple cycle.  Note this can't happen
+	 * storage allocated in the previous tuple cycle.  Note this__ can't happen
 	 * until we're done projecting out tuples from a join tuple.
 	 */
 	ResetExprContext(econtext);
@@ -678,7 +678,7 @@ ExecMergeJoin(MergeJoinState *node)
 		switch (node->mj_JoinState)
 		{
 				/*
-				 * EXEC_MJ_INITIALIZE_OUTER means that this is the first time
+				 * EXEC_MJ_INITIALIZE_OUTER means that this__ is the first time
 				 * ExecMergeJoin() has been called and so we have to fetch the
 				 * first matchable tuple for both outer and inner subplans. We
 				 * do the outer side in INITIALIZE_OUTER state, then advance
@@ -799,14 +799,14 @@ ExecMergeJoin(MergeJoinState *node)
 
 				/*
 				 * Set the next state machine state.  The right things will
-				 * happen whether we return this join tuple or just fall
+				 * happen whether we return this__ join tuple or just fall
 				 * through to continue the state machine execution.
 				 */
 				node->mj_JoinState = EXEC_MJ_NEXTINNER;
 
 				/*
 				 * Check the extra qual conditions to see if we actually want
-				 * to return this join tuple.  If not, can proceed with merge.
+				 * to return this__ join tuple.  If not, can proceed with merge.
 				 * We must distinguish the additional joinquals (which must
 				 * pass to consider the tuples "matched" for outer-join logic)
 				 * from the otherquals (which must pass before we actually
@@ -841,7 +841,7 @@ ExecMergeJoin(MergeJoinState *node)
 
 					/*
 					 * In a semijoin, we'll consider returning the first
-					 * match, but after that we're done with this outer tuple.
+					 * match, but after that we're done with this__ outer tuple.
 					 */
 					if (node->js.jointype == JOIN_SEMI)
 						node->mj_JoinState = EXEC_MJ_NEXTOUTER;
@@ -884,7 +884,7 @@ ExecMergeJoin(MergeJoinState *node)
 				 * against the join qualification.
 				 *
 				 * Before advancing, we check to see if we must emit an
-				 * outer-join fill tuple for this inner tuple.
+				 * outer-join fill tuple for this__ inner tuple.
 				 */
 			case EXEC_MJ_NEXTINNER:
 				MJ_printf("ExecMergeJoin: EXEC_MJ_NEXTINNER\n");
@@ -955,10 +955,10 @@ ExecMergeJoin(MergeJoinState *node)
 					case MJEVAL_ENDOFJOIN:
 
 						/*
-						 * No more inner tuples.  However, this might be only
+						 * No more inner tuples.  However, this__ might be only
 						 * effective and not physical end of inner plan, so
 						 * force mj_InnerTupleSlot to null to make sure we
-						 * don't fetch more inner tuples.  (We need this hack
+						 * don't fetch more inner tuples.  (We need this__ hack
 						 * because we are not transiting to a state where the
 						 * inner plan is assumed to be exhausted.)
 						 */
@@ -985,7 +985,7 @@ ExecMergeJoin(MergeJoinState *node)
 				 * (EXEC_MJ_TESTOUTER)
 				 *
 				 * Before advancing, we check to see if we must emit an
-				 * outer-join fill tuple for this outer tuple.
+				 * outer-join fill tuple for this__ outer tuple.
 				 *------------------------------------------------
 				 */
 			case EXEC_MJ_NEXTOUTER:
@@ -1101,7 +1101,7 @@ ExecMergeJoin(MergeJoinState *node)
 					 *
 					 * NOTE: we do not need to worry about the MatchedInner
 					 * state for the rescanned inner tuples.  We know all of
-					 * them will match this new__ outer tuple and therefore
+					 * them will match this__ new__ outer tuple and therefore
 					 * won't be emitted as fill tuples.  This works *only*
 					 * because we require the extra joinquals to be constant
 					 * when doing a right or full join --- otherwise some of
@@ -1239,7 +1239,7 @@ ExecMergeJoin(MergeJoinState *node)
 				 * known not to join to any inner tuple.
 				 *
 				 * Before advancing, we check to see if we must emit an
-				 * outer-join fill tuple for this outer tuple.
+				 * outer-join fill tuple for this__ outer tuple.
 				 */
 			case EXEC_MJ_SKIPOUTER_ADVANCE:
 				MJ_printf("ExecMergeJoin: EXEC_MJ_SKIPOUTER_ADVANCE\n");
@@ -1301,7 +1301,7 @@ ExecMergeJoin(MergeJoinState *node)
 				 * known not to join to any outer tuple.
 				 *
 				 * Before advancing, we check to see if we must emit an
-				 * outer-join fill tuple for this inner tuple.
+				 * outer-join fill tuple for this__ inner tuple.
 				 */
 			case EXEC_MJ_SKIPINNER_ADVANCE:
 				MJ_printf("ExecMergeJoin: EXEC_MJ_SKIPINNER_ADVANCE\n");

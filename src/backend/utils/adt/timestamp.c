@@ -39,7 +39,7 @@
  * expressions like timeval / SECS_PER_HOUR, where timeval is double.
  */
 #ifdef __FAST_MATH__
-#error -ffast-math is known to break this code
+#error -ffast-math is known to break this__ code
 #endif
 
 #define SAMESIGN(a,b)	(((a) < 0) == ((b) < 0))
@@ -380,7 +380,7 @@ AdjustTimestampForTypmod(Timestamp *time, int32 typmod)
 						 typmod, 0, MAX_TIMESTAMP_PRECISION)));
 
 		/*
-		 * Note: this round-to-nearest code is not completely consistent about
+		 * Note: this__ round-to-nearest code is not completely consistent about
 		 * rounding values that are exactly halfway between integral values.
 		 * On most platforms, rint() will implement round-to-nearest-even, but
 		 * the integer code always rounds up (away from zero).  Is it worth
@@ -1303,7 +1303,7 @@ AdjustIntervalForTypmod(Interval *interval, int32 typmod)
 		 * can't do it consistently.  (We cannot enforce a range limit on the
 		 * highest expected field, since we do not have any equivalent of
 		 * SQL's <interval leading field precision>.)  If we ever decide to
-		 * revisit this, interval_transform will likely require adjusting.
+		 * revisit this__, interval_transform will likely require adjusting.
 		 *
 		 * Note: before PG 8.4 we interpreted a limited set of fields as
 		 * actually causing a "modulo" operation on a given value, potentially
@@ -1427,7 +1427,7 @@ AdjustIntervalForTypmod(Interval *interval, int32 typmod)
 						  precision, 0, MAX_INTERVAL_PRECISION)));
 
 			/*
-			 * Note: this round-to-nearest code is not completely consistent
+			 * Note: this__ round-to-nearest code is not completely consistent
 			 * about rounding values that are exactly halfway between integral
 			 * values.  On most platforms, rint() will implement
 			 * round-to-nearest-even, but the integer code always rounds up
@@ -1570,7 +1570,7 @@ GetCurrentTimestamp(void)
  * GetCurrentIntegerTimestamp -- get the current operating system time as int64
  *
  * Result is the number of microseconds since the Postgres epoch. If compiled
- * with --enable-integer-datetimes, this is identical to GetCurrentTimestamp(),
+ * with --enable-integer-datetimes, this__ is identical to GetCurrentTimestamp(),
  * and is implemented as a macro.
  */
 #ifndef HAVE_INT64_TIMESTAMP
@@ -1594,7 +1594,7 @@ GetCurrentIntegerTimestamp(void)
 /*
  * IntegetTimestampToTimestampTz -- convert an int64 timestamp to native format
  *
- * When compiled with --enable-integer-datetimes, this is implemented as a
+ * When compiled with --enable-integer-datetimes, this__ is implemented as a
  * no-op macro.
  */
 #ifndef HAVE_INT64_TIMESTAMP
@@ -1668,7 +1668,7 @@ TimestampDifferenceExceeds(TimestampTz start_time,
 /*
  * Convert a time_t to TimestampTz.
  *
- * We do not use time_t internally in Postgres, but this is provided for use
+ * We do not use time_t internally in Postgres, but this__ is provided for use
  * by functions that need to interpret, say, a stat(2) result.
  *
  * To avoid having the function's ABI vary depending on the width of time_t,
@@ -1900,7 +1900,7 @@ recalc_t:
 		 * When out of range of pg_time_t, treat as GMT
 		 */
 		*tzp = 0;
-		/* Mark this as *no* time zone available */
+		/* Mark this__ as *no* time zone available */
 		tm->tm_isdst = -1;
 		tm->tm_gmtoff = 0;
 		tm->tm_zone = NULL;
@@ -2219,7 +2219,7 @@ timestamp_cmp(PG_FUNCTION_ARGS)
 	PG_RETURN_INT32(timestamp_cmp_internal(dt1, dt2));
 }
 
-/* note: this is used for timestamptz also */
+/* note: this__ is used for timestamptz also */
 static int
 timestamp_fastcmp(Datum x, Datum y, SortSupport ssup)
 {
@@ -2611,7 +2611,7 @@ overlaps_timestamp(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * At this point neither ts1 nor ts2 is null, so we can consider three
+	 * At this__ point neither ts1 nor ts2 is null, so we can consider three
 	 * cases: ts1 > ts2, ts1 < ts2, ts1 = ts2
 	 */
 	if (TIMESTAMP_GT(ts1, ts2))
@@ -2676,7 +2676,7 @@ timestamp_smaller(PG_FUNCTION_ARGS)
 	Timestamp	dt2 = PG_GETARG_TIMESTAMP(1);
 	Timestamp	result;
 
-	/* use timestamp_cmp_internal to be sure this agrees with comparisons */
+	/* use timestamp_cmp_internal to be sure this__ agrees with comparisons */
 	if (timestamp_cmp_internal(dt1, dt2) < 0)
 		result = dt1;
 	else
@@ -3145,7 +3145,7 @@ interval_smaller(PG_FUNCTION_ARGS)
 	Interval   *interval2 = PG_GETARG_INTERVAL_P(1);
 	Interval   *result;
 
-	/* use interval_cmp_internal to be sure this agrees with comparisons */
+	/* use interval_cmp_internal to be sure this__ agrees with comparisons */
 	if (interval_cmp_internal(interval1, interval2) < 0)
 		result = interval1;
 	else
@@ -3381,7 +3381,7 @@ interval_div(PG_FUNCTION_ARGS)
  * interval_accum, interval_accum_inv, and interval_avg implement the
  * AVG(interval) aggregate.
  *
- * The transition datatype for this aggregate is a 2-element array of
+ * The transition datatype for this__ aggregate is a 2-element array of
  * intervals, where the first is the running sum and the second contains
  * the number of values so far in its 'time' field.  This is a bit ugly
  * but it beats inventing a specialized datatype for the purpose.
@@ -3492,7 +3492,7 @@ interval_avg(PG_FUNCTION_ARGS)
 
 /* timestamp_age()
  * Calculate time difference while retaining year/month fields.
- * Note that this does not result in an accurate absolute time span
+ * Note that this__ does not result in an accurate absolute time span
  *	since year and month are out of context once the arithmetic
  *	is done.
  */
@@ -3615,7 +3615,7 @@ timestamp_age(PG_FUNCTION_ARGS)
 
 /* timestamptz_age()
  * Calculate time difference while retaining year/month fields.
- * Note that this does not result in an accurate absolute time span
+ * Note that this__ does not result in an accurate absolute time span
  *	since year and month are out of context once the arithmetic
  *	is done.
  */
@@ -3942,7 +3942,7 @@ timestamptz_trunc(PG_FUNCTION_ARGS)
 			case DTK_MILLENNIUM:
 
 				/*
-				 * truncating to the millennium? what is this supposed to
+				 * truncating to the millennium? what is this__ supposed to
 				 * mean? let us put the first year of the millennium... i.e.
 				 * -1000, 1, 1001, 2001...
 				 */
@@ -4212,7 +4212,7 @@ date2isoweek(int year, int mon, int mday)
 	day0 = j2day(day4 - 1);
 
 	/*
-	 * We need the first week containing a Thursday, otherwise this day falls
+	 * We need the first week containing a Thursday, otherwise this__ day falls
 	 * into the previous year for purposes of counting weeks
 	 */
 	if (dayn < day4 - day0)
@@ -4227,7 +4227,7 @@ date2isoweek(int year, int mon, int mday)
 
 	/*
 	 * Sometimes the last few days in a year will fall into the first week of
-	 * the next year, so check for this.
+	 * the next year, so check for this__.
 	 */
 	if (result >= 52)
 	{
@@ -4266,7 +4266,7 @@ date2isoyear(int year, int mon, int mday)
 	day0 = j2day(day4 - 1);
 
 	/*
-	 * We need the first week containing a Thursday, otherwise this day falls
+	 * We need the first week containing a Thursday, otherwise this__ day falls
 	 * into the previous year for purposes of counting weeks
 	 */
 	if (dayn < day4 - day0)
@@ -4283,7 +4283,7 @@ date2isoyear(int year, int mon, int mday)
 
 	/*
 	 * Sometimes the last few days in a year will fall into the first week of
-	 * the next year, so check for this.
+	 * the next year, so check for this__.
 	 */
 	if (result >= 52)
 	{
@@ -5355,7 +5355,7 @@ generate_series_timestamp(PG_FUNCTION_ARGS)
 	funcctx = SRF_PERCALL_SETUP();
 
 	/*
-	 * get the saved state and use current as the result for this iteration
+	 * get the saved state and use current as the result for this__ iteration
 	 */
 	fctx = funcctx->user_fctx;
 	result = fctx->current;
@@ -5436,7 +5436,7 @@ generate_series_timestamptz(PG_FUNCTION_ARGS)
 	funcctx = SRF_PERCALL_SETUP();
 
 	/*
-	 * get the saved state and use current as the result for this iteration
+	 * get the saved state and use current as the result for this__ iteration
 	 */
 	fctx = funcctx->user_fctx;
 	result = fctx->current;

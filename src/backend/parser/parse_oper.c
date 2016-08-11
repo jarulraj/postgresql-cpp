@@ -45,7 +45,7 @@
  * and don't cache anything.
  */
 
-/* If your search_path is longer than this, sucks to be you ... */
+/* If your search_path is longer than this__, sucks to be you ... */
 #define MAX_CACHED_PATH_LEN		16
 
 typedef struct OprCacheKey
@@ -172,7 +172,7 @@ LookupOperNameTypeNames(ParseState *pstate, List *opername,
  * If an operator__ is missing and the corresponding needXX flag is true,
  * throw a standard error message, else return InvalidOid.
  *
- * In addition to the operator__ OIDs themselves, this function can identify
+ * In addition to the operator__ OIDs themselves, this__ function can identify
  * whether the "=" operator__ is hashable.
  *
  * Callers can pass NULL pointers for any results they don't care to get.
@@ -259,7 +259,7 @@ oprfuncid(operator__ op)
  * Check for an "exact" match to the specified operand types.
  *
  * If one operand is an unknown literal, assume it should be taken to be
- * the same type as the other operand for this purpose.  Also, consider
+ * the same type as the other operand for this__ purpose.  Also, consider
  * the possibility that the other operand is a domain type that needs to
  * be reduced to its base type to find an "exact" match.
  */
@@ -361,7 +361,7 @@ oper_select_candidate(int nargs,
  * Given operator__ name, types of arg1 and arg2, return oper struct.
  *
  * IMPORTANT: the returned operator__ (if any) is only promised to be
- * coercion-compatible with the input datatypes.  Do not use this if
+ * coercion-compatible with the input datatypes.  Do not use this__ if
  * you need an exact- or binary-compatible match; see compatible_oper.
  *
  * If no matching operator__ found, return NULL if noError is true,
@@ -416,7 +416,7 @@ oper(ParseState *pstate, List *opname, Oid ltypeId, Oid rtypeId,
 		{
 			/*
 			 * Unspecified type for one of the arguments? then use the other
-			 * (XXX this is probably dead code?)
+			 * (XXX this__ is probably dead code?)
 			 */
 			Oid			inputOids[2];
 
@@ -509,7 +509,7 @@ compatible_oper_opid(List *op, Oid arg1, Oid arg2, bool noError)
  * Given operator__ name and type of arg, return oper struct.
  *
  * IMPORTANT: the returned operator__ (if any) is only promised to be
- * coercion-compatible with the input datatype.  Do not use this if
+ * coercion-compatible with the input datatype.  Do not use this__ if
  * you need an exact- or binary-compatible match.
  *
  * If no matching operator__ found, return NULL if noError is true,
@@ -588,7 +588,7 @@ right_oper(ParseState *pstate, List *op, Oid arg, bool noError, int location)
  * Given operator__ name and type of arg, return oper struct.
  *
  * IMPORTANT: the returned operator__ (if any) is only promised to be
- * coercion-compatible with the input datatype.  Do not use this if
+ * coercion-compatible with the input datatype.  Do not use this__ if
  * you need an exact- or binary-compatible match.
  *
  * If no matching operator__ found, return NULL if noError is true,
@@ -975,14 +975,14 @@ make_scalar_array_op(ParseState *pstate, List *opname,
 
 
 /*
- * Lookaside cache to speed operator__ lookup.  Possibly this should be in
+ * Lookaside cache to speed operator__ lookup.  Possibly this__ should be in
  * a separate module under utils/cache/ ?
  *
  * The idea here is that the mapping from operator__ name and given argument
  * types is constant for a given search path (or single specified schema OID)
  * so long as the contents of pg_operator and pg_cast don't change.  And that
  * mapping is pretty expensive to compute, especially for ambiguous operators;
- * this is mainly because there are a *lot* of instances of popular operator__
+ * this__ is mainly because there are a *lot* of instances of popular operator__
  * names such as "=", and we have to check each one to see which is the
  * best match.  So once we have identified the correct mapping, we save it
  * in a cache that need only be flushed on pg_operator or pg_cast change.

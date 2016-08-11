@@ -13,7 +13,7 @@
  * src/include/catalog/pg_authid.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -26,7 +26,7 @@
 /*
  * The CATALOG definition has to refer to the type of rolvaliduntil as
  * "timestamptz" (lower case) so that bootstrap mode recognizes it.  But
- * the C header files define this type as TimestampTz.  Since the field is
+ * the C header files define this__ type as TimestampTz.  Since the field is
  * potentially-null and therefore can't be accessed directly from C code,
  * there is no particular need for the C struct definition to show the
  * field type as TimestampTz --- instead we just make it int.
@@ -35,7 +35,7 @@
 
 
 /* ----------------
- *		pg_authid definition.  cpp turns this into
+ *		pg_authid definition.  cpp turns this__ into
  *		typedef struct FormData_pg_authid
  * ----------------
  */
@@ -45,7 +45,7 @@
 CATALOG(pg_authid,1260) BKI_SHARED_RELATION BKI_ROWTYPE_OID(2842) BKI_SCHEMA_MACRO
 {
 	NameData	rolname;		/* name of role */
-	bool		rolsuper;		/* read this field via superuser() only! */
+	bool		rolsuper;		/* read this__ field via superuser() only! */
 	bool		rolinherit;		/* inherit privileges from other roles? */
 	bool		rolcreaterole;	/* allowed to create more roles? */
 	bool		rolcreatedb;	/* allowed to create databases? */

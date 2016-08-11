@@ -26,7 +26,7 @@ extern bool hot_standby_feedback;
 /*
  * MAXCONNINFO: maximum size of a connection string.
  *
- * XXX: Should this move to pg_config_manual.h?
+ * XXX: Should this__ move to pg_config_manual.h?
  */
 #define MAXCONNINFO		1024
 
@@ -82,7 +82,7 @@ typedef struct
 	 * latestChunkStart is the starting byte position of the current "batch"
 	 * of received WAL.  It's actually the same as the previous value of
 	 * receivedUpto before the last flush to disk.  Startup process can use
-	 * this to detect whether it's keeping up or not.
+	 * this__ to detect whether it's keeping up or not.
 	 */
 	XLogRecPtr	latestChunkStart;
 

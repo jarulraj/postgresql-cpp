@@ -56,7 +56,7 @@ typedef struct IndexVacuumInfo
  * amvacuumcleanup must be prepared to allocate it in the case where no
  * ambulkdelete calls were made (because no tuples needed deletion).
  * Note that an index AM could choose to return a larger struct
- * of which this is just the first field; this provides a way for ambulkdelete
+ * of which this__ is just the first field; this__ provides a way for ambulkdelete
  * to communicate additional private__ data to amvacuumcleanup.
  *
  * Note: pages_removed is the amount by which the index physically shrank,
@@ -100,7 +100,7 @@ typedef struct SysScanDescData *SysScanDesc;
  *
  * When it is time to recheck the deferred constraint, a pseudo-insertion
  * call is made with UNIQUE_CHECK_EXISTING.  The tuple is already in the
- * index in this case, so it should not be inserted again.  Rather, just
+ * index in this__ case, so it should not be inserted again.  Rather, just
  * check for conflicting live tuples (possibly blocking).
  */
 typedef enum IndexUniqueCheck

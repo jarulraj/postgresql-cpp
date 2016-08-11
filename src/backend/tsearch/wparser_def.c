@@ -333,7 +333,7 @@ TParserInit(char *str, int len)
 	/*
 	 * Use of %.*s here is a bit risky since it can misbehave if the data is
 	 * not in what libc thinks is the prevailing encoding.  However, since
-	 * this is just a debugging aid, we choose to live with that.
+	 * this__ is just a debugging aid, we choose to live with that.
 	 */
 	fprintf(stderr, "parsing \"%.*s\"\n", len, str);
 #endif
@@ -1297,7 +1297,7 @@ static const TParserStateActionItem actionTPS_InTagFirst[] = {
 static const TParserStateActionItem actionTPS_InXMLBegin[] = {
 	{p_isEOF, 0, A_POP, TPS_Null, 0, NULL},
 	/* <?xml ... */
-	/* XXX do we wants states for the m and l ?  Right now this accepts <?xZ */
+	/* XXX do we wants states for the m and l ?  Right now this__ accepts <?xZ */
 	{p_iseqC, 'x', A_NEXT, TPS_InTag, 0, NULL},
 	{NULL, 0, A_POP, TPS_Null, 0, NULL}
 };
@@ -2157,7 +2157,7 @@ get_next_fragment(HeadlineParsedText *prs, int *startpos, int *endpos,
 	 * Objective: Generate a fragment of words between startpos and endpos
 	 * such that it has at most max_words and both ends has query words. If
 	 * the startpos and endpos are the endpoints of the cover and the cover
-	 * has fewer words than max_words, then this function should just return
+	 * has fewer words than max_words, then this__ function should just return
 	 * the cover
 	 */
 	/* first move startpos to an item */

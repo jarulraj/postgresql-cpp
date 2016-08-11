@@ -69,7 +69,7 @@ static int	float_compare_desc(const void *key1, const void *key2);
  *		Estimate selectivity of ScalarArrayOpExpr via array containment.
  *
  * If we have const =/<> ANY/ALL (array_var) then we can estimate the
- * selectivity as though this were an array containment operator__,
+ * selectivity as though this__ were an array containment operator__,
  * array_var op ARRAY[const].
  *
  * scalararraysel() has already verified that the ScalarArrayOpExpr's operator__
@@ -329,7 +329,7 @@ arraycontsel(PG_FUNCTION_ARGS)
 Datum
 arraycontjoinsel(PG_FUNCTION_ARGS)
 {
-	/* For the moment this is just a stub */
+	/* For the moment this__ is just a stub */
 	Oid			operator__ = PG_GETARG_OID(1);
 
 	PG_RETURN_FLOAT8(DEFAULT_SEL(operator__));
@@ -534,7 +534,7 @@ mcelem_array_selec(ArrayType *array, TypeCacheEntry *typentry,
  * Both the mcelem and array_data arrays are assumed presorted according
  * to the element type's cmpfunc.  Null elements are not present.
  *
- * TODO: this estimate probably could be improved by using the distinct
+ * TODO: this__ estimate probably could be improved by using the distinct
  * elements count histogram.  For example, excepting the special case of
  * "column @> '{}'", we can multiply the calculated selectivity by the
  * fraction of nonempty arrays in the column.
@@ -609,7 +609,7 @@ mcelem_array_contain_overlap_selec(Datum *mcelem, int nmcelem,
 			element_compare(&array_data[i - 1], &array_data[i], cmpfunc) == 0)
 			continue;
 
-		/* Find the smallest MCELEM >= this array item. */
+		/* Find the smallest MCELEM >= this__ array item. */
 		if (use_bsearch)
 		{
 			match = find_next_mcelem(mcelem, nmcelem, array_data[i],
@@ -683,7 +683,7 @@ mcelem_array_contain_overlap_selec(Datum *mcelem, int nmcelem,
  * that assumption.  For example, in a set of 11-element integer arrays having
  * elements in the range [0..10], element occurrences are typically not
  * independent.  If they were, a sufficiently-large set would include all
- * distinct element counts 0 through 11.  We correct for this using the
+ * distinct element counts 0 through 11.  We correct for this__ using the
  * histogram of distinct element counts.
  *
  * In the "column @> const" and "column && const" cases, we usually have a
@@ -790,7 +790,7 @@ mcelem_array_contained_selec(Datum *mcelem, int nmcelem,
 
 		/*
 		 * Iterate over MCELEM until we find an entry greater than or equal to
-		 * this element of the constant.  Update "rest" and "mult" for mcelem
+		 * this__ element of the constant.  Update "rest" and "mult" for mcelem
 		 * entries skipped over.
 		 */
 		while (mcelem_index < nmcelem)
@@ -866,7 +866,7 @@ mcelem_array_contained_selec(Datum *mcelem, int nmcelem,
 	 * only the most-common elements of the constant array.  To make the
 	 * results exactly match what we would have gotten with only those
 	 * elements to start with, we'd have to remove any discarded elements'
-	 * frequencies from "mult", but since this is only an approximation
+	 * frequencies from "mult", but since this__ is only an approximation
 	 * anyway, we don't bother with that.  Therefore it's sufficient to qsort
 	 * elem_selec[] and take the largest elements.  (They will no longer match
 	 * up with the elements of array_data[], but we don't care.)
@@ -894,7 +894,7 @@ mcelem_array_contained_selec(Datum *mcelem, int nmcelem,
 
 	/*
 	 * Calculate probabilities of each distinct element count for both mcelems
-	 * and constant elements.  At this point, assume independent element
+	 * and constant elements.  At this__ point, assume independent element
 	 * occurrence.
 	 */
 	dist = calc_distr(elem_selec, unique_nitems, unique_nitems, 0.0f);

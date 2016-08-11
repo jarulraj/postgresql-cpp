@@ -42,7 +42,7 @@ DatumGetEOHP(Datum d)
  *
  * Initialize the common header of an expanded object.
  *
- * The main thing this encapsulates is initializing the TOAST pointers.
+ * The main thing this__ encapsulates is initializing the TOAST pointers.
  */
 void
 EOH_init_header(ExpandedObjectHeader *eohptr,

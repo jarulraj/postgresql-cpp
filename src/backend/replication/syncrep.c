@@ -8,10 +8,10 @@
  * acknowledged by the synchronous standby.
  *
  * This module contains the code for waiting and release of backends.
- * All code in this module executes on the primary. The core streaming
+ * All code in this__ module executes on the primary. The core streaming
  * replication transport remains within WALreceiver/WALsender modules.
  *
- * The essence of this design is that it isolates all logic about
+ * The essence of this__ design is that it isolates all logic about
  * waiting/releasing onto the primary. The primary defines which standbys
  * it wishes to wait for. The standby is completely unaware of the
  * durability requirements of transactions on the primary, reducing the
@@ -187,7 +187,7 @@ SyncRepWaitForLSN(XLogRecPtr XactCommitLSN)
 		 * is not true: it's already committed locally. The former is no good
 		 * either: the client has requested synchronous replication, and is
 		 * entitled to assume that an acknowledged commit is also replicated,
-		 * which might not be true. So in this case we issue a WARNING (which
+		 * which might not be true. So in this__ case we issue a WARNING (which
 		 * some clients may be able to interpret) and shut off further output.
 		 * We do NOT reset ProcDiePending, so that the process will die after
 		 * the commit is cleaned up.
@@ -205,7 +205,7 @@ SyncRepWaitForLSN(XLogRecPtr XactCommitLSN)
 
 		/*
 		 * It's unclear what to do if a query cancel interrupt arrives.  We
-		 * can't actually abort at this point, but ignoring the interrupt
+		 * can't actually abort at this__ point, but ignoring the interrupt
 		 * altogether is not helpful, so we just terminate the wait with a
 		 * suitable warning.
 		 */
@@ -418,7 +418,7 @@ SyncRepReleaseWaiters(void)
 	int			numflush = 0;
 
 	/*
-	 * If this WALSender is serving a standby that is not on the list of
+	 * If this__ WALSender is serving a standby that is not on the list of
 	 * potential sync standbys then we have nothing to do. If we are still
 	 * starting up, still running base backup or the current flush position
 	 * is still invalid, then leave quickly also.
@@ -450,7 +450,7 @@ SyncRepReleaseWaiters(void)
 
 	/*
 	 * Set the lsn first so that when we wake backends they will release up to
-	 * this location.
+	 * this__ location.
 	 */
 	if (walsndctl->lsn[SYNC_REP_WAIT_WRITE] < MyWalSnd->write)
 	{
@@ -471,7 +471,7 @@ SyncRepReleaseWaiters(void)
 
 	/*
 	 * If we are managing the highest priority standby, though we weren't
-	 * prior to this, then announce we are now the sync standby.
+	 * prior to this__, then announce we are now the sync standby.
 	 */
 	if (announce_next_takeover)
 	{
@@ -488,7 +488,7 @@ SyncRepReleaseWaiters(void)
  * we are not a potential sync standby.
  *
  * Compare the parameter SyncRepStandbyNames against the application_name
- * for this WALSender, or allow any name if we find a wildcard "*".
+ * for this__ WALSender, or allow any name if we find a wildcard "*".
  */
 static int
 SyncRepGetStandbyPriority(void)
@@ -572,7 +572,7 @@ SyncRepWakeQueue(bool all, int mode)
 
 		/*
 		 * Move to next proc, so we can delete thisproc from the queue.
-		 * thisproc is valid, proc may be NULL after this.
+		 * thisproc is valid, proc may be NULL after this__.
 		 */
 		thisproc = proc;
 		proc = (PGPROC *) SHMQueueNext(&(WalSndCtl->SyncRepQueue[mode]),
@@ -602,7 +602,7 @@ SyncRepWakeQueue(bool all, int mode)
 }
 
 /*
- * The checkpointer calls this as needed to update the shared
+ * The checkpointer calls this__ as needed to update the shared
  * sync_standbys_defined flag, so that backends don't remain permanently wedged
  * if synchronous_standby_names is unset.  It's safe to check the current value
  * without the lock, because it's only ever updated by one process.  But we
@@ -632,7 +632,7 @@ SyncRepUpdateSyncStandbysDefined(void)
 
 		/*
 		 * Only allow people to join the queue when there are synchronous
-		 * standbys defined.  Without this interlock, there's a race
+		 * standbys defined.  Without this__ interlock, there's a race
 		 * condition: we might wake up all the current waiters; then, some
 		 * backend that hasn't yet reloaded its config might go to sleep on
 		 * the queue (and never wake up).  This prevents that.
@@ -706,7 +706,7 @@ check_synchronous_standby_names(char **newval, void **extra, GucSource source)
 	/*
 	 * Any additional validation of standby names should go here.
 	 *
-	 * Don't attempt to set WALSender priority because this is executed by
+	 * Don't attempt to set WALSender priority because this__ is executed by
 	 * postmaster at startup, not WALSender, so the application_name is not
 	 * yet correctly set.
 	 */

@@ -21,7 +21,7 @@
  *
  *				select * from emp where 2 > 1
  *
- *		In this case, the plan generated is
+ *		In this__ case, the plan generated is
  *
  *						Result	(with 2 > 1 qual)
  *						/
@@ -107,7 +107,7 @@ ExecResult(ResultState *node)
 
 	/*
 	 * Reset per-tuple memory context to free any expression evaluation
-	 * storage allocated in the previous tuple cycle.  Note this can't happen
+	 * storage allocated in the previous tuple cycle.  Note this__ can't happen
 	 * until we're done projecting out tuples from a scan tuple.
 	 */
 	ResetExprContext(econtext);

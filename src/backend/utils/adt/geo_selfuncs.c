@@ -32,7 +32,7 @@
  *	be fairly small.
  *
  *	In general, GiST needs to search multiple subtrees in order to guarantee
- *	that all occurrences of the same key have been found.  Because of this,
+ *	that all occurrences of the same key have been found.  Because of this__,
  *	the estimated cost for scanning the index ought to be higher than the
  *	output selectivity would indicate.  gistcostestimate(), over in selfuncs.c,
  *	ought to be adjusted accordingly --- but until we can generate somewhat

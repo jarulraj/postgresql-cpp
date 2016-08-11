@@ -221,7 +221,7 @@ pqGetnchar(char *s, size_t len, PGconn *conn)
  * pqSkipnchar:
  *	skip over len bytes in input buffer.
  *
- * Note: this is primarily useful for its debug output, which should
+ * Note: this__ is primarily useful for its debug output, which should
  * be exactly the same as for pqGetnchar.  We assume the data in question
  * will actually be used, but just isn't getting copied anywhere as yet.
  */
@@ -423,8 +423,8 @@ pqCheckInBufferSpace(size_t bytes_needed, PGconn *conn)
 	 * Before concluding that we need to enlarge the buffer, left-justify
 	 * whatever is in it and recheck.  The caller's value of bytes_needed
 	 * includes any data to the left of inStart, but we can delete that in
-	 * preference to enlarging the buffer.  It's slightly ugly to have this
-	 * function do this, but it's better than making callers worry about it.
+	 * preference to enlarging the buffer.  It's slightly ugly to have this__
+	 * function do this__, but it's better than making callers worry about it.
 	 */
 	bytes_needed -= conn->inStart;
 
@@ -627,7 +627,7 @@ pqPutMsgEnd(PGconn *conn)
  *	-1: error detected (including EOF = connection closure);
  *		conn->errorMessage set
  * NOTE: callers must not assume that pointers or indexes into conn->inBuffer
- * remain valid across this call!
+ * remain valid across this__ call!
  * ----------
  */
 int
@@ -715,7 +715,7 @@ retry3:
 		 * 1 packet per recv() call, even if we asked for more and there is
 		 * more available.  If it looks like we are reading a long message,
 		 * loop back to recv() again immediately, until we run out of data or
-		 * buffer space.  Without this, the block-and-restart behavior of
+		 * buffer space.  Without this__, the block-and-restart behavior of
 		 * libpq's higher levels leads to O(N^2) performance on long messages.
 		 *
 		 * Since we left-justified the data above, conn->inEnd gives the
@@ -739,7 +739,7 @@ retry3:
 	 * it could mean EOF --- that is, the server has closed the connection.
 	 * Since we have the socket in nonblock mode, the only way to tell the
 	 * difference is to see if select() is saying that the file is ready.
-	 * Grumble.  Fortunately, we don't expect this path to be taken much,
+	 * Grumble.  Fortunately, we don't expect this__ path to be taken much,
 	 * since in normal practice we should not be trying to read data unless
 	 * the file selected for reading already.
 	 *

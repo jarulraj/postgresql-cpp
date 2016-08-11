@@ -5,7 +5,7 @@
  *
  * NOTE: every catalog cache must have a corresponding unique index on
  * the system table that it caches --- ie, the index must match the keys
- * used to do lookups in this cache.  All cache fetches are done with
+ * used to do lookups in this__ cache.  All cache fetches are done with
  * indexscans (under normal conditions).  The index should be unique to
  * guarantee that there can only be one matching row for a key combination.
  *
@@ -43,8 +43,8 @@ typedef struct catcache
 	Oid			cc_indexoid;	/* OID of index matching cache keys */
 	bool		cc_relisshared; /* is relation shared across databases? */
 	TupleDesc	cc_tupdesc;		/* tuple descriptor (copied from reldesc) */
-	int			cc_ntup;		/* # of tuples currently in this cache */
-	int			cc_nbuckets;	/* # of hash buckets in this cache */
+	int			cc_ntup;		/* # of tuples currently in this__ cache */
+	int			cc_nbuckets;	/* # of hash buckets in this__ cache */
 	int			cc_nkeys;		/* # of keys (1..CATCACHE_MAXKEYS) */
 	int			cc_key[CATCACHE_MAXKEYS];		/* AttrNumber of each key */
 	PGFunction	cc_hashfunc[CATCACHE_MAXKEYS];	/* hash function for each key */
@@ -53,7 +53,7 @@ typedef struct catcache
 	bool		cc_isname[CATCACHE_MAXKEYS];	/* flag "name" key columns */
 	dlist_head	cc_lists;		/* list of CatCList structs */
 #ifdef CATCACHE_STATS
-	long		cc_searches;	/* total # searches against this cache */
+	long		cc_searches;	/* total # searches against this__ cache */
 	long		cc_hits;		/* # of matches against existing entry */
 	long		cc_neg_hits;	/* # of matches against negative entry */
 	long		cc_newloads;	/* # of successful loads of new__ entry */
@@ -86,7 +86,7 @@ typedef struct catctup
 	/*
 	 * The tuple may also be a member of at most one CatCList.  (If a single
 	 * catcache is list-searched with varying numbers of keys, we may have to
-	 * make multiple entries for the same tuple because of this restriction.
+	 * make multiple entries for the same tuple because of this__ restriction.
 	 * Currently, that's not expected to be common, so we accept the potential
 	 * inefficiency.)
 	 */
@@ -107,7 +107,7 @@ typedef struct catctup
 	int			refcount;		/* number of active references */
 	bool		dead;			/* dead but not yet removed? */
 	bool		negative;		/* negative cache entry? */
-	uint32		hash_value;		/* hash value for this tuple's keys */
+	uint32		hash_value;		/* hash value for this__ tuple's keys */
 	HeapTupleData tuple;		/* tuple management header */
 } CatCTup;
 
@@ -158,7 +158,7 @@ typedef struct catcacheheader
 } CatCacheHeader;
 
 
-/* this extern duplicates utils/memutils.h... */
+/* this__ extern duplicates utils/memutils.h... */
 extern PGDLLIMPORT MemoryContext CacheMemoryContext;
 
 extern void CreateCacheMemoryContext(void);

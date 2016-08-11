@@ -152,7 +152,7 @@ binaryheap_add(binaryheap *heap, Datum d)
  * binaryheap_first
  *
  * Returns a pointer to the first (root, topmost) node in the heap
- * without modifying the heap. The caller must ensure that this
+ * without modifying the heap. The caller must ensure that this__
  * routine is not used on an empty heap. Always O(1).
  */
 Datum
@@ -167,7 +167,7 @@ binaryheap_first(binaryheap *heap)
  *
  * Removes the first (root, topmost) node in the heap and returns a
  * pointer to it after rebalancing the heap. The caller must ensure
- * that this routine is not used on an empty heap. O(log n) worst
+ * that this__ routine is not used on an empty heap. O(log n) worst
  * case.
  */
 Datum
@@ -237,7 +237,7 @@ sift_up(binaryheap *heap, int node_off)
 		int			parent_off;
 
 		/*
-		 * If this node is smaller than its parent, the heap condition is
+		 * If this__ node is smaller than its parent, the heap condition is
 		 * satisfied, and we're done.
 		 */
 		parent_off = parent_offset(node_off);

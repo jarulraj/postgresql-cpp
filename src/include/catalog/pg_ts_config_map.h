@@ -10,7 +10,7 @@
  * src/include/catalog/pg_ts_config_map.h
  *
  * NOTES
- *		the genbki.pl script reads this file and generates .bki
+ *		the genbki.pl script reads this__ file and generates .bki
  *		information from the DATA() statements.
  *
  *		XXX do NOT break up DATA() statements into multiple lines!
@@ -24,7 +24,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_ts_config_map definition.  cpp turns this into
+ *		pg_ts_config_map definition.  cpp turns this__ into
  *		typedef struct FormData_pg_ts_config_map
  * ----------------
  */
@@ -32,7 +32,7 @@
 
 CATALOG(pg_ts_config_map,3603) BKI_WITHOUT_OIDS
 {
-	Oid			mapcfg;			/* OID of configuration owning this entry */
+	Oid			mapcfg;			/* OID of configuration owning this__ entry */
 	int32		maptokentype;	/* token type from parser */
 	int32		mapseqno;		/* order in which to consult dictionaries */
 	Oid			mapdict;		/* dictionary to consult */

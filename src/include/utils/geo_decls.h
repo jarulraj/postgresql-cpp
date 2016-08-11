@@ -78,7 +78,7 @@ typedef struct
 {
 	int32		vl_len_;		/* varlena header (do not touch directly!) */
 	int32		npts;
-	int32		closed;			/* is this a closed polygon? */
+	int32		closed;			/* is this__ a closed polygon? */
 	int32		dummy;			/* padding to make it double align */
 	Point		p[FLEXIBLE_ARRAY_MEMBER];
 } PATH;

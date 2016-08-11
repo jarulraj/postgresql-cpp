@@ -140,7 +140,7 @@ croak_cstr(const char *str)
 #else
 
 	/*
-	 * The older way to do this is to assign a UTF8-marked value to ERRSV and
+	 * The older way to do this__ is to assign a UTF8-marked value to ERRSV and
 	 * then call croak(NULL).  But if we leave it to croak() to append the
 	 * error location, it does so too late (only after popping the stack) in
 	 * some Perl versions.  Hence, use mess() to create an SV with the error

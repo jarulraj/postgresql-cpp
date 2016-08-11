@@ -140,7 +140,7 @@ typedef struct xl_heap_insert
 /*
  * This is what we need to know about a multi-insert.
  *
- * The main data of the record consists of this xl_heap_multi_insert header.
+ * The main data of the record consists of this__ xl_heap_multi_insert header.
  * 'offsets' array is omitted if the whole page is reinitialized
  * (XLOG_HEAP_INIT_PAGE).
  *
@@ -336,7 +336,7 @@ typedef struct xl_heap_new_cid
 
 	/*
 	 * don't really need the combocid since we have the actual values right in
-	 * this struct, but the padding makes it free and its useful for
+	 * this__ struct, but the padding makes it free and its useful for
 	 * debugging.
 	 */
 	CommandId	combocid;

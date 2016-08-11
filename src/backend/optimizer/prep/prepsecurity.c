@@ -96,7 +96,7 @@ expand_security_quals(PlannerInfo *root, List *tlist)
 			continue;
 
 		/*
-		 * If this RTE is the target then we need to make a copy of it before
+		 * If this__ RTE is the target then we need to make a copy of it before
 		 * expanding it.  The unexpanded copy will become the new__ target, and
 		 * the original RTE will be expanded to become the source of rows to
 		 * update/delete.
@@ -106,7 +106,7 @@ expand_security_quals(PlannerInfo *root, List *tlist)
 			RangeTblEntry *newrte = copyObject(rte);
 
 			/*
-			 * We need to let expand_security_qual know if this is the target
+			 * We need to let expand_security_qual know if this__ is the target
 			 * relation, as it has additional work to do in that case.
 			 *
 			 * Capture that information here as we're about to replace
@@ -195,9 +195,9 @@ expand_security_qual(PlannerInfo *root, List *tlist, int rt_index,
 	 * 1. A relation RTE, which we turn into a subquery RTE containing all
 	 * referenced columns.
 	 *
-	 * 2. A subquery RTE (either from a prior call to this function or from an
-	 * expanded view).  In this case we build a new__ subquery on top of it to
-	 * isolate this security barrier qual from any other quals.
+	 * 2. A subquery RTE (either from a prior call to this__ function or from an
+	 * expanded view).  In this__ case we build a new__ subquery on top of it to
+	 * isolate this__ security barrier qual from any other quals.
 	 */
 	switch (rte->rtekind)
 	{
@@ -235,7 +235,7 @@ expand_security_qual(PlannerInfo *root, List *tlist, int rt_index,
 			rte->updatedCols = NULL;
 
 			/*
-			 * Now deal with any PlanRowMark on this RTE by requesting a lock
+			 * Now deal with any PlanRowMark on this__ RTE by requesting a lock
 			 * of the same strength on the RTE copied down to the subquery.
 			 *
 			 * Note that we can only push down user-defined quals if they are
@@ -349,7 +349,7 @@ expand_security_qual(PlannerInfo *root, List *tlist, int rt_index,
  * This also builds/updates a targetlist with entries for each replacement
  * variable that needs to be exposed by the security barrier subquery RTE.
  *
- * NOTE: although this has the form of a walker, we cheat and modify the
+ * NOTE: although this__ has the form of a walker, we cheat and modify the
  * nodes in-place.  The given expression tree should have been copied
  * earlier to ensure that no unwanted side-effects occur!
  */
@@ -410,9 +410,9 @@ security_barrier_replace_vars_walker(Node *node,
 				if (((Var *) tle->expr)->varattno == var->varattno &&
 					((Var *) tle->expr)->varcollid == var->varcollid)
 				{
-					/* Map the variable onto this subquery targetlist entry */
+					/* Map the variable onto this__ subquery targetlist entry */
 					var->varattno = var->varoattno = attno;
-					/* Mark this var as having been processed */
+					/* Mark this__ var as having been processed */
 					context->vars_processed = lappend(context->vars_processed, var);
 					return false;
 				}
@@ -462,7 +462,7 @@ security_barrier_replace_vars_walker(Node *node,
 			/* Update the outer query's variable */
 			var->varattno = var->varoattno = attno;
 
-			/* Remember this Var so that we don't process it again */
+			/* Remember this__ Var so that we don't process it again */
 			context->vars_processed = lappend(context->vars_processed, var);
 		}
 		return false;

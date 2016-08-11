@@ -10,7 +10,7 @@
  * src/include/catalog/pg_default_acl.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_default_acl definition.  cpp turns this into
+ *		pg_default_acl definition.  cpp turns this__ into
  *		typedef struct FormData_pg_default_acl
  * ----------------
  */
@@ -29,7 +29,7 @@
 
 CATALOG(pg_default_acl,826)
 {
-	Oid			defaclrole;		/* OID of role owning this ACL */
+	Oid			defaclrole;		/* OID of role owning this__ ACL */
 	Oid			defaclnamespace;	/* OID of namespace__, or 0 for all */
 	char		defaclobjtype;	/* see DEFACLOBJ_xxx constants below */
 

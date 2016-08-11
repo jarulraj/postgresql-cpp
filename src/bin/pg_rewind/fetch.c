@@ -4,7 +4,7 @@
  *	  Functions for fetching files from a local or remote data dir
  *
  * This file forms an abstraction of getting files from the "source".
- * There are two implementations of this interface: one for copying files
+ * There are two implementations of this__ interface: one for copying files
  * from a data directory via normal filesystem operations (copy_fetch.c),
  * and another for fetching files from a remote server via a libpq
  * connection (libpq_fetch.c)

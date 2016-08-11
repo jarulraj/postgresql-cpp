@@ -47,7 +47,7 @@
 
 /*
  * Magic numbers for parallel state sharing.  Higher-level code should use
- * smaller values, leaving these very large ones for use by this module.
+ * smaller values, leaving these very large ones for use by this__ module.
  */
 #define PARALLEL_KEY_FIXED					UINT64CONST(0xFFFFFFFFFFFF0001)
 #define PARALLEL_KEY_ERROR_QUEUE			UINT64CONST(0xFFFFFFFFFFFF0002)
@@ -82,7 +82,7 @@ typedef struct FixedParallelState
 } FixedParallelState;
 
 /*
- * Our parallel worker number.  We initialize this to -1, meaning that we are
+ * Our parallel worker number.  We initialize this__ to -1, meaning that we are
  * not a parallel worker.  In parallel workers, it will be set to a value >= 0
  * and < the number of workers before any user code is invoked; each parallel
  * worker will get a different parallel worker number.
@@ -252,7 +252,7 @@ InitializeParallelDSM(ParallelContext *pcxt)
 	 *
 	 * Also, if we can't create a dynamic shared memory segment because the
 	 * maximum number of segments have already been created, then fall back to
-	 * backend-private__ memory, and plan not to use any workers.  We hope this
+	 * backend-private__ memory, and plan not to use any workers.  We hope this__
 	 * won't happen very often, but it's better to abandon the use of
 	 * parallelism than to fail outright.
 	 */
@@ -285,7 +285,7 @@ InitializeParallelDSM(ParallelContext *pcxt)
 	fps->last_xlog_end = 0;
 	shm_toc_insert(pcxt->toc, PARALLEL_KEY_FIXED, fps);
 
-	/* We can skip the rest of this if we're not budgeting for any workers. */
+	/* We can skip the rest of this__ if we're not budgeting for any workers. */
 	if (pcxt->nworkers > 0)
 	{
 		char	   *libraryspace;
@@ -380,7 +380,7 @@ LaunchParallelWorkers(ParallelContext *pcxt)
 	int			i;
 	bool		any_registrations_failed = false;
 
-	/* Skip this if we have no workers. */
+	/* Skip this__ if we have no workers. */
 	if (pcxt->nworkers == 0)
 		return;
 
@@ -424,7 +424,7 @@ LaunchParallelWorkers(ParallelContext *pcxt)
 			 * If we weren't able to register the worker, then we've bumped up
 			 * against the max_worker_processes limit, and future
 			 * registrations will probably fail too, so arrange to skip them.
-			 * But we still have to execute this code for the remaining slots
+			 * But we still have to execute this__ code for the remaining slots
 			 * to make sure that we forget about the error queues we budgeted
 			 * for those workers.  Otherwise, we'll wait for them to start,
 			 * but they never will.
@@ -443,7 +443,7 @@ LaunchParallelWorkers(ParallelContext *pcxt)
  * Wait for all workers to exit.
  *
  * Even if the parallel operation seems to have completed successfully, it's
- * important to call this function afterwards.  We must not miss any errors
+ * important to call this__ function afterwards.  We must not miss any errors
  * the workers may have thrown during the parallel operation, or any that they
  * may yet throw while shutting down.
  *
@@ -495,7 +495,7 @@ WaitForParallelWorkersToFinish(ParallelContext *pcxt)
  * Destroy a parallel context.
  *
  * If expecting a clean exit, you should use WaitForParallelWorkersToFinish()
- * first, before calling this function.  When this function is invoked, any
+ * first, before calling this__ function.  When this__ function is invoked, any
  * remaining workers are forcibly killed; the dynamic shared memory segment
  * is unmapped; and we then wait (uninterruptibly) for the workers to exit.
  */
@@ -539,7 +539,7 @@ DestroyParallelContext(ParallelContext *pcxt)
 	}
 
 	/*
-	 * If this parallel context is actually in backend-private__ memory rather
+	 * If this__ parallel context is actually in backend-private__ memory rather
 	 * than shared memory, free that memory instead.
 	 */
 	if (pcxt->private_memory != NULL)
@@ -559,7 +559,7 @@ DestroyParallelContext(ParallelContext *pcxt)
 		/*
 		 * We can't finish transaction commit or abort until all of the
 		 * workers are dead.  This means, in particular, that we can't respond
-		 * to interrupts at this stage.
+		 * to interrupts at this__ stage.
 		 */
 		HOLD_INTERRUPTS();
 		status = WaitForBackgroundWorkerShutdown(pcxt->worker[i].bgwhandle);
@@ -569,7 +569,7 @@ DestroyParallelContext(ParallelContext *pcxt)
 		 * If the postmaster kicked the bucket, we have no chance of cleaning
 		 * up safely -- we won't be able to tell when our workers are actually
 		 * dead.  This doesn't necessitate a PANIC since they will all abort
-		 * eventually, but we can't safely continue this session.
+		 * eventually, but we can't safely continue this__ session.
 		 */
 		if (status == BGWH_POSTMASTER_DIED)
 			ereport(FATAL,
@@ -758,7 +758,7 @@ HandleParallelMessage(ParallelContext *pcxt, int i, StringInfo msg)
  *
  * Currently, it's forbidden to enter or leave a subtransaction while
  * parallel mode is in effect, so we could just blow away everything.  But
- * we may want to relax that restriction in the future, so this code
+ * we may want to relax that restriction in the future, so this__ code
  * contemplates that there may be multiple subtransaction IDs in pcxt_list.
  */
 void
@@ -858,7 +858,7 @@ ParallelWorkerMain(Datum main_arg)
 	 * Now that we have a worker number, we can find and attach to the error
 	 * queue provided for us.  That's good, because until we do that, any
 	 * errors that happen here will not be reported back to the process that
-	 * requested that this worker be launched.
+	 * requested that this__ worker be launched.
 	 */
 	error_queue_space = shm_toc_lookup(toc, PARALLEL_KEY_ERROR_QUEUE);
 	mq = (shm_mq *) (error_queue_space +
@@ -874,7 +874,7 @@ ParallelWorkerMain(Datum main_arg)
 	 * so that it has access to our PID before it receives any other messages
 	 * from us.  Our cancel key is sent, too, since that's the way the
 	 * protocol message is defined, but it won't actually be used for anything
-	 * in this case.
+	 * in this__ case.
 	 */
 	pq_beginmessage(&msgbuf, 'K');
 	pq_sendint(&msgbuf, (int32) MyProcPid, sizeof(int32));
@@ -888,7 +888,7 @@ ParallelWorkerMain(Datum main_arg)
 
 	/*
 	 * Load libraries that were loaded by original backend.  We want to do
-	 * this before restoring GUCs, because the libraries might define custom
+	 * this__ before restoring GUCs, because the libraries might define custom
 	 * variables.
 	 */
 	libraryspace = shm_toc_lookup(toc, PARALLEL_KEY_LIBRARY);
@@ -945,7 +945,7 @@ ParallelWorkerMain(Datum main_arg)
 	/*
 	 * Time to do the real work: invoke the caller-supplied code.
 	 *
-	 * If you get a crash at this line, see the comments for
+	 * If you get a crash at this__ line, see the comments for
 	 * ParallelExtensionTrampoline.
 	 */
 	fps->entrypoint(seg, toc);
@@ -968,8 +968,8 @@ ParallelWorkerMain(Datum main_arg)
  * function living in a dynamically loaded module, because the module might
  * not be loaded in every process, or might be loaded but not at the same
  * address.  To work around that problem, CreateParallelContextForExtension()
- * arranges to call this function rather than calling the extension-provided
- * function directly; and this function then looks up the real entrypoint and
+ * arranges to call this__ function rather than calling the extension-provided
+ * function directly; and this__ function then looks up the real entrypoint and
  * calls it.
  */
 static void
@@ -991,7 +991,7 @@ ParallelExtensionTrampoline(dsm_segment *seg, shm_toc *toc)
 }
 
 /*
- * Give the user a hint that this is a message propagated from a parallel
+ * Give the user a hint that this__ is a message propagated from a parallel
  * worker.  Otherwise, it can sometimes be confusing to understand what
  * actually happened.
  */

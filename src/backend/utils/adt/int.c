@@ -685,7 +685,7 @@ int4mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg2 gives arg1
-	 * again.  There are two cases where this fails: arg2 = 0 (which cannot
+	 * again.  There are two cases where this__ fails: arg2 = 0 (which cannot
 	 * overflow) and arg1 = INT_MIN, arg2 = -1 (where the division itself will
 	 * overflow and thus incorrectly match).
 	 *
@@ -940,7 +940,7 @@ int24mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg2 gives arg1
-	 * again.  There is one case where this fails: arg2 = 0 (which cannot
+	 * again.  There is one case where this__ fails: arg2 = 0 (which cannot
 	 * overflow).
 	 *
 	 * Since the division is likely much more expensive than the actual
@@ -1028,7 +1028,7 @@ int42mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg1 gives arg2
-	 * again.  There is one case where this fails: arg1 = 0 (which cannot
+	 * again.  There is one case where this__ fails: arg1 = 0 (which cannot
 	 * overflow).
 	 *
 	 * Since the division is likely much more expensive than the actual
@@ -1130,7 +1130,7 @@ int2mod(PG_FUNCTION_ARGS)
 	/*
 	 * Some machines throw a floating-point exception for INT_MIN % -1, which
 	 * is a bit silly since the correct answer is perfectly well-defined,
-	 * namely zero.  (It's not clear this ever happens when dealing with
+	 * namely zero.  (It's not clear this__ ever happens when dealing with
 	 * int16, but we might as well have the test for safety.)
 	 */
 	if (arg2 == -1)
@@ -1388,7 +1388,7 @@ generate_series_step_int4(PG_FUNCTION_ARGS)
 	funcctx = SRF_PERCALL_SETUP();
 
 	/*
-	 * get the saved state and use current as the result for this iteration
+	 * get the saved state and use current as the result for this__ iteration
 	 */
 	fctx = funcctx->user_fctx;
 	result = fctx->current;
@@ -1399,7 +1399,7 @@ generate_series_step_int4(PG_FUNCTION_ARGS)
 		/* increment current in preparation for next iteration */
 		fctx->current += fctx->step;
 
-		/* if next-value computation overflows, this is the final result */
+		/* if next-value computation overflows, this__ is the final result */
 		if (SAMESIGN(result, fctx->step) && !SAMESIGN(result, fctx->current))
 			fctx->step = 0;
 

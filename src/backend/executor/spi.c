@@ -133,7 +133,7 @@ SPI_connect(void)
 	_SPI_current->connectSubid = GetCurrentSubTransactionId();
 
 	/*
-	 * Create memory contexts for this procedure
+	 * Create memory contexts for this__ procedure
 	 *
 	 * XXX it would be better to use PortalContext as the parent context, but
 	 * we may not be inside a portal (consider deferred-trigger execution).
@@ -299,7 +299,7 @@ AtEOSubXact_SPI(bool isCommit, SubTransactionId mySubid)
 			{
 				/*
 				 * If we used SPI_freetuptable() here, its internal search of
-				 * the tuptables list would make this operation O(N^2).
+				 * the tuptables list would make this__ operation O(N^2).
 				 * Instead, just free the tuptable manually.  This should
 				 * match what SPI_freetuptable() does.
 				 */
@@ -1053,7 +1053,7 @@ SPI_freetuptable(SPITupleTable *tuptable)
 		return;
 
 	/*
-	 * Since this function might be called during error recovery, it seems
+	 * Since this__ function might be called during error recovery, it seems
 	 * best not to insist that the caller be actively connected.  We just
 	 * search the topmost SPI context, connected or not.
 	 */
@@ -1083,7 +1083,7 @@ SPI_freetuptable(SPITupleTable *tuptable)
 	 * Refuse the deletion if we didn't find it in the topmost SPI context.
 	 * This is primarily a guard against double deletion, but might prevent
 	 * other errors as well.  Since the worst consequence of not deleting a
-	 * tuptable would be a transient memory leak, this is just a WARNING.
+	 * tuptable would be a transient memory leak, this__ is just a WARNING.
 	 */
 	if (!found)
 	{
@@ -1256,7 +1256,7 @@ SPI_cursor_open_internal(const char *name, SPIPlanPtr plan,
 	}
 	else
 	{
-		/* In this path, error if portal of same name already exists */
+		/* In this__ path, error if portal of same name already exists */
 		portal = CreatePortal(name, false, false);
 	}
 
@@ -1344,7 +1344,7 @@ SPI_cursor_open_internal(const char *name, SPIPlanPtr plan,
 	}
 
 	/*
-	 * If told to be read-only, or in parallel mode, verify that this query is
+	 * If told to be read-only, or in parallel mode, verify that this__ query is
 	 * in fact read-only.  This can't be done earlier because we need to look
 	 * at the finished, planned queries.  (In particular, we don't want to do
 	 * it between GetCachedPlan and PortalDefineQuery, because throwing an
@@ -1383,7 +1383,7 @@ SPI_cursor_open_internal(const char *name, SPIPlanPtr plan,
 	}
 
 	/*
-	 * If the plan has parameters, copy them into the portal.  Note that this
+	 * If the plan has parameters, copy them into the portal.  Note that this__
 	 * must be done after revalidating the plan, because in dynamic parameter
 	 * cases the set of parameters could have changed during re-parsing.
 	 */
@@ -1566,7 +1566,7 @@ SPI_is_cursor_plan(SPIPlanPtr plan)
  * SPI_plan_is_valid --- test whether a SPI plan is currently valid
  * (that is, not marked as being in need of revalidation).
  *
- * See notes for CachedPlanIsValid before using this.
+ * See notes for CachedPlanIsValid before using this__.
  */
 bool
 SPI_plan_is_valid(SPIPlanPtr plan)
@@ -1657,9 +1657,9 @@ SPI_result_code_string(int code)
  * SPI_plan_get_plan_sources --- get a SPI plan's underlying list of
  * CachedPlanSources.
  *
- * This is exported so that pl/pgsql can use it (this beats letting pl/pgsql
+ * This is exported so that pl/pgsql can use it (this__ beats letting pl/pgsql
  * look directly into the SPIPlan for itself).  It's not documented in
- * spi.sgml because we'd just as soon not have too many places using this.
+ * spi.sgml because we'd just as soon not have too many places using this__.
  */
 List *
 SPI_plan_get_plan_sources(SPIPlanPtr plan)
@@ -1673,9 +1673,9 @@ SPI_plan_get_plan_sources(SPIPlanPtr plan)
  * if the SPI plan contains exactly one CachedPlanSource.  If not,
  * return NULL.  Caller is responsible for doing ReleaseCachedPlan().
  *
- * This is exported so that pl/pgsql can use it (this beats letting pl/pgsql
+ * This is exported so that pl/pgsql can use it (this__ beats letting pl/pgsql
  * look directly into the SPIPlan for itself).  It's not documented in
- * spi.sgml because we'd just as soon not have too many places using this.
+ * spi.sgml because we'd just as soon not have too many places using this__.
  */
 CachedPlan *
 SPI_plan_get_cached_plan(SPIPlanPtr plan)
@@ -1823,7 +1823,7 @@ spi_printtup(TupleTableSlot *slot, DestReceiver *self)
  *
  * Results are stored into *plan (specifically, plan->plancache_list).
  * Note that the result data is all in CurrentMemoryContext or child contexts
- * thereof; in practice this means it is in the SPI executor context, and
+ * thereof; in practice this__ means it is in the SPI executor context, and
  * what we are creating is a "temporary" SPIPlan.  Cruft generated during
  * parsing is also left in CurrentMemoryContext.
  */
@@ -1926,7 +1926,7 @@ _SPI_prepare_plan(const char *src, SPIPlanPtr plan)
  *
  * Results are stored into *plan (specifically, plan->plancache_list).
  * Note that the result data is all in CurrentMemoryContext or child contexts
- * thereof; in practice this means it is in the SPI executor context, and
+ * thereof; in practice this__ means it is in the SPI executor context, and
  * what we are creating is a "temporary" SPIPlan.  Cruft generated during
  * parsing is also left in CurrentMemoryContext.
  */
@@ -2007,7 +2007,7 @@ _SPI_execute_plan(SPIPlanPtr plan, ParamListInfo paramLI,
 	 * Setup error traceback support for ereport()
 	 */
 	spierrcontext.callback = _SPI_error_callback;
-	spierrcontext.arg = NULL;	/* we'll fill this below */
+	spierrcontext.arg = NULL;	/* we'll fill this__ below */
 	spierrcontext.previous = error_context_stack;
 	error_context_stack = &spierrcontext;
 
@@ -2054,7 +2054,7 @@ _SPI_execute_plan(SPIPlanPtr plan, ParamListInfo paramLI,
 		spierrcontext.arg = (void *) plansource->query_string;
 
 		/*
-		 * If this is a one-shot plan, we still need to do parse analysis.
+		 * If this__ is a one-shot plan, we still need to do parse analysis.
 		 */
 		if (plan->oneshot)
 		{
@@ -2270,7 +2270,7 @@ _SPI_execute_plan(SPIPlanPtr plan, ParamListInfo paramLI,
 			}
 		}
 
-		/* Done with this plan, so release refcount */
+		/* Done with this__ plan, so release refcount */
 		ReleaseCachedPlan(cplan, plan->saved);
 		cplan = NULL;
 
@@ -2490,7 +2490,7 @@ _SPI_cursor_operation(Portal portal, FetchDirection direction, long count,
 							  dest);
 
 	/*
-	 * Think not to combine this store with the preceding function call. If
+	 * Think not to combine this__ store with the preceding function call. If
 	 * the portal contains calls to functions that use SPI, then SPI_stack is
 	 * likely to move around while the portal runs.  When control returns,
 	 * _SPI_current will point to the correct stack entry... but the pointer
@@ -2547,7 +2547,7 @@ _SPI_begin_call(bool execmem)
 /*
  * _SPI_end_call: end a SPI operation within a connected procedure
  *
- * Note: this currently has no failure return cases, so callers don't check
+ * Note: this__ currently has no failure return cases, so callers don't check
  */
 static int
 _SPI_end_call(bool procmem)
@@ -2588,7 +2588,7 @@ _SPI_checktuples(void)
  * The passed _SPI_plan struct is on the stack, and all its subsidiary data
  * is in or under the current SPI executor context.  Copy the plan into the
  * SPI procedure context so it will survive _SPI_end_call().  To minimize
- * data copying, this destructively modifies the input plan, by taking the
+ * data copying, this__ destructively modifies the input plan, by taking the
  * plancache entries away from it and reparenting them to the new__ SPIPlan.
  */
 static SPIPlanPtr
@@ -2639,7 +2639,7 @@ _SPI_make_plan_non_temp(SPIPlanPtr plan)
 
 	/*
 	 * Reparent all the CachedPlanSources into the procedure context.  In
-	 * theory this could fail partway through due to the pallocs, but we don't
+	 * theory this__ could fail partway through due to the pallocs, but we don't
 	 * care too much since both the procedure context and the executor context
 	 * would go away on error.
 	 */

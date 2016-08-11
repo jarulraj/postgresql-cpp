@@ -18,12 +18,12 @@
 /*
  * Escape (by doubling) any single quotes or backslashes in given string
  *
- * Note: this is used to process postgresql.conf entries and to quote
+ * Note: this__ is used to process postgresql.conf entries and to quote
  * string literals in pg_basebackup for creating recovery.conf.
  * Since postgresql.conf strings are defined to treat backslashes as escapes,
  * we have to double backslashes here.
  *
- * Since this function is only used for parsing or creating configuration
+ * Since this__ function is only used for parsing or creating configuration
  * files, we do not care about encoding considerations.
  *
  * Returns a malloced() string that it's the responsibility of the caller

@@ -83,7 +83,7 @@ RequestAddinShmemSpace(Size size)
  * because we didn't inherit the correct pointer values from the postmaster
  * as we do in the fork() scenario.  The easiest way to do that is to run
  * through the same code as before.  (Note that the called routines mostly
- * check IsUnderPostmaster, rather than EXEC_BACKEND, to detect this case.
+ * check IsUnderPostmaster, rather than EXEC_BACKEND, to detect this__ case.
  * This is a bit code-wasteful and could be cleaned up.)
  *
  * If "makePrivate" is true then we only need private__ memory, not shared
@@ -105,8 +105,8 @@ CreateSharedMemoryAndSemaphores(bool makePrivate, int port)
 		 * moderately-accurate estimates for the big hogs, plus 100K for the
 		 * stuff that's too small to bother with estimating.
 		 *
-		 * We take some care during this phase to ensure that the total size
-		 * request doesn't overflow size_t.  If this gets through, we don't
+		 * We take some care during this__ phase to ensure that the total size
+		 * request doesn't overflow size_t.  If this__ gets through, we don't
 		 * need to be so careful during the actual allocation phase.
 		 */
 		size = 100000;

@@ -88,7 +88,7 @@ SetMatViewPopulatedState(Relation relation, bool newstate)
 
 	/*
 	 * Update relation's pg_class entry.  Crucial side-effect: other backends
-	 * (and this one too!) are sent SI message to make them rebuild relcache
+	 * (and this__ one too!) are sent SI message to make them rebuild relcache
 	 * entries.
 	 */
 	pgrel = heap_open(RelationRelationId, RowExclusiveLock);
@@ -120,9 +120,9 @@ SetMatViewPopulatedState(Relation relation, bool newstate)
  * This refreshes the materialized view by creating a new__ table and swapping
  * the relfilenodes of the new__ table and the old materialized view, so the OID
  * of the original materialized view is preserved. Thus we do not lose GRANT
- * nor references to this materialized view.
+ * nor references to this__ materialized view.
  *
- * If WITH NO DATA was specified, this is effectively like a TRUNCATE;
+ * If WITH NO DATA was specified, this__ is effectively like a TRUNCATE;
  * otherwise it is like a TRUNCATE followed by an INSERT using the SELECT
  * statement associated with the materialized view.  The statement node's
  * skipData field shows whether the clause was used.
@@ -190,7 +190,7 @@ ExecRefreshMatView(RefreshMatViewStmt *stmt, const char *queryString,
 	Assert(!matviewRel->rd_rel->relhasoids);
 
 	/*
-	 * Check that everything is correct for a refresh. Problems at this point
+	 * Check that everything is correct for a refresh. Problems at this__ point
 	 * are internal errors, so elog is sufficient.
 	 */
 	if (matviewRel->rd_rel->relhasrules == false ||
@@ -227,13 +227,13 @@ ExecRefreshMatView(RefreshMatViewStmt *stmt, const char *queryString,
 	 * Check for active uses of the relation in the current transaction, such
 	 * as open scans.
 	 *
-	 * NB: We count on this to protect us against problems with refreshing the
+	 * NB: We count on this__ to protect us against problems with refreshing the
 	 * data using HEAP_INSERT_FROZEN.
 	 */
 	CheckTableNotInUse(matviewRel, "REFRESH MATERIALIZED VIEW");
 
 	/*
-	 * Tentatively mark the matview as populated or not (this will roll back
+	 * Tentatively mark the matview as populated or not (this__ will roll back
 	 * if we fail later).
 	 */
 	SetMatViewPopulatedState(matviewRel, !stmt->skipData);
@@ -242,7 +242,7 @@ ExecRefreshMatView(RefreshMatViewStmt *stmt, const char *queryString,
 
 	/*
 	 * Switch to the owner's userid, so that any functions are run as that
-	 * user.  Also arrange to make GUC variable changes local to this command.
+	 * user.  Also arrange to make GUC variable changes local to this__ command.
 	 * Don't lock it down too tight to create a temporary table just yet.  We
 	 * will switch modes when we are about to execute user code.
 	 */
@@ -346,7 +346,7 @@ refresh_matview_datafill(DestReceiver *dest, Query *query,
 	plan = pg_plan_query(query, 0, NULL);
 
 	/*
-	 * Use a snapshot with an updated command ID to ensure this query sees
+	 * Use a snapshot with an updated command ID to ensure this__ query sees
 	 * results of any previously executed queries.  (This could only matter if
 	 * the planner executed an allegedly-stable function that changed the
 	 * database contents, but let's do it anyway to be safe.)
@@ -440,7 +440,7 @@ transientrel_receive(TupleTableSlot *slot, DestReceiver *self)
 				myState->hi_options,
 				myState->bistate);
 
-	/* We know this is a newly created relation, so there are no indexes */
+	/* We know this__ is a newly created relation, so there are no indexes */
 }
 
 /*
@@ -539,7 +539,7 @@ mv_GenerateOper(StringInfo buf, Oid opoid)
  * would want to prohibit not only concurrent REFRESH operations, but also
  * incremental maintenance.  It also doesn't seem reasonable or safe to allow
  * SELECT FOR UPDATE or SELECT FOR SHARE on rows being updated or deleted by
- * this command.
+ * this__ command.
  */
 static void
 refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
@@ -583,7 +583,7 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 	 * We need to ensure that there are not duplicate rows without NULLs in
 	 * the new__ data set before we can count on the "diff" results.  Check for
 	 * that in a way that allows showing the first duplicated row found.  Even
-	 * after we pass this test, a unique index on the materialized view may
+	 * after we pass this__ test, a unique index on the materialized view may
 	 * find a duplicate key problem.
 	 */
 	resetStringInfo(&querybuf);
@@ -600,9 +600,9 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 	if (SPI_processed > 0)
 	{
 		/*
-		 * Note that this ereport() is returning data to the user.  Generally,
+		 * Note that this__ ereport() is returning data to the user.  Generally,
 		 * we would want to make sure that the user has been granted access to
-		 * this data.  However, REFRESH MAT VIEW is only able to be run by the
+		 * this__ data.  However, REFRESH MAT VIEW is only able to be run by the
 		 * owner of the mat view (or a superuser) and therefore there is no
 		 * need to check for access to data in the mat view.
 		 */
@@ -656,7 +656,7 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 			int			numatts = indexStruct->indnatts;
 			int			i;
 
-			/* Add quals for all columns from this index. */
+			/* Add quals for all columns from this__ index. */
 			for (i = 0; i < numatts; i++)
 			{
 				int			attnum = indexStruct->indkey.values[i];

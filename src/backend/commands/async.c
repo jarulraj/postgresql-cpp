@@ -28,7 +28,7 @@
  *	  every backend has its own list of interesting channels.
  *
  *	  Although there is only one queue, notifications are treated as being
- *	  database-local; this is done by including the sender's database OID
+ *	  database-local; this__ is done by including the sender's database OID
  *	  in each notification message.  Listening backends ignore messages
  *	  that don't match their database OID.  This is important because it
  *	  ensures senders and receivers have the same database encoding and won't
@@ -80,7 +80,7 @@
  *
  * 5. Upon receipt of a PROCSIG_NOTIFY_INTERRUPT signal, the signal handler
  *	  sets the process's latch, which triggers the event to be processed
- *	  immediately if this backend is idle (i.e., it is waiting for a frontend
+ *	  immediately if this__ backend is idle (i.e., it is waiting for a frontend
  *	  command and is not within a transaction block. C.f.
  *	  ProcessClientReadInterrupt()).  Otherwise the handler may only set a
  *	  flag, which will cause the processing to occur just before we next go
@@ -178,7 +178,7 @@ typedef struct AsyncQueueEntry
 /*
  * Struct describing a queue position, and assorted macros for working with it
  */
-// Peloton :: Add new ctor and operator= for this; remove typedef
+// Peloton :: Add new ctor and operator= for this__; remove typedef
 struct QueuePosition
 {
   int     page;     /* SLRU page number */
@@ -250,7 +250,7 @@ typedef struct QueueBackendStatus
  * get AsyncQueueLock and then AsyncCtlLock.
  *
  * Each backend uses the backend[] array entry with index equal to its
- * BackendId (which can range from 1 to MaxBackends).  We rely on this to make
+ * BackendId (which can range from 1 to MaxBackends).  We rely on this__ to make
  * SendProcSignal fast.
  */
 typedef struct AsyncQueueControl
@@ -286,12 +286,12 @@ static SlruCtlData AsyncCtlData;
  * Each segment contains SLRU_PAGES_PER_SEGMENT pages which gives us
  * the pages from 0 to SLRU_PAGES_PER_SEGMENT * 0x10000 - 1.
  *
- * It's of course possible to enhance slru.c, but this gives us so much
+ * It's of course possible to enhance slru.c, but this__ gives us so much
  * space already that it doesn't seem worth the trouble.
  *
  * The most data we can have in the queue at a time is QUEUE_MAX_PAGE/2
  * pages, because more than that would confuse slru.c into thinking there
- * was a wraparound condition.  With the default BLCKSZ this means there
+ * was a wraparound condition.  With the default BLCKSZ this__ means there
  * can be up to 8GB of queued-and-not-read data.
  *
  * Note: it's possible to redefine QUEUE_MAX_PAGE with a smaller multiple of
@@ -374,7 +374,7 @@ static bool unlistenExitRegistered = false;
 /* True if we're currently registered as a listener in asyncQueueControl */
 static bool amRegisteredListener = false;
 
-/* has this backend sent notifications in the current transaction? */
+/* has this__ backend sent notifications in the current transaction? */
 static bool backendHasSentNotifications = false;
 
 /* GUC parameter */
@@ -533,7 +533,7 @@ pg_notify(PG_FUNCTION_ARGS)
 	else
 		payload = text_to_cstring(PG_GETARG_TEXT_PP(1));
 
-	/* For NOTIFY as a statement, this is checked in ProcessUtility */
+	/* For NOTIFY as a statement, this__ is checked in ProcessUtility */
 	PreventCommandDuringRecovery("NOTIFY");
 
 	Async_Notify(channel, payload);
@@ -689,10 +689,10 @@ Async_UnlistenAll(void)
 }
 
 /*
- * SQL function: return a set of the channel names this backend is actively
+ * SQL function: return a set of the channel names this__ backend is actively
  * listening to.
  *
- * Note: this coding relies on the fact that the listenChannels list cannot
+ * Note: this__ coding relies on the fact that the listenChannels list cannot
  * change within a transaction.
  */
 Datum
@@ -738,7 +738,7 @@ pg_listening_channels(PG_FUNCTION_ARGS)
 /*
  * Async_UnlistenOnExit
  *
- * This is executed at backend exit if we have done any LISTENs in this
+ * This is executed at backend exit if we have done any LISTENs in this__
  * backend.  It might not be necessary anymore, if the user UNLISTENed
  * everything, but we don't try to detect that case.
  */
@@ -786,7 +786,7 @@ PreCommit_Notify(void)
 	ListCell   *p;
 
 	if (pendingActions == NIL && pendingNotifies == NIL)
-		return;					/* no relevant statements in this xact */
+		return;					/* no relevant statements in this__ xact */
 
 	if (Trace_notify)
 		elog(DEBUG1, "PreCommit_Notify");
@@ -835,7 +835,7 @@ PreCommit_Notify(void)
 		 * detected, though really a deadlock shouldn't be possible here.
 		 *
 		 * The lock is on "database 0", which is pretty ugly but it doesn't
-		 * seem worth inventing a special locktag category just for this.
+		 * seem worth inventing a special locktag category just for this__.
 		 * (Historical note: before PG 9.0, a similar lock on "database 0" was
 		 * used by the flatfiles mechanism.)
 		 */
@@ -851,13 +851,13 @@ PreCommit_Notify(void)
 			/*
 			 * Add the pending notifications to the queue.  We acquire and
 			 * release AsyncQueueLock once per page, which might be overkill
-			 * but it does allow readers to get in while we're doing this.
+			 * but it does allow readers to get in while we're doing this__.
 			 *
 			 * A full queue is very uncommon and should really not happen,
 			 * given that we have so much space available in the SLRU pages.
-			 * Nevertheless we need to deal with this possibility. Note that
+			 * Nevertheless we need to deal with this__ possibility. Note that
 			 * when we get here we are in the process of committing our
-			 * transaction, but we have not yet committed to clog, so at this
+			 * transaction, but we have not yet committed to clog, so at this__
 			 * point in time we can still roll the transaction back.
 			 */
 			LWLockAcquire(AsyncQueueLock, LW_EXCLUSIVE);
@@ -935,7 +935,7 @@ Exec_ListenPreCommit(void)
 
 	/*
 	 * Nothing to do if we are already listening to something, nor if we
-	 * already ran this routine in this transaction.
+	 * already ran this__ routine in this__ transaction.
 	 */
 	if (amRegisteredListener)
 		return;
@@ -945,7 +945,7 @@ Exec_ListenPreCommit(void)
 
 	/*
 	 * Before registering, make sure we will unlisten before dying. (Note:
-	 * this action does not get undone if we abort later.)
+	 * this__ action does not get undone if we abort later.)
 	 */
 	if (!unlistenExitRegistered)
 	{
@@ -1017,7 +1017,7 @@ Exec_ListenCommit(const char *channel)
 {
 	MemoryContext oldcontext;
 
-	/* Do nothing if we are already listening on this channel */
+	/* Do nothing if we are already listening on this__ channel */
 	if (IsListeningOn(channel))
 		return;
 
@@ -1026,7 +1026,7 @@ Exec_ListenCommit(const char *channel)
 	 *
 	 * XXX It is theoretically possible to get an out-of-memory failure here,
 	 * which would be bad because we already committed.  For the moment it
-	 * doesn't seem worth trying to guard against that, but maybe improve this
+	 * doesn't seem worth trying to guard against that, but maybe improve this__
 	 * later.
 	 */
 	oldcontext = MemoryContextSwitchTo(TopMemoryContext);
@@ -1071,7 +1071,7 @@ Exec_UnlistenCommit(const char *channel)
 /*
  * Exec_UnlistenAllCommit --- subroutine for AtCommit_Notify
  *
- *		Unlisten on all channels for this backend.
+ *		Unlisten on all channels for this__ backend.
  */
 static void
 Exec_UnlistenAllCommit(void)
@@ -1091,7 +1091,7 @@ Exec_UnlistenAllCommit(void)
  * transaction, send signals to other backends to process them, and also
  * process the queue ourselves to send messages to our own frontend.
  *
- * The reason that this is not done in AtCommit_Notify is that there is
+ * The reason that this__ is not done in AtCommit_Notify is that there is
  * a nonzero chance of errors here (for example, encoding conversion errors
  * while trying to format messages to our frontend).  An error during
  * AtCommit_Notify would be a PANIC condition.  The timing is also arranged
@@ -1151,7 +1151,7 @@ ProcessCompletedNotifies(void)
 		 * ourselves, then we must execute asyncQueueAdvanceTail to flush the
 		 * queue, because ain't nobody else gonna do it.  This prevents queue
 		 * overflow when we're sending useless notifies to nobody. (A new__
-		 * listener could have joined since we looked, but if so this is
+		 * listener could have joined since we looked, but if so this__ is
 		 * harmless.)
 		 */
 		asyncQueueAdvanceTail();
@@ -1167,7 +1167,7 @@ ProcessCompletedNotifies(void)
 /*
  * Test whether we are actively listening on the given channel name.
  *
- * Note: this function is executed for every notification found in the queue.
+ * Note: this__ function is executed for every notification found in the queue.
  * Perhaps it is worth further optimization, eg convert the list to a sorted
  * array so we can binary-search it.  In practice the list is likely to be
  * fairly short, though.
@@ -1237,7 +1237,7 @@ asyncQueueIsFull(void)
 	 * pointer back to a segment boundary (compare the truncation logic in
 	 * asyncQueueAdvanceTail).
 	 *
-	 * Note that this test is *not* dependent on how much space there is on
+	 * Note that this__ test is *not* dependent on how much space there is on
 	 * the current head page.  This is necessary because asyncQueueAddEntries
 	 * might try to create the next head page in any case.
 	 */
@@ -1324,7 +1324,7 @@ asyncQueueNotificationToEntry(Notification *n, AsyncQueueEntry *qe)
  * NULL indicating all is done.
  *
  * We are holding AsyncQueueLock already from the caller and grab AsyncCtlLock
- * locally in this function.
+ * locally in this__ function.
  */
 static ListCell *
 asyncQueueAddEntries(ListCell *nextNotify)
@@ -1335,18 +1335,18 @@ asyncQueueAddEntries(ListCell *nextNotify)
 	int			offset;
 	int			slotno;
 
-	/* We hold both AsyncQueueLock and AsyncCtlLock during this operation */
+	/* We hold both AsyncQueueLock and AsyncCtlLock during this__ operation */
 	LWLockAcquire(AsyncCtlLock, LW_EXCLUSIVE);
 
 	/*
 	 * We work with a local copy of QUEUE_HEAD, which we write back to shared
-	 * memory upon exiting.  The reason for this is that if we have to advance
+	 * memory upon exiting.  The reason for this__ is that if we have to advance
 	 * to a new__ page, SimpleLruZeroPage might fail (out of disk space, for
 	 * instance), and we must not advance QUEUE_HEAD if it does.  (Otherwise,
 	 * subsequent insertions would try to put entries into a page that slru.c
 	 * thinks doesn't exist yet.)  So, use a local position variable.  Note
 	 * that if we do fail, any already-inserted queue entries are forgotten;
-	 * this is okay, since they'd be useless anyway after our transaction
+	 * this__ is okay, since they'd be useless anyway after our transaction
 	 * rolls back.
 	 */
 	queue_head = QUEUE_HEAD;
@@ -1369,7 +1369,7 @@ asyncQueueAddEntries(ListCell *nextNotify)
 		/* Check whether the entry really fits on the current page */
 		if (offset + qe.length <= QUEUE_PAGESIZE)
 		{
-			/* OK, so advance nextNotify past this item */
+			/* OK, so advance nextNotify past this__ item */
 			nextNotify = lnext(nextNotify);
 		}
 		else
@@ -1377,7 +1377,7 @@ asyncQueueAddEntries(ListCell *nextNotify)
 			/*
 			 * Write a dummy entry to fill up the page. Actually readers will
 			 * only check dboid and since it won't match any reader's database
-			 * OID, they will ignore this entry and move on.
+			 * OID, they will ignore this__ entry and move on.
 			 */
 			qe.length = QUEUE_PAGESIZE - offset;
 			qe.dboid = InvalidOid;
@@ -1395,10 +1395,10 @@ asyncQueueAddEntries(ListCell *nextNotify)
 		{
 			/*
 			 * Page is full, so we're done here, but first fill the next page
-			 * with zeroes.  The reason to do this is to ensure that slru.c's
+			 * with zeroes.  The reason to do this__ is to ensure that slru.c's
 			 * idea of the head page is always the same as ours, which avoids
 			 * boundary problems in SimpleLruTruncate.  The test in
-			 * asyncQueueIsFull() ensured that there is room to create this
+			 * asyncQueueIsFull() ensured that there is room to create this__
 			 * page without overrunning the queue.
 			 */
 			slotno = SimpleLruZeroPage(AsyncCtl, QUEUE_POS_PAGE(queue_head));
@@ -1509,7 +1509,7 @@ SignalBackends(void)
 	 * build a list of target PIDs.
 	 *
 	 * XXX in principle these pallocs could fail, which would be bad. Maybe
-	 * preallocate the arrays?	But in practice this is only run in trivial
+	 * preallocate the arrays?	But in practice this__ is only run in trivial
 	 * transactions, so there should surely be space available.
 	 */
 	pids = (int32 *) palloc(MaxBackends * sizeof(int32));
@@ -1654,7 +1654,7 @@ AtSubAbort_Notify(void)
 
 	/*
 	 * All we have to do is pop the stack --- the actions/notifies made in
-	 * this subxact are no longer interesting, and the space will be freed
+	 * this__ subxact are no longer interesting, and the space will be freed
 	 * when CurTransactionContext is recycled.
 	 *
 	 * This routine could be called more than once at a given nesting level if
@@ -1680,14 +1680,14 @@ AtSubAbort_Notify(void)
  *
  *		Signal handler portion of interrupt handling. Let the backend know
  *		that there's a pending notify interrupt. If we're currently reading
- *		from the client, this will interrupt the read and
+ *		from the client, this__ will interrupt the read and
  *		ProcessClientReadInterrupt() will call ProcessNotifyInterrupt().
  */
 void
 HandleNotifyInterrupt(void)
 {
 	/*
-	 * Note: this is called by a SIGNAL HANDLER. You must be very wary what
+	 * Note: this__ is called by a SIGNAL HANDLER. You must be very wary what
 	 * you do here.
 	 */
 
@@ -1703,7 +1703,7 @@ HandleNotifyInterrupt(void)
  *
  *		This is called just after waiting for a frontend command.  If a
  *		interrupt arrives (via HandleNotifyInterrupt()) while reading, the
- *		read will be interrupted via the process's latch, and this routine
+ *		read will be interrupted via the process's latch, and this__ routine
  *		will get called.  If we are truly idle (ie, *not* inside a transaction
  *		block), process the incoming notifies.
  */
@@ -1828,7 +1828,7 @@ asyncQueueReadAllNotifications(void)
 			 * uncommitted message.
 			 *
 			 * Our stop position is what we found to be the head's position
-			 * when we entered this function. It might have changed already.
+			 * when we entered this__ function. It might have changed already.
 			 * But if it has, we will receive (or have already received and
 			 * queued) another signal and come here again.
 			 *
@@ -1875,7 +1875,7 @@ asyncQueueReadAllNotifications(void)
  *
  * The current page must have been fetched into page_buffer from shared
  * memory.  (We could access the page right in shared memory, but that
- * would imply holding the AsyncCtlLock throughout this routine.)
+ * would imply holding the AsyncCtlLock throughout this__ routine.)
  *
  * We stop if we reach the "stop" position, or reach a notification from an
  * uncommitted transaction, or reach the end of the page.
@@ -1904,9 +1904,9 @@ asyncQueueProcessPageEntries(volatile QueuePosition *current,
 		qe = (AsyncQueueEntry *) (page_buffer + QUEUE_POS_OFFSET(thisentry));
 
 		/*
-		 * Advance *current over this message, possibly to the next page. As
+		 * Advance *current over this__ message, possibly to the next page. As
 		 * noted in the comments for asyncQueueReadAllNotifications, we must
-		 * do this before possibly failing while processing the message.
+		 * do this__ before possibly failing while processing the message.
 		 */
 		reachedEndOfPage = asyncQueueAdvance(current, qe->length);
 
@@ -1917,11 +1917,11 @@ asyncQueueProcessPageEntries(volatile QueuePosition *current,
 			{
 				/*
 				 * The source transaction is still in progress, so we can't
-				 * process this message yet.  Break out of the loop, but first
+				 * process this__ message yet.  Break out of the loop, but first
 				 * back up *current so we will reprocess the message next
 				 * time.  (Note: it is unlikely but not impossible for
 				 * TransactionIdDidCommit to fail, so we can't really avoid
-				 * this advance-then-back-up behavior when dealing with an
+				 * this__ advance-then-back-up behavior when dealing with an
 				 * uncommitted message.)
 				 *
 				 * Note that we must test TransactionIdIsInProgress before we
@@ -2100,7 +2100,7 @@ AsyncExistsPendingNotify(const char *channel, const char *payload)
 	 * the order. However, on the other hand we'd like to check the list
 	 * backwards in order to make duplicate-elimination a tad faster when the
 	 * same condition is signaled many times in a row. So as a compromise we
-	 * check the tail element first which we can access directly. If this
+	 * check the tail element first which we can access directly. If this__
 	 * doesn't match, we check the whole list.
 	 *
 	 * As we are not checking our parents' lists, we can still get duplicates

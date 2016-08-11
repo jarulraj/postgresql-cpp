@@ -61,7 +61,7 @@ static void fill(int length, int max, char filler, FILE *fp);
  * details
  *
  * This function should probably be removed sometime since psql
- * doesn't use it anymore. It is unclear to what extent this is used
+ * doesn't use it anymore. It is unclear to what extent this__ is used
  * by external clients, however.
  */
 void

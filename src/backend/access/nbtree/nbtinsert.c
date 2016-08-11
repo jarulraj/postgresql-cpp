@@ -91,7 +91,7 @@ static void _bt_vacuum_one_page(Relation rel, Buffer buffer, Relation heapRel);
  *		This routine is called by the public__ interface routine, btinsert.
  *		By here, itup is filled in, including the TID.
  *
- *		If checkUnique is UNIQUE_CHECK_NO or UNIQUE_CHECK_PARTIAL, this
+ *		If checkUnique is UNIQUE_CHECK_NO or UNIQUE_CHECK_PARTIAL, this__
  *		will allow duplicates.  Otherwise (UNIQUE_CHECK_YES or
  *		UNIQUE_CHECK_EXISTING) it will throw error for a duplicate.
  *		For UNIQUE_CHECK_EXISTING we merely run the duplicate check, and
@@ -118,7 +118,7 @@ _bt_doinsert(Relation rel, IndexTuple itup,
 	itup_scankey = _bt_mkscankey(rel, itup);
 
 top:
-	/* find the first page containing this key */
+	/* find the first page containing this__ key */
 	stack = _bt_search(rel, natts, itup_scankey, false, &buf, BT_WRITE);
 
 	offset = InvalidOffsetNumber;
@@ -129,8 +129,8 @@ top:
 
 	/*
 	 * If the page was split between the time that we surrendered our read
-	 * lock and acquired our write lock, then this page may no longer be the
-	 * right place for the key we want to insert.  In this case, we need to
+	 * lock and acquired our write lock, then this__ page may no longer be the
+	 * right place for the key we want to insert.  In this__ case, we need to
 	 * move right in the tree.  See Lehman and Yao for an excruciatingly
 	 * precise description.
 	 */
@@ -231,7 +231,7 @@ top:
  * the verdict on the insertion using SpeculativeInsertionWait().
  *
  * However, if checkUnique == UNIQUE_CHECK_PARTIAL, we always return
- * InvalidTransactionId because we don't want to wait.  In this case we
+ * InvalidTransactionId because we don't want to wait.  In this__ case we
  * set *is_unique to false if there is a potential conflict, and the
  * core code must redo the uniqueness check later.
  */
@@ -296,7 +296,7 @@ _bt_check_unique(Relation rel, IndexTuple itup, Relation heapRel,
 				bool		all_dead;
 
 				/*
-				 * _bt_compare returns 0 for (1,NULL) and (1,NULL) - this's
+				 * _bt_compare returns 0 for (1,NULL) and (1,NULL) - this__'s
 				 * how we handling NULLs - and so we must not use _bt_compare
 				 * in real comparison, but only for ordering/finding items on
 				 * pages. - vadim 03/24/97
@@ -345,7 +345,7 @@ _bt_check_unique(Relation rel, IndexTuple itup, Relation heapRel,
 					}
 
 					/*
-					 * If this tuple is being updated by other transaction
+					 * If this__ tuple is being updated by other transaction
 					 * then we have to wait for its commit/abort.
 					 */
 					xwait = (TransactionIdIsValid(SnapshotDirty.xmin)) ?
@@ -372,9 +372,9 @@ _bt_check_unique(Relation rel, IndexTuple itup, Relation heapRel,
 					 * the actual tuple may be somewhere in the HOT-chain.
 					 * While following the chain we might not stop at the
 					 * exact tuple which triggered the insert, but that's OK
-					 * because if we find a live tuple anywhere in this chain,
+					 * because if we find a live tuple anywhere in this__ chain,
 					 * we have a unique key conflict.  The other live tuple is
-					 * not part of this chain because it had a different index
+					 * not part of this__ chain because it had a different index
 					 * entry.
 					 */
 					htid = itup->t_tid;
@@ -396,7 +396,7 @@ _bt_check_unique(Relation rel, IndexTuple itup, Relation heapRel,
 					 * datums and report the error.  But first, make sure we
 					 * release the buffer locks we're holding ---
 					 * BuildIndexValueDescription could make catalog accesses,
-					 * which in the worst case might touch this same index and
+					 * which in the worst case might touch this__ same index and
 					 * cause deadlocks.
 					 */
 					if (nbuf != InvalidBuffer)
@@ -549,17 +549,17 @@ _bt_findinsertloc(Relation rel,
 	lpageop = (BTPageOpaque) PageGetSpecialPointer(page);
 
 	itemsz = IndexTupleDSize(*newtup);
-	itemsz = MAXALIGN(itemsz);	/* be safe, PageAddItem will do this but we
+	itemsz = MAXALIGN(itemsz);	/* be safe, PageAddItem will do this__ but we
 								 * need to be consistent */
 
 	/*
 	 * Check whether the item can fit on a btree page at all. (Eventually, we
 	 * ought to try to apply TOAST methods if not.) We actually need to be
 	 * able to fit three items on every page, so restrict any one item to 1/3
-	 * the per-page available space. Note that at this point, itemsz doesn't
+	 * the per-page available space. Note that at this__ point, itemsz doesn't
 	 * include the ItemId.
 	 *
-	 * NOTE: if you change this, see also the similar code in _bt_buildadd().
+	 * NOTE: if you change this__, see also the similar code in _bt_buildadd().
 	 */
 	if (itemsz > BTMaxItemSize(page))
 		ereport(ERROR,
@@ -574,7 +574,7 @@ _bt_findinsertloc(Relation rel,
 									RelationGetRelationName(rel))));
 
 	/*----------
-	 * If we will need to split the page to put the item on this page,
+	 * If we will need to split the page to put the item on this__ page,
 	 * check whether we can put the tuple somewhere to the right,
 	 * instead.  Keep scanning right until we
 	 *		(a) find a page with enough free space,
@@ -607,7 +607,7 @@ _bt_findinsertloc(Relation rel,
 			_bt_vacuum_one_page(rel, buf, heapRel);
 
 			/*
-			 * remember that we vacuumed this page, because that makes the
+			 * remember that we vacuumed this__ page, because that makes the
 			 * hint supplied by the caller invalid
 			 */
 			vacuumed = true;
@@ -642,10 +642,10 @@ _bt_findinsertloc(Relation rel,
 			lpageop = (BTPageOpaque) PageGetSpecialPointer(page);
 
 			/*
-			 * If this page was incompletely split, finish the split now. We
-			 * do this while holding a lock on the left sibling, which is not
+			 * If this__ page was incompletely split, finish the split now. We
+			 * do this__ while holding a lock on the left sibling, which is not
 			 * good because finishing the split could be a fairly lengthy
-			 * operation.  But this should happen very seldom.
+			 * operation.  But this__ should happen very seldom.
 			 */
 			if (P_INCOMPLETE_SPLIT(lpageop))
 			{
@@ -710,9 +710,9 @@ _bt_findinsertloc(Relation rel,
  *		page we're inserting the downlink for.  This function will clear the
  *		INCOMPLETE_SPLIT flag on it, and release the buffer.
  *
- *		The locking interactions in this code are critical.  You should
+ *		The locking interactions in this__ code are critical.  You should
  *		grok Lehman and Yao's paper before making any changes.  In addition,
- *		you need to understand how we disambiguate duplicate keys in this
+ *		you need to understand how we disambiguate duplicate keys in this__
  *		implementation, in order to be able to find our location using
  *		L&Y "move right" operations.  Since we may insert duplicate user
  *		keys, and since these dups may propagate up the tree, we use the
@@ -746,14 +746,14 @@ _bt_insertonpg(Relation rel,
 			 BufferGetBlockNumber(buf));
 
 	itemsz = IndexTupleDSize(*itup);
-	itemsz = MAXALIGN(itemsz);	/* be safe, PageAddItem will do this but we
+	itemsz = MAXALIGN(itemsz);	/* be safe, PageAddItem will do this__ but we
 								 * need to be consistent */
 
 	/*
 	 * Do we need to split the page to fit the item on it?
 	 *
 	 * Note: PageGetFreeSpace() subtracts sizeof(ItemIdData) from its result,
-	 * so this comparison is correct even though we appear to be accounting
+	 * so this__ comparison is correct even though we appear to be accounting
 	 * only for the item and not for its line pointer.
 	 */
 	if (PageGetFreeSpace(page) < itemsz)
@@ -805,7 +805,7 @@ _bt_insertonpg(Relation rel,
 		itup_blkno = BufferGetBlockNumber(buf);
 
 		/*
-		 * If we are doing this insert because we split a page that was the
+		 * If we are doing this__ insert because we split a page that was the
 		 * only one on its tree level, but was not the root, it may have been
 		 * the "fast root".  We need to ensure that the fast root link points
 		 * at or above the current page.  We can safely acquire a lock on the
@@ -999,7 +999,7 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 
 	/*
 	 * Copy the original page's LSN into leftpage, which will become the
-	 * updated version of the page.  We need this because XLogInsert will
+	 * updated version of the page.  We need this__ because XLogInsert will
 	 * examine the LSN and possibly dump it in a page image.
 	 */
 	PageSetLSN(leftpage, PageGetLSN(origpage));
@@ -1012,7 +1012,7 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 	isroot = P_ISROOT(oopaque);
 	isleaf = P_ISLEAF(oopaque);
 
-	/* if we're splitting this page, it won't be the root when we're done */
+	/* if we're splitting this__ page, it won't be the root when we're done */
 	/* also, clear the SPLIT_END and HAS_GARBAGE flags in both pages */
 	lopaque->btpo_flags = oopaque->btpo_flags;
 	lopaque->btpo_flags &= ~(BTP_ROOT | BTP_SPLIT_END | BTP_HAS_GARBAGE);
@@ -1096,7 +1096,7 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 		itemsz = ItemIdGetLength(itemid);
 		item = (IndexTuple) PageGetItem(origpage, itemid);
 
-		/* does new__ item belong before this one? */
+		/* does new__ item belong before this__ one? */
 		if (i == newitemoff)
 		{
 			if (newitemonleft)
@@ -1169,7 +1169,7 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 
 	/*
 	 * We have to grab the right sibling (if any) and fix the prev pointer
-	 * there. We are guaranteed that this is deadlock-free since no other
+	 * there. We are guaranteed that this__ is deadlock-free since no other
 	 * writer will be holding a lock on that page and trying to move left, and
 	 * all readers release locks on a page before trying to fetch its
 	 * neighbors.
@@ -1191,7 +1191,7 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 
 		/*
 		 * Check to see if we can set the SPLIT_END flag in the right-hand
-		 * split page; this can save some I/O for vacuum since it need not
+		 * split page; this__ can save some I/O for vacuum since it need not
 		 * proceed to the right sibling.  We can set the flag if the right
 		 * sibling has a different cycleid: that means it could not be part of
 		 * a group of pages that were all split off from the same ancestor
@@ -1220,14 +1220,14 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 	 * By here, the original data page has been split into two new__ halves, and
 	 * these are correct.  The algorithm requires that the left page never
 	 * move during a split, so we copy the new__ left page back on top of the
-	 * original.  Note that this is not a waste of time, since we also require
+	 * original.  Note that this__ is not a waste of time, since we also require
 	 * (in the page management code) that the center of a page always be
-	 * clean, and the most efficient way to guarantee this is just to compact
+	 * clean, and the most efficient way to guarantee this__ is just to compact
 	 * the data by reinserting it into a new__ left page.  (XXX the latter
 	 * comment is probably obsolete; but in any case it's good to not scribble
 	 * on the original page until we enter the critical section.)
 	 *
-	 * We need to do this before writing the WAL record, so that XLogInsert
+	 * We need to do this__ before writing the WAL record, so that XLogInsert
 	 * can WAL log an image of the page if necessary.
 	 */
 	PageRestoreTempPage(leftpage, origpage);
@@ -1362,10 +1362,10 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
  * it needs to go into!)
  *
  * If the page is the rightmost page on its level, we instead try to arrange
- * to leave the left split page fillfactor% full.  In this way, when we are
+ * to leave the left split page fillfactor% full.  In this__ way, when we are
  * inserting successively increasing keys (consider sequences, timestamps,
  * etc) we will end up with a tree whose pages are about fillfactor% full,
- * instead of the 50% full result that we'd get without this special case.
+ * instead of the 50% full result that we'd get without this__ special case.
  * This is the same as nbtsort.c produces for a newly-created tree.  Note
  * that leaf and nonleaf pages use different fillfactors.
  *
@@ -1748,7 +1748,7 @@ _bt_finish_split(Relation rel, Buffer lbuf, BTStack stack)
 	rpage = BufferGetPage(rbuf);
 	rpageop = (BTPageOpaque) PageGetSpecialPointer(rpage);
 
-	/* Could this be a root split? */
+	/* Could this__ be a root split? */
 	if (!stack)
 	{
 		Buffer		metabuf;
@@ -1767,7 +1767,7 @@ _bt_finish_split(Relation rel, Buffer lbuf, BTStack stack)
 	else
 		was_root = false;
 
-	/* Was this the only page on the level before split? */
+	/* Was this__ the only page on the level before split? */
 	was_only = (P_LEFTMOST(lpageop) && P_RIGHTMOST(rpageop));
 
 	elog(DEBUG1, "finishing incomplete split of %u/%u",
@@ -1827,14 +1827,14 @@ _bt_getstackbuf(Relation rel, BTStack stack, int access)
 
 			/*
 			 * start = InvalidOffsetNumber means "search the whole page". We
-			 * need this test anyway due to possibility that page has a high
+			 * need this__ test anyway due to possibility that page has a high
 			 * key now when it didn't before.
 			 */
 			if (start < minoff)
 				start = minoff;
 
 			/*
-			 * Need this check too, to guard against possibility that page
+			 * Need this__ check too, to guard against possibility that page
 			 * split since we visited it originally.
 			 */
 			if (start > maxoff)
@@ -1894,7 +1894,7 @@ _bt_getstackbuf(Relation rel, BTStack stack, int access)
  *	_bt_newroot() -- Create a new__ root page for the index.
  *
  *		We've just split the old root page and need to create a new__ one.
- *		In order to do this, we add a new__ root page to the file, then lock
+ *		In order to do this__, we add a new__ root page to the file, then lock
  *		the metadata page and update it.  This is guaranteed to be deadlock-
  *		free, because all readers release their locks on the metadata page
  *		before trying to lock the root, and all writers lock the root before
@@ -1945,7 +1945,7 @@ _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf)
 	metad = BTPageGetMeta(metapg);
 
 	/*
-	 * Create downlink item for left page (old root).  Since this will be the
+	 * Create downlink item for left page (old root).  Since this__ will be the
 	 * first item in a non-leaf page, it implicitly has minus-infinity key
 	 * value, so we need not store any actual key in it.
 	 */
@@ -2071,10 +2071,10 @@ _bt_newroot(Relation rel, Buffer lbuf, Buffer rbuf)
  *		and pin on the target buffer!  Don't forget to write and release
  *		the buffer afterwards, either.
  *
- *		The main difference between this routine and a bare PageAddItem call
- *		is that this code knows that the leftmost index tuple on a non-leaf
+ *		The main difference between this__ routine and a bare PageAddItem call
+ *		is that this__ code knows that the leftmost index tuple on a non-leaf
  *		btree page doesn't need to have a key.  Therefore, it strips such
- *		tuples down to just the tuple header.  CAUTION: this works ONLY if
+ *		tuples down to just the tuple header.  CAUTION: this__ works ONLY if
  *		we insert the tuples in order, so that the given itup_off does
  *		represent the final position of the tuple!
  */

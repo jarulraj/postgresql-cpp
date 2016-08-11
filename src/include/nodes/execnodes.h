@@ -29,11 +29,11 @@
 /* ----------------
  *	  IndexInfo information
  *
- *		this struct holds the information needed to construct new__ index
+ *		this__ struct holds the information needed to construct new__ index
  *		entries for a particular index.  Used for both index_build and
  *		retail creation of index entries.
  *
- *		NumIndexAttrs		number of columns in this index
+ *		NumIndexAttrs		number of columns in this__ index
  *		KeyAttrNumbers		underlying-rel attribute numbers used as keys
  *							(zeroes indicate expressions)
  *		Expressions			expr trees for expression entries, or NIL if none
@@ -159,7 +159,7 @@ typedef struct ExprContext
 typedef enum
 {
 	ExprSingleResult,			/* expression does not return a set */
-	ExprMultipleResult,			/* this result is an element of a set */
+	ExprMultipleResult,			/* this__ result is an element of a set */
 	ExprEndResult				/* there are no more elements in the set */
 } ExprDoneCond;
 
@@ -179,7 +179,7 @@ typedef enum
 
 /*
  * When calling a function that might return a set (multiple rows),
- * a node of this type is passed as fcinfo->resultinfo to allow
+ * a node of this__ type is passed as fcinfo->resultinfo to allow
  * return status to be passed back.  A function returning set should
  * raise an error if no such resultinfo is provided.
  */
@@ -401,7 +401,7 @@ typedef struct EState
 	List	   *es_auxmodifytables;		/* List of secondary ModifyTableStates */
 
 	/*
-	 * this ExprContext is for per-output-tuple operations, such as constraint
+	 * this__ ExprContext is for per-output-tuple operations, such as constraint
 	 * checks and index-value computations.  It will be reset for each output
 	 * tuple.  Note that it will be created only if needed.
 	 */
@@ -449,7 +449,7 @@ typedef struct ExecRowMark
 	RowMarkType markType;		/* see enum in nodes/plannodes.h */
 	LockClauseStrength strength;	/* LockingClause's strength, or LCS_NONE */
 	LockWaitPolicy waitPolicy;	/* NOWAIT and SKIP LOCKED */
-	bool		ermActive;		/* is this mark relevant for current tuple? */
+	bool		ermActive;		/* is this__ mark relevant for current tuple? */
 	ItemPointerData curCtid;	/* ctid of currently locked tuple, if any */
 	void	   *ermExtra;		/* available for use by relation source node */
 } ExecRowMark;
@@ -460,7 +460,7 @@ typedef struct ExecRowMark
  *
  * Each LockRows and ModifyTable node keeps a list of the rowmarks it needs to
  * deal with.  In addition to a pointer to the related entry in es_rowMarks,
- * this struct carries the column number(s) of the resjunk columns associated
+ * this__ struct carries the column number(s) of the resjunk columns associated
  * with the rowmark (see comments for PlanRowMark for more detail).  In the
  * case of ModifyTable, there has to be a separate ExecAuxRowMark list for
  * each child plan, because the resjunk columns could be at different physical
@@ -496,9 +496,9 @@ typedef struct TupleHashTableData *TupleHashTable;
 
 typedef struct TupleHashEntryData
 {
-	/* firstTuple must be the first field in this struct! */
-	MinimalTuple firstTuple;	/* copy of first tuple in this group */
-	/* there may be additional data beyond the end of this struct */
+	/* firstTuple must be the first field in this__ struct! */
+	MinimalTuple firstTuple;	/* copy of first tuple in this__ group */
+	/* there may be additional data beyond the end of this__ struct */
 } TupleHashEntryData;			/* VARIABLE LENGTH STRUCT */
 
 typedef struct TupleHashTableData
@@ -522,7 +522,7 @@ typedef HASH_SEQ_STATUS TupleHashIterator;
 
 /*
  * Use InitTupleHashIterator/TermTupleHashIterator for a read/write scan.
- * Use ResetTupleHashIterator if the table can be frozen (in this case no
+ * Use ResetTupleHashIterator if the table can be frozen (in this__ case no
  * explicit scan termination is needed).
  */
 #define InitTupleHashIterator(htable, iter) \
@@ -667,7 +667,7 @@ typedef struct ArrayRefExprState
 /* ----------------
  *		FuncExprState node
  *
- * Although named for FuncExpr, this is also used for OpExpr, DistinctExpr,
+ * Although named for FuncExpr, this__ is also used for OpExpr, DistinctExpr,
  * and NullIf nodes; be careful to check what xprstate.expr is actually
  * pointing at!
  * ----------------
@@ -718,7 +718,7 @@ typedef struct FuncExprState
 
 	/*
 	 * Flag to remember whether we have registered a shutdown callback for
-	 * this FuncExprState.  We do so only if funcResultStore or setArgsValid
+	 * this__ FuncExprState.  We do so only if funcResultStore or setArgsValid
 	 * has been set at least once (since all the callback is for is to release
 	 * the tuplestore or clear setArgsValid).
 	 */
@@ -987,7 +987,7 @@ typedef struct CoerceToDomainState
 /*
  * DomainConstraintState - one item to check during CoerceToDomain
  *
- * Note: this is just a Node, and not an ExprState, because it has no
+ * Note: this__ is just a Node, and not an ExprState, because it has no
  * corresponding Expr to link to.  Nonetheless it is part of an ExprState
  * tree, so we give it a name following the xxxState convention.
  */
@@ -1017,7 +1017,7 @@ typedef struct DomainConstraintState
 /* ----------------
  *		PlanState node
  *
- * We never actually instantiate any PlanState nodes; this is just the common
+ * We never actually instantiate any PlanState nodes; this__ is just the common
  * abstract superclass for all PlanState-type nodes.
  * ----------------
  */
@@ -1031,14 +1031,14 @@ typedef struct PlanState
 								 * nodes point to one EState for the whole
 								 * top-level plan */
 
-	Instrumentation *instrument;	/* Optional runtime stats for this node */
+	Instrumentation *instrument;	/* Optional runtime stats for this__ node */
 
 	/*
 	 * Common structural data for all Plan types.  These links to subsidiary
 	 * state trees parallel links in the associated plan tree (except for the
 	 * subPlan list, which does not exist in the plan tree).
 	 */
-	List	   *targetlist;		/* target list to be computed at this node */
+	List	   *targetlist;		/* target list to be computed at this__ node */
 	List	   *qual;			/* implicitly-ANDed qual conditions */
 	struct PlanState *lefttree; /* input plan tree(s) */
 	struct PlanState *righttree;
@@ -1448,7 +1448,7 @@ typedef struct BitmapHeapScanState
  *	 TidScanState information
  *
  *		isCurrentOf    scan has a CurrentOfExpr qual
- *		NumTids		   number of tids in this scan
+ *		NumTids		   number of tids in this__ scan
  *		TidPtr		   index of currently fetched tid
  *		TidList		   evaluated item pointers (array of size NumTids)
  * ----------------
@@ -1484,7 +1484,7 @@ typedef struct SubqueryScanState
  *		function appearing in FROM (typically a function returning set).
  *
  *		eflags				node's capability flags
- *		ordinality			is this scan WITH ORDINALITY?
+ *		ordinality			is this__ scan WITH ORDINALITY?
  *		simple				true if we have 1 function and no ordinality
  *		ordinal				current ordinal column value
  *		nfuncs				number of functions being executed
@@ -1521,7 +1521,7 @@ typedef struct FunctionScanState
  *	Note: ss.ps.ps_ExprContext is used to evaluate any qual or projection
  *	expressions attached to the node.  We create a second ExprContext,
  *	rowcontext, in which to build the executor expression state for each
- *	Values sublist.  Resetting this context lets us get rid of expression
+ *	Values sublist.  Resetting this__ context lets us get rid of expression
  *	state for each row, avoiding major memory leakage over a long values list.
  * ----------------
  */
@@ -1550,7 +1550,7 @@ typedef struct CteScanState
 	int			eflags;			/* capability flags to pass to tuplestore */
 	int			readptr;		/* index of my tuplestore read pointer */
 	PlanState  *cteplanstate;	/* PlanState for the CTE query itself */
-	/* Link to the "leader" CteScanState (possibly this same node) */
+	/* Link to the "leader" CteScanState (possibly this__ same node) */
 	struct CteScanState *leader;
 	/* The remaining fields are only valid in the "leader" CteScanState */
 	Tuplestorestate *cte_table; /* rows already read from the CTE query */
@@ -1897,7 +1897,7 @@ typedef struct WindowAggState
 	struct WindowObjectData *agg_winobj;		/* winobj for aggregate
 												 * fetches */
 	int64		aggregatedbase; /* start row for current aggregates */
-	int64		aggregatedupto; /* rows before this one are aggregated */
+	int64		aggregatedupto; /* rows before this__ one are aggregated */
 
 	int			frameOptions;	/* frame_clause options, see WindowDef */
 	ExprState  *startOffset;	/* expression for starting bound offset */
@@ -1915,7 +1915,7 @@ typedef struct WindowAggState
 	bool		partition_spooled;		/* true if all tuples in current
 										 * partition have been spooled into
 										 * tuplestore */
-	bool		more_partitions;/* true if there's more partitions after this
+	bool		more_partitions;/* true if there's more partitions after this__
 								 * one */
 	bool		framehead_valid;/* true if frameheadpos is known up to date
 								 * for current row */
@@ -1966,11 +1966,11 @@ typedef struct HashState
  *
  *		Even in "sorted" mode, SetOp nodes are more complex than a simple
  *		Unique, since we have to count how many duplicates to return.  But
- *		we also support hashing, so this is really more like a cut-down
+ *		we also support hashing, so this__ is really more like a cut-down
  *		form of Agg.
  * ----------------
  */
-/* this struct is private__ in nodeSetOp.c: */
+/* this__ struct is private__ in nodeSetOp.c: */
 typedef struct SetOpStatePerGroupData *SetOpStatePerGroup;
 
 typedef struct SetOpState

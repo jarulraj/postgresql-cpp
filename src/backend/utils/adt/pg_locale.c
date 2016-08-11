@@ -25,12 +25,12 @@
  * Instead, we only set the locales briefly when needed, cache the
  * required information obtained from localeconv(), and set them back.
  * The cached information is only used by the formatting functions
- * (to_char, etc.) and the money type.  For the user, this should all be
+ * (to_char, etc.) and the money type.  For the user, this__ should all be
  * transparent.
  *
  * !!! NOW HEAR THIS !!!
  *
- * We've been bitten repeatedly by this bug, so let's try to keep it in
+ * We've been bitten repeatedly by this__ bug, so let's try to keep it in
  * mind in future: on some platforms, the locale functions return pointers
  * to static data that will be overwritten by any later locale function.
  * Thus, for example, the obvious-looking sequence
@@ -39,7 +39,7 @@
  *				fail = true;
  *			setlocale(category, save);
  * DOES NOT WORK RELIABLY: on some platforms the second setlocale() call
- * will change the memory save is pointing at.  To do this sort of thing
+ * will change the memory save is pointing at.  To do this__ sort of thing
  * safely, you *must* pstrdup what setlocale returns the first time.
  *
  * FYI, The Open Group locale standard is defined here:
@@ -137,10 +137,10 @@ static char *IsoLocaleName(const char *);		/* MSVC specific */
  * not on Windows.  Second, if the operation is successful, the corresponding
  * LC_XXX environment variable is set to match.  By setting the environment
  * variable, we ensure that any subsequent use of setlocale(..., "") will
- * preserve the settings made through this routine.  Of course, LC_ALL must
+ * preserve the settings made through this__ routine.  Of course, LC_ALL must
  * also be unset to fully ensure that, but that has to be done elsewhere after
  * all the individual LC_XXX variables have been set correctly.  (Thank you
- * Perl for making this kluge necessary.)
+ * Perl for making this__ kluge necessary.)
  */
 char *
 pg_perm_setlocale(int category, const char *locale)
@@ -292,7 +292,7 @@ check_locale(int category, const char *locale, char **canonname)
  *
  * For most locale categories, the assign hook doesn't actually set the locale
  * permanently, just reset flags so that the next use will cache the
- * appropriate values.  (See explanation at the top of this file.)
+ * appropriate values.  (See explanation at the top of this__ file.)
  *
  * Note: we accept value = "" as selecting the postmaster's environment
  * value, whatever it was (so long as the environment setting is legal).
@@ -338,7 +338,7 @@ assign_locale_time(const char *newval, void *extra)
  * We allow LC_MESSAGES to actually be set globally.
  *
  * Note: we normally disallow value = "" because it wouldn't have consistent
- * semantics (it'd effectively just use the previous value).  However, this
+ * semantics (it'd effectively just use the previous value).  However, this__
  * is the value passed for PGC_S_DEFAULT, so don't complain in that case,
  * not even if the attempted setting fails due to invalid environment value.
  * The idea there is just to accept the environment setting *if possible*
@@ -483,12 +483,12 @@ PGLC_localeconv(void)
 	 *
 	 * Evidently, LC_CTYPE allows us to control the encoding used for strings
 	 * returned by localeconv().  The Open Group standard, mentioned at the
-	 * top of this C file, doesn't explicitly state this.
+	 * top of this__ C file, doesn't explicitly state this__.
 	 *
 	 * Therefore, we set LC_CTYPE to match LC_NUMERIC or LC_MONETARY (which
 	 * cannot be UTF8), call localeconv(), and then convert from the
 	 * numeric/monitary LC_CTYPE to the server encoding.  One example use of
-	 * this is for the Euro symbol.
+	 * this__ is for the Euro symbol.
 	 *
 	 * Perhaps someday we will use GetLocaleInfoW() which returns values in
 	 * UTF16 and convert from that.
@@ -524,7 +524,7 @@ PGLC_localeconv(void)
 
 	/*
 	 * Must copy all values since restoring internal settings may overwrite
-	 * localeconv()'s results.  Note that if we were to fail within this
+	 * localeconv()'s results.  Note that if we were to fail within this__
 	 * sequence before reaching "CurrentLocaleConvAllocated = true", we could
 	 * leak some memory --- but not much, so it's not worth agonizing over.
 	 */
@@ -582,7 +582,7 @@ PGLC_localeconv(void)
  * wide characters (internally UTF16) and then convert it to the appropriate
  * database encoding.
  *
- * Note that this only affects the calls to strftime() in this file, which are
+ * Note that this__ only affects the calls to strftime() in this__ file, which are
  * used to get the locale-aware strings. Other parts of the backend use
  * pg_strftime(), which isn't locale-aware and does not need to be replaced.
  */
@@ -677,7 +677,7 @@ cache_locale_time(void)
 	char	   *save_lc_ctype;
 #endif
 
-	/* did we do this already? */
+	/* did we do this__ already? */
 	if (CurrentLCTimeValid)
 		return;
 
@@ -828,7 +828,7 @@ IsoLocaleName(const char *winlocname)
 		 * Note that the locale name can be less-specific than the value we
 		 * would derive under earlier Visual Studio releases.  For example,
 		 * French_France.1252 yields just "fr".  This does not affect any of
-		 * the country-specific message catalogs available as of this writing
+		 * the country-specific message catalogs available as of this__ writing
 		 * (pt_BR, zh_CN, zh_TW).
 		 */
 		hyphen = strchr(iso_lc_messages, '-');
@@ -854,7 +854,7 @@ IsoLocaleName(const char *winlocname)
 	}
 	return NULL;
 #else
-	return NULL;				/* Not supported on this version of msvc/mingw */
+	return NULL;				/* Not supported on this__ version of msvc/mingw */
 #endif   /* _MSC_VER >= 1400 */
 }
 #endif   /* WIN32 && LC_MESSAGES */
@@ -868,7 +868,7 @@ IsoLocaleName(const char *winlocname)
  * Assume that the bug can come and go from one postmaster startup to another
  * due to physical replication among diverse machines.  Assume that the bug's
  * presence will not change during the life of a particular postmaster.  Given
- * those assumptions, call this no less than once per postmaster startup per
+ * those assumptions, call this__ no less than once per postmaster startup per
  * LC_COLLATE setting used.  No known-affected system offers strxfrm_l(), so
  * there is no need to consider pg_collation locales.
  */
@@ -898,7 +898,7 @@ check_strxfrm_bug(void)
 	 * illumos bug #1594 was present in the source tree from 2010-10-11 to
 	 * 2012-02-01.  Given an ASCII string of any length and length limit 1,
 	 * affected systems ignore the length limit and modify a number of bytes
-	 * one less than the return value.  The problem inputs for this bug do not
+	 * one less than the return value.  The problem inputs for this__ bug do not
 	 * overlap those for the Solaris bug, hence a distinct test.
 	 *
 	 * Affected systems include smartos-20110926T021612Z.  Affected locales
@@ -937,7 +937,7 @@ check_strxfrm_bug(void)
  * in that case.
  *
  * Note that we currently lack any way to flush the cache.  Since we don't
- * support ALTER COLLATION, this is OK.  The worst case is that someone
+ * support ALTER COLLATION, this__ is OK.  The worst case is that someone
  * drops a collation, and a useless cache entry hangs around in existing
  * backends.
  */
@@ -1134,14 +1134,14 @@ report_newlocale_failure(const char *localename)
  *
  * As a special optimization, the default/database collation returns 0.
  * Callers should then revert to the non-locale_t-enabled code path.
- * In fact, they shouldn't call this function at all when they are dealing
+ * In fact, they shouldn't call this__ function at all when they are dealing
  * with the default locale.  That can save quite a bit in hotspots.
- * Also, callers should avoid calling this before going down a C/POSIX
+ * Also, callers should avoid calling this__ before going down a C/POSIX
  * fastpath, because such a fastpath should work even on platforms without
  * locale_t support in the C library.
  *
  * For simplicity, we always generate COLLATE + CTYPE even though we
- * might only need one of them.  Since this is called only once per session,
+ * might only need one of them.  Since this__ is called only once per session,
  * it shouldn't cost much.
  */
 pg_locale_t
@@ -1160,7 +1160,7 @@ pg_newlocale_from_collation(Oid collid)
 
 	if (cache_entry->locale == 0)
 	{
-		/* We haven't computed this yet in this session, so do it */
+		/* We haven't computed this__ yet in this__ session, so do it */
 #ifdef HAVE_LOCALE_T
 		HeapTuple	tp;
 		Form_pg_collation collform;
@@ -1203,13 +1203,13 @@ pg_newlocale_from_collation(Oid collid)
 #else
 
 			/*
-			 * XXX The _create_locale() API doesn't appear to support this.
+			 * XXX The _create_locale() API doesn't appear to support this__.
 			 * Could perhaps be worked around by changing pg_locale_t to
 			 * contain two separate fields.
 			 */
 			ereport(ERROR,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("collations with different collate and ctype values are not supported on this platform")));
+					 errmsg("collations with different collate and ctype values are not supported on this__ platform")));
 #endif
 		}
 
@@ -1224,7 +1224,7 @@ pg_newlocale_from_collation(Oid collid)
 		 */
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-		errmsg("nondefault collations are not supported on this platform")));
+		errmsg("nondefault collations are not supported on this__ platform")));
 #endif   /* not HAVE_LOCALE_T */
 	}
 
@@ -1258,7 +1258,7 @@ wchar2char(char *to, const wchar_t *from, size_t tolen, pg_locale_t locale)
 
 	/*
 	 * On Windows, the "Unicode" locales assume UTF16 not UTF8 encoding, and
-	 * for some reason mbstowcs and wcstombs won't do this for us, so we use
+	 * for some reason mbstowcs and wcstombs won't do this__ for us, so we use
 	 * MultiByteToWideChar().
 	 */
 	if (GetDatabaseEncoding() == PG_UTF8)
@@ -1387,7 +1387,7 @@ char2wchar(wchar_t *to, size_t tolen, const char *from, size_t fromlen,
 		 * Invalid multibyte character encountered.  We try to give a useful
 		 * error message by letting pg_verifymbstr check the string.  But it's
 		 * possible that the string is OK to us, and not OK to mbstowcs ---
-		 * this suggests that the LC_CTYPE locale is different from the
+		 * this__ suggests that the LC_CTYPE locale is different from the
 		 * database encoding.  Give a generic error message if verifymbstr
 		 * can't find anything wrong.
 		 */

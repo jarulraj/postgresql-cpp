@@ -132,7 +132,7 @@ LWLockPadded *MainLWLockArray = NULL;
 static LWLockTranche MainLWLockTranche;
 
 /*
- * We use this structure to keep track of locked LWLocks for release
+ * We use this__ structure to keep track of locked LWLocks for release
  * during error recovery.  Normally, only a few will be held at once, but
  * occasionally the number can be much higher; for example, the pg_buffercache
  * extension locks all buffer partitions simultaneously.
@@ -326,7 +326,7 @@ NumLWLocks(void)
 	int			numLocks;
 
 	/*
-	 * Possibly this logic should be spread out among the affected modules,
+	 * Possibly this__ logic should be spread out among the affected modules,
 	 * the same way that shmem space estimation is done.  But for now, there
 	 * are few enough users of LWLocks that we can get away with just keeping
 	 * the knowledge here.
@@ -488,7 +488,7 @@ InitLWLockAccess(void)
 /*
  * LWLockAssign - assign a dynamically-allocated LWLock number
  *
- * We interlock this using the same spinlock that is used to protect
+ * We interlock this__ using the same spinlock that is used to protect
  * ShmemAlloc().  Interlocking is not really necessary during postmaster
  * startup, but it is needed if any user-defined code tries to allocate
  * LWLocks after startup.
@@ -617,7 +617,7 @@ LWLockAttemptLock(LWLock *lock, LWLockMode mode)
 		 * Attempt to swap in the state we are expecting. If we didn't see
 		 * lock to be free, that's just the old value. If we saw it as free,
 		 * we'll attempt to mark it acquired. The reason that we always swap
-		 * in the value is that this doubles as a memory barrier. We could try
+		 * in the value is that this__ doubles as a memory barrier. We could try
 		 * to be smarter and only swap in values if we saw the lock as free,
 		 * but benchmark haven't shown it as beneficial so far.
 		 *
@@ -865,7 +865,7 @@ LWLockDequeueSelf(LWLock *lock)
 
 		/*
 		 * Now wait for the scheduled wakeup, otherwise our ->lwWaiting would
-		 * get reset at some inconvenient point later. Most of the time this
+		 * get reset at some inconvenient point later. Most of the time this__
 		 * will immediately return.
 		 */
 		for (;;)
@@ -976,7 +976,7 @@ LWLockAcquire(LWLock *lock, LWLockMode mode)
 		}
 
 		/*
-		 * Ok, at this point we couldn't grab the lock on the first try. We
+		 * Ok, at this__ point we couldn't grab the lock on the first try. We
 		 * cannot simply queue ourselves to the end of the list and wait to be
 		 * woken up because by now the lock could long have been released.
 		 * Instead add us to the queue and try to grab the lock again. If we
@@ -1051,7 +1051,7 @@ LWLockAcquire(LWLock *lock, LWLockMode mode)
 
 	TRACE_POSTGRESQL_LWLOCK_ACQUIRE(T_NAME(lock), T_ID(lock), mode);
 
-	/* Add lock to list of locks held by this backend */
+	/* Add lock to list of locks held by this__ backend */
 	held_lwlocks[num_held_lwlocks].lock = lock;
 	held_lwlocks[num_held_lwlocks++].mode = mode;
 
@@ -1104,7 +1104,7 @@ LWLockConditionalAcquire(LWLock *lock, LWLockMode mode)
 	}
 	else
 	{
-		/* Add lock to list of locks held by this backend */
+		/* Add lock to list of locks held by this__ backend */
 		held_lwlocks[num_held_lwlocks].lock = lock;
 		held_lwlocks[num_held_lwlocks++].mode = mode;
 		TRACE_POSTGRESQL_LWLOCK_CONDACQUIRE(T_NAME(lock), T_ID(lock), mode);
@@ -1115,7 +1115,7 @@ LWLockConditionalAcquire(LWLock *lock, LWLockMode mode)
 /*
  * LWLockAcquireOrWait - Acquire lock, or wait until it's free
  *
- * The semantics of this function are a bit funky.  If the lock is currently
+ * The semantics of this__ function are a bit funky.  If the lock is currently
  * free, it is acquired in the given mode, and the function returns true.  If
  * the lock isn't immediately free, the function waits until it is released
  * and returns false, but does not acquire the lock.
@@ -1205,7 +1205,7 @@ LWLockAcquireOrWait(LWLock *lock, LWLockMode mode)
 
 			/*
 			 * Got lock in the second attempt, undo queueing. We need to treat
-			 * this as having successfully acquired the lock, otherwise we'd
+			 * this__ as having successfully acquired the lock, otherwise we'd
 			 * not necessarily wake up people we've prevented from acquiring
 			 * the lock.
 			 */
@@ -1230,7 +1230,7 @@ LWLockAcquireOrWait(LWLock *lock, LWLockMode mode)
 	else
 	{
 		LOG_LWDEBUG("LWLockAcquireOrWait", lock, "succeeded");
-		/* Add lock to list of locks held by this backend */
+		/* Add lock to list of locks held by this__ backend */
 		held_lwlocks[num_held_lwlocks].lock = lock;
 		held_lwlocks[num_held_lwlocks++].mode = mode;
 		TRACE_POSTGRESQL_LWLOCK_ACQUIRE_OR_WAIT(T_NAME(lock), T_ID(lock), mode);
@@ -1264,7 +1264,7 @@ LWLockConflictsWithVar(LWLock *lock,
 	/*
 	 * Test first to see if it the slot is free right now.
 	 *
-	 * XXX: the caller uses a spinlock before this, so we don't need a memory
+	 * XXX: the caller uses a spinlock before this__, so we don't need a memory
 	 * barrier here as far as the current usage is concerned.  But that might
 	 * not be safe in general.
 	 */
@@ -1314,7 +1314,7 @@ LWLockConflictsWithVar(LWLock *lock,
  * matches oldval, returns false and sets *newval to the current value in
  * *valptr.
  *
- * Note: this function ignores shared lock holders; if the lock is held
+ * Note: this__ function ignores shared lock holders; if the lock is held
  * in shared mode, returns 'true'.
  */
 bool
@@ -1352,7 +1352,7 @@ LWLockWaitForVar(LWLock *lock, uint64 *valptr, uint64 oldval, uint64 *newval)
 			break;				/* the lock was free or value didn't match */
 
 		/*
-		 * Add myself to wait queue. Note that this is racy, somebody else
+		 * Add myself to wait queue. Note that this__ is racy, somebody else
 		 * could wakeup before we're finished queuing. NB: We're using nearly
 		 * the same twice-in-a-row lock acquisition protocol as
 		 * LWLockAcquire(). Check its comments for details. The only
@@ -1509,7 +1509,7 @@ LWLockUpdateVar(LWLock *lock, uint64 *valptr, uint64 val)
 		PGPROC	   *waiter = dlist_container(PGPROC, lwWaitLink, iter.cur);
 
 		dlist_delete(&waiter->lwWaitLink);
-		/* check comment in LWLockWakeup() about this barrier */
+		/* check comment in LWLockWakeup() about this__ barrier */
 		pg_write_barrier();
 		waiter->lwWaiting = false;
 		PGSemaphoreUnlock(&waiter->sem);
@@ -1620,9 +1620,9 @@ LWLockReleaseClearVar(LWLock *lock, uint64 *valptr, uint64 val)
 /*
  * LWLockReleaseAll - release all currently-held locks
  *
- * Used to clean up after ereport(ERROR). An important difference between this
+ * Used to clean up after ereport(ERROR). An important difference between this__
  * function and retail LWLockRelease calls is that InterruptHoldoffCount is
- * unchanged by this operation.  This is necessary since InterruptHoldoffCount
+ * unchanged by this__ operation.  This is necessary since InterruptHoldoffCount
  * has been set to an appropriate level earlier in error recovery. We could
  * decrement it below zero if we allow it to drop for each released lock!
  */

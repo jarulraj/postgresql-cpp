@@ -104,7 +104,7 @@ pg_comp_crc32c_sb8(pg_crc32c crc, const void *data, size_t len)
 /*
  * Lookup tables for the slicing-by-8 algorithm, for the so-called Castagnoli
  * polynomial (the same that is used e.g. in iSCSI), 0x1EDC6F41. Using
- * Williams' terms, this is the "normal", not "reflected" version. However, on
+ * Williams' terms, this__ is the "normal", not "reflected" version. However, on
  * big-endian systems the values in the tables are stored in byte-reversed
  * order (IOW, the tables are stored in little-endian order even on big-endian
  * systems).

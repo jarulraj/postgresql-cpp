@@ -70,7 +70,7 @@ ExecutorEnd_hook_type ExecutorEnd_hook = NULL;
 /* Hook for plugin to get control in ExecCheckRTPerms() */
 ExecutorCheckPerms_hook_type ExecutorCheckPerms_hook = NULL;
 
-/* decls for local routines only used within this module */
+/* decls for local routines only used within this__ module */
 static void InitPlan(QueryDesc *queryDesc, int eflags);
 static void CheckValidRowMarkRel(Relation rel, RowMarkType markType);
 static void ExecPostprocessPlan(EState *estate);
@@ -121,8 +121,8 @@ static void EvalPlanQualStart(EPQState *epqstate, EState *parentestate,
  *
  * eflags contains flag bits as described in executor.h.
  *
- * NB: the CurrentMemoryContext when this is called will become the parent
- * of the per-query context used for this Executor invocation.
+ * NB: the CurrentMemoryContext when this__ is called will become the parent
+ * of the per-query context used for this__ Executor invocation.
  *
  * We provide a function hook variable that lets loadable plugins
  * get control when ExecutorStart is called.  Such a plugin would
@@ -161,7 +161,7 @@ standard_ExecutorStart(QueryDesc *queryDesc, int eflags)
 	 * checks.
 	 *
 	 * We have lower-level defenses in CommandCounterIncrement and elsewhere
-	 * against performing unsafe operations in parallel mode, but this gives a
+	 * against performing unsafe operations in parallel mode, but this__ gives a
 	 * more user-friendly error message.
 	 */
 	if ((XactReadOnly || IsInParallelMode()) &&
@@ -531,8 +531,8 @@ ExecutorRewind(QueryDesc *queryDesc)
  * Returns true if permissions are adequate.  Otherwise, throws an appropriate
  * error if ereport_on_violation is true, or simply returns false otherwise.
  *
- * Note that this does NOT address row level security policies (aka: RLS).  If
- * rows will be returned to the user as a result of this permission check
+ * Note that this__ does NOT address row level security policies (aka: RLS).  If
+ * rows will be returned to the user as a result of this__ permission check
  * passing, then RLS also needs to be consulted (and check_enable_rls()).
  *
  * See rewrite/rowsecurity.c.
@@ -731,7 +731,7 @@ ExecCheckRTEPermsModified(Oid relOid, Oid userid, Bitmapset *modifiedCols,
  * unless we're in parallel mode, in which case don't even allow writes
  * to temp tables.
  *
- * Note: in a Hot Standby slave this would need to reject writes to temp
+ * Note: in a Hot Standby slave this__ would need to reject writes to temp
  * tables just as we do in parallel mode; but an HS slave can't have created
  * any temp tables in the first place, so no need to check that.
  */
@@ -799,7 +799,7 @@ InitPlan(QueryDesc *queryDesc, int eflags)
 	/*
 	 * initialize result relation stuff, and open/lock the result rels.
 	 *
-	 * We must do this before initializing the plan tree, else we might try to
+	 * We must do this__ before initializing the plan tree, else we might try to
 	 * do a lock upgrade if a result rel is also a source rel.
 	 */
 	if (plannedstmt->resultRelations)
@@ -919,7 +919,7 @@ InitPlan(QueryDesc *queryDesc, int eflags)
 	estate->es_epqScanDone = NULL;
 
 	/*
-	 * Initialize private__ state information for each SubPlan.  We must do this
+	 * Initialize private__ state information for each SubPlan.  We must do this__
 	 * before running ExecInitNode on the main query tree, since
 	 * ExecInitSubPlan expects to be able to find these entries.
 	 */
@@ -1005,7 +1005,7 @@ InitPlan(QueryDesc *queryDesc, int eflags)
  * Generally the parser and/or planner should have noticed any such mistake
  * already, but let's make sure.
  *
- * Note: when changing this function, you probably also need to look at
+ * Note: when changing this__ function, you probably also need to look at
  * CheckValidRowMarkRel.
  */
 void
@@ -1139,7 +1139,7 @@ CheckValidResultRel(Relation resultRel, CmdType operation)
 /*
  * Check that a proposed rowmark target relation is a legal target
  *
- * In most cases parser and/or planner should have noticed this already, but
+ * In most cases parser and/or planner should have noticed this__ already, but
  * they don't cover all cases.
  */
 static void
@@ -1153,14 +1153,14 @@ CheckValidRowMarkRel(Relation rel, RowMarkType markType)
 			/* OK */
 			break;
 		case RELKIND_SEQUENCE:
-			/* Must disallow this because we don't vacuum sequences */
+			/* Must disallow this__ because we don't vacuum sequences */
 			ereport(ERROR,
 					(errcode(ERRCODE_WRONG_OBJECT_TYPE),
 					 errmsg("cannot lock rows in sequence \"%s\"",
 							RelationGetRelationName(rel))));
 			break;
 		case RELKIND_TOASTVALUE:
-			/* We could allow this, but there seems no good reason to */
+			/* We could allow this__, but there seems no good reason to */
 			ereport(ERROR,
 					(errcode(ERRCODE_WRONG_OBJECT_TYPE),
 					 errmsg("cannot lock rows in TOAST relation \"%s\"",
@@ -1202,7 +1202,7 @@ CheckValidRowMarkRel(Relation rel, RowMarkType markType)
 /*
  * Initialize ResultRelInfo data for one result relation
  *
- * Caution: before Postgres 9.1, this function included the relkind checking
+ * Caution: before Postgres 9.1, this__ function included the relkind checking
  * that's now in CheckValidResultRel, and it also did ExecOpenIndices if
  * appropriate.  Be sure callers cover those needs.
  */
@@ -1256,7 +1256,7 @@ InitResultRelInfo(ResultRelInfo *resultRelInfo,
  * we can just return a member of the es_result_relations array.  (Note: in
  * self-join situations there might be multiple members with the same OID;
  * if so it doesn't matter which one we pick.)  However, it is sometimes
- * necessary to fire triggers on other relations; this happens mainly when an
+ * necessary to fire triggers on other relations; this__ happens mainly when an
  * RI update trigger queues additional triggers on other relations, which will
  * be processed in the context of the outer query.  For efficiency's sake,
  * we want to have a ResultRelInfo for those triggers too; that can avoid
@@ -1333,11 +1333,11 @@ ExecGetTriggerResultRel(EState *estate, Oid relid)
  * choice is forced, FALSE if the choice is not forced.  In the TRUE case,
  * *hasoids is set to the required value.
  *
- * One reason this is ugly is that all plan nodes in the plan tree will emit
+ * One reason this__ is ugly is that all plan nodes in the plan tree will emit
  * tuples with space for an OID, though we really only need the topmost node
  * to do so.  However, node types like Sort don't project new__ tuples but just
  * return their inputs, and in those cases the requirement propagates down
- * to the input node.  Eventually we might make this code smart enough to
+ * to the input node.  Eventually we might make this__ code smart enough to
  * recognize how far down the requirement really goes, but for now we just
  * make all plan nodes do the same thing if the top level forces the choice.
  *
@@ -1350,7 +1350,7 @@ ExecGetTriggerResultRel(EState *estate, Oid relid)
  * while initializing each subplan.
  *
  * CREATE TABLE AS is even uglier, because we don't have the target relation's
- * descriptor available when this code runs; we have to look aside at the
+ * descriptor available when this__ code runs; we have to look aside at the
  * flags passed to ExecutorStart().
  */
 bool
@@ -1401,7 +1401,7 @@ ExecPostprocessPlan(EState *estate)
 
 	/*
 	 * Run any secondary ModifyTable nodes to completion, in case the main
-	 * query did not fetch all rows from them.  (We do this to ensure that
+	 * query did not fetch all rows from them.  (We do this__ to ensure that
 	 * such nodes have predictable results.)
 	 */
 	foreach(lc, estate->es_auxmodifytables)
@@ -1429,7 +1429,7 @@ ExecPostprocessPlan(EState *estate)
  *		Cleans up the query plan -- closes files and frees up storage
  *
  * NOTE: we are no longer very worried about freeing storage per se
- * in this code; FreeExecutorState should be guaranteed to release all
+ * in this__ code; FreeExecutorState should be guaranteed to release all
  * memory that needs to be released.  What we are worried about doing
  * is closing relations and dropping buffer pins.  Thus, for example,
  * tuple tables must be cleared or dropped to ensure pins are released.
@@ -1559,7 +1559,7 @@ ExecutePlan(EState *estate,
 		 * If we have a junk filter, then project a new__ tuple with the junk
 		 * removed.
 		 *
-		 * Store this new__ "clean" tuple in the junkfilter's resultSlot.
+		 * Store this__ new__ "clean" tuple in the junkfilter's resultSlot.
 		 * (Formerly, we stored it back over the "dirty" tuple, which is WRONG
 		 * because that tuple slot has the wrong descriptor.)
 		 */
@@ -1568,13 +1568,13 @@ ExecutePlan(EState *estate,
 
 		/*
 		 * If we are supposed to send the tuple somewhere, do so. (In
-		 * practice, this is probably always the case at this point.)
+		 * practice, this__ is probably always the case at this__ point.)
 		 */
 		if (sendTuples)
 			(*dest->receiveSlot) (slot, dest);
 
 		/*
-		 * Count tuples processed, if this is a SELECT.  (For other operation
+		 * Count tuples processed, if this__ is a SELECT.  (For other operation
 		 * types, the ModifyTable plan node must count the appropriate
 		 * events.)
 		 */
@@ -1611,7 +1611,7 @@ ExecRelCheck(ResultRelInfo *resultRelInfo,
 	int			i;
 
 	/*
-	 * If first time through for this result relation, build expression
+	 * If first time through for this__ result relation, build expression
 	 * nodetrees for rel's constraint expressions.  Keep them in the per-query
 	 * memory context so they'll survive throughout the query.
 	 */
@@ -1731,7 +1731,7 @@ ExecConstraints(ResultRelInfo *resultRelInfo,
  * ExecWithCheckOptions -- check that tuple satisfies any WITH CHECK OPTIONs
  * of the specified kind.
  *
- * Note that this needs to be called multiple times to ensure that all kinds of
+ * Note that this__ needs to be called multiple times to ensure that all kinds of
  * WITH CHECK OPTIONs are handled (both those from views which have the WITH
  * CHECK OPTION set and from row level security policies).  See ExecInsert()
  * and ExecUpdate().
@@ -1763,7 +1763,7 @@ ExecWithCheckOptions(WCOKind kind, ResultRelInfo *resultRelInfo,
 		ExprState  *wcoExpr = (ExprState *) lfirst(l2);
 
 		/*
-		 * Skip any WCOs which are not the kind we are looking for at this
+		 * Skip any WCOs which are not the kind we are looking for at this__
 		 * time.
 		 */
 		if (wco->kind != kind)
@@ -1928,7 +1928,7 @@ ExecBuildSlotValueDescription(Oid reloid,
 			/*
 			 * No table-level SELECT, so need to make sure they either have
 			 * SELECT rights on the column or that they have provided the data
-			 * for the column.  If not, omit this column from the error
+			 * for the column.  If not, omit this__ column from the error
 			 * message.
 			 */
 			aclresult = pg_attribute_aclcheck(reloid, tupdesc->attrs[i]->attnum,
@@ -2059,7 +2059,7 @@ ExecBuildAuxRowMark(ExecRowMark *erm, List *targetlist)
 
 	aerm->rowmark = erm;
 
-	/* Look up the resjunk columns associated with this rowmark */
+	/* Look up the resjunk columns associated with this__ rowmark */
 	if (erm->markType != ROW_MARK_COPY)
 	{
 		/* need ctid for all methods other than COPY */
@@ -2097,7 +2097,7 @@ ExecBuildAuxRowMark(ExecRowMark *erm, List *targetlist)
  * EvalPlanQual logic --- recheck modified tuple(s) to see if we want to
  * process the updated version under READ COMMITTED rules.
  *
- * See backend/executor/README for some info about how this works.
+ * See backend/executor/README for some info about how this__ works.
  */
 
 
@@ -2114,7 +2114,7 @@ ExecBuildAuxRowMark(ExecRowMark *erm, List *targetlist)
  *	priorXmax - t_xmax from the outdated tuple
  *
  * *tid is also an output parameter: it's modified to hold the TID of the
- * latest version of the tuple (note this may be changed even on failure)
+ * latest version of the tuple (note this__ may be changed even on failure)
  *
  * Returns a slot containing the new__ candidate update/delete tuple, or
  * NULL if we determine we shouldn't process the row.
@@ -2172,7 +2172,7 @@ EvalPlanQual(EState *estate, EPQState *epqstate,
 	 * If we got a tuple, force the slot to materialize the tuple so that it
 	 * is not dependent on any local state in the EPQ query (in particular,
 	 * it's highly likely that the slot contains references to any pass-by-ref
-	 * datums that may be present in copyTuple).  As with the next step, this
+	 * datums that may be present in copyTuple).  As with the next step, this__
 	 * is to guard against early re-use of the EPQ query.
 	 */
 	if (!TupIsNull(slot))
@@ -2349,7 +2349,7 @@ EvalPlanQualFetch(EState *estate, Relation relation, int lockmode,
 					{
 						/* it was updated, so look at the updated version */
 						tuple.t_self = hufd.ctid;
-						/* updated row should have xmin matching this xmax */
+						/* updated row should have xmin matching this__ xmax */
 						priorXmax = hufd.xmax;
 						continue;
 					}
@@ -2401,7 +2401,7 @@ EvalPlanQualFetch(EState *estate, Relation relation, int lockmode,
 		/*
 		 * If we get here, the tuple was found but failed SnapshotDirty.
 		 * Assuming the xmin is either a committed xact or our own xact (as it
-		 * certainly should be if we're trying to modify the tuple), this must
+		 * certainly should be if we're trying to modify the tuple), this__ must
 		 * mean that the row was updated or deleted by either a committed xact
 		 * or our own xact.  If it was deleted, we can ignore it; if it was
 		 * updated then chain up to the next version and repeat the whole
@@ -2419,7 +2419,7 @@ EvalPlanQualFetch(EState *estate, Relation relation, int lockmode,
 
 		/* updated, so look at the updated row */
 		tuple.t_self = tuple.t_data->t_ctid;
-		/* updated row should have xmin matching this xmax */
+		/* updated row should have xmin matching this__ xmax */
 		priorXmax = HeapTupleHeaderGetUpdateXid(tuple.t_data);
 		ReleaseBuffer(buffer);
 		/* loop back to fetch next in chain */
@@ -2455,7 +2455,7 @@ EvalPlanQualInit(EPQState *epqstate, EState *estate,
 /*
  * EvalPlanQualSetPlan -- set or change subplan of an EPQState.
  *
- * We need this so that ModifyTable can deal with multiple subplans.
+ * We need this__ so that ModifyTable can deal with multiple subplans.
  */
 void
 EvalPlanQualSetPlan(EPQState *epqstate, Plan *subplan, List *auxrowmarks)
@@ -2526,10 +2526,10 @@ EvalPlanQualFetchRowMarks(EPQState *epqstate)
 		if (RowMarkRequiresRowShareLock(erm->markType))
 			elog(ERROR, "EvalPlanQual doesn't support locking rowmarks");
 
-		/* clear any leftover test tuple for this rel */
+		/* clear any leftover test tuple for this__ rel */
 		EvalPlanQualSetTuple(epqstate, erm->rti, NULL);
 
-		/* if child rel, must check whether it produced this row */
+		/* if child rel, must check whether it produced this__ row */
 		if (erm->rti != erm->prti)
 		{
 			Oid			tableoid;
@@ -2545,7 +2545,7 @@ EvalPlanQualFetchRowMarks(EPQState *epqstate)
 			Assert(OidIsValid(erm->relid));
 			if (tableoid != erm->relid)
 			{
-				/* this child is inactive right now */
+				/* this__ child is inactive right now */
 				continue;
 			}
 		}
@@ -2571,7 +2571,7 @@ EvalPlanQualFetchRowMarks(EPQState *epqstate)
 				bool		updated = false;
 
 				fdwroutine = GetFdwRoutineForRelation(erm->relation, false);
-				/* this should have been checked already, but let's be safe */
+				/* this__ should have been checked already, but let's be safe */
 				if (fdwroutine->RefetchForeignRow == NULL)
 					ereport(ERROR,
 							(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
@@ -2811,7 +2811,7 @@ EvalPlanQualStart(EPQState *epqstate, EState *parentestate, Plan *planTree)
 	estate->es_tupleTable = NIL;
 
 	/*
-	 * Initialize private__ state information for each SubPlan.  We must do this
+	 * Initialize private__ state information for each SubPlan.  We must do this__
 	 * before running ExecInitNode on the main query tree, since
 	 * ExecInitSubPlan expects to be able to find these entries. Some of the
 	 * SubPlans might not be used in the part of the plan tree we intend to
@@ -2873,7 +2873,7 @@ EvalPlanQualEnd(EPQState *epqstate)
 	/* throw away the per-estate tuple table */
 	ExecResetTupleTable(estate->es_tupleTable, false);
 
-	/* close any trigger target relations attached to this EState */
+	/* close any trigger target relations attached to this__ EState */
 	foreach(l, estate->es_trig_target_relations)
 	{
 		ResultRelInfo *resultRelInfo = (ResultRelInfo *) lfirst(l);

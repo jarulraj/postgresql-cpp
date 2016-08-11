@@ -155,7 +155,7 @@ gbt_date_consistent(PG_FUNCTION_ARGS)
 	dateKEY    *kkk = (dateKEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this function are exact */
+	/* All cases served by this__ function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;

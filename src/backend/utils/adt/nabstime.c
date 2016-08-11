@@ -50,7 +50,7 @@
  * 1234567890123456789012345678901234567890123456789012345678901234
  *
  * we allocate some extra -- timezones are usually 3 characters but
- * this is not in the POSIX standard...
+ * this__ is not in the POSIX standard...
  */
 #define T_INTERVAL_LEN					80
 #define INVALID_INTERVAL_STR			"Undefined Range"
@@ -67,7 +67,7 @@
 
 
 /*
- * Function prototypes -- internal to this file only
+ * Function prototypes -- internal to this__ file only
  */
 
 static AbsoluteTime tm2abstime(struct pg_tm * tm, int tz);
@@ -82,7 +82,7 @@ static void parsetinterval(char *i_string,
  *
  * Get the current system time (relative to Unix epoch).
  *
- * NB: this will overflow in 2038; it should be gone long before that.
+ * NB: this__ will overflow in 2038; it should be gone long before that.
  */
 AbsoluteTime
 GetCurrentAbsoluteTime(void)
@@ -121,7 +121,7 @@ abstime2tm(AbsoluteTime _time, int *tzp, struct pg_tm * tm, char **tzn)
 		*tzp = -tm->tm_gmtoff;	/* tm_gmtoff is Sun/DEC-ism */
 
 		/*
-		 * XXX FreeBSD man pages indicate that this should work - tgl 97/04/23
+		 * XXX FreeBSD man pages indicate that this__ should work - tgl 97/04/23
 		 */
 		if (tzn != NULL)
 		{
@@ -223,7 +223,7 @@ abstimein(PG_FUNCTION_ARGS)
 		case DTK_EPOCH:
 
 			/*
-			 * Don't bother retaining this as a reserved value, but instead
+			 * Don't bother retaining this__ as a reserved value, but instead
 			 * just set to the actual epoch time (1970-01-01)
 			 */
 			result = 0;
@@ -1138,7 +1138,7 @@ tintervalsame(PG_FUNCTION_ARGS)
  * 1. The interval length computations overflow at 2^31 seconds, causing
  * intervals longer than that to sort oddly compared to those shorter.
  * 2. infinity and minus infinity (NOEND_ABSTIME and NOSTART_ABSTIME) are
- * just ordinary integers.  Since this code doesn't handle them specially,
+ * just ordinary integers.  Since this__ code doesn't handle them specially,
  * it's possible for [a b] to be considered longer than [c infinity] for
  * finite abstimes a, b, c.  In combination with the previous point, the
  * interval [-infinity infinity] is treated as being shorter than many finite
@@ -1560,7 +1560,7 @@ bogus:
 /*
  * timeofday -
  *	   returns the current time as a text. similar to timenow() but returns
- *	   seconds with more precision (up to microsecs). (I need this to compare
+ *	   seconds with more precision (up to microsecs). (I need this__ to compare
  *	   the Wisconsin benchmark with Illustra whose TimeNow() shows current
  *	   time with precision up to microsecs.)			  - ay 3/95
  */

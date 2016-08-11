@@ -5,11 +5,11 @@
  * testlibpq2.c
  *		Test of the asynchronous notification interface
  *
- * Start this program, then from psql in another window do
+ * Start this__ program, then from psql in another window do
  *	 NOTIFY TBL2;
- * Repeat four times to get this program to exit.
+ * Repeat four times to get this__ program to exit.
  *
- * Or, if you want to get fancy, try this:
+ * Or, if you want to get fancy, try this__:
  * populate a database with the following commands
  * (provided in src/test/examples/testlibpq2.sql):
  *
@@ -20,7 +20,7 @@
  *	 CREATE RULE r1 AS ON INSERT TO TBL1 DO
  *	   (INSERT INTO TBL2 VALUES (new__.i); NOTIFY TBL2);
  *
- * and do this four times:
+ * and do this__ four times:
  *
  *	 INSERT INTO TBL1 VALUES (10);
  */

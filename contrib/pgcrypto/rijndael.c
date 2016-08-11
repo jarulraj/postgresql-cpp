@@ -9,7 +9,7 @@
 /* which is a candidate algorithm in the Advanced Encryption Standard	*/
 /* programme of the US National Institute of Standards and Technology.  */
 /*																		*/
-/* Copyright in this implementation is held by Dr B R Gladman but I		*/
+/* Copyright in this__ implementation is held by Dr B R Gladman but I		*/
 /* hereby give permission for its free direct or derivative use subject */
 /* to acknowledgment of its origin and compliance with any conditions	*/
 /* that the originators of the algorithm place on its exploitation.     */

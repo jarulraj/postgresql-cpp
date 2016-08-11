@@ -5,17 +5,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this software was funded, in part, by Cray Research Inc.,
+ * Development of this__ software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this entire copyright notice and
+ * redistributions in source form retain this__ entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this package in the documentation
+ * I'd appreciate being given credit for this__ package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -132,7 +132,7 @@ typedef struct
 /*
  * error reporting
  * Be careful if modifying the list of error codes -- the table used by
- * regerror() is generated automatically from this file!
+ * regerror() is generated automatically from this__ file!
  */
 #define REG_OKAY	 0			/* no errors detected */
 #define REG_NOMATCH  1			/* failed to match */

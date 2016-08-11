@@ -80,13 +80,13 @@ static bool XidInMVCCSnapshot(TransactionId xid, Snapshot snapshot);
 /*
  * SetHintBits()
  *
- * Set commit/abort hint bits on a tuple, if appropriate at this time.
+ * Set commit/abort hint bits on a tuple, if appropriate at this__ time.
  *
  * It is only safe to set a transaction-committed hint bit if we know the
  * transaction's commit record has been flushed to disk, or if the table is
  * temporary or unlogged and will be obliterated by a crash anyway.  We
  * cannot change the LSN of the page here because we may hold only a share
- * lock on the buffer, so we can't use the LSN to interlock this; we have to
+ * lock on the buffer, so we can't use the LSN to interlock this__; we have to
  * just refrain from setting the hint bit until some future re-examination
  * of the tuple.
  *
@@ -96,13 +96,13 @@ static bool XidInMVCCSnapshot(TransactionId xid, Snapshot snapshot);
  * Also, if we are cleaning up HEAP_MOVED_IN or HEAP_MOVED_OFF entries, then
  * we can always set the hint bits, since pre-9.0 VACUUM FULL always used
  * synchronous commits and didn't move tuples that weren't previously
- * hinted.  (This is not known by this subroutine, but is applied by its
- * callers.)  Note: old-style VACUUM FULL is gone, but we have to keep this
+ * hinted.  (This is not known by this__ subroutine, but is applied by its
+ * callers.)  Note: old-style VACUUM FULL is gone, but we have to keep this__
  * module's support for MOVED_OFF/MOVED_IN flag bits for as long as we
  * support in-place update from pre-9.0 databases.
  *
  * Normal commits may be asynchronous, so for those we need to get the LSN
- * of the transaction and then check whether this is flushed.
+ * of the transaction and then check whether this__ is flushed.
  *
  * The caller should pass xid as the XID of the transaction to check, or
  * InvalidTransactionId if no check is needed.
@@ -144,7 +144,7 @@ HeapTupleSetHintBits(HeapTupleHeader tuple, Buffer buffer,
  *
  *	Here, we consider the effects of:
  *		all committed transactions (as of the current instant)
- *		previous commands of this transaction
+ *		previous commands of this__ transaction
  *		changes made by the current command
  *
  * Note:
@@ -347,9 +347,9 @@ HeapTupleSatisfiesAny(HeapTuple htup, Snapshot snapshot, Buffer buffer)
  * its own time qual checks; if you can see the main table row that contains
  * a TOAST reference, you should be able to see the TOASTed value.  However,
  * vacuuming a TOAST table is independent of the main table, and in case such
- * a vacuum fails partway through, we'd better do this much checking.
+ * a vacuum fails partway through, we'd better do this__ much checking.
  *
- * Among other things, this means you can't do UPDATEs of rows in a TOAST
+ * Among other things, this__ means you can't do UPDATEs of rows in a TOAST
  * table.
  */
 bool
@@ -423,7 +423,7 @@ HeapTupleSatisfiesToast(HeapTuple htup, Snapshot snapshot,
  * HeapTupleSatisfiesUpdate
  *
  *	This function returns a more detailed result code than most of the
- *	functions in this file, since UPDATE needs to know more than "is it
+ *	functions in this__ file, since UPDATE needs to know more than "is it
  *	visible?".  It also allows for user-supplied CommandId rather than
  *	relying on CurrentCommandId.
  *
@@ -441,7 +441,7 @@ HeapTupleSatisfiesToast(HeapTuple htup, Snapshot snapshot,
  *	HeapTupleUpdated: The tuple was updated by a committed transaction.
  *
  *	HeapTupleBeingUpdated: The tuple is being updated by an in-progress
- *	transaction other than the current transaction.  (Note: this includes
+ *	transaction other than the current transaction.  (Note: this__ includes
  *	the case where the tuple is share-locked by a MultiXact, even if the
  *	MultiXact includes the current transaction.  Callers that want to
  *	distinguish that case must test for it themselves.)
@@ -514,7 +514,7 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 				xmax = HeapTupleHeaderGetRawXmax(tuple);
 
 				/*
-				 * Careful here: even though this tuple was created by our own
+				 * Careful here: even though this__ tuple was created by our own
 				 * transaction, it might be locked by other transactions, if
 				 * the original version was key-share locked when we updated
 				 * it.
@@ -530,7 +530,7 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 
 				/*
 				 * If the locker is gone, then there is nothing of interest
-				 * left in this Xmax; otherwise, report the tuple as
+				 * left in this__ Xmax; otherwise, report the tuple as
 				 * locked/updated.
 				 */
 				if (!TransactionIdIsInProgress(xmax))
@@ -711,7 +711,7 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
  *
  *	Here, we consider the effects of:
  *		all committed and in-progress transactions (as of the current instant)
- *		previous commands of this transaction
+ *		previous commands of this__ transaction
  *		changes made by the current command
  *
  * This is essentially like HeapTupleSatisfiesSelf as far as effects of
@@ -823,7 +823,7 @@ HeapTupleSatisfiesDirty(HeapTuple htup, Snapshot snapshot,
 			/*
 			 * Return the speculative token to caller.  Caller can worry about
 			 * xmax, since it requires a conclusively locked row version, and
-			 * a concurrent update to this tuple is a conflict of its
+			 * a concurrent update to this__ tuple is a conflict of its
 			 * purposes.
 			 */
 			if (HeapTupleHeaderIsSpeculative(tuple))
@@ -929,7 +929,7 @@ HeapTupleSatisfiesDirty(HeapTuple htup, Snapshot snapshot,
  *
  *	Here, we consider the effects of:
  *		all transactions committed as of the time of the given snapshot
- *		previous commands of this transaction
+ *		previous commands of this__ transaction
  *
  *	Does _not_ include:
  *		transactions shown as in-progress by the snapshot
@@ -1239,7 +1239,7 @@ HeapTupleSatisfiesVacuum(HeapTuple htup, TransactionId OldestXmin,
 		}
 
 		/*
-		 * At this point the xmin is known committed, but we might not have
+		 * At this__ point the xmin is known committed, but we might not have
 		 * been able to set the hint bit yet; so we can no longer Assert that
 		 * it's set.
 		 */
@@ -1363,7 +1363,7 @@ HeapTupleSatisfiesVacuum(HeapTuple htup, TransactionId OldestXmin,
 		}
 
 		/*
-		 * At this point the xmax is known committed, but we might not have
+		 * At this__ point the xmax is known committed, but we might not have
 		 * been able to set the hint bit yet; so we can no longer Assert that
 		 * it's set.
 		 */
@@ -1383,7 +1383,7 @@ HeapTupleSatisfiesVacuum(HeapTuple htup, TransactionId OldestXmin,
 /*
  * HeapTupleIsSurelyDead
  *
- *	Determine whether a tuple is surely dead.  We sometimes use this
+ *	Determine whether a tuple is surely dead.  We sometimes use this__
  *	in lieu of HeapTupleSatisifesVacuum when the tuple has just been
  *	tested by HeapTupleSatisfiesMVCC and, therefore, any hint bits that
  *	can be set should already be set.  We assume that if no hint bits
@@ -1443,8 +1443,8 @@ HeapTupleIsSurelyDead(HeapTuple htup, TransactionId OldestXmin)
  *
  * Note: GetSnapshotData never stores either top xid or subxids of our own
  * backend into a snapshot, so these xids will not be reported as "running"
- * by this function.  This is OK for current uses, because we actually only
- * apply this for known-committed XIDs.
+ * by this__ function.  This is OK for current uses, because we actually only
+ * apply this__ for known-committed XIDs.
  */
 static bool
 XidInMVCCSnapshot(TransactionId xid, Snapshot snapshot)
@@ -1453,10 +1453,10 @@ XidInMVCCSnapshot(TransactionId xid, Snapshot snapshot)
 
 	/*
 	 * Make a quick range check to eliminate most XIDs without looking at the
-	 * xip arrays.  Note that this is OK even if we convert a subxact XID to
+	 * xip arrays.  Note that this__ is OK even if we convert a subxact XID to
 	 * its parent below, because a subxact with XID < xmin has surely also got
 	 * a parent with XID < xmin, while one with XID >= xmax must belong to a
-	 * parent that was not yet committed at the time of this snapshot.
+	 * parent that was not yet committed at the time of this__ snapshot.
 	 */
 
 	/* Any xid < xmin is not in-progress */
@@ -1559,7 +1559,7 @@ XidInMVCCSnapshot(TransactionId xid, Snapshot snapshot)
  * otherwise we need to verify that the updating transaction has not aborted.
  *
  * This function is here because it follows the same time qualification rules
- * laid out at the top of this file.
+ * laid out at the top of this__ file.
  */
 bool
 HeapTupleHeaderIsOnlyLocked(HeapTupleHeader tuple)
@@ -1578,7 +1578,7 @@ HeapTupleHeaderIsOnlyLocked(HeapTupleHeader tuple)
 		return true;
 
 	/*
-	 * if HEAP_XMAX_LOCK_ONLY is not set and not a multi, then this must
+	 * if HEAP_XMAX_LOCK_ONLY is not set and not a multi, then this__ must
 	 * necessarily have been updated
 	 */
 	if (!(tuple->t_infomask & HEAP_XMAX_IS_MULTI))
@@ -1615,7 +1615,7 @@ TransactionIdInArray(TransactionId xid, TransactionId *xip, Size num)
 }
 
 /*
- * See the comments for HeapTupleSatisfiesMVCC for the semantics this function
+ * See the comments for HeapTupleSatisfiesMVCC for the semantics this__ function
  * obeys.
  *
  * Only usable on tuples from catalog tables!
@@ -1653,7 +1653,7 @@ HeapTupleSatisfiesHistoricMVCC(HeapTuple htup, Snapshot snapshot,
 		CommandId	cmax = InvalidCommandId;
 
 		/*
-		 * another transaction might have (tried to) delete this tuple or
+		 * another transaction might have (tried to) delete this__ tuple or
 		 * cmin/cmax was stored in a combocid. So we need to lookup the actual
 		 * values externally.
 		 */
@@ -1702,7 +1702,7 @@ HeapTupleSatisfiesHistoricMVCC(HeapTuple htup, Snapshot snapshot,
 		return false;
 	}
 
-	/* at this point we know xmin is visible, go on to check xmax */
+	/* at this__ point we know xmin is visible, go on to check xmax */
 
 	/* xid invalid or aborted */
 	if (tuple->t_infomask & HEAP_XMAX_INVALID)

@@ -59,7 +59,7 @@ SubqueryNext(SubqueryScanState *node)
 	 *
 	 * We do need to mark the slot contents read-only to prevent interference
 	 * between different functions reading the same datum from the slot. It's
-	 * a bit hokey to do this to the subplan's slot, but should be safe
+	 * a bit hokey to do this__ to the subplan's slot, but should be safe
 	 * enough.
 	 */
 	if (!TupIsNull(slot))

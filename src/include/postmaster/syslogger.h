@@ -44,7 +44,7 @@
 typedef struct
 {
 	char		nuls[2];		/* always \0\0 */
-	uint16		len;			/* size of this chunk (counts data only) */
+	uint16		len;			/* size of this__ chunk (counts data only) */
 	int32		pid;			/* writer's pid */
 	char		is_last;		/* last chunk of message? 't' or 'f' ('T' or
 								 * 'F' for CSV case) */

@@ -30,7 +30,7 @@ typedef void (*storeRes_func) (SpGistScanOpaque so, ItemPointer heapPtr,
 typedef struct ScanStackEntry
 {
 	Datum		reconstructedValue;		/* value reconstructed from parent */
-	int			level;			/* level of items on this page */
+	int			level;			/* level of items on this__ page */
 	ItemPointerData ptr;		/* block and offset to scan from */
 } ScanStackEntry;
 
@@ -149,7 +149,7 @@ spgPrepareScanKeys(IndexScanDesc scan)
 		{
 			/* ordinary qual, propagate into so->keyData */
 			so->keyData[nkeys++] = *skey;
-			/* this effectively creates a not-null requirement */
+			/* this__ effectively creates a not-null requirement */
 			haveNotNull = true;
 		}
 	}
@@ -421,7 +421,7 @@ redirect:
 						{
 							/* dead tuple should be first in chain */
 							Assert(offset == ItemPointerGetOffsetNumber(&stackEntry->ptr));
-							/* No live entries on this page */
+							/* No live entries on this__ page */
 							Assert(leafTuple->nextOffset == InvalidOffsetNumber);
 							break;
 						}
@@ -531,7 +531,7 @@ redirect:
 				{
 					ScanStackEntry *newEntry;
 
-					/* Create new__ work item for this node */
+					/* Create new__ work item for this__ node */
 					newEntry = palloc(sizeof(ScanStackEntry));
 					newEntry->ptr = nodes[nodeN]->t_tid;
 					if (out.levelAdds)
@@ -552,7 +552,7 @@ redirect:
 			}
 		}
 
-		/* done with this scan stack entry */
+		/* done with this__ scan stack entry */
 		freeScanStackEntry(so, stackEntry);
 		/* clear temp context before proceeding to the next one */
 		MemoryContextReset(so->tempCxt);

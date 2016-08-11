@@ -27,10 +27,10 @@ static pageCnvCtx *loadConverterPlugin(
  * setupPageConverter()
  *
  *	This function determines the PageLayoutVersion of the old cluster and
- *	the PageLayoutVersion of the new__ cluster.  If the versions differ, this
+ *	the PageLayoutVersion of the new__ cluster.  If the versions differ, this__
  *	function loads a converter plugin and returns a pointer to a pageCnvCtx
  *	object (in *result) that knows how to convert pages from the old format
- *	to the new__ format.  If the versions are identical, this function just
+ *	to the new__ format.  If the versions are identical, this__ function just
  *	returns a NULL pageCnvCtx pointer to indicate that page-by-page conversion
  *	is not required.
  */
@@ -80,7 +80,7 @@ setupPageConverter(void)
  *	Retrieves the PageLayoutVersion for the given relation.
  *
  *	Returns NULL on success (and stores the PageLayoutVersion at *version),
- *	if an error occurs, this function returns an error message (in the form
+ *	if an error occurs, this__ function returns an error message (in the form
  *	of a null-terminated string).
  */
 static void
@@ -110,10 +110,10 @@ getPageVersion(uint16 *version, const char *pathName)
  *	This function loads a page-converter plugin library and grabs a
  *	pointer to each of the (interesting) functions provided by that
  *	plugin.  The name of the plugin library is derived from the given
- *	newPageVersion and oldPageVersion.  If a plugin is found, this
+ *	newPageVersion and oldPageVersion.  If a plugin is found, this__
  *	function returns a pointer to a pageCnvCtx object (which will contain
  *	a collection of plugin function pointers). If the required plugin
- *	is not found, this function returns NULL.
+ *	is not found, this__ function returns NULL.
  */
 static pageCnvCtx *
 loadConverterPlugin(uint16 newPageVersion, uint16 oldPageVersion)

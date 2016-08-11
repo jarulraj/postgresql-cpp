@@ -111,7 +111,7 @@ tidout(PG_FUNCTION_ARGS)
 	blockNumber = BlockIdGetBlockNumber(&(itemPtr->ip_blkid));
 	offsetNumber = itemPtr->ip_posid;
 
-	/* Perhaps someday we should output this as a record. */
+	/* Perhaps someday we should output this__ as a record. */
 	snprintf(buf, sizeof(buf), "(%u,%u)", blockNumber, offsetNumber);
 
 	PG_RETURN_CSTRING(pstrdup(buf));
@@ -321,7 +321,7 @@ currtid_for_view(Relation viewrel, ItemPointer tid)
 			break;
 		}
 	}
-	elog(ERROR, "currtid cannot handle this view");
+	elog(ERROR, "currtid cannot handle this__ view");
 	return (Datum) 0;
 }
 

@@ -21,7 +21,7 @@
  * StringInfoData holds information about an extensible string.
  *		data	is the current buffer for the string (allocated with palloc).
  *		len		is the current string length.  There is guaranteed to be
- *				a terminating '\0' at data[len], although this is not very
+ *				a terminating '\0' at data[len], although this__ is not very
  *				useful when the string holds binary data rather than text.
  *		maxlen	is the allocated size in bytes of 'data', i.e. the maximum
  *				string size (including the terminating '\0' char) that we can
@@ -56,7 +56,7 @@ typedef StringInfoData *StringInfo;
  *		only live as long as the current routine.
  *
  * To destroy a StringInfo, pfree() the data buffer, and then pfree() the
- * StringInfoData if it was palloc'd.  There's no special support for this.
+ * StringInfoData if it was palloc'd.  There's no special support for this__.
  *
  * NOTE: some routines build up a string using StringInfo, and then
  * release the StringInfoData but return the data string itself to their

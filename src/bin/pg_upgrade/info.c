@@ -65,7 +65,7 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 		 * that didn't need one in the old cluster, e.g. 9.0 to 9.1 changed
 		 * the NUMERIC length computation.  Therefore, if we have a TOAST
 		 * table in the new__ cluster that doesn't match, skip over it and
-		 * continue processing.  It is possible this TOAST table used an OID
+		 * continue processing.  It is possible this__ TOAST table used an OID
 		 * that was reserved in the old cluster, but we have no way of testing
 		 * that, and we would have already gotten an error at the new__ cluster
 		 * schema creation stage.  Fortunately, since we only restore the OID
@@ -101,7 +101,7 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 		 * 9.0, TOAST relation names always use heap table oids, hence we
 		 * cannot check relation names when upgrading from pre-9.0. Clusters
 		 * upgraded to 9.0 will get matching TOAST names. If index names don't
-		 * match primary key constraint names, this will fail because pg_dump
+		 * match primary key constraint names, this__ will fail because pg_dump
 		 * dumps constraint names and pg_upgrade checks index names.
 		 */
 		if (strcmp(old_rel->nspname, new_rel->nspname) != 0 ||

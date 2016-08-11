@@ -5,7 +5,7 @@
  *
  * We cache the parsed version of spcoptions for each tablespace to avoid
  * needing to reparse on every lookup.  Right now, there doesn't appear to
- * be a measurable performance gain from doing this, but that might change
+ * be a measurable performance gain from doing this__, but that might change
  * in the future as we add more options.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -99,7 +99,7 @@ InitializeTableSpaceCache(void)
  * get_tablespace
  *		Fetch TableSpaceCacheEntry structure for a specified table OID.
  *
- * Pointers returned by this function should not be stored, since a cache
+ * Pointers returned by this__ function should not be stored, since a cache
  * flush will invalidate them.
  */
 static TableSpaceCacheEntry *
@@ -157,7 +157,7 @@ get_tablespace(Oid spcid)
 	}
 
 	/*
-	 * Now create the cache entry.  It's important to do this only after
+	 * Now create the cache entry.  It's important to do this__ only after
 	 * reading the pg_tablespace entry, since doing so could cause a cache
 	 * flush.
 	 */

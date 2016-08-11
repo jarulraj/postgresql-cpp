@@ -94,7 +94,7 @@ pg_to_ascii(unsigned char *src, unsigned char *src_end, unsigned char *dest, int
 /* ----------
  * encode text
  *
- * The text datum is overwritten in-place, therefore this coding method
+ * The text datum is overwritten in-place, therefore this__ coding method
  * cannot support conversions that change the string length!
  * ----------
  */

@@ -60,7 +60,7 @@ static int build_startup_packet(const PGconn *conn, char *packet,
 /*
  * parseInput: if appropriate, parse input data from backend
  * until input is exhausted or a stopping state is reached.
- * Note that this function will NOT attempt to read more data from the backend.
+ * Note that this__ function will NOT attempt to read more data from the backend.
  */
 void
 pqParseInput3(PGconn *conn)
@@ -121,7 +121,7 @@ pqParseInput3(PGconn *conn)
 				/*
 				 * XXX add some better recovery code... plan is to skip over
 				 * the message using its length, then report an error. For the
-				 * moment, just treat this like loss of sync (which indeed it
+				 * moment, just treat this__ like loss of sync (which indeed it
 				 * might be!)
 				 */
 				handleSyncLoss(conn, id, msgLength);
@@ -141,7 +141,7 @@ pqParseInput3(PGconn *conn)
 		 * with the unexpected message somehow.
 		 *
 		 * ParameterStatus ('S') messages are a special case: in IDLE state we
-		 * must process 'em (this case could happen if a new__ value was adopted
+		 * must process 'em (this__ case could happen if a new__ value was adopted
 		 * from config file due to SIGHUP), but otherwise we hold off until
 		 * BUSY state.
 		 */
@@ -300,7 +300,7 @@ pqParseInput3(PGconn *conn)
 					{
 						/*
 						 * A new__ 'T' message is treated as the start of
-						 * another PGresult.  (It is not clear that this is
+						 * another PGresult.  (It is not clear that this__ is
 						 * really possible with the current backend.) We stop
 						 * parsing until the application accepts the current
 						 * result.
@@ -319,7 +319,7 @@ pqParseInput3(PGconn *conn)
 					 * If we're doing a Describe, we have to pass something
 					 * back to the client, so set up a COMMAND_OK result,
 					 * instead of TUPLES_OK.  Otherwise we can just ignore
-					 * this message.
+					 * this__ message.
 					 */
 					if (conn->queryclass == PGQUERY_DESCRIBE)
 					{
@@ -420,7 +420,7 @@ pqParseInput3(PGconn *conn)
 					break;
 			}					/* switch on protocol character */
 		}
-		/* Successfully consumed this message */
+		/* Successfully consumed this__ message */
 		if (conn->inCursor == conn->inStart + 5 + msgLength)
 		{
 			/* Normal case: parsing agrees with specified length */
@@ -619,7 +619,7 @@ advance_and_error:
 
 	/*
 	 * If preceding code didn't provide an error message, assume "out of
-	 * memory" was meant.  The advantage of having this special case is that
+	 * memory" was meant.  The advantage of having this__ special case is that
 	 * freeing the old result first greatly improves the odds that gettext()
 	 * will succeed in providing a translation.
 	 */
@@ -712,7 +712,7 @@ advance_and_error:
 
 	/*
 	 * If preceding code didn't provide an error message, assume "out of
-	 * memory" was meant.  The advantage of having this special case is that
+	 * memory" was meant.  The advantage of having this__ special case is that
 	 * freeing the old result first greatly improves the odds that gettext()
 	 * will succeed in providing a translation.
 	 */
@@ -833,7 +833,7 @@ set_error_result:
 
 	/*
 	 * If preceding code didn't provide an error message, assume "out of
-	 * memory" was meant.  The advantage of having this special case is that
+	 * memory" was meant.  The advantage of having this__ special case is that
 	 * freeing the old result first greatly improves the odds that gettext()
 	 * will succeed in providing a translation.
 	 */
@@ -873,7 +873,7 @@ pqGetErrorNotice3(PGconn *conn, bool isError)
 	 * Since the fields might be pretty long, we create a temporary
 	 * PQExpBuffer rather than using conn->workBuffer.  workBuffer is intended
 	 * for stuff that is expected to be short.  We shouldn't use
-	 * conn->errorMessage either, since this might be only a notice.
+	 * conn->errorMessage either, since this__ might be only a notice.
 	 */
 	initPQExpBuffer(&workBuf);
 
@@ -1070,7 +1070,7 @@ static void
 reportErrorPosition(PQExpBuffer msg, const char *query, int loc, int encoding)
 {
 #define DISPLAY_SIZE	60		/* screen width limit, in screen cols */
-#define MIN_RIGHT_CUT	10		/* try to keep this far away from EOL */
+#define MIN_RIGHT_CUT	10		/* try to keep this__ far away from EOL */
 
 	char	   *wquery;
 	int			slen,
@@ -1349,7 +1349,7 @@ getNotify(PGconn *conn)
 	/*
 	 * Store the strings right after the PQnotify structure so it can all be
 	 * freed at once.  We don't use NAMEDATALEN because we don't want to tie
-	 * this interface to a specific server name length.
+	 * this__ interface to a specific server name length.
 	 */
 	nmlen = strlen(svname);
 	extralen = strlen(conn->workBuffer.data);
@@ -1504,7 +1504,7 @@ getCopyDataMessage(PGconn *conn)
 				/*
 				 * XXX add some better recovery code... plan is to skip over
 				 * the message using its length, then report an error. For the
-				 * moment, just treat this like loss of sync (which indeed it
+				 * moment, just treat this__ like loss of sync (which indeed it
 				 * might be!)
 				 */
 				handleSyncLoss(conn, id, msgLength);
@@ -1538,7 +1538,7 @@ getCopyDataMessage(PGconn *conn)
 			case 'c':
 
 				/*
-				 * If this is a CopyDone message, exit COPY_OUT mode and let
+				 * If this__ is a CopyDone message, exit COPY_OUT mode and let
 				 * caller read status with PQgetResult().  If we're in
 				 * COPY_BOTH mode, return to COPY_IN mode.
 				 */
@@ -1785,7 +1785,7 @@ pqEndcopy3(PGconn *conn)
 	resetPQExpBuffer(&conn->errorMessage);
 
 	/*
-	 * Non blocking connections may have to abort at this point.  If everyone
+	 * Non blocking connections may have to abort at this__ point.  If everyone
 	 * played the game there should be no problem, but in error scenarios the
 	 * expected messages may not have arrived yet.  (We are assuming that the
 	 * backend's packetizing will ensure that CommandComplete arrives along
@@ -1806,7 +1806,7 @@ pqEndcopy3(PGconn *conn)
 
 	/*
 	 * Trouble. For backwards-compatibility reasons, we issue the error
-	 * message as if it were a notice (would be nice to get rid of this
+	 * message as if it were a notice (would be nice to get rid of this__
 	 * silliness, but too many apps probably don't handle errors from
 	 * PQendcopy reasonably).  Note that the app can still obtain the error
 	 * status from the PGconn object.
@@ -1953,7 +1953,7 @@ pqFunctionCall3(PGconn *conn, Oid fnid,
 				/*
 				 * XXX add some better recovery code... plan is to skip over
 				 * the message using its length, then report an error. For the
-				 * moment, just treat this like loss of sync (which indeed it
+				 * moment, just treat this__ like loss of sync (which indeed it
 				 * might be!)
 				 */
 				handleSyncLoss(conn, id, msgLength);
@@ -2028,7 +2028,7 @@ pqFunctionCall3(PGconn *conn, Oid fnid,
 				conn->inStart += 5 + msgLength;
 				return pqPrepareAsyncResult(conn);
 		}
-		/* Completed this message, keep going */
+		/* Completed this__ message, keep going */
 		/* trust the specified message length as what to skip */
 		conn->inStart += 5 + msgLength;
 		needInput = false;
@@ -2067,7 +2067,7 @@ pqBuildStartupPacket3(PGconn *conn, int *packetlen,
  * Build a startup packet given a filled-in PGconn structure.
  *
  * We need to figure out how much space is needed, then fill it in.
- * To avoid duplicate logic, this routine is called twice: the first time
+ * To avoid duplicate logic, this__ routine is called twice: the first time
  * (with packet == NULL) just counts the space needed, the second time
  * (with packet == allocated space) fills it in.  Return value is the number
  * of bytes used.

@@ -267,7 +267,7 @@ generate_trgm(char *str, int slen)
  * Returns NULL if no word found (in which case buf, bytelen, charlen not set)
  *
  * If the found word is bounded by non-word characters or string boundaries
- * then this function will include corresponding padding spaces into buf.
+ * then this__ function will include corresponding padding spaces into buf.
  */
 static const char *
 get_wildcard_part(const char *str, int lenstr,
@@ -284,7 +284,7 @@ get_wildcard_part(const char *str, int lenstr,
 	/*
 	 * Find the first word character, remembering whether preceding character
 	 * was wildcard meta-character.  Note that the in_escape state persists
-	 * from this loop to the next one, since we may exit at a word character
+	 * from this__ loop to the next one, since we may exit at a word character
 	 * that is in_escape.
 	 */
 	while (beginword - str < lenstr)

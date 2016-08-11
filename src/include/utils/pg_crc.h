@@ -69,10 +69,10 @@ do {															  \
  * different. Using Williams' terms, we use the "normal" table, but with
  * "reflected" code. That's bogus, but it was like that for years before
  * anyone noticed. It does not correspond to any polynomial in a normal CRC
- * algorithm, so it's not clear what the error-detection properties of this
+ * algorithm, so it's not clear what the error-detection properties of this__
  * algorithm actually are.
  *
- * We still need to carry this around because it is used in a few on-disk
+ * We still need to carry this__ around because it is used in a few on-disk
  * structures that need to be pg_upgradeable. It should not be used in new__
  * code.
  */

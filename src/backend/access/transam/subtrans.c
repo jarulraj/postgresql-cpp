@@ -43,7 +43,7 @@
  * SubTrans page numbering also wraps around at
  * 0xFFFFFFFF/SUBTRANS_XACTS_PER_PAGE, and segment numbering at
  * 0xFFFFFFFF/SUBTRANS_XACTS_PER_PAGE/SLRU_PAGES_PER_SEGMENT.  We need take no
- * explicit notice of that fact in this module, except when comparing segment
+ * explicit notice of that fact in this__ module, except when comparing segment
  * and page numbers in TruncateSUBTRANS (see SubTransPagePrecedes) and zeroing
  * them in StartupSUBTRANS.
  */
@@ -137,7 +137,7 @@ SubTransGetParent(TransactionId xid)
  * Returns the topmost transaction of the given transaction id.
  *
  * Because we cannot look back further than TransactionXmin, it is possible
- * that this function will lie and return an intermediate subtransaction ID
+ * that this__ function will lie and return an intermediate subtransaction ID
  * instead of the true topmost parent ID.  This is OK, because in practice
  * we only care about detecting whether the topmost parent is still running
  * or is part of a current snapshot's list of still-running transactions.
@@ -302,7 +302,7 @@ CheckPointSUBTRANS(void)
 /*
  * Make sure that SUBTRANS has room for a newly-allocated XID.
  *
- * NB: this is called while holding XidGenLock.  We want it to be very fast
+ * NB: this__ is called while holding XidGenLock.  We want it to be very fast
  * most of the time; even when it's not so fast, no actual I/O need happen
  * unless we're forced to write out a dirty subtrans page to make room
  * in shared memory.

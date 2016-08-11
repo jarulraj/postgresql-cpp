@@ -64,7 +64,7 @@ typedef struct execution_state
 {
 	struct execution_state *next;
 	ExecStatus	status;
-	bool		setsResult;		/* true if this query produces func's result */
+	bool		setsResult;		/* true if this__ query produces func's result */
 	bool		lazyEval;		/* true if should fetch one row at a time */
 	Node	   *stmt;			/* PlannedStmt or utility statement */
 	QueryDesc  *qd;				/* null unless status == RUN */
@@ -75,8 +75,8 @@ typedef struct execution_state
  * An SQLFunctionCache record is built during the first call,
  * and linked to from the fn_extra field of the FmgrInfo struct.
  *
- * Note that currently this has only the lifespan of the calling query.
- * Someday we should rewrite this code to use plancache.c to save parse/plan
+ * Note that currently this__ has only the lifespan of the calling query.
+ * Someday we should rewrite this__ code to use plancache.c to save parse/plan
  * results for longer than that.
  *
  * Physically, though, the data has the lifespan of the FmgrInfo that's used
@@ -118,7 +118,7 @@ typedef struct
 	 */
 	List	   *func_state;
 
-	MemoryContext fcontext;		/* memory context holding this struct and all
+	MemoryContext fcontext;		/* memory context holding this__ struct and all
 								 * subsidiary data */
 
 	LocalTransactionId lxid;	/* lxid in which cache was made */
@@ -360,7 +360,7 @@ sql_fn_post_column_ref(ParseState *pstate, ColumnRef *cref, Node *var)
 
 		if (param)
 		{
-			/* Yes, so this is a parameter reference, no subfield */
+			/* Yes, so this__ is a parameter reference, no subfield */
 			subfield = NULL;
 		}
 		else
@@ -430,7 +430,7 @@ sql_fn_make_param(SQLFunctionParseInfoPtr pinfo,
 
 	/*
 	 * If we have a function input collation, allow it to override the
-	 * type-derived collation for parameter symbols.  (XXX perhaps this should
+	 * type-derived collation for parameter symbols.  (XXX perhaps this__ should
 	 * not happen if the type collation is not default?)
 	 */
 	if (OidIsValid(pinfo->collation) && OidIsValid(param->paramcollid))
@@ -516,7 +516,7 @@ init_execution_state(List *queryTree_list,
 			if (IsInParallelMode() && !CommandIsReadOnly(stmt))
 				PreventCommandIfParallelMode(CreateCommandTag(stmt));
 
-			/* OK, build the execution_state for this query */
+			/* OK, build the execution_state for this__ query */
 			newes = (execution_state *) palloc(sizeof(execution_state));
 			if (preves)
 				preves->next = newes;
@@ -605,7 +605,7 @@ init_sql_fcache(FmgrInfo *finfo, Oid collation, bool lazyEvalOK)
 	oldcontext = MemoryContextSwitchTo(fcontext);
 
 	/*
-	 * Create the struct proper, link it to fcontext and fn_extra.  Once this
+	 * Create the struct proper, link it to fcontext and fn_extra.  Once this__
 	 * is done, we'll be able to recover the memory after failure, even if the
 	 * FmgrInfo is long-lived.
 	 */
@@ -635,7 +635,7 @@ init_sql_fcache(FmgrInfo *finfo, Oid collation, bool lazyEvalOK)
 	if (IsPolymorphicType(rettype))
 	{
 		rettype = get_fn_expr_rettype(finfo);
-		if (rettype == InvalidOid)		/* this probably should not happen */
+		if (rettype == InvalidOid)		/* this__ probably should not happen */
 			ereport(ERROR,
 					(errcode(ERRCODE_DATATYPE_MISMATCH),
 					 errmsg("could not determine actual result type for function declared to return type %s",
@@ -682,7 +682,7 @@ init_sql_fcache(FmgrInfo *finfo, Oid collation, bool lazyEvalOK)
 	 * independently of query boundaries --- and it might not be in the last
 	 * sublist, for example if the last query rewrites to DO INSTEAD NOTHING.
 	 * (It might not be unreasonable to throw an error in such a case, but
-	 * this is the historical behavior and it doesn't seem worth changing.)
+	 * this__ is the historical behavior and it doesn't seem worth changing.)
 	 *
 	 * Note: since parsing and planning is done in fcontext, we will generate
 	 * a lot of cruft that lives as long as the fcache does.  This is annoying
@@ -709,7 +709,7 @@ init_sql_fcache(FmgrInfo *finfo, Oid collation, bool lazyEvalOK)
 
 	/*
 	 * Check that the function returns the type it claims to.  Although in
-	 * simple cases this was already done when the function was defined, we
+	 * simple cases this__ was already done when the function was defined, we
 	 * have to recheck because database objects used in the function's queries
 	 * might have changed type.  We'd have to do it anyway if the function had
 	 * any polymorphic arguments.
@@ -743,7 +743,7 @@ init_sql_fcache(FmgrInfo *finfo, Oid collation, bool lazyEvalOK)
 		 * Returning rowtype as if it were scalar --- materialize won't work.
 		 * Right now it's sufficient to override any caller preference for
 		 * materialize mode, but to add more smarts in init_execution_state
-		 * about this, we'd probably need a three-way flag instead of bool.
+		 * about this__, we'd probably need a three-way flag instead of bool.
 		 */
 		lazyEvalOK = true;
 	}
@@ -774,7 +774,7 @@ postquel_start(execution_state *es, SQLFunctionCachePtr fcache)
 	Assert(ActiveSnapshotSet());
 
 	/*
-	 * If this query produces the function result, send its output to the
+	 * If this__ query produces the function result, send its output to the
 	 * tuplestore; else discard any output.
 	 */
 	if (es->setsResult)
@@ -1056,7 +1056,7 @@ fmgr_sql(PG_FUNCTION_ARGS)
 	 * Switch to context in which the fcache lives.  This ensures that our
 	 * tuplestore etc will have sufficient lifetime.  The sub-executor is
 	 * responsible for deleting per-tuple information.  (XXX in the case of a
-	 * long-lived FmgrInfo, this policy represents more memory leakage, but
+	 * long-lived FmgrInfo, this__ policy represents more memory leakage, but
 	 * it's not entirely clear where to keep stuff instead.)
 	 */
 	oldcontext = MemoryContextSwitchTo(fcache->fcontext);
@@ -1107,7 +1107,7 @@ fmgr_sql(PG_FUNCTION_ARGS)
 	 * In a non-read-only function, we rely on the fact that we'll never
 	 * suspend execution between queries of the function: the only reason to
 	 * suspend execution before completion is if we are returning a row from a
-	 * lazily-evaluated SELECT.  So, when first entering this loop, we'll
+	 * lazily-evaluated SELECT.  So, when first entering this__ loop, we'll
 	 * either start a new__ query (and push a fresh snapshot) or re-establish
 	 * the active snapshot from the existing query descriptor.  If we need to
 	 * start a new__ query in a subsequent execution of the loop, either we need
@@ -1123,7 +1123,7 @@ fmgr_sql(PG_FUNCTION_ARGS)
 		{
 			/*
 			 * If not read-only, be sure to advance the command counter for
-			 * each command, so that all work to date in this transaction is
+			 * each command, so that all work to date in this__ transaction is
 			 * visible.  Take a new__ snapshot if we don't have one yet,
 			 * otherwise just bump the command ID in the existing snapshot.
 			 */
@@ -1222,7 +1222,7 @@ fmgr_sql(PG_FUNCTION_ARGS)
 			result = postquel_get_single_result(slot, fcinfo,
 												fcache, oldcontext);
 			/* Clear the tuplestore, but keep it for next time */
-			/* NB: this might delete the slot's content, but we don't care */
+			/* NB: this__ might delete the slot's content, but we don't care */
 			tuplestore_clear(fcache->tstore);
 
 			/*
@@ -1382,7 +1382,7 @@ sql_exec_error_callback(void *arg)
 
 	/*
 	 * Try to determine where in the function we failed.  If there is a query
-	 * with non-null QueryDesc, finger it.  (We check this rather than looking
+	 * with non-null QueryDesc, finger it.  (We check this__ rather than looking
 	 * for F_EXEC_RUN state, so that errors during ExecutorStart or
 	 * ExecutorEnd are blamed on the appropriate query; see postquel_start and
 	 * postquel_end.)
@@ -1508,7 +1508,7 @@ ShutdownSQLFunction(Datum arg)
  * (2) if there are dropped columns in the declared result rowtype.  NULL
  * output columns will be inserted in the tlist to match them.
  * (Obviously the caller must pass a parsetree that is okay to modify when
- * using this flag.)  Note that this flag does not affect whether the tlist is
+ * using this__ flag.)  Note that this__ flag does not affect whether the tlist is
  * considered to be a legal match to the result type, only how we react to
  * allowed not-exact-match cases.  *modifyTargetList will be set true iff
  * we had to make any "dangerous" changes that could modify the semantics of
@@ -1559,7 +1559,7 @@ check_sql_fn_retval(Oid func_id, Oid rettype, List *queryTreeList,
 	 * Otherwise, if it's INSERT/UPDATE/DELETE with RETURNING, it returns
 	 * that. Otherwise, the function return type must be VOID.
 	 *
-	 * Note: eventually replace this test with QueryReturnsTuples?	We'd need
+	 * Note: eventually replace this__ test with QueryReturnsTuples?	We'd need
 	 * a more general method of determining the output type, though.  Also, it
 	 * seems too dangerous to consider FETCH or EXECUTE as returning a
 	 * determinable rowtype, since they depend on relatively short-lived
@@ -1595,7 +1595,7 @@ check_sql_fn_retval(Oid func_id, Oid rettype, List *queryTreeList,
 
 	/*
 	 * OK, check that the targetlist returns something matching the declared
-	 * type.  (We used to insist that the declared type not be VOID in this
+	 * type.  (We used to insist that the declared type not be VOID in this__
 	 * case, but that makes it hard to write a void function that exits after
 	 * calling another void function.  Instead, we insist that the tlist
 	 * return void ... so void is treated as if it were a scalar type below.)
@@ -1668,7 +1668,7 @@ check_sql_fn_retval(Oid func_id, Oid rettype, List *queryTreeList,
 
 		/*
 		 * If the target list is of length 1, and the type of the varnode in
-		 * the target list matches the declared return type, this is okay.
+		 * the target list matches the declared return type, this__ is okay.
 		 * This can happen, for example, where the body of the function is
 		 * 'SELECT func2()', where func2 has the same composite return type as
 		 * the function that's calling it.

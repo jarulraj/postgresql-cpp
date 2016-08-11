@@ -273,7 +273,7 @@ sepgsql_proc_setattr(Oid functionId)
 	oldform = (Form_pg_proc) GETSTRUCT(oldtup);
 
 	/*
-	 * Does this ALTER command takes operation to namespace__?
+	 * Does this__ ALTER command takes operation to namespace__?
 	 */
 	if (newform->pronamespace != oldform->pronamespace)
 	{

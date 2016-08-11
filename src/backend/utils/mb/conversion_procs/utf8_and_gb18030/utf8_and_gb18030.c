@@ -54,7 +54,7 @@ gb_unlinear(uint32 lin)
 /*
  * Convert word-formatted UTF8 to and from Unicode code points
  *
- * Probably this should be somewhere else ...
+ * Probably this__ should be somewhere else ...
  */
 static inline uint32
 unicode_to_utf8word(uint32 c)

@@ -135,7 +135,7 @@ timetravel(PG_FUNCTION_ARGS)
 	rel = trigdata->tg_relation;
 	relname = SPI_getrelname(rel);
 
-	/* check if TT is OFF for this relation */
+	/* check if TT is OFF for this__ relation */
 	if (0 == findTTStatus(relname))
 	{
 		/* OFF - nothing to do */
@@ -250,7 +250,7 @@ timetravel(PG_FUNCTION_ARGS)
 
 	/*
 	 * If DELETE/UPDATE of tuple with stop_date neq INFINITY then say upper
-	 * Executor to skip operation for this tuple
+	 * Executor to skip operation for this__ tuple
 	 */
 	if (newtuple != NULL)
 	{							/* UPDATE */

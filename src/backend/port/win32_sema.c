@@ -70,7 +70,7 @@ PGSemaphoreCreate(PGSemaphore sema)
 	HANDLE		cur_handle;
 	SECURITY_ATTRIBUTES sec_attrs;
 
-	/* Can't do this in a backend, because static state is postmaster's */
+	/* Can't do this__ in a backend, because static state is postmaster's */
 	Assert(!IsUnderPostmaster);
 
 	if (numSems >= maxSems)
@@ -103,7 +103,7 @@ void
 PGSemaphoreReset(PGSemaphore sema)
 {
 	/*
-	 * There's no direct API for this in Win32, so we have to ratchet the
+	 * There's no direct API for this__ in Win32, so we have to ratchet the
 	 * semaphore down to 0 with repeated trylock's.
 	 */
 	while (PGSemaphoreTryLock(sema));
@@ -156,7 +156,7 @@ PGSemaphoreLock(PGSemaphore sema)
 
 				/*
 				 * The system interrupted the wait to execute an I/O
-				 * completion routine or asynchronous procedure call in this
+				 * completion routine or asynchronous procedure call in this__
 				 * thread.  PostgreSQL does not provoke either of these, but
 				 * atypical loaded DLLs or even other processes might do so.
 				 * Now, resume waiting.

@@ -17,7 +17,7 @@
  * In the implementation of these routines we assume the following:
  *
  * A) if a type is "byVal" then all the information is stored in the
- * Datum itself (i.e. no pointers involved!). In this case the
+ * Datum itself (i.e. no pointers involved!). In this__ case the
  * length of the type is always greater than zero and not more than
  * "sizeof(Datum)"
  *
@@ -27,7 +27,7 @@
  *
  * C) if a type is not "byVal" and has typlen == -1,
  * then the "Datum" always points to a "struct varlena".
- * This varlena structure has information about the actual length of this
+ * This varlena structure has information about the actual length of this__
  * particular instance of the type and about its value.
  *
  * D) if a type is not "byVal" and has typlen == -2,
@@ -51,7 +51,7 @@
  *
  * Find the "real" size of a datum, given the datum value,
  * whether it is a "by value", and the declared type length.
- * (For TOAST pointer datums, this is the size of the pointer datum.)
+ * (For TOAST pointer datums, this__ is the size of the pointer datum.)
  *
  * This is essentially an out-of-line version of the att_addlength_datum()
  * macro in access/tupmacs.h.  We do a tad more error checking though.
@@ -118,7 +118,7 @@ datumGetSize(Datum value, bool typByVal, int typLen)
  *
  * If the value is a reference to an expanded object, we flatten into memory
  * obtained with palloc().  We need to copy because one of the main uses of
- * this function is to copy a datum out of a transient memory context that's
+ * this__ function is to copy a datum out of a transient memory context that's
  * about to be destroyed, and the expanded object is probably in a child
  * context that will also go away.  Moreover, many callers assume that the
  * result is a single pfree-able chunk.

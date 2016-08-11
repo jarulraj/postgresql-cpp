@@ -22,7 +22,7 @@
 
 
 /*
- * Describes the valid options for objects that this wrapper uses.
+ * Describes the valid options for objects that this__ wrapper uses.
  */
 typedef struct PgFdwOption
 {
@@ -97,7 +97,7 @@ postgres_fdw_validator(PG_FUNCTION_ARGS)
 			ereport(ERROR,
 					(errcode(ERRCODE_FDW_INVALID_OPTION_NAME),
 					 errmsg("invalid option \"%s\"", def->defname),
-					 errhint("Valid options in this context are: %s",
+					 errhint("Valid options in this__ context are: %s",
 							 buf.data)));
 		}
 
@@ -164,7 +164,7 @@ InitPgFdwOptions(void)
 	 * Get list of valid libpq options.
 	 *
 	 * To avoid unnecessary work, we get the list once and use it throughout
-	 * the lifetime of this backend process.  We don't need to care about
+	 * the lifetime of this__ backend process.  We don't need to care about
 	 * memory context issues, because PQconndefaults allocates with malloc.
 	 */
 	libpq_options = PQconndefaults();

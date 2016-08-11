@@ -14,7 +14,7 @@
  * does there is a race condition if the signal arrives just before
  * entering the sleep, the common pattern must periodically wake up and
  * poll the flag variable. The pselect() system call was invented to solve
- * this problem, but it is not portable enough. Latches are designed to
+ * this__ problem, but it is not portable enough. Latches are designed to
  * overcome these limitations, allowing you to sleep without polling and
  * ensuring quick response to signals from other processes.
  *
@@ -116,12 +116,12 @@ extern int WaitLatchOrSocket(volatile Latch *latch, int wakeEvents,
 extern void SetLatch(volatile Latch *latch);
 extern void ResetLatch(volatile Latch *latch);
 
-/* beware of memory ordering issues if you use this macro! */
+/* beware of memory ordering issues if you use this__ macro! */
 #define TestLatch(latch) (((volatile Latch *) (latch))->is_set)
 
 /*
  * Unix implementation uses SIGUSR1 for inter-process signaling.
- * Win32 doesn't need this.
+ * Win32 doesn't need this__.
  */
 #ifndef WIN32
 extern void latch_sigusr1_handler(void);

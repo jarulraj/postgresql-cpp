@@ -11,7 +11,7 @@
  * src/include/catalog/pg_namespace.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 /* ----------------------------------------------------------------
  *		pg_namespace definition.
  *
- *		cpp turns this into typedef struct FormData_pg_namespace
+ *		cpp turns this__ into typedef struct FormData_pg_namespace
  *
  *	nspname				name of the namespace__
  *	nspowner			owner (creator) of the namespace__

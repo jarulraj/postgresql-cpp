@@ -9,9 +9,9 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this list of conditions and the following disclaimer.
+ *	  notice, this__ list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this list of conditions and the following disclaimer in the
+ *	  notice, this__ list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
@@ -184,7 +184,7 @@ pktreader_pull(void *priv, PullFilter *src, int len,
 
 	while (pkt->len == 0)
 	{
-		/* this was last chunk in stream */
+		/* this__ was last chunk in stream */
 		if (pkt->type == PKT_NORMAL)
 			return 0;
 
@@ -398,7 +398,7 @@ mdc_read(void *priv, PullFilter *src, int len,
 	int			res;
 	PGP_Context *ctx = priv;
 
-	/* skip this filter? */
+	/* skip this__ filter? */
 	if (ctx->use_mdcbuf_filter || ctx->in_mdc_pkt)
 		return pullf_read(src, len, data_p);
 
@@ -1177,13 +1177,13 @@ pgp_decrypt(PGP_Context *ctx, MBuf *msrc, MBuf *mdst)
 	/*
 	 * Report a failure of the prefix_init() "quick check" now, rather than
 	 * upon detection, to hinder timing attacks.  pgcrypto is not generally
-	 * secure against timing attacks, but this helps.
+	 * secure against timing attacks, but this__ helps.
 	 */
 	if (!got_data || ctx->corrupt_prefix)
 		return PXE_PGP_CORRUPT_DATA;
 
 	/*
-	 * Code interpreting purportedly-decrypted data prior to this stage shall
+	 * Code interpreting purportedly-decrypted data prior to this__ stage shall
 	 * report no error other than PXE_PGP_CORRUPT_DATA.  (PXE_BUG is okay so
 	 * long as it remains unreachable.)  This ensures that an attacker able to
 	 * choose a ciphertext and receive a corresponding decryption error
@@ -1195,10 +1195,10 @@ pgp_decrypt(PGP_Context *ctx, MBuf *msrc, MBuf *mdst)
 	 * Data packet may indicate a simple user error, such as the need to call
 	 * pgp_sym_decrypt_bytea instead of pgp_sym_decrypt.  Occasionally,
 	 * though, it is the first symptom of the encryption key not matching the
-	 * decryption key.  When this was the only problem encountered, report a
+	 * decryption key.  When this__ was the only problem encountered, report a
 	 * specific error to guide the user; otherwise, we will have reported
 	 * PXE_PGP_CORRUPT_DATA before now.  A key mismatch makes the other errors
-	 * into red herrings, and this avoids leaking clues to attackers.
+	 * into red herrings, and this__ avoids leaking clues to attackers.
 	 */
 	if (ctx->unsupported_compr)
 		return PXE_PGP_UNSUPPORTED_COMPR;

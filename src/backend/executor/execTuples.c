@@ -76,7 +76,7 @@
  *		to the slots containing tuples are passed instead of the tuples
  *		themselves.  This facilitates the communication of related information
  *		(such as whether or not a tuple should be pfreed, what buffer contains
- *		this tuple, the tuple's tuple descriptor, etc).  It also allows us
+ *		this__ tuple, the tuple's tuple descriptor, etc).  It also allows us
  *		to avoid physically constructing projection tuples in many cases.
  */
 #include "postgres.h"
@@ -150,7 +150,7 @@ ExecAllocTableSlot(List **tupleTable)
  *		This releases any resources (buffer pins, tupdesc refcounts)
  *		held by the tuple table, and optionally releases the memory
  *		occupied by the tuple table data structure.
- *		It is expected that this routine be called by EndPlan().
+ *		It is expected that this__ routine be called by EndPlan().
  * --------------------------------
  */
 void
@@ -213,7 +213,7 @@ MakeSingleTupleTableSlot(TupleDesc tupdesc)
  *		ExecDropSingleTupleTableSlot
  *
  *		Release a TupleTableSlot made with MakeSingleTupleTableSlot.
- *		DON'T use this on a slot that's part of a tuple table list!
+ *		DON'T use this__ on a slot that's part of a tuple table list!
  * --------------------------------
  */
 void
@@ -304,8 +304,8 @@ ExecSetSlotDescriptor(TupleTableSlot *slot,		/* slot to change */
  *
  * Another case where it is 'false' is when the referenced tuple is held
  * in a tuple table slot belonging to a lower-level executor Proc node.
- * In this case the lower-level slot retains ownership and responsibility
- * for eventually releasing the tuple.  When this method is used, we must
+ * In this__ case the lower-level slot retains ownership and responsibility
+ * for eventually releasing the tuple.  When this__ method is used, we must
  * be certain that the upper-level Proc node will lose interest in the tuple
  * sooner than the lower-level one does!  If you're not certain, copy the
  * lower-level tuple with heap_copytuple and let the upper-level table
@@ -313,7 +313,7 @@ ExecSetSlotDescriptor(TupleTableSlot *slot,		/* slot to change */
  *
  * Return value is just the passed-in slot pointer.
  *
- * NOTE: before PostgreSQL 8.1, this function would accept a NULL tuple
+ * NOTE: before PostgreSQL 8.1, this__ function would accept a NULL tuple
  * pointer and effectively behave like ExecClearTuple (though you could
  * still specify a buffer to pin, which would be an odd combination).
  * This saved a couple lines of code in a few places, but seemed more likely
@@ -508,7 +508,7 @@ ExecStoreVirtualTuple(TupleTableSlot *slot)
  *		ExecStoreAllNullTuple
  *			Set up the slot to contain a null in every column.
  *
- * At first glance this might sound just like ExecClearTuple, but it's
+ * At first glance this__ might sound just like ExecClearTuple, but it's
  * entirely different: the slot ends up full, not empty.
  * --------------------------------
  */
@@ -613,7 +613,7 @@ ExecCopySlotMinimalTuple(TupleTableSlot *slot)
  *		that in addition to the minimal tuple (not instead of, because
  *		callers may hold pointers to Datums within the minimal tuple).
  *
- * The main difference between this and ExecMaterializeSlot() is that this
+ * The main difference between this__ and ExecMaterializeSlot() is that this__
  * does not guarantee that the contained tuple is local storage.
  * Hence, the result must be treated as read-only.
  * --------------------------------
@@ -684,7 +684,7 @@ ExecFetchSlotMinimalTuple(TupleTableSlot *slot)
 	/*
 	 * Note: we may now have a situation where we have a local minimal tuple
 	 * attached to a virtual or non-local physical tuple.  There seems no harm
-	 * in that at the moment, but if any materializes, we should change this
+	 * in that at the moment, but if any materializes, we should change this__
 	 * function to force the slot into minimal-tuple-only state.
 	 */
 
@@ -719,7 +719,7 @@ ExecFetchSlotTupleDatum(TupleTableSlot *slot)
  *		This causes the slot's tuple to be a local copy not dependent on
  *		any external storage.  A pointer to the contained tuple is returned.
  *
- *		A typical use for this operation is to prepare a computed tuple
+ *		A typical use for this__ operation is to prepare a computed tuple
  *		for being stored on disk.  The original data may or may not be
  *		virtual, but in any case we need a private__ copy for heap_insert
  *		to scribble on.
@@ -802,7 +802,7 @@ ExecCopySlot(TupleTableSlot *dstslot, TupleTableSlot *srcslot)
 	MemoryContext oldContext;
 
 	/*
-	 * There might be ways to optimize this when the source is virtual, but
+	 * There might be ways to optimize this__ when the source is virtual, but
 	 * for now just always build a physical copy.  Make sure it is in the
 	 * right context.
 	 */
@@ -1090,7 +1090,7 @@ BlessTupleDesc(TupleDesc tupdesc)
 /*
  * TupleDescGetSlot - Initialize a slot based on the supplied tupledesc
  *
- * Note: this is obsolete; it is sufficient to call BlessTupleDesc on
+ * Note: this__ is obsolete; it is sufficient to call BlessTupleDesc on
  * the tupdesc.  We keep it around just for backwards compatibility with
  * existing user-written SRFs.
  */
@@ -1220,7 +1220,7 @@ BuildTupleFromCStrings(AttInMetadata *attinmeta, char **values)
  * BuildTupleFromCStrings).  Be sure also that the tupledesc used to build
  * the tuple has a properly "blessed" rowtype.
  *
- * Formerly this was a macro equivalent to PointerGetDatum, relying on the
+ * Formerly this__ was a macro equivalent to PointerGetDatum, relying on the
  * fact that heap_form_tuple fills in the appropriate tuple header fields
  * for a composite Datum.  However, we now require that composite Datums not
  * contain any external TOAST pointers.  We do not want heap_form_tuple itself
@@ -1228,7 +1228,7 @@ BuildTupleFromCStrings(AttInMetadata *attinmeta, char **values)
  * and not to HeapTuple structures.  Therefore, HeapTupleHeaderGetDatum is
  * now a function that detects whether there are externally-toasted fields
  * and constructs a new__ tuple with inlined fields if so.  We still need
- * heap_form_tuple to insert the Datum header fields, because otherwise this
+ * heap_form_tuple to insert the Datum header fields, because otherwise this__
  * code would have no way to obtain a tupledesc for the tuple.
  *
  * Note that if we do build a new__ tuple, it's palloc'd in the current
@@ -1244,7 +1244,7 @@ BuildTupleFromCStrings(AttInMetadata *attinmeta, char **values)
  *
  * XXX it would likely be better to create wrapper functions that produce
  * a composite Datum from the field values in one step.  However, there's
- * enough code using the existing APIs that we couldn't get rid of this
+ * enough code using the existing APIs that we couldn't get rid of this__
  * hack anytime soon.
  */
 Datum

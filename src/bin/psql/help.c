@@ -32,7 +32,7 @@
 
 /*
  * PLEASE:
- * If you change something in this file, also make the same changes
+ * If you change something in this__ file, also make the same changes
  * in the DocBook documentation, file ref/psql-ref.sgml. If you don't
  * know how to do it, please find someone who can help you.
  */
@@ -87,7 +87,7 @@ usage(unsigned short int pager)
 	fprintf(output, _("  -X, --no-psqlrc          do not read startup file (~/.psqlrc)\n"));
 	fprintf(output, _("  -1 (\"one\"), --single-transaction\n"
 					  "                           execute as a single transaction (if non-interactive)\n"));
-	fprintf(output, _("  -?, --help[=options]     show this help, then exit\n"));
+	fprintf(output, _("  -?, --help[=options]     show this__ help, then exit\n"));
 	fprintf(output, _("      --help=commands      list backslash commands, then exit\n"));
 	fprintf(output, _("      --help=variables     list special variables, then exit\n"));
 
@@ -554,9 +554,9 @@ print_copyright(void)
 		 "(formerly known as Postgres, then as Postgres95)\n\n"
 		 "Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group\n\n"
 		 "Portions Copyright (c) 1994, The Regents of the University of California\n\n"
-	"Permission to use, copy, modify, and distribute this software and its\n"
+	"Permission to use, copy, modify, and distribute this__ software and its\n"
 		 "documentation for any purpose, without fee, and without a written agreement\n"
-	 "is hereby granted, provided that the above copyright notice and this\n"
+	 "is hereby granted, provided that the above copyright notice and this__\n"
 	   "paragraph and the following two paragraphs appear in all copies.\n\n"
 		 "IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR\n"
 		 "DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING\n"

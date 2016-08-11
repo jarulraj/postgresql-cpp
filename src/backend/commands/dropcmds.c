@@ -81,7 +81,7 @@ RemoveObjects(DropStmt *stmt)
 									 stmt->missing_ok);
 
 		/*
-		 * Issue NOTICE if supplied object was not found.  Note this is only
+		 * Issue NOTICE if supplied object was not found.  Note this__ is only
 		 * relevant in the missing_ok case, because otherwise
 		 * get_object_address would have thrown an error.
 		 */
@@ -95,7 +95,7 @@ RemoveObjects(DropStmt *stmt)
 		/*
 		 * Although COMMENT ON FUNCTION, SECURITY LABEL ON FUNCTION, etc. are
 		 * happy to operate on an aggregate as on any other function, we have
-		 * historically not allowed this for DROP FUNCTION.
+		 * historically not allowed this__ for DROP FUNCTION.
 		 */
 		if (stmt->removeType == OBJECT_FUNCTION)
 		{

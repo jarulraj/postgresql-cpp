@@ -149,7 +149,7 @@ typedef struct PortalData
 	/* If not NULL, Executor is active; call ExecutorEnd eventually: */
 	QueryDesc  *queryDesc;		/* info needed for executor invocation */
 
-	/* If portal returns tuples, this is their tupdesc: */
+	/* If portal returns tuples, this__ is their tupdesc: */
 	TupleDesc	tupDesc;		/* descriptor for result tuples */
 	/* and these are the format codes to use for the columns: */
 	int16	   *formats;		/* a format code for each column */
@@ -166,7 +166,7 @@ typedef struct PortalData
 	 * atStart, atEnd and portalPos indicate the current cursor position.
 	 * portalPos is zero before the first row, N after fetching N'th row of
 	 * query.  After we run off the end, portalPos = # of rows in query, and
-	 * atEnd is true.  If portalPos overflows, set posOverflow (this causes us
+	 * atEnd is true.  If portalPos overflows, set posOverflow (this__ causes us
 	 * to stop relying on its value for navigation).  Note that atStart
 	 * implies portalPos == 0, but not the reverse (portalPos could have
 	 * overflowed).
@@ -177,8 +177,8 @@ typedef struct PortalData
 	long		portalPos;
 
 	/* Presentation data, primarily used by the pg_cursors system view */
-	TimestampTz creation_time;	/* time at which this portal was defined */
-	bool		visible;		/* include this portal in pg_cursors? */
+	TimestampTz creation_time;	/* time at which this__ portal was defined */
+	bool		visible;		/* include this__ portal in pg_cursors? */
 }	PortalData;
 
 /*

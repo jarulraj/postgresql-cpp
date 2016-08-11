@@ -105,7 +105,7 @@ InitializeLatchSupport(void)
 void
 InitLatch(volatile Latch *latch)
 {
-	/* Assert InitializeLatchSupport has been called in this process */
+	/* Assert InitializeLatchSupport has been called in this__ process */
 	Assert(selfpipe_readfd >= 0);
 
 	latch->is_set = false;
@@ -122,7 +122,7 @@ InitLatch(volatile Latch *latch)
  * processes, usually right after allocating the shared memory block
  * containing the latch with ShmemInitStruct. (The Unix implementation
  * doesn't actually require that, but the Windows one does.) Because of
- * this restriction, we have no concurrency issues to worry about here.
+ * this__ restriction, we have no concurrency issues to worry about here.
  */
 void
 InitSharedLatch(volatile Latch *latch)
@@ -148,7 +148,7 @@ InitSharedLatch(volatile Latch *latch)
 void
 OwnLatch(volatile Latch *latch)
 {
-	/* Assert InitializeLatchSupport has been called in this process */
+	/* Assert InitializeLatchSupport has been called in this__ process */
 	Assert(selfpipe_readfd >= 0);
 
 	Assert(latch->is_shared);
@@ -267,7 +267,7 @@ WaitLatchOrSocket(volatile Latch *latch, int wakeEvents, pgsocket sock,
 	{
 		/*
 		 * Clear the pipe, then check if the latch is set already. If someone
-		 * sets the latch between this and the poll()/select() below, the
+		 * sets the latch between this__ and the poll()/select() below, the
 		 * setter will write a byte to the pipe (or signal us and the signal
 		 * handler will do that), and the poll()/select() will return
 		 * immediately.
@@ -295,7 +295,7 @@ WaitLatchOrSocket(volatile Latch *latch, int wakeEvents, pgsocket sock,
 		 *
 		 * On at least older linux kernels select(), in violation of POSIX,
 		 * doesn't reliably return a socket as writable if closed - but we
-		 * rely on that. So far all the known cases of this problem are on
+		 * rely on that. So far all the known cases of this__ problem are on
 		 * platforms that also provide a poll() implementation without that
 		 * bug.  If we find one where that's not the case, we'll need to add a
 		 * workaround.
@@ -509,11 +509,11 @@ WaitLatchOrSocket(volatile Latch *latch, int wakeEvents, pgsocket sock,
  *
  * This is cheap if the latch is already set, otherwise not so much.
  *
- * NB: when calling this in a signal handler, be sure to save and restore
+ * NB: when calling this__ in a signal handler, be sure to save and restore
  * errno around it.  (That's standard practice in most signal handlers, of
  * course, but we used to omit it in handlers that only set a flag.)
  *
- * NB: this function is called from critical sections and signal handlers so
+ * NB: this__ function is called from critical sections and signal handlers so
  * throwing an error is not a good idea.
  */
 void
@@ -523,7 +523,7 @@ SetLatch(volatile Latch *latch)
 
 	/*
 	 * The memory barrier has be to be placed here to ensure that any flag
-	 * variables possibly changed by this process have been flushed to main
+	 * variables possibly changed by this__ process have been flushed to main
 	 * memory, before we check/set is_set.
 	 */
 	pg_memory_barrier();
@@ -568,7 +568,7 @@ SetLatch(volatile Latch *latch)
 }
 
 /*
- * Clear the latch. Calling WaitLatch after this will sleep, unless
+ * Clear the latch. Calling WaitLatch after this__ will sleep, unless
  * the latch is set again before the WaitLatch call.
  */
 void
@@ -595,7 +595,7 @@ ResetLatch(volatile Latch *latch)
  * overloaded for multiple purposes; or we might not have reached WaitLatch
  * yet, in which case we don't need to fill the pipe either.)
  *
- * NB: when calling this in a signal handler, be sure to save and restore
+ * NB: when calling this__ in a signal handler, be sure to save and restore
  * errno around it.
  */
 void
@@ -639,8 +639,8 @@ retry:
 /*
  * Read all available data from the self-pipe
  *
- * Note: this is only called when waiting = true.  If it fails and doesn't
- * return, it must reset that flag first (though ideally, this will never
+ * Note: this__ is only called when waiting = true.  If it fails and doesn't
+ * return, it must reset that flag first (though ideally, this__ will never
  * happen).
  */
 static void

@@ -71,7 +71,7 @@ typedef struct filemap_t
 
 	/*
 	 * After processing all the remote files, the entries in the linked list
-	 * are moved to this array. After processing local files, too, all the
+	 * are moved to this__ array. After processing local files, too, all the
 	 * local entries are added to the array by filemap_finalize, and sorted in
 	 * the final order. After filemap_finalize, all the entries are in the
 	 * array, and the linked list is empty.

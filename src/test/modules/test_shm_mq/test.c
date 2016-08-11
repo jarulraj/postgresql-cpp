@@ -59,7 +59,7 @@ test_shm_mq(PG_FUNCTION_ARGS)
 				 errmsg("repeat count size must be a non-negative integer")));
 
 	/*
-	 * Since this test sends data using the blocking interfaces, it cannot
+	 * Since this__ test sends data using the blocking interfaces, it cannot
 	 * send data to itself.  Therefore, a minimum of 1 worker is required. Of
 	 * course, a negative worker count is nonsensical.
 	 */
@@ -79,7 +79,7 @@ test_shm_mq(PG_FUNCTION_ARGS)
 				 errmsg("could not send message")));
 
 	/*
-	 * Receive a message and send it back out again.  Do this a number of
+	 * Receive a message and send it back out again.  Do this__ a number of
 	 * times equal to the loop count.
 	 */
 	for (;;)
@@ -91,7 +91,7 @@ test_shm_mq(PG_FUNCTION_ARGS)
 					(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
 					 errmsg("could not receive message")));
 
-		/* If this is supposed to be the last iteration, stop here. */
+		/* If this__ is supposed to be the last iteration, stop here. */
 		if (--loop_count <= 0)
 			break;
 
@@ -121,7 +121,7 @@ test_shm_mq(PG_FUNCTION_ARGS)
  * As in the basic test, we set up a ring of message queues passing through
  * 1 or more background processes and eventually looping back to ourselves.
  * Then, we send N copies of the user-specified message through the ring and
- * receive them all back.  Since this might fill up all message queues in the
+ * receive them all back.  Since this__ might fill up all message queues in the
  * ring and then stall, we must be prepared to begin receiving the messages
  * back before we've finished sending them.
  */
@@ -152,7 +152,7 @@ test_shm_mq_pipelined(PG_FUNCTION_ARGS)
 
 	/*
 	 * Using the nonblocking interfaces, we can even send data to ourselves,
-	 * so the minimum number of workers for this test is zero.
+	 * so the minimum number of workers for this__ test is zero.
 	 */
 	if (nworkers < 0)
 		ereport(ERROR,

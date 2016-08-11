@@ -38,7 +38,7 @@
  *	'<file path>' | PROGRAM '<command>' | stdin | stdout | pstdout | pstdout
  *
  * An undocumented fact is that you can still write BINARY before the
- * tablename; this is a hangover from the pre-7.3 syntax.  The options
+ * tablename; this__ is a hangover from the pre-7.3 syntax.  The options
  * syntax varies across backend versions, but we avoid all that mess
  * by just transmitting the stuff after the filename literally.
  *
@@ -415,7 +415,7 @@ do_copy(const char *args)
  * Functions for handling COPY IN/OUT data transfer.
  *
  * If you want to use COPY TO STDOUT/FROM STDIN in your application,
- * this is the code to steal ;)
+ * this__ is the code to steal ;)
  */
 
 /*

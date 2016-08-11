@@ -22,7 +22,7 @@
 
 /*
  * MaxTupleAttributeNumber limits the number of (user) columns in a tuple.
- * The key limit on this value is that the size of the fixed overhead for
+ * The key limit on this__ value is that the size of the fixed overhead for
  * a tuple, plus the size of the null-values bitmap (at 1 bit per column),
  * plus MAXALIGN alignment, must fit into t_hoff which is uint8.  On most
  * machines the upper limit without making t_hoff wider would be a little
@@ -54,7 +54,7 @@
  * as on-disk tuples, so that the same routines can be used to build and
  * examine them.  However the requirements are slightly different: a Datum
  * does not need any transaction visibility information, and it does need
- * a length word and some embedded type information.  We can achieve this
+ * a length word and some embedded type information.  We can achieve this__
  * by overlaying the xmin/cmin/xmax/cmax/xvac fields of a heap tuple
  * with the fields needed in the Datum case.  Typically, all tuples built
  * in-memory will be initialized with the Datum fields; but when a tuple is
@@ -147,7 +147,7 @@ struct HeapTupleHeaderData
 		DatumTupleFields t_datum;
 	}			t_choice;
 
-	ItemPointerData t_ctid;		/* current TID of this or newer tuple (or a
+	ItemPointerData t_ctid;		/* current TID of this__ or newer tuple (or a
 								 * speculative insertion token) */
 
 	/* Fields below here must match MinimalTupleData! */
@@ -192,7 +192,7 @@ struct HeapTupleHeaderData
 #define HEAP_XMAX_COMMITTED		0x0400	/* t_xmax committed */
 #define HEAP_XMAX_INVALID		0x0800	/* t_xmax invalid/aborted */
 #define HEAP_XMAX_IS_MULTI		0x1000	/* t_xmax is a MultiXactId */
-#define HEAP_UPDATED			0x2000	/* this is UPDATEd version of row */
+#define HEAP_UPDATED			0x2000	/* this__ is UPDATEd version of row */
 #define HEAP_MOVED_OFF			0x4000	/* moved to another place by pre-9.0
 										 * VACUUM FULL; kept for binary
 										 * upgrade support */
@@ -239,7 +239,7 @@ struct HeapTupleHeaderData
 #define HEAP_KEYS_UPDATED		0x2000	/* tuple was updated and key cols
 										 * modified, or tuple deleted */
 #define HEAP_HOT_UPDATED		0x4000	/* tuple was HOT-updated */
-#define HEAP_ONLY_TUPLE			0x8000	/* this is heap-only tuple */
+#define HEAP_ONLY_TUPLE			0x8000	/* this__ is heap-only tuple */
 
 #define HEAP2_XACT_MASK			0xE000	/* visibility-related bits */
 
@@ -454,7 +454,7 @@ do { \
 /*
  * Note that we stop considering a tuple HOT-updated as soon as it is known
  * aborted or the would-be updating transaction is known aborted.  For best
- * efficiency, check tuple visibility before using this macro, so that the
+ * efficiency, check tuple visibility before using this__ macro, so that the
  * INVALID bits will be as up to date as possible.
  */
 #define HeapTupleHeaderIsHotUpdated(tup) \
@@ -529,7 +529,7 @@ do { \
  * "special space", there's no deduction for that.
  *
  * NOTE: we allow for the ItemId that must point to the tuple, ensuring that
- * an otherwise-empty page can indeed hold a tuple of this size.  Because
+ * an otherwise-empty page can indeed hold a tuple of this__ size.  Because
  * ItemIds and tuples have different alignment requirements, don't assume that
  * you can, say, fit 2 tuples of size MaxHeapTupleSize/2 on the same page.
  */
@@ -543,8 +543,8 @@ do { \
  * must be maxaligned, and it must have an associated item pointer.
  *
  * Note: with HOT, there could theoretically be more line pointers (not actual
- * tuples) than this on a heap page.  However we constrain the number of line
- * pointers to this anyway, to avoid excessive line-pointer bloat and not
+ * tuples) than this__ on a heap page.  However we constrain the number of line
+ * pointers to this__ anyway, to avoid excessive line-pointer bloat and not
  * require increases in the size of work arrays.
  */
 #define MaxHeapTuplesPerPage	\
@@ -589,7 +589,7 @@ do { \
  * the MINIMAL_TUPLE_OFFSET distance.  t_len does not include that, however.
  *
  * MINIMAL_TUPLE_DATA_OFFSET is the offset to the first useful (non-pad) data
- * other than the length word.  tuplesort.c and tuplestore.c use this to avoid
+ * other than the length word.  tuplesort.c and tuplestore.c use this__ to avoid
  * writing the padding to disk.
  */
 #define MINIMAL_TUPLE_OFFSET \

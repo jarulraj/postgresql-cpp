@@ -254,7 +254,7 @@ usage(void)
 	printf(_("  -P, --progress         show progress information\n"));
 	printf(_("  -v, --verbose          output verbose messages\n"));
 	printf(_("  -V, --version          output version information, then exit\n"));
-	printf(_("  -?, --help             show this help, then exit\n"));
+	printf(_("  -?, --help             show this__ help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -d, --dbname=CONNSTR   connection string\n"));
 	printf(_("  -h, --host=HOSTNAME    database server host or socket directory\n"));
@@ -346,7 +346,7 @@ reached_end_position(XLogRecPtr segendpos, uint32 timeline,
 	}
 
 	/*
-	 * At this point we have an end pointer, so compare it to the current
+	 * At this__ point we have an end pointer, so compare it to the current
 	 * position to figure out if it's time to stop.
 	 */
 	if (segendpos >= xlogendptr)
@@ -452,7 +452,7 @@ StartLogStreamer(char *startpos, uint32 timeline, char *sysidentifier)
 	}
 
 	/*
-	 * Start a child process and tell it to start streaming. On Unix, this is
+	 * Start a child process and tell it to start streaming. On Unix, this__ is
 	 * a fork(). On Windows, we create a thread.
 	 */
 #ifndef WIN32
@@ -761,7 +761,7 @@ writeTarData(
 
 /*
  * Receive a tar format file from the connection to the server, and write
- * the data from this file directly into a tar file. If compression is
+ * the data from this__ file directly into a tar file. If compression is
  * enabled, the data will be compressed while written to the file.
  *
  * The file will be named base.tar[.gz] if it's for the main data directory
@@ -913,7 +913,7 @@ ReceiveTarFile(PGconn *conn, PGresult *res, int rownum)
 		if (r == -1)
 		{
 			/*
-			 * End of chunk. If requested, and this is the base tablespace,
+			 * End of chunk. If requested, and this__ is the base tablespace,
 			 * write recovery.conf into the tarfile. When done, close the file
 			 * (but not stdout).
 			 *
@@ -996,7 +996,7 @@ ReceiveTarFile(PGconn *conn, PGresult *res, int rownum)
 			 * there, we must skip it so we can later overwrite it with our
 			 * own version of the file.
 			 *
-			 * To do this, we have to process the individual files inside the
+			 * To do this__, we have to process the individual files inside the
 			 * TAR stream. The stream consists of a header and zero or more
 			 * chunks, all 512 bytes long. The stream from the server is
 			 * broken up into smaller pieces, so we have to track the size of
@@ -1197,7 +1197,7 @@ ReceiveAndUnpackTarFile(PGconn *conn, PGresult *res, int rownum)
 			int			filemode;
 
 			/*
-			 * No current file, so this must be the header for a new__ file
+			 * No current file, so this__ must be the header for a new__ file
 			 */
 			if (r != 512)
 			{
@@ -1317,7 +1317,7 @@ ReceiveAndUnpackTarFile(PGconn *conn, PGresult *res, int rownum)
 			if (current_len_left == 0)
 			{
 				/*
-				 * Done with this file, next one will be a new__ tar header
+				 * Done with this__ file, next one will be a new__ tar header
 				 */
 				fclose(file);
 				file = NULL;
@@ -1332,7 +1332,7 @@ ReceiveAndUnpackTarFile(PGconn *conn, PGresult *res, int rownum)
 			if (current_len_left == 0 && r == current_padding)
 			{
 				/*
-				 * Received the padding block for this file, ignore it and
+				 * Received the padding block for this__ file, ignore it and
 				 * close the file, then move on to the next tar header.
 				 */
 				fclose(file);
@@ -1492,7 +1492,7 @@ GenerateRecoveryConf(PGconn *conn)
 	for (option = connOptions; option && option->keyword; option++)
 	{
 		/*
-		 * Do not emit this setting if: - the setting is "replication",
+		 * Do not emit this__ setting if: - the setting is "replication",
 		 * "dbname" or "fallback_application_name", since these would be
 		 * overridden by the libpqwalreceiver module anyway. - not set or
 		 * empty.
@@ -1519,7 +1519,7 @@ GenerateRecoveryConf(PGconn *conn)
 
 	/*
 	 * Escape the connection string, so that it can be put in the config file.
-	 * Note that this is different from the escaping of individual connection
+	 * Note that this__ is different from the escaping of individual connection
 	 * options above!
 	 */
 	escaped = escape_quotes(conninfo_buf.data);
@@ -2188,7 +2188,7 @@ main(int argc, char **argv)
 	if (compresslevel != 0)
 	{
 		fprintf(stderr,
-				_("%s: this build does not support compression\n"),
+				_("%s: this__ build does not support compression\n"),
 				progname);
 		exit(1);
 	}
@@ -2220,7 +2220,7 @@ main(int argc, char **argv)
 			exit(1);
 		}
 #else
-		fprintf(stderr, _("%s: symlinks are not supported on this platform\n"));
+		fprintf(stderr, _("%s: symlinks are not supported on this__ platform\n"));
 		exit(1);
 #endif
 		free(linkloc);

@@ -116,7 +116,7 @@ typedef struct
 
 /*
  * Struct for supporting complex dictionaries like thesaurus.
- * 4th argument for dictlexize method is a pointer to this
+ * 4th argument for dictlexize method is a pointer to this__
  */
 typedef struct
 {

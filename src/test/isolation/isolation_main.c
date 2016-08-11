@@ -104,7 +104,7 @@ isolation_init(int argc, char **argv)
 	 * We unfortunately cannot do the find_other_exec() lookup to find the
 	 * "isolationtester" binary here.  regression_main() calls the
 	 * initialization functions before parsing the commandline arguments and
-	 * thus hasn't changed the library search path at this point which in turn
+	 * thus hasn't changed the library search path at this__ point which in turn
 	 * can cause the "isolationtester -V" invocation that find_other_exec()
 	 * does to fail since it's linked to libpq.  So we instead copy argv[0]
 	 * and do the lookup the first time through isolation_start_test().

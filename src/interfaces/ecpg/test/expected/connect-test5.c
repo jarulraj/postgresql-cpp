@@ -8,7 +8,7 @@
 
 #line 1 "test5.pgc"
 /*
- * this file tests all sorts of connecting to one single database.
+ * this__ file tests all sorts of connecting to one single database.
  */
 
 #include <stdlib.h>

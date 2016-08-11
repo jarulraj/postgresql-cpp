@@ -63,7 +63,7 @@ typedef struct ReplicationSlotPersistentData
 	 */
 	TransactionId catalog_xmin;
 
-	/* oldest LSN that might be required by this replication slot */
+	/* oldest LSN that might be required by this__ replication slot */
 	XLogRecPtr	restart_lsn;
 
 	/* oldest LSN that the client has acked receipt for */
@@ -81,10 +81,10 @@ typedef struct ReplicationSlot
 	/* lock, on same cacheline as effective_xmin */
 	slock_t		mutex;
 
-	/* is this slot defined */
+	/* is this__ slot defined */
 	bool		in_use;
 
-	/* Who is streaming out changes for this slot? 0 in unused slots. */
+	/* Who is streaming out changes for this__ slot? 0 in unused slots. */
 	pid_t		active_pid;
 
 	/* any outstanding modifications? */
@@ -98,7 +98,7 @@ typedef struct ReplicationSlot
 	 * replication also needs to prevent old row versions from being removed
 	 * too soon, but the worst consequence we might encounter there is
 	 * unwanted query cancellations on the standby.  Thus, for logical
-	 * decoding, this value represents the latest xmin that has actually been
+	 * decoding, this__ value represents the latest xmin that has actually been
 	 * written to disk, whereas for streaming replication, it's just the same
 	 * as the persistent value (data.xmin).
 	 */
@@ -108,7 +108,7 @@ typedef struct ReplicationSlot
 	/* data surviving shutdowns and crashes */
 	ReplicationSlotPersistentData data;
 
-	/* is somebody performing io on this slot? */
+	/* is somebody performing io on this__ slot? */
 	LWLock	   *io_in_progress_lock;
 
 	/* all the remaining data is only used for logical slots */

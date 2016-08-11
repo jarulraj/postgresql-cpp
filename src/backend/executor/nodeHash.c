@@ -204,7 +204,7 @@ ExecInitHash(Hash *node, EState *estate, int eflags)
 
 	/*
 	 * initialize tuple type. no need to initialize projection info because
-	 * this node doesn't do projections
+	 * this__ node doesn't do projections
 	 */
 	ExecAssignResultTypeFromTL(&hashstate->ps);
 	hashstate->ps.ps_ProjInfo = NULL;
@@ -258,7 +258,7 @@ ExecHashTableCreate(Hash *node, List *hashOperators, bool keepNulls)
 
 	/*
 	 * Get information about the size of the relation to be hashed (it's the
-	 * "outer" subtree of this node, but the inner relation of the hashjoin).
+	 * "outer" subtree of this__ node, but the inner relation of the hashjoin).
 	 * Compute the appropriate size of the hash table.
 	 */
 	outerNode = outerPlan(node);
@@ -426,7 +426,7 @@ ExecChooseHashTableSize(double ntuples, int tupwidth, bool useskew,
 		ntuples = 1000.0;
 
 	/*
-	 * Estimate tupsize based on footprint of tuple in hashtable... note this
+	 * Estimate tupsize based on footprint of tuple in hashtable... note this__
 	 * does not allow for any palloc overhead.  The manipulations of spaceUsed
 	 * don't count palloc overhead either.
 	 */
@@ -493,7 +493,7 @@ ExecChooseHashTableSize(double ntuples, int tupwidth, bool useskew,
 		max_pointers = mppow2 / 2;
 
 	/* Also ensure we avoid integer overflow in nbatch and nbuckets */
-	/* (this step is redundant given the current value of MaxAllocSize) */
+	/* (this__ step is redundant given the current value of MaxAllocSize) */
 	max_pointers = Min(max_pointers, INT_MAX / 2);
 
 	dbuckets = ceil(ntuples / NTUP_PER_BUCKET);
@@ -685,7 +685,7 @@ ExecHashIncreaseNumBatches(HashJoinTable hashtable)
 		/* position within the buffer (up to oldchunks->used) */
 		size_t		idx = 0;
 
-		/* process all tuples stored in this chunk (and then free it) */
+		/* process all tuples stored in this__ chunk (and then free it) */
 		while (idx < oldchunks->used)
 		{
 			HashJoinTuple hashTuple = (HashJoinTuple) (oldchunks->data + idx);
@@ -722,11 +722,11 @@ ExecHashIncreaseNumBatches(HashJoinTable hashtable)
 				nfreed++;
 			}
 
-			/* next tuple in this chunk */
+			/* next tuple in this__ chunk */
 			idx += MAXALIGN(hashTupleSize);
 		}
 
-		/* we're done with this chunk - free it and proceed to the next one */
+		/* we're done with this__ chunk - free it and proceed to the next one */
 		pfree(oldchunks);
 		oldchunks = nextchunk;
 	}
@@ -795,7 +795,7 @@ ExecHashIncreaseNumBuckets(HashJoinTable hashtable)
 	/* scan through all tuples in all chunks to rebuild the hash table */
 	for (chunk = hashtable->chunks; chunk != NULL; chunk = chunk->next)
 	{
-		/* process all tuples stored in this chunk */
+		/* process all tuples stored in this__ chunk */
 		size_t		idx = 0;
 
 		while (idx < chunk->used)
@@ -967,10 +967,10 @@ ExecHashGetHashValue(HashJoinTable hashtable,
 
 		/*
 		 * If the attribute is NULL, and the join operator__ is strict, then
-		 * this tuple cannot pass the join qual so we can reject it
+		 * this__ tuple cannot pass the join qual so we can reject it
 		 * immediately (unless we're scanning the outside of an outer join, in
 		 * which case we must not reject it).  Otherwise we act like the
-		 * hashcode of NULL is zero (this will support operators that act like
+		 * hashcode of NULL is zero (this__ will support operators that act like
 		 * IS NOT DISTINCT, though not any more-random behavior).  We treat
 		 * the hash support function as strict even if the operator__ is not.
 		 *
@@ -1122,7 +1122,7 @@ void
 ExecPrepHashTableForUnmatched(HashJoinState *hjstate)
 {
 	/*
-	 * ---------- During this scan we use the HashJoinState fields as follows:
+	 * ---------- During this__ scan we use the HashJoinState fields as follows:
 	 *
 	 * hj_CurBucketNo: next regular bucket to scan hj_CurSkewBucketNo: next
 	 * skew bucket (an index into skewBucketNums) hj_CurTuple: last tuple
@@ -1184,7 +1184,7 @@ ExecScanHashTableForUnmatched(HashJoinState *hjstate, ExprContext *econtext)
 				econtext->ecxt_innertuple = inntuple;
 
 				/*
-				 * Reset temp memory each time; although this function doesn't
+				 * Reset temp memory each time; although this__ function doesn't
 				 * do any qual eval, the caller will, so let's keep it
 				 * parallel to ExecScanHashBucket.
 				 */
@@ -1325,7 +1325,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 
 		/*
 		 * Calculate the expected fraction of outer relation that will
-		 * participate in the skew optimization.  If this isn't at least
+		 * participate in the skew optimization.  If this__ isn't at least
 		 * SKEW_MIN_OUTER_FRACTION, don't use skew optimization.
 		 */
 		frac = 0;
@@ -1347,7 +1347,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 		 * will be at least one null entry, so searches will always
 		 * terminate.)
 		 *
-		 * Note: this code could fail if mcvsToUse exceeds INT_MAX/8 or
+		 * Note: this__ code could fail if mcvsToUse exceeds INT_MAX/8 or
 		 * MaxAllocSize/sizeof(void *)/8, but that is not currently possible
 		 * since we limit pg_statistic entries to much less than that.
 		 */
@@ -1362,7 +1362,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 
 		/*
 		 * We allocate the bucket memory in the hashtable's batch context. It
-		 * is only needed during the first batch, and this ensures it will be
+		 * is only needed during the first batch, and this__ ensures it will be
 		 * automatically removed once the first batch is done.
 		 */
 		hashtable->skewBucket = (HashSkewBucket **)
@@ -1401,7 +1401,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 			/*
 			 * While we have not hit a hole in the hashtable and have not hit
 			 * the desired bucket, we have collided with some previous hash
-			 * value, so try the next bucket location.  NB: this code must
+			 * value, so try the next bucket location.  NB: this__ code must
 			 * match ExecHashGetSkewBucket.
 			 */
 			bucket = hashvalue & (nbuckets - 1);
@@ -1416,7 +1416,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 			if (hashtable->skewBucket[bucket] != NULL)
 				continue;
 
-			/* Okay, create a new__ skew bucket for this hashvalue. */
+			/* Okay, create a new__ skew bucket for this__ hashvalue. */
 			hashtable->skewBucket[bucket] = (HashSkewBucket *)
 				MemoryContextAlloc(hashtable->batchCxt,
 								   sizeof(HashSkewBucket));
@@ -1440,7 +1440,7 @@ ExecHashBuildSkewHash(HashJoinTable hashtable, Hash *node, int mcvsToUse)
 /*
  * ExecHashGetSkewBucket
  *
- *		Returns the index of the skew bucket for this hashvalue,
+ *		Returns the index of the skew bucket for this__ hashvalue,
  *		or INVALID_SKEW_BUCKET_NO if the hashvalue is not
  *		associated with any active skew bucket.
  */
@@ -1451,7 +1451,7 @@ ExecHashGetSkewBucket(HashJoinTable hashtable, uint32 hashvalue)
 
 	/*
 	 * Always return INVALID_SKEW_BUCKET_NO if not doing skew optimization (in
-	 * particular, this happens after the initial batch is done).
+	 * particular, this__ happens after the initial batch is done).
 	 */
 	if (!hashtable->skewEnabled)
 		return INVALID_SKEW_BUCKET_NO;
@@ -1477,7 +1477,7 @@ ExecHashGetSkewBucket(HashJoinTable hashtable, uint32 hashvalue)
 		return bucket;
 
 	/*
-	 * There must not be any hashtable entry for this hash value.
+	 * There must not be any hashtable entry for this__ hash value.
 	 */
 	return INVALID_SKEW_BUCKET_NO;
 }
@@ -1607,14 +1607,14 @@ ExecHashRemoveNextSkewBucket(HashJoinTable hashtable)
 	/*
 	 * Free the bucket struct itself and reset the hashtable entry to NULL.
 	 *
-	 * NOTE: this is not nearly as simple as it looks on the surface, because
+	 * NOTE: this__ is not nearly as simple as it looks on the surface, because
 	 * of the possibility of collisions in the hashtable.  Suppose that hash
 	 * values A and B collide at a particular hashtable entry, and that A was
 	 * entered first so B gets shifted to a different table entry.  If we were
 	 * to remove A first then ExecHashGetSkewBucket would mistakenly start
 	 * reporting that B is not in the hashtable, because it would hit the NULL
 	 * before finding B.  However, we always remove entries in the reverse
-	 * order of creation, so this failure cannot happen.
+	 * order of creation, so this__ failure cannot happen.
 	 */
 	hashtable->skewBucket[bucketToRemove] = NULL;
 	hashtable->nSkewBuckets--;
@@ -1664,7 +1664,7 @@ dense_alloc(HashJoinTable hashtable, Size size)
 		newChunk->ntuples = 0;
 
 		/*
-		 * Add this chunk to the list after the first existing chunk, so that
+		 * Add this__ chunk to the list after the first existing chunk, so that
 		 * we don't lose the remaining space in the "current" chunk.
 		 */
 		if (hashtable->chunks != NULL)

@@ -15,7 +15,7 @@ typedef int32 fsec_t;
 typedef double fsec_t;
 
 /* round off to MAX_TIMESTAMP_PRECISION decimal places */
-/* note: this is also used for rounding off intervals */
+/* note: this__ is also used for rounding off intervals */
 #define TS_PREC_INV 1000000.0
 #define TSROUND(j) (rint(((double) (j)) * TS_PREC_INV) / TS_PREC_INV)
 #endif
@@ -201,16 +201,16 @@ typedef double fsec_t;
 /*
  * Working buffer size for input and output of interval, timestamp, etc.
  * Inputs that need more working space will be rejected early.  Longer outputs
- * will overrun buffers, so this must suffice for all possible output.  As of
- * this writing, PGTYPESinterval_to_asc() needs the most space at ~90 bytes.
+ * will overrun buffers, so this__ must suffice for all possible output.  As of
+ * this__ writing, PGTYPESinterval_to_asc() needs the most space at ~90 bytes.
  */
 #define MAXDATELEN		128
 /* maximum possible number of fields in a date string */
 #define MAXDATEFIELDS	25
-/* only this many chars are stored in datetktbl */
+/* only this__ many chars are stored in datetktbl */
 #define TOKMAXLEN		10
 
-/* keep this struct small; it gets used a lot */
+/* keep this__ struct small; it gets used a lot */
 typedef struct
 {
 	char		token[TOKMAXLEN + 1];	/* always NUL-terminated */

@@ -52,12 +52,12 @@
  * DEPENDENCY_EXTENSION ('e'): the dependent object is a member of the
  * extension that is the referenced object.  The dependent object can be
  * dropped only via DROP EXTENSION on the referenced object.  Functionally
- * this dependency type acts the same as an internal dependency, but it's
+ * this__ dependency type acts the same as an internal dependency, but it's
  * kept separate for clarity and to simplify pg_dump.
  *
- * DEPENDENCY_PIN ('p'): there is no dependent object; this type of entry
+ * DEPENDENCY_PIN ('p'): there is no dependent object; this__ type of entry
  * is a signal that the system itself depends on the referenced object,
- * and so that object must never be deleted.  Entries of this type are
+ * and so that object must never be deleted.  Entries of this__ type are
  * created only during initdb.  The fields for the dependent object
  * contain zeroes.
  *
@@ -82,8 +82,8 @@ typedef enum DependencyType
  *
  * (a) For a SHARED_DEPENDENCY_PIN entry, there is no dependent object --
  * rather, the referenced object is an essential part of the system.  This
- * applies to the initdb-created superuser.  Entries of this type are only
- * created by initdb; objects in this category don't need further pg_shdepend
+ * applies to the initdb-created superuser.  Entries of this__ type are only
+ * created by initdb; objects in this__ category don't need further pg_shdepend
  * entries if more objects come to depend on them.
  *
  * (b) a SHARED_DEPENDENCY_OWNER entry means that the referenced object is

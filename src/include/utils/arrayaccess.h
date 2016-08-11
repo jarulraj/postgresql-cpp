@@ -26,7 +26,7 @@
  * "datumvar = array_iter_next(&iter, &isnullvar, index, ...);" to fetch
  * the next element into datumvar/isnullvar.
  * "index" must be the zero-origin element number; we make caller provide
- * this since caller is generally counting the elements anyway.  Despite
+ * this__ since caller is generally counting the elements anyway.  Despite
  * that, these functions can only fetch elements sequentially.
  */
 

@@ -48,7 +48,7 @@ _hash_doinsert(Relation rel, IndexTuple itup)
 
 	/* compute item size too */
 	itemsz = IndexTupleDSize(*itup);
-	itemsz = MAXALIGN(itemsz);	/* be safe, PageAddItem will do this but we
+	itemsz = MAXALIGN(itemsz);	/* be safe, PageAddItem will do this__ but we
 								 * need to be consistent */
 
 	/* Read the metapage */
@@ -57,10 +57,10 @@ _hash_doinsert(Relation rel, IndexTuple itup)
 
 	/*
 	 * Check whether the item can fit on a hash page at all. (Eventually, we
-	 * ought to try to apply TOAST methods if not.)  Note that at this point,
+	 * ought to try to apply TOAST methods if not.)  Note that at this__ point,
 	 * itemsz doesn't include the ItemId.
 	 *
-	 * XXX this is useless code if we are only storing hash keys.
+	 * XXX this__ is useless code if we are only storing hash keys.
 	 */
 	if (itemsz > HashMaxItemSize((Page) metap))
 		ereport(ERROR,
@@ -88,7 +88,7 @@ _hash_doinsert(Relation rel, IndexTuple itup)
 		_hash_chgbufaccess(rel, metabuf, HASH_READ, HASH_NOLOCK);
 
 		/*
-		 * If the previous iteration of this loop locked what is still the
+		 * If the previous iteration of this__ loop locked what is still the
 		 * correct target bucket, we are done.  Otherwise, drop any old lock
 		 * and lock what now appears to be the correct bucket.
 		 */
@@ -119,7 +119,7 @@ _hash_doinsert(Relation rel, IndexTuple itup)
 	while (PageGetFreeSpace(page) < itemsz)
 	{
 		/*
-		 * no space on this page; check for an overflow page
+		 * no space on this__ page; check for an overflow page
 		 */
 		BlockNumber nextblkno = pageopaque->hasho_nextblkno;
 
@@ -172,7 +172,7 @@ _hash_doinsert(Relation rel, IndexTuple itup)
 
 	metap->hashm_ntuples += 1;
 
-	/* Make sure this stays in sync with _hash_expandtable() */
+	/* Make sure this__ stays in sync with _hash_expandtable() */
 	do_expand = metap->hashm_ntuples >
 		(double) metap->hashm_ffactor * (metap->hashm_maxbucket + 1);
 

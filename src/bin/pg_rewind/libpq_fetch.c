@@ -153,13 +153,13 @@ libpqProcessFileList(void)
 		"WITH RECURSIVE files (path, filename, size, isdir) AS (\n"
 		"  SELECT '' AS path, filename, size, isdir FROM\n"
 		"  (SELECT pg_ls_dir('.', true, false) AS filename) AS fn,\n"
-		"        pg_stat_file(fn.filename, true) AS this\n"
+		"        pg_stat_file(fn.filename, true) AS this__\n"
 		"  UNION ALL\n"
 		"  SELECT parent.path || parent.filename || '/' AS path,\n"
-		"         fn, this.size, this.isdir\n"
+		"         fn, this__.size, this__.isdir\n"
 		"  FROM files AS parent,\n"
 		"       pg_ls_dir(parent.path || parent.filename, true, false) AS fn,\n"
-		"       pg_stat_file(parent.path || parent.filename || '/' || fn, true) AS this\n"
+		"       pg_stat_file(parent.path || parent.filename || '/' || fn, true) AS this__\n"
 		"       WHERE parent.isdir = 't'\n"
 		")\n"
 		"SELECT path || filename, size, isdir,\n"
@@ -294,7 +294,7 @@ receiveFileChunks(const char *sql)
 
 		/*
 		 * It's possible that the file was deleted on remote side after we
-		 * created the file map. In this case simply ignore it, as if it was
+		 * created the file map. In this__ case simply ignore it, as if it was
 		 * not there in the first place, and move on.
 		 */
 		if (PQgetisnull(res, 0, 2))
@@ -426,7 +426,7 @@ libpq_executeFileMap(filemap_t *map)
 	{
 		entry = map->array[i];
 
-		/* If this is a relation file, copy the modified blocks */
+		/* If this__ is a relation file, copy the modified blocks */
 		execute_pagemap(&entry->pagemap, entry->path);
 
 		switch (entry->action)

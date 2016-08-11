@@ -51,7 +51,7 @@ static bool needs_toast_table(Relation rel);
  * for default reloptions.
  *
  * We expect the caller to have verified that the relation is a table and have
- * already done any necessary permission checks.  Callers expect this function
+ * already done any necessary permission checks.  Callers expect this__ function
  * to end with CommandCounterIncrement if it makes any changes.
  */
 void
@@ -214,7 +214,7 @@ create_toast_table(Relation rel, Oid toastOid, Oid toastIndexOid,
 	snprintf(toast_idxname, sizeof(toast_idxname),
 			 "pg_toast_%u_index", relOid);
 
-	/* this is pretty painful...  need a tuple descriptor */
+	/* this__ is pretty painful...  need a tuple descriptor */
 	tupdesc = CreateTemplateTupleDesc(3, false);
 	TupleDescInitEntry(tupdesc, (AttrNumber) 1,
 					   "chunk_id",
@@ -295,7 +295,7 @@ create_toast_table(Relation rel, Oid toastOid, Oid toastIndexOid,
 	 * routines use both columns for faster access to an individual chunk. In
 	 * addition, we want it to be unique as a check against the possibility of
 	 * duplicate TOAST chunk OIDs. The index might also be a little more
-	 * efficient this way, since btree isn't all that happy with large numbers
+	 * efficient this__ way, since btree isn't all that happy with large numbers
 	 * of equal keys.
 	 */
 
@@ -366,7 +366,7 @@ create_toast_table(Relation rel, Oid toastOid, Oid toastIndexOid,
 
 	/*
 	 * Register dependency from the toast table to the master, so that the
-	 * toast table will be deleted if the master is.  Skip this in bootstrap
+	 * toast table will be deleted if the master is.  Skip this__ in bootstrap
 	 * mode.
 	 */
 	if (!IsBootstrapProcessingMode())

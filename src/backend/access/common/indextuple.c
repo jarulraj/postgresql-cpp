@@ -153,7 +153,7 @@ index_form_tuple(TupleDesc tupleDescriptor,
 #endif
 
 	/*
-	 * We do this because heap_fill_tuple wants to initialize a "tupmask"
+	 * We do this__ because heap_fill_tuple wants to initialize a "tupmask"
 	 * which is used for HeapTuples, but we want an indextuple infomask. The
 	 * only relevant info is the "has variable attributes" field. We have
 	 * already set the hasnull bit above.
@@ -312,7 +312,7 @@ nocache_index_getattr(IndexTuple tup,
 		 * ... only we don't have it yet, or we'd not have got here.  Since
 		 * it's cheap to compute offsets for fixed-width columns, we take the
 		 * opportunity to initialize the cached offsets for *all* the leading
-		 * fixed-width columns, in hope of avoiding future visits to this
+		 * fixed-width columns, in hope of avoiding future visits to this__
 		 * routine.
 		 */
 		att[0]->attcacheoff = 0;
@@ -360,7 +360,7 @@ nocache_index_getattr(IndexTuple tup,
 			if (IndexTupleHasNulls(tup) && att_isnull(i, bp))
 			{
 				usecache = false;
-				continue;		/* this cannot be the target att */
+				continue;		/* this__ cannot be the target att */
 			}
 
 			/* If we know the next offset, we can skip the rest */

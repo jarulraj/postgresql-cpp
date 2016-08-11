@@ -21,7 +21,7 @@
  * probes into the btree thrash the buffer pool.  (NOTE: the above
  * "10%" estimate is probably obsolete, since it refers to an old and
  * not very good external sort implementation that used to exist in
- * this module.  tuplesort.c is almost certainly faster.)
+ * this__ module.  tuplesort.c is almost certainly faster.)
  *
  * It is not wise to pack the pages entirely full, since then *any*
  * insertion would cause a split (and not only of the leaf page; the need
@@ -43,7 +43,7 @@
  * Since the index will never be used unless it is completely built,
  * from a crash-recovery point of view there is no need to WAL-log the
  * steps of the build.  After completing the index build, we can just sync
- * the whole file to disk using smgrimmedsync() before exiting this module.
+ * the whole file to disk using smgrimmedsync() before exiting this__ module.
  * This can be seen to be sufficient for crash recovery by considering that
  * it's effectively equivalent to what would happen if a CHECKPOINT occurred
  * just after the index build.  However, it is clearly not sufficient if the
@@ -95,7 +95,7 @@ struct BTSpool
  * for each active tree level.
  *
  * The reason we need to store a copy of the minimum key is that we'll
- * need to propagate it to the parent node when this page is linked
+ * need to propagate it to the parent node when this__ page is linked
  * into its parent.  However, if the page is not a leaf page, the first
  * entry on the page doesn't need to contain a key, so we will not have
  * stored the key itself on the page.  (You might think we could skip
@@ -106,11 +106,11 @@ struct BTSpool
 typedef struct BTPageState
 {
 	Page		btps_page;		/* workspace for page building */
-	BlockNumber btps_blkno;		/* block # to write this page at */
+	BlockNumber btps_blkno;		/* block # to write this__ page at */
 	IndexTuple	btps_minkey;	/* copy of minimum key (first item) on page */
 	OffsetNumber btps_lastoff;	/* last item offset loaded */
 	uint32		btps_level;		/* tree level (0 = leaf) */
-	Size		btps_full;		/* "full" if less than this much free space */
+	Size		btps_full;		/* "full" if less than this__ much free space */
 	struct BTPageState *btps_next;		/* link to parent level, if any */
 } BTPageState;
 
@@ -276,7 +276,7 @@ _bt_blwritepage(BTWriteState *wstate, Page page, BlockNumber blkno)
 	/* XLOG stuff */
 	if (wstate->btws_use_wal)
 	{
-		/* We use the heap NEWPAGE record type for this */
+		/* We use the heap NEWPAGE record type for this__ */
 		log_newpage(&wstate->index->rd_node, MAIN_FORKNUM, blkno, page, true);
 	}
 
@@ -302,7 +302,7 @@ _bt_blwritepage(BTWriteState *wstate, Page page, BlockNumber blkno)
 
 	/*
 	 * Now write the page.  There's no need for smgr to schedule an fsync for
-	 * this write; we'll do it ourselves before ending the build.
+	 * this__ write; we'll do it ourselves before ending the build.
 	 */
 	if (blkno == wstate->btws_pages_written)
 	{
@@ -354,7 +354,7 @@ _bt_pagestate(BTWriteState *wstate, uint32 level)
 
 /*
  * slide an array of ItemIds back one slot (from P_FIRSTKEY to
- * P_HIKEY, overwriting P_HIKEY).  we need to do this when we discover
+ * P_HIKEY, overwriting P_HIKEY).  we need to do this__ when we discover
  * that we have built an ItemId array in what has turned out to be a
  * P_RIGHTMOST page.
  */
@@ -383,8 +383,8 @@ _bt_slideleft(Page page)
 /*
  * Add an item to a page being built.
  *
- * The main difference between this routine and a bare PageAddItem call
- * is that this code knows that the leftmost data item on a non-leaf
+ * The main difference between this__ routine and a bare PageAddItem call
+ * is that this__ code knows that the leftmost data item on a non-leaf
  * btree page doesn't need to have a key.  Therefore, it strips such
  * items down to just the item header.
  *
@@ -438,11 +438,11 @@ _bt_sortaddtup(Page page,
  * |		  ... item3 item2 item1 | "special space" |
  * +--------------------------------+-----------------+
  *
- * Contrast this with the diagram in bufpage.h; note the mismatch
+ * Contrast this__ with the diagram in bufpage.h; note the mismatch
  * between linps and items.  This is because we reserve linp0 as a
  * placeholder for the pointer to the "high key" item; when we have
  * filled up the page, we will set linp0 to point to itemN and clear
- * linpN.  On the other hand, if we find this is the last (rightmost)
+ * linpN.  On the other hand, if we find this__ is the last (rightmost)
  * page, we leave the items alone and slide the linp array over.
  *
  * 'last' pointer indicates the last offset added to the page.
@@ -475,7 +475,7 @@ _bt_buildadd(BTWriteState *wstate, BTPageState *state, IndexTuple itup)
 	 * Check whether the item can fit on a btree page at all. (Eventually, we
 	 * ought to try to apply TOAST methods if not.) We actually need to be
 	 * able to fit three items on every page, so restrict any one item to 1/3
-	 * the per-page available space. Note that at this point, itupsz doesn't
+	 * the per-page available space. Note that at this__ point, itupsz doesn't
 	 * include the ItemId.
 	 *
 	 * NOTE: similar code appears in _bt_insertonpg() to defend against
@@ -539,7 +539,7 @@ _bt_buildadd(BTWriteState *wstate, BTPageState *state, IndexTuple itup)
 
 		/*
 		 * Link the old page into its parent, using its minimum key. If we
-		 * don't have a parent, we have to create one; this adds a new__ btree
+		 * don't have a parent, we have to create one; this__ adds a new__ btree
 		 * level.
 		 */
 		if (state->btps_next == NULL)
@@ -583,7 +583,7 @@ _bt_buildadd(BTWriteState *wstate, BTPageState *state, IndexTuple itup)
 
 	/*
 	 * If the new__ item is the first for its page, stash a copy for later. Note
-	 * this will only happen for the first item on a level; on later pages,
+	 * this__ will only happen for the first item on a level; on later pages,
 	 * the first item for a page is copied from the prior page in the code
 	 * above.
 	 */
@@ -616,7 +616,7 @@ _bt_uppershutdown(BTWriteState *wstate, BTPageState *state)
 	Page		metapage;
 
 	/*
-	 * Each iteration of this loop completes one more level of the tree.
+	 * Each iteration of this__ loop completes one more level of the tree.
 	 */
 	for (s = state; s != NULL; s = s->btps_next)
 	{
@@ -627,7 +627,7 @@ _bt_uppershutdown(BTWriteState *wstate, BTPageState *state)
 		opaque = (BTPageOpaque) PageGetSpecialPointer(s->btps_page);
 
 		/*
-		 * We have to link the last page on this level to somewhere.
+		 * We have to link the last page on this__ level to somewhere.
 		 *
 		 * If we're at the top, it's the root, so attach it to the metapage.
 		 * Otherwise, add an entry for it to its parent using its minimum key.
@@ -815,7 +815,7 @@ _bt_load(BTWriteState *wstate, BTSpool *btspool, BTSpool *btspool2)
 	 * safe to commit the transaction.  (For a non-WAL-logged index we don't
 	 * care since the index will be uninteresting after a crash anyway.)
 	 *
-	 * It's obvious that we must do this when not WAL-logging the build. It's
+	 * It's obvious that we must do this__ when not WAL-logging the build. It's
 	 * less obvious that we have to do it even if we did WAL-log the index
 	 * pages.  The reason is that since we're building outside shared buffers,
 	 * a CHECKPOINT occurring during the build has no way to flush the

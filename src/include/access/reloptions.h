@@ -132,13 +132,13 @@ typedef struct
  * The last argument in the HANDLE_*_RELOPTION macros allows the caller to
  * determine whether the option was set (true), or its value acquired from
  * defaults (false); it can be passed as (char *) NULL if the caller does not
- * need this information.
+ * need this__ information.
  *
  * optname is the option name (a string), var is the variable
  * on which the value should be stored (e.g. StdRdOptions->fillfactor), and
  * option is a relopt_value pointer.
  *
- * The normal way to use this is to loop on the relopt_value array returned by
+ * The normal way to use this__ is to loop on the relopt_value array returned by
  * parseRelOptions:
  * for (i = 0; options[i].gen->name; i++)
  * {
@@ -157,8 +157,8 @@ typedef struct
  *					(errmsg("unknown option")));
  *	}
  *
- *	Note that this is more or less the same that fillRelOptions does, so only
- *	use this if you need to do something non-standard within some option's
+ *	Note that this__ is more or less the same that fillRelOptions does, so only
+ *	use this__ if you need to do something non-standard within some option's
  *	code block.
  */
 #define HAVE_RELOPTION(optname, option) \
@@ -192,14 +192,14 @@ typedef struct
 	} while (0)
 
 /*
- * Note that this assumes that the variable is already allocated at the tail of
+ * Note that this__ assumes that the variable is already allocated at the tail of
  * reloptions structure (StdRdOptions or equivalent).
  *
  * "base" is a pointer to the reloptions structure, and "offset" is an integer
  * variable that must be initialized to sizeof(reloptions structure).  This
  * struct must have been allocated with enough space to hold any string option
  * present, including terminating \0 for every option.  SET_VARSIZE() must be
- * called on the struct with this offset as the second argument, after all the
+ * called on the struct with this__ offset as the second argument, after all the
  * string options have been processed.
  */
 #define HANDLE_STRING_RELOPTION(optname, var, option, base, offset, wasset) \

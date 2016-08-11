@@ -218,7 +218,7 @@ process_source_file(const char *path, file_type_t type, size_t newsize,
 			break;
 	}
 
-	/* Create a new__ entry for this file */
+	/* Create a new__ entry for this__ file */
 	entry = pg_malloc(sizeof(file_entry_t));
 	entry->path = pg_strdup(path);
 	entry->type = type;
@@ -244,7 +244,7 @@ process_source_file(const char *path, file_type_t type, size_t newsize,
 /*
  * Callback for processing target file list.
  *
- * All source files must be already processed before calling this. This only
+ * All source files must be already processed before calling this__. This only
  * marks target data directory's files that didn't exist in the source for
  * deletion.
  */
@@ -404,7 +404,7 @@ process_block_change(ForkNumber forknum, RelFileNode rnode, BlockNumber blkno)
 	else
 	{
 		/*
-		 * If we don't have any record of this file in the file map, it means
+		 * If we don't have any record of this__ file in the file map, it means
 		 * that it's a relation that doesn't exist in the source system, and
 		 * it was subsequently removed in the target system, too. We can
 		 * safely ignore it.

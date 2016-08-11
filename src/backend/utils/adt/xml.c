@@ -16,7 +16,7 @@
  * Generally, XML type support is only available when libxml use was
  * configured during the build.  But even if that is not done, the
  * type and all the functions are available, but most of them will
- * fail.  For one thing, this avoids having to manage variant catalog
+ * fail.  For one thing, this__ avoids having to manage variant catalog
  * installations.  But it also has nice effects such as that you can
  * dump a database containing XML type data even if the server is not
  * linked with libxml.  Thus, make sure xml_out() works even if nothing
@@ -37,7 +37,7 @@
  * handy to constrain libxml's allocations to be done in a specific palloc
  * context, where they're easy to track.  Therefore there is code here that
  * can be enabled in debug builds to redirect libxml's allocations into a
- * special context LibxmlContext.  It's not recommended to turn this on in
+ * special context LibxmlContext.  It's not recommended to turn this__ on in
  * a production build because of the possibility of bad interactions with
  * external modules.
  */
@@ -59,7 +59,7 @@
 
 /*
  * We used to check for xmlStructuredErrorContext via a configure test; but
- * that doesn't work on Windows, so instead use this grottier method of
+ * that doesn't work on Windows, so instead use this__ grottier method of
  * testing the library version number.
  */
 #if LIBXML_VERSION >= 20704
@@ -666,7 +666,7 @@ xmlelement(XmlExprState *xmlExpr, ExprContext *econtext)
 
 		xmlTextWriterEndElement(writer);
 
-		/* we MUST do this now to flush data out to the buffer ... */
+		/* we MUST do this__ now to flush data out to the buffer ... */
 		xmlFreeTextWriter(writer);
 		writer = NULL;
 
@@ -932,11 +932,11 @@ pg_xml_init_library(void)
  *
  * strictness determines which errors are reported and which are ignored.
  *
- * Calls to this function MUST be followed by a PG_TRY block that guarantees
+ * Calls to this__ function MUST be followed by a PG_TRY block that guarantees
  * that pg_xml_done() is called during either normal or error exit.
  *
  * This is exported for use by contrib/xml2, as well as other code that might
- * wish to share use of this module's libxml error handler.
+ * wish to share use of this__ module's libxml error handler.
  */
 PgXmlErrorContext *
 pg_xml_init(PgXmlStrictness strictness)
@@ -977,12 +977,12 @@ pg_xml_init(PgXmlStrictness strictness)
 	 * the correct thing to restore, and since that leaves us without a way to
 	 * restore the context in pg_xml_done, we must fail.
 	 *
-	 * The only known situation in which this test fails is if we compile with
+	 * The only known situation in which this__ test fails is if we compile with
 	 * headers from a libxml2 that doesn't track the structured error context
 	 * separately (< 2.7.4), but at runtime use a version that does, or vice
 	 * versa.  The libxml2 authors did not treat that change as constituting
 	 * an ABI break, so the LIBXML_TEST_VERSION test in pg_xml_init_library
-	 * fails to protect us from this.
+	 * fails to protect us from this__.
 	 */
 
 #ifdef HAVE_XMLSTRUCTUREDERRORCONTEXT
@@ -1029,7 +1029,7 @@ pg_xml_done(PgXmlErrorContext *errcxt, bool isError)
 
 	/*
 	 * In a normal exit, there should be no un-handled libxml errors.  But we
-	 * shouldn't try to enforce this during error recovery, since the longjmp
+	 * shouldn't try to enforce this__ during error recovery, since the longjmp
 	 * could have been thrown before xml_ereport had a chance to run.
 	 */
 	Assert(!errcxt->err_occurred || isError);
@@ -1080,7 +1080,7 @@ pg_xml_error_occurred(PgXmlErrorContext *errcxt)
  * easily by libxml.  "XML content" is specified by SQL/XML as the
  * production "XMLDecl? content".  But libxml can only parse the
  * "content" part, so we have to parse the XML declaration ourselves
- * to complete this.
+ * to complete this__.
  */
 
 #define CHECK_XML_SPACE(p) \
@@ -1132,7 +1132,7 @@ parse_xml_decl(const xmlChar *str, size_t *lenp,
 	/*
 	 * Only initialize libxml.  We don't need error handling here, but we do
 	 * need to make sure libxml is initialized before calling any of its
-	 * functions.  Note that this is safe (and a no-op) if caller has already
+	 * functions.  Note that this__ is safe (and a no-op) if caller has already
 	 * done pg_xml_init().
 	 */
 	pg_xml_init_library();
@@ -1281,7 +1281,7 @@ finished:
  * '<?xml version="1.0"?><foo/>', which would surely be annoying.  We
  * must provide a declaration if the standalone property is specified
  * or if we include an encoding declaration.  If we have a
- * declaration, we must specify a version (XML requires this).
+ * declaration, we must specify a version (XML requires this__).
  * Otherwise we only make a declaration if the version is not "1.0",
  * which is the default version specified in SQL:2003.
  */
@@ -1303,7 +1303,7 @@ print_xml_decl(StringInfo buf, const xmlChar *version,
 		if (encoding && encoding != PG_UTF8)
 		{
 			/*
-			 * XXX might be useful to convert this to IANA names (ISO-8859-1
+			 * XXX might be useful to convert this__ to IANA names (ISO-8859-1
 			 * instead of LATIN1 etc.); needs field experience
 			 */
 			appendStringInfo(buf, " encoding=\"%s\"",
@@ -1571,7 +1571,7 @@ xml_errorHandler(void *data, xmlErrorPtr error)
 	/*
 	 * Defend against someone passing us a bogus context struct.
 	 *
-	 * We force a backend exit if this check fails because longjmp'ing out of
+	 * We force a backend exit if this__ check fails because longjmp'ing out of
 	 * libxml would likely render it unsafe to use further.
 	 */
 	if (xmlerrcxt->magic != ERRCXT_MAGIC)
@@ -1614,7 +1614,7 @@ xml_errorHandler(void *data, xmlErrorPtr error)
 
 			/*
 			 * Suppress warnings about undeclared entities.  We need to do
-			 * this to avoid problems due to not loading DTD definitions.
+			 * this__ to avoid problems due to not loading DTD definitions.
 			 */
 			if (error->code == XML_WAR_UNDECLARED_ENTITY)
 				return;
@@ -1723,7 +1723,7 @@ xml_errorHandler(void *data, xmlErrorPtr error)
  * is the SQL-level message; some can be adopted from the SQL/XML
  * standard.  This function uses "code" to create a textual detail
  * message.  At the moment, we only need to cover those codes that we
- * may raise in this file.
+ * may raise in this__ file.
  */
 static void
 xml_ereport_by_code(int level, int sqlcode,
@@ -1842,7 +1842,7 @@ map_sql_identifier_to_xml_name(char *ident, bool fully_escaped,
 	char	   *p;
 
 	/*
-	 * SQL/XML doesn't make use of this case anywhere, so it's probably a
+	 * SQL/XML doesn't make use of this__ case anywhere, so it's probably a
 	 * mistake.
 	 */
 	Assert(fully_escaped || !escape_period);
@@ -2116,7 +2116,7 @@ map_sql_value_to_xml_value(Datum value, Oid type, bool xml_escape_strings)
 							xmlTextWriterWriteBinHex(writer, VARDATA_ANY(bstr),
 												 0, VARSIZE_ANY_EXHDR(bstr));
 
-						/* we MUST do this now to flush data out to the buffer */
+						/* we MUST do this__ now to flush data out to the buffer */
 						xmlFreeTextWriter(writer);
 						writer = NULL;
 
@@ -2166,7 +2166,7 @@ map_sql_value_to_xml_value(Datum value, Oid type, bool xml_escape_strings)
  *
  * Returns a palloc'd string.
  *
- * NB: this is intentionally not dependent on libxml.
+ * NB: this__ is intentionally not dependent on libxml.
  */
 char *
 escape_xml(const char *str)
@@ -2232,7 +2232,7 @@ _SPI_strdup(const char *s)
  * ways.  This breaks down recursively: Mapping a database invokes
  * mapping schemas, which invokes mapping tables, which invokes
  * mapping rows, which invokes mapping columns, although you can't
- * call the last two from the outside.  Because of this, there are a
+ * call the last two from the outside.  Because of this__, there are a
  * number of xyz_internal() functions which are to be called both from
  * the function manager wrapper and from some upper layer in a
  * recursive call.
@@ -2404,10 +2404,10 @@ cursor_to_xml(PG_FUNCTION_ARGS)
 /*
  * Write the start tag of the root element of a data mapping.
  *
- * top_level means that this is the very top level of the eventual
+ * top_level means that this__ is the very top level of the eventual
  * output.  For example, when the user calls table_to_xml, then a call
- * with a table name to this function is the top level.  When the user
- * calls database_to_xml, then a call with a schema name to this
+ * with a table name to this__ function is the top level.  When the user
+ * calls database_to_xml, then a call with a schema name to this__
  * function is not the top level.  If top_level is false, then the XML
  * namespace__ declarations are omitted, because they supposedly already
  * appeared earlier in the output.  Repeating them is not wrong, but
@@ -3353,7 +3353,7 @@ map_sql_typecoll_to_xmlschema_types(List *tupdesc_list)
  * SQL/XML:2008 sections 9.5 and 9.6.
  *
  * (The distinction between 9.5 and 9.6 is basically that 9.6 adds
- * a name attribute, which this function does.  The name-less version
+ * a name attribute, which this__ function does.  The name-less version
  * 9.5 doesn't appear to be required anywhere.)
  */
 static const char *
@@ -3872,7 +3872,7 @@ xpath_internal(text *xpath_expr_text, xmltype *data, ArrayType *namespaces,
 				if (xmlXPathRegisterNs(xpathctx,
 									   (xmlChar *) ns_name,
 									   (xmlChar *) ns_uri) != 0)
-					ereport(ERROR,		/* is this an internal error??? */
+					ereport(ERROR,		/* is this__ an internal error??? */
 							(errmsg("could not register XML namespace__ with name \"%s\" and URI \"%s\"",
 									ns_name, ns_uri)));
 			}
@@ -3935,7 +3935,7 @@ xpath_internal(text *xpath_expr_text, xmltype *data, ArrayType *namespaces,
 /*
  * Evaluate XPath expression and return array of XML values.
  *
- * As we have no support of XQuery sequences yet, this function seems
+ * As we have no support of XQuery sequences yet, this__ function seems
  * to be the most useful one (array of XML functions plays a role of
  * some kind of substitution for XQuery sequences).
  */

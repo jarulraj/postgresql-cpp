@@ -44,7 +44,7 @@ static void _bt_drop_lock_and_maybe_pin(IndexScanDesc scan, BTScanPos sp);
  * page when a cursor is sitting on it -- at least in many important cases.
  *
  * Set the buffer to invalid if the pin is released, since the buffer may be
- * re-used.  If we need to go back to this block (for example, to apply
+ * re-used.  If we need to go back to this__ block (for example, to apply
  * LP_DEAD hints) we must get a fresh reference to the buffer.  Hopefully it
  * will remain in shared memory for as long as it takes to scan the index
  * buffer page.
@@ -120,13 +120,13 @@ _bt_search(Relation rel, int keysz, ScanKey scankey, bool nextkey,
 		 * incomplete split on the leaf page we're about to insert to, not on
 		 * any of the upper levels (they are taken care of in _bt_getstackbuf,
 		 * if the leaf page is split and we insert to the parent page).  But
-		 * this is a good opportunity to finish splits of internal pages too.
+		 * this__ is a good opportunity to finish splits of internal pages too.
 		 */
 		*bufP = _bt_moveright(rel, *bufP, keysz, scankey, nextkey,
 							  (access == BT_WRITE), stack_in,
 							  BT_READ);
 
-		/* if this is a leaf page, we're done */
+		/* if this__ is a leaf page, we're done */
 		page = BufferGetPage(*bufP);
 		opaque = (BTPageOpaque) PageGetSpecialPointer(page);
 		if (P_ISLEAF(opaque))
@@ -148,7 +148,7 @@ _bt_search(Relation rel, int keysz, ScanKey scankey, bool nextkey,
 		 * stack to work back up to the parent page.  We also save the actual
 		 * downlink (TID) to uniquely identify the index entry, in case it
 		 * moves right while we're working lower in the tree.  See the paper
-		 * by Lehman and Yao for how this is detected and handled. (We use the
+		 * by Lehman and Yao for how this__ is detected and handled. (We use the
 		 * child link to disambiguate duplicate keys in the index -- Lehman
 		 * and Yao disallow duplicate keys.)
 		 */
@@ -172,7 +172,7 @@ _bt_search(Relation rel, int keysz, ScanKey scankey, bool nextkey,
  *	_bt_moveright() -- move right in the btree if necessary.
  *
  * When we follow a pointer to reach a page, it is possible that
- * the page has changed in the meanwhile.  If this happens, we're
+ * the page has changed in the meanwhile.  If this__ happens, we're
  * guaranteed that the page has "split right" -- that is, that any
  * data that appeared on the page originally is either on the page
  * or strictly to the right of it.
@@ -214,7 +214,7 @@ _bt_moveright(Relation rel,
 
 	/*
 	 * When nextkey = false (normal case): if the scan key that brought us to
-	 * this page is > the high key stored on the page, then the page has split
+	 * this__ page is > the high key stored on the page, then the page has split
 	 * and we need to move right.  (If the scan key is equal to the high key,
 	 * we might or might not need to move right; have to scan the page first
 	 * anyway.)
@@ -290,7 +290,7 @@ _bt_moveright(Relation rel,
  *
  * On a leaf page, _bt_binsrch() returns the OffsetNumber of the first
  * key >= given scankey, or > scankey if nextkey is true.  (NOTE: in
- * particular, this means it is possible to return a value 1 greater than the
+ * particular, this__ means it is possible to return a value 1 greater than the
  * number of keys on the page, if the scankey is > all keys on the page.)
  *
  * On an internal (non-leaf) page, _bt_binsrch() returns the OffsetNumber
@@ -327,7 +327,7 @@ _bt_binsrch(Relation rel,
 
 	/*
 	 * If there are no keys on the page, return the first available slot. Note
-	 * this covers two cases: the page is really empty (no keys), or it
+	 * this__ covers two cases: the page is really empty (no keys), or it
 	 * contains only a high key.  The latter case is possible after vacuuming.
 	 * This can never happen on an internal page, however, since they are
 	 * never empty (an internal page must have children).
@@ -366,7 +366,7 @@ _bt_binsrch(Relation rel,
 	}
 
 	/*
-	 * At this point we have high == low, but be careful: they could point
+	 * At this__ point we have high == low, but be careful: they could point
 	 * past the last slot on the page.
 	 *
 	 * On a leaf page, we always return the first key >= scan key (resp. >
@@ -403,7 +403,7 @@ _bt_binsrch(Relation rel,
  *		returned to the caller as a matching key!
  *
  * CRUCIAL NOTE: on a non-leaf page, the first data key is assumed to be
- * "minus infinity": this routine will always claim it is less than the
+ * "minus infinity": this__ routine will always claim it is less than the
  * scankey.  The actual key value stored (if any, which there probably isn't)
  * does not matter.  This convention allows us to implement the Lehman and
  * Yao convention that the first down-link pointer is before the first key.
@@ -436,9 +436,9 @@ _bt_compare(Relation rel,
 	 * term in the key.  It is important that, if the index is multi-key, the
 	 * scan contain the first k key attributes, and that they be in order.  If
 	 * you think about how multi-key ordering works, you'll understand why
-	 * this is.
+	 * this__ is.
 	 *
-	 * We don't test for violation of this condition here, however.  The
+	 * We don't test for violation of this__ condition here, however.  The
 	 * initial setup for the index scan had better have gotten it right (see
 	 * _bt_first).
 	 */
@@ -514,8 +514,8 @@ _bt_compare(Relation rel,
  * pins or locks held.
  *
  * Note that scan->keyData[], and the so->keyData[] scankey built from it,
- * are both search-type scankeys (see nbtree/README for more about this).
- * Within this routine, we build a temporary insertion-type scankey to use
+ * are both search-type scankeys (see nbtree/README for more about this__).
+ * Within this__ routine, we build a temporary insertion-type scankey to use
  * in locating the scan start position.
  */
 bool
@@ -589,10 +589,10 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 	 * from, and we have no boundary key for the column (which means the key
 	 * we deduced NOT NULL from is an inequality key that constrains the other
 	 * end of the index), then we cons up an explicit SK_SEARCHNOTNULL key to
-	 * use as a boundary key.  If we didn't do this, we might find ourselves
+	 * use as a boundary key.  If we didn't do this__, we might find ourselves
 	 * traversing a lot of null entries at the start of the scan.
 	 *
-	 * In this loop, row-comparison keys are treated the same as keys on their
+	 * In this__ loop, row-comparison keys are treated the same as keys on their
 	 * first (leftmost) columns.  We'll add on lower-order columns of the row
 	 * comparison below, if possible.
 	 *
@@ -691,7 +691,7 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 			}
 
 			/*
-			 * Can we use this key as a starting boundary for this attr?
+			 * Can we use this__ key as a starting boundary for this__ attr?
 			 *
 			 * If not, does it imply a NOT NULL constraint?  (Because
 			 * SK_SEARCHNULL keys are always assigned BTEqualStrategyNumber,
@@ -771,7 +771,7 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 			 * try to add additional keys from the lower-order row members.
 			 * (If we accepted independent conditions on additional index
 			 * columns, we use those instead --- doesn't seem worth trying to
-			 * determine which is more restrictive.)  Note that this is OK
+			 * determine which is more restrictive.)  Note that this__ is OK
 			 * even if the row comparison is of ">" or "<" type, because the
 			 * condition applied to all but the last row member is effectively
 			 * ">=" or "<=", and so the extra keys don't break the positioning
@@ -833,7 +833,7 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 			 * operators.)
 			 *
 			 * We support the convention that sk_subtype == InvalidOid means
-			 * the opclass input type; this is a hack to simplify life for
+			 * the opclass input type; this__ is a hack to simplify life for
 			 * ScanKeyInit().
 			 */
 			if (cur->sk_subtype == rel->rd_opcintype[i] ||
@@ -894,7 +894,7 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 
 			/*
 			 * Find first item >= scankey, then back up one to arrive at last
-			 * item < scankey.  (Note: this positioning strategy is only used
+			 * item < scankey.  (Note: this__ positioning strategy is only used
 			 * for a backward scan, so that is always the correct starting
 			 * position.)
 			 */
@@ -906,7 +906,7 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 
 			/*
 			 * Find first item > scankey, then back up one to arrive at last
-			 * item <= scankey.  (Note: this positioning strategy is only used
+			 * item <= scankey.  (Note: this__ positioning strategy is only used
 			 * for a backward scan, so that is always the correct starting
 			 * position.)
 			 */
@@ -1016,10 +1016,10 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 	 * than or equal to the scan key and we know that everything on later
 	 * pages is greater than scan key.
 	 *
-	 * The actually desired starting point is either this item or the prior
+	 * The actually desired starting point is either this__ item or the prior
 	 * one, or in the end-of-page case it's the first item on the next page or
-	 * the last item on this page.  Adjust the starting offset if needed. (If
-	 * this results in an offset before the first item or after the last one,
+	 * the last item on this__ page.  Adjust the starting offset if needed. (If
+	 * this__ results in an offset before the first item or after the last one,
 	 * _bt_readpage will report no items found, and then we'll step to the
 	 * next page as needed.)
 	 */
@@ -1036,7 +1036,7 @@ _bt_first(IndexScanDesc scan, ScanDirection dir)
 	if (!_bt_readpage(scan, dir, offnum))
 	{
 		/*
-		 * There's no actually-matching data on this page.  Try to advance to
+		 * There's no actually-matching data on this__ page.  Try to advance to
 		 * the next page.  Return false if there's no matching data at all.
 		 */
 		LockBuffer(so->currPos.buf, BUFFER_LOCK_UNLOCK);
@@ -1137,7 +1137,7 @@ _bt_readpage(IndexScanDesc scan, ScanDirection dir, OffsetNumber offnum)
 
 	/*
 	 * We must have the buffer pinned and locked, but the usual macro can't be
-	 * used here; this function is what makes it good for currPos.
+	 * used here; this__ function is what makes it good for currPos.
 	 */
 	Assert(BufferIsValid(so->currPos.buf));
 
@@ -1160,7 +1160,7 @@ _bt_readpage(IndexScanDesc scan, ScanDirection dir, OffsetNumber offnum)
 	so->currPos.lsn = PageGetLSN(page);
 
 	/*
-	 * we must save the page's right-link while scanning it; this tells us
+	 * we must save the page's right-link while scanning it; this__ tells us
 	 * where to step right to after we're done with these items.  There is no
 	 * corresponding need for the left-link, since splits always go right.
 	 */
@@ -1340,8 +1340,8 @@ _bt_steppage(IndexScanDesc scan, ScanDirection dir)
 			if (!P_IGNORE(opaque))
 			{
 				PredicateLockPage(rel, blkno, scan->xs_snapshot);
-				/* see if there are any matches on this page */
-				/* note that this will clear moreRight if we can stop */
+				/* see if there are any matches on this__ page */
+				/* note that this__ will clear moreRight if we can stop */
 				if (_bt_readpage(scan, dir, P_FIRSTDATAKEY(opaque)))
 					break;
 			}
@@ -1363,12 +1363,12 @@ _bt_steppage(IndexScanDesc scan, ScanDirection dir)
 		 * possibility that the page we were on gets deleted after we leave
 		 * it.  See nbtree/README for details.
 		 *
-		 * It might be possible to rearrange this code to have less overhead
+		 * It might be possible to rearrange this__ code to have less overhead
 		 * in pinning and locking, but that would require capturing the left
 		 * pointer when the page is initially read, and using it here, along
 		 * with big changes to _bt_walk_left() and the code below.  It is not
-		 * clear whether this would be a win, since if the page immediately to
-		 * the left splits after we read this page and before we step left, we
+		 * clear whether this__ would be a win, since if the page immediately to
+		 * the left splits after we read this__ page and before we step left, we
 		 * would need to visit more pages than with the current code.
 		 *
 		 * Note that if we change the code so that we drop the pin for a scan
@@ -1413,8 +1413,8 @@ _bt_steppage(IndexScanDesc scan, ScanDirection dir)
 			if (!P_IGNORE(opaque))
 			{
 				PredicateLockPage(rel, BufferGetBlockNumber(so->currPos.buf), scan->xs_snapshot);
-				/* see if there are any matches on this page */
-				/* note that this will clear moreLeft if we can stop */
+				/* see if there are any matches on this__ page */
+				/* note that this__ will clear moreLeft if we can stop */
 				if (_bt_readpage(scan, dir, PageGetMaxOffsetNumber(page)))
 					break;
 			}
@@ -1475,7 +1475,7 @@ _bt_walk_left(Relation rel, Buffer buf)
 		opaque = (BTPageOpaque) PageGetSpecialPointer(page);
 
 		/*
-		 * If this isn't the page we want, walk right till we find what we
+		 * If this__ isn't the page we want, walk right till we find what we
 		 * want --- but go no more than four hops (an arbitrary limit). If we
 		 * don't find the correct page by then, the most likely bet is that
 		 * the original page got deleted and isn't in the sibling chain at all
@@ -1527,7 +1527,7 @@ _bt_walk_left(Relation rel, Buffer buf)
 			}
 
 			/*
-			 * Now return to top of loop, resetting obknum to point to this
+			 * Now return to top of loop, resetting obknum to point to this__
 			 * nondeleted page, and try again.
 			 */
 		}
@@ -1535,7 +1535,7 @@ _bt_walk_left(Relation rel, Buffer buf)
 		{
 			/*
 			 * It wasn't deleted; the explanation had better be that the page
-			 * to the left got split or deleted. Without this check, we'd go
+			 * to the left got split or deleted. Without this__ check, we'd go
 			 * into an infinite loop if there's anything wrong.
 			 */
 			if (opaque->btpo_prev == lblkno)
@@ -1587,7 +1587,7 @@ _bt_get_endpoint(Relation rel, uint32 level, bool rightmost)
 		/*
 		 * If we landed on a deleted page, step right to find a live page
 		 * (there must be one).  Also, if we want the rightmost page, step
-		 * right if needed to get to it (this could happen if the page split
+		 * right if needed to get to it (this__ could happen if the page split
 		 * since we obtained a pointer to it).
 		 */
 		while (P_IGNORE(opaque) ||
@@ -1671,7 +1671,7 @@ _bt_endpoint(IndexScanDesc scan, ScanDirection dir)
 
 	if (ScanDirectionIsForward(dir))
 	{
-		/* There could be dead pages to the left, so not this: */
+		/* There could be dead pages to the left, so not this__: */
 		/* Assert(P_LEFTMOST(opaque)); */
 
 		start = P_FIRSTDATAKEY(opaque);
@@ -1711,7 +1711,7 @@ _bt_endpoint(IndexScanDesc scan, ScanDirection dir)
 	if (!_bt_readpage(scan, dir, start))
 	{
 		/*
-		 * There's no actually-matching data on this page.  Try to advance to
+		 * There's no actually-matching data on this__ page.  Try to advance to
 		 * the next page.  Return false if there's no matching data at all.
 		 */
 		LockBuffer(so->currPos.buf, BUFFER_LOCK_UNLOCK);

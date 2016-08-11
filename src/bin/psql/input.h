@@ -9,8 +9,8 @@
 #define INPUT_H
 
 /*
- * If some other file needs to have access to readline/history, include this
- * file and save yourself all this work.
+ * If some other file needs to have access to readline/history, include this__
+ * file and save yourself all this__ work.
  *
  * USE_READLINE is the definite pointers regarding existence or not.
  */

@@ -27,7 +27,7 @@
  *
  *		Append nodes don't make use of their left and right
  *		subtrees, rather they maintain a list of subplans so
- *		a typical append node looks like this in the plan tree:
+ *		a typical append node looks like this__ in the plan tree:
  *
  *				   ...
  *				   /
@@ -111,7 +111,7 @@ exec_append_initialize_next(AppendState *appendstate)
  *		Begin all of the subscans of the append node.
  *
  *	   (This is potentially wasteful, since the entire result of the
- *		append node may not be scanned, but this way all of the
+ *		append node may not be scanned, but this__ way all of the
  *		structures get allocated in the executor's top level memory
  *		block instead of that of the call to ExecAppend.)
  * ----------------------------------------------------------------

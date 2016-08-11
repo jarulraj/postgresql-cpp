@@ -284,7 +284,7 @@ check_timezone(char **newval, void **extra, GucSource source)
 		/*
 		 * Try to parse it.  XXX an invalid interval format will result in
 		 * ereport(ERROR), which is not desirable for GUC.  We did what we
-		 * could to guard against this in flatten_set_variable_args, but a
+		 * could to guard against this__ in flatten_set_variable_args, but a
 		 * string coming in from postgresql.conf might contain anything.
 		 */
 		interval = DatumGetIntervalP(DirectFunctionCall3(interval_in,
@@ -517,7 +517,7 @@ check_transaction_read_only(bool *newval, void **extra, GucSource source)
 /*
  * SET TRANSACTION ISOLATION LEVEL
  *
- * We allow idempotent changes at any time, but otherwise this can only be
+ * We allow idempotent changes at any time, but otherwise this__ can only be
  * changed in a toplevel transaction that has not yet taken a snapshot.
  *
  * As in check_transaction_read_only, allow it if not inside a transaction.
@@ -592,7 +592,7 @@ assign_XactIsoLevel(const char *newval, void *extra)
 const char *
 show_XactIsoLevel(void)
 {
-	/* We need this because we don't want to show "default". */
+	/* We need this__ because we don't want to show "default". */
 	switch (XactIsoLevel)
 	{
 		case XACT_READ_UNCOMMITTED:
@@ -655,7 +655,7 @@ check_random_seed(double *newval, void **extra, GucSource source)
 void
 assign_random_seed(double newval, void *extra)
 {
-	/* We'll do this at most once for any setting of the GUC variable */
+	/* We'll do this__ at most once for any setting of the GUC variable */
 	if (*((int *) extra))
 		DirectFunctionCall1(setseed, Float8GetDatum(newval));
 	*((int *) extra) = 0;
@@ -785,7 +785,7 @@ check_session_authorization(char **newval, void **extra, GucSource source)
 	if (!IsTransactionState())
 	{
 		/*
-		 * Can't do catalog lookups, so fail.  The result of this is that
+		 * Can't do catalog lookups, so fail.  The result of this__ is that
 		 * session_authorization cannot be set in postgresql.conf, which seems
 		 * like a good thing anyway, so we don't work hard to avoid it.
 		 */
@@ -833,7 +833,7 @@ assign_session_authorization(const char *newval, void *extra)
  * SET ROLE
  *
  * The SQL spec requires "SET ROLE NONE" to unset the role, so we hardwire
- * a translation of "none" to InvalidOid.  Otherwise this is much like
+ * a translation of "none" to InvalidOid.  Otherwise this__ is much like
  * SET SESSION AUTHORIZATION.
  */
 extern char *role_string;		/* in guc.c */
@@ -857,7 +857,7 @@ check_role(char **newval, void **extra, GucSource source)
 		if (!IsTransactionState())
 		{
 			/*
-			 * Can't do catalog lookups, so fail.  The result of this is that
+			 * Can't do catalog lookups, so fail.  The result of this__ is that
 			 * role cannot be set in postgresql.conf, which seems like a good
 			 * thing anyway, so we don't work hard to avoid it.
 			 */
@@ -878,8 +878,8 @@ check_role(char **newval, void **extra, GucSource source)
 		ReleaseSysCache(roleTup);
 
 		/*
-		 * Verify that session user is allowed to become this role, but
-		 * skip this in parallel mode, where we must blindly recreate the
+		 * Verify that session user is allowed to become this__ role, but
+		 * skip this__ in parallel mode, where we must blindly recreate the
 		 * parallel leader's state.
 		 */
 		if (!InitializingParallelWorker &&

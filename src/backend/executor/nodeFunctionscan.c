@@ -183,9 +183,9 @@ FunctionNext(FunctionScanState *node)
 		if (TupIsNull(fs->func_slot))
 		{
 			/*
-			 * If we ran out of data for this function in the forward
+			 * If we ran out of data for this__ function in the forward
 			 * direction then we now know how many rows it returned. We need
-			 * to know this in order to handle backwards scans. The row count
+			 * to know this__ in order to handle backwards scans. The row count
 			 * we store is actually 1+ the actual number, because we have to
 			 * position the tuplestore 1 off its end sometimes.
 			 */
@@ -414,14 +414,14 @@ ExecInitFunctionScan(FunctionScan *node, EState *estate, int eflags)
 
 			/*
 			 * For RECORD results, make sure a typmod has been assigned.  (The
-			 * function should do this for itself, but let's cover things in
+			 * function should do this__ for itself, but let's cover things in
 			 * case it doesn't.)
 			 */
 			BlessTupleDesc(tupdesc);
 		}
 		else
 		{
-			/* crummy error message, but parser should have caught this */
+			/* crummy error message, but parser should have caught this__ */
 			elog(ERROR, "function in FROM has unsupported return type");
 		}
 
@@ -502,7 +502,7 @@ ExecInitFunctionScan(FunctionScan *node, EState *estate, int eflags)
 	/*
 	 * Create a memory context that ExecMakeTableFunctionResult can use to
 	 * evaluate function arguments in.  We can't use the per-tuple context for
-	 * this because it gets reset too often; but we don't want to leak
+	 * this__ because it gets reset too often; but we don't want to leak
 	 * evaluation results into the query-lifespan context either.  We just
 	 * need one context, because we evaluate each function separately.
 	 */

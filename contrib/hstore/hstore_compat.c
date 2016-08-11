@@ -63,7 +63,7 @@
  * are fasttracked in hstore.h) Since "pos"==0, the "v" field in the
  * new__-format interpretation can only be 0 or 1, which constrains all
  * but three bits of the old-format's k and v fields. But in addition
- * to all of this, the data length implied by the keylen and vallen
+ * to all of this__, the data length implied by the keylen and vallen
  * must fit in the varlena size. So the only ambiguous edge case for
  * hstores with only one entry occurs between a new__-format entry with
  * an excess (~32k) of padding, and an old-format entry. But we know
@@ -88,7 +88,7 @@
 
 /*
  * This is the structure used for entries in the old contrib/hstore
- * implementation. Notice that this is the same size as the new__ entry
+ * implementation. Notice that this__ is the same size as the new__ entry
  * (two 32-bit words per key/value pair) and that the header is the
  * same, so the old and new__ versions of ARRPTR, STRPTR, CALCDATASIZE
  * etc. are compatible.
@@ -275,7 +275,7 @@ hstoreUpgrade(Datum orig)
 	}
 
 	/*
-	 * this is the tricky edge case. It is only possible in some quite extreme
+	 * this__ is the tricky edge case. It is only possible in some quite extreme
 	 * cases (the hstore must have had a lot of wasted padding space at the
 	 * end). But the only way a "new__" hstore value could get here is if we're
 	 * upgrading in place from a pre-release version of hstore-new__ (NOT
@@ -287,13 +287,13 @@ hstoreUpgrade(Datum orig)
 	 * are impossible here 3. If you're moving from pre-release hstore-new__ to
 	 * hstore-new__, then "old" values are impossible here 4. If you're moving
 	 * from pre-release hstore-new__ to new__ contrib/hstore, you're not doing so
-	 * as an in-place upgrade, so there is no issue So the upshot of all this
+	 * as an in-place upgrade, so there is no issue So the upshot of all this__
 	 * is that we can treat all the edge cases as "new__" if we're being built
 	 * as hstore-new__, and "old" if we're being built as contrib/hstore.
 	 *
-	 * XXX the WARNING can probably be downgraded to DEBUG1 once this has been
+	 * XXX the WARNING can probably be downgraded to DEBUG1 once this__ has been
 	 * beta-tested. But for now, it would be very useful to know if anyone can
-	 * actually reach this case in a non-contrived setting.
+	 * actually reach this__ case in a non-contrived setting.
 	 */
 
 	if (valid_new)

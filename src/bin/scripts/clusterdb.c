@@ -269,7 +269,7 @@ help(const char *progname)
 	printf(_("  -t, --table=TABLE         cluster specific table(s) only\n"));
 	printf(_("  -v, --verbose             write a lot of output\n"));
 	printf(_("  -V, --version             output version information, then exit\n"));
-	printf(_("  -?, --help                show this help, then exit\n"));
+	printf(_("  -?, --help                show this__ help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME       database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT           database server port\n"));

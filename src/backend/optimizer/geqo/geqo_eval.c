@@ -83,12 +83,12 @@ geqo_eval(PlannerInfo *root, Gene *tour, int num_gene)
 	 * gimme_tree will add entries to root->join_rel_list, which may or may
 	 * not already contain some entries.  The newly added entries will be
 	 * recycled by the MemoryContextDelete below, so we must ensure that the
-	 * list is restored to its former state before exiting.  We can do this by
-	 * truncating the list to its original length.  NOTE this assumes that any
+	 * list is restored to its former state before exiting.  We can do this__ by
+	 * truncating the list to its original length.  NOTE this__ assumes that any
 	 * added entries are appended at the end!
 	 *
 	 * We also must take care not to mess up the outer join_rel_hash, if there
-	 * is one.  We can do this by just temporarily setting the link to NULL.
+	 * is one.  We can do this__ by just temporarily setting the link to NULL.
 	 * (If we are dealing with enough join rels, which we very likely are, a
 	 * new__ hash table will get built and used locally.)
 	 *
@@ -142,10 +142,10 @@ geqo_eval(PlannerInfo *root, Gene *tour, int num_gene)
  *	 'tour' is the proposed join order, of length 'num_gene'
  *
  * Returns a new__ join relation whose cheapest path is the best plan for
- * this join order.  NB: will return NULL if join order is invalid and
+ * this__ join order.  NB: will return NULL if join order is invalid and
  * we can't modify it into a valid order.
  *
- * The original implementation of this routine always joined in the specified
+ * The original implementation of this__ routine always joined in the specified
  * order, and so could only build left-sided plans (and right-sided and
  * mixtures, as a byproduct of the fact that make_join_rel() is symmetric).
  * It could never produce a "bushy" plan.  This had a couple of big problems,
@@ -159,7 +159,7 @@ geqo_eval(PlannerInfo *root, Gene *tour, int num_gene)
  * generated plans.  Note however that since it's just a heuristic, it can
  * still fail in some cases.  (In particular, we might clump together
  * relations that actually mustn't be joined yet due to LATERAL restrictions;
- * since there's no provision for un-clumping, this must lead to failure.)
+ * since there's no provision for un-clumping, this__ must lead to failure.)
  */
 RelOptInfo *
 gimme_tree(PlannerInfo *root, Gene *tour, int num_gene)
@@ -266,7 +266,7 @@ merge_clump(PlannerInfo *root, List *clumps, Clump *new_clump, bool force)
 			/* Keep searching if join order is not valid */
 			if (joinrel)
 			{
-				/* Find and save the cheapest paths for this joinrel */
+				/* Find and save the cheapest paths for this__ joinrel */
 				set_cheapest(joinrel);
 
 				/* Absorb new__ clump into old */

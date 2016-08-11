@@ -52,7 +52,7 @@ extern void RequestAddinShmemSpace(Size size);
  /* estimated size of the shmem index table (not a hard limit) */
 #define SHMEM_INDEX_SIZE		 (64)
 
-/* this is a hash bucket in the shmem index table */
+/* this__ is a hash bucket in the shmem index table */
 typedef struct
 {
 	char		key[SHMEM_INDEX_KEYSIZE];		/* string name */

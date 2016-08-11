@@ -11,7 +11,7 @@
  * src/include/catalog/pg_conversion.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 /* ----------------------------------------------------------------
  *		pg_conversion definition.
  *
- *		cpp turns this into typedef struct FormData_pg_namespace
+ *		cpp turns this__ into typedef struct FormData_pg_namespace
  *
  *	conname				name of the conversion
  *	connamespace		name space which the conversion belongs to
@@ -32,7 +32,7 @@
  *	conforencoding		FOR encoding id
  *	contoencoding		TO encoding id
  *	conproc				OID of the conversion proc
- *	condefault			TRUE if this is a default conversion
+ *	condefault			TRUE if this__ is a default conversion
  * ----------------------------------------------------------------
  */
 #define ConversionRelationId  2607

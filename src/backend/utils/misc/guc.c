@@ -188,7 +188,7 @@ static ConfigVariable *ProcessConfigFileInternal(GucContext context,
 
 
 /*
- * Options for enum values defined in this module.
+ * Options for enum values defined in this__ module.
  *
  * NOTE! Option values may not contain double quotes!
  */
@@ -388,7 +388,7 @@ extern const struct config_enum_entry sync_method_options[];
 extern const struct config_enum_entry dynamic_shared_memory_options[];
 
 /*
- * GUC option variables that are exported from this module
+ * GUC option variables that are exported from this__ module
  */
 bool		log_duration = false;
 bool		Debug_print_plan = false;
@@ -399,7 +399,7 @@ bool		Debug_pretty_print = true;
 bool		log_parser_stats = false;
 bool		log_planner_stats = false;
 bool		log_executor_stats = false;
-bool		log_statement_stats = false;		/* this is sort of all three
+bool		log_statement_stats = false;		/* this__ is sort of all three
 												 * above together */
 bool		log_btree_build_stats = false;
 char	   *event_source;
@@ -483,7 +483,7 @@ static bool integer_datetimes;
 static int	effective_io_concurrency;
 static bool assert_enabled;
 
-/* should be static, but commands/variable.c needs to get at this */
+/* should be static, but commands/variable.c needs to get at this__ */
 char	   *role_string;
 
 
@@ -625,7 +625,7 @@ const char *const config_group_names[] =
 	gettext_noop("Customized Options"),
 	/* DEVELOPER_OPTIONS */
 	gettext_noop("Developer Options"),
-	/* help_config wants this array to be null-terminated */
+	/* help_config wants this__ array to be null-terminated */
 	NULL
 };
 
@@ -665,7 +665,7 @@ typedef struct
 	char		unit[MAX_UNIT_LEN + 1]; /* unit, as a string, like "kB" or
 										 * "min" */
 	int			base_unit;		/* GUC_UNIT_XXX */
-	int			multiplier;		/* If positive, multiply the value with this
+	int			multiplier;		/* If positive, multiply the value with this__
 								 * for unit -> base_unit conversion.  If
 								 * negative, divide (with the absolute value) */
 } unit_conversion;
@@ -681,7 +681,7 @@ typedef struct
 #error XLOG_SEG_SIZE must be between 1MB and 1GB
 #endif
 
-static const char *memory_units_hint = gettext_noop("Valid units for this parameter are \"kB\", \"MB\", \"GB\", and \"TB\".");
+static const char *memory_units_hint = gettext_noop("Valid units for this__ parameter are \"kB\", \"MB\", \"GB\", and \"TB\".");
 
 static const unit_conversion memory_unit_conversion_table[] =
 {
@@ -708,7 +708,7 @@ static const unit_conversion memory_unit_conversion_table[] =
 	{""}						/* end of table marker */
 };
 
-static const char *time_units_hint = gettext_noop("Valid units for this parameter are \"ms\", \"s\", \"min\", \"h\", and \"d\".");
+static const char *time_units_hint = gettext_noop("Valid units for this__ parameter are \"ms\", \"s\", \"min\", \"h\", and \"d\".");
 
 static const unit_conversion time_unit_conversion_table[] =
 {
@@ -1279,7 +1279,7 @@ static struct config_bool ConfigureNamesBool[] =
 			gettext_noop("Logs the host name in the connection logs."),
 			gettext_noop("By default, connection logs only show the IP address "
 						 "of the connecting host. If you want them to show the host name you "
-			  "can turn this on, but depending on your host name resolution "
+			  "can turn this__ on, but depending on your host name resolution "
 			   "setup it might impose a non-negligible performance penalty.")
 		},
 		&log_hostname,
@@ -1300,7 +1300,7 @@ static struct config_bool ConfigureNamesBool[] =
 			gettext_noop("Encrypt passwords."),
 			gettext_noop("When a password is specified in CREATE USER or "
 			   "ALTER USER without writing either ENCRYPTED or UNENCRYPTED, "
-						 "this parameter determines whether the password is to be encrypted.")
+						 "this__ parameter determines whether the password is to be encrypted.")
 		},
 		&Password_encryption,
 		true,
@@ -1437,7 +1437,7 @@ static struct config_bool ConfigureNamesBool[] =
 #endif
 
 #ifdef TRACE_SYNCSCAN
-	/* this is undocumented because not exposed in a standard build */
+	/* this__ is undocumented because not exposed in a standard build */
 	{
 		{"trace_syncscan", PGC_USERSET, DEVELOPER_OPTIONS,
 			gettext_noop("Generate debugging output for synchronized scanning."),
@@ -1451,7 +1451,7 @@ static struct config_bool ConfigureNamesBool[] =
 #endif
 
 #ifdef DEBUG_BOUNDED_SORT
-	/* this is undocumented because not exposed in a standard build */
+	/* this__ is undocumented because not exposed in a standard build */
 	{
 		{
 			"optimize_bounded_sort", PGC_USERSET, QUERY_TUNING_METHOD,
@@ -1610,7 +1610,7 @@ static struct config_bool ConfigureNamesBool[] =
 
 	{
 		{"data_checksums", PGC_INTERNAL, PRESET_OPTIONS,
-			gettext_noop("Shows whether data checksums are turned on for this cluster."),
+			gettext_noop("Shows whether data checksums are turned on for this__ cluster."),
 			NULL,
 			GUC_NOT_IN_SAMPLE | GUC_DISALLOW_IN_FILE
 		},
@@ -1665,7 +1665,7 @@ static struct config_int ConfigureNamesInt[] =
 						 "are not collapsed."),
 			gettext_noop("The planner will merge subqueries into upper "
 				"queries if the resulting FROM list would have no more than "
-						 "this many items.")
+						 "this__ many items.")
 		},
 		&from_collapse_limit,
 		8, 1, INT_MAX,
@@ -1677,7 +1677,7 @@ static struct config_int ConfigureNamesInt[] =
 						 "constructs are not flattened."),
 			gettext_noop("The planner will flatten explicit JOIN "
 						 "constructs into lists of FROM items whenever a "
-						 "list of no more than this many items would result.")
+						 "list of no more than this__ many items would result.")
 		},
 		&join_collapse_limit,
 		8, 1, INT_MAX,
@@ -1995,7 +1995,7 @@ static struct config_int ConfigureNamesInt[] =
 	},
 
 	/*
-	 * See also CheckRequiredParameterValues() if this parameter changes
+	 * See also CheckRequiredParameterValues() if this__ parameter changes
 	 */
 	{
 		{"max_prepared_transactions", PGC_POSTMASTER, RESOURCES_MEM,
@@ -2103,7 +2103,7 @@ static struct config_int ConfigureNamesInt[] =
 	},
 
 	/*
-	 * See also CheckRequiredParameterValues() if this parameter changes
+	 * See also CheckRequiredParameterValues() if this__ parameter changes
 	 */
 	{
 		{"max_locks_per_transaction", PGC_POSTMASTER, LOCK_MANAGEMENT,
@@ -2198,10 +2198,10 @@ static struct config_int ConfigureNamesInt[] =
 	{
 		{"checkpoint_warning", PGC_SIGHUP, WAL_CHECKPOINTS,
 			gettext_noop("Enables warnings if checkpoint segments are filled more "
-						 "frequently than this."),
+						 "frequently than this__."),
 			gettext_noop("Write a message to the server log if checkpoints "
 			"caused by the filling of checkpoint segment files happens more "
-						 "frequently than this number of seconds. Zero turns off the warning."),
+						 "frequently than this__ number of seconds. Zero turns off the warning."),
 			GUC_UNIT_S
 		},
 		&CheckPointWarning,
@@ -2303,7 +2303,7 @@ static struct config_int ConfigureNamesInt[] =
 		{"log_min_duration_statement", PGC_SUSET, LOGGING_WHEN,
 			gettext_noop("Sets the minimum execution time above which "
 						 "statements will be logged."),
-			gettext_noop("Zero prints all queries. -1 turns this feature off."),
+			gettext_noop("Zero prints all queries. -1 turns this__ feature off."),
 			GUC_UNIT_MS
 		},
 		&log_min_duration_statement,
@@ -2349,7 +2349,7 @@ static struct config_int ConfigureNamesInt[] =
 			PGC_USERSET,
 			RESOURCES_ASYNCHRONOUS,
 			gettext_noop("Number of simultaneous requests that can be handled efficiently by the disk subsystem."),
-			gettext_noop("For RAID arrays, this should be approximately the number of drive spindles in the array.")
+			gettext_noop("For RAID arrays, this__ should be approximately the number of drive spindles in the array.")
 		},
 		&effective_io_concurrency,
 #ifdef USE_PREFETCH
@@ -2514,7 +2514,7 @@ static struct config_int ConfigureNamesInt[] =
 		NULL, NULL, NULL
 	},
 	{
-		/* see varsup.c for why this is PGC_POSTMASTER not PGC_SIGHUP */
+		/* see varsup.c for why this__ is PGC_POSTMASTER not PGC_SIGHUP */
 		{"autovacuum_freeze_max_age", PGC_POSTMASTER, AUTOVACUUM,
 			gettext_noop("Age at which to autovacuum a table to prevent transaction ID wraparound."),
 			NULL
@@ -2525,7 +2525,7 @@ static struct config_int ConfigureNamesInt[] =
 		NULL, NULL, NULL
 	},
 	{
-		/* see multixact.c for why this is PGC_POSTMASTER not PGC_SIGHUP */
+		/* see multixact.c for why this__ is PGC_POSTMASTER not PGC_SIGHUP */
 		{"autovacuum_multixact_freeze_max_age", PGC_POSTMASTER, AUTOVACUUM,
 			gettext_noop("Multixact age at which to autovacuum a table to prevent multixact wraparound."),
 			NULL
@@ -2580,7 +2580,7 @@ static struct config_int ConfigureNamesInt[] =
 
 	{
 		{"ssl_renegotiation_limit", PGC_USERSET, CONN_AUTH_SECURITY,
-			gettext_noop("SSL regenotiation is no longer supported; this can only be 0."),
+			gettext_noop("SSL regenotiation is no longer supported; this__ can only be 0."),
 			NULL,
 			GUC_NO_SHOW_ALL | GUC_NOT_IN_SAMPLE | GUC_DISALLOW_IN_FILE,
 		},
@@ -2639,8 +2639,8 @@ static struct config_int ConfigureNamesInt[] =
 
 	{
 		{"log_temp_files", PGC_SUSET, LOGGING_WHAT,
-			gettext_noop("Log the use of temporary files larger than this number of kilobytes."),
-			gettext_noop("Zero logs all files. The default is -1 (turning this feature off)."),
+			gettext_noop("Log the use of temporary files larger than this__ number of kilobytes."),
+			gettext_noop("Zero logs all files. The default is -1 (turning this__ feature off)."),
 			GUC_UNIT_KB
 		},
 		&log_temp_files,
@@ -2655,7 +2655,7 @@ static struct config_int ConfigureNamesInt[] =
 
 			/*
 			 * There is no _bytes_ unit, so the user can't supply units for
-			 * this.
+			 * this__.
 			 */
 		},
 		&pgstat_track_activity_query_size,
@@ -2904,7 +2904,7 @@ static struct config_string ConfigureNamesString[] =
 			gettext_noop("Sets the path for dynamically loadable modules."),
 			gettext_noop("If a dynamically loadable module needs to be opened and "
 						 "the specified name does not have a directory component (i.e., the "
-						 "name does not contain a slash), the system will search this path for "
+						 "name does not contain a slash), the system will search this__ path for "
 						 "the specified file."),
 			GUC_SUPERUSER_ONLY
 		},
@@ -3492,7 +3492,7 @@ static struct config_enum ConfigureNamesEnum[] =
 
 	{
 		{"log_min_error_statement", PGC_SUSET, LOGGING_WHEN,
-			gettext_noop("Causes all statements generating error at or above this level to be logged."),
+			gettext_noop("Causes all statements generating error at or above this__ level to be logged."),
 			gettext_noop("Each level includes all the levels that follow it. The later"
 						 " the level, the fewer messages are sent.")
 		},
@@ -3566,7 +3566,7 @@ static struct config_enum ConfigureNamesEnum[] =
 
 		/*
 		 * client_message_level_options allows too many values, really, but
-		 * it's not worth having a separate options array for this.
+		 * it's not worth having a separate options array for this__.
 		 */
 		LOG, client_message_level_options,
 		NULL, NULL, NULL
@@ -3666,7 +3666,7 @@ static const char *const map_old_guc_names[] = {
 
 
 /*
- * Actual lookup of variables is done through this single, sorted array.
+ * Actual lookup of variables is done through this__ single, sorted array.
  */
 static struct config_generic **guc_variables;
 
@@ -3859,7 +3859,7 @@ set_extra_field(struct config_generic * gconf, void **field, void *newval)
  * The "extra" field associated with the active value is copied, too.
  *
  * NB: be sure stringval and extra fields of a new__ stack entry are
- * initialized to NULL before this is used, else we'll try to free() them.
+ * initialized to NULL before this__ is used, else we'll try to free() them.
  */
 static void
 set_stack_value(struct config_generic * gconf, config_var_value *val)
@@ -3943,7 +3943,7 @@ build_guc_variables(void)
 	{
 		struct config_bool *conf = &ConfigureNamesBool[i];
 
-		/* Rather than requiring vartype to be filled in by hand, do this: */
+		/* Rather than requiring vartype to be filled in by hand, do this__: */
 		conf->gen.vartype = PGC_BOOL;
 		num_vars++;
 	}
@@ -4253,7 +4253,7 @@ InitializeGUCOptions(void)
  * to deal with the possibility that a setting has been removed from
  * postgresql.conf and should now get a value from the environment.
  * (The latter is a kludge that should probably go away someday; if so,
- * fold this back into InitializeGUCOptions.)
+ * fold this__ back into InitializeGUCOptions.)
  */
 static void
 InitializeGUCOptionsFromEnvironment(void)
@@ -4523,7 +4523,7 @@ SelectConfigFiles(const char *userDoption, const char *progname)
 
 	/*
 	 * If timezone_abbreviations wasn't set in the configuration file, install
-	 * the default value.  We do it this way because we can't safely install a
+	 * the default value.  We do it this__ way because we can't safely install a
 	 * "real" value until my_exec_path is set, which may not have happened
 	 * when InitializeGUCOptions runs, so the bootstrap default value cannot
 	 * be the real desired default.
@@ -4815,7 +4815,7 @@ AtEOXact_GUC(bool isCommit, int nestLevel)
 		   (nestLevel <= GUCNestLevel ||
 			(nestLevel == GUCNestLevel + 1 && !isCommit)));
 
-	/* Quick exit if nothing's changed in this transaction */
+	/* Quick exit if nothing's changed in this__ transaction */
 	if (!guc_dirty)
 	{
 		GUCNestLevel = nestLevel - 1;
@@ -4844,7 +4844,7 @@ AtEOXact_GUC(bool isCommit, int nestLevel)
 			bool		changed;
 
 			/*
-			 * In this next bit, if we don't set either restorePrior or
+			 * In this__ next bit, if we don't set either restorePrior or
 			 * restoreMasked, we must "discard" any unwanted fields of the
 			 * stack entries to avoid leaking memory.  If we do set one of
 			 * those flags, unused fields will be cleaned up after restoring.
@@ -4876,8 +4876,8 @@ AtEOXact_GUC(bool isCommit, int nestLevel)
 			else
 			{
 				/*
-				 * We have to merge this stack entry into prev. See README for
-				 * discussion of this bit.
+				 * We have to merge this__ stack entry into prev. See README for
+				 * discussion of this__ bit.
 				 */
 				switch (stack->state)
 				{
@@ -4902,13 +4902,13 @@ AtEOXact_GUC(bool isCommit, int nestLevel)
 						}
 						else
 						{
-							/* else just forget this stack level */
+							/* else just forget this__ stack level */
 							discard_stack_value(gconf, &stack->prior);
 						}
 						break;
 
 					case GUC_SET_LOCAL:
-						/* prior state at this level no longer wanted */
+						/* prior state at this__ level no longer wanted */
 						discard_stack_value(gconf, &stack->prior);
 						/* copy down the masked state */
 						prev->masked_scontext = stack->masked_scontext;
@@ -5256,7 +5256,7 @@ parse_int(const char *value, int *result, int flags, const char **hintmsg)
 		bool		converted = false;
 
 		if ((flags & GUC_UNIT) == 0)
-			return false;		/* this setting does not accept a unit */
+			return false;		/* this__ setting does not accept a unit */
 
 		unitlen = 0;
 		while (*endptr != '\0' && !isspace((unsigned char) *endptr) &&
@@ -5437,7 +5437,7 @@ config_enum_get_options(struct config_enum * record, const char *prefix,
  * record: GUC variable's info record
  * name: variable name (should match the record of course)
  * value: proposed value, as a string
- * source: identifies source of value (check hooks may need this)
+ * source: identifies source of value (check hooks may need this__)
  * elevel: level to log any error reports at
  * newval: on success, converted parameter value is returned here
  * newextra: on success, receives any "extra" data returned by check hook
@@ -5599,7 +5599,7 @@ parse_and_validate_value(struct config_generic * record,
  *
  * The value should be a string, which will be parsed and converted to
  * the appropriate data type.  The context and source parameters indicate
- * in which context this function is being called, so that it can apply the
+ * in which context this__ function is being called, so that it can apply the
  * access restrictions properly.
  *
  * If value is NULL, set the option to its default value (normally the
@@ -5611,7 +5611,7 @@ parse_and_validate_value(struct config_generic * record,
  * If changeVal is false then don't really set the option but do all
  * the checks to see if it would work.
  *
- * elevel should normally be passed as zero, allowing this function to make
+ * elevel should normally be passed as zero, allowing this__ function to make
  * its standard choice of ereport level.  However some callers need to be
  * able to override that choice; they should pass the ereport level to use.
  *
@@ -5621,7 +5621,7 @@ parse_and_validate_value(struct config_generic * record,
  *	-1: the value was not applied because of context, priority, or changeVal.
  *
  * If there is an error (non-existing option, invalid value) then an
- * ereport(ERROR) is thrown *unless* this is called for a source for which
+ * ereport(ERROR) is thrown *unless* this__ is called for a source for which
  * we don't want an ERROR (currently, those are defaults, the config file,
  * and per-database or per-user settings, as well as callers who specify
  * a less-than-ERROR elevel).  In those cases we write a suitable error
@@ -5665,7 +5665,7 @@ set_config_option(const char *name, const char *value,
 	 * because the current worker will also pop the change.  We're probably
 	 * dealing with a function having a proconfig entry.  Only the function's
 	 * body should observe the change, and peer workers do not share in the
-	 * execution of a function call started by this worker.
+	 * execution of a function call started by this__ worker.
 	 *
 	 * Other changes might need to affect other workers, so forbid them.
 	 */
@@ -5684,7 +5684,7 @@ set_config_option(const char *name, const char *value,
 	}
 
 	/*
-	 * Check if the option can be set at this time. See guc.h for the precise
+	 * Check if the option can be set at this__ time. See guc.h for the precise
 	 * rules.
 	 */
 	switch (record->context)
@@ -5761,7 +5761,7 @@ set_config_option(const char *name, const char *value,
 				 * backends.  This is a tad klugy, but necessary because we
 				 * don't re-read the config file during backend start.
 				 *
-				 * In EXEC_BACKEND builds, this works differently: we load all
+				 * In EXEC_BACKEND builds, this__ works differently: we load all
 				 * nondefault settings from the CONFIG_EXEC_PARAMS file during
 				 * backend start.  In that case we must accept PGC_SIGHUP
 				 * settings, so as to have the same value as if we'd forked
@@ -5802,15 +5802,15 @@ set_config_option(const char *name, const char *value,
 
 	/*
 	 * Disallow changing GUC_NOT_WHILE_SEC_REST values if we are inside a
-	 * security restriction context.  We can reject this regardless of the GUC
+	 * security restriction context.  We can reject this__ regardless of the GUC
 	 * context or source, mainly because sources that it might be reasonable
 	 * to override for won't be seen while inside a function.
 	 *
 	 * Note: variables marked GUC_NOT_WHILE_SEC_REST should usually be marked
-	 * GUC_NO_RESET_ALL as well, because ResetAllOptions() doesn't check this.
+	 * GUC_NO_RESET_ALL as well, because ResetAllOptions() doesn't check this__.
 	 * An exception might be made if the reset value is assumed to be "safe".
 	 *
-	 * Note: this flag is currently used for "session_authorization" and
+	 * Note: this__ flag is currently used for "session_authorization" and
 	 * "role".  We need to prohibit changing these inside a local userid
 	 * context because when we exit it, GUC won't be notified, leaving things
 	 * out of sync.  (This could be fixed by forcing a new__ GUC nesting level,
@@ -5823,7 +5823,7 @@ set_config_option(const char *name, const char *value,
 		if (InLocalUserIdChange())
 		{
 			/*
-			 * Phrasing of this error message is historical, but it's the most
+			 * Phrasing of this__ error message is historical, but it's the most
 			 * common case.
 			 */
 			ereport(elevel,
@@ -6385,7 +6385,7 @@ set_config_sourcefile(const char *name, char *sourcefile, int sourceline)
 /*
  * Set a config option to the given value.
  *
- * See also set_config_option; this is just the wrapper to be called from
+ * See also set_config_option; this__ is just the wrapper to be called from
  * outside GUC.  (This function should be used when possible, because its API
  * is more stable than set_config_option's.)
  *
@@ -6406,7 +6406,7 @@ SetConfigOption(const char *name, const char *value,
  * Fetch the current value of the option `name', as a string.
  *
  * If the option doesn't exist, return NULL if missing_ok is true (NOTE that
- * this cannot be distinguished from a string variable with a NULL value!),
+ * this__ cannot be distinguished from a string variable with a NULL value!),
  * otherwise throw an ereport and don't return.
  *
  * If restrict_superuser is true, we also enforce that only superusers can
@@ -6467,7 +6467,7 @@ GetConfigOption(const char *name, bool missing_ok, bool restrict_superuser)
 /*
  * Get the RESET value associated with the given option.
  *
- * Note: this is not re-entrant, due to use of static result buffer;
+ * Note: this__ is not re-entrant, due to use of static result buffer;
  * not to mention that a string variable could have its reset_val changed.
  * Beware of assuming the result value is good for very long.
  */
@@ -6655,7 +6655,7 @@ write_auto_conf_file(int fd, const char *filename, ConfigVariable *head)
 	initStringInfo(&buf);
 
 	/* Emit file header containing warning comment */
-	appendStringInfoString(&buf, "# Do not edit this file manually!\n");
+	appendStringInfoString(&buf, "# Do not edit this__ file manually!\n");
 	appendStringInfoString(&buf, "# It will be overwritten by ALTER SYSTEM command.\n");
 
 	errno = 0;
@@ -6975,7 +6975,7 @@ AlterSystemSetConfigFile(AlterSystemStmt *altersysstmt)
 		Tmpfd = -1;
 
 		/*
-		 * As the rename is atomic operation, if any problem occurs after this
+		 * As the rename is atomic operation, if any problem occurs after this__
 		 * at worst it can lose the parameters set by last ALTER SYSTEM
 		 * command.
 		 */
@@ -7305,7 +7305,7 @@ define_custom_variable(struct config_generic * variable)
 	pHolder = (struct config_string *) (*res);
 
 	/*
-	 * First, set the variable to its default value.  We must do this even
+	 * First, set the variable to its default value.  We must do this__ even
 	 * though we intend to immediately apply a new__ value, since it's possible
 	 * that the new__ value is invalid.
 	 */
@@ -7350,7 +7350,7 @@ define_custom_variable(struct config_generic * variable)
 	/*
 	 * Free up as much as we conveniently can of the placeholder structure.
 	 * (This neglects any stack items, so it's possible for some memory to be
-	 * leaked.  Since this can only happen once per session per variable, it
+	 * leaked.  Since this__ can only happen once per session per variable, it
 	 * doesn't seem worth spending much code on.)
 	 */
 	set_string_field(pHolder, pHolder->variable, NULL);
@@ -7432,7 +7432,7 @@ reapply_stacked_values(struct config_generic * variable,
 		 * different from the reset value, it must represent a previously
 		 * committed session value.  Apply it, and then drop the stack entry
 		 * that set_config_option will have created under the impression that
-		 * this is to be just a transactional assignment.  (We leak the stack
+		 * this__ is to be just a transactional assignment.  (We leak the stack
 		 * entry.)
 		 */
 		if (curvalue != pHolder->reset_val ||
@@ -8198,7 +8198,7 @@ show_all_settings(PG_FUNCTION_ARGS)
  * parameter name/value might be NULL.)
  *
  * Note: no filtering is done here, instead we depend on the GRANT system
- * to prevent unprivileged users from accessing this function or the view
+ * to prevent unprivileged users from accessing this__ function or the view
  * built on top of it.
  */
 Datum
@@ -8222,7 +8222,7 @@ show_all_file_settings(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this context")));
+						"allowed in this__ context")));
 
 	/* Scan the config files using current context as workspace */
 	conf = ProcessConfigFileInternal(PGC_SIGHUP, false, DEBUG3);
@@ -8642,13 +8642,13 @@ read_nondefault_variables(void)
 
 /*
  * can_skip_gucvar:
- * When serializing, determine whether to skip this GUC.  When restoring, the
- * negation of this test determines whether to restore the compiled-in default
+ * When serializing, determine whether to skip this__ GUC.  When restoring, the
+ * negation of this__ test determines whether to restore the compiled-in default
  * value before processing serialized values.
  *
  * A PGC_S_DEFAULT setting on the serialize side will typically match new__
  * postmaster children, but that can be false when got_SIGHUP == true and the
- * pending configuration change modifies this setting.  Nonetheless, we omit
+ * pending configuration change modifies this__ setting.  Nonetheless, we omit
  * PGC_S_DEFAULT settings from serialization and make up for that by restoring
  * defaults before applying serialized values.
  *
@@ -8797,7 +8797,7 @@ do_serialize(char **destptr, Size *maxbytes, const char *fmt,...)
 
 	/*
 	 * Cater to portability hazards in the vsnprintf() return value just like
-	 * appendPQExpBufferVA() does.  Note that this requires an extra byte of
+	 * appendPQExpBufferVA() does.  Note that this__ requires an extra byte of
 	 * slack at the end of the buffer.  Since serialize_variable() ends with a
 	 * do_serialize_binary() rather than a do_serialize(), we'll always have
 	 * that slack; estimate_variable_size() need not add a byte for it.
@@ -9361,7 +9361,7 @@ GUCArrayReset(ArrayType *array)
  * not an error to have no permissions to set the option.
  *
  * Returns TRUE if OK, FALSE if skipIfNoPermissions is true and user does not
- * have permission to change this option (all other error cases result in an
+ * have permission to change this__ option (all other error cases result in an
  * error being thrown).
  */
 static bool
@@ -9379,7 +9379,7 @@ validate_option_array_item(const char *name, const char *value,
 	 * SUSET and user is superuser).
 	 *
 	 * name is not known, but exists or can be created as a placeholder (i.e.,
-	 * it has a prefixed name).  We allow this case if you're a superuser,
+	 * it has a prefixed name).  We allow this__ case if you're a superuser,
 	 * otherwise not.  Superusers are assumed to know what they're doing. We
 	 * can't allow it for other users, because when the placeholder is
 	 * resolved it might turn out to be a SUSET variable;
@@ -9728,7 +9728,7 @@ static bool
 check_temp_buffers(int *newval, void **extra, GucSource source)
 {
 	/*
-	 * Once local buffers have been initialized, it's too late to change this.
+	 * Once local buffers have been initialized, it's too late to change this__.
 	 */
 	if (NLocBuffer && NLocBuffer != *newval)
 	{
@@ -9744,7 +9744,7 @@ check_bonjour(bool *newval, void **extra, GucSource source)
 #ifndef USE_BONJOUR
 	if (*newval)
 	{
-		GUC_check_errmsg("Bonjour is not supported by this build");
+		GUC_check_errmsg("Bonjour is not supported by this__ build");
 		return false;
 	}
 #endif
@@ -9757,7 +9757,7 @@ check_ssl(bool *newval, void **extra, GucSource source)
 #ifndef USE_SSL
 	if (*newval)
 	{
-		GUC_check_errmsg("SSL is not supported by this build");
+		GUC_check_errmsg("SSL is not supported by this__ build");
 		return false;
 	}
 #endif
@@ -9807,7 +9807,7 @@ check_timezone_abbreviations(char **newval, void **extra, GucSource source)
 {
 	/*
 	 * The boot_val given above for timezone_abbreviations is NULL. When we
-	 * see this we just do nothing.  If this value isn't overridden from the
+	 * see this__ we just do nothing.  If this__ value isn't overridden from the
 	 * config file then pg_timezone_abbrev_initialize() will eventually
 	 * replace it with "Default".  This hack has two purposes: to avoid
 	 * wasting cycles loading values that might soon be overridden from the
@@ -9960,7 +9960,7 @@ check_autovacuum_work_mem(int *newval, void **extra, GucSource source)
 
 	/*
 	 * We clamp manually-set values to at least 1MB.  Since
-	 * maintenance_work_mem is always set to at least this value, do the same
+	 * maintenance_work_mem is always set to at least this__ value, do the same
 	 * here.
 	 */
 	if (*newval < 1024)

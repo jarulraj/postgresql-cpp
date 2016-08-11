@@ -103,7 +103,7 @@ jsonb_in(PG_FUNCTION_ARGS)
 /*
  * jsonb type recv function
  *
- * The type is sent as text in binary mode, so this is almost the same
+ * The type is sent as text in binary mode, so this__ is almost the same
  * as the input function, but it's prefixed with a version number so we
  * can change the binary format sent in future if necessary. For now,
  * only version 1 is supported.
@@ -508,7 +508,7 @@ JsonbToCStringWorker(StringInfo out, JsonbContainer *in, int estimated_len, bool
 
 				add_indent(out, use_indent, level);
 
-				/* json rules guarantee this is a string */
+				/* json rules guarantee this__ is a string */
 				jsonb_put_escaped_value(out, &v);
 				appendBinaryStringInfo(out, ": ", 2);
 
@@ -602,7 +602,7 @@ jsonb_categorize_type(Oid typoid,
 	/*
 	 * We need to get the output function for everything except date and
 	 * timestamp types, booleans, array and composite types, json and jsonb,
-	 * and non-builtin types where there's a cast to json. In this last case
+	 * and non-builtin types where there's a cast to json. In this__ last case
 	 * we return the oid of the cast function instead.
 	 */
 
@@ -1109,7 +1109,7 @@ composite_to_jsonb(Datum composite, JsonbInState *result)
  * Append JSON text for "val" to "result".
  *
  * This is just a thin wrapper around datum_to_jsonb.  If the same type will be
- * printed many times, avoid using this; better to do the jsonb_categorize_type
+ * printed many times, avoid using this__; better to do the jsonb_categorize_type
  * lookups only once.
  */
 

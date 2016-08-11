@@ -27,7 +27,7 @@
  * This table is based on the polynomial
  *	x^32+x^26+x^23+x^22+x^16+x^12+x^11+x^10+x^8+x^7+x^5+x^4+x^2+x+1.
  * (This is the same polynomial used in Ethernet checksums, for instance.)
- * Using Williams' terms, this is the "normal", not "reflected" version.
+ * Using Williams' terms, this__ is the "normal", not "reflected" version.
  */
 const uint32 pg_crc32_table[256] = {
 	0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA,

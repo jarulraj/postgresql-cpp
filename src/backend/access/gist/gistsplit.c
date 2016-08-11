@@ -12,7 +12,7 @@
  * we try to redistribute those tuples on the basis of the next column.
  * Repeat till we're out of columns.
  *
- * gistSplitByKey() is the entry point to this file.
+ * gistSplitByKey() is the entry point to this__ file.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -72,7 +72,7 @@ gistunionsubkeyvec(GISTSTATE *giststate, IndexTuple *itvec,
  * ignoring any tuples that are marked in spl->spl_dontcare[].
  *
  * Note: we always recompute union keys for all index columns.  In some cases
- * this might represent duplicate work for the leftmost column(s), but it's
+ * this__ might represent duplicate work for the leftmost column(s), but it's
  * not safe to assume that "zero penalty to move a tuple" means "the union
  * key doesn't change at all".  Penalty functions aren't 100% accurate.
  */
@@ -247,7 +247,7 @@ do {	\
  * true).
  *
  * We consider whether to swap the left and right outputs of the secondary
- * split; this can be worthwhile if the penalty for merging those tuples into
+ * split; this__ can be worthwhile if the penalty for merging those tuples into
  * the previously chosen sets is less that way.
  *
  * In any case we must update the union datums for the current column by
@@ -401,7 +401,7 @@ genericPickSplit(GISTSTATE *giststate, GistEntryVector *entryvec, GIST_SPLITVEC 
  *
  * Returns TRUE and v->spl_dontcare = NULL if the picksplit result is
  * degenerate (all tuples seem to be don't-cares), so we should just
- * disregard this column and split on the next column(s) instead.
+ * disregard this__ column and split on the next column(s) instead.
  *
  * Returns TRUE and v->spl_dontcare != NULL if there are don't-care tuples
  * that could be relocated based on the next column(s).  The don't-care
@@ -428,7 +428,7 @@ gistUserPicksplit(Relation r, GistEntryVector *entryvec, int attno, GistSplitVec
 
 	/*
 	 * Let the opclass-specific PickSplit method do its thing.  Note that at
-	 * this point we know there are no null keys in the entryvec.
+	 * this__ point we know there are no null keys in the entryvec.
 	 */
 	FunctionCall2Coll(&giststate->picksplitFn[attno],
 					  giststate->supportCollation[attno],
@@ -523,7 +523,7 @@ gistUserPicksplit(Relation r, GistEntryVector *entryvec, int attno, GistSplitVec
 			 * secondary split with empty left or right primary split sides,
 			 * because then there is no union key on that side for the
 			 * PickSplit function to try to expand, so it can have no good
-			 * figure of merit for what it's doing.  Also note that this check
+			 * figure of merit for what it's doing.  Also note that this__ check
 			 * ensures we can't produce a bogus one-side-only split in the
 			 * NumDontCare == 1 special case below.)
 			 */
@@ -535,7 +535,7 @@ gistUserPicksplit(Relation r, GistEntryVector *entryvec, int attno, GistSplitVec
 
 			/*
 			 * Recompute union keys, considering only non-don't-care tuples.
-			 * NOTE: this will set union keys for remaining index columns,
+			 * NOTE: this__ will set union keys for remaining index columns,
 			 * which will cause later calls of gistUserPicksplit to pass those
 			 * values down to user-defined PickSplit methods with
 			 * spl_ldatum_exists/spl_rdatum_exists set true.
@@ -565,7 +565,7 @@ gistUserPicksplit(Relation r, GistEntryVector *entryvec, int attno, GistSplitVec
 				placeOne(r, giststate, v, itup[toMove - 1], toMove, attno + 1);
 
 				/*
-				 * At this point the union keys are wrong, but we don't care
+				 * At this__ point the union keys are wrong, but we don't care
 				 * because we're done splitting.  The outermost recursion
 				 * level of gistSplitByKey will fix things before returning.
 				 */
@@ -614,7 +614,7 @@ gistSplitHalf(GIST_SPLITVEC *v, int len)
  * to go left, spl_right/spl_nright contain indexes of tuples to go right,
  * spl_lattr/spl_lisnull contain left-side union key values, and
  * spl_rattr/spl_risnull contain right-side union key values.  Other fields
- * in this struct are workspace for this file.
+ * in this__ struct are workspace for this__ file.
  *
  * Outside caller must pass zero for attno.  The function may internally
  * recurse to the next column by passing attno+1.
@@ -629,7 +629,7 @@ gistSplitByKey(Relation r, Page page, IndexTuple *itup, int len,
 	int			i;
 
 	/* generate the item array, and identify tuples with null keys */
-	/* note that entryvec->vector[0] goes unused in this code */
+	/* note that entryvec->vector[0] goes unused in this__ code */
 	entryvec = palloc(GEVHDRSZ + (len + 1) * sizeof(GISTENTRY));
 	entryvec->n = len + 1;
 	offNullTuples = (OffsetNumber *) palloc(len * sizeof(OffsetNumber));
@@ -714,7 +714,7 @@ gistSplitByKey(Relation r, Page page, IndexTuple *itup, int len,
 			{
 				/*
 				 * Form an array of just the don't-care tuples to pass to a
-				 * recursive invocation of this function for the next column.
+				 * recursive invocation of this__ function for the next column.
 				 */
 				IndexTuple *newitup = (IndexTuple *) palloc(len * sizeof(IndexTuple));
 				OffsetNumber *map = (OffsetNumber *) palloc(len * sizeof(OffsetNumber));

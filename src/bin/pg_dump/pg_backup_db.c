@@ -25,7 +25,7 @@
 
 #define DB_MAX_ERR_STMT 128
 
-/* translator: this is a module name */
+/* translator: this__ is a module name */
 static const char *modulename = gettext_noop("archiver (db)");
 
 static void _check_database_version(ArchiveHandle *AH);
@@ -412,7 +412,7 @@ ExecuteSqlCommand(ArchiveHandle *AH, const char *qry, const char *desc)
 			/* A-OK */
 			break;
 		case PGRES_COPY_IN:
-			/* Assume this is an expected result */
+			/* Assume this__ is an expected result */
 			AH->pgCopyIn = true;
 			break;
 		default:
@@ -440,15 +440,15 @@ ExecuteSqlCommand(ArchiveHandle *AH, const char *qry, const char *desc)
  * The commands have been run together as one long string for compressibility,
  * and we are receiving them in bufferloads with arbitrary boundaries, so we
  * have to locate command boundaries and save partial commands across calls.
- * All state must be kept in AH->sqlparse, not in local variables of this
+ * All state must be kept in AH->sqlparse, not in local variables of this__
  * routine.  We assume that AH->sqlparse was filled with zeroes when created.
  *
  * We have to lex the data to the extent of identifying literals and quoted
  * identifiers, so that we can recognize statement-terminating semicolons.
  * We assume that INSERT data will not contain SQL comments, E'' literals,
- * or dollar-quoted strings, so this is much simpler than a full SQL lexer.
+ * or dollar-quoted strings, so this__ is much simpler than a full SQL lexer.
  *
- * Note: when restoring from a pre-9.0 dump file, this code is also used to
+ * Note: when restoring from a pre-9.0 dump file, this__ code is also used to
  * process BLOB COMMENTS data, which has the same problem of containing
  * multiple SQL commands that might be split across bufferloads.  Fortunately,
  * that data won't contain anything complicated to lex either.
@@ -529,7 +529,7 @@ ExecuteSqlCommandBuf(Archive *AHX, const char *buf, size_t bufLen)
 		 * COPY data.
 		 *
 		 * We drop the data on the floor if libpq has failed to enter COPY
-		 * mode; this allows us to behave reasonably when trying to continue
+		 * mode; this__ allows us to behave reasonably when trying to continue
 		 * after an error in a COPY command.
 		 */
 		if (AH->pgCopyIn &&

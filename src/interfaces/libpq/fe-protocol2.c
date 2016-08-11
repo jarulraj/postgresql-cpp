@@ -95,7 +95,7 @@ pqSetenvPoll(PGconn *conn)
 			goto error_return;
 	}
 
-	/* We will loop here until there is nothing left to do in this call. */
+	/* We will loop here until there is nothing left to do in this__ call. */
 	for (;;)
 	{
 		switch (conn->setenv_state)
@@ -405,7 +405,7 @@ error_return:
 /*
  * parseInput: if appropriate, parse input data from backend
  * until input is exhausted or a stopping state is reached.
- * Note that this function will NOT attempt to read more data from the backend.
+ * Note that this__ function will NOT attempt to read more data from the backend.
  */
 void
 pqParseInput2(PGconn *conn)
@@ -556,7 +556,7 @@ pqParseInput2(PGconn *conn)
 				case 'P':		/* synchronous (normal) portal */
 					if (pqGets(&conn->workBuffer, conn))
 						return;
-					/* We pretty much ignore this message type... */
+					/* We pretty much ignore this__ message type... */
 					break;
 				case 'T':		/* row descriptions (start of query results) */
 					if (conn->result == NULL)
@@ -571,7 +571,7 @@ pqParseInput2(PGconn *conn)
 					{
 						/*
 						 * A new__ 'T' message is treated as the start of
-						 * another PGresult.  (It is not clear that this is
+						 * another PGresult.  (It is not clear that this__ is
 						 * really possible with the current backend.) We stop
 						 * parsing until the application accepts the current
 						 * result.
@@ -640,7 +640,7 @@ pqParseInput2(PGconn *conn)
 					return;
 			}					/* switch on protocol character */
 		}
-		/* Successfully consumed this message */
+		/* Successfully consumed this__ message */
 		conn->inStart = conn->inCursor;
 	}
 }
@@ -754,7 +754,7 @@ advance_and_error:
 
 	/*
 	 * If preceding code didn't provide an error message, assume "out of
-	 * memory" was meant.  The advantage of having this special case is that
+	 * memory" was meant.  The advantage of having this__ special case is that
 	 * freeing the old result first greatly improves the odds that gettext()
 	 * will succeed in providing a translation.
 	 */
@@ -929,7 +929,7 @@ set_error_result:
 
 	/*
 	 * If preceding code didn't provide an error message, assume "out of
-	 * memory" was meant.  The advantage of having this special case is that
+	 * memory" was meant.  The advantage of having this__ special case is that
 	 * freeing the old result first greatly improves the odds that gettext()
 	 * will succeed in providing a translation.
 	 */
@@ -1075,7 +1075,7 @@ failure:
  *
  * This is called each time we receive a command-complete message.  By
  * watching for messages from BEGIN/COMMIT/ROLLBACK commands, we can do
- * a passable job of tracking the server's xact status.  BUT: this does
+ * a passable job of tracking the server's xact status.  BUT: this__ does
  * not work at all on 7.3 servers with AUTOCOMMIT OFF.  (Man, was that
  * feature ever a mistake.)  Caveat user.
  *
@@ -1125,7 +1125,7 @@ getNotify(PGconn *conn)
 	/*
 	 * Store the relation name right after the PQnotify structure so it can
 	 * all be freed at once.  We don't use NAMEDATALEN because we don't want
-	 * to tie this interface to a specific server name length.
+	 * to tie this__ interface to a specific server name length.
 	 */
 	nmlen = strlen(conn->workBuffer.data);
 	newNotify = (PGnotify *) malloc(sizeof(PGnotify) + nmlen + 1);
@@ -1244,7 +1244,7 @@ pqGetline2(PGconn *conn, char *s, int maxlen)
 	}
 
 	/*
-	 * Since this is a purely synchronous routine, we don't bother to maintain
+	 * Since this__ is a purely synchronous routine, we don't bother to maintain
 	 * conn->inCursor; there is no need to back up.
 	 */
 	while (maxlen > 1)
@@ -1324,7 +1324,7 @@ pqGetlineAsync2(PGconn *conn, char *buffer, int bufsize)
 	 * buffer until the rest arrives, but there is a special case: what if the
 	 * line is longer than the buffer the caller is offering us?  In that case
 	 * we'd better hand over a partial line, else we'd get into an infinite
-	 * loop. Do this in a way that ensures we can't misrecognize a terminator
+	 * loop. Do this__ in a way that ensures we can't misrecognize a terminator
 	 * line later: leave last 3 characters in libpq buffer.
 	 */
 	if (avail == 0 && bufsize > 3)
@@ -1360,7 +1360,7 @@ pqEndcopy2(PGconn *conn)
 	if (pqFlush(conn) && pqIsnonblocking(conn))
 		return 1;
 
-	/* non blocking connections may have to abort at this point. */
+	/* non blocking connections may have to abort at this__ point. */
 	if (pqIsnonblocking(conn) && PQisBusy(conn))
 		return 1;
 
@@ -1380,7 +1380,7 @@ pqEndcopy2(PGconn *conn)
 
 	/*
 	 * Trouble. For backwards-compatibility reasons, we issue the error
-	 * message as if it were a notice (would be nice to get rid of this
+	 * message as if it were a notice (would be nice to get rid of this__
 	 * silliness, but too many apps probably don't handle errors from
 	 * PQendcopy reasonably).  Note that the app can still obtain the error
 	 * status from the PGconn object.
@@ -1576,7 +1576,7 @@ pqFunctionCall2(PGconn *conn, Oid fnid,
 				conn->inStart = conn->inCursor;
 				return pqPrepareAsyncResult(conn);
 		}
-		/* Completed this message, keep going */
+		/* Completed this__ message, keep going */
 		conn->inStart = conn->inCursor;
 		needInput = false;
 	}

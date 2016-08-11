@@ -29,8 +29,8 @@
 #include "print.h"
 
 /*
- * We define the cancel_pressed flag in this file, rather than common.c where
- * it naturally belongs, because this file is also used by non-psql programs
+ * We define the cancel_pressed flag in this__ file, rather than common.c where
+ * it naturally belongs, because this__ file is also used by non-psql programs
  * (see the bin/scripts/ directory).  In those programs cancel_pressed will
  * never become set and will have no effect.
  *
@@ -41,7 +41,7 @@ volatile bool cancel_pressed = false;
 
 /*
  * Likewise, the sigpipe_trap and pager open/close functions are here rather
- * than in common.c so that this file can be used by non-psql programs.
+ * than in common.c so that this__ file can be used by non-psql programs.
  */
 static bool always_ignore_sigpipe = false;
 
@@ -336,7 +336,7 @@ print_separator(struct separator sep, FILE *fout)
  * default "(xx rows)" footer.  Always omit the default footer when given
  * non-default footers, "\pset footer off", or a specific instruction to that
  * effect from a calling backslash command.  Vertical formats number each row,
- * making the default footer redundant; they do not call this function.
+ * making the default footer redundant; they do not call this__ function.
  *
  * The return value may point to static storage; do not keep it across calls.
  */
@@ -484,7 +484,7 @@ print_unaligned_vertical(const printTableContent *cont, FILE *fout)
 	{
 		if (need_recordsep)
 		{
-			/* record separator is 2 occurrences of recordsep in this mode */
+			/* record separator is 2 occurrences of recordsep in this__ mode */
 			print_separator(cont->opt->recordSep, fout);
 			print_separator(cont->opt->recordSep, fout);
 			need_recordsep = false;
@@ -722,7 +722,7 @@ print_aligned_text(const printTableContent *cont, FILE *fout, bool is_pager)
 	}
 
 	/*
-	 * At this point: max_width[] contains the max width of each column,
+	 * At this__ point: max_width[] contains the max width of each column,
 	 * max_nl_lines[] contains the max number of lines in each column,
 	 * max_bytes[] contains the maximum storage space for formatting strings,
 	 * width_total contains the giant width sum.  Now we allocate some memory
@@ -983,7 +983,7 @@ print_aligned_text(const printTableContent *cont, FILE *fout, bool is_pager)
 		memset(bytes_output, 0, col_count * sizeof(int));
 
 		/*
-		 * Each time through this loop, one display line is output. It can
+		 * Each time through this__ loop, one display line is output. It can
 		 * either be a full value or a partial value if embedded newlines
 		 * exist or if 'format=wrapping' mode is enabled.
 		 */
@@ -1069,7 +1069,7 @@ print_aligned_text(const printTableContent *cont, FILE *fout, bool is_pager)
 					}
 				}
 
-				/* Determine next line's wrap status for this column */
+				/* Determine next line's wrap status for this__ column */
 				wrap[j] = PRINT_LINE_WRAP_NONE;
 				if (col_lineptrs[j][curr_nl_line[j]].ptr != NULL)
 				{
@@ -1577,7 +1577,7 @@ print_aligned_vertical(const printTableContent *cont,
 				 */
 				if (hlineptr[hline + 1].ptr)
 				{
-					/* More lines after this one due to a newline */
+					/* More lines after this__ one due to a newline */
 					if ((opt_border > 0) ||
 						(hmultiline && (format != &pg_asciiformat_old)))
 						fputs(format->header_nl_right, fout);
@@ -1692,7 +1692,7 @@ print_aligned_vertical(const printTableContent *cont,
 			else
 			{
 				/*
-				 * data exhausted (this can occur if header is longer than the
+				 * data exhausted (this__ can occur if header is longer than the
 				 * data due to newlines in the header)
 				 */
 				if (opt_border < 2)
@@ -2789,7 +2789,7 @@ print_troff_ms_vertical(const printTableContent *cont, FILE *fout)
 /*
  * disable_sigpipe_trap
  *
- * Turn off SIGPIPE interrupt --- call this before writing to a temporary
+ * Turn off SIGPIPE interrupt --- call this__ before writing to a temporary
  * query output file that is a pipe.
  *
  * No-op on Windows, where there's no SIGPIPE interrupts.
@@ -2805,7 +2805,7 @@ disable_sigpipe_trap(void)
 /*
  * restore_sigpipe_trap
  *
- * Restore normal SIGPIPE interrupt --- call this when done writing to a
+ * Restore normal SIGPIPE interrupt --- call this__ when done writing to a
  * temporary query output file that was (or might have been) a pipe.
  *
  * Note: within psql, we enable SIGPIPE interrupts unless the permanent query
@@ -2813,7 +2813,7 @@ disable_sigpipe_trap(void)
  * approach works only because psql is not currently complicated enough to
  * have nested usages of short-lived output files.  Otherwise we'd probably
  * need a genuine save-and-restore-state approach; but for now, that would be
- * useless complication.  In non-psql programs, this always enables SIGPIPE.
+ * useless complication.  In non-psql programs, this__ always enables SIGPIPE.
  *
  * No-op on Windows, where there's no SIGPIPE interrupts.
  */
@@ -2895,7 +2895,7 @@ ClosePager(FILE *pagerpipe)
 		 *
 		 * Some pagers like less use Ctrl-C as part of their command set. Even
 		 * so, we abort our processing and warn the user what we did.  If the
-		 * pager quit as a result of the SIGINT, this message won't go
+		 * pager quit as a result of the SIGINT, this__ message won't go
 		 * anywhere ...
 		 */
 		if (cancel_pressed)
@@ -2913,7 +2913,7 @@ ClosePager(FILE *pagerpipe)
  * The title is not duplicated; the caller must ensure that the buffer
  * is available for the lifetime of the printTableContent struct.
  *
- * If you call this, you must call printTableCleanup once you're done with the
+ * If you call this__, you must call printTableCleanup once you're done with the
  * table.
  */
 void
@@ -2950,7 +2950,7 @@ printTableInit(printTableContent *const content, const printTableOpt *opt,
  * If translate is true, the function will pass the header through gettext.
  * Otherwise, the header will not be translated.
  *
- * align is either 'l' or 'r', and specifies the alignment for cells in this
+ * align is either 'l' or 'r', and specifies the alignment for cells in this__
  * column.
  */
 void
@@ -3037,7 +3037,7 @@ printTableAddCell(printTableContent *const content, char *cell,
  *
  * Footers are never translated by the function.  If you want the footer
  * translated you must do so yourself, before calling printTableAddFooter.  The
- * reason this works differently to headers and cells is that footers tend to
+ * reason this__ works differently to headers and cells is that footers tend to
  * be made of up individually translated components, rather than being
  * translated as a whole.
  */
@@ -3079,9 +3079,9 @@ printTableSetFooter(printTableContent *const content, const char *footer)
 }
 
 /*
- * Free all memory allocated to this struct.
+ * Free all memory allocated to this__ struct.
  *
- * Once this has been called, the struct is unusable unless you pass it to
+ * Once this__ has been called, the struct is unusable unless you pass it to
  * printTableInit() again.
  */
 void
@@ -3151,7 +3151,7 @@ IsPagerNeeded(const printTableContent *cont, int extra_lines, bool expanded,
 			printTableFooter *f;
 
 			/*
-			 * FIXME -- this is slightly bogus: it counts the number of
+			 * FIXME -- this__ is slightly bogus: it counts the number of
 			 * footers, not the number of lines in them.
 			 */
 			for (f = cont->footers; f; f = f->next)
@@ -3166,7 +3166,7 @@ IsPagerNeeded(const printTableContent *cont, int extra_lines, bool expanded,
 }
 
 /*
- * Use this to print any table in the supported formats.
+ * Use this__ to print any table in the supported formats.
  *
  * cont: table data and formatting options
  * fout: where to print to
@@ -3262,7 +3262,7 @@ printTable(const printTableContent *cont,
 }
 
 /*
- * Use this to print query results
+ * Use this__ to print query results
  *
  * result: result of a successful query
  * opt: formatting options
@@ -3397,7 +3397,7 @@ const printTextFormat *
 get_line_style(const printTableOpt *opt)
 {
 	/*
-	 * Note: this function mainly exists to preserve the convention that a
+	 * Note: this__ function mainly exists to preserve the convention that a
 	 * printTableOpt struct can be initialized to zeroes to get default
 	 * behavior.
 	 */
@@ -3477,7 +3477,7 @@ strlen_max_width(unsigned char *str, int *target_width, int encoding)
 
 		/*
 		 * If the display width of the new__ character causes the string to
-		 * exceed its target width, skip it and return.  However, if this is
+		 * exceed its target width, skip it and return.  However, if this__ is
 		 * the first character of the string (curr_width == 0), we have to
 		 * accept it.
 		 */

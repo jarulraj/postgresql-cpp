@@ -164,7 +164,7 @@ gistbuild(PG_FUNCTION_ARGS)
 
 	/*
 	 * Create a temporary memory context that is reset once for each tuple
-	 * processed.  (Note: we don't bother to make this a child of the
+	 * processed.  (Note: we don't bother to make this__ a child of the
 	 * giststate's scanCxt, so we have to delete it separately at the end.)
 	 */
 	buildstate.giststate->tempCxt = createTempGistContext();
@@ -360,7 +360,7 @@ gistInitBuffering(GISTBuildState *buildstate)
 		double		subtreesize;
 		double		maxlowestlevelpages;
 
-		/* size of an average subtree at this levelStep (in pages). */
+		/* size of an average subtree at this__ levelStep (in pages). */
 		subtreesize =
 			(1 - pow(avgIndexTuplesPerPage, (double) (levelStep + 1))) /
 			(1 - avgIndexTuplesPerPage);
@@ -376,7 +376,7 @@ gistInitBuffering(GISTBuildState *buildstate)
 		if (maxlowestlevelpages > ((double) maintenance_work_mem * 1024) / BLCKSZ)
 			break;
 
-		/* Good, we can handle this levelStep. See if we can go one higher. */
+		/* Good, we can handle this__ levelStep. See if we can go one higher. */
 		levelStep++;
 	}
 
@@ -400,7 +400,7 @@ gistInitBuffering(GISTBuildState *buildstate)
 	/*
 	 * The second parameter to set is pagesPerBuffer, which determines the
 	 * size of each buffer. We adjust pagesPerBuffer also during the build,
-	 * which is why this calculation is in a separate function.
+	 * which is why this__ calculation is in a separate function.
 	 */
 	pagesPerBuffer = calculatePagesPerBuffer(buildstate, levelStep);
 
@@ -508,7 +508,7 @@ gistBuildCallback(Relation index,
 	 * In 'auto' mode, check if the index has grown too large to fit in cache,
 	 * and switch to buffering mode if it has.
 	 *
-	 * To avoid excessive calls to smgrnblocks(), only check this every
+	 * To avoid excessive calls to smgrnblocks(), only check this__ every
 	 * BUFFERING_MODE_SWITCH_CHECK_STEP index tuples
 	 */
 	if ((buildstate->bufferingMode == GIST_BUFFERING_AUTO &&
@@ -695,7 +695,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 							   false);
 
 	/*
-	 * If this is a root split, update the root path item kept in memory. This
+	 * If this__ is a root split, update the root path item kept in memory. This
 	 * ensures that all path stacks are always complete, including all parent
 	 * nodes up to the root. That simplifies the algorithm to re-find correct
 	 * parent.
@@ -753,7 +753,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 		Buffer		parentBuffer;
 		ListCell   *lc;
 
-		/* Parent may have changed since we memorized this path. */
+		/* Parent may have changed since we memorized this__ path. */
 		parentBuffer =
 			gistBufferingFindCorrectParent(buildstate,
 										   BufferGetBlockNumber(buffer),
@@ -762,7 +762,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 										   &downlinkoffnum);
 
 		/*
-		 * If there's a buffer associated with this page, that needs to be
+		 * If there's a buffer associated with this__ page, that needs to be
 		 * split too. gistRelocateBuildBuffersOnSplit() will also adjust the
 		 * downlinks in 'splitinfo', to make sure they're consistent not only
 		 * with the tuples already on the pages, but also the tuples in the
@@ -796,7 +796,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 
 			/*
 			 * Also update the parent map for all the downlinks that got moved
-			 * to a different page. (actually this also loops through the
+			 * to a different page. (actually this__ also loops through the
 			 * downlinks that stayed on the original page, but it does no
 			 * harm).
 			 */
@@ -816,7 +816,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 								  downlinks, ndownlinks, downlinkoffnum,
 								  InvalidBlockNumber, InvalidOffsetNumber);
 
-		list_free_deep(splitinfo);		/* we don't need this anymore */
+		list_free_deep(splitinfo);		/* we don't need this__ anymore */
 	}
 	else
 		UnlockReleaseBuffer(buffer);
@@ -840,7 +840,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
  * block.
  *
  * This function serves the same purpose as gistFindCorrectParent() during
- * normal index inserts, but this is simpler because we don't need to deal
+ * normal index inserts, but this__ is simpler because we don't need to deal
  * with concurrent inserts.
  */
 static Buffer
@@ -914,7 +914,7 @@ gistBufferingFindCorrectParent(GISTBuildState *buildstate,
 
 /*
  * Process buffers emptying stack. Emptying of one buffer can cause emptying
- * of other buffers. This function iterates until this cascading emptying
+ * of other buffers. This function iterates until this__ cascading emptying
  * process finished, e.g. until buffers emptying stack is empty.
  */
 static void
@@ -941,7 +941,7 @@ gistProcessEmptyingQueue(GISTBuildState *buildstate)
 		/*
 		 * Pop tuples from the buffer and run them down to the buffers at
 		 * lower level, or leaf pages. We continue until one of the lower
-		 * level buffers fills up, or this buffer runs empty.
+		 * level buffers fills up, or this__ buffer runs empty.
 		 *
 		 * In Arge et al's paper, the buffer emptying is stopped after
 		 * processing 1/2 node buffer worth of tuples, to avoid overfilling
@@ -962,7 +962,7 @@ gistProcessEmptyingQueue(GISTBuildState *buildstate)
 			 * Run it down to the underlying node buffer or leaf page.
 			 *
 			 * Note: it's possible that the buffer we're emptying splits as a
-			 * result of this call. If that happens, our emptyingNodeBuffer
+			 * result of this__ call. If that happens, our emptyingNodeBuffer
 			 * points to the left half of the split. After split, it's very
 			 * likely that the new__ left buffer is no longer over the half-full
 			 * threshold, but we might as well keep flushing tuples from it
@@ -971,7 +971,7 @@ gistProcessEmptyingQueue(GISTBuildState *buildstate)
 			if (gistProcessItup(buildstate, itup, emptyingNodeBuffer->nodeBlocknum, emptyingNodeBuffer->level))
 			{
 				/*
-				 * A lower level buffer filled up. Stop emptying this buffer,
+				 * A lower level buffer filled up. Stop emptying this__ buffer,
 				 * to avoid overflowing the lower level buffer.
 				 */
 				break;
@@ -988,7 +988,7 @@ gistProcessEmptyingQueue(GISTBuildState *buildstate)
  * index build to flush all remaining tuples to the index.
  *
  * Note: This destroys the buffersOnLevels lists, so the buffers should not
- * be inserted to after this call.
+ * be inserted to after this__ call.
  */
 static void
 gistEmptyAllBuffers(GISTBuildState *buildstate)
@@ -1005,7 +1005,7 @@ gistEmptyAllBuffers(GISTBuildState *buildstate)
 	for (i = gfbb->buffersOnLevelsLen - 1; i >= 0; i--)
 	{
 		/*
-		 * Empty all buffers on this level. Note that new__ buffers can pop up
+		 * Empty all buffers on this__ level. Note that new__ buffers can pop up
 		 * in the list during the processing, as a result of page splits, so a
 		 * simple walk through the list won't work. We remove buffers from the
 		 * list when we see them empty; a buffer can't become non-empty once
@@ -1020,7 +1020,7 @@ gistEmptyAllBuffers(GISTBuildState *buildstate)
 			if (nodeBuffer->blocksCount != 0)
 			{
 				/*
-				 * Add this buffer to the emptying queue, and proceed to empty
+				 * Add this__ buffer to the emptying queue, and proceed to empty
 				 * the queue.
 				 */
 				if (!nodeBuffer->queuedForEmptying)
@@ -1113,7 +1113,7 @@ gistGetMaxLevel(Relation index)
  * page. We don't need to track the parents of leaf nodes, however. Whenever
  * we insert to a leaf, we've just descended down from its parent, so we know
  * its immediate parent already. This helps a lot to limit the memory used
- * by this hash table.
+ * by this__ hash table.
  *
  * Whenever an internal node is split, the parent map needs to be updated.
  * the parent of the new__ child page needs to be recorded, and also the

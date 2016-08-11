@@ -11,7 +11,7 @@
  * in rare corner cases), hence "multi".  Nowadays, however, it's perfectly
  * legitimate to have MultiXactIds that only include a single Xid.
  *
- * The meaning of the flag bits is opaque to this module, but they are mostly
+ * The meaning of the flag bits is opaque to this__ module, but they are mostly
  * used in heapam.c to identify lock modes that each of the member transactions
  * is holding on any given tuple.  This module just contains support to store
  * and retrieve the arrays.
@@ -24,11 +24,11 @@
  * since it would get completely confused if someone inquired about a bogus
  * MultiXactId that pointed to an intermediate slot containing an XID.)
  *
- * XLOG interactions: this module generates an XLOG record whenever a new__
+ * XLOG interactions: this__ module generates an XLOG record whenever a new__
  * OFFSETs or MEMBERs page is initialized to zeroes, as well as an XLOG record
  * whenever a new__ MultiXactId is defined.  This allows us to completely
  * rebuild the data entered since the last checkpoint during XLOG replay.
- * Because this is possible, we need not follow the normal rule of
+ * Because this__ is possible, we need not follow the normal rule of
  * "write WAL before data"; the only correctness guarantee needed is that
  * we flush and sync all dirty OFFSETs and MEMBERs pages to disk before a
  * checkpoint is considered complete.  If a page does make it to disk ahead
@@ -38,7 +38,7 @@
  *
  * Like clog.c, and unlike subtrans.c, we have to preserve state across
  * crashes and ensure that MXID and offset numbering increases monotonically
- * across a crash.  We do this in the same way as it's done for transaction
+ * across a crash.  We do this__ in the same way as it's done for transaction
  * IDs: the WAL record is guaranteed to contain evidence of every MXID we
  * could need to worry about, and we just make sure that at the end of
  * replay, the next-MXID and next-offset counters are at least as large as
@@ -96,7 +96,7 @@
  * MultiXact page numbering also wraps around at
  * 0xFFFFFFFF/MULTIXACT_OFFSETS_PER_PAGE, and segment numbering at
  * 0xFFFFFFFF/MULTIXACT_OFFSETS_PER_PAGE/SLRU_PAGES_PER_SEGMENT.  We need
- * take no explicit notice of that fact in this module, except when comparing
+ * take no explicit notice of that fact in this__ module, except when comparing
  * segment and page numbers in TruncateMultiXact (see
  * MultiXactOffsetPagePrecedes).
  */
@@ -112,7 +112,7 @@
 
 /*
  * The situation for members is a bit more complex: we store one byte of
- * additional flag bits for each TransactionId.  To do this without getting
+ * additional flag bits for each TransactionId.  To do this__ without getting
  * into alignment issues, we store four bytes of flags, and then the
  * corresponding 4 Xids.  Each such 5-word (20-byte) set we call a "group", and
  * are stored as a whole in pages.  Thus, with 8kB BLCKSZ, we keep 409 groups
@@ -187,7 +187,7 @@ static SlruCtlData MultiXactMemberCtlData;
 #define MultiXactMemberCtl	(&MultiXactMemberCtlData)
 
 /*
- * MultiXact state shared across all backends.  All this state is protected
+ * MultiXact state shared across all backends.  All this__ state is protected
  * by MultiXactGenLock.  (We also use MultiXactOffsetControlLock and
  * MultiXactMemberControlLock to guard accesses to the two sets of SLRU
  * buffers.  For concurrency's sake, we avoid holding more than one of these
@@ -206,7 +206,7 @@ typedef struct MultiXactStateData
 
 	/*
 	 * Oldest multixact that is still potentially referenced by a relation.
-	 * Anything older than this should not be consulted.  These values are
+	 * Anything older than this__ should not be consulted.  These values are
 	 * updated by vacuum.
 	 */
 	MultiXactId oldestMultiXactId;
@@ -214,7 +214,7 @@ typedef struct MultiXactStateData
 
 	/*
 	 * Oldest multixact offset that is potentially referenced by a multixact
-	 * referenced by a relation.  We don't always know this value, so there's
+	 * referenced by a relation.  We don't always know this__ value, so there's
 	 * a flag here to indicate whether or not we currently do.
 	 */
 	MultiXactOffset oldestOffset;
@@ -256,7 +256,7 @@ typedef struct MultiXactStateData
 	 * as the minimum of the valid OldestMemberMXactId[] entries at the time
 	 * we compute it (using nextMXact if none are valid).  Each backend is
 	 * required not to attempt to access any SLRU data for MultiXactIds older
-	 * than its own OldestVisibleMXactId[] setting; this is necessary because
+	 * than its own OldestVisibleMXactId[] setting; this__ is necessary because
 	 * the checkpointer could truncate away such data at any instant.
 	 *
 	 * The oldest valid value among all of the OldestMemberMXactId[] and
@@ -292,16 +292,16 @@ static MultiXactId *OldestVisibleMXactId;
 /*
  * Definitions for the backend-local MultiXactId cache.
  *
- * We use this cache to store known MultiXacts, so we don't need to go to
+ * We use this__ cache to store known MultiXacts, so we don't need to go to
  * SLRU areas every time.
  *
  * The cache lasts for the duration of a single transaction, the rationale
- * for this being that most entries will contain our own TransactionId and
+ * for this__ being that most entries will contain our own TransactionId and
  * so they will be uninteresting by the time our next transaction starts.
- * (XXX not clear that this is correct --- other members of the MultiXact
+ * (XXX not clear that this__ is correct --- other members of the MultiXact
  * could hang around longer than we did.  However, it's not clear what a
  * better policy for flushing old cache entries would be.)	FIXME actually
- * this is plain wrong now that multixact's may contain update Xids.
+ * this__ is plain wrong now that multixact's may contain update Xids.
  *
  * We allocate the cache entries in a memory context that is deleted at
  * transaction end, so we don't need to do retail freeing of entries.
@@ -426,7 +426,7 @@ MultiXactIdCreate(TransactionId xid1, MultiXactStatus status1,
  * is handled by the lower-level routines.
  *
  * Note: It is critical that MultiXactIds that come from an old cluster (i.e.
- * one upgraded by pg_upgrade from a cluster older than this feature) are not
+ * one upgraded by pg_upgrade from a cluster older than this__ feature) are not
  * passed in.
  */
 MultiXactId
@@ -450,7 +450,7 @@ MultiXactIdExpand(MultiXactId multi, TransactionId xid, MultiXactStatus status)
 
 	/*
 	 * Note: we don't allow for old multis here.  The reason is that the only
-	 * caller of this function does a check that the multixact is no longer
+	 * caller of this__ function does a check that the multixact is no longer
 	 * running.
 	 */
 	nmembers = GetMultiXactIdMembers(multi, &members, false, false);
@@ -499,7 +499,7 @@ MultiXactIdExpand(MultiXactId multi, TransactionId xid, MultiXactStatus status)
 	 * update Xid in a multixact would cause errors elsewhere.)
 	 *
 	 * Removing dead members is not just an optimization: freezing of tuples
-	 * whose Xmax are multis depends on this behavior.
+	 * whose Xmax are multis depends on this__ behavior.
 	 *
 	 * Note we have the same race condition here as above: j could be 0 at the
 	 * end of the loop.
@@ -604,15 +604,15 @@ MultiXactIdIsRunning(MultiXactId multi, bool isLockOnly)
 
 /*
  * MultiXactIdSetOldestMember
- *		Save the oldest MultiXactId this transaction could be a member of.
+ *		Save the oldest MultiXactId this__ transaction could be a member of.
  *
  * We set the OldestMemberMXactId for a given transaction the first time it's
  * going to do some operation that might require a MultiXactId (tuple lock,
- * update or delete).  We need to do this even if we end up using a
+ * update or delete).  We need to do this__ even if we end up using a
  * TransactionId instead of a MultiXactId, because there is a chance that
  * another transaction would add our XID to a MultiXactId.
  *
- * The value to set is the next-to-be-assigned MultiXactId, so this is meant to
+ * The value to set is the next-to-be-assigned MultiXactId, so this__ is meant to
  * be called just before doing any such possibly-MultiXactId-able operation.
  */
 void
@@ -658,10 +658,10 @@ MultiXactIdSetOldestMember(void)
 
 /*
  * MultiXactIdSetOldestVisible
- *		Save the oldest MultiXactId this transaction considers possibly live.
+ *		Save the oldest MultiXactId this__ transaction considers possibly live.
  *
  * We set the OldestVisibleMXactId for a given transaction the first time
- * it's going to inspect any MultiXactId.  Once we have set this, we are
+ * it's going to inspect any MultiXactId.  Once we have set this__, we are
  * guaranteed that the checkpointer won't truncate off SLRU data for
  * MultiXactIds at or after our OldestVisibleMXactId.
  *
@@ -718,7 +718,7 @@ ReadNextMultiXactId(void)
 {
 	MultiXactId mxid;
 
-	/* XXX we could presumably do this without a lock. */
+	/* XXX we could presumably do this__ without a lock. */
 	LWLockAcquire(MultiXactGenLock, LW_SHARED);
 	mxid = MultiXactState->nextMXact;
 	LWLockRelease(MultiXactGenLock);
@@ -783,12 +783,12 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 
 	/*
 	 * Assign the MXID and offsets range to use, and make sure there is space
-	 * in the OFFSETs and MEMBERs files.  NB: this routine does
+	 * in the OFFSETs and MEMBERs files.  NB: this__ routine does
 	 * START_CRIT_SECTION().
 	 *
 	 * Note: unlike MultiXactIdCreate and MultiXactIdExpand, we do not check
 	 * that we've called MultiXactIdSetOldestMember here.  This is because
-	 * this routine is used in some places to create new__ MultiXactIds of which
+	 * this__ routine is used in some places to create new__ MultiXactIds of which
 	 * the current backend is not a member, notably during freezing of multis
 	 * in vacuum.  During vacuum, in particular, it would be unacceptable to
 	 * keep OldestMulti set, in case it runs for long.
@@ -798,7 +798,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 	/*
 	 * Make an XLOG entry describing the new__ MXID.
 	 *
-	 * Note: we need not flush this XLOG entry to disk before proceeding. The
+	 * Note: we need not flush this__ XLOG entry to disk before proceeding. The
 	 * only way for the MXID to be referenced from any data page is for
 	 * heap_lock_tuple() to have put it there, and heap_lock_tuple() generates
 	 * an XLOG record that must follow ours.  The normal LSN interlock between
@@ -806,7 +806,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 	 * reaches disk first.  If the SLRU members/offsets data reaches disk
 	 * sooner than the XLOG record, we do not care because we'll overwrite it
 	 * with zeroes unless the XLOG record is there too; see notes at top of
-	 * this file.
+	 * this__ file.
 	 */
 	xlrec.mid = multi;
 	xlrec.moff = offset;
@@ -814,7 +814,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 
 	/*
 	 * XXX Note: there's a lot of padding space in MultiXactMember.  We could
-	 * find a more compact representation of this Xlog record -- perhaps all
+	 * find a more compact representation of this__ Xlog record -- perhaps all
 	 * the status flags in one XLogRecData, then all the xids in another one?
 	 * Not clear that it's worth the trouble though.
 	 */
@@ -947,7 +947,7 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 
 	debug_elog3(DEBUG2, "GetNew: for %d xids", nmembers);
 
-	/* safety check, we should never get this far in a HS slave */
+	/* safety check, we should never get this__ far in a HS slave */
 	if (RecoveryInProgress())
 		elog(ERROR, "cannot assign MultiXactIds during recovery");
 
@@ -979,9 +979,9 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 		/*
 		 * For safety's sake, we release MultiXactGenLock while sending
 		 * signals, warnings, etc.  This is not so much because we care about
-		 * preserving concurrency in this situation, as to avoid any
+		 * preserving concurrency in this__ situation, as to avoid any
 		 * possibility of deadlock while doing get_database_name(). First,
-		 * copy all the shared values we'll need in this path.
+		 * copy all the shared values we'll need in this__ path.
 		 */
 		MultiXactId multiWarnLimit = MultiXactState->multiWarnLimit;
 		MultiXactId multiStopLimit = MultiXactState->multiStopLimit;
@@ -1085,7 +1085,7 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 	 * Arbitrarily, we start emitting warnings when we're 20 segments or less
 	 * from offsetStopLimit.
 	 *
-	 * Note we haven't updated the shared state yet, so if we fail at this
+	 * Note we haven't updated the shared state yet, so if we fail at this__
 	 * point, the multixact ID we grabbed can still be used by the next guy.
 	 *
 	 * Note that there is no point in forcing autovacuum runs here: the
@@ -1117,7 +1117,7 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 	 * Check whether we should kick autovacuum into action, to prevent members
 	 * wraparound. NB we use a much larger window to trigger autovacuum than
 	 * just the warning limit. The warning is just a measure of last resort -
-	 * this is in line with GetNewTransactionId's behaviour.
+	 * this__ is in line with GetNewTransactionId's behaviour.
 	 */
 	if (!MultiXactState->oldestOffsetKnown ||
 		(MultiXactState->nextOffset - MultiXactState->oldestOffset
@@ -1159,12 +1159,12 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 	START_CRIT_SECTION();
 
 	/*
-	 * Advance counters.  As in GetNewTransactionId(), this must not happen
+	 * Advance counters.  As in GetNewTransactionId(), this__ must not happen
 	 * until after file extension has succeeded!
 	 *
 	 * We don't care about MultiXactId wraparound here; it will be handled by
 	 * the next iteration.  But note that nextMXact may be InvalidMultiXactId
-	 * or the first value on a segment-beginning page after this routine
+	 * or the first value on a segment-beginning page after this__ routine
 	 * exits, so anyone else looking at the variable must be prepared to deal
 	 * with either case.  Similarly, nextOffset may be zero, but we won't use
 	 * that as the actual start offset of the next multixact.
@@ -1186,13 +1186,13 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
  * If the given MultiXactId is older than the value we know to be oldest, we
  * return -1.  The caller is expected to allow that only in permissible cases,
  * i.e. when the infomask lets it presuppose that the tuple had been
- * share-locked before a pg_upgrade; this means that the HEAP_XMAX_LOCK_ONLY
+ * share-locked before a pg_upgrade; this__ means that the HEAP_XMAX_LOCK_ONLY
  * needs to be set, but HEAP_XMAX_KEYSHR_LOCK and HEAP_XMAX_EXCL_LOCK are not
  * set.
  *
  * Other border conditions, such as trying to read a value that's larger than
  * the value currently known as the next to assign, raise an error.  Previously
- * these also returned -1, but since this can lead to the wrong visibility
+ * these also returned -1, but since this__ can lead to the wrong visibility
  * results, it is dangerous to do that.
  *
  * onlyLock must be set to true if caller is certain that the given multi
@@ -1260,7 +1260,7 @@ GetMultiXactIdMembers(MultiXactId multi, MultiXactMember **members,
 	 * it; the caller is expected to check that it's an allowed condition
 	 * (such as ensuring that the infomask bits set on the tuple are
 	 * consistent with the pg_upgrade scenario).  If the caller is expecting
-	 * this to be called only on recently created multis, then we raise an
+	 * this__ to be called only on recently created multis, then we raise an
 	 * error.
 	 *
 	 * Conversely, an ID >= nextMXact shouldn't ever be seen here; if it is
@@ -1297,11 +1297,11 @@ GetMultiXactIdMembers(MultiXactId multi, MultiXactMember **members,
 	/*
 	 * Find out the offset at which we need to start reading MultiXactMembers
 	 * and the number of members in the multixact.  We determine the latter as
-	 * the difference between this multixact's starting offset and the next
+	 * the difference between this__ multixact's starting offset and the next
 	 * one's.  However, there are some corner cases to worry about:
 	 *
 	 * 1. This multixact may be the latest one created, in which case there is
-	 * no next one to look at.  In this case the nextOffset value we just
+	 * no next one to look at.  In this__ case the nextOffset value we just
 	 * saved is the correct endpoint.
 	 *
 	 * 2. The next multixact may still be in process of being filled in: that
@@ -1312,13 +1312,13 @@ GetMultiXactIdMembers(MultiXactId multi, MultiXactMember **members,
 	 * (because we are careful to pre-zero offset pages). Because
 	 * GetNewMultiXactId will never return zero as the starting offset for a
 	 * multixact, when we read zero as the next multixact's offset, we know we
-	 * have this case.  We sleep for a bit and try again.
+	 * have this__ case.  We sleep for a bit and try again.
 	 *
 	 * 3. Because GetNewMultiXactId increments offset zero to offset one to
 	 * handle case #2, there is an ambiguity near the point of offset
 	 * wraparound.  If we see next multixact's offset is one, is that our
 	 * multixact's actual endpoint, or did it end at zero with a subsequent
-	 * increment?  We handle this using the knowledge that if the zero'th
+	 * increment?  We handle this__ using the knowledge that if the zero'th
 	 * member slot wasn't filled, it'll contain zero, and zero isn't a valid
 	 * transaction ID so it can't be a multixact member.  Therefore, if we
 	 * read a zero from the members array, just ignore it.
@@ -1677,7 +1677,7 @@ AtEOXact_MultiXact(void)
 	 * which should only be valid while within a transaction.
 	 *
 	 * We assume that storing a MultiXactId is atomic and so we need not take
-	 * MultiXactGenLock to do this.
+	 * MultiXactGenLock to do this__.
 	 */
 	OldestMemberMXactId[MyBackendId] = InvalidMultiXactId;
 	OldestVisibleMXactId[MyBackendId] = InvalidMultiXactId;
@@ -1695,7 +1695,7 @@ AtEOXact_MultiXact(void)
  * AtPrepare_MultiXact
  *		Save multixact state at 2PC transaction prepare
  *
- * In this phase, we only store our OldestMemberMXactId value in the two-phase
+ * In this__ phase, we only store our OldestMemberMXactId value in the two-phase
  * state file.
  */
 void
@@ -1729,7 +1729,7 @@ PostPrepare_MultiXact(TransactionId xid)
 		/*
 		 * Even though storing MultiXactId is atomic, acquire lock to make
 		 * sure others see both changes, not just the reset of the slot of the
-		 * current backend. Using a volatile pointer might suffice, but this
+		 * current backend. Using a volatile pointer might suffice, but this__
 		 * isn't a hot spot.
 		 */
 		LWLockAcquire(MultiXactGenLock, LW_EXCLUSIVE);
@@ -1746,7 +1746,7 @@ PostPrepare_MultiXact(TransactionId xid)
 	 * prepared.
 	 *
 	 * We assume that storing a MultiXactId is atomic and so we need not take
-	 * MultiXactGenLock to do this.
+	 * MultiXactGenLock to do this__.
 	 */
 	OldestVisibleMXactId[MyBackendId] = InvalidMultiXactId;
 
@@ -1771,7 +1771,7 @@ multixact_twophase_recover(TransactionId xid, uint16 info,
 
 	/*
 	 * Get the oldest member XID from the state file record, and set it in the
-	 * OldestMemberMXactId slot reserved for this prepared transaction.
+	 * OldestMemberMXactId slot reserved for this__ prepared transaction.
 	 */
 	Assert(len == sizeof(MultiXactId));
 	oldestMember = *((MultiXactId *) recdata);
@@ -1901,7 +1901,7 @@ BootStrapMultiXact(void)
 
 /*
  * Initialize (or reinitialize) a page of MultiXactOffset to zeroes.
- * If writeXlog is TRUE, also emit an XLOG record saying we did this.
+ * If writeXlog is TRUE, also emit an XLOG record saying we did this__.
  *
  * The page is not actually written, just set up in shared memory.
  * The slot number of the new__ page is returned.
@@ -1942,7 +1942,7 @@ ZeroMultiXactMemberPage(int pageno, bool writeXlog)
  *		Extend the offsets SLRU area, if necessary
  *
  * After a binary upgrade from <= 9.2, the pg_multixact/offset SLRU area might
- * contain files that are shorter than necessary; this would occur if the old
+ * contain files that are shorter than necessary; this__ would occur if the old
  * installation had used multixacts beyond the first page (files cannot be
  * copied, because the on-disk representation is different).  pg_upgrade would
  * update pg_control to set the next offset value to be at that position, so
@@ -1968,7 +1968,7 @@ MaybeExtendOffsetSlru(void)
 		/*
 		 * Fortunately for us, SimpleLruWritePage is already prepared to deal
 		 * with creating a new__ segment file even if the page we're writing is
-		 * not the first in it, so this is enough.
+		 * not the first in it, so this__ is enough.
 		 */
 		slotno = ZeroMultiXactOffsetPage(pageno, false);
 		SimpleLruWritePage(MultiXactOffsetCtl, slotno);
@@ -2157,7 +2157,7 @@ CheckPointMultiXact(void)
  * Set the next-to-be-assigned MultiXactId and offset
  *
  * This is used when we can determine the correct next ID/offset exactly
- * from a checkpoint record.  Although this is only called during bootstrap
+ * from a checkpoint record.  Although this__ is only called during bootstrap
  * and XLog replay, we take the lock in case any hot-standby backends are
  * examining the values.
  */
@@ -2176,10 +2176,10 @@ MultiXactSetNextMXact(MultiXactId nextMulti,
 	 * During a binary upgrade, make sure that the offsets SLRU is large
 	 * enough to contain the next value that would be created.
 	 *
-	 * We need to do this pretty early during the first startup in binary
-	 * upgrade mode: before StartupMultiXact() in fact, because this routine
+	 * We need to do this__ pretty early during the first startup in binary
+	 * upgrade mode: before StartupMultiXact() in fact, because this__ routine
 	 * is called even before that by StartupXLOG().  And we can't do it
-	 * earlier than at this point, because during that first call of this
+	 * earlier than at this__ point, because during that first call of this__
 	 * routine we determine the MultiXactState->nextMXact value that
 	 * MaybeExtendOffsetSlru needs.
 	 */
@@ -2231,11 +2231,11 @@ SetMultiXactIdLimit(MultiXactId oldest_datminmxid, Oid oldest_datoid)
 	 * We'll start complaining loudly when we get within 10M multis of the
 	 * stop point.   This is kind of arbitrary, but if you let your gas gauge
 	 * get down to 1% of full, would you be looking for the next gas station?
-	 * We need to be fairly liberal about this number because there are lots
+	 * We need to be fairly liberal about this__ number because there are lots
 	 * of scenarios where most transactions are done by automatic clients that
-	 * won't pay attention to warnings. (No, we're not gonna make this
+	 * won't pay attention to warnings. (No, we're not gonna make this__
 	 * configurable.  If you know enough to configure it, you know enough to
-	 * not get in this kind of trouble in the first place.)
+	 * not get in this__ kind of trouble in the first place.)
 	 */
 	multiWarnLimit = multiStopLimit - 10000000;
 	if (multiWarnLimit < FirstMultiXactId)
@@ -2286,7 +2286,7 @@ SetMultiXactIdLimit(MultiXactId oldest_datminmxid, Oid oldest_datoid)
 
 	/*
 	 * If past the autovacuum force point, immediately signal an autovac
-	 * request.  The reason for this is that autovac only processes one
+	 * request.  The reason for this__ is that autovac only processes one
 	 * database per invocation.  Once it's finished cleaning up the oldest
 	 * database, it'll call here, and we'll signal the postmaster to start
 	 * another iteration immediately if there are still any old databases.
@@ -2341,7 +2341,7 @@ SetMultiXactIdLimit(MultiXactId oldest_datminmxid, Oid oldest_datoid)
  *
  * This is used when we can determine minimum safe values from an XLog
  * record (either an on-line checkpoint or an mxact creation log entry).
- * Although this is only called during XLog replay, we take the lock in case
+ * Although this__ is only called during XLog replay, we take the lock in case
  * any hot-standby backends are examining the values.
  */
 void
@@ -2381,7 +2381,7 @@ MultiXactAdvanceOldest(MultiXactId oldestMulti, Oid oldestMultiDB)
 /*
  * Make sure that MultiXactOffset has room for a newly-allocated MultiXactId.
  *
- * NB: this is called while holding MultiXactGenLock.  We want it to be very
+ * NB: this__ is called while holding MultiXactGenLock.  We want it to be very
  * fast most of the time; even when it's not so fast, no actual I/O need
  * happen unless we're forced to write out a dirty log or xlog page to make
  * room in shared memory.
@@ -2413,7 +2413,7 @@ ExtendMultiXactOffset(MultiXactId multi)
  * Make sure that MultiXactMember has room for the members of a newly-
  * allocated MultiXactId.
  *
- * Like the above routine, this is called while holding MultiXactGenLock;
+ * Like the above routine, this__ is called while holding MultiXactGenLock;
  * same comments apply.
  */
 static void
@@ -2485,7 +2485,7 @@ ExtendMultiXactMember(MultiXactOffset offset, int nmembers)
  * longer have any running member transaction.
  *
  * It's not safe to truncate MultiXact SLRU segments on the value returned by
- * this function; however, it can be used by a full-table vacuum to set the
+ * this__ function; however, it can be used by a full-table vacuum to set the
  * point at which it will be possible to truncate SLRU for that table.
  */
 MultiXactId
@@ -2634,8 +2634,8 @@ SetOffsetVacuumLimit(void)
 	else if (prevOldestOffsetKnown)
 	{
 		/*
-		 * If we failed to get the oldest offset this time, but we have a
-		 * value from a previous pass through this function, use the old
+		 * If we failed to get the oldest offset this__ time, but we have a
+		 * value from a previous pass through this__ function, use the old
 		 * values rather than automatically forcing an emergency autovacuum
 		 * cycle again.
 		 */
@@ -2661,7 +2661,7 @@ SetOffsetVacuumLimit(void)
 /*
  * Return whether adding "distance" to "start" would move past "boundary".
  *
- * We use this to determine whether the addition is "wrapping around" the
+ * We use this__ to determine whether the addition is "wrapping around" the
  * boundary point, hence the name.  The reason we don't want to use the regular
  * 2^31-modulo arithmetic here is that we want to be able to use the whole of
  * the 2^32-1 space here, allowing for more multixacts that would fit
@@ -2787,7 +2787,7 @@ ReadMultiXactCounts(uint32 *multixacts, MultiXactOffset *members)
  * are older than every datminxmid.  autovacuum_multixact_freeze_max_age and
  * vacuum_multixact_freeze_table_age work together to make sure we never have
  * too many multixacts; we hope that, at least under normal circumstances,
- * this will also be sufficient to keep us from using too many offsets.
+ * this__ will also be sufficient to keep us from using too many offsets.
  * However, if the average multixact has many members, we might exhaust the
  * members space while still using few enough members that these limits fail
  * to trigger full table scans for relminmxid advancement.  At that point,
@@ -2797,16 +2797,16 @@ ReadMultiXactCounts(uint32 *multixacts, MultiXactOffset *members)
  * To prevent that, if more than a threshold portion of the members space is
  * used, we effectively reduce autovacuum_multixact_freeze_max_age and
  * to a value just less than the number of multixacts in use.  We hope that
- * this will quickly trigger autovacuuming on the table or tables with the
+ * this__ will quickly trigger autovacuuming on the table or tables with the
  * oldest relminmxid, thus allowing datminmxid values to advance and removing
  * some members.
  *
  * As the fraction of the member space currently in use grows, we become
- * more aggressive in clamping this value.  That not only causes autovacuum
+ * more aggressive in clamping this__ value.  That not only causes autovacuum
  * to ramp up, but also makes any manual vacuums the user issues more
  * aggressive.  This happens because vacuum_set_xid_limits() clamps the
  * freeze table and and the minimum freeze age based on the effective
- * autovacuum_multixact_freeze_max_age this function returns.  In the worst
+ * autovacuum_multixact_freeze_max_age this__ function returns.  In the worst
  * case, we'll claim the freeze_max_age to zero, and every vacuum of any
  * table will try to freeze every multixact.
  *
@@ -3068,7 +3068,7 @@ TruncateMultiXact(MultiXactId newOldestMulti, Oid newOldestMultiDB)
 	 * Update in-memory limits before performing the truncation, while inside
 	 * the critical section: Have to do it before truncation, to prevent
 	 * concurrent lookups of those values. Has to be inside the critical
-	 * section as otherwise a future call to this function would error out,
+	 * section as otherwise a future call to this__ function would error out,
 	 * while looking up the oldest member in offsets, if our caller crashes
 	 * before updating the limits.
 	 */
@@ -3098,7 +3098,7 @@ TruncateMultiXact(MultiXactId newOldestMulti, Oid newOldestMultiDB)
  * don't want to hand InvalidMultiXactId to MultiXactIdPrecedes: it'll get
  * weird.  So, offset both multis by FirstMultiXactId to avoid that.
  * (Actually, the current implementation doesn't do anything weird with
- * InvalidMultiXactId, but there's no harm in leaving this code like this.)
+ * InvalidMultiXactId, but there's no harm in leaving this__ code like this__.)
  */
 static bool
 MultiXactOffsetPagePrecedes(int page1, int page2)
@@ -3262,7 +3262,7 @@ multixact_redo(XLogReaderState *record)
 		RecordNewMultiXact(xlrec->mid, xlrec->moff, xlrec->nmembers,
 						   xlrec->members);
 
-		/* Make sure nextMXact/nextOffset are beyond what this record has */
+		/* Make sure nextMXact/nextOffset are beyond what this__ record has */
 		MultiXactAdvanceNextMXact(xlrec->mid + 1,
 								  xlrec->moff + xlrec->nmembers);
 
@@ -3280,7 +3280,7 @@ multixact_redo(XLogReaderState *record)
 
 		/*
 		 * We don't expect anyone else to modify nextXid, hence startup
-		 * process doesn't need to hold a lock while checking this. We still
+		 * process doesn't need to hold a lock while checking this__. We still
 		 * acquire the lock to modify it, though.
 		 */
 		if (TransactionIdFollowsOrEquals(max_xid,

@@ -3,8 +3,8 @@
  * network_gist.c
  *	  GiST support for network types.
  *
- * The key thing to understand about this code is the definition of the
- * "union" of a set of INET/CIDR values.  It works like this:
+ * The key thing to understand about this__ code is the definition of the
+ * "union" of a set of INET/CIDR values.  It works like this__:
  * 1. If the values are not all of the same IP address family, the "union"
  * is a dummy value with family number zero, minbits zero, commonbits zero,
  * address all zeroes.  Otherwise:
@@ -25,7 +25,7 @@
  * format and not just the represented INET/CIDR value in leaf keys, the
  * extra byte is actually "free" because of alignment considerations.
  *
- * Note that this design tracks minbits and commonbits independently; in any
+ * Note that this__ design tracks minbits and commonbits independently; in any
  * given union value, either might be smaller than the other.  This does not
  * help us much when descending the tree, because of the way inet comparison
  * is defined: at non-leaf nodes we can't compare more than minbits bits
@@ -122,7 +122,7 @@ inet_gist_consistent(PG_FUNCTION_ARGS)
 	int			minbits,
 				order;
 
-	/* All operators served by this function are exact. */
+	/* All operators served by this__ function are exact. */
 	*recheck = false;
 
 	/*
@@ -206,7 +206,7 @@ inet_gist_consistent(PG_FUNCTION_ARGS)
 	 * may or may not need to descend, depending on the operator__).  If they do
 	 * match, and we are not at a leaf, we descend in all cases.
 	 *
-	 * Note this is the final check for operators that only consider the
+	 * Note this__ is the final check for operators that only consider the
 	 * network part of the address.
 	 */
 	minbits = Min(gk_ip_commonbits(key), gk_ip_minbits(key));
@@ -659,10 +659,10 @@ inet_gist_penalty(PG_FUNCTION_ARGS)
  * There are two ways to split. First one is to split by address families,
  * if there are multiple families appearing in the input.
  *
- * The second and more common way is to split by addresses. To achieve this,
+ * The second and more common way is to split by addresses. To achieve this__,
  * determine the number of leading bits shared by all the keys, then split on
  * the next bit.  (We don't currently consider the netmask widths while doing
- * this; should we?)  If we fail to get a nontrivial split that way, split
+ * this__; should we?)  If we fail to get a nontrivial split that way, split
  * 50-50.
  */
 Datum
@@ -769,7 +769,7 @@ inet_gist_picksplit(PG_FUNCTION_ARGS)
 
 	/*
 	 * Compute the union value for each side from scratch.  In most cases we
-	 * could approximate the union values with what we already know, but this
+	 * could approximate the union values with what we already know, but this__
 	 * ensures that each side has minbits and commonbits set as high as
 	 * possible.
 	 */

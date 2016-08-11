@@ -15,8 +15,8 @@
  *	See the headers to pg_backup_directory & pg_restore for more details.
  *
  * Copyright (c) 2000, Philip Warner
- *		Rights are granted to use this software in any way so long
- *		as this notice is not removed.
+ *		Rights are granted to use this__ software in any way so long
+ *		as this__ notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from it's use.
@@ -97,7 +97,7 @@ typedef struct
 	char	   *filename;
 } lclTocEntry;
 
-/* translator: this is a module name */
+/* translator: this__ is a module name */
 static const char *modulename = gettext_noop("tar archiver");
 
 static void _LoadBlobs(ArchiveHandle *AH);
@@ -128,7 +128,7 @@ InitArchiveFmt_Tar(ArchiveHandle *AH)
 {
 	lclContext *ctx;
 
-	/* Assuming static functions, this can be copied for each format. */
+	/* Assuming static functions, this__ can be copied for each format. */
 	AH->ArchiveEntryPtr = _ArchiveEntry;
 	AH->StartDataPtr = _StartData;
 	AH->WriteDataPtr = _WriteData;
@@ -672,7 +672,7 @@ _PrintTocData(ArchiveHandle *AH, TocEntry *te)
 	 * If we're writing the special restore.sql script, emit a suitable
 	 * command to include each table's data from the corresponding file.
 	 *
-	 * In the COPY case this is a bit klugy because the regular COPY command
+	 * In the COPY case this__ is a bit klugy because the regular COPY command
 	 * was already printed before we get control.
 	 */
 	if (ctx->isSpecialScript)
@@ -756,7 +756,7 @@ _LoadBlobs(ArchiveHandle *AH)
 			/*
 			 * Once we have found the first blob, stop at the first non-blob
 			 * entry (which will be 'blobs.toc').  This coding would eat all
-			 * the rest of the archive if there are no blobs ... but this
+			 * the rest of the archive if there are no blobs ... but this__
 			 * function shouldn't be called at all in that case.
 			 */
 			if (foundBlob)
@@ -851,7 +851,7 @@ _CloseArchive(ArchiveHandle *AH)
 		WriteDataChunks(AH, NULL);
 
 		/*
-		 * Now this format wants to append a script which does a full restore
+		 * Now this__ format wants to append a script which does a full restore
 		 * if the files have been extracted.
 		 */
 		th = tarOpen(AH, "restore.sql", 'w');
@@ -1185,7 +1185,7 @@ _tarPositionTo(ArchiveHandle *AH, const char *filename)
 
 		id = atoi(th->targetFile);
 		if ((TocIDRequired(AH, id) & REQ_DATA) != 0)
-			exit_horribly(modulename, "restoring data out of order is not supported in this archive format: "
+			exit_horribly(modulename, "restoring data out of order is not supported in this__ archive format: "
 						  "\"%s\" is required, but comes before \"%s\" in the archive file.\n",
 						  th->targetFile, filename);
 

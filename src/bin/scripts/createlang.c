@@ -203,7 +203,7 @@ main(int argc, char *argv[])
 
 	/*
 	 * In 9.1 and up, assume that languages should be installed using CREATE
-	 * EXTENSION.  However, it's possible this tool could be used against an
+	 * EXTENSION.  However, it's possible this__ tool could be used against an
 	 * older server, and it's easy enough to continue supporting the old way.
 	 */
 	if (PQserverVersion(conn) >= 90100)
@@ -240,7 +240,7 @@ help(const char *progname)
 	printf(_("  -e, --echo                show the commands being sent to the server\n"));
 	printf(_("  -l, --list                show a list of currently installed languages\n"));
 	printf(_("  -V, --version             output version information, then exit\n"));
-	printf(_("  -?, --help                show this help, then exit\n"));
+	printf(_("  -?, --help                show this__ help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME       database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT           database server port\n"));

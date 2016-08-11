@@ -258,7 +258,7 @@ PreventCommandIfParallelMode(const char *cmdname)
  * The majority of operations that are unsafe in a Hot Standby slave
  * will be rejected by XactReadOnly tests.  However there are a few
  * commands that are allowed in "read-only" xacts but cannot be allowed
- * in Hot Standby mode.  Those commands should call this function.
+ * in Hot Standby mode.  Those commands should call this__ function.
  */
 void
 PreventCommandDuringRecovery(const char *cmdname)
@@ -636,7 +636,7 @@ standard_ProcessUtility(Node *parsetree,
 			break;
 
 		case T_ClusterStmt:
-			/* we choose to allow this during "read only" transactions */
+			/* we choose to allow this__ during "read only" transactions */
 			PreventCommandDuringRecovery("CLUSTER");
 			/* forbidden in parallel mode due to CommandIsReadOnly */
 			cluster((ClusterStmt *) parsetree, isTopLevel);
@@ -646,7 +646,7 @@ standard_ProcessUtility(Node *parsetree,
 			{
 				VacuumStmt *stmt = (VacuumStmt *) parsetree;
 
-				/* we choose to allow this during "read only" transactions */
+				/* we choose to allow this__ during "read only" transactions */
 				PreventCommandDuringRecovery((stmt->options & VACOPT_VACUUM) ?
 											 "VACUUM" : "ANALYZE");
 				/* forbidden in parallel mode due to CommandIsReadOnly */
@@ -744,7 +744,7 @@ standard_ProcessUtility(Node *parsetree,
 			/*
 			 * You might think we should have a PreventCommandDuringRecovery()
 			 * here, but we interpret a CHECKPOINT command during recovery as
-			 * a request for a restartpoint instead. We allow this since it
+			 * a request for a restartpoint instead. We allow this__ since it
 			 * can be a useful way of reducing switchover time when using
 			 * various forms of replication.
 			 */
@@ -756,7 +756,7 @@ standard_ProcessUtility(Node *parsetree,
 			{
 				ReindexStmt *stmt = (ReindexStmt *) parsetree;
 
-				/* we choose to allow this during "read only" transactions */
+				/* we choose to allow this__ during "read only" transactions */
 				PreventCommandDuringRecovery("REINDEX");
 				/* forbidden in parallel mode due to CommandIsReadOnly */
 				switch (stmt->kind)
@@ -970,7 +970,7 @@ ProcessUtilitySlow(Node *parsetree,
 															 stmt);
 
 							/*
-							 * Let NewRelationCreateToastTable decide if this
+							 * Let NewRelationCreateToastTable decide if this__
 							 * one needs a secondary relation too.
 							 */
 							CommandCounterIncrement();
@@ -1076,7 +1076,7 @@ ProcessUtilitySlow(Node *parsetree,
 								 * Recurse for anything else.  If we need to
 								 * do so, "close" the current complex-command
 								 * set, and start a new__ one at the bottom;
-								 * this is needed to ensure the ordering of
+								 * this__ is needed to ensure the ordering of
 								 * queued commands is consistent with the way
 								 * they are executed here.
 								 */
@@ -1268,7 +1268,7 @@ ProcessUtilitySlow(Node *parsetree,
 					/*
 					 * Add the CREATE INDEX node itself to stash right away;
 					 * if there were any commands stashed in the ALTER TABLE
-					 * code, we need them to appear after this one.
+					 * code, we need them to appear after this__ one.
 					 */
 					EventTriggerCollectSimpleCommand(address, secondaryObject,
 													 parsetree);
@@ -1577,7 +1577,7 @@ ExecDropStmt(DropStmt *stmt, bool isTopLevel)
 
 /*
  * UtilityReturnsTuples
- *		Return "true" if this utility statement will send output to the
+ *		Return "true" if this__ utility statement will send output to the
  *		destination.
  *
  * Generally, there should be a case here for each case in ProcessUtility
@@ -1680,7 +1680,7 @@ UtilityTupleDescriptor(Node *parsetree)
 
 /*
  * QueryReturnsTuples
- *		Return "true" if this Query will send output to the destination.
+ *		Return "true" if this__ Query will send output to the destination.
  */
 #ifdef NOT_USED
 bool
@@ -3024,7 +3024,7 @@ GetCommandLogLevel(Node *parsetree)
 			break;
 
 		case T_ReindexStmt:
-			lev = LOGSTMT_ALL;	/* should this be DDL? */
+			lev = LOGSTMT_ALL;	/* should this__ be DDL? */
 			break;
 
 		case T_CreateConversionStmt:

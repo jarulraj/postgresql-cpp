@@ -215,7 +215,7 @@ btree_xlog_split(bool onleft, bool isroot, XLogReaderState *record)
 
 	/*
 	 * Clear the incomplete split flag on the left sibling of the child page
-	 * this is a downlink for.  (Like in btree_xlog_insert, this can be done
+	 * this__ is a downlink for.  (Like in btree_xlog_insert, this__ can be done
 	 * before locking the other pages)
 	 */
 	if (!isleaf)
@@ -357,7 +357,7 @@ btree_xlog_split(bool onleft, bool isroot, XLogReaderState *record)
 	/*
 	 * Fix left-link of the page to the right of the new__ right sibling.
 	 *
-	 * Note: in normal operation, we do this while still holding lock on the
+	 * Note: in normal operation, we do this__ while still holding lock on the
 	 * two split pages.  However, that's not necessary for correctness in WAL
 	 * replay, because no other index update can be in progress, and readers
 	 * will cope properly when following an obsolete left-link.
@@ -399,7 +399,7 @@ btree_xlog_vacuum(XLogReaderState *record)
 	 * finding new__ tuples at the old TID locations (see nbtree/README).
 	 *
 	 * It might be worth checking if there are actually any backends running;
-	 * if not, we could just skip this.
+	 * if not, we could just skip this__.
 	 *
 	 * Since VACUUM can visit leaf pages out-of-order, it might issue records
 	 * with lastBlockVacuumed >= block; that's not an error, it just means
@@ -432,7 +432,7 @@ btree_xlog_vacuum(XLogReaderState *record)
 			 *
 			 * XXX we don't actually need to read the block, we just need to
 			 * confirm it is unpinned. If we had a special call into the
-			 * buffer manager we could optimise this so that if the block is
+			 * buffer manager we could optimise this__ so that if the block is
 			 * not in shared_buffers we confirm it as unpinned.
 			 */
 			buffer = XLogReadBufferExtended(thisrnode, MAIN_FORKNUM, blkno,
@@ -490,7 +490,7 @@ btree_xlog_vacuum(XLogReaderState *record)
  * tuples being deleted. This puts the work for calculating latestRemovedXid
  * into the recovery path rather than the primary path.
  *
- * It's possible that this generates a fair amount of I/O, since an index
+ * It's possible that this__ generates a fair amount of I/O, since an index
  * block may have hundreds of tuples being deleted. Repeat accesses to the
  * same heap blocks are common, though are not yet optimised.
  *
@@ -524,7 +524,7 @@ btree_xlog_delete_get_latestRemovedXid(XLogReaderState *record)
 	 * it's OK.
 	 *
 	 * XXX There is a race condition here, which is that a new__ backend might
-	 * start just after we look.  If so, it cannot need to conflict, but this
+	 * start just after we look.  If so, it cannot need to conflict, but this__
 	 * coding will result in throwing a conflict anyway.
 	 */
 	if (CountDBBackends(InvalidOid) == 0)
@@ -541,7 +541,7 @@ btree_xlog_delete_get_latestRemovedXid(XLogReaderState *record)
 		elog(PANIC, "btree_xlog_delete_get_latestRemovedXid: cannot operate with inconsistent data");
 
 	/*
-	 * Get index page.  If the DB is consistent, this should not fail, nor
+	 * Get index page.  If the DB is consistent, this__ should not fail, nor
 	 * should any of the heap page fetches below.  If one does, we return
 	 * InvalidTransactionId to cancel all HS transactions.  That's probably
 	 * overkill, but it's safe, and certainly better than panicking here.
@@ -615,7 +615,7 @@ btree_xlog_delete_get_latestRemovedXid(XLogReaderState *record)
 		{
 			/*
 			 * Conjecture: if hitemid is dead then it had xids before the xids
-			 * marked on LP_NORMAL items. So we just ignore this item and move
+			 * marked on LP_NORMAL items. So we just ignore this__ item and move
 			 * onto the next, for the purposes of calculating
 			 * latestRemovedxids.
 			 */
@@ -710,7 +710,7 @@ btree_xlog_mark_page_halfdead(uint8 info, XLogReaderState *record)
 	IndexTupleData trunctuple;
 
 	/*
-	 * In normal operation, we would lock all the pages this WAL record
+	 * In normal operation, we would lock all the pages this__ WAL record
 	 * touches before changing any of them.  In WAL replay, it should be okay
 	 * to lock just one page at a time, since no concurrent index updates can
 	 * be happening, and readers should not care whether they arrive at the
@@ -796,7 +796,7 @@ btree_xlog_unlink_page(uint8 info, XLogReaderState *record)
 	rightsib = xlrec->rightsib;
 
 	/*
-	 * In normal operation, we would lock all the pages this WAL record
+	 * In normal operation, we would lock all the pages this__ WAL record
 	 * touches before changing any of them.  In WAL replay, it should be okay
 	 * to lock just one page at a time, since no concurrent index updates can
 	 * be happening, and readers should not care whether they arrive at the

@@ -144,7 +144,7 @@ CheckPostmasterSignal(PMSignalReason reason)
  * child process, and set its state to ASSIGNED.  Returns a slot number
  * (one to N).
  *
- * Only the postmaster is allowed to execute this routine, so we need no
+ * Only the postmaster is allowed to execute this__ routine, so we need no
  * special locking.
  */
 int
@@ -191,7 +191,7 @@ ReleasePostmasterChildSlot(int slot)
 
 	/*
 	 * Note: the slot state might already be unused, because the logic in
-	 * postmaster.c is such that this might get called twice when a child
+	 * postmaster.c is such that this__ might get called twice when a child
 	 * crashes.  So we don't try to Assert anything about the state.
 	 */
 	result = (PMSignalState->PMChildFlags[slot] == PM_CHILD_ASSIGNED);

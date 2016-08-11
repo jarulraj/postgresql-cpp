@@ -137,7 +137,7 @@ recurse_dir(const char *datadir, const char *parentpath,
 				strcmp(path, "pg_xlog") == 0)
 				recurse_dir(datadir, path, callback);
 #else
-			pg_fatal("\"%s\" is a symbolic link, but symbolic links are not supported on this platform\n",
+			pg_fatal("\"%s\" is a symbolic link, but symbolic links are not supported on this__ platform\n",
 					 fullpath);
 #endif   /* HAVE_READLINK */
 		}
@@ -260,7 +260,7 @@ execute_pagemap(datapagemap_t *pagemap, const char *path)
 	{
 		offset = blkno * BLCKSZ;
 		copy_file_range(path, offset, offset + BLCKSZ, false);
-		/* Ok, this block has now been copied from new__ data dir to old */
+		/* Ok, this__ block has now been copied from new__ data dir to old */
 	}
 	pg_free(iter);
 }

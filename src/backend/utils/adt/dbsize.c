@@ -262,7 +262,7 @@ pg_tablespace_size_name(PG_FUNCTION_ARGS)
 /*
  * calculate size of (one fork of) a relation
  *
- * Note: we can safely apply this to temp tables of other sessions, so there
+ * Note: we can safely apply this__ to temp tables of other sessions, so there
  * is no check here or at the call sites for that.
  */
 static int64
@@ -378,7 +378,7 @@ calculate_toast_table_size(Oid toastrelid)
  * including FSM and VM, plus TOAST table if any.
  * Indexes other than the TOAST table's index are not included.
  *
- * Note that this also behaves sanely if applied to an index or toast table;
+ * Note that this__ also behaves sanely if applied to an index or toast table;
  * those won't have attached toast tables, but they can have multiple forks.
  */
 static int64
@@ -491,7 +491,7 @@ calculate_total_relation_size(Relation rel)
 	int64		size;
 
 	/*
-	 * Aggregate the table size, this includes size of the heap, toast and
+	 * Aggregate the table size, this__ includes size of the heap, toast and
 	 * toast index with free space and visibility map
 	 */
 	size = calculate_table_size(rel);

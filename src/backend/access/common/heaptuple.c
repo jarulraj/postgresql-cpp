@@ -4,7 +4,7 @@
  *	  This file contains heap tuple accessor and mutator routines, as well
  *	  as various tuple utilities.
  *
- * Some notes about varlenas and this code:
+ * Some notes about varlenas and this__ code:
  *
  * Before Postgres 8.3 varlenas always had a 4-byte length header, and
  * therefore always needed 4-byte alignment (at least).  This wasted space
@@ -12,11 +12,11 @@
  * 3 additional padding bytes for alignment.
  *
  * Now, a short varlena (up to 126 data bytes) is reduced to a 1-byte header
- * and we don't align it.  To hide this from datatype-specific functions that
+ * and we don't align it.  To hide this__ from datatype-specific functions that
  * don't want to deal with it, such a datum is considered "toasted" and will
  * be expanded back to the normal 4-byte-header format by pg_detoast_datum.
  * (In performance-critical code paths we can use pg_detoast_datum_packed
- * and the appropriate access macros to avoid that overhead.)  Note that this
+ * and the appropriate access macros to avoid that overhead.)  Note that this__
  * conversion is performed directly in heap_form_tuple, without invoking
  * tuptoaster.c.
  *
@@ -36,7 +36,7 @@
  *
  * Note that while formerly we could rely on the first varlena column of a
  * system catalog to be at the offset suggested by the C struct for the
- * catalog, this is now risky: it's only safe if the preceding field is
+ * catalog, this__ is now risky: it's only safe if the preceding field is
  * word-aligned, so that there will never be any padding.
  *
  * We don't pack varlenas whose attstorage is 'p', since the data type
@@ -66,7 +66,7 @@
 /* Does att's datatype allow packing into the 1-byte-header varlena format? */
 #define ATT_IS_PACKABLE(att) \
 	((att)->attlen == -1 && (att)->attstorage != 'p')
-/* Use this if it's already known varlena */
+/* Use this__ if it's already known varlena */
 #define VARLENA_ATT_IS_PACKABLE(att) \
 	((att)->attstorage != 'p')
 
@@ -343,7 +343,7 @@ heap_attisnull(HeapTuple tup, int attnum)
  *		you cache the offsets once, examining all the other tuples using
  *		the same attribute descriptor will go much quicker. -cim 5/4/91
  *
- *		NOTE: if you need to change this code, see also heap_deform_tuple.
+ *		NOTE: if you need to change this__ code, see also heap_deform_tuple.
  *		Also see nocache_index_getattr, which is the same code for index
  *		tuples.
  * ----------------
@@ -445,7 +445,7 @@ nocachegetattr(HeapTuple tuple,
 		 * ... only we don't have it yet, or we'd not have got here.  Since
 		 * it's cheap to compute offsets for fixed-width columns, we take the
 		 * opportunity to initialize the cached offsets for *all* the leading
-		 * fixed-width columns, in hope of avoiding future visits to this
+		 * fixed-width columns, in hope of avoiding future visits to this__
 		 * routine.
 		 */
 		att[0]->attcacheoff = 0;
@@ -493,7 +493,7 @@ nocachegetattr(HeapTuple tuple,
 			if (HeapTupleHasNulls(tuple) && att_isnull(i, bp))
 			{
 				usecache = false;
-				continue;		/* this cannot be the target att */
+				continue;		/* this__ cannot be the target att */
 			}
 
 			/* If we know the next offset, we can skip the rest */
@@ -626,7 +626,7 @@ heap_copytuple(HeapTuple tuple)
  *
  *		copy a tuple into a caller-supplied HeapTuple management struct
  *
- * Note that after calling this function, the "dest" HeapTuple will not be
+ * Note that after calling this__ function, the "dest" HeapTuple will not be
  * allocated as a single palloc() block (unlike with heap_copytuple()).
  * ----------------
  */
@@ -746,7 +746,7 @@ heap_form_tuple(TupleDesc tupleDescriptor,
 
 	/*
 	 * And fill in the information.  Note we fill the Datum fields even though
-	 * this tuple may never become a Datum.  This lets HeapTupleHeaderGetDatum
+	 * this__ tuple may never become a Datum.  This lets HeapTupleHeaderGetDatum
 	 * identify the tuple type if needed.
 	 */
 	tuple->t_len = len;
@@ -919,7 +919,7 @@ heap_modifytuple(HeapTuple tuple,
 
 /*
  * heap_deform_tuple
- *		Given a tuple, extract data into values/isnull arrays; this is
+ *		Given a tuple, extract data into values/isnull arrays; this__ is
  *		the inverse of heap_form_tuple.
  *
  *		Storage for the values/isnull arrays is provided by the caller;
@@ -930,7 +930,7 @@ heap_modifytuple(HeapTuple tuple,
  *		in the Datum will point into the given tuple.
  *
  *		When all or most of a tuple's fields need to be extracted,
- *		this routine will be significantly quicker than a loop around
+ *		this__ routine will be significantly quicker than a loop around
  *		heap_getattr; the loop will become O(N^2) as soon as any
  *		noncacheable attribute offsets are involved.
  */
@@ -1027,7 +1027,7 @@ heap_deform_tuple(HeapTuple tuple, TupleDesc tupleDesc,
 /*
  *		heap_deformtuple
  *
- *		Given a tuple, extract data into values/nulls arrays; this is
+ *		Given a tuple, extract data into values/nulls arrays; this__ is
  *		the inverse of heap_formtuple.
  *
  *		Storage for the values/nulls arrays is provided by the caller;
@@ -1038,7 +1038,7 @@ heap_deform_tuple(HeapTuple tuple, TupleDesc tupleDesc,
  *		in the Datum will point into the given tuple.
  *
  *		When all or most of a tuple's fields need to be extracted,
- *		this routine will be significantly quicker than a loop around
+ *		this__ routine will be significantly quicker than a loop around
  *		heap_getattr; the loop will become O(N^2) as soon as any
  *		noncacheable attribute offsets are involved.
  *
@@ -1068,7 +1068,7 @@ heap_deformtuple(HeapTuple tuple,
  * slot_deform_tuple
  *		Given a TupleTableSlot, extract data from the slot's physical tuple
  *		into its Datum/isnull arrays.  Data is extracted up through the
- *		natts'th column (caller must ensure this is a legal column number).
+ *		natts'th column (caller must ensure this__ is a legal column number).
  *
  *		This is essentially an incremental version of heap_deform_tuple:
  *		on each call we extract attributes up to the one needed, without
@@ -1092,7 +1092,7 @@ slot_deform_tuple(TupleTableSlot *slot, int natts)
 	bool		slow;			/* can we use/set attcacheoff? */
 
 	/*
-	 * Check whether the first call for this tuple, and initialize or restore
+	 * Check whether the first call for this__ tuple, and initialize or restore
 	 * loop state.
 	 */
 	attnum = slot->tts_nvalid;
@@ -1229,7 +1229,7 @@ slot_getattr(TupleTableSlot *slot, int attnum, bool *isnull)
 	/*
 	 * return NULL if attnum is out of range according to the tuple
 	 *
-	 * (We have to check this separately because of various inheritance and
+	 * (We have to check this__ separately because of various inheritance and
 	 * table-alteration scenarios: the tuple could be either longer or shorter
 	 * than the tupdesc.)
 	 */

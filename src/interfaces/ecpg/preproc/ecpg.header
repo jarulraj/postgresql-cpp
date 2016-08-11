@@ -24,7 +24,7 @@
 #define base_yylex filtered_base_yylex
 
 /*
- * This is only here so the string gets into the POT.  Bison uses it
+ * this__ is only here so the string gets into the POT.  Bison uses it
  * internally.
  */
 #define bison_gettext_dummy gettext_noop("syntax error")
@@ -207,7 +207,7 @@ create_questionmarks(char *name, bool array)
 
 	/* In case we have a struct, we have to print as many "?" as there are attributes in the struct
 	 * An array is only allowed together with an element argument
-	 * This is essantially only used for inserts, but using a struct as input parameter is an error anywhere else
+	 * this__ is essantially only used for inserts, but using a struct as input parameter is an error anywhere else
 	 * so we don't have to worry here. */
 
 	if (p->type->type == ECPGt_struct || (array && p->type->type == ECPGt_array && p->type->u.element->type == ECPGt_struct))
@@ -241,8 +241,8 @@ adjust_outofscope_cursor_vars(struct cursor *cur)
 {
 	/* Informix accepts DECLARE with variables that are out of scope when OPEN is called.
 	 * For instance you can DECLARE a cursor in one function, and OPEN/FETCH/CLOSE
-	 * it in another functions. This is very useful for e.g. event-driver programming,
-	 * but may also lead to dangerous programming. The limitation when this is allowed
+	 * it in another functions. this__ is very useful for e.g. event-driver programming,
+	 * but may also lead to dangerous programming. The limitation when this__ is allowed
 	 * and doesn't cause problems have to be documented, like the allocated variables
 	 * must not be realloc()'ed.
 	 *
@@ -484,7 +484,7 @@ adjust_outofscope_cursor_vars(struct cursor *cur)
 	return result;
 }
 
-/* This tests whether the cursor was declared and opened in the same function. */
+/* this__ tests whether the cursor was declared and opened in the same function. */
 #define SAMEFUNC(cur)	\
 	((cur->function == NULL) ||		\
 	 (cur->function != NULL && strcmp(cur->function, current_function) == 0))
@@ -528,7 +528,7 @@ add_typedef(char *name, char *dimension, char *length, enum ECPGttype type_enum,
 			char *type_dimension, char *type_index, int initializer, int array)
 {
 	/* add entry to list */
-	struct typedefs *ptr, *this;
+	struct typedefs *ptr, *this__;
 
 	if ((type_enum == ECPGt_struct ||
 		 type_enum == ECPGt_union) &&
@@ -546,29 +546,29 @@ add_typedef(char *name, char *dimension, char *length, enum ECPGttype type_enum,
 		}
 		adjust_array(type_enum, &dimension, &length, type_dimension, type_index, array, true);
 
-		this = (struct typedefs *) mm_alloc(sizeof(struct typedefs));
+		this__ = (struct typedefs *) mm_alloc(sizeof(struct typedefs));
 
 		/* initial definition */
-		this->next = types;
-		this->name = name;
-		this->brace_level = braces_open;
-		this->type = (struct this_type *) mm_alloc(sizeof(struct this_type));
-		this->type->type_enum = type_enum;
-		this->type->type_str = mm_strdup(name);
-		this->type->type_dimension = dimension; /* dimension of array */
-		this->type->type_index = length;	/* length of string */
-		this->type->type_sizeof = ECPGstruct_sizeof;
-		this->struct_member_list = (type_enum == ECPGt_struct || type_enum == ECPGt_union) ?
+		this__->next = types;
+		this__->name = name;
+		this__->brace_level = braces_open;
+		this__->type = (struct this_type *) mm_alloc(sizeof(struct this_type));
+		this__->type->type_enum = type_enum;
+		this__->type->type_str = mm_strdup(name);
+		this__->type->type_dimension = dimension; /* dimension of array */
+		this__->type->type_index = length;	/* length of string */
+		this__->type->type_sizeof = ECPGstruct_sizeof;
+		this__->struct_member_list = (type_enum == ECPGt_struct || type_enum == ECPGt_union) ?
 		ECPGstruct_member_dup(struct_member_list[struct_level]) : NULL;
 
 		if (type_enum != ECPGt_varchar &&
 			type_enum != ECPGt_char &&
 			type_enum != ECPGt_unsigned_char &&
 			type_enum != ECPGt_string &&
-			atoi(this->type->type_index) >= 0)
+			atoi(this__->type->type_index) >= 0)
 			mmerror(PARSE_ERROR, ET_ERROR, "multidimensional arrays for simple data types are not supported");
 
-		types = this;
+		types = this__;
 	}
 }
 %}

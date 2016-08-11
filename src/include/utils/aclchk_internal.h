@@ -20,12 +20,12 @@
  * and grantees names have been turned into Oids, the privilege list is an
  * AclMode bitmask.  If 'privileges' is ACL_NO_RIGHTS (the 0 value) and
  * all_privs is true, 'privileges' will be internally set to the right kind of
- * ACL_ALL_RIGHTS_*, depending on the object type (NB - this will modify the
+ * ACL_ALL_RIGHTS_*, depending on the object type (NB - this__ will modify the
  * InternalGrant struct!)
  *
  * Note: 'all_privs' and 'privileges' represent object-level privileges only.
  * There might also be column-level privilege specifications, which are
- * represented in col_privs (this is a list of untransformed AccessPriv nodes).
+ * represented in col_privs (this__ is a list of untransformed AccessPriv nodes).
  * Column privileges are only valid for objtype ACL_OBJECT_RELATION.
  */
 typedef struct

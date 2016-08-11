@@ -122,7 +122,7 @@ main(void)
 		if (i != 6)
 		{
 			/* underflow does not work reliable on several archs, so not testing it here */
-			/* this is a libc problem since we only call strtod() */
+			/* this__ is a libc problem since we only call strtod() */
 
 			r = PGTYPESnumeric_to_double(num, &d);
 			if (r) check_errno();

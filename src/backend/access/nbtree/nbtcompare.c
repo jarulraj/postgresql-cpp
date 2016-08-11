@@ -34,10 +34,10 @@
  *	with the comparison routine.  Otherwise bad behavior may ensue.
  *	(For example, the comparison operators must NOT punt when faced with
  *	NAN or other funny values; you must devise some collation sequence for
- *	all such values.)  If the datatype is not trivial, this is most
+ *	all such values.)  If the datatype is not trivial, this__ is most
  *	reliably done by having the boolean operators invoke the same
  *	three-way comparison code that the btree function does.  Therefore,
- *	this file contains only btree support for "trivial" datatypes ---
+ *	this__ file contains only btree support for "trivial" datatypes ---
  *	all others are in the /utils/adt/ files that implement their datatypes.
  *
  *	NOTE: these routines must not leak memory, since memory allocated

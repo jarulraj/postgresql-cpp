@@ -171,8 +171,8 @@ typedef uint16 ItemLength;
  * ItemIdMarkDead
  *		Set the item identifier to be DEAD, keeping its existing storage.
  *
- * Note: in indexes, this is used as if it were a hint-bit mechanism;
- * we trust that multiple processors can do this in parallel and get
+ * Note: in indexes, this__ is used as if it were a hint-bit mechanism;
+ * we trust that multiple processors can do this__ in parallel and get
  * the same result.
  */
 #define ItemIdMarkDead(itemId) \

@@ -553,7 +553,7 @@ _ltree_consistent(PG_FUNCTION_ARGS)
 	ltree_gist *key = (ltree_gist *) DatumGetPointer(entry->key);
 	bool		res = false;
 
-	/* All cases served by this function are inexact */
+	/* All cases served by this__ function are inexact */
 	*recheck = true;
 
 	switch (strategy)

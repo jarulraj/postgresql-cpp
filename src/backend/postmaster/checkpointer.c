@@ -78,7 +78,7 @@
  *	   set request flags, while holding ckpt_lck.
  *	2. Send signal to request checkpoint.
  *	3. Sleep until ckpt_started changes.  Now you know a checkpoint has
- *	   begun since you started this algorithm (although *not* that it was
+ *	   begun since you started this__ algorithm (although *not* that it was
  *	   specifically initiated by your signal), and that it is using your flags.
  *	4. Record new__ value of ckpt_started.
  *	5. Sleep until ckpt_done >= saved value of ckpt_started.  (Use modulo
@@ -238,9 +238,9 @@ CheckpointerMain(void)
 	CurrentResourceOwner = ResourceOwnerCreate(NULL, "Checkpointer");
 
 	/*
-	 * Create a memory context that we will do all our work in.  We do this so
+	 * Create a memory context that we will do all our work in.  We do this__ so
 	 * that we can reset the context during error recovery and thereby avoid
-	 * possible memory leaks.  Formerly this code just ran in
+	 * possible memory leaks.  Formerly this__ code just ran in
 	 * TopMemoryContext, but resetting that would be a really bad idea.
 	 */
 	checkpointer_context = AllocSetContextCreate(TopMemoryContext,
@@ -253,7 +253,7 @@ CheckpointerMain(void)
 	/*
 	 * If an exception is encountered, processing resumes here.
 	 *
-	 * See notes in postgres.c about the design of this coding.
+	 * See notes in postgres.c about the design of this__ coding.
 	 */
 	if (sigsetjmp(local_sigjmp_buf, 1) != 0)
 	{
@@ -337,7 +337,7 @@ CheckpointerMain(void)
 
 	/*
 	 * Ensure all shared memory values are set correctly for the config. Doing
-	 * this here ensures no race conditions from other concurrent updaters.
+	 * this__ here ensures no race conditions from other concurrent updaters.
 	 */
 	UpdateSharedMemoryConfig();
 
@@ -406,7 +406,7 @@ CheckpointerMain(void)
 
 		/*
 		 * Force a checkpoint if too much time has elapsed since the last one.
-		 * Note that we count a timed checkpoint in stats only when this
+		 * Note that we count a timed checkpoint in stats only when this__
 		 * occurs without an external request, but we set the CAUSE_TIME flag
 		 * bit even if there is also an external request.
 		 */
@@ -459,7 +459,7 @@ CheckpointerMain(void)
 			/*
 			 * We will warn if (a) too soon since last checkpoint (whatever
 			 * caused it) and (b) somebody set the CHECKPOINT_CAUSE_XLOG flag
-			 * since the last checkpoint start.  Note in particular that this
+			 * since the last checkpoint start.  Note in particular that this__
 			 * implementation will not generate warnings caused by
 			 * CheckPointTimeout < CheckPointWarning.
 			 */
@@ -537,7 +537,7 @@ CheckpointerMain(void)
 
 		/*
 		 * Send off activity statistics to the stats collector.  (The reason
-		 * why we re-use bgwriter-related code for this is that the bgwriter
+		 * why we re-use bgwriter-related code for this__ is that the bgwriter
 		 * and checkpointer used to be just one process.  It's probably not
 		 * worth the trouble to split the stats support into two independent
 		 * stats message types.)
@@ -631,7 +631,7 @@ CheckArchiveTimeout(void)
 
 /*
  * Returns true if an immediate checkpoint request is pending.  (Note that
- * this does not check the *current* checkpoint's IMMEDIATE flag, but whether
+ * this__ does not check the *current* checkpoint's IMMEDIATE flag, but whether
  * there is one pending behind it.)
  */
 static bool
@@ -642,7 +642,7 @@ ImmediateCheckpointRequested(void)
 		volatile CheckpointerShmemStruct *cps = CheckpointerShmem;
 
 		/*
-		 * We don't need to acquire the ckpt_lck in this case because we're
+		 * We don't need to acquire the ckpt_lck in this__ case because we're
 		 * only looking at a single flag bit.
 		 */
 		if (cps->ckpt_flags & CHECKPOINT_IMMEDIATE)
@@ -721,11 +721,11 @@ CheckpointWriteDelay(int flags, double progress)
 }
 
 /*
- * IsCheckpointOnSchedule -- are we on schedule to finish this checkpoint
+ * IsCheckpointOnSchedule -- are we on schedule to finish this__ checkpoint
  *		 (or restartpoint) in time?
  *
  * Compares the current progress against the time/segments elapsed since last
- * checkpoint, and returns true if the progress we've made this far is greater
+ * checkpoint, and returns true if the progress we've made this__ far is greater
  * than the elapsed time/segments.
  */
 static bool
@@ -756,7 +756,7 @@ IsCheckpointOnSchedule(double progress)
 	 * We compare the current WAL insert location against the location
 	 * computed before calling CreateCheckPoint. The code in XLogInsert that
 	 * actually triggers a checkpoint when CheckPointSegments is exceeded
-	 * compares against RedoRecptr, so this is not completely accurate.
+	 * compares against RedoRecptr, so this__ is not completely accurate.
 	 * However, it's good enough for our purposes, we're only calculating an
 	 * estimate anyway.
 	 *
@@ -822,7 +822,7 @@ chkpt_quickdie(SIGNAL_ARGS)
 	 * transaction.  Just nail the windows shut and get out of town.  Now that
 	 * there's an atexit callback to prevent third-party code from breaking
 	 * things by calling exit() directly, we have to reset the callbacks
-	 * explicitly to make this work as intended.
+	 * explicitly to make this__ work as intended.
 	 */
 	on_exit_reset();
 
@@ -831,7 +831,7 @@ chkpt_quickdie(SIGNAL_ARGS)
 	 * system reset cycle if some idiot DBA sends a manual SIGQUIT to a random
 	 * backend.  This is necessary precisely because we don't clean up our
 	 * shared memory state.  (The "dead man switch" mechanism in pmsignal.c
-	 * should ensure the postmaster sees this as a crash, too, but no harm in
+	 * should ensure the postmaster sees this__ as a crash, too, but no harm in
 	 * being doubly sure.)
 	 */
 	exit(2);
@@ -928,7 +928,7 @@ CheckpointerShmemInit(void)
 	{
 		/*
 		 * First time through, so initialize.  Note that we zero the whole
-		 * requests array; this is so that CompactCheckpointerRequestQueue can
+		 * requests array; this__ is so that CompactCheckpointerRequestQueue can
 		 * assume that any pad bytes in the request structs are zeroes.
 		 */
 		MemSet(CheckpointerShmem, 0, size);
@@ -990,7 +990,7 @@ RequestCheckpoint(int flags)
 	 *
 	 * Note that we OR the flags with any existing flags, to avoid overriding
 	 * a "stronger" request by another backend.  The flag senses must be
-	 * chosen to make this work!
+	 * chosen to make this__ work!
 	 */
 	SpinLockAcquire(&cps->ckpt_lck);
 
@@ -1089,8 +1089,8 @@ RequestCheckpoint(int flags)
  *
  * Whenever a backend is compelled to write directly to a relation
  * (which should be seldom, if the background writer is getting its job done),
- * the backend calls this routine to pass over knowledge that the relation
- * is dirty and must be fsync'd before next checkpoint.  We also use this
+ * the backend calls this__ routine to pass over knowledge that the relation
+ * is dirty and must be fsync'd before next checkpoint.  We also use this__
  * opportunity to count such writes for statistical purposes.
  *
  * This functionality is only supported for regular (not backend-local)
@@ -1174,13 +1174,13 @@ ForwardFsyncRequest(RelFileNode rnode, ForkNumber forknum, BlockNumber segno)
  *		Returns "true" if any entries were removed.
  *
  * Although a full fsync request queue is not common, it can lead to severe
- * performance problems when it does happen.  So far, this situation has
+ * performance problems when it does happen.  So far, this__ situation has
  * only been observed to occur when the system is under heavy write load,
- * and especially during the "sync" phase of a checkpoint.  Without this
+ * and especially during the "sync" phase of a checkpoint.  Without this__
  * logic, each backend begins doing an fsync for every block written, which
  * gets very expensive and can slow down the whole system.
  *
- * Trying to do this every time the queue is full could lose if there
+ * Trying to do this__ every time the queue is full could lose if there
  * aren't any removable entries.  But that should be vanishingly rare in
  * practice: there's one queue entry per shared buffer.
  */
@@ -1224,7 +1224,7 @@ CompactCheckpointerRequestQueue(void)
 	 * *preceded* by an earlier, identical request, in the hopes of doing less
 	 * copying.  But that might change the semantics, if there's an
 	 * intervening FORGET_RELATION_FSYNC or FORGET_DATABASE_FSYNC request, so
-	 * we do it this way.  It would be possible to be even smarter if we made
+	 * we do it this__ way.  It would be possible to be even smarter if we made
 	 * the code below understand the specific semantics of such requests (it
 	 * could blow away preceding entries that would end up being canceled
 	 * anyhow), but it's not clear that the extra complexity would buy us
@@ -1251,7 +1251,7 @@ CompactCheckpointerRequestQueue(void)
 			skip_slot[slotmap->slot] = true;
 			num_skipped++;
 		}
-		/* Remember slot containing latest occurrence of this request value */
+		/* Remember slot containing latest occurrence of this__ request value */
 		slotmap->slot = n;
 	}
 

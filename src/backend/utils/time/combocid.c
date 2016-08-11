@@ -12,7 +12,7 @@
  * we create a "combo" command ID and store that in the tuple header
  * instead of cmin and cmax. The combo command ID can be mapped to the
  * real cmin and cmax using a backend-private__ array, which is managed by
- * this module.
+ * this__ module.
  *
  * To allow reusing existing combo cids, we also keep a hash table that
  * maps cmin,cmax pairs to combo cids.  This keeps the data structure size
@@ -145,9 +145,9 @@ HeapTupleHeaderGetCmax(HeapTupleHeader tup)
  * FALSE.  If we do need one, *cmax is replaced by a combo CID and *iscombo
  * is set to TRUE.
  *
- * The reason this is separate from the actual HeapTupleHeaderSetCmax()
- * operation is that this could fail due to out-of-memory conditions.  Hence
- * we need to do this before entering the critical section that actually
+ * The reason this__ is separate from the actual HeapTupleHeaderSetCmax()
+ * operation is that this__ could fail due to out-of-memory conditions.  Hence
+ * we need to do this__ before entering the critical section that actually
  * changes the tuple in shared buffers.
  */
 void
@@ -236,7 +236,7 @@ GetComboCommandId(CommandId cmin, CommandId cmax)
 	}
 
 	/*
-	 * Grow the array if there's not at least one free slot.  We must do this
+	 * Grow the array if there's not at least one free slot.  We must do this__
 	 * before possibly entering a new__ hashtable entry, else failure to
 	 * repalloc would leave a corrupt hashtable entry behind.
 	 */
@@ -335,7 +335,7 @@ SerializeComboCIDState(Size maxsize, char *start_address)
 }
 
 /*
- * Read the ComboCID state at the specified address and initialize this
+ * Read the ComboCID state at the specified address and initialize this__
  * backend with the same ComboCIDs.  This is only valid in a backend that
  * currently has no ComboCIDs (and only makes sense if the transaction state
  * is serialized and restored as well).

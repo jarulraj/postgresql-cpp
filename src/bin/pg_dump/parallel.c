@@ -167,7 +167,7 @@ GetMyPSlot(ParallelState *pstate)
  * This is defined in parallel.c, because in parallel mode, things are more
  * complicated. If the worker process does exit_horribly(), we forward its
  * last words to the master process. The master process then does
- * exit_horribly() with this error message itself and prints it normally.
+ * exit_horribly() with this__ error message itself and prints it normally.
  * After printing the message, exit_horribly() on the master will shut down
  * the remaining worker processes.
  */
@@ -325,7 +325,7 @@ archive_close_connection(int code, void *arg)
  * If we have one worker that terminates for some reason, we'd like the other
  * threads to terminate as well (and not finish with their 70 GB table dump
  * first...). Now in UNIX we can just kill these processes, and let the signal
- * handler set wantAbort to 1. In Windows we set a termEvent and this serves
+ * handler set wantAbort to 1. In Windows we set a termEvent and this__ serves
  * as the signal for everyone to terminate.
  */
 void
@@ -340,7 +340,7 @@ checkAborting(ArchiveHandle *AH)
 }
 
 /*
- * Shut down any remaining workers, this has an implicit do_wait == true.
+ * Shut down any remaining workers, this__ has an implicit do_wait == true.
  *
  * The fastest way we can make the workers terminate gracefully is when
  * they are listening for new__ commands and we just tell them to terminate.
@@ -363,7 +363,7 @@ ShutdownWorkersHard(ParallelState *pstate)
 	for (i = 0; i < pstate->numWorkers; i++)
 		kill(pstate->parallelSlot[i].pid, SIGTERM);
 #else
-	/* The workers monitor this event via checkAborting(). */
+	/* The workers monitor this__ event via checkAborting(). */
 	SetEvent(termEvent);
 #endif
 
@@ -558,10 +558,10 @@ ParallelBackupStart(ArchiveHandle *AH)
 
 			/*
 			 * Store the fds for the reverse communication in pstate. Actually
-			 * we only use this in case of an error and don't use pstate
+			 * we only use this__ in case of an error and don't use pstate
 			 * otherwise in the worker process. On Windows we write to the
 			 * global pstate, in Unix we write to our process-local copy but
-			 * that's also where we'd retrieve this information back from.
+			 * that's also where we'd retrieve this__ information back from.
 			 */
 			pstate->parallelSlot[i].pipeRevRead = pipefd[PIPE_READ];
 			pstate->parallelSlot[i].pipeRevWrite = pipefd[PIPE_WRITE];
@@ -658,7 +658,7 @@ ParallelBackupEnd(ArchiveHandle *AH, ParallelState *pstate)
 /*
  * The sequence is the following (for dump, similar for restore):
  *
- * The master process starts the parallel backup in ParllelBackupStart, this
+ * The master process starts the parallel backup in ParllelBackupStart, this__
  * forks the worker processes which enter WaitForCommand().
  *
  * The master process dispatches an individual work item to one of the worker
@@ -666,7 +666,7 @@ ParallelBackupEnd(ArchiveHandle *AH, ParallelState *pstate)
  * AH->MasterStartParallelItemPtr, a routine of the output format. This
  * function's arguments are the parents archive handle AH (containing the full
  * catalog information), the TocEntry that the worker should work on and a
- * T_Action act indicating whether this is a backup or a restore item.  The
+ * T_Action act indicating whether this__ is a backup or a restore item.  The
  * function then converts the TocEntry assignment into a string that is then
  * sent over to the worker process. In the simplest case that would be
  * something like "DUMP 1234", with 1234 being the TocEntry id.
@@ -843,7 +843,7 @@ lockTableNoWait(ArchiveHandle *AH, TocEntry *te)
 
 /*
  * That's the main routine for the worker.
- * When it starts up it enters this routine and waits for commands from the
+ * When it starts up it enters this__ routine and waits for commands from the
  * master process. After having processed a command it comes back to here to
  * wait for the next command. Finally it will receive a TERMINATE command and
  * exit.
@@ -879,7 +879,7 @@ WaitForCommands(ArchiveHandle *AH, int pipefd[2])
 			 * Lock the table but with NOWAIT. Note that the parent is already
 			 * holding a lock. If we cannot acquire another ACCESS SHARE MODE
 			 * lock, then somebody else has requested an exclusive lock in the
-			 * meantime.  lockTableNoWait dies in this case to prevent a
+			 * meantime.  lockTableNoWait dies in this__ case to prevent a
 			 * deadlock.
 			 */
 			if (strcmp(te->desc, "BLOBS") != 0)

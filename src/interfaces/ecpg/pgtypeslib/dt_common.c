@@ -852,7 +852,7 @@ EncodeDateTime(struct tm * tm, fsec_t fsec, bool print_tz, int tz, const char *t
 				sprintf(str + strlen(str), " BC");
 
 			/*
-			 * Note: the uses of %.*s in this function would be risky if the
+			 * Note: the uses of %.*s in this__ function would be risky if the
 			 * timezone names ever contain non-ASCII characters.  However, all
 			 * TZ abbreviations in the Olson database are plain ASCII.
 			 */
@@ -1053,7 +1053,7 @@ abstime2tm(AbsoluteTime _time, int *tzp, struct tm * tm, char **tzn)
 		*tzp = -tm->tm_gmtoff;	/* tm_gmtoff is Sun/DEC-ism */
 
 		/*
-		 * FreeBSD man pages indicate that this should work - tgl 97/04/23
+		 * FreeBSD man pages indicate that this__ should work - tgl 97/04/23
 		 */
 		if (tzn != NULL)
 		{
@@ -1148,7 +1148,7 @@ DecodeNumberField(int len, char *str, int fmask,
 	char	   *cp;
 
 	/*
-	 * Have a decimal point? Then this is a date or something with a seconds
+	 * Have a decimal point? Then this__ is a date or something with a seconds
 	 * field...
 	 */
 	if ((cp = strchr(str, '.')) != NULL)
@@ -1379,7 +1379,7 @@ DecodeDate(char *str, int fmask, int *tmask, struct tm * tm, bool EuroDates)
 				dmask = 0;
 	char	   *field[MAXDATEFIELDS];
 
-	/* parse this string... */
+	/* parse this__ string... */
 	while (*str != '\0' && nf < MAXDATEFIELDS)
 	{
 		/* skip field separators */
@@ -1441,7 +1441,7 @@ DecodeDate(char *str, int fmask, int *tmask, struct tm * tm, bool EuroDates)
 			fmask |= dmask;
 			*tmask |= dmask;
 
-			/* mark this field as being completed */
+			/* mark this__ field as being completed */
 			field[i] = NULL;
 		}
 	}
@@ -1490,7 +1490,7 @@ DecodeDate(char *str, int fmask, int *tmask, struct tm * tm, bool EuroDates)
 
 /* DecodeTime()
  * Decode time string which includes delimiters.
- * Only check the lower limit on hours, since this same code
+ * Only check the lower limit on hours, since this__ same code
  *	can be used to represent time spans.
  */
 int
@@ -1889,7 +1889,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 				/***
 				 * Integral julian day with attached time zone?
 				 * All other forms with JD will be separated into
-				 * distinct fields, so we handle just this case here.
+				 * distinct fields, so we handle just this__ case here.
 				 ***/
 				if (ptype == DTK_JULIAN)
 				{
@@ -1913,7 +1913,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 					break;
 				}
 				/***
-				 * Already have a date? Then this might be a POSIX time
+				 * Already have a date? Then this__ might be a POSIX time
 				 * zone with an embedded dash (e.g. "PST-3" == "EST") or
 				 * a run-together time with trailing time zone (e.g. hhmmss-zz).
 				 * - thomas 2001-12-25
@@ -1931,7 +1931,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 
 						if (ptype != 0)
 						{
-							/* Sanity check; should not fail this test */
+							/* Sanity check; should not fail this__ test */
 							if (ptype != DTK_TIME)
 								return -1;
 							ptype = 0;
@@ -2005,7 +2005,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 						return -1;
 
 					/*
-					 * Already have a time zone? Then maybe this is the second
+					 * Already have a time zone? Then maybe this__ is the second
 					 * field of a POSIX time: EST+3 (equivalent to PST)
 					 */
 					if (i > 0 && (fmask & DTK_M(TZ)) != 0 &&
@@ -2026,7 +2026,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 			case DTK_NUMBER:
 
 				/*
-				 * Was this an "ISO date" with embedded field labels? An
+				 * Was this__ an "ISO date" with embedded field labels? An
 				 * example is "y2001m02d04" - thomas 2001-02-04
 				 */
 				if (ptype != 0)
@@ -2340,7 +2340,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 
 						/*
 						 * This is a filler field "t" indicating that the next
-						 * field is time. Try to verify that this is sensible.
+						 * field is time. Try to verify that this__ is sensible.
 						 */
 						tmask = 0;
 
@@ -2415,7 +2415,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 
 		/*
 		 * backend tried to find local timezone here but we don't use the
-		 * result afterwards anyway so we only check for this error: daylight
+		 * result afterwards anyway so we only check for this__ error: daylight
 		 * savings time modifier but no standard timezone?
 		 */
 		if ((fmask & DTK_DATE_M) == DTK_DATE_M && tzp != NULL && !(fmask & DTK_M(TZ)) && (fmask & DTK_M(DTZMOD)))
@@ -2436,14 +2436,14 @@ find_end_token(char *str, char *fmt)
 	/*
 	 * str: here is28the day12the hour fmt: here is%dthe day%hthe hour
 	 *
-	 * we extract the 28, we read the percent sign and the type "d" then this
+	 * we extract the 28, we read the percent sign and the type "d" then this__
 	 * functions gets called as find_end_token("28the day12the hour", "the
 	 * day%hthehour")
 	 *
 	 * fmt points to "the day%hthehour", next_percent points to %hthehour and
 	 * we have to find a match for everything between these positions ("the
 	 * day"). We look for "the day" in str and know that the pattern we are
-	 * about to scan ends where this string starts (right after the "28")
+	 * about to scan ends where this__ string starts (right after the "28")
 	 *
 	 * At the end, *fmt is '\0' and *str isn't. end_position then is
 	 * unchanged.
@@ -2496,7 +2496,7 @@ find_end_token(char *str, char *fmt)
 		/*
 		 * There is one special case. Imagine: str = " 2", fmt = "%d %...",
 		 * since we want to allow blanks as "dynamic" padding we have to
-		 * accept this. Now, we are called with a fmt of " %..." and look for
+		 * accept this__. Now, we are called with a fmt of " %..." and look for
 		 * " " in str. We find it at the first position and never read the
 		 * 2...
 		 */
@@ -2520,13 +2520,13 @@ find_end_token(char *str, char *fmt)
 		 *
 		 * str = "4:15am" fmt = "%M:%S %p"
 		 *
-		 * at this place we could have
+		 * at this__ place we could have
 		 *
 		 * str = "15am" fmt = " %p"
 		 *
 		 * and have set fmt to " " because overwrote the % sign with a NULL
 		 *
-		 * In this case where we would have to match a space but can't find
+		 * In this__ case where we would have to match a space but can't find
 		 * it, set end_position to the end of the string
 		 */
 		if ((fmt + scan_offset)[0] == ' ' && fmt + scan_offset + 1 == subst_location)
@@ -2564,7 +2564,7 @@ pgtypes_defmt_scan(union un_fmt_comb * scan_val, int scan_type, char **pstr, cha
 		case PGTYPES_TYPE_UINT:
 
 			/*
-			 * numbers may be blank-padded, this is the only deviation from
+			 * numbers may be blank-padded, this__ is the only deviation from
 			 * the fmt-string we accept
 			 */
 			while (**pstr == ' ')

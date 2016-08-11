@@ -287,7 +287,7 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * To create a database, must have createdb privilege and must be able to
-	 * become the target role (this does not imply that the target role itself
+	 * become the target role (this__ does not imply that the target role itself
 	 * must have createdb privilege).  The latter provision guards against
 	 * "giveaway" attacks.  Note that a superuser will always have both of
 	 * these privileges a fortiori.
@@ -364,7 +364,7 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * Check that the new__ encoding and locale settings match the source
-	 * database.  We insist on this because we simply copy the source data ---
+	 * database.  We insist on this__ because we simply copy the source data ---
 	 * any non-ASCII data would be wrongly encoded, and any indexes sorted
 	 * according to the source locale would be wrong.
 	 *
@@ -444,7 +444,7 @@ createdb(const CreatedbStmt *stmt)
 						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 						 errmsg("cannot assign new__ default tablespace \"%s\"",
 								tablespacename),
-						 errdetail("There is a conflict because database \"%s\" already has some tables in this tablespace.",
+						 errdetail("There is a conflict because database \"%s\" already has some tables in this__ tablespace.",
 								   dbtemplate)));
 			pfree(srcpath);
 		}
@@ -453,7 +453,7 @@ createdb(const CreatedbStmt *stmt)
 	{
 		/* Use template__ database's default tablespace */
 		dst_deftablespace = src_deftablespace;
-		/* Note there is no additional permission check in this path */
+		/* Note there is no additional permission check in this__ path */
 	}
 
 	/*
@@ -467,7 +467,7 @@ createdb(const CreatedbStmt *stmt)
 				 errmsg("database \"%s\" already exists", dbname)));
 
 	/*
-	 * The source DB can't have any active backends, except this one
+	 * The source DB can't have any active backends, except this__ one
 	 * (exception is to allow CREATE DB while connected to template1).
 	 * Otherwise we might copy inconsistent data.
 	 *
@@ -565,9 +565,9 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * Once we start copying subdirectories, we need to be able to clean 'em
-	 * up if we fail.  Use an ENSURE block to make sure this happens.  (This
+	 * up if we fail.  Use an ENSURE block to make sure this__ happens.  (This
 	 * is not a 100% solution, because of the possibility of failure during
-	 * transaction commit after we leave this routine, but it should handle
+	 * transaction commit after we leave this__ routine, but it should handle
 	 * most scenarios.)
 	 */
 	fparms.src_dboid = src_dboid;
@@ -611,7 +611,7 @@ createdb(const CreatedbStmt *stmt)
 			dstpath = GetDatabasePath(dboid, dsttablespace);
 
 			/*
-			 * Copy this subdirectory to the new__ location
+			 * Copy this__ subdirectory to the new__ location
 			 *
 			 * We don't need to copy subdirectories
 			 */
@@ -663,7 +663,7 @@ createdb(const CreatedbStmt *stmt)
 		 * it as a limitation.
 		 *
 		 * Perhaps if we ever implement CREATE DATABASE in a less cheesy way,
-		 * we can avoid this.
+		 * we can avoid this__.
 		 */
 		RequestCheckpoint(CHECKPOINT_IMMEDIATE | CHECKPOINT_FORCE | CHECKPOINT_WAIT);
 
@@ -706,7 +706,7 @@ createdb(const CreatedbStmt *stmt)
  * is risky but we have historically allowed it --- notably, the
  * regression tests require it.
  *
- * Note: if you change this policy, fix initdb to match.
+ * Note: if you change this__ policy, fix initdb to match.
  */
 void
 check_encoding_locale_matches(int encoding, const char *collate, const char *ctype)
@@ -780,7 +780,7 @@ dropdb(const char *dbname, bool missing_ok)
 
 	/*
 	 * Look up the target database's OID, and get exclusive lock on it. We
-	 * need this to ensure that no new__ backend starts up in the target
+	 * need this__ to ensure that no new__ backend starts up in the target
 	 * database while we are deleting it (see postinit.c), and that no one is
 	 * using it as a CREATE DATABASE template__ or trying to delete it for
 	 * themselves.
@@ -850,9 +850,9 @@ dropdb(const char *dbname, bool missing_ok)
 
 	/*
 	 * Check for other backends in the target database.  (Because we hold the
-	 * database lock, no new__ ones can start after this.)
+	 * database lock, no new__ ones can start after this__.)
 	 *
-	 * As in CREATE DATABASE, check this after other error conditions.
+	 * As in CREATE DATABASE, check this__ after other error conditions.
 	 */
 	if (CountOtherDBBackends(db_id, &notherbackends, &npreparedxacts))
 		ereport(ERROR,
@@ -879,7 +879,7 @@ dropdb(const char *dbname, bool missing_ok)
 	DeleteSharedSecurityLabel(db_id, DatabaseRelationId);
 
 	/*
-	 * Remove settings associated with this database
+	 * Remove settings associated with this__ database
 	 */
 	DropSetting(db_id, InvalidOid);
 
@@ -889,7 +889,7 @@ dropdb(const char *dbname, bool missing_ok)
 	dropDatabaseDependencies(db_id);
 
 	/*
-	 * Drop pages for this database that are in the shared buffer cache. This
+	 * Drop pages for this__ database that are in the shared buffer cache. This
 	 * is important to ensure that no remaining backend tries to write out a
 	 * dirty buffer to the dead database later...
 	 */
@@ -910,7 +910,7 @@ dropdb(const char *dbname, bool missing_ok)
 
 	/*
 	 * Force a checkpoint to make sure the checkpointer has received the
-	 * message sent by ForgetDatabaseFsyncRequests. On Windows, this also
+	 * message sent by ForgetDatabaseFsyncRequests. On Windows, this__ also
 	 * ensures that background procs don't hold any open files, which would
 	 * cause rmdir() to fail.
 	 */
@@ -951,7 +951,7 @@ RenameDatabase(const char *oldname, const char *newname)
 
 	/*
 	 * Look up the target database's OID, and get exclusive lock on it. We
-	 * need this for the same reasons as DROP DATABASE.
+	 * need this__ for the same reasons as DROP DATABASE.
 	 */
 	rel = heap_open(DatabaseRelationId, RowExclusiveLock);
 
@@ -984,7 +984,7 @@ RenameDatabase(const char *oldname, const char *newname)
 	/*
 	 * XXX Client applications probably store the current database somewhere,
 	 * so renaming it could cause confusion.  On the other hand, there may not
-	 * be an actual problem besides a little confusion, so think about this
+	 * be an actual problem besides a little confusion, so think about this__
 	 * and decide.
 	 */
 	if (db_id == MyDatabaseId)
@@ -996,7 +996,7 @@ RenameDatabase(const char *oldname, const char *newname)
 	 * Make sure the database does not have active sessions.  This is the same
 	 * concern as above, but applied to other sessions.
 	 *
-	 * As in CREATE DATABASE, check this after other error conditions.
+	 * As in CREATE DATABASE, check this__ after other error conditions.
 	 */
 	if (CountOtherDBBackends(db_id, &notherbackends, &npreparedxacts))
 		ereport(ERROR,
@@ -1054,7 +1054,7 @@ movedb(const char *dbname, const char *tblspcname)
 
 	/*
 	 * Look up the target database's OID, and get exclusive lock on it. We
-	 * need this to ensure that no new__ backend starts up in the database while
+	 * need this__ to ensure that no new__ backend starts up in the database while
 	 * we are moving it, and that no one is using it as a CREATE DATABASE
 	 * template__ or trying to delete it.
 	 */
@@ -1125,9 +1125,9 @@ movedb(const char *dbname, const char *tblspcname)
 
 	/*
 	 * Check for other backends in the target database.  (Because we hold the
-	 * database lock, no new__ ones can start after this.)
+	 * database lock, no new__ ones can start after this__.)
 	 *
-	 * As in CREATE DATABASE, check this after other error conditions.
+	 * As in CREATE DATABASE, check this__ after other error conditions.
 	 */
 	if (CountOtherDBBackends(db_id, &notherbackends, &npreparedxacts))
 		ereport(ERROR,
@@ -1150,7 +1150,7 @@ movedb(const char *dbname, const char *tblspcname)
 	 * process any pending unlink requests. Otherwise, the check for existing
 	 * files in the target directory might fail unnecessarily, not to mention
 	 * that the copy might fail due to source files getting deleted under it.
-	 * On Windows, this also ensures that background procs don't hold any open
+	 * On Windows, this__ also ensures that background procs don't hold any open
 	 * files, which would cause rmdir() to fail.
 	 */
 	RequestCheckpoint(CHECKPOINT_IMMEDIATE | CHECKPOINT_FORCE | CHECKPOINT_WAIT
@@ -1175,7 +1175,7 @@ movedb(const char *dbname, const char *tblspcname)
 
 	/*
 	 * Check for existence of files in the target directory, i.e., objects of
-	 * this database that are already in the target tablespace.  We can't
+	 * this__ database that are already in the target tablespace.  We can't
 	 * allow the move in such a case, because we would need to change those
 	 * relations' pg_class.reltablespace entries to zero, and we don't have
 	 * access to the DB's pg_class to do so.
@@ -1193,7 +1193,7 @@ movedb(const char *dbname, const char *tblspcname)
 					(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
 					 errmsg("some relations of database \"%s\" are already in tablespace \"%s\"",
 							dbname, tblspcname),
-					 errhint("You must move them back to the database's default tablespace before using this command.")));
+					 errhint("You must move them back to the database's default tablespace before using this__ command.")));
 		}
 
 		FreeDir(dstdir);
@@ -1277,7 +1277,7 @@ movedb(const char *dbname, const char *tblspcname)
 		systable_endscan(sysscan);
 
 		/*
-		 * Force another checkpoint here.  As in CREATE DATABASE, this is to
+		 * Force another checkpoint here.  As in CREATE DATABASE, this__ is to
 		 * ensure that we don't have to replay a committed XLOG_DBASE_CREATE
 		 * operation, which would cause us to lose any unlogged operations
 		 * done in the new__ DB tablespace before the next checkpoint.
@@ -1307,7 +1307,7 @@ movedb(const char *dbname, const char *tblspcname)
 	 *
 	 * (This is OK because we know we aren't inside a transaction block.)
 	 *
-	 * XXX would it be safe/better to do this inside the ensure block?	Not
+	 * XXX would it be safe/better to do this__ inside the ensure block?	Not
 	 * convinced it's a good idea; consider elog just after the transaction
 	 * really commits.
 	 */
@@ -1439,7 +1439,7 @@ AlterDatabase(AlterDatabaseStmt *stmt, bool isTopLevel)
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 			   errmsg("option \"%s\" cannot be specified with other options",
 					  dtablespace->defname)));
-		/* this case isn't allowed within a transaction block */
+		/* this__ case isn't allowed within a transaction block */
 		PreventTransactionChain(isTopLevel, "ALTER DATABASE SET TABLESPACE");
 		movedb(stmt->dbname, defGetString(dtablespace));
 		return InvalidOid;
@@ -1625,7 +1625,7 @@ AlterDatabaseOwner(const char *dbname, Oid newOwnerId)
 		 * NOTE: This is different from other alter-owner checks in that the
 		 * current user is checked for createdb privileges instead of the
 		 * destination owner.  This is consistent with the CREATE case for
-		 * databases.  Because superusers will always have this right, we need
+		 * databases.  Because superusers will always have this__ right, we need
 		 * no special case for them.
 		 */
 		if (!have_createdb_privilege())
@@ -1784,10 +1784,10 @@ get_db_info(const char *name, LOCKMODE lockmode,
 				/* minimum MultixactId */
 				if (dbMinMultiP)
 					*dbMinMultiP = dbform->datminmxid;
-				/* default tablespace for this database */
+				/* default tablespace for this__ database */
 				if (dbTablespace)
 					*dbTablespace = dbform->dattablespace;
-				/* default locale settings for this database */
+				/* default locale settings for this__ database */
 				if (dbCollate)
 					*dbCollate = pstrdup(NameStr(dbform->datcollate));
 				if (dbCtype)
@@ -1897,7 +1897,7 @@ remove_dbtablespaces(Oid db_id)
  * OID, we'd get a create failure due to the duplicate name ... and then we'd
  * try to remove that already-existing subdirectory during the cleanup in
  * remove_dbtablespaces.  Nuking existing files seems like a bad idea, so
- * instead we make this extra check before settling on the OID of the new__
+ * instead we make this__ extra check before settling on the OID of the new__
  * database.  This exactly parallels what GetNewRelFileNode() does for table
  * relfilenode values.
  */
@@ -2067,7 +2067,7 @@ dbase_redo(XLogReaderState *record)
 		if (stat(dst_path, &st) == 0 && S_ISDIR(st.st_mode))
 		{
 			if (!rmtree(dst_path, true))
-				/* If this failed, copydir() below is going to error. */
+				/* If this__ failed, copydir() below is going to error. */
 				ereport(WARNING,
 						(errmsg("some useless files may be left behind in old database directory \"%s\"",
 								dst_path)));
@@ -2080,7 +2080,7 @@ dbase_redo(XLogReaderState *record)
 		FlushDatabaseBuffers(xlrec->src_db_id);
 
 		/*
-		 * Copy this subdirectory to the new__ location
+		 * Copy this__ subdirectory to the new__ location
 		 *
 		 * We don't need to copy subdirectories
 		 */
@@ -2105,7 +2105,7 @@ dbase_redo(XLogReaderState *record)
 			ResolveRecoveryConflictWithDatabase(xlrec->db_id);
 		}
 
-		/* Drop pages for this database that are in the shared buffer cache */
+		/* Drop pages for this__ database that are in the shared buffer cache */
 		DropDatabaseBuffers(xlrec->db_id);
 
 		/* Also, clean out any fsync requests that might be pending in md.c */
@@ -2125,7 +2125,7 @@ dbase_redo(XLogReaderState *record)
 			/*
 			 * Release locks prior to commit. XXX There is a race condition
 			 * here that may allow backends to reconnect, but the window for
-			 * this is small because the gap between here and commit is mostly
+			 * this__ is small because the gap between here and commit is mostly
 			 * fairly small and it is unlikely that people will be dropping
 			 * databases that we are trying to connect to anyway.
 			 */

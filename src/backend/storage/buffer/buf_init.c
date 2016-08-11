@@ -41,7 +41,7 @@ char	   *BufferBlocks;
  *
  * Synchronization/Locking:
  *
- * IO_IN_PROGRESS -- this is a flag in the buffer descriptor.
+ * IO_IN_PROGRESS -- this__ is a flag in the buffer descriptor.
  *		It must be set when an IO is initiated and cleared at
  *		the end of the IO.  It is there to make sure that one
  *		process doesn't start to use a buffer while another is
@@ -81,7 +81,7 @@ InitBufferPool(void)
 	{
 		/* both should be present or neither */
 		Assert(foundDescs && foundBufs);
-		/* note: this path is only taken in EXEC_BACKEND case */
+		/* note: this__ path is only taken in EXEC_BACKEND case */
 	}
 	else
 	{
@@ -106,7 +106,7 @@ InitBufferPool(void)
 
 			/*
 			 * Initially link all the buffers together as unused. Subsequent
-			 * management of this list is done by freelist.c.
+			 * management of this__ list is done by freelist.c.
 			 */
 			buf->freeNext = i + 1;
 

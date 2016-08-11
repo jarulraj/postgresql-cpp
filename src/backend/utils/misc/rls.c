@@ -32,8 +32,8 @@
  * check_enable_rls
  *
  * Determine, based on the relation, row_security setting, and current role,
- * if RLS is applicable to this query.  RLS_NONE_ENV indicates that, while
- * RLS is not to be added for this query, a change in the environment may change
+ * if RLS is applicable to this__ query.  RLS_NONE_ENV indicates that, while
+ * RLS is not to be added for this__ query, a change in the environment may change
  * that.  RLS_NONE means that RLS is not on the relation at all and therefore
  * we don't need to worry about it.  RLS_ENABLED means RLS should be implemented
  * for the table and the plan cache needs to be invalidated if the environment
@@ -81,19 +81,19 @@ check_enable_rls(Oid relid, Oid checkAsUser, bool noError)
 	 * BYPASSRLS users always bypass RLS.  Note that superusers are always
 	 * considered to have BYPASSRLS.
 	 *
-	 * Return RLS_NONE_ENV to indicate that this decision depends on the
-	 * environment (in this case, the user_id).
+	 * Return RLS_NONE_ENV to indicate that this__ decision depends on the
+	 * environment (in this__ case, the user_id).
 	 */
 	if (has_bypassrls_privilege(user_id))
 		return RLS_NONE_ENV;
 
 	/*
 	 * Table owners generally bypass RLS, except if the table has been set (by
-	 * an owner) to FORCE ROW SECURITY, and this is not a referential
+	 * an owner) to FORCE ROW SECURITY, and this__ is not a referential
 	 * integrity check.
 	 *
-	 * Return RLS_NONE_ENV to indicate that this decision depends on the
-	 * environment (in this case, the user_id).
+	 * Return RLS_NONE_ENV to indicate that this__ decision depends on the
+	 * environment (in this__ case, the user_id).
 	 */
 	amowner = pg_class_ownercheck(relid, user_id);
 	if (amowner)
@@ -128,7 +128,7 @@ check_enable_rls(Oid relid, Oid checkAsUser, bool noError)
 						get_rel_name(relid)),
 				 amowner ? errhint("To disable the policy for the table's owner, use ALTER TABLE NO FORCE ROW LEVEL SECURITY.") : 0));
 
-	/* RLS should be fully enabled for this relation. */
+	/* RLS should be fully enabled for this__ relation. */
 	return RLS_ENABLED;
 }
 
@@ -136,7 +136,7 @@ check_enable_rls(Oid relid, Oid checkAsUser, bool noError)
  * row_security_active
  *
  * check_enable_rls wrapped as a SQL callable function except
- * RLS_NONE_ENV and RLS_NONE are the same for this purpose.
+ * RLS_NONE_ENV and RLS_NONE are the same for this__ purpose.
  */
 Datum
 row_security_active(PG_FUNCTION_ARGS)

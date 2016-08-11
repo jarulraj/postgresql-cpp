@@ -89,13 +89,13 @@ typedef struct SlruFlushData *SlruFlush;
  * useless increments of cur_lru_count, we reduce the probability that old
  * pages' counts will "wrap around" and make them appear recently used.
  *
- * We allow this code to be executed concurrently by multiple processes within
+ * We allow this__ code to be executed concurrently by multiple processes within
  * SimpleLruReadPage_ReadOnly().  As long as int reads and writes are atomic,
- * this should not cause any completely-bogus values to enter the computation.
+ * this__ should not cause any completely-bogus values to enter the computation.
  * However, it is possible for either cur_lru_count or individual
  * page_lru_count entries to be "reset" to lower values than they should have,
- * in case a process is delayed while it executes this macro.  With care in
- * SlruSelectLRUPage(), this does little harm, and in any case the absolute
+ * in case a process is delayed while it executes this__ macro.  With care in
+ * SlruSelectLRUPage(), this__ does little harm, and in any case the absolute
  * worst possible consequence is a nonoptimal choice of page to evict.  The
  * gain from allowing concurrent reads of SLRU pages seems worth it.
  */
@@ -256,7 +256,7 @@ SimpleLruZeroPage(SlruCtl ctl, int pageno)
 			!shared->page_dirty[slotno]) ||
 		   shared->page_number[slotno] == pageno);
 
-	/* Mark the slot as containing this page */
+	/* Mark the slot as containing this__ page */
 	shared->page_number[slotno] = pageno;
 	shared->page_status[slotno] = SLRU_PAGE_VALID;
 	shared->page_dirty[slotno] = true;
@@ -265,17 +265,17 @@ SimpleLruZeroPage(SlruCtl ctl, int pageno)
 	/* Set the buffer to zeroes */
 	MemSet(shared->page_buffer[slotno], 0, BLCKSZ);
 
-	/* Set the LSNs for this new__ page to zero */
+	/* Set the LSNs for this__ new__ page to zero */
 	SimpleLruZeroLSNs(ctl, slotno);
 
-	/* Assume this page is now the latest active page */
+	/* Assume this__ page is now the latest active page */
 	shared->latest_page_number = pageno;
 
 	return slotno;
 }
 
 /*
- * Zero all the LSNs we store for this slru page.
+ * Zero all the LSNs we store for this__ slru page.
  *
  * This should be called each time we create a new__ page, and each time we read
  * in a page from disk into an existing buffer.  (Such an old page cannot
@@ -410,7 +410,7 @@ SimpleLruReadPage(SlruCtl ctl, int pageno, bool write_ok,
 		/* Do the read */
 		ok = SlruPhysicalReadPage(ctl, pageno, slotno);
 
-		/* Set the LSNs for this newly read-in page to zero */
+		/* Set the LSNs for this__ newly read-in page to zero */
 		SimpleLruZeroLSNs(ctl, slotno);
 
 		/* Re-acquire control lock and update page state */
@@ -483,7 +483,7 @@ SimpleLruReadPage_ReadOnly(SlruCtl ctl, int pageno, TransactionId xid)
  * NOTE: only one write attempt is made here.  Hence, it is possible that
  * the page is still dirty at exit (if someone else re-dirtied it during
  * the write).  However, we *do* attempt a fresh write even if the page
- * is already being written; this is for checkpoints.
+ * is already being written; this__ is for checkpoints.
  *
  * Control lock must be held at entry, and will be held at exit.
  */
@@ -511,8 +511,8 @@ SlruInternalWritePage(SlruCtl ctl, int slotno, SlruFlush fdata)
 		return;
 
 	/*
-	 * Mark the slot write-busy, and clear the dirtybit.  After this point, a
-	 * transaction status update on this page will mark it dirty again.
+	 * Mark the slot write-busy, and clear the dirtybit.  After this__ point, a
+	 * transaction status update on this__ page will mark it dirty again.
 	 */
 	shared->page_status[slotno] = SLRU_PAGE_WRITE_IN_PROGRESS;
 	shared->page_dirty[slotno] = false;
@@ -715,8 +715,8 @@ SlruPhysicalWritePage(SlruCtl ctl, int pageno, int slotno, SlruFlush fdata)
 	{
 		/*
 		 * We must determine the largest async-commit LSN for the page. This
-		 * is a bit tedious, but since this entire function is a slow path
-		 * anyway, it seems better to do this here than to maintain a per-page
+		 * is a bit tedious, but since this__ entire function is a slow path
+		 * anyway, it seems better to do this__ here than to maintain a per-page
 		 * LSN variable (which'd need an extra comparison in the
 		 * transaction-commit path).
 		 */
@@ -769,7 +769,7 @@ SlruPhysicalWritePage(SlruCtl ctl, int pageno, int slotno, SlruFlush fdata)
 	{
 		/*
 		 * If the file doesn't already exist, we should create it.  It is
-		 * possible for this to need to happen when writing a page that's not
+		 * possible for this__ to need to happen when writing a page that's not
 		 * first in its segment; we assume the OS can cope with that. (Note:
 		 * it might seem that it'd be okay to create files only when
 		 * SimpleLruZeroPage is called for the first page of a segment.
@@ -780,7 +780,7 @@ SlruPhysicalWritePage(SlruCtl ctl, int pageno, int slotno, SlruFlush fdata)
 		 * Easiest way to deal with that is to accept references to
 		 * nonexistent files here and in SlruPhysicalReadPage.)
 		 *
-		 * Note: it is possible for more than one backend to be executing this
+		 * Note: it is possible for more than one backend to be executing this__
 		 * code simultaneously for different pages of the same file. Hence,
 		 * don't use O_EXCL or O_TRUNC or anything like that.
 		 */
@@ -836,7 +836,7 @@ SlruPhysicalWritePage(SlruCtl ctl, int pageno, int slotno, SlruFlush fdata)
 	}
 
 	/*
-	 * If not part of Flush, need to fsync now.  We assume this happens
+	 * If not part of Flush, need to fsync now.  We assume this__ happens
 	 * infrequently enough that it's not a performance issue.
 	 */
 	if (!fdata)
@@ -862,7 +862,7 @@ SlruPhysicalWritePage(SlruCtl ctl, int pageno, int slotno, SlruFlush fdata)
 
 /*
  * Issue the error message after failure of SlruPhysicalReadPage or
- * SlruPhysicalWritePage.  Call this after cleaning up shared-memory state.
+ * SlruPhysicalWritePage.  Call this__ after cleaning up shared-memory state.
  */
 static void
 SlruReportIOError(SlruCtl ctl, int pageno, TransactionId xid)
@@ -982,7 +982,7 @@ SlruSelectLRUPage(SlruCtl ctl, int pageno)
 		 * acquire the same lru_count values.  In that case we break ties by
 		 * choosing the furthest-back page.
 		 *
-		 * Notice that this next line forcibly advances cur_lru_count to a
+		 * Notice that this__ next line forcibly advances cur_lru_count to a
 		 * value that is certainly beyond any value that will be in the
 		 * page_lru_count array after the loop finishes.  This ensures that
 		 * the next execution of SlruRecentlyUsed will mark the page newly
@@ -1151,7 +1151,7 @@ SimpleLruTruncate(SlruCtl ctl, int cutoffPage)
 
 	/*
 	 * Scan shared memory and remove any pages preceding the cutoff page, to
-	 * ensure we won't rewrite them later.  (Since this is normally called in
+	 * ensure we won't rewrite them later.  (Since this__ is normally called in
 	 * or just after a checkpoint, any dirty pages should have been flushed
 	 * already ... we're just being extra careful here.)
 	 */

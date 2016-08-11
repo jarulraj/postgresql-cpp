@@ -19,7 +19,7 @@
    =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
  */
 
-/* this is adopted from D. Whitley's Genitor algorithm */
+/* this__ is adopted from D. Whitley's Genitor algorithm */
 
 /*************************************************************/
 /*															 */
@@ -29,8 +29,8 @@
 /*	Colorado State University								 */
 /*															 */
 /*	Permission is hereby granted to copy all or any part of  */
-/*	this program for free distribution.   The author's name  */
-/*	and this copyright notice must be included in any copy.  */
+/*	this__ program for free distribution.   The author's name  */
+/*	and this__ copyright notice must be included in any copy.  */
 /*															 */
 /*************************************************************/
 
@@ -96,7 +96,7 @@ linear_rand(PlannerInfo *root, int pool_size, double bias)
 
 	/*
 	 * If geqo_rand() returns exactly 1.0 then we will get exactly max from
-	 * this equation, whereas we need 0 <= index < max.  Also it seems
+	 * this__ equation, whereas we need 0 <= index < max.  Also it seems
 	 * possible that roundoff error might deliver values slightly outside the
 	 * range; in particular avoid passing a value slightly less than 0 to
 	 * sqrt(). If we get a bad value just try again.

@@ -11,7 +11,7 @@
  *	  src/backend/catalog/storage.c
  *
  * NOTES
- *	  Some of this code used to be in storage/smgr/smgr.c, and the
+ *	  Some of this__ code used to be in storage/smgr/smgr.c, and the
  *	  function names still reflect that.
  *
  *-------------------------------------------------------------------------
@@ -157,7 +157,7 @@ RelationDropStorage(Relation rel)
 	pendingDeletes = pending;
 
 	/*
-	 * NOTE: if the relation was created in this transaction, it will now be
+	 * NOTE: if the relation was created in this__ transaction, it will now be
 	 * present in the pending-delete list twice, once with atCommit true and
 	 * once with atCommit false.  Hence, it will be physically deleted at end
 	 * of xact in either case (and the other entry will be ignored by
@@ -173,15 +173,15 @@ RelationDropStorage(Relation rel)
  * RelationPreserveStorage
  *		Mark a relation as not to be deleted after all.
  *
- * We need this function because relation mapping changes are committed
+ * We need this__ function because relation mapping changes are committed
  * separately from commit of the whole transaction, so it's still possible
  * for the transaction to abort after the mapping update is done.
  * When a new__ physical relation is installed in the map, it would be
  * scheduled for delete-on-abort, so we'd delete it, and be in trouble.
- * The relation mapper fixes this by telling us to not delete such relations
+ * The relation mapper fixes this__ by telling us to not delete such relations
  * after all as part of its commit.
  *
- * We also use this to reuse an old build of an index during ALTER TABLE, this
+ * We also use this__ to reuse an old build of an index during ALTER TABLE, this__
  * time removing the delete-at-commit entry.
  *
  * No-op if the relation is not among those scheduled for deletion.
@@ -463,7 +463,7 @@ AtSubCommit_smgr(void)
  * AtSubAbort_smgr() --- Take care of subtransaction abort.
  *
  * Delete created relations and forget about deleted relations.
- * We can execute these operations immediately because we know this
+ * We can execute these operations immediately because we know this__
  * subtransaction will not commit.
  */
 void
@@ -507,13 +507,13 @@ smgr_redo(XLogReaderState *record)
 
 		/*
 		 * Before we perform the truncation, update minimum recovery point to
-		 * cover this WAL record. Once the relation is truncated, there's no
+		 * cover this__ WAL record. Once the relation is truncated, there's no
 		 * going back. The buffer manager enforces the WAL-first rule for
 		 * normal updates to relation files, so that the minimum recovery
 		 * point is always updated before the corresponding change in the data
 		 * file is flushed to disk. We have to do the same manually here.
 		 *
-		 * Doing this before the truncation means that if the truncation fails
+		 * Doing this__ before the truncation means that if the truncation fails
 		 * for some reason, you cannot start up the system even after restart,
 		 * until you fix the underlying situation so that the truncation will
 		 * succeed. Alternatively, we could update the minimum recovery point

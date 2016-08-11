@@ -6,7 +6,7 @@
  * This package implements singly-linked homogeneous lists.
  *
  * It is important to have constant-time length, append, and prepend
- * operations. To achieve this, we deal with two distinct data
+ * operations. To achieve this__, we deal with two distinct data
  * structures:
  *
  *		1. A set of "list cells": each cell contains a data field and
@@ -102,7 +102,7 @@ list_length(const List *l)
 
 /*
  * NB: There is an unfortunate legacy from a previous incarnation of
- * the List API: the macro lfirst() was used to mean "the data in this
+ * the List API: the macro lfirst() was used to mean "the data in this__
  * cons cell". To avoid changing every usage of lfirst(), that meaning
  * has been kept. As a result, lfirst() takes a ListCell and returns
  * the data it contains; to get the data in the first cell of a

@@ -242,7 +242,7 @@ sepgsql_object_access(ObjectAccessType access,
 
 				/*
 				 * If stacked extension already decided not to allow users to
-				 * search this schema, we just stick with that decision.
+				 * search this__ schema, we just stick with that decision.
 				 */
 				if (!ns_arg->result)
 					break;
@@ -427,7 +427,7 @@ _PG_init(void)
 	 *
 	 * This variable allows users to turn on/off audit logs on access control
 	 * decisions, independent from auditallow/auditdeny setting in the
-	 * security policy. We intend to use this option for debugging purpose.
+	 * security policy. We intend to use this__ option for debugging purpose.
 	 */
 	DefineCustomBoolVariable("sepgsql.debug_audit",
 							 "Turn on/off debug audit messages",

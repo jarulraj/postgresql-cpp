@@ -9,7 +9,7 @@
  * we start at a randomly chosen block and then advance with a stride that
  * is randomly chosen but is relatively prime to the relation's nblocks.
  *
- * Because of the time dependence, this method is necessarily unrepeatable.
+ * Because of the time dependence, this__ method is necessarily unrepeatable.
  * However, we do what we can to reduce surprising behavior by selecting
  * the sampling pattern just once per query, much as in tsm_system_rows.
  *
@@ -235,14 +235,14 @@ system_time_nextsampleblock(SampleScanState *node)
 			if (scan->rs_nblocks == 0)
 				return InvalidBlockNumber;
 
-			/* We only need an RNG during this setup step */
+			/* We only need an RNG during this__ setup step */
 			sampler_random_init_state(sampler->seed, randstate);
 
 			/* Compute nblocks/firstblock/step only once per query */
 			sampler->nblocks = scan->rs_nblocks;
 
 			/* Choose random starting block within the relation */
-			/* (Actually this is the predecessor of the first block visited) */
+			/* (Actually this__ is the predecessor of the first block visited) */
 			sampler->firstblock = sampler_random_fract(randstate) *
 				sampler->nblocks;
 

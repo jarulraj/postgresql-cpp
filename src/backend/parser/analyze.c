@@ -172,7 +172,7 @@ parse_sub_analyze(Node *parseTree, ParseState *parentParseState,
  *
  * The only thing we do here that we don't do in transformStmt() is to
  * convert SELECT ... INTO into CREATE TABLE AS.  Since utility statements
- * aren't allowed within larger statements, this is only allowed at the top
+ * aren't allowed within larger statements, this__ is only allowed at the top
  * of the parse tree, and so we only try it before entering the recursive
  * transformStmt() processing.
  */
@@ -465,7 +465,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 	 * SELECT.  This can only happen if we are inside a CREATE RULE, and in
 	 * that case we want the rule's OLD and new__ rtable entries to appear as
 	 * part of the SELECT's rtable, not as outer references for it.  (Kluge!)
-	 * The SELECT's joinlist is not affected however.  We must do this before
+	 * The SELECT's joinlist is not affected however.  We must do this__ before
 	 * adding the target table to the INSERT's rtable.
 	 */
 	if (isGeneralSelect)
@@ -503,7 +503,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 	if (selectStmt == NULL)
 	{
 		/*
-		 * We have INSERT ... DEFAULT VALUES.  We can handle this case by
+		 * We have INSERT ... DEFAULT VALUES.  We can handle this__ case by
 		 * emitting an empty targetlist --- all columns will be defaulted when
 		 * the planner expands the targetlist.
 		 */
@@ -524,7 +524,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 		/*
 		 * Process the source SELECT.
 		 *
-		 * It is important that this be handled just like a standalone SELECT;
+		 * It is important that this__ be handled just like a standalone SELECT;
 		 * otherwise the behavior of SELECT within INSERT might be different
 		 * from a stand-alone SELECT. (Indeed, Postgres up through 6.5 had
 		 * bugs of just that nature...)
@@ -568,7 +568,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 		 * are copied up as-is rather than being referenced as subquery
 		 * outputs.  This is to ensure that when we try to coerce them to
 		 * the target column's datatype, the right things happen (see
-		 * special cases in coerce_type).  Otherwise, this fails:
+		 * special cases in coerce_type).  Otherwise, this__ fails:
 		 *		INSERT INTO foo SELECT 'bar', ... FROM baz
 		 *----------
 		 */
@@ -653,7 +653,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 			 * whether they are consistent vertically.  The outer INSERT query
 			 * isn't going to care about the collations of the VALUES columns,
 			 * so it's not worth the effort to identify a common collation for
-			 * each one here.  (But note this does have one user-visible
+			 * each one here.  (But note this__ does have one user-visible
 			 * consequence: INSERT ... VALUES won't complain about conflicting
 			 * explicit COLLATEs in a column, whereas the same VALUES
 			 * construct in another context would complain.)
@@ -700,7 +700,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 	{
 		/*
 		 * Process INSERT ... VALUES with a single VALUES sublist.  We treat
-		 * this case separately for efficiency.  The sublist is just computed
+		 * this__ case separately for efficiency.  The sublist is just computed
 		 * directly as the Query's targetlist, with no VALUES RTE.  So it
 		 * works just like a SELECT without any FROM.
 		 */
@@ -802,7 +802,7 @@ transformInsertRow(ParseState *pstate, List *exprlist,
 	 * Check length of expr list.  It must not have more expressions than
 	 * there are target columns.  We allow fewer, but only if no explicit
 	 * columns list was given (the remaining columns are implicitly
-	 * defaulted).  Note we must check this *after* transformation because
+	 * defaulted).  Note we must check this__ *after* transformation because
 	 * that could expand '*' into multiple items.
 	 */
 	if (list_length(exprlist) > list_length(icolumns))
@@ -819,7 +819,7 @@ transformInsertRow(ParseState *pstate, List *exprlist,
 		 * We can get here for cases like INSERT ... SELECT (a,b,c) FROM ...
 		 * where the user accidentally created a RowExpr instead of separate
 		 * columns.  Add a suitable hint if that seems to be the problem,
-		 * because the main error message is quite misleading for this case.
+		 * because the main error message is quite misleading for this__ case.
 		 * (If there's no stmtcols, you'll get something about data type
 		 * mismatch, which is less misleading so we don't worry about giving a
 		 * hint in that case.)
@@ -959,7 +959,7 @@ transformOnConflictClause(ParseState *pstate,
 		 * Additionally add a whole row tlist entry for EXCLUDED. That's
 		 * really only needed for ruleutils' benefit, which expects to find
 		 * corresponding entries in child tlists. Alternatively we could do
-		 * this only when required, but that doesn't seem worth the trouble.
+		 * this__ only when required, but that doesn't seem worth the trouble.
 		 */
 		var = makeVar(exclRelIndex, InvalidAttrNumber,
 					  RelationGetRelid(targetrel),
@@ -1047,7 +1047,7 @@ count_rowexpr_columns(ParseState *pstate, Node *expr)
  * transformSelectStmt -
  *	  transforms a Select Statement
  *
- * Note: this covers only cases with no set operations and no VALUES lists;
+ * Note: this__ covers only cases with no set operations and no VALUES lists;
  * see below for the other cases.
  */
 static Query *
@@ -1436,7 +1436,7 @@ transformSetOperationStmt(ParseState *pstate, SelectStmt *stmt)
 	qry->commandType = CMD_SELECT;
 
 	/*
-	 * Find leftmost leaf SelectStmt.  We currently only need to do this in
+	 * Find leftmost leaf SelectStmt.  We currently only need to do this__ in
 	 * order to deliver a suitable error message if there's an INTO clause
 	 * there, implying the set-op tree is in a context that doesn't allow
 	 * INTO.  (transformSetOperationTree would throw error anyway, but it
@@ -1560,7 +1560,7 @@ transformSetOperationStmt(ParseState *pstate, SelectStmt *stmt)
 	/*
 	 * As a first step towards supporting sort clauses that are expressions
 	 * using the output columns, generate a namespace__ entry that makes the
-	 * output columns visible.  A Join RTE node is handy for this, since we
+	 * output columns visible.  A Join RTE node is handy for this__, since we
 	 * can easily control the Vars generated upon matches.
 	 *
 	 * Note: we don't yet do anything useful with such cases, but at least
@@ -1644,7 +1644,7 @@ transformSetOperationStmt(ParseState *pstate, SelectStmt *stmt)
  * set-op node these are the actual targetlist entries; otherwise they are
  * dummy entries created to carry the type, typmod, collation, and location
  * (for error messages) of each output column of the set-op node.  This info
- * is needed only during the internal recursion of this function, so outside
+ * is needed only during the internal recursion of this__ function, so outside
  * callers pass NULL for targetlist.  Note: the reason for passing the
  * actual targetlist entries of a leaf node is so that upper levels can
  * replace UNKNOWN Consts with properly-coerced constants.
@@ -1714,14 +1714,14 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 		 * Transform SelectStmt into a Query.
 		 *
 		 * Note: previously transformed sub-queries don't affect the parsing
-		 * of this sub-query, because they are not in the toplevel pstate's
+		 * of this__ sub-query, because they are not in the toplevel pstate's
 		 * namespace__ list.
 		 */
 		selectQuery = parse_sub_analyze((Node *) stmt, pstate, NULL, false);
 
 		/*
 		 * Check for bogus references to Vars on the current query level (but
-		 * upper-level references are okay). Normally this can't happen
+		 * upper-level references are okay). Normally this__ can't happen
 		 * because the namespace__ will be empty, but it could happen if we are
 		 * inside a rule.
 		 */
@@ -1797,7 +1797,7 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 		/*
 		 * If we are processing a recursive union query, now is the time to
 		 * examine the non-recursive term's output columns and mark the
-		 * containing CTE as having those result columns.  We should do this
+		 * containing CTE as having those result columns.  We should do this__
 		 * only at the topmost setop of the CTE, of course.
 		 */
 		if (isTopLevel &&
@@ -1871,8 +1871,8 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 			 * want to replace it with the coerced expression.  This can only
 			 * happen when the child is a leaf set-op node.  It's safe to
 			 * replace the expression because if the child query's semantics
-			 * depended on the type of this output column, it'd have already
-			 * coerced the UNKNOWN to something else.  We want to do this
+			 * depended on the type of this__ output column, it'd have already
+			 * coerced the UNKNOWN to something else.  We want to do this__
 			 * because (a) we want to verify that a Const is valid for the
 			 * target type, or resolve the actual type of an UNKNOWN Param,
 			 * and (b) we want to avoid unnecessary discrepancies between the
@@ -2077,7 +2077,7 @@ transformUpdateStmt(ParseState *pstate, UpdateStmt *stmt)
 
 	/*
 	 * the FROM clause is non-standard SQL syntax. We used to be able to do
-	 * this with REPLACE in POSTQUEL so we keep the feature.
+	 * this__ with REPLACE in POSTQUEL so we keep the feature.
 	 */
 	transformFromClause(pstate, stmt->fromClause);
 
@@ -2206,7 +2206,7 @@ transformReturningList(ParseState *pstate, List *returningList)
 	/*
 	 * Complain if the nonempty tlist expanded to nothing (which is possible
 	 * if it contains only a star-expansion of a zero-column table).  If we
-	 * allow this, the parsed Query will look like it didn't have RETURNING,
+	 * allow this__, the parsed Query will look like it didn't have RETURNING,
 	 * with results that would probably surprise the user.
 	 */
 	if (rlist == NIL)
@@ -2508,7 +2508,7 @@ CheckSelectLocking(Query *qry, LockClauseStrength strength)
  *
  * This basically involves replacing names by integer relids.
  *
- * NB: if you need to change this, see also markQueryForLocking()
+ * NB: if you need to change this__, see also markQueryForLocking()
  * in rewriteHandler.c, and isLockedRefname() in parse_relation.c.
  */
 static void
@@ -2551,7 +2551,7 @@ transformLockingClause(ParseState *pstate, Query *qry, LockingClause *lc,
 
 					/*
 					 * FOR UPDATE/SHARE of subquery is propagated to all of
-					 * subquery's rels, too.  We could do this later (based on
+					 * subquery's rels, too.  We could do this__ later (based on
 					 * the marking of the subquery RTE) but it is convenient
 					 * to have local knowledge in each query level about which
 					 * rels need to be opened with RowShareLock.

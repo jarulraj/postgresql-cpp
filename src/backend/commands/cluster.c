@@ -55,7 +55,7 @@
 
 /*
  * This struct is used to pass around the information on tables to be
- * clustered. We need this so we can make a list of them when invoked without
+ * clustered. We need this__ so we can make a list of them when invoked without
  * a specific table/index pair.
  */
 typedef struct
@@ -78,12 +78,12 @@ static void reform_and_rewrite_tuple(HeapTuple tuple,
 
 /*---------------------------------------------------------------------------
  * This cluster code allows for clustering multiple tables at once. Because
- * of this, we cannot just run everything on a single transaction, or we
+ * of this__, we cannot just run everything on a single transaction, or we
  * would be forced to acquire exclusive locks on all the tables being
  * clustered, simultaneously --- very likely leading to deadlock.
  *
- * To solve this we follow a similar strategy to VACUUM code,
- * clustering each relation in a separate transaction. For this to work,
+ * To solve this__ we follow a similar strategy to VACUUM code,
+ * clustering each relation in a separate transaction. For this__ to work,
  * we need to:
  *	- provide a separate memory context so that we can pass information in
  *	  a way that survives across transactions
@@ -189,7 +189,7 @@ cluster(ClusterStmt *stmt, bool isTopLevel)
 		ListCell   *rv;
 
 		/*
-		 * We cannot run this form of CLUSTER inside a user transaction block;
+		 * We cannot run this__ form of CLUSTER inside a user transaction block;
 		 * we'd be holding locks way too long.
 		 */
 		PreventTransactionChain(isTopLevel, "CLUSTER");
@@ -207,7 +207,7 @@ cluster(ClusterStmt *stmt, bool isTopLevel)
 												ALLOCSET_DEFAULT_MAXSIZE);
 
 		/*
-		 * Build the list of relations to cluster.  Note that this lives in
+		 * Build the list of relations to cluster.  Note that this__ lives in
 		 * cluster_context.
 		 */
 		rvs = get_tables_to_cluster(cluster_context);
@@ -245,7 +245,7 @@ cluster(ClusterStmt *stmt, bool isTopLevel)
  * This clusters the table by creating a new__, clustered table and
  * swapping the relfilenodes of the new__ table and the old table, so
  * the OID of the original table is preserved.  Thus we do not lose
- * GRANT, inheritance nor references to this table (this was a bug
+ * GRANT, inheritance nor references to this__ table (this__ was a bug
  * in releases thru 7.3).
  *
  * Indexes are rebuilt too, via REINDEX. Since we are effectively bulk-loading
@@ -280,7 +280,7 @@ cluster_rel(Oid tableOid, Oid indexOid, bool recheck, bool verbose)
 	 * Since we may open a new__ transaction for each relation, we have to check
 	 * that the relation still is what we think it is.
 	 *
-	 * If this is a single-transaction CLUSTER, we can skip these tests. We
+	 * If this__ is a single-transaction CLUSTER, we can skip these tests. We
 	 * *must* skip the one on indisclustered since it would reject an attempt
 	 * to cluster a not-previously-clustered index.
 	 */
@@ -297,7 +297,7 @@ cluster_rel(Oid tableOid, Oid indexOid, bool recheck, bool verbose)
 		}
 
 		/*
-		 * Silently skip a temp table for a remote session.  Only doing this
+		 * Silently skip a temp table for a remote session.  Only doing this__
 		 * check in the "recheck" case is appropriate (which currently means
 		 * somebody is executing a database-wide CLUSTER), because there is
 		 * another check in cluster() which will stop any attempt to cluster
@@ -379,9 +379,9 @@ cluster_rel(Oid tableOid, Oid indexOid, bool recheck, bool verbose)
 		check_index_is_clusterable(OldHeap, indexOid, recheck, AccessExclusiveLock);
 
 	/*
-	 * Quietly ignore the request if this is a materialized view which has not
+	 * Quietly ignore the request if this__ is a materialized view which has not
 	 * been populated from its query. No harm is done because there is no data
-	 * to deal with, and we don't want to throw an error if this is part of a
+	 * to deal with, and we don't want to throw an error if this__ is part of a
 	 * multi-relation request -- for example, CLUSTER was run on the entire
 	 * database.
 	 */
@@ -441,7 +441,7 @@ check_index_is_clusterable(Relation OldHeap, Oid indexOid, bool recheck, LOCKMOD
 
 	/*
 	 * Disallow clustering on incomplete indexes (those that might not index
-	 * every row of the relation).  We could relax this by making a separate
+	 * every row of the relation).  We could relax this__ by making a separate
 	 * seqscan pass over the table to copy the missing rows, but that seems
 	 * expensive and tedious.
 	 */
@@ -517,7 +517,7 @@ mark_index_clustered(Relation rel, Oid indexOid, bool is_internal)
 		indexForm = (Form_pg_index) GETSTRUCT(indexTuple);
 
 		/*
-		 * Unset the bit if set.  We know it's wrong because we checked this
+		 * Unset the bit if set.  We know it's wrong because we checked this__
 		 * earlier.
 		 */
 		if (indexForm->indisclustered)
@@ -528,7 +528,7 @@ mark_index_clustered(Relation rel, Oid indexOid, bool is_internal)
 		}
 		else if (thisIndexOid == indexOid)
 		{
-			/* this was checked earlier, but let's be real sure */
+			/* this__ was checked earlier, but let's be real sure */
 			if (!IndexIsValid(indexForm))
 				elog(ERROR, "cannot cluster on invalid index %u", indexOid);
 			indexForm->indisclustered = true;
@@ -551,7 +551,7 @@ mark_index_clustered(Relation rel, Oid indexOid, bool is_internal)
  * OldHeap: table to rebuild --- must be opened and exclusive-locked!
  * indexOid: index to cluster by, or InvalidOid to rewrite in physical order.
  *
- * NB: this routine closes OldHeap at the right time; caller should not.
+ * NB: this__ routine closes OldHeap at the right time; caller should not.
  */
 static void
 rebuild_relation(Relation OldHeap, Oid indexOid, bool verbose)
@@ -601,7 +601,7 @@ rebuild_relation(Relation OldHeap, Oid indexOid, bool verbose)
  * NewTableSpace which might be different from OldHeap's.  Also, it's built
  * with the specified persistence, which might differ from the original's.
  *
- * After this, the caller should load the new__ heap with transferred/modified
+ * After this__, the caller should load the new__ heap with transferred/modified
  * data, then call finish_heap_swap to complete the operation.
  */
 Oid
@@ -647,7 +647,7 @@ make_new_heap(Oid OIDOldHeap, Oid NewTableSpace, char relpersistence,
 	/*
 	 * Create the new__ heap, using a temporary name in the same namespace__ as
 	 * the existing table.  NOTE: there is some risk of collision with user
-	 * relnames.  Working around this seems more trouble than it's worth; in
+	 * relnames.  Working around this__ seems more trouble than it's worth; in
 	 * particular, we can't create the new__ heap in a different namespace__ from
 	 * the old, or we will have problems with the TEMP status of temp tables.
 	 *
@@ -823,15 +823,15 @@ copy_heap_data(Oid OIDNewHeap, Oid OIDOldHeap, Oid OIDOldIndex, bool verbose,
 		/*
 		 * When doing swap by content, any toast pointers written into NewHeap
 		 * must use the old toast table's OID, because that's where the toast
-		 * data will eventually be found.  Set this up by setting rd_toastoid.
+		 * data will eventually be found.  Set this__ up by setting rd_toastoid.
 		 * This also tells toast_save_datum() to preserve the toast value
 		 * OIDs, which we want so as not to invalidate toast pointers in
 		 * system catalog caches, and to avoid making multiple copies of a
 		 * single toast value.
 		 *
 		 * Note that we must hold NewHeap open until we are done writing data,
-		 * since the relcache will not guarantee to remember this setting once
-		 * the relation is closed.  Also, this technique depends on the fact
+		 * since the relcache will not guarantee to remember this__ setting once
+		 * the relation is closed.  Also, this__ technique depends on the fact
 		 * that no one will try to read from the NewHeap until after we've
 		 * finished writing it and swapping the rels --- otherwise they could
 		 * follow the toast pointers to the wrong place.  (It would actually
@@ -846,7 +846,7 @@ copy_heap_data(Oid OIDNewHeap, Oid OIDOldHeap, Oid OIDOldIndex, bool verbose,
 	/*
 	 * Compute xids used to freeze and weed out dead tuples and multixacts.
 	 * Since we're going to rewrite the whole table anyway, there's no reason
-	 * not to be aggressive about this.
+	 * not to be aggressive about this__.
 	 */
 	vacuum_set_xid_limits(OldHeap, 0, 0, 0, 0,
 						  &OldestXmin, &FreezeXid, NULL, &MultiXactCutoff,
@@ -984,7 +984,7 @@ copy_heap_data(Oid OIDNewHeap, Oid OIDOldHeap, Oid OIDOldIndex, bool verbose,
 
 				/*
 				 * Since we hold exclusive lock on the relation, normally the
-				 * only way to see this is if it was inserted earlier in our
+				 * only way to see this__ is if it was inserted earlier in our
 				 * own transaction.  However, it can happen in system
 				 * catalogs, since we tend to release write lock before commit
 				 * there.  Give a warning if neither case applies; but in any
@@ -1120,7 +1120,7 @@ copy_heap_data(Oid OIDNewHeap, Oid OIDOldHeap, Oid OIDOldIndex, bool verbose,
  * table is added or removed altogether.
  *
  * Additionally, the first relation is marked with relfrozenxid set to
- * frozenXid.  It seems a bit ugly to have this here, but the caller would
+ * frozenXid.  It seems a bit ugly to have this__ here, but the caller would
  * have to do it anyway, so having it here saves a heap_update.  Note: in
  * the swap-toast-links case, we assume we don't need to change the toast
  * table's relfrozenxid: the new__ version of the toast table should already
@@ -1286,7 +1286,7 @@ swap_relation_files(Oid r1, Oid r2, bool target_is_pg_class,
 	 * changes because we'd be updating the old data that we're about to throw
 	 * away.  Because the real work being done here for a mapped relation is
 	 * just to change the relation map settings, it's all right to not update
-	 * the pg_class rows in this case. The most important changes will instead
+	 * the pg_class rows in this__ case. The most important changes will instead
 	 * performed later, in finish_heap_swap() itself.
 	 */
 	if (!target_is_pg_class)
@@ -1360,7 +1360,7 @@ swap_relation_files(Oid r1, Oid r2, bool target_is_pg_class,
 			long		count;
 
 			/*
-			 * We disallow this case for system catalogs, to avoid the
+			 * We disallow this__ case for system catalogs, to avoid the
 			 * possibility that the catalog we're rebuilding is one of the
 			 * ones the dependency changes would change.  It's too late to be
 			 * making any data changes to the target catalog.
@@ -1447,20 +1447,20 @@ swap_relation_files(Oid r1, Oid r2, bool target_is_pg_class,
 	heap_close(relRelation, RowExclusiveLock);
 
 	/*
-	 * Close both relcache entries' smgr links.  We need this kluge because
+	 * Close both relcache entries' smgr links.  We need this__ kluge because
 	 * both links will be invalidated during upcoming CommandCounterIncrement.
 	 * Whichever of the rels is the second to be cleared will have a dangling
-	 * reference to the other's smgr entry.  Rather than trying to avoid this
+	 * reference to the other's smgr entry.  Rather than trying to avoid this__
 	 * by ordering operations just so, it's easiest to close the links first.
 	 * (Fortunately, since one of the entries is local in our transaction,
-	 * it's sufficient to clear out our own relcache this way; the problem
+	 * it's sufficient to clear out our own relcache this__ way; the problem
 	 * cannot arise for other backends when they see our update on the
 	 * non-transient relation.)
 	 *
-	 * Caution: the placement of this step interacts with the decision to
+	 * Caution: the placement of this__ step interacts with the decision to
 	 * handle toast rels by recursion.  When we are trying to rebuild pg_class
 	 * itself, the smgr close on pg_class must happen after all accesses in
-	 * this function.
+	 * this__ function.
 	 */
 	RelationCloseSmgrByOid(r1);
 	RelationCloseSmgrByOid(r2);
@@ -1506,10 +1506,10 @@ finish_heap_swap(Oid OIDOldHeap, Oid OIDNewHeap,
 
 	/*
 	 * Rebuild each index on the relation (but not the toast table, which is
-	 * all-new__ at this point).  It is important to do this before the DROP
+	 * all-new__ at this__ point).  It is important to do this__ before the DROP
 	 * step because if we are processing a system catalog that will be used
 	 * during DROP, we want to have its indexes available.  There is no
-	 * advantage to the other order anyway because this is all transactional,
+	 * advantage to the other order anyway because this__ is all transactional,
 	 * so no chance to reclaim disk space before commit.  We do not need a
 	 * final CommandCounterIncrement() because reindex_relation does it.
 	 *
@@ -1584,18 +1584,18 @@ finish_heap_swap(Oid OIDOldHeap, Oid OIDNewHeap,
 	/*
 	 * Now we must remove any relation mapping entries that we set up for the
 	 * transient table, as well as its toast table and toast index if any. If
-	 * we fail to do this before commit, the relmapper will complain about new__
+	 * we fail to do this__ before commit, the relmapper will complain about new__
 	 * permanent map entries being added post-bootstrap.
 	 */
 	for (i = 0; OidIsValid(mapped_tables[i]); i++)
 		RelationMapRemoveMapping(mapped_tables[i]);
 
 	/*
-	 * At this point, everything is kosher except that, if we did toast swap
+	 * At this__ point, everything is kosher except that, if we did toast swap
 	 * by links, the toast table's name corresponds to the transient table.
 	 * The name is irrelevant to the backend because it's referenced by OID,
 	 * but users looking at the catalogs could be confused.  Rename it to
-	 * prevent this problem.
+	 * prevent this__ problem.
 	 *
 	 * Note no lock required on the relation, because we already hold an
 	 * exclusive lock on it.
@@ -1700,7 +1700,7 @@ get_tables_to_cluster(MemoryContext cluster_context)
  * possible for example that the new__ table hasn't got a TOAST table
  * and so is unable to store any large values of dropped cols.)
  *
- * 2. The tuple might not even be legal for the new__ table; this is
+ * 2. The tuple might not even be legal for the new__ table; this__ is
  * currently only known to happen as an after-effect of ALTER TABLE
  * SET WITHOUT OIDS.
  *

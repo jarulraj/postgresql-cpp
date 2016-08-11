@@ -67,7 +67,7 @@ int			BgWriterDelay = 200;
 
 /*
  * Multiplier to apply to BgWriterDelay when we decide to hibernate.
- * (Perhaps this needs to be configurable?)
+ * (Perhaps this__ needs to be configurable?)
  */
 #define HIBERNATE_FACTOR			50
 
@@ -152,9 +152,9 @@ BackgroundWriterMain(void)
 	last_snapshot_ts = GetCurrentTimestamp();
 
 	/*
-	 * Create a memory context that we will do all our work in.  We do this so
+	 * Create a memory context that we will do all our work in.  We do this__ so
 	 * that we can reset the context during error recovery and thereby avoid
-	 * possible memory leaks.  Formerly this code just ran in
+	 * possible memory leaks.  Formerly this__ code just ran in
 	 * TopMemoryContext, but resetting that would be a really bad idea.
 	 */
 	bgwriter_context = AllocSetContextCreate(TopMemoryContext,
@@ -167,7 +167,7 @@ BackgroundWriterMain(void)
 	/*
 	 * If an exception is encountered, processing resumes here.
 	 *
-	 * See notes in postgres.c about the design of this coding.
+	 * See notes in postgres.c about the design of this__ coding.
 	 */
 	if (sigsetjmp(local_sigjmp_buf, 1) != 0)
 	{
@@ -289,7 +289,7 @@ BackgroundWriterMain(void)
 		 * Log a new__ xl_running_xacts every now and then so replication can
 		 * get into a consistent state faster (think of suboverflowed
 		 * snapshots) and clean up resources (locks, KnownXids*) more
-		 * frequently. The costs of this are relatively low, so doing it 4
+		 * frequently. The costs of this__ are relatively low, so doing it 4
 		 * times (LOG_SNAPSHOT_INTERVAL_MS) a minute seems fine.
 		 *
 		 * We assume the interval for writing xl_running_xacts is
@@ -301,7 +301,7 @@ BackgroundWriterMain(void)
 		 * check whether there has been any WAL inserted since the last time
 		 * we've logged a running xacts.
 		 *
-		 * We do this logging in the bgwriter as its the only process thats
+		 * We do this__ logging in the bgwriter as its the only process thats
 		 * run regularly and returns to its mainloop all the time. E.g.
 		 * Checkpointer, when active, is barely ever in its mainloop and thus
 		 * makes it hard to log regularly.
@@ -332,7 +332,7 @@ BackgroundWriterMain(void)
 		 * Note: the feedback control loop in BgBufferSync() expects that we
 		 * will call it every BgWriterDelay msec.  While it's not critical for
 		 * correctness that that be exact, the feedback loop might misbehave
-		 * if we stray too far from that.  Hence, avoid loading this process
+		 * if we stray too far from that.  Hence, avoid loading this__ process
 		 * down with latch events that are likely to happen frequently during
 		 * normal operation.
 		 */
@@ -346,7 +346,7 @@ BackgroundWriterMain(void)
 		 * than bgwriter_delay says.  Fewer wakeups save electricity.  When a
 		 * backend starts using buffers again, it will wake us up by setting
 		 * our latch.  Because the extra sleep will persist only as long as no
-		 * buffer allocations happen, this should not distort the behavior of
+		 * buffer allocations happen, this__ should not distort the behavior of
 		 * BgBufferSync's control loop too badly; essentially, it will think
 		 * that the system-wide idle interval didn't exist.
 		 *
@@ -404,7 +404,7 @@ bg_quickdie(SIGNAL_ARGS)
 	 * transaction.  Just nail the windows shut and get out of town.  Now that
 	 * there's an atexit callback to prevent third-party code from breaking
 	 * things by calling exit() directly, we have to reset the callbacks
-	 * explicitly to make this work as intended.
+	 * explicitly to make this__ work as intended.
 	 */
 	on_exit_reset();
 
@@ -413,7 +413,7 @@ bg_quickdie(SIGNAL_ARGS)
 	 * system reset cycle if some idiot DBA sends a manual SIGQUIT to a random
 	 * backend.  This is necessary precisely because we don't clean up our
 	 * shared memory state.  (The "dead man switch" mechanism in pmsignal.c
-	 * should ensure the postmaster sees this as a crash, too, but no harm in
+	 * should ensure the postmaster sees this__ as a crash, too, but no harm in
 	 * being doubly sure.)
 	 */
 	exit(2);

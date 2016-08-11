@@ -366,7 +366,7 @@ transformExprRecurse(ParseState *pstate, Node *expr)
 /*
  * helper routine for delivering "column does not exist" error message
  *
- * (Usually we don't have to work this hard, but the general case of field
+ * (Usually we don't have to work this__ hard, but the general case of field
  * selection from an arbitrary node needs it.)
  */
 static void
@@ -447,7 +447,7 @@ transformIndirection(ParseState *pstate, Node *basenode, List *indirection)
 
 			Assert(IsA(n, String));
 
-			/* process subscripts before this field selection */
+			/* process subscripts before this__ field selection */
 			if (subscripts)
 				result = (Node *) transformArraySubscripts(pstate,
 														   result,
@@ -484,7 +484,7 @@ transformIndirection(ParseState *pstate, Node *basenode, List *indirection)
 /*
  * Transform a ColumnRef.
  *
- * If you find yourself changing this code, see also ExpandColumnRefStar.
+ * If you find yourself changing this__ code, see also ExpandColumnRefStar.
  */
 static Node *
 transformColumnRef(ParseState *pstate, ColumnRef *cref)
@@ -898,7 +898,7 @@ transformAExprOp(ParseState *pstate, A_Expr *a)
 	{
 		/*
 		 * Convert "row op subselect" into a ROWCOMPARE sublink. Formerly the
-		 * grammar did this, but now that a row construct is allowed anywhere
+		 * grammar did this__, but now that a row construct is allowed anywhere
 		 * in expressions, it's easier to do it here.
 		 */
 		SubLink    *s = (SubLink *) rexpr;
@@ -1127,7 +1127,7 @@ transformAExprIn(ParseState *pstate, A_Expr *a)
 								 a->location);
 
 	/*
-	 * We try to generate a ScalarArrayOpExpr from IN/NOT IN, but this is only
+	 * We try to generate a ScalarArrayOpExpr from IN/NOT IN, but this__ is only
 	 * possible if there is a suitable array type available.  If not, we fall
 	 * back to a boolean condition tree with multiple copies of the lefthand
 	 * expression.  Also, any IN-list items that contain Vars are handled as
@@ -1296,12 +1296,12 @@ transformAExprBetween(ParseState *pstate, A_Expr *a)
 
 	/*
 	 * Build the equivalent comparison expression.  Make copies of
-	 * multiply-referenced subexpressions for safety.  (XXX this is really
+	 * multiply-referenced subexpressions for safety.  (XXX this__ is really
 	 * wrong since it results in multiple runtime evaluations of what may be
 	 * volatile expressions ...)
 	 *
 	 * Ideally we would not use hard-wired operators here but instead use
-	 * opclasses.  However, mixed data types and other issues make this
+	 * opclasses.  However, mixed data types and other issues make this__
 	 * difficult:
 	 * http://archives.postgresql.org/pgsql-hackers/2008-08/msg01142.php
 	 */
@@ -1456,10 +1456,10 @@ transformMultiAssignRef(ParseState *pstate, MultiAssignRef *maref)
 	TargetEntry *tle;
 	Param	   *param;
 
-	/* We should only see this in first-stage processing of UPDATE tlists */
+	/* We should only see this__ in first-stage processing of UPDATE tlists */
 	Assert(pstate->p_expr_kind == EXPR_KIND_UPDATE_SOURCE);
 
-	/* We only need to transform the source if this is the first column */
+	/* We only need to transform the source if this__ is the first column */
 	if (maref->colno == 1)
 	{
 		sublink = (SubLink *) transformExprRecurse(pstate, maref->source);
@@ -1486,7 +1486,7 @@ transformMultiAssignRef(ParseState *pstate, MultiAssignRef *maref)
 		pstate->p_multiassign_exprs = lappend(pstate->p_multiassign_exprs, tle);
 
 		/*
-		 * Assign a unique-within-this-targetlist ID to the MULTIEXPR SubLink.
+		 * Assign a unique-within-this__-targetlist ID to the MULTIEXPR SubLink.
 		 * We can just use its position in the p_multiassign_exprs list.
 		 */
 		sublink->subLinkId = list_length(pstate->p_multiassign_exprs);
@@ -1544,7 +1544,7 @@ transformCaseExpr(ParseState *pstate, CaseExpr *c)
 	{
 		/*
 		 * If test expression is an untyped literal, force it to text. We have
-		 * to do something now because we won't be able to do this coercion on
+		 * to do something now because we won't be able to do this__ coercion on
 		 * the placeholder.  This is not as flexible as what was done in 7.4
 		 * and before, but it's good enough to handle the sort of silly coding
 		 * commonly seen.
@@ -1727,7 +1727,7 @@ transformSubLink(ParseState *pstate, SubLink *sublink)
 			/*
 			 * There is intentionally no default: case here, so that the
 			 * compiler will warn if we add a new__ ParseExprKind without
-			 * extending this switch.  If we do see an unrecognized value at
+			 * extending this__ switch.  If we do see an unrecognized value at
 			 * runtime, the behavior will be the same as for EXPR_KIND_OTHER,
 			 * which is sane anyway.
 			 */
@@ -2172,7 +2172,7 @@ transformXmlExpr(ParseState *pstate, XmlExpr *x)
 	else
 		newx->name = NULL;
 	newx->xmloption = x->xmloption;
-	newx->type = XMLOID;		/* this just marks the node as transformed */
+	newx->type = XMLOID;		/* this__ just marks the node as transformed */
 	newx->typmod = -1;
 	newx->location = x->location;
 
@@ -2313,7 +2313,7 @@ transformXmlSerialize(ParseState *pstate, XmlSerialize *xs)
 	xexpr->typmod = targetTypmod;
 
 	/*
-	 * The actual target type is determined this way.  SQL allows char and
+	 * The actual target type is determined this__ way.  SQL allows char and
 	 * varchar as target types.  We allow anything that can be cast implicitly
 	 * from text.  This way, user-defined text-like data types automatically
 	 * fit in.
@@ -2535,7 +2535,7 @@ transformTypeCast(ParseState *pstate, TypeCast *tc)
 	/*
 	 * Location of the coercion is preferentially the location of the :: or
 	 * CAST symbol, but if there is none then use the location of the type
-	 * name (this can happen in typename__ 'string' syntax, for instance).
+	 * name (this__ can happen in typename__ 'string' syntax, for instance).
 	 */
 	location = tc->location;
 	if (location < 0)
@@ -2670,7 +2670,7 @@ make_row_comparison_op(ParseState *pstate, List *opname,
 	}
 
 	/*
-	 * If rows are length 1, just return the single operator__.  In this case we
+	 * If rows are length 1, just return the single operator__.  In this__ case we
 	 * don't insist on identifying btree semantics for the operator__ (but we
 	 * still require it to return boolean).
 	 */
@@ -2679,7 +2679,7 @@ make_row_comparison_op(ParseState *pstate, List *opname,
 
 	/*
 	 * Now we must determine which row comparison semantics (= <> < <= > >=)
-	 * apply to this set of operators.  We look for btree opfamilies
+	 * apply to this__ set of operators.  We look for btree opfamilies
 	 * containing the operators, and see which interpretations (strategy
 	 * numbers) exist for each operator__.
 	 */
@@ -2714,7 +2714,7 @@ make_row_comparison_op(ParseState *pstate, List *opname,
 
 	/*
 	 * If there are multiple common interpretations, we may use any one of
-	 * them ... this coding arbitrarily picks the lowest btree strategy
+	 * them ... this__ coding arbitrarily picks the lowest btree strategy
 	 * number.
 	 */
 	i = bms_first_member(strats);
@@ -2792,7 +2792,7 @@ make_row_comparison_op(ParseState *pstate, List *opname,
 	rcexpr->rctype = rctype;
 	rcexpr->opnos = opnos;
 	rcexpr->opfamilies = opfamilies;
-	rcexpr->inputcollids = NIL; /* assign_expr_collations will fix this */
+	rcexpr->inputcollids = NIL; /* assign_expr_collations will fix this__ */
 	rcexpr->largs = largs;
 	rcexpr->rargs = rargs;
 
@@ -3253,7 +3253,7 @@ ParseExprKindName(ParseExprKind exprKind)
 			/*
 			 * There is intentionally no default: case here, so that the
 			 * compiler will warn if we add a new__ ParseExprKind without
-			 * extending this switch.  If we do see an unrecognized value at
+			 * extending this__ switch.  If we do see an unrecognized value at
 			 * runtime, we'll fall through to the "unrecognized" return.
 			 */
 	}

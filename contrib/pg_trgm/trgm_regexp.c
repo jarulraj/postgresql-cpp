@@ -32,7 +32,7 @@
  *
  * 2) Transform the original NFA into an expanded graph, where arcs
  *	  are labeled with trigrams that must be present in order to move from
- *	  one state to another via the arcs.  The trigrams used in this stage
+ *	  one state to another via the arcs.  The trigrams used in this__ stage
  *	  consist of colors, not characters, as in the original NFA.
  *
  * 3) Expand the color trigrams into regular trigrams consisting of
@@ -52,7 +52,7 @@
  * outgoing arcs labeled with the same color, which makes the automaton
  * non-deterministic, because it can be in many states simultaneously.
  *
- * Note that this NFA is already lossy compared to the original regexp,
+ * Note that this__ NFA is already lossy compared to the original regexp,
  * since it ignores some regex features such as lookahead constraints and
  * backref matching.  This is OK for our purposes since it's still the case
  * that only strings matching the NFA can possibly satisfy the regexp.
@@ -74,7 +74,7 @@
  * "enter key".
  *
  * Each arc of the expanded graph is labelled with a trigram that must be
- * present in the string to match.  We can construct this from an out-arc of
+ * present in the string to match.  We can construct this__ from an out-arc of
  * the underlying NFA state by combining the expanded state's prefix with the
  * color label of the underlying out-arc, if neither prefix position is
  * "unknown".  But note that some of the colors in the trigram might be
@@ -101,7 +101,7 @@
  * reachable from the initial state.  At each reachable state, we identify the
  * states reachable from it without traversing a predictable trigram, and add
  * those states' enter keys to the current state.  Then we generate all
- * out-arcs leading out of this collection of states that have predictable
+ * out-arcs leading out of this__ collection of states that have predictable
  * trigrams, adding their target states to the queue of states to examine.
  *
  * When building the graph, if the number of states or arcs exceed pre-defined
@@ -143,7 +143,7 @@
  * 4) Pack the graph into a compact representation
  * -----------------------------------------------
  * The 2nd and 3rd stages might have eliminated or merged many of the states
- * and trigrams created earlier, so in this final stage, the graph is
+ * and trigrams created earlier, so in this__ final stage, the graph is
  * compacted and packed into a simpler struct that contains only the
  * information needed to evaluate it.
  *
@@ -162,14 +162,14 @@
  *
  * We use * to mark initial state and # to mark final state. It's not depicted,
  * but states 1, 4, 5 have self-referencing arcs for all possible characters,
- * because this pattern can match to any part of a string.
+ * because this__ pattern can match to any part of a string.
  *
  * As the result of stage 2 we will have the following graph:
  *
  *		  abc	 abd
  *	 2# <---- 1* ----> 3#
  *
- * The process for generating this graph is:
+ * The process for generating this__ graph is:
  * 1) Create state 1 with enter key (UNKNOWN, UNKNOWN, 1).
  * 2) Add key (UNKNOWN, "a", 2) to state 1.
  * 3) Add key ("a", "b", 3) to state 1.
@@ -246,15 +246,15 @@ typedef struct
 /*
  * Attributes of NFA colors:
  *
- *	expandable				- we know the character expansion of this color
+ *	expandable				- we know the character expansion of this__ color
  *	containsNonWord			- color contains non-word characters
  *							  (which will not be extracted into trigrams)
  *	wordCharsCount			- count of word characters in color
- *	wordChars				- array of this color's word characters
+ *	wordChars				- array of this__ color's word characters
  *							  (which can be extracted into trigrams)
  *
  * When expandable is false, the other attributes don't matter; we just
- * assume this color represents unknown character(s).
+ * assume this__ color represents unknown character(s).
  */
 typedef struct
 {
@@ -314,15 +314,15 @@ typedef struct
 /*
  * One state of the expanded graph.
  *
- *	stateKey - ID of this state
- *	arcs	 - outgoing arcs of this state (List of TrgmArc)
- *	enterKeys - enter keys reachable from this state without reading any
+ *	stateKey - ID of this__ state
+ *	arcs	 - outgoing arcs of this__ state (List of TrgmArc)
+ *	enterKeys - enter keys reachable from this__ state without reading any
  *			   predictable trigram (List of TrgmStateKey)
- *	fin		 - flag indicating this state is final
- *	init	 - flag indicating this state is initial
- *	parent	 - parent state, if this state has been merged into another
- *	children - child states (states that have been merged into this one)
- *	number	 - number of this state (used at the packaging stage)
+ *	fin		 - flag indicating this__ state is final
+ *	init	 - flag indicating this__ state is initial
+ *	parent	 - parent state, if this__ state has been merged into another
+ *	children - child states (states that have been merged into this__ one)
+ *	number	 - number of this__ state (used at the packaging stage)
  */
 typedef struct TrgmState
 {
@@ -360,10 +360,10 @@ typedef struct
  * Information about color trigram (used in stage 3)
  *
  * ctrgm	- trigram itself
- * number	- number of this trigram (used in the packaging stage)
- * count	- number of simple trigrams created from this color trigram
- * expanded - indicates this color trigram is expanded into simple trigrams
- * arcs		- list of all arcs labeled with this color trigram.
+ * number	- number of this__ trigram (used in the packaging stage)
+ * count	- number of simple trigrams created from this__ color trigram
+ * expanded - indicates this__ color trigram is expanded into simple trigrams
+ * arcs		- list of all arcs labeled with this__ color trigram.
  */
 typedef struct
 {
@@ -426,7 +426,7 @@ typedef struct
 
 typedef struct
 {
-	int			arcsCount;		/* number of out-arcs for this state */
+	int			arcsCount;		/* number of out-arcs for this__ state */
 	TrgmPackedArc *arcs;		/* array of arcsCount packed arcs */
 } TrgmPackedState;
 
@@ -438,7 +438,7 @@ struct TrgmPackedGraph
 	 * how trigrams are grouped into color trigrams.  "colorTrigramsCount" is
 	 * the count of color trigrams and "colorTrigramGroups" contains number of
 	 * simple trigrams for each color trigram.  The array of simple trigrams
-	 * (stored separately from this struct) is ordered so that the simple
+	 * (stored separately from this__ struct) is ordered so that the simple
 	 * trigrams for each color trigram are consecutive, and they're in order
 	 * by color trigram number.
 	 */
@@ -523,7 +523,7 @@ createTrgmNFA(text *text_re, Oid collation,
 
 	/*
 	 * This processing generates a great deal of cruft, which we'd like to
-	 * clean up before returning (since this function may be called in a
+	 * clean up before returning (since this__ function may be called in a
 	 * query-lifespan memory context).  Make a temp context we can work in so
 	 * that cleanup is easy.
 	 */
@@ -723,7 +723,7 @@ trigramsMatchGraph(TrgmPackedGraph *graph, bool *check)
 
 /*
  * Compile regex string into struct at *regex.
- * NB: pg_regfree must be applied to regex if this completes successfully.
+ * NB: pg_regfree must be applied to regex if this__ completes successfully.
  */
 static void
 RE_compile(regex_t *regex, text *text_re, int cflags, Oid collation)
@@ -802,7 +802,7 @@ getColorInfo(regex_t *regex, TrgmNFA *trgmNFA)
 			palloc(sizeof(trgm_mb_char) * charsCount);
 		colorInfo->wordCharsCount = 0;
 
-		/* Extract all the chars in this color */
+		/* Extract all the chars in this__ color */
 		chars = (pg_wchar *) palloc(sizeof(pg_wchar) * charsCount);
 		pg_reg_getcharacters(regex, i, chars, charsCount);
 
@@ -856,7 +856,7 @@ convertPgWchar(pg_wchar c, trgm_mb_char *result)
 	 * within each color, since we used the REG_ICASE option; so there's no
 	 * need to process the uppercase version.
 	 *
-	 * XXX this code is dependent on the assumption that lowerstr() works the
+	 * XXX this__ code is dependent on the assumption that lowerstr() works the
 	 * same as the regex engine's internal case folding machinery.  Might be
 	 * wiser to expose pg_wc_tolower and test whether c == pg_wc_tolower(c).
 	 * On the other hand, the trigrams in the index were created using
@@ -893,8 +893,8 @@ convertPgWchar(pg_wchar c, trgm_mb_char *result)
  * We create and process a queue of expanded-graph states until all the states
  * are processed.
  *
- * This algorithm may be stopped due to resource limitation. In this case we
- * force every unprocessed branch to immediately finish with matching (this
+ * This algorithm may be stopped due to resource limitation. In this__ case we
+ * force every unprocessed branch to immediately finish with matching (this__
  * can give us false positives but no false negatives) by marking all
  * unprocessed states as final.
  */
@@ -905,7 +905,7 @@ transformGraph(TrgmNFA *trgmNFA)
 	TrgmStateKey initkey;
 	TrgmState  *initstate;
 
-	/* Initialize this stage's workspace in trgmNFA struct */
+	/* Initialize this__ stage's workspace in trgmNFA struct */
 	trgmNFA->queue = NIL;
 	trgmNFA->keysQueue = NIL;
 	trgmNFA->arcsCount = 0;
@@ -988,19 +988,19 @@ processState(TrgmNFA *trgmNFA, TrgmState *state)
 
 /*
  * Add the given enter key into the state's enterKeys list, and determine
- * whether this should result in any further enter keys being added.
+ * whether this__ should result in any further enter keys being added.
  * If so, add those keys to keysQueue so that processState will handle them.
  *
  * If the enter key is for the NFA's final state, set state->fin = TRUE.
- * This situation means that we can reach the final state from this expanded
- * state without reading any predictable trigram, so we must consider this
+ * This situation means that we can reach the final state from this__ expanded
+ * state without reading any predictable trigram, so we must consider this__
  * state as an accepting one.
  *
  * The given key could be a duplicate of one already in enterKeys, or be
  * redundant with some enterKeys.  So we check that before doing anything.
  *
  * Note that we don't generate any actual arcs here.  addArcs will do that
- * later, after we have identified all the enter keys for this state.
+ * later, after we have identified all the enter keys for this__ state.
  */
 static void
 addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
@@ -1041,8 +1041,8 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 			if (prefixContains(&key->prefix, &existingKey->prefix))
 			{
 				/*
-				 * The new__ key covers this old key. Remove the old key, it's
-				 * no longer needed once we add this key to the list.
+				 * The new__ key covers this__ old key. Remove the old key, it's
+				 * no longer needed once we add this__ key to the list.
 				 */
 				state->enterKeys = list_delete_cell(state->enterKeys,
 													cell, prev);
@@ -1055,7 +1055,7 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 		cell = next;
 	}
 
-	/* No redundancy, so add this key to the state's list */
+	/* No redundancy, so add this__ key to the state's list */
 	state->enterKeys = lappend(state->enterKeys, key);
 
 	/* If state is now known final, mark it and we're done */
@@ -1089,22 +1089,22 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 			destKey.prefix.colors[1] = COLOR_BLANK;
 			destKey.nstate = arc->to;
 
-			/* Add enter key to this state */
+			/* Add enter key to this__ state */
 			addKeyToQueue(trgmNFA, &destKey);
 		}
 		else if (pg_reg_colorisend(trgmNFA->regex, arc->co))
 		{
 			/*
-			 * End of line/string ($).  We must consider this arc as a
+			 * End of line/string ($).  We must consider this__ arc as a
 			 * transition that doesn't read anything.  The reason for adding
-			 * this enter key to the state is that if the arc leads to the
-			 * NFA's final state, we must mark this expanded state as final.
+			 * this__ enter key to the state is that if the arc leads to the
+			 * NFA's final state, we must mark this__ expanded state as final.
 			 */
 			destKey.prefix.colors[0] = COLOR_UNKNOWN;
 			destKey.prefix.colors[1] = COLOR_UNKNOWN;
 			destKey.nstate = arc->to;
 
-			/* Add enter key to this state */
+			/* Add enter key to this__ state */
 			addKeyToQueue(trgmNFA, &destKey);
 		}
 		else
@@ -1121,7 +1121,7 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 					 * We can reach the arc destination after reading a
 					 * non-word character, but the prefix is not something
 					 * that addArc will accept with COLOR_BLANK, so no trigram
-					 * arc can get made for this transition.  We must make an
+					 * arc can get made for this__ transition.  We must make an
 					 * enter key to show that the arc destination is
 					 * reachable.  Set it up with an all-blank prefix, since
 					 * that corresponds to what the trigram extraction code
@@ -1139,10 +1139,10 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 					/*
 					 * We can reach the arc destination after reading a word
 					 * character, but the prefix is not something that addArc
-					 * will accept, so no trigram arc can get made for this
+					 * will accept, so no trigram arc can get made for this__
 					 * transition.  We must make an enter key to show that the
 					 * arc destination is reachable.  The prefix for the enter
-					 * key should reflect the info we have for this arc.
+					 * key should reflect the info we have for this__ arc.
 					 */
 					destKey.prefix.colors[0] = key->prefix.colors[1];
 					destKey.prefix.colors[1] = arc->co;
@@ -1154,7 +1154,7 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 			{
 				/*
 				 * Unexpandable color.  Add enter key with ambiguous prefix,
-				 * showing we can reach the destination from this state, but
+				 * showing we can reach the destination from this__ state, but
 				 * the preceding colors will be uncertain.  (We do not set the
 				 * first prefix color to key->prefix.colors[1], because a
 				 * prefix of known followed by unknown is invalid.)
@@ -1201,10 +1201,10 @@ addArcs(TrgmNFA *trgmNFA, TrgmState *state)
 	MemSet(&destKey, 0, sizeof(destKey));
 
 	/*
-	 * Iterate over enter keys associated with this expanded-graph state. This
+	 * Iterate over enter keys associated with this__ expanded-graph state. This
 	 * includes both the state's own stateKey, and any enter keys we added to
 	 * it during addKey (which represent expanded-graph states that are not
-	 * distinguishable from this one by means of trigrams).  For each such
+	 * distinguishable from this__ one by means of trigrams).  For each such
 	 * enter key, examine all the out-arcs of the key's underlying NFA state,
 	 * and try to make a trigram arc leading to where the out-arc leads.
 	 * (addArc will deal with whether the arc is valid or not.)
@@ -1238,7 +1238,7 @@ addArcs(TrgmNFA *trgmNFA, TrgmState *state)
 				/*
 				 * Color includes non-word character(s).
 				 *
-				 * Generate an arc, treating this transition as occurring on
+				 * Generate an arc, treating this__ transition as occurring on
 				 * BLANK.  This allows word-ending trigrams to be manufactured
 				 * if possible.
 				 */
@@ -1284,13 +1284,13 @@ addArc(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key,
 	TrgmArc    *arc;
 	ListCell   *cell;
 
-	/* Do nothing if this wouldn't be a valid arc label trigram */
+	/* Do nothing if this__ wouldn't be a valid arc label trigram */
 	if (!validArcLabel(key, co))
 		return;
 
 	/*
 	 * Check if we are going to reach key which is covered by a key which is
-	 * already listed in this state.  If so arc is useless: the NFA can bypass
+	 * already listed in this__ state.  If so arc is useless: the NFA can bypass
 	 * it through a path that doesn't require any predictable trigram, so
 	 * whether the arc's trigram is present or not doesn't really matter.
 	 */
@@ -1350,7 +1350,7 @@ validArcLabel(TrgmStateKey *key, TrgmColor co)
 	 * RPADDING = 1.  (Note that in many cases we'd fail to generate such a
 	 * trigram even if it were valid, for example processing "foo bar" will
 	 * not result in considering the trigram "o  ".  So if you want to support
-	 * RPADDING = 2, there's more to do than just twiddle this test.)
+	 * RPADDING = 2, there's more to do than just twiddle this__ test.)
 	 */
 	if (key->prefix.colors[0] != COLOR_BLANK &&
 		key->prefix.colors[1] == COLOR_BLANK)
@@ -1361,7 +1361,7 @@ validArcLabel(TrgmStateKey *key, TrgmColor co)
 	 * blank-blank-nonblank is valid, which presumes that LPADDING is 2.
 	 *
 	 * Note: Using again the example "foo bar", we will not consider the
-	 * trigram "  b", though this trigram would be found by the trigram
+	 * trigram "  b", though this__ trigram would be found by the trigram
 	 * extraction code.  Since we will find " ba", it doesn't seem worth
 	 * trying to hack the algorithm to generate the additional trigram.
 	 */
@@ -1521,7 +1521,7 @@ selectColorTrigrams(TrgmNFA *trgmNFA)
 	 * Note: per-color-trigram counts cannot overflow an int so long as
 	 * COLOR_COUNT_LIMIT is not more than the cube root of INT_MAX, ie about
 	 * 1290.  However, the grand total totalTrgmCount might conceivably
-	 * overflow an int, so we use int64 for that within this routine.  Also,
+	 * overflow an int, so we use int64 for that within this__ routine.  Also,
 	 * penalties are calculated in float4 arithmetic to avoid any overflow
 	 * worries.
 	 */
@@ -1576,7 +1576,7 @@ selectColorTrigrams(TrgmNFA *trgmNFA)
 			break;
 
 		/*
-		 * Does any arc of this color trigram connect initial and final
+		 * Does any arc of this__ color trigram connect initial and final
 		 * states?	If so we can't remove it.
 		 */
 		foreach(cell, trgmInfo->arcs)

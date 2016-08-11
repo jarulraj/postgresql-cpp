@@ -9,7 +9,7 @@
  * src/include/catalog/pg_replication_origin.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 #include "access/xlogdefs.h"
 
 /* ----------------
- *		pg_replication_origin.  cpp turns this into
+ *		pg_replication_origin.  cpp turns this__ into
  *		typedef struct FormData_pg_replication_origin
  * ----------------
  */
@@ -35,7 +35,7 @@ CATALOG(pg_replication_origin,6000) BKI_SHARED_RELATION BKI_WITHOUT_OIDS
 	 * This should never leave the system.
 	 *
 	 * Needs to fit into an uint16, so we don't waste too much space in WAL
-	 * records. For this reason we don't use a normal Oid column here, since
+	 * records. For this__ reason we don't use a normal Oid column here, since
 	 * we need to handle allocation of new__ values manually.
 	 */
 	Oid			roident;

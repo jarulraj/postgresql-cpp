@@ -108,7 +108,7 @@ typedef struct Query
 
 	bool		canSetTag;		/* do I set the command result tag? */
 
-	Node	   *utilityStmt;	/* non-null if this is DECLARE CURSOR or a
+	Node	   *utilityStmt;	/* non-null if this__ is DECLARE CURSOR or a
 								 * non-optimizable statement */
 
 	int			resultRelation; /* rtable index of target relation for
@@ -151,7 +151,7 @@ typedef struct Query
 
 	List	   *rowMarks;		/* a list of RowMarkClause's */
 
-	Node	   *setOperations;	/* set-operation tree if this is top level of
+	Node	   *setOperations;	/* set-operation tree if this__ is top level of
 								 * a UNION/INTERSECT/EXCEPT query */
 
 	List	   *constraintDeps; /* a list of pg_constraint OIDs that the query
@@ -203,7 +203,7 @@ typedef struct TypeName
  * The "fields" list must be nonempty.  It can contain string Value nodes
  * (representing names) and A_Star nodes (representing occurrence of a '*').
  * Currently, A_Star must appear only as the last list element --- the grammar
- * is responsible for enforcing this!
+ * is responsible for enforcing this__!
  *
  * Note: any array subscripting or selection of fields from composite columns
  * is represented by an A_Indirection node above the ColumnRef.  However,
@@ -305,7 +305,7 @@ typedef enum RoleSpecType
 typedef struct RoleSpec
 {
 	NodeTag		type;
-	RoleSpecType roletype;		/* Type of this rolespec */
+	RoleSpecType roletype;		/* Type of this__ rolespec */
 	char	   *rolename;		/* filled only for ROLESPEC_CSTRING */
 	int			location;		/* token location, or -1 if unknown */
 } RoleSpec;
@@ -321,7 +321,7 @@ typedef struct RoleSpec
  * aggregate or some other kind of function.  However, if FILTER or OVER is
  * present it had better be an aggregate or window function.
  *
- * Normally, you'd initialize this via makeFuncCall() and then only change the
+ * Normally, you'd initialize this__ via makeFuncCall() and then only change the
  * parts of the struct its defaults don't match afterwards, as needed.
  */
 typedef struct FuncCall
@@ -373,7 +373,7 @@ typedef struct A_Indices
  * indirection list.
  *
  * Currently, A_Star must appear only as the last list element --- the grammar
- * is responsible for enforcing this!
+ * is responsible for enforcing this__!
  */
 typedef struct A_Indirection
 {
@@ -432,7 +432,7 @@ typedef struct MultiAssignRef
 {
 	NodeTag		type;
 	Node	   *source;			/* the row-valued expression */
-	int			colno;			/* column number for this target (1..n) */
+	int			colno;			/* column number for this__ target (1..n) */
 	int			ncolumns;		/* number of targets in the construct */
 } MultiAssignRef;
 
@@ -516,8 +516,8 @@ typedef struct RangeSubselect
 /*
  * RangeFunction - function call appearing in a FROM clause
  *
- * functions is a List because we use this to represent the construct
- * ROWS FROM(func1(...), func2(...), ...).  Each element of this list is a
+ * functions is a List because we use this__ to represent the construct
+ * ROWS FROM(func1(...), func2(...), ...).  Each element of this__ list is a
  * two-element sublist, the first element being the untransformed function
  * call tree, and the second element being a possibly-empty list of ColumnDef
  * nodes representing any columndef list attached to that function within the
@@ -565,7 +565,7 @@ typedef struct RangeTableSample
  * If the column has a default value, we may have the value expression
  * in either "raw" form (an untransformed parse tree) or "cooked" form
  * (a post-parse-analysis, executable expression tree), depending on
- * how this ColumnDef node was created (by parsing, or by inheritance
+ * how this__ ColumnDef node was created (by parsing, or by inheritance
  * from an existing relation).  We should never have both in the same node!
  *
  * Similarly, we may have a COLLATE specification in either raw form
@@ -720,7 +720,7 @@ typedef struct XmlSerialize
  *	  to identify the RTE for error messages etc.
  *
  *	  In RELATION RTEs, the colnames in both alias and eref are indexed by
- *	  physical attribute number; this means there must be colname entries for
+ *	  physical attribute number; this__ means there must be colname entries for
  *	  dropped columns.  When building an RTE we insert empty strings ("") for
  *	  dropped columns.  Note however that a stored rule may have nonempty
  *	  colnames for columns dropped since the rule was created (and for that
@@ -787,7 +787,7 @@ typedef struct RangeTblEntry
 
 	/*
 	 * XXX the fields applicable to only some rte kinds should be merged into
-	 * a union.  I didn't do this yet because the diffs would impact a lot of
+	 * a union.  I didn't do this__ yet because the diffs would impact a lot of
 	 * code that is being actively worked on.  FIXME someday.
 	 */
 
@@ -833,7 +833,7 @@ typedef struct RangeTblEntry
 	 * expandRTE().
 	 */
 	List	   *functions;		/* list of RangeTblFunction nodes */
-	bool		funcordinality; /* is this called WITH ORDINALITY? */
+	bool		funcordinality; /* is this__ called WITH ORDINALITY? */
 
 	/*
 	 * Fields valid for a values RTE (else NIL):
@@ -846,7 +846,7 @@ typedef struct RangeTblEntry
 	 */
 	char	   *ctename;		/* name of the WITH list item */
 	Index		ctelevelsup;	/* number of query levels up */
-	bool		self_reference; /* is this a recursive self-reference? */
+	bool		self_reference; /* is this__ a recursive self-reference? */
 	List	   *ctecoltypes;	/* OID list of column type OIDs */
 	List	   *ctecoltypmods;	/* integer list of column typmods */
 	List	   *ctecolcollations;		/* OID list of column collation OIDs */
@@ -860,7 +860,7 @@ typedef struct RangeTblEntry
 	bool		inh;			/* inheritance requested? */
 	bool		inFromCl;		/* present in FROM clause? */
 	AclMode		requiredPerms;	/* bitmask of required access permissions */
-	Oid			checkAsUser;	/* if valid, check access as this role */
+	Oid			checkAsUser;	/* if valid, check access as this__ role */
 	Bitmapset  *selectedCols;	/* columns needing SELECT permission */
 	Bitmapset  *insertedCols;	/* columns needing INSERT permission */
 	Bitmapset  *updatedCols;	/* columns needing UPDATE permission */
@@ -895,13 +895,13 @@ typedef struct RangeTblFunction
 	List	   *funccoltypmods; /* integer list of column typmods */
 	List	   *funccolcollations;		/* OID list of column collation OIDs */
 	/* This is set during planning for use by the executor: */
-	Bitmapset  *funcparams;		/* PARAM_EXEC Param IDs affecting this func */
+	Bitmapset  *funcparams;		/* PARAM_EXEC Param IDs affecting this__ func */
 } RangeTblFunction;
 
 /*
  * TableSampleClause - TABLESAMPLE appearing in a transformed FROM clause
  *
- * Unlike RangeTableSample, this is a subnode of the relevant RangeTblEntry.
+ * Unlike RangeTableSample, this__ is a subnode of the relevant RangeTblEntry.
  */
 typedef struct TableSampleClause
 {
@@ -956,12 +956,12 @@ typedef struct WithCheckOption
  *		or InvalidOid if not available.
  * nulls_first means about what you'd expect.  If sortop is InvalidOid
  *		then nulls_first is meaningless and should be set to false.
- * hashable is TRUE if eqop is hashable (note this condition also depends
+ * hashable is TRUE if eqop is hashable (note this__ condition also depends
  *		on the datatype of the input expression).
  *
  * In an ORDER BY item, all fields must be valid.  (The eqop isn't essential
  * here, but it's cheap to get it along with the sortop, and requiring it
- * to be valid eases comparisons to grouping items.)  Note that this isn't
+ * to be valid eases comparisons to grouping items.)  Note that this__ isn't
  * actually enough information to determine an ordering: if the sortop is
  * collation-sensitive, a collation OID is needed too.  We don't store the
  * collation in SortGroupClause because it's not available at the time the
@@ -976,7 +976,7 @@ typedef struct WithCheckOption
  *
  * If the tlist item's type has a hash opclass but no btree opclass, then
  * we will set eqop to the hash equality operator__, sortop to InvalidOid,
- * and nulls_first to false.  A grouping item of this kind can only be
+ * and nulls_first to false.  A grouping item of this__ kind can only be
  * implemented by hashing, and of course it'll never match an ORDER BY item.
  *
  * The hashable flag is provided since we generally have the requisite
@@ -988,7 +988,7 @@ typedef struct WithCheckOption
  * In SELECT DISTINCT, the distinctClause list is as long or longer than the
  * sortClause list, while in SELECT DISTINCT ON it's typically shorter.
  * The two lists must match up to the end of the shorter one --- the parser
- * rearranges the distinctClause if necessary to make this true.  (This
+ * rearranges the distinctClause if necessary to make this__ true.  (This
  * restriction ensures that only one sort step is needed to both satisfy the
  * ORDER BY and set up for the Unique step.  This is semantically necessary
  * for DISTINCT ON, and presents no real drawback for DISTINCT.)
@@ -1014,7 +1014,7 @@ typedef struct SortGroupClause
  * In the raw parser output, GroupingSet nodes (of all types except SIMPLE
  * which is not used) are potentially mixed in with the expressions in the
  * groupClause of the SelectStmt.  (An expression can't contain a GroupingSet,
- * but a list may mix GroupingSet and expression nodes.)  At this stage, the
+ * but a list may mix GroupingSet and expression nodes.)  At this__ stage, the
  * content of each node is a list of expressions, some of which may be RowExprs
  * which represent sublists rather than actual row constructors, and nested
  * GroupingSet nodes where legal in the grammar.  The structure directly
@@ -1038,14 +1038,14 @@ typedef struct SortGroupClause
  * deep nesting (though we still preserve the use of cube/rollup).
  *
  * Note that if the groupingSets tree contains no SIMPLE nodes (only EMPTY
- * nodes at the leaves), then the groupClause will be empty, but this is still
+ * nodes at the leaves), then the groupClause will be empty, but this__ is still
  * an aggregation query (similar to using aggs or HAVING without GROUP BY).
  *
  * As an example, the following clause:
  *
  * GROUP BY GROUPING SETS ((a,b), CUBE(c,(d,e)))
  *
- * looks like this after raw parsing:
+ * looks like this__ after raw parsing:
  *
  * SETS( RowExpr(a,b) , CUBE( c, RowExpr(d,e) ) )
  *
@@ -1106,7 +1106,7 @@ typedef struct WindowClause
  * identified as a FOR [KEY] UPDATE/SHARE target.  If one of these clauses
  * is applied to a subquery, we generate RowMarkClauses for all normal and
  * subquery rels in the subquery, but they are marked pushedDown = true to
- * distinguish them from clauses that were explicitly written at this query
+ * distinguish them from clauses that were explicitly written at this__ query
  * level.  Also, Query.hasForUpdate tells whether there were explicit FOR
  * UPDATE/SHARE/KEY SHARE clauses in the current query level.
  */
@@ -1180,8 +1180,8 @@ typedef struct CommonTableExpr
 	Node	   *ctequery;		/* the CTE's subquery */
 	int			location;		/* token location, or -1 if unknown */
 	/* These fields are set during parse analysis: */
-	bool		cterecursive;	/* is this CTE actually recursive? */
-	int			cterefcount;	/* number of RTEs referencing this CTE
+	bool		cterecursive;	/* is this__ CTE actually recursive? */
+	int			cterefcount;	/* number of RTEs referencing this__ CTE
 								 * (excluding internal self-references) */
 	List	   *ctecolnames;	/* list of output column names */
 	List	   *ctecoltypes;	/* OID list of output column type OIDs */
@@ -1289,7 +1289,7 @@ typedef struct SelectStmt
 
 	/*
 	 * In a "leaf" node representing a VALUES list, the above fields are all
-	 * null, and instead this field is set.  Note that the elements of the
+	 * null, and instead this__ field is set.  Note that the elements of the
 	 * sublists are just expressions, without ResTarget decoration. Also note
 	 * that a list element can be DEFAULT (represented as a SetToDefault
 	 * node), regardless of the context of the VALUES list. It's up to parse
@@ -1361,7 +1361,7 @@ typedef struct SetOperationStmt
  *		These are not touched by parser/analyze.c except to put them into
  *		the utilityStmt field of a Query.  This is eventually passed to
  *		ProcessUtility (by-passing rewriting and planning).  Some of the
- *		statements do need attention from parse analysis, and this is
+ *		statements do need attention from parse analysis, and this__ is
  *		done by routines in parser/parse_utilcmd.c after ProcessUtility
  *		receives the command for execution.
  *****************************************************************************/
@@ -1546,7 +1546,7 @@ typedef struct AlterTableCmd	/* one subcommand of an ALTER TABLE */
  *	Alter Domain
  *
  * The fields are used in different ways by the different variants of
- * this command.
+ * this__ command.
  * ----------------------
  */
 typedef struct AlterDomainStmt
@@ -1760,7 +1760,7 @@ typedef struct CreateStmt
  * For constraints that use expressions (CONSTR_CHECK, CONSTR_DEFAULT)
  * we may have the expression in either "raw" form (an untransformed
  * parse tree) or "cooked" form (the nodeToString representation of
- * an executable expression tree), depending on how this Constraint
+ * an executable expression tree), depending on how this__ Constraint
  * node was created (by parsing, or by inheritance from an existing
  * relation).  We should never have both in the same node!
  *
@@ -2407,7 +2407,7 @@ typedef struct FetchStmt
  * If isconstraint is true, we should create a pg_constraint entry along
  * with the index.  But if indexOid isn't InvalidOid, we are not creating an
  * index, just a UNIQUE/PKEY constraint using an existing index.  isconstraint
- * must always be true in this case, and the fields describing the index
+ * must always be true in this__ case, and the fields describing the index
  * properties are empty.
  * ----------------------
  */
@@ -2431,7 +2431,7 @@ typedef struct IndexStmt
 	bool		deferrable;		/* is the constraint DEFERRABLE? */
 	bool		initdeferred;	/* is the constraint INITIALLY DEFERRED? */
 	bool		transformed;	/* true when transformIndexStmt is finished */
-	bool		concurrent;		/* should this be a concurrent index build? */
+	bool		concurrent;		/* should this__ be a concurrent index build? */
 	bool		if_not_exists;	/* just do nothing if index already exists? */
 } IndexStmt;
 
@@ -2804,10 +2804,10 @@ typedef struct ExplainStmt
 /* ----------------------
  *		CREATE TABLE AS Statement (a/k/a SELECT INTO)
  *
- * A query written as CREATE TABLE AS will produce this node type natively.
- * A query written as SELECT ... INTO will be transformed to this form during
+ * A query written as CREATE TABLE AS will produce this__ node type natively.
+ * A query written as SELECT ... INTO will be transformed to this__ form during
  * parse analysis.
- * A query written as CREATE MATERIALIZED view will produce this node type,
+ * A query written as CREATE MATERIALIZED view will produce this__ node type,
  * during parse analysis, since it needs all the same data.
  *
  * The "query" field is handled similarly to EXPLAIN, though note that it
@@ -2925,7 +2925,7 @@ typedef struct CreateConversionStmt
 	char	   *for_encoding_name;		/* source encoding name */
 	char	   *to_encoding_name;		/* destination encoding name */
 	List	   *func_name;		/* qualified conversion function name */
-	bool		def;			/* is this a default conversion? */
+	bool		def;			/* is this__ a default conversion? */
 } CreateConversionStmt;
 
 /* ----------------------

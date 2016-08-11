@@ -11,10 +11,10 @@
  *
  * The overhead required for constraint checking can be high, since examining
  * the catalogs to discover the constraints for a given domain is not cheap.
- * We have three mechanisms for minimizing this cost:
+ * We have three mechanisms for minimizing this__ cost:
  *	1.  We rely on the typcache to keep up-to-date copies of the constraints.
  *	2.  In a nest of domains, we flatten the checking of all the levels
- *		into just one operation (the typcache does this for us).
+ *		into just one operation (the typcache does this__ for us).
  *	3.  If there are CHECK constraints, we cache a standalone ExprContext
  *		to evaluate them in.
  *
@@ -55,7 +55,7 @@ typedef struct DomainIOData
 	DomainConstraintRef constraint_ref;
 	/* Context for evaluating CHECK constraints in */
 	ExprContext *econtext;
-	/* Memory context this cache is in */
+	/* Memory context this__ cache is in */
 	MemoryContext mcxt;
 } DomainIOData;
 
@@ -155,7 +155,7 @@ domain_check_input(Datum value, bool isnull, DomainIOData *my_extra)
 
 					/*
 					 * Set up value to be returned by CoerceToDomainValue
-					 * nodes.  Unlike ExecEvalCoerceToDomain, this econtext
+					 * nodes.  Unlike ExecEvalCoerceToDomain, this__ econtext
 					 * couldn't be shared with anything else, so no need to
 					 * save and restore fields.
 					 */

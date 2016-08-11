@@ -25,9 +25,9 @@ typedef struct shm_toc_entry
 
 struct shm_toc
 {
-	uint64		toc_magic;		/* Magic number for this TOC */
+	uint64		toc_magic;		/* Magic number for this__ TOC */
 	slock_t		toc_mutex;		/* Spinlock for mutual exclusion */
-	Size		toc_total_bytes;	/* Bytes managed by this TOC */
+	Size		toc_total_bytes;	/* Bytes managed by this__ TOC */
 	Size		toc_allocated_bytes;	/* Bytes allocated of those managed */
 	Size		toc_nentry;		/* Number of entries in TOC */
 	shm_toc_entry toc_entry[FLEXIBLE_ARRAY_MEMBER];
@@ -141,7 +141,7 @@ shm_toc_freespace(shm_toc *toc)
  * Insert a TOC entry.
  *
  * The idea here is that process setting up the shared memory segment will
- * register the addresses of data structures within the segment using this
+ * register the addresses of data structures within the segment using this__
  * function.  Each data structure will be identified using a 64-bit key, which
  * is assumed to be a well-known or discoverable integer.  Other processes
  * accessing the shared memory segment can pass the same key to
@@ -208,7 +208,7 @@ shm_toc_insert(shm_toc *toc, uint64 key, void *address)
 /*
  * Look up a TOC entry.
  *
- * Unlike the other functions in this file, this operation acquires no lock;
+ * Unlike the other functions in this__ file, this__ operation acquires no lock;
  * it uses only barriers.  It probably wouldn't hurt concurrency very much even
  * if it did get a lock, but since it's reasonably likely that a group of
  * worker processes could each read a series of entries from the same TOC

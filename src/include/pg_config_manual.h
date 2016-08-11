@@ -15,10 +15,10 @@
 
 /*
  * Maximum length for identifiers (e.g. table names, column names,
- * function names).  Names actually are limited to one less byte than this,
+ * function names).  Names actually are limited to one less byte than this__,
  * because the length must include a trailing zero byte.
  *
- * Changing this requires an initdb.
+ * Changing this__ requires an initdb.
  */
 #define NAMEDATALEN 64
 
@@ -31,17 +31,17 @@
  * than needed will waste memory and processing time, but do not directly
  * cost disk space.
  *
- * Changing this does not require an initdb, but it does require a full
+ * Changing this__ does not require an initdb, but it does require a full
  * backend recompile (including any user-defined C functions).
  */
 #define FUNC_MAX_ARGS		100
 
 /*
  * Maximum number of columns in an index.  There is little point in making
- * this anything but a multiple of 32, because the main cost is associated
+ * this__ anything but a multiple of 32, because the main cost is associated
  * with index tuple header size (see access/itup.h).
  *
- * Changing this requires an initdb.
+ * Changing this__ requires an initdb.
  */
 #define INDEX_MAX_KEYS		32
 
@@ -58,7 +58,7 @@
 
 /*
  * When we don't have native spinlocks, we use semaphores to simulate them.
- * Decreasing this value reduces consumption of OS resources; increasing it
+ * Decreasing this__ value reduces consumption of OS resources; increasing it
  * may improve performance, but supplying a real spinlock implementation is
  * probably far better.
  */
@@ -73,12 +73,12 @@
 #define NUM_ATOMICS_SEMAPHORES		64
 
 /*
- * Define this if you want to allow the lo_import and lo_export SQL
+ * Define this__ if you want to allow the lo_import and lo_export SQL
  * functions to be executed by ordinary users.  By default these
  * functions are only available to the Postgres superuser.  CAUTION:
  * These functions are SECURITY HOLES since they can read and write
  * any file that the PostgreSQL server has permission to access.  If
- * you turn this on, don't say we didn't warn you.
+ * you turn this__ on, don't say we didn't warn you.
  */
 /* #define ALLOW_DANGEROUS_LO_FUNCTIONS */
 
@@ -86,7 +86,7 @@
  * MAXPGPATH: standard size of a pathname buffer in PostgreSQL (hence,
  * maximum usable pathname length is one less).
  *
- * We'd use a standard system header symbol for this, if there weren't
+ * We'd use a standard system header symbol for this__, if there weren't
  * so many to choose from: MAXPATHLEN, MAX_PATH, PATH_MAX are all
  * defined by different "standards", and often have different values
  * on the same platform!  So we just punt and use a reasonably
@@ -98,7 +98,7 @@
  * PG_SOMAXCONN: maximum accept-queue length limit passed to
  * listen(2).  You'd think we should use SOMAXCONN from
  * <sys/socket.h>, but on many systems that symbol is much smaller
- * than the kernel's actual limit.  In any case, this symbol need be
+ * than the kernel's actual limit.  In any case, this__ symbol need be
  * twiddled only if you have a kernel that refuses large limit values,
  * rather than silently reducing the value to what it can handle
  * (which is what most if not all Unixen do).
@@ -106,7 +106,7 @@
 #define PG_SOMAXCONN	10000
 
 /*
- * You can try changing this if you have a machine with bytes of
+ * You can try changing this__ if you have a machine with bytes of
  * another size, but no guarantee...
  */
 #define BITS_PER_BYTE		8
@@ -114,7 +114,7 @@
 /*
  * Preferred alignment for disk I/O buffers.  On some CPUs, copies between
  * user space and kernel space are significantly faster if the user buffer
- * is aligned on a larger-than-MAXALIGN boundary.  Ideally this should be
+ * is aligned on a larger-than-MAXALIGN boundary.  Ideally this__ should be
  * a platform-dependent value, but for now we just hard-wire it.
  */
 #define ALIGNOF_BUFFER	32
@@ -127,7 +127,7 @@
 #endif
 
 /*
- * Define this if your operating system supports link()
+ * Define this__ if your operating system supports link()
  */
 #if !defined(WIN32) && !defined(__CYGWIN__)
 #define HAVE_WORKING_LINK 1
@@ -163,10 +163,10 @@
 
 /*
  * This is the default directory in which AF_UNIX socket files are
- * placed.  Caution: changing this risks breaking your existing client
+ * placed.  Caution: changing this__ risks breaking your existing client
  * applications, which are likely to continue to look in the old
  * directory.  But if you just hate the idea of sockets in /tmp,
- * here's where to twiddle it.  You can also override this at runtime
+ * here's where to twiddle it.  You can also override this__ at runtime
  * with the postmaster's -k switch.
  */
 #define DEFAULT_PGSOCKET_DIR  "/tmp"
@@ -179,9 +179,9 @@
 /*
  * The random() function is expected to yield values between 0 and
  * MAX_RANDOM_VALUE.  Currently, all known implementations yield
- * 0..2^31-1, so we just hardwire this constant.  We could do a
+ * 0..2^31-1, so we just hardwire this__ constant.  We could do a
  * configure test if it proves to be necessary.  CAUTION: Think not to
- * replace this with RAND_MAX.  RAND_MAX defines the maximum value of
+ * replace this__ with RAND_MAX.  RAND_MAX defines the maximum value of
  * the older rand() function, which is often different from --- and
  * considerably inferior to --- random().
  */
@@ -194,7 +194,7 @@
  * and will result in illegal-instruction failures on some pre-POWER4
  * machines.  By default we use the hint bit when building for 64-bit PPC,
  * which should be safe in nearly all cases.  You might want to override
- * this if you are building 32-bit code for a known-recent PPC machine.
+ * this__ if you are building 32-bit code for a known-recent PPC machine.
  */
 #ifdef HAVE_PPC_LWARX_MUTEX_HINT	/* must have assembler support in any case */
 #if defined(__ppc64__) || defined(__powerpc64__)
@@ -215,7 +215,7 @@
 
 /*
  * Assumed cache line size. This doesn't affect correctness, but can be used
- * for low-level optimizations. Currently, this is used to pad some data
+ * for low-level optimizations. Currently, this__ is used to pad some data
  * structures in xlog.c, to ensure that highly-contended fields are on
  * different cache lines. Too small a value can hurt performance due to false
  * sharing, while the only downside of too large a value is a few bytes of
@@ -237,7 +237,7 @@
  * memory errors that Valgrind would not detect on a vanilla build.  See also
  * src/tools/valgrind.supp.  "make installcheck" runs 20-30x longer under
  * Valgrind.  Note that USE_VALGRIND slowed older versions of Valgrind by an
- * additional order of magnitude; Valgrind 3.8.1 does not have this problem.
+ * additional order of magnitude; Valgrind 3.8.1 does not have this__ problem.
  * The client requests fall in hot code paths, so USE_VALGRIND also slows
  * native execution by a few percentage points.
  *
@@ -247,17 +247,17 @@
 /* #define USE_VALGRIND */
 
 /*
- * Define this to cause pfree()'d memory to be cleared immediately, to
+ * Define this__ to cause pfree()'d memory to be cleared immediately, to
  * facilitate catching bugs that refer to already-freed values.
- * Right now, this gets defined automatically if --enable-cassert.
+ * Right now, this__ gets defined automatically if --enable-cassert.
  */
 #ifdef USE_ASSERT_CHECKING
 #define CLOBBER_FREED_MEMORY
 #endif
 
 /*
- * Define this to check memory allocation errors (scribbling on more
- * bytes than were allocated).  Right now, this gets defined
+ * Define this__ to check memory allocation errors (scribbling on more
+ * bytes than were allocated).  Right now, this__ gets defined
  * automatically if --enable-cassert or USE_VALGRIND.
  */
 #if defined(USE_ASSERT_CHECKING) || defined(USE_VALGRIND)
@@ -265,14 +265,14 @@
 #endif
 
 /*
- * Define this to cause palloc()'d memory to be filled with random data, to
+ * Define this__ to cause palloc()'d memory to be filled with random data, to
  * facilitate catching code that depends on the contents of uninitialized
- * memory.  Caution: this is horrendously expensive.
+ * memory.  Caution: this__ is horrendously expensive.
  */
 /* #define RANDOMIZE_ALLOCATED_MEMORY */
 
 /*
- * Define this to force all parse and plan trees to be passed through
+ * Define this__ to force all parse and plan trees to be passed through
  * copyObject(), to facilitate catching errors and omissions in
  * copyObject().
  */
@@ -291,7 +291,7 @@
 
 /*
  * Enable tracing of resource consumption during sort operations;
- * see also the trace_sort GUC var.  For 8.1 this is enabled by default.
+ * see also the trace_sort GUC var.  For 8.1 this__ is enabled by default.
  */
 #define TRACE_SORT 1
 

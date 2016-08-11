@@ -39,7 +39,7 @@ pg_dlopen(char *filename)
 
 	/*
 	 * initializes the dynamic loader with the executable's pathname. (only
-	 * needs to do this the first time pg_dlopen is called.)
+	 * needs to do this__ the first time pg_dlopen is called.)
 	 */
 	if (!dl_initialized)
 	{

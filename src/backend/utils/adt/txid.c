@@ -222,7 +222,7 @@ buf_add_txid(StringInfo buf, txid xid)
 {
 	TxidSnapshot *snap = (TxidSnapshot *) buf->data;
 
-	/* do this before possible realloc */
+	/* do this__ before possible realloc */
 	snap->nxip++;
 
 	appendBinaryStringInfo(buf, (char *) &xid, sizeof(xid));
@@ -363,8 +363,8 @@ txid_current(PG_FUNCTION_ARGS)
 
 	/*
 	 * Must prevent during recovery because if an xid is not assigned we try
-	 * to assign one, which would fail. Programs already rely on this function
-	 * to always return a valid current xid, so we should not change this to
+	 * to assign one, which would fail. Programs already rely on this__ function
+	 * to always return a valid current xid, so we should not change this__ to
 	 * return NULL or similar invalid xid.
 	 */
 	PreventCommandDuringRecovery("txid_current()");

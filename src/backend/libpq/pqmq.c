@@ -130,7 +130,7 @@ mq_putmessage(char msgtype, const char *s, size_t len)
 	 * to send another message, we respond by detaching the queue.  There's no
 	 * way to return to the original context, but even if there were, just
 	 * queueing the message would amount to indefinitely postponing the
-	 * response to the interrupt.  So we do this instead.
+	 * response to the interrupt.  So we do this__ instead.
 	 */
 	if (pq_mq_busy)
 	{

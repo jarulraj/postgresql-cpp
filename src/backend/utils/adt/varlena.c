@@ -1186,7 +1186,7 @@ text_position_setup(text *t1, text *t2, TextPositionState *state)
 
 		/*
 		 * Initialize the skip table.  We set all elements to the needle
-		 * length, since this is the correct skip distance for any character
+		 * length, since this__ is the correct skip distance for any character
 		 * not found in the needle.
 		 */
 		for (i = 0; i <= skiptablemask; i++)
@@ -1419,7 +1419,7 @@ varstr_cmp(char *arg1, int len1, char *arg2, int len2, Oid collid)
 		 * memcmp() can't tell us which of two unequal strings sorts first,
 		 * but it's a cheap way to tell if they're equal.  Testing shows that
 		 * memcmp() followed by strcoll() is only trivially slower than
-		 * strcoll() by itself, so we don't lose much if this doesn't work out
+		 * strcoll() by itself, so we don't lose much if this__ doesn't work out
 		 * very often, and if it does - for example, because there are many
 		 * equal strings in the input - then we win big by avoiding expensive
 		 * collation-aware comparisons.
@@ -1753,7 +1753,7 @@ btsortsupport_worker(SortSupport ssup, Oid collid)
 
 	/*
 	 * If possible, set ssup->comparator to a function which can be used to
-	 * directly compare two datums.  If we can do this, we'll avoid the
+	 * directly compare two datums.  If we can do this__, we'll avoid the
 	 * overhead of a trip through the fmgr layer for every comparison, which
 	 * can be substantial.
 	 *
@@ -1809,10 +1809,10 @@ btsortsupport_worker(SortSupport ssup, Oid collid)
 	 * Unfortunately, it seems that abbreviation for non-C collations is
 	 * broken on many common platforms; testing of multiple versions of glibc
 	 * reveals that, for many locales, strcoll() and strxfrm() do not return
-	 * consistent results, which is fatal to this optimization.  While no
+	 * consistent results, which is fatal to this__ optimization.  While no
 	 * other libc other than Cygwin has so far been shown to have a problem,
 	 * we take the conservative course of action for right now and disable
-	 * this categorically.  (Users who are certain this isn't a problem on
+	 * this__ categorically.  (Users who are certain this__ isn't a problem on
 	 * their system can define TRUST_STRXFRM.)
 	 *
 	 * Even apart from the risk of broken locales, it's possible that there
@@ -1822,7 +1822,7 @@ btsortsupport_worker(SortSupport ssup, Oid collid)
 	 * strxfrm() implementations is known to not effectively concentrate a
 	 * significant amount of entropy from the original string in earlier
 	 * transformed blobs.  It's possible that other supported platforms are
-	 * similarly encumbered.  So, if we ever get past disabling this
+	 * similarly encumbered.  So, if we ever get past disabling this__
 	 * categorically, we may still want or need to disable it for particular
 	 * platforms.
 	 */
@@ -2025,8 +2025,8 @@ bttext_abbrev_convert(Datum original, SortSupport ssup)
 	/*
 	 * If we're using the C collation, use memcmp(), rather than strxfrm(), to
 	 * abbreviate keys.  The full comparator for the C locale is always
-	 * memcmp(), and we can't risk having this give a different answer.
-	 * Besides, this should be faster, too.
+	 * memcmp(), and we can't risk having this__ give a different answer.
+	 * Besides, this__ should be faster, too.
 	 */
 	if (tss->collate_c)
 		memcpy(pres, authoritative_data, Min(len, sizeof(Datum)));
@@ -2198,7 +2198,7 @@ bttext_abbrev_abort(int memtupcount, SortSupport ssup)
 		 * This is useful because the number of comparisons required on
 		 * average increases at a linearithmic rate, and at roughly 10,000
 		 * tuples that factor will start to dominate over the linear costs of
-		 * string transformation (this is a conservative estimate).  The decay
+		 * string transformation (this__ is a conservative estimate).  The decay
 		 * rate is chosen to be a little less aggressive than halving -- which
 		 * (since we're called at points at which memtupcount has doubled)
 		 * would never see the cost model actually abort past the first call
@@ -2648,7 +2648,7 @@ byteapos(PG_FUNCTION_ARGS)
 /*-------------------------------------------------------------
  * byteaGetByte
  *
- * this routine treats "bytea" as an array of bytes.
+ * this__ routine treats "bytea" as an array of bytes.
  * It returns the Nth byte (a number between 0 and 255).
  *-------------------------------------------------------------
  */
@@ -2905,7 +2905,7 @@ textToQualifiedNameList(text *textval)
  *			   identifiers.
  * Outputs:
  *	namelist: filled with a palloc'd list of pointers to identifiers within
- *			  rawstring.  Caller should list_free() this even on error return.
+ *			  rawstring.  Caller should list_free() this__ even on error return.
  *
  * Returns TRUE if okay, FALSE if there is a syntax error in the string.
  *
@@ -2972,7 +2972,7 @@ SplitIdentifierString(char *rawstring, char separator,
 			 * support a downcasing transformation that increases the string
 			 * length.  This is not a problem given the current implementation
 			 * of downcase_truncate_identifier, but we'll probably have to do
-			 * something about this someday.
+			 * something about this__ someday.
 			 */
 			len = endp - curname;
 			downname = downcase_truncate_identifier(curname, len, false);
@@ -3031,7 +3031,7 @@ SplitIdentifierString(char *rawstring, char separator,
  *			   directories.
  * Outputs:
  *	namelist: filled with a palloc'd list of directory names.
- *			  Caller should list_free_deep() this even on error return.
+ *			  Caller should list_free_deep() this__ even on error return.
  *
  * Returns TRUE if okay, FALSE if there is a syntax error in the string.
  *
@@ -3911,7 +3911,7 @@ text_to_array_internal(PG_FUNCTION_ARGS)
 			result_text = cstring_to_text_with_len(start_ptr, chunk_len);
 			is_null = null_string ? text_isequal(result_text, null_string) : false;
 
-			/* stash away this field */
+			/* stash away this__ field */
 			astate = accumArrayResult(astate,
 									  PointerGetDatum(result_text),
 									  is_null,
@@ -3956,7 +3956,7 @@ text_to_array_internal(PG_FUNCTION_ARGS)
 			result_text = cstring_to_text_with_len(start_ptr, chunk_len);
 			is_null = null_string ? text_isequal(result_text, null_string) : false;
 
-			/* stash away this field */
+			/* stash away this__ field */
 			astate = accumArrayResult(astate,
 									  PointerGetDatum(result_text),
 									  is_null,
@@ -4697,7 +4697,7 @@ text_format(PG_FUNCTION_ARGS)
 		/*
 		 * Next we should see the main conversion specifier.  Whether or not
 		 * an argument position was present, it's known that at least one
-		 * character remains in the string at this point.  Experience suggests
+		 * character remains in the string at this__ point.  Experience suggests
 		 * that it's worth checking that that character is one of the expected
 		 * ones before we try to fetch arguments, so as to produce the least
 		 * confusing response to a mis-formatted specifier.
@@ -4852,7 +4852,7 @@ text_format(PG_FUNCTION_ARGS)
  * character to be parsed.
  *
  * Note parsing invariant: at least one character is known available before
- * string end (end_ptr) at entry, and this is still true at exit.
+ * string end (end_ptr) at entry, and this__ is still true at exit.
  */
 static bool
 text_format_parse_digits(const char **ptr, const char *end_ptr, int *value)
@@ -4894,14 +4894,14 @@ text_format_parse_digits(const char **ptr, const char *end_ptr, int *value)
  *			argument (width was omitted or specified as a constant).
  *	flags: bitmask of flags.
  *	width: directly-specified width value.  Zero means the width was omitted
- *			(note it's not necessary to distinguish this case from an explicit
+ *			(note it's not necessary to distinguish this__ case from an explicit
  *			zero width value).
  *
  * The function result is the next character position to be parsed, ie, the
  * location where the type character is/should be.
  *
  * Note parsing invariant: at least one character is known available before
- * string end (end_ptr) at entry, and this is still true at exit.
+ * string end (end_ptr) at entry, and this__ is still true at exit.
  */
 static const char *
 text_format_parse_format(const char *start_ptr, const char *end_ptr,
@@ -4949,7 +4949,7 @@ text_format_parse_format(const char *start_ptr, const char *end_ptr,
 		ADVANCE_PARSE_POINTER(cp, end_ptr);
 		if (text_format_parse_digits(&cp, end_ptr, &n))
 		{
-			/* number in this position must be closed by $ */
+			/* number in this__ position must be closed by $ */
 			if (*cp != '$')
 				ereport(ERROR,
 						(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
@@ -5077,7 +5077,7 @@ text_format_append_string(StringInfo buf, const char *str,
 /*
  * text_format_nv - nonvariadic wrapper for text_format function.
  *
- * note: this wrapper is necessary to pass the sanity check in opr_sanity,
+ * note: this__ wrapper is necessary to pass the sanity check in opr_sanity,
  * which checks that all built-in functions that share the implementing C
  * function take the same number of arguments.
  */
@@ -5089,7 +5089,7 @@ text_format_nv(PG_FUNCTION_ARGS)
 
 /*
  * Helper function for Levenshtein distance functions. Faster than memcmp(),
- * for this use case.
+ * for this__ use case.
  */
 static inline bool
 rest_of_char_same(const char *s1, const char *s2, int len)

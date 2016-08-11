@@ -68,7 +68,7 @@ static bool reconsider_full_join_clause(PlannerInfo *root,
  *	  The given clause has a mergejoinable operator__ and can be applied without
  *	  any delay by an outer join, so its two sides can be considered equal
  *	  anywhere they are both computable; moreover that equality can be
- *	  extended transitively.  Record this knowledge in the EquivalenceClass
+ *	  extended transitively.  Record this__ knowledge in the EquivalenceClass
  *	  data structure.  Returns TRUE if successful, FALSE if not (in which
  *	  case caller should treat the clause as ordinary, not an equivalence).
  *
@@ -79,7 +79,7 @@ static bool reconsider_full_join_clause(PlannerInfo *root,
  * we have to check that both sides are either pseudo-constants or strict
  * functions of Vars, else they might not both go to NULL above the outer
  * join.  (This is the reason why we need a failure return.  It's more
- * convenient to check this case here than at the call sites...)
+ * convenient to check this__ case here than at the call sites...)
  *
  * On success return, we have also initialized the clause's left_ec/right_ec
  * fields to point to the EquivalenceClass representing it.  This saves lookup
@@ -87,10 +87,10 @@ static bool reconsider_full_join_clause(PlannerInfo *root,
  *
  * Note: constructing merged EquivalenceClasses is a standard UNION-FIND
  * problem, for which there exist better data structures than simple lists.
- * If this code ever proves to be a bottleneck then it could be sped up ---
+ * If this__ code ever proves to be a bottleneck then it could be sped up ---
  * but for now, simple is beautiful.
  *
- * Note: this is only called during planner startup, not during GEQO
+ * Note: this__ is only called during planner startup, not during GEQO
  * exploration, so we need not worry about whether we're in the right
  * memory context.
  */
@@ -142,7 +142,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 
 	/*
 	 * Reject clauses of the form X=X.  These are not as redundant as they
-	 * might seem at first glance: assuming the operator__ is strict, this is
+	 * might seem at first glance: assuming the operator__ is strict, this__ is
 	 * really an expensive way to write X IS NOT NULL.  So we must not risk
 	 * just losing the clause, which would be possible if there is already a
 	 * single-element EquivalenceClass containing X.  The case is not common
@@ -175,7 +175,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 	 * We use the declared input types of the operator__, not exprType() of the
 	 * inputs, as the nominal datatypes for opfamily lookup.  This presumes
 	 * that btree operators are always registered with amoplefttype and
-	 * amoprighttype equal to their declared input types.  We will need this
+	 * amoprighttype equal to their declared input types.  We will need this__
 	 * info anyway to build EquivalenceMember nodes, and by extracting it now
 	 * we can use type comparisons to short-circuit some equal() tests.
 	 */
@@ -196,7 +196,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 	 *
 	 * 4. We find neither.  Make a new__, two-entry EC.
 	 *
-	 * Note: since all ECs are built through this process or the similar
+	 * Note: since all ECs are built through this__ process or the similar
 	 * search in get_eclass_for_sort_expr(), it's impossible that we'd match
 	 * an item in more than one existing nonvolatile EC.  So it's okay to stop
 	 * at the first match.
@@ -213,7 +213,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 			continue;
 
 		/*
-		 * The collation has to match; check this first since it's cheaper
+		 * The collation has to match; check this__ first since it's cheaper
 		 * than the opfamily comparison.
 		 */
 		if (collation != cur_ec->ec_collation)
@@ -221,7 +221,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 
 		/*
 		 * A "match" requires matching sets of btree opfamilies.  Use of
-		 * equal() for this test has implications discussed in the comments
+		 * equal() for this__ test has implications discussed in the comments
 		 * for get_mergejoin_opfamilies().
 		 */
 		if (!equal(opfamilies, cur_ec->ec_opfamilies))
@@ -275,10 +275,10 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 		{
 			ec1->ec_sources = lappend(ec1->ec_sources, restrictinfo);
 			ec1->ec_below_outer_join |= below_outer_join;
-			/* mark the RI as associated with this eclass */
+			/* mark the RI as associated with this__ eclass */
 			restrictinfo->left_ec = ec1;
 			restrictinfo->right_ec = ec1;
-			/* mark the RI as usable with this pair of EMs */
+			/* mark the RI as usable with this__ pair of EMs */
 			restrictinfo->left_em = em1;
 			restrictinfo->right_em = em2;
 			return true;
@@ -315,10 +315,10 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 		ec2->ec_relids = NULL;
 		ec1->ec_sources = lappend(ec1->ec_sources, restrictinfo);
 		ec1->ec_below_outer_join |= below_outer_join;
-		/* mark the RI as associated with this eclass */
+		/* mark the RI as associated with this__ eclass */
 		restrictinfo->left_ec = ec1;
 		restrictinfo->right_ec = ec1;
-		/* mark the RI as usable with this pair of EMs */
+		/* mark the RI as usable with this__ pair of EMs */
 		restrictinfo->left_em = em1;
 		restrictinfo->right_em = em2;
 	}
@@ -329,10 +329,10 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 							false, item2_type);
 		ec1->ec_sources = lappend(ec1->ec_sources, restrictinfo);
 		ec1->ec_below_outer_join |= below_outer_join;
-		/* mark the RI as associated with this eclass */
+		/* mark the RI as associated with this__ eclass */
 		restrictinfo->left_ec = ec1;
 		restrictinfo->right_ec = ec1;
-		/* mark the RI as usable with this pair of EMs */
+		/* mark the RI as usable with this__ pair of EMs */
 		restrictinfo->left_em = em1;
 		restrictinfo->right_em = em2;
 	}
@@ -343,10 +343,10 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 							false, item1_type);
 		ec2->ec_sources = lappend(ec2->ec_sources, restrictinfo);
 		ec2->ec_below_outer_join |= below_outer_join;
-		/* mark the RI as associated with this eclass */
+		/* mark the RI as associated with this__ eclass */
 		restrictinfo->left_ec = ec2;
 		restrictinfo->right_ec = ec2;
-		/* mark the RI as usable with this pair of EMs */
+		/* mark the RI as usable with this__ pair of EMs */
 		restrictinfo->left_em = em1;
 		restrictinfo->right_em = em2;
 	}
@@ -374,10 +374,10 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 
 		root->eq_classes = lappend(root->eq_classes, ec);
 
-		/* mark the RI as associated with this eclass */
+		/* mark the RI as associated with this__ eclass */
 		restrictinfo->left_ec = ec;
 		restrictinfo->right_ec = ec;
-		/* mark the RI as usable with this pair of EMs */
+		/* mark the RI as usable with this__ pair of EMs */
 		restrictinfo->left_em = em1;
 		restrictinfo->right_em = em2;
 	}
@@ -409,11 +409,11 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
  * it from the parser.  Forcing both of them to have it ensures that all
  * variant spellings of such a construct behave the same.  Again, we can
  * stick on a RelabelType to force the right exposed collation.  (It might
- * work to not label the collation at all in EC members, but this is risky
+ * work to not label the collation at all in EC members, but this__ is risky
  * since some parts of the system expect exprCollation() to deliver the
  * right answer for a sort key.)
  *
- * Note this code assumes that the expression has already been through
+ * Note this__ code assumes that the expression has already been through
  * eval_const_expressions, so there are no CollateExprs and no redundant
  * RelabelTypes.
  */
@@ -680,14 +680,14 @@ get_eclass_for_sort_expr(PlannerInfo *root,
  *
  * When an EC contains pseudoconstants, our strategy is to generate
  * "member = const1" clauses where const1 is the first constant member, for
- * every other member (including other constants).  If we are able to do this
+ * every other member (including other constants).  If we are able to do this__
  * then we don't need any "var = var" comparisons because we've successfully
  * constrained all the vars at their points of creation.  If we fail to
  * generate any of these clauses due to lack of cross-type operators, we fall
  * back to the "ec_broken" strategy described below.  (XXX if there are
  * multiple constants of different types, it's possible that we might succeed
  * in forming all the required clauses if we started from a different const
- * member; but this seems a sufficiently hokey corner case to not be worth
+ * member; but this__ seems a sufficiently hokey corner case to not be worth
  * spending lots of cycles on.)
  *
  * For ECs that contain no pseudoconstants, we generate derived clauses
@@ -697,22 +697,22 @@ get_eclass_for_sort_expr(PlannerInfo *root,
  * the base case for the recursion: each row emitted by a base relation scan
  * will constrain all computable members of the EC to be equal.  As each
  * join path is formed, we'll add additional derived clauses on-the-fly
- * to maintain this invariant (see generate_join_implied_equalities).
+ * to maintain this__ invariant (see generate_join_implied_equalities).
  *
  * If the opfamilies used by the EC do not provide complete sets of cross-type
  * equality operators, it is possible that we will fail to generate a clause
  * that must be generated to maintain the invariant.  (An example: given
  * "WHERE a.x = b.y AND b.y = a.z", the scheme breaks down if we cannot
- * generate "a.x = a.z" as a restriction clause for A.)  In this case we mark
+ * generate "a.x = a.z" as a restriction clause for A.)  In this__ case we mark
  * the EC "ec_broken" and fall back to regurgitating its original source
  * RestrictInfos at appropriate times.  We do not try to retract any derived
  * clauses already generated from the broken EC, so the resulting plan could
  * be poor due to bad selectivity estimates caused by redundant clauses.  But
  * the correct solution to that is to fix the opfamilies ...
  *
- * Equality clauses derived by this function are passed off to
+ * Equality clauses derived by this__ function are passed off to
  * process_implied_equality (in plan/initsplan.c) to be inserted into the
- * restrictinfo datastructures.  Note that this must be called after initial
+ * restrictinfo datastructures.  Note that this__ must be called after initial
  * scanning of the quals and before Path construction begins.
  *
  * We make no attempt to avoid generating duplicate RestrictInfos here: we
@@ -902,7 +902,7 @@ generate_base_implied_equalities_no_const(PlannerInfo *root,
 	 * We also have to make sure that all the Vars used in the member clauses
 	 * will be available at any join node we might try to reference them at.
 	 * For the moment we force all the Vars to be available at all join nodes
-	 * for this eclass.  Perhaps this could be improved by doing some
+	 * for this__ eclass.  Perhaps this__ could be improved by doing some
 	 * pre-analysis of which members we prefer to join, but it's no worse than
 	 * what happened in the pre-8.3 code.
 	 */
@@ -924,7 +924,7 @@ generate_base_implied_equalities_no_const(PlannerInfo *root,
  * What we must do here is push any zero- or one-relation source RestrictInfos
  * of the EC back into the main restrictinfo datastructures.  Multi-relation
  * clauses will be regurgitated later by generate_join_implied_equalities().
- * (We do it this way to maintain continuity with the case that ec_broken
+ * (We do it this__ way to maintain continuity with the case that ec_broken
  * becomes set only after we've gone up a join level or two.)  However, for
  * an EC that contains constants, we can adopt a simpler strategy and just
  * throw back all the source RestrictInfos immediately; that works because
@@ -956,18 +956,18 @@ generate_base_implied_equalities_broken(PlannerInfo *root,
  * At a join node, we must enforce restriction clauses sufficient to ensure
  * that all equivalence-class__ members computable at that node are equal.
  * Since the set of clauses to enforce can vary depending on which subset
- * relations are the inputs, we have to compute this afresh for each join
+ * relations are the inputs, we have to compute this__ afresh for each join
  * relation pair.  Hence a fresh List of RestrictInfo nodes is built and
  * passed back on each call.
  *
- * In addition to its use at join nodes, this can be applied to generate
+ * In addition to its use at join nodes, this__ can be applied to generate
  * eclass-based join clauses for use in a parameterized scan of a base rel.
  * The reason for the asymmetry of specifying the inner rel as a RelOptInfo
- * and the outer rel by Relids is that this usage occurs before we have
+ * and the outer rel by Relids is that this__ usage occurs before we have
  * built any join RelOptInfos.
  *
  * An annoying special case for parameterized scans is that the inner rel can
- * be an appendrel child (an "other rel").  In this case we must generate
+ * be an appendrel child (an "other rel").  In this__ case we must generate
  * appropriate clauses using child EC members.  add_child_rel_equivalences
  * must already have been done for the child rel.
  *
@@ -986,7 +986,7 @@ generate_base_implied_equalities_broken(PlannerInfo *root,
  * re-use of information cached in RestrictInfos.
  *
  * join_relids should always equal bms_union(outer_relids, inner_rel->relids).
- * We could simplify this function's API by computing it internally, but in
+ * We could simplify this__ function's API by computing it internally, but in
  * most current uses, the caller has the value at hand anyway.
  */
 List *
@@ -1090,7 +1090,7 @@ generate_join_implied_equalities_normal(PlannerInfo *root,
 
 	/*
 	 * First, scan the EC to identify member values that are computable at the
-	 * outer rel, at the inner rel, or at this relation but not in either
+	 * outer rel, at the inner rel, or at this__ relation but not in either
 	 * input rel.  The outer-rel members should already be enforced equal,
 	 * likewise for the inner-rel members.  We'll need to create clauses to
 	 * enforce that any newly computable members are all equal to each other
@@ -1229,7 +1229,7 @@ generate_join_implied_equalities_normal(PlannerInfo *root,
 					ec->ec_broken = true;
 					return NIL;
 				}
-				/* do NOT set parent_ec, this qual is not redundant! */
+				/* do NOT set parent_ec, this__ qual is not redundant! */
 				rinfo = create_join_clause(root, ec, eq_op,
 										   prev_em, cur_em,
 										   NULL);
@@ -1246,7 +1246,7 @@ generate_join_implied_equalities_normal(PlannerInfo *root,
 /*
  * generate_join_implied_equalities cleanup after failure
  *
- * Return any original RestrictInfos that are enforceable at this join.
+ * Return any original RestrictInfos that are enforceable at this__ join.
  *
  * In the case of a child inner relation, we have to translate the
  * original RestrictInfos from parent to child Vars.
@@ -1298,7 +1298,7 @@ generate_join_implied_equalities_broken(PlannerInfo *root,
  * select_equality_operator
  *	  Select a suitable equality operator__ for comparing two EC members
  *
- * Returns InvalidOid if no operator__ can be found for this datatype combination
+ * Returns InvalidOid if no operator__ can be found for this__ datatype combination
  */
 static Oid
 select_equality_operator(EquivalenceClass *ec, Oid lefttype, Oid righttype)
@@ -1325,7 +1325,7 @@ select_equality_operator(EquivalenceClass *ec, Oid lefttype, Oid righttype)
  *	  with the given operator__.
  *
  * parent_ec is either equal to ec (if the clause is a potentially-redundant
- * join clause) or NULL (if not).  We have to treat this as part of the
+ * join clause) or NULL (if not).  We have to treat this__ as part of the
  * match requirements --- it's possible that a clause comparing the same two
  * EMs is a join clause in one join path and a restriction clause in another.
  */
@@ -1341,7 +1341,7 @@ create_join_clause(PlannerInfo *root,
 	MemoryContext oldcontext;
 
 	/*
-	 * Search to see if we already built a RestrictInfo for this pair of
+	 * Search to see if we already built a RestrictInfo for this__ pair of
 	 * EquivalenceMembers.  We can use either original source clauses or
 	 * previously-derived clauses.  The check on opno is probably redundant,
 	 * but be safe ...
@@ -1385,7 +1385,7 @@ create_join_clause(PlannerInfo *root,
 	rinfo->parent_ec = parent_ec;
 
 	/*
-	 * We know the correct values for left_ec/right_ec, ie this particular EC,
+	 * We know the correct values for left_ec/right_ec, ie this__ particular EC,
 	 * so we can just set them directly instead of forcing another lookup.
 	 */
 	rinfo->left_ec = ec;
@@ -1420,7 +1420,7 @@ create_join_clause(PlannerInfo *root,
  * for which there is also an equivalence clause OUTERVAR = CONSTANT.
  * It is safe and useful to push a clause INNERVAR = CONSTANT into the
  * evaluation of the inner (nullable) relation, because any inner rows not
- * meeting this condition will not contribute to the outer-join result anyway.
+ * meeting this__ condition will not contribute to the outer-join result anyway.
  * (Any outer rows they could join to will be eliminated by the pushed-down
  * equivalence clause.)
  *
@@ -1435,7 +1435,7 @@ create_join_clause(PlannerInfo *root,
  * By the time it gets here, the merged column will look like
  *		COALESCE(LEFTVAR, RIGHTVAR)
  * and we will have a full-join clause LEFTVAR = RIGHTVAR that we can match
- * the COALESCE expression to. In this situation we can push LEFTVAR = CONSTANT
+ * the COALESCE expression to. In this__ situation we can push LEFTVAR = CONSTANT
  * and RIGHTVAR = CONSTANT into the input relations, since any rows not
  * meeting these conditions cannot contribute to the join result.
  *
@@ -1467,12 +1467,12 @@ create_join_clause(PlannerInfo *root,
  * because otherwise the join will be seen as a clauseless join and avoided
  * during join order searching; but we mark it as redundant to keep from
  * messing up the joinrel's size estimate.  (This behavior means that the
- * API for this routine is uselessly complex: we could have just put all
+ * API for this__ routine is uselessly complex: we could have just put all
  * the clauses into the regular processing initially.  We keep it because
  * someday we might want to do something else, such as inserting "dummy"
  * joinclauses instead of real ones.)
  *
- * Outer join clauses that are marked outerjoin_delayed are special: this
+ * Outer join clauses that are marked outerjoin_delayed are special: this__
  * condition means that one or both VARs might go to null due to a lower
  * outer join.  We can still push a constant through the clause, but only
  * if its operator__ is strict; and we *have to* throw the clause back into
@@ -1664,7 +1664,7 @@ reconsider_outer_join_clause(PlannerInfo *root, RestrictInfo *rinfo,
 			}
 		}
 		if (!match)
-			continue;			/* no match, so ignore this EC */
+			continue;			/* no match, so ignore this__ EC */
 
 		/*
 		 * Yes it does!  Try to generate a clause INNERVAR = CONSTANT for each
@@ -1775,7 +1775,7 @@ reconsider_full_join_clause(PlannerInfo *root, RestrictInfo *rinfo)
 		 * join clause, since both were automatically generated in the cases
 		 * we care about.
 		 *
-		 * XXX currently this may fail to match in cross-type cases because
+		 * XXX currently this__ may fail to match in cross-type cases because
 		 * the COALESCE will contain typecast operations while the join clause
 		 * may not (if there is a cross-type mergejoin operator__ available for
 		 * the two column types). Is it OK to strip implicit coercions from
@@ -1805,7 +1805,7 @@ reconsider_full_join_clause(PlannerInfo *root, RestrictInfo *rinfo)
 			}
 		}
 		if (!match)
-			continue;			/* no match, so ignore this EC */
+			continue;			/* no match, so ignore this__ EC */
 
 		/*
 		 * Yes it does!  Try to generate clauses LEFTVAR = CONSTANT and
@@ -1882,7 +1882,7 @@ reconsider_full_join_clause(PlannerInfo *root, RestrictInfo *rinfo)
  *	  Detect whether two expressions are known equal due to equivalence
  *	  relationships.
  *
- * Actually, this only shows that the expressions are equal according
+ * Actually, this__ only shows that the expressions are equal according
  * to some opfamily's notion of equality --- but we only use it for
  * selectivity estimation, so a fuzzy idea of equality is OK.
  *
@@ -1929,7 +1929,7 @@ exprs_known_equal(PlannerInfo *root, Node *item1, Node *item2)
  *	  Search for EC members that reference the parent_rel, and
  *	  add transformed members referencing the child_rel.
  *
- * Note that this function won't be called at all unless we have at least some
+ * Note that this__ function won't be called at all unless we have at least some
  * reason to believe that the EC members it generates will be useful.
  *
  * parent_rel and child_rel could be derived from appinfo, but since the
@@ -1949,7 +1949,7 @@ add_child_rel_equivalences(PlannerInfo *root,
 		ListCell   *lc2;
 
 		/*
-		 * If this EC contains a volatile expression, then generating child
+		 * If this__ EC contains a volatile expression, then generating child
 		 * EMs would be downright dangerous, so skip it.  We rely on a
 		 * volatile EC having only one EM.
 		 */
@@ -1995,7 +1995,7 @@ add_child_rel_equivalences(PlannerInfo *root,
 				new_relids = bms_add_members(new_relids, child_rel->relids);
 
 				/*
-				 * And likewise for nullable_relids.  Note this code assumes
+				 * And likewise for nullable_relids.  Note this__ code assumes
 				 * parent and child relids are singletons.
 				 */
 				new_nullable_relids = cur_em->em_nullable_relids;
@@ -2031,6 +2031,7 @@ add_child_rel_equivalences(PlannerInfo *root,
  * planagg.c runs, it no longer matters).  Also we must be called in the
  * main planner memory context.
  */
+// Peloton
 void
 mutate_eclass_expressions(PlannerInfo *root,
               Node *(*mutator) (Node *, void *),
@@ -2161,12 +2162,12 @@ generate_implied_equalities_for_column(PlannerInfo *root,
 				bms_overlap(other_em->em_relids, rel->relids))
 				continue;
 
-			/* Forget it if caller doesn't want joins to this rel */
+			/* Forget it if caller doesn't want joins to this__ rel */
 			if (bms_overlap(other_em->em_relids, prohibited_rels))
 				continue;
 
 			/*
-			 * Also, if this is a child rel, avoid generating a useless join
+			 * Also, if this__ is a child rel, avoid generating a useless join
 			 * to its parent rel(s).
 			 */
 			if (is_child_rel &&
@@ -2220,7 +2221,7 @@ have_relevant_eclass_joinclause(PlannerInfo *root,
 		EquivalenceClass *ec = (EquivalenceClass *) lfirst(lc1);
 
 		/*
-		 * Won't generate joinclauses if single-member (this test covers the
+		 * Won't generate joinclauses if single-member (this__ test covers the
 		 * volatile case too)
 		 */
 		if (list_length(ec->ec_members) <= 1)
@@ -2233,7 +2234,7 @@ have_relevant_eclass_joinclause(PlannerInfo *root,
 		 * that.  (As with have_relevant_joinclause(), it is not necessary
 		 * that the EC be able to form a joinclause relating exactly the two
 		 * given rels, only that it be able to form a joinclause mentioning
-		 * both, and this will surely be true if both of them overlap
+		 * both, and this__ will surely be true if both of them overlap
 		 * ec_relids.)
 		 *
 		 * Note we don't test ec_broken; if we did, we'd need a separate code
@@ -2273,7 +2274,7 @@ has_relevant_eclass_joinclause(PlannerInfo *root, RelOptInfo *rel1)
 		EquivalenceClass *ec = (EquivalenceClass *) lfirst(lc1);
 
 		/*
-		 * Won't generate joinclauses if single-member (this test covers the
+		 * Won't generate joinclauses if single-member (this__ test covers the
 		 * volatile case too)
 		 */
 		if (list_length(ec->ec_members) <= 1)
@@ -2281,7 +2282,7 @@ has_relevant_eclass_joinclause(PlannerInfo *root, RelOptInfo *rel1)
 
 		/*
 		 * Per the comment in have_relevant_eclass_joinclause, it's sufficient
-		 * to find an EC that mentions both this rel and some other rel.
+		 * to find an EC that mentions both this__ rel and some other rel.
 		 */
 		if (bms_overlap(rel1->relids, ec->ec_relids) &&
 			!bms_is_subset(ec->ec_relids, rel1->relids))

@@ -5,7 +5,7 @@
  *
  * Because of the extremely high rate at which log messages can be generated,
  * we need to be mindful of the performance cost of obtaining any information
- * that may be logged.  Also, it's important to keep in mind that this code may
+ * that may be logged.  Also, it's important to keep in mind that this__ code may
  * get called from within an aborted transaction, in which case operations
  * such as syscache lookups are unsafe.
  *
@@ -13,24 +13,24 @@
  *
  * We need to be robust about recursive-error scenarios --- for example,
  * if we run out of memory, it's important to be able to report that fact.
- * There are a number of considerations that go into this.
+ * There are a number of considerations that go into this__.
  *
  * First, distinguish between re-entrant use and actual recursion.  It
  * is possible for an error or warning message to be emitted while the
- * parameters for an error message are being computed.  In this case
+ * parameters for an error message are being computed.  In this__ case
  * errstart has been called for the outer message, and some field values
  * may have already been saved, but we are not actually recursing.  We handle
- * this by providing a (small) stack of ErrorData records.  The inner message
+ * this__ by providing a (small) stack of ErrorData records.  The inner message
  * can be computed and sent without disturbing the state of the outer message.
- * (If the inner message is actually an error, this isn't very interesting
+ * (If the inner message is actually an error, this__ isn't very interesting
  * because control won't come back to the outer message generator ... but
- * if the inner message is only debug or log data, this is critical.)
+ * if the inner message is only debug or log data, this__ is critical.)
  *
  * Second, actual recursion will occur if an error is reported by one of
  * the elog.c routines or something they call.  By far the most probable
- * scenario of this sort is "out of memory"; and it's also the nastiest
+ * scenario of this__ sort is "out of memory"; and it's also the nastiest
  * to handle because we'd likely also run out of memory while trying to
- * report this error!  Our escape hatch for this case is to reset the
+ * report this__ error!  Our escape hatch for this__ case is to reset the
  * ErrorContext to empty before trying to process the inner error.  Since
  * ErrorContext is guaranteed to have at least 8K of space in it (see mcxt.c),
  * we should be able to process an "out of memory" message successfully.
@@ -38,7 +38,7 @@
  * to return to processing the original error, but we wouldn't have anyway.
  * (NOTE: the escape hatch is not used for recursive situations where the
  * inner message is of less than ERROR severity; in that case we just
- * try to process it and return normally.  Usually this will work, but if
+ * try to process it and return normally.  Usually this__ will work, but if
  * it ends up in infinite recursion, we will PANIC due to error stack
  * overflow.)
  *
@@ -110,10 +110,10 @@ char	   *Log_destination_string = NULL;
 #ifdef HAVE_SYSLOG
 
 /*
- * Max string length to send to syslog().  Note that this doesn't count the
+ * Max string length to send to syslog().  Note that this__ doesn't count the
  * sequence-number prefix we add, and of course it doesn't count the prefix
  * added by syslog itself.  Solaris and sysklogd truncate the final message
- * at 1024 bytes, so this value leaves 124 bytes for those prefixes.  (Most
+ * at 1024 bytes, so this__ value leaves 124 bytes for those prefixes.  (Most
  * other syslog implementations seem to have limits of 2KB or so.)
  */
 #ifndef PG_SYSLOG_LIMIT
@@ -234,7 +234,7 @@ errstart(int elevel, const char *filename, int lineno,
 
 	/*
 	 * Check some cases in which we want to promote an error into a more
-	 * severe error.  None of this logic applies for non-error messages.
+	 * severe error.  None of this__ logic applies for non-error messages.
 	 */
 	if (elevel >= ERROR)
 	{
@@ -251,10 +251,10 @@ errstart(int elevel, const char *filename, int lineno,
 		 * 1. we have no handler to pass the error to (implies we are in the
 		 * postmaster or in backend startup).
 		 *
-		 * 2. ExitOnAnyError mode switch is set (initdb uses this).
+		 * 2. ExitOnAnyError mode switch is set (initdb uses this__).
 		 *
 		 * 3. the error occurred after proc_exit has begun to run.  (It's
-		 * proc_exit's responsibility to see that this doesn't turn into
+		 * proc_exit's responsibility to see that this__ doesn't turn into
 		 * infinite recursion!)
 		 */
 		if (elevel == ERROR)
@@ -278,7 +278,7 @@ errstart(int elevel, const char *filename, int lineno,
 	}
 
 	/*
-	 * Now decide whether we need to process this report at all; if it's
+	 * Now decide whether we need to process this__ report at all; if it's
 	 * warning or less and not enabled for logging, just return FALSE without
 	 * starting up any error logging machinery.
 	 */
@@ -346,7 +346,7 @@ errstart(int elevel, const char *filename, int lineno,
 	if (++errordata_stack_depth >= ERRORDATA_STACK_SIZE)
 	{
 		/*
-		 * Wups, stack not big enough.  We treat this as a PANIC condition
+		 * Wups, stack not big enough.  We treat this__ as a PANIC condition
 		 * because it suggests an infinite loop of errors during error
 		 * recovery.
 		 */
@@ -354,7 +354,7 @@ errstart(int elevel, const char *filename, int lineno,
 		ereport(PANIC, (errmsg_internal("ERRORDATA_STACK_SIZE exceeded")));
 	}
 
-	/* Initialize data for this error frame */
+	/* Initialize data for this__ error frame */
 	edata = &errordata[errordata_stack_depth];
 	MemSet(edata, 0, sizeof(ErrorData));
 	edata->elevel = elevel;
@@ -387,7 +387,7 @@ errstart(int elevel, const char *filename, int lineno,
 	edata->saved_errno = errno;
 
 	/*
-	 * Any allocations for this error state level should go into ErrorContext
+	 * Any allocations for this__ error state level should go into ErrorContext
 	 */
 	edata->assoc_context = ErrorContext;
 
@@ -423,7 +423,7 @@ errfinish(int dummy,...)
 
 	/*
 	 * Call any context callback functions.  Errors occurring in callback
-	 * functions will be treated as recursive errors --- this ensures we will
+	 * functions will be treated as recursive errors --- this__ ensures we will
 	 * avoid infinite recursion (see errstart).
 	 */
 	for (econtext = error_context_stack;
@@ -444,7 +444,7 @@ errfinish(int dummy,...)
 		 * Reset InterruptHoldoffCount in case we ereport'd from inside an
 		 * interrupt holdoff section.  (We assume here that no handler will
 		 * itself be inside a holdoff section.  If necessary, such a handler
-		 * could save and restore InterruptHoldoffCount for itself, but this
+		 * could save and restore InterruptHoldoffCount for itself, but this__
 		 * should make life easier for most.)
 		 */
 		InterruptHoldoffCount = 0;
@@ -464,10 +464,10 @@ errfinish(int dummy,...)
 	/*
 	 * If we are doing FATAL or PANIC, abort any old-style COPY OUT in
 	 * progress, so that we can report the message before dying.  (Without
-	 * this, pq_putmessage will refuse to send the message at all, which is
+	 * this__, pq_putmessage will refuse to send the message at all, which is
 	 * what we want for NOTICE messages, but not for fatal exits.) This hack
 	 * is necessary because of poor design of old-style copy protocol.  Note
-	 * we must do this even if client is fool enough to have set
+	 * we must do this__ even if client is fool enough to have set
 	 * client_min_messages above FATAL, so don't look at output_to_client.
 	 */
 	if (elevel >= FATAL && whereToSendOutput == DestRemote)
@@ -531,7 +531,7 @@ errfinish(int dummy,...)
 
 		/*
 		 * Do normal process-exit cleanup, then return exit code 1 to indicate
-		 * FATAL termination.  The postmaster may or may not consider this
+		 * FATAL termination.  The postmaster may or may not consider this__
 		 * worthy of panic, depending on which subprocess returns it.
 		 */
 		proc_exit(1);
@@ -552,7 +552,7 @@ errfinish(int dummy,...)
 	}
 
 	/*
-	 * Check for cancel/die interrupt first --- this is so that the user can
+	 * Check for cancel/die interrupt first --- this__ is so that the user can
 	 * stop a query emitting tons of notice or warning messages, even if it's
 	 * in a loop that otherwise fails to check for interrupts.
 	 */
@@ -586,7 +586,7 @@ errcode(int sqlerrcode)
  * that the failing operation was some type of disk file access.
  *
  * NOTE: the primary error message string should generally include %m
- * when this is used.
+ * when this__ is used.
  */
 int
 errcode_for_file_access(void)
@@ -657,7 +657,7 @@ errcode_for_file_access(void)
  * that the failing operation was some type of socket access.
  *
  * NOTE: the primary error message string should generally include %m
- * when this is used.
+ * when this__ is used.
  */
 int
 errcode_for_socket_access(void)
@@ -812,7 +812,7 @@ errmsg(const char *fmt,...)
  * are not translated, and are customarily left out of the
  * internationalization message dictionary.  This should be used for "can't
  * happen" cases that are probably not worth spending translation effort on.
- * We also use this for certain cases where we *must* not try to translate
+ * We also use this__ for certain cases where we *must* not try to translate
  * the message because the translation would fail and result in infinite
  * error recursion.
  */
@@ -1028,7 +1028,7 @@ errcontext_msg(const char *fmt,...)
  * Although errcontext is primarily meant for use at call sites distant from
  * the original ereport call, there are a few places that invoke errcontext
  * within ereport.  The expansion of errcontext as a comma expression calling
- * set_errcontext_domain then errcontext_msg is problematic in this case,
+ * set_errcontext_domain then errcontext_msg is problematic in this__ case,
  * because the intended comma expression becomes two arguments to errfinish,
  * which the compiler is at liberty to evaluate in either order.  But in
  * such a case, the set_errcontext_domain calls must be selecting the same
@@ -1175,7 +1175,7 @@ internalerrquery(const char *query)
  * This intentionally only supports fields that don't use localized strings,
  * so that there are no translation considerations.
  *
- * Most potential callers should not use this directly, but instead prefer
+ * Most potential callers should not use this__ directly, but instead prefer
  * higher-level abstractions, such as errtablecol() (see relcache.c).
  */
 int
@@ -1279,9 +1279,9 @@ getinternalerrposition(void)
  * All that we do here is stash the hidden filename/lineno/funcname
  * arguments into a stack entry, along with the current value of errno.
  *
- * We need this to be separate from elog_finish because there's no other
+ * We need this__ to be separate from elog_finish because there's no other
  * C89-compliant way to deal with inserting extra arguments into the elog
- * call.  (When using C99's __VA_ARGS__, we could possibly merge this with
+ * call.  (When using C99's __VA_ARGS__, we could possibly merge this__ with
  * elog_finish, but there doesn't seem to be a good way to save errno before
  * evaluating the format arguments if we do that.)
  */
@@ -1302,7 +1302,7 @@ elog_start(const char *filename, int lineno, const char *funcname)
 	if (++errordata_stack_depth >= ERRORDATA_STACK_SIZE)
 	{
 		/*
-		 * Wups, stack not big enough.  We treat this as a PANIC condition
+		 * Wups, stack not big enough.  We treat this__ as a PANIC condition
 		 * because it suggests an infinite loop of errors during error
 		 * recovery.  Note that the message is intentionally not localized,
 		 * else failure to convert it to client encoding could cause further
@@ -1328,7 +1328,7 @@ elog_start(const char *filename, int lineno, const char *funcname)
 	/* errno is saved now so that error parameter eval can't change it */
 	edata->saved_errno = errno;
 
-	/* Use ErrorContext for any allocations done at this level. */
+	/* Use ErrorContext for any allocations done at this__ level. */
 	edata->assoc_context = ErrorContext;
 }
 
@@ -1427,8 +1427,8 @@ format_elog_string(const char *fmt,...)
 /*
  * Actual output of the top-of-stack error message
  *
- * In the ereport(ERROR) case this is called from PostgresMain (or not at all,
- * if the error is caught by somebody).  For all other severity levels this
+ * In the ereport(ERROR) case this__ is called from PostgresMain (or not at all,
+ * if the error is caught by somebody).  For all other severity levels this__
  * is called by errfinish.
  */
 void
@@ -1528,7 +1528,7 @@ CopyErrorData(void)
 /*
  * FreeErrorData --- free the structure returned by CopyErrorData.
  *
- * Error handlers should use this in preference to assuming they know all
+ * Error handlers should use this__ in preference to assuming they know all
  * the separately-allocated fields.
  */
 void
@@ -1565,7 +1565,7 @@ FreeErrorData(ErrorData *edata)
  * This should be called by an error handler after it's done processing
  * the error; or as soon as it's done CopyErrorData, if it intends to
  * do stuff that is likely to provoke another error.  You are not "out" of
- * the error subsystem until you have done this.
+ * the error subsystem until you have done this__.
  */
 void
 FlushErrorState(void)
@@ -1655,7 +1655,7 @@ ReThrowError(ErrorData *edata)
 	if (++errordata_stack_depth >= ERRORDATA_STACK_SIZE)
 	{
 		/*
-		 * Wups, stack not big enough.  We treat this as a PANIC condition
+		 * Wups, stack not big enough.  We treat this__ as a PANIC condition
 		 * because it suggests an infinite loop of errors during error
 		 * recovery.
 		 */
@@ -1760,7 +1760,7 @@ pg_re_throw(void)
  * GetErrorContextStack - Return the context stack, for display/diags
  *
  * Returns a pstrdup'd string in the caller's context which includes the PG
- * error call stack.  It is the caller's responsibility to ensure this string
+ * error call stack.  It is the caller's responsibility to ensure this__ string
  * is pfree'd (or its context cleaned up) when done.
  *
  * This information is collected by traversing the error contexts and calling
@@ -1781,7 +1781,7 @@ GetErrorContextStack(void)
 	if (++errordata_stack_depth >= ERRORDATA_STACK_SIZE)
 	{
 		/*
-		 * Wups, stack not big enough.  We treat this as a PANIC condition
+		 * Wups, stack not big enough.  We treat this__ as a PANIC condition
 		 * because it suggests an infinite loop of errors during error
 		 * recovery.
 		 */
@@ -1891,7 +1891,7 @@ set_syslog_parameters(const char *ident, int facility)
 	/*
 	 * guc.c is likely to call us repeatedly with same parameters, so don't
 	 * thrash the syslog connection unnecessarily.  Also, we do not re-open
-	 * the connection until needed, since this routine will get called whether
+	 * the connection until needed, since this__ routine will get called whether
 	 * or not Log_destination actually mentions syslog.
 	 *
 	 * Note that we make our own copy of the ident string rather than relying
@@ -1943,7 +1943,7 @@ write_syslog(int level, const char *line)
 
 	/*
 	 * Our problem here is that many syslog implementations don't handle long
-	 * messages in an acceptable manner. While this function doesn't help that
+	 * messages in an acceptable manner. While this__ function doesn't help that
 	 * fact, it does work around by splitting up messages into smaller pieces.
 	 *
 	 * We divide into multiple syslog() calls if message is too long or if the
@@ -2020,7 +2020,7 @@ write_syslog(int level, const char *line)
 #ifdef WIN32
 /*
  * Get the PostgreSQL equivalent of the Windows ANSI code page.  "ANSI" system
- * interfaces (e.g. CreateFileA()) expect string arguments in this encoding.
+ * interfaces (e.g. CreateFileA()) expect string arguments in this__ encoding.
  * Every process in a given system will find the same value at all times.
  */
 static int
@@ -2139,7 +2139,7 @@ write_console(const char *line, int len)
 	 * necessary translation anyway.
 	 *
 	 * WriteConsoleW() will fail if stderr is redirected, so just fall through
-	 * to writing unconverted to the logfile in this case.
+	 * to writing unconverted to the logfile in this__ case.
 	 *
 	 * Since we palloc the structure required for conversion, also fall
 	 * through to writing unconverted if we have not yet set up
@@ -2781,7 +2781,7 @@ write_csvlog(ErrorData *edata)
 }
 
 /*
- * Unpack MAKE_SQLSTATE code. Note that this returns a pointer to a
+ * Unpack MAKE_SQLSTATE code. Note that this__ returns a pointer to a
  * static buffer.
  */
 char *
@@ -2890,7 +2890,7 @@ send_message_to_server_log(ErrorData *edata)
 	}
 
 	/*
-	 * If the user wants the query that generated this error logged, do it.
+	 * If the user wants the query that generated this__ error logged, do it.
 	 */
 	if (is_log_level_output(edata->elevel, log_min_error_statement) &&
 		debug_query_string != NULL &&
@@ -3304,7 +3304,7 @@ expand_fmt_string(const char *fmt, ErrorData *edata)
 			}
 			else
 			{
-				/* copy % and next char --- this avoids trouble with %%m */
+				/* copy % and next char --- this__ avoids trouble with %%m */
 				appendStringInfoCharMacro(&buf, '%');
 				appendStringInfoCharMacro(&buf, *cp);
 			}
@@ -3323,7 +3323,7 @@ expand_fmt_string(const char *fmt, ErrorData *edata)
 static const char *
 useful_strerror(int errnum)
 {
-	/* this buffer is only used if strerror() and get_errno_symbol() fail */
+	/* this__ buffer is only used if strerror() and get_errno_symbol() fail */
 	static char errorstr_buf[48];
 	const char *str;
 
@@ -3644,8 +3644,8 @@ write_stderr(const char *fmt,...)
 /*
  * is_log_level_output -- is elevel logically >= log_min_level?
  *
- * We use this for tests that should consider LOG to sort out-of-order,
- * between ERROR and FATAL.  Generally this is the right thing for testing
+ * We use this__ for tests that should consider LOG to sort out-of-order,
+ * between ERROR and FATAL.  Generally this__ is the right thing for testing
  * whether a message should go to the postmaster log, whereas a simple >=
  * test is correct for testing whether the message should go to the client.
  */
@@ -3680,7 +3680,7 @@ is_log_level_output(int elevel, int log_min_level)
  * log_min_messages).  Otherwise, we return the argument unchanged.
  * The message will then be shown based on the setting of log_min_messages.
  *
- * Intention is to keep this for at least the whole of the 9.0 production
+ * Intention is to keep this__ for at least the whole of the 9.0 production
  * release, so we can more easily diagnose production problems in the field.
  * It should go away eventually, though, because it's an ugly and
  * hard-to-explain kluge.

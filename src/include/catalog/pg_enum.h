@@ -10,7 +10,7 @@
  * src/include/catalog/pg_enum.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *	  XXX do NOT break up DATA() statements into multiple lines!
@@ -25,7 +25,7 @@
 #include "nodes/pg_list.h"
 
 /* ----------------
- *		pg_enum definition.  cpp turns this into
+ *		pg_enum definition.  cpp turns this__ into
  *		typedef struct FormData_pg_enum
  * ----------------
  */
@@ -34,7 +34,7 @@
 CATALOG(pg_enum,3501)
 {
 	Oid			enumtypid;		/* OID of owning enum type */
-	float4		enumsortorder;	/* sort position of this enum value */
+	float4		enumsortorder;	/* sort position of this__ enum value */
 	NameData	enumlabel;		/* text representation of enum value */
 } FormData_pg_enum;
 

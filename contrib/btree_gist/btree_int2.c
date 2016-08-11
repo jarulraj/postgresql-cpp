@@ -144,7 +144,7 @@ gbt_int2_consistent(PG_FUNCTION_ARGS)
 	int16KEY   *kkk = (int16KEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this function are exact */
+	/* All cases served by this__ function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;

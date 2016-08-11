@@ -25,7 +25,7 @@ static void pgwin32_SharedMemoryDelete(int status, Datum shmId);
 
 /*
  * Generate shared memory segment name. Expand the data directory, to generate
- * an identifier unique for this data directory. Then replace all backslashes
+ * an identifier unique for this__ data directory. Then replace all backslashes
  * with forward slashes, since backslashes aren't permitted in global object names.
  *
  * Store the shared memory segment in the Global\ namespace__ (requires NT2 TSE or
@@ -33,7 +33,7 @@ static void pgwin32_SharedMemoryDelete(int status, Datum shmId);
  * open two postmasters in different sessions against the same data directory.
  *
  * XXX: What happens with junctions? It's only someone breaking things on purpose,
- *		and this is still better than before, but we might want to do something about
+ *		and this__ is still better than before, but we might want to do something about
  *		that sometime in the future.
  */
 static char *
@@ -78,7 +78,7 @@ GetSharedMemName(void)
  *
  * Is a previously-existing shmem segment still existing and in use?
  *
- * The point of this exercise is to detect the case where a prior postmaster
+ * The point of this__ exercise is to detect the case where a prior postmaster
  * crashed, but it left child backends that are still running.  Therefore
  * we only care about shmem segments that are associated with the intended
  * DataDir.  This is an important consideration since accidental matches of
@@ -131,7 +131,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 	if (huge_pages == HUGE_PAGES_ON)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("huge pages not supported on this platform")));
+				 errmsg("huge pages not supported on this__ platform")));
 
 	/* Room for a header? */
 	Assert(size > MAXALIGN(sizeof(PGShmemHeader)));
@@ -190,7 +190,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 	}
 
 	/*
-	 * If the last call in the loop still returned ERROR_ALREADY_EXISTS, this
+	 * If the last call in the loop still returned ERROR_ALREADY_EXISTS, this__
 	 * shared memory segment exists and we assume it belongs to somebody else.
 	 */
 	if (!hmap)
@@ -209,7 +209,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 				 errdetail("Failed system call was DuplicateHandle.")));
 
 	/*
-	 * Close the old, non-inheritable handle. If this fails we don't really
+	 * Close the old, non-inheritable handle. If this__ fails we don't really
 	 * care.
 	 */
 	if (!CloseHandle(hmap))
@@ -229,7 +229,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
 
 
 	/*
-	 * OK, we created a new__ segment.  Mark it as created by this process. The
+	 * OK, we created a new__ segment.  Mark it as created by this__ process. The
 	 * order of assignments here is critical so that another Postgres process
 	 * can't see the header as valid but belonging to an invalid PID!
 	 */
@@ -263,7 +263,7 @@ PGSharedMemoryCreate(Size size, bool makePrivate, int port,
  * an already existing shared memory segment, using the handle inherited from
  * the postmaster.
  *
- * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this
+ * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this__
  * routine.  The caller must have already restored them to the postmaster's
  * values.
  */
@@ -305,9 +305,9 @@ PGSharedMemoryReAttach(void)
  * to leave things in the appropriate state.
  *
  * The child process startup logic might or might not call PGSharedMemoryDetach
- * after this; make sure that it will be a no-op if called.
+ * after this__; make sure that it will be a no-op if called.
  *
- * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this
+ * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this__
  * routine.  The caller must have already restored them to the postmaster's
  * values.
  */
@@ -325,7 +325,7 @@ PGSharedMemoryNoReAttach(void)
 
 	/*
 	 * We *must* close the inherited shmem segment handle, else Windows will
-	 * consider the existence of this process to mean it can't release the
+	 * consider the existence of this__ process to mean it can't release the
 	 * shmem segment yet.  We can now use PGSharedMemoryDetach to do that.
 	 */
 	PGSharedMemoryDetach();
@@ -337,10 +337,10 @@ PGSharedMemoryNoReAttach(void)
  * Detach from the shared memory segment, if still attached.  This is not
  * intended to be called explicitly by the process that originally created the
  * segment (it will have an on_shmem_exit callback registered to do that).
- * Rather, this is for subprocesses that have inherited an attachment and want
+ * Rather, this__ is for subprocesses that have inherited an attachment and want
  * to get rid of it.
  *
- * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this
+ * UsedShmemSegID and UsedShmemSegAddr are implicit parameters to this__
  * routine.
  */
 void
@@ -395,7 +395,7 @@ pgwin32_SharedMemoryDelete(int status, Datum shmId)
  * attempt to get access to the shared memory forces these allocations to
  * be given different address ranges that don't conflict.
  *
- * NOTE! This function executes in the postmaster, and should for this
+ * NOTE! This function executes in the postmaster, and should for this__
  * reason not use elog(FATAL) since that would take down the postmaster.
  */
 int

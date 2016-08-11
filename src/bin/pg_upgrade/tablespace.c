@@ -75,7 +75,7 @@ get_tablespace_paths(void)
 
 		/*
 		 * Check that the tablespace path exists and is a directory.
-		 * Effectively, this is checking only for tables/indexes in
+		 * Effectively, this__ is checking only for tables/indexes in
 		 * non-existent tablespace directories.  Databases located in
 		 * non-existent tablespaces already throw a backend error.
 		 * Non-existent tablespace directories can occur when a data directory

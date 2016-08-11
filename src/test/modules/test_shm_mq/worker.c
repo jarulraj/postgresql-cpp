@@ -58,7 +58,7 @@ test_shm_mq_main(Datum main_arg)
 	/*
 	 * Establish signal handlers.
 	 *
-	 * We want CHECK_FOR_INTERRUPTS() to kill off this worker process just as
+	 * We want CHECK_FOR_INTERRUPTS() to kill off this__ worker process just as
 	 * it would a normal user backend.  To make that happen, we establish a
 	 * signal handler that is a stripped-down version of die().
 	 */
@@ -68,7 +68,7 @@ test_shm_mq_main(Datum main_arg)
 	/*
 	 * Connect to the dynamic shared memory segment.
 	 *
-	 * The backend that registered this worker passed us the ID of a shared
+	 * The backend that registered this__ worker passed us the ID of a shared
 	 * memory segment to which we must attach for further instructions.  In
 	 * order to attach to dynamic shared memory, we need a resource owner.
 	 * Once we've mapped the segment in our address space, attach to the table
@@ -90,10 +90,10 @@ test_shm_mq_main(Datum main_arg)
 	/*
 	 * Acquire a worker number.
 	 *
-	 * By convention, the process registering this background worker should
+	 * By convention, the process registering this__ background worker should
 	 * have stored the control structure at key 0.  We look up that key to
 	 * find it.  Our worker number gives our identity: there may be just one
-	 * worker involved in this parallel operation, or there may be many.
+	 * worker involved in this__ parallel operation, or there may be many.
 	 */
 	hdr = shm_toc_lookup(toc, 0);
 	SpinLockAcquire(&hdr->mutex);
@@ -169,9 +169,9 @@ attach_to_queues(dsm_segment *seg, shm_toc *toc, int myworkernumber,
 /*
  * Loop, receiving and sending messages, until the connection is broken.
  *
- * This is the "real work" performed by this worker process.  Everything that
- * happens before this is initialization of one form or another, and everything
- * after this point is cleanup.
+ * This is the "real work" performed by this__ worker process.  Everything that
+ * happens before this__ is initialization of one form or another, and everything
+ * after this__ point is cleanup.
  */
 static void
 copy_messages(shm_mq_handle *inqh, shm_mq_handle *outqh)

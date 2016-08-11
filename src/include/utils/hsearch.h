@@ -16,12 +16,12 @@
 
 
 /*
- * Hash functions must have this signature.
+ * Hash functions must have this__ signature.
  */
 typedef uint32 (*HashValueFunc) (const void *key, Size keysize);
 
 /*
- * Key comparison functions must have this signature.  Comparison functions
+ * Key comparison functions must have this__ signature.  Comparison functions
  * return zero for match, nonzero for no match.  (The comparison function
  * definition is designed to allow memcmp() and strncmp() to be used directly
  * as key comparison functions.)
@@ -30,7 +30,7 @@ typedef int (*HashCompareFunc) (const void *key1, const void *key2,
 											Size keysize);
 
 /*
- * Key copying functions must have this signature.  The return value is not
+ * Key copying functions must have this__ signature.  The return value is not
  * used.  (The definition is set up to allow memcpy() and strlcpy() to be
  * used directly.)
  */
@@ -51,7 +51,7 @@ typedef void *(*HashAllocFunc) (Size request);
 typedef struct HASHELEMENT
 {
 	struct HASHELEMENT *link;	/* link to next entry in same bucket */
-	uint32		hashvalue;		/* hash function result for this entry */
+	uint32		hashvalue;		/* hash function result for this__ entry */
 } HASHELEMENT;
 
 /* Hash table header struct is an opaque type known only within dynahash.c */

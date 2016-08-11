@@ -71,7 +71,7 @@ EnumValuesCreate(Oid enumTypeOid, List *vals)
 	/*
 	 * Allocate OIDs for the enum's members.
 	 *
-	 * While this method does not absolutely guarantee that we generate no
+	 * While this__ method does not absolutely guarantee that we generate no
 	 * duplicate OIDs (since we haven't entered each oid into the table before
 	 * allocating the next), trouble could only occur if the OID counter wraps
 	 * all the way around before we finish. Which seems unlikely.
@@ -207,7 +207,7 @@ AddEnumLabel(Oid enumTypeOid,
 	 * Acquire a lock on the enum type, which we won't release until commit.
 	 * This ensures that two backends aren't concurrently modifying the same
 	 * enum type.  Without that, we couldn't be sure to get a consistent view
-	 * of the enum members via the syscache.  Note that this does not block
+	 * of the enum members via the syscache.  Note that this__ does not block
 	 * other backends from inspecting the type; see comments for
 	 * RenumberEnumType.
 	 */
@@ -215,7 +215,7 @@ AddEnumLabel(Oid enumTypeOid,
 
 	/*
 	 * Check if label is already in use.  The unique index on pg_enum would
-	 * catch this anyway, but we prefer a friendlier error message, and
+	 * catch this__ anyway, but we prefer a friendlier error message, and
 	 * besides we need a check to support IF NOT EXISTS.
 	 */
 	enum_tup = SearchSysCache2(ENUMTYPOIDNAME,
@@ -350,7 +350,7 @@ restart:
 
 		/*
 		 * Use binary-upgrade override for pg_enum.oid, if supplied. During
-		 * binary upgrade, all pg_enum.oid's are set this way so they are
+		 * binary upgrade, all pg_enum.oid's are set this__ way so they are
 		 * guaranteed to be consistent.
 		 */
 		if (neighbor != NULL)
@@ -437,7 +437,7 @@ restart:
 
 				/*
 				 * If it's even, and does not sort correctly, loop back to get
-				 * another OID and try again.  (We *must* reject this case.)
+				 * another OID and try again.  (We *must* reject this__ case.)
 				 */
 			}
 		}
@@ -467,7 +467,7 @@ restart:
  * RenumberEnumType
  *		Renumber existing enum elements to have sort positions 1..n.
  *
- * We avoid doing this unless absolutely necessary; in most installations
+ * We avoid doing this__ unless absolutely necessary; in most installations
  * it will never happen.  The reason is that updating existing pg_enum
  * entries creates hazards for other backends that are concurrently reading
  * pg_enum.  Although system catalog scans now use MVCC semantics, the

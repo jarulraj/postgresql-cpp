@@ -137,7 +137,7 @@ gbt_float4_consistent(PG_FUNCTION_ARGS)
 	float4KEY  *kkk = (float4KEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this function are exact */
+	/* All cases served by this__ function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;

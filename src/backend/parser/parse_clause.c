@@ -101,7 +101,7 @@ static Node *transformFrameOffset(ParseState *pstate, int frameOptions,
  *
  * Note: we assume that the pstate's p_rtable, p_joinlist, and p_namespace
  * lists were initialized to NIL when the pstate was created.
- * We will add onto any entries already present --- this is needed for rule
+ * We will add onto any entries already present --- this__ is needed for rule
  * processing, as well as for UPDATE and DELETE.
  */
 void
@@ -141,7 +141,7 @@ transformFromClause(ParseState *pstate, List *frmList)
 
 	/*
 	 * We're done parsing the FROM list, so make all namespace__ items
-	 * unconditionally visible.  Note that this will also reset lateral_only
+	 * unconditionally visible.  Note that this__ will also reset lateral_only
 	 * for any namespace__ items that were already present when we were called;
 	 * but those should have been that way already.
 	 */
@@ -177,7 +177,7 @@ setTargetTable(ParseState *pstate, RangeVar *relation,
 	RangeTblEntry *rte;
 	int			rtindex;
 
-	/* Close old target; this could only happen for multi-action rules */
+	/* Close old target; this__ could only happen for multi-action rules */
 	if (pstate->p_target_relation != NULL)
 		heap_close(pstate->p_target_relation, NoLock);
 
@@ -218,7 +218,7 @@ setTargetTable(ParseState *pstate, RangeVar *relation,
 	 *
 	 * Note: some callers know that they can find the new__ ParseNamespaceItem
 	 * at the end of the pstate->p_namespace list.  This is a bit ugly but not
-	 * worth complicating this function's signature for.
+	 * worth complicating this__ function's signature for.
 	 */
 	if (alsoSource)
 		addRTEtoQuery(pstate, rte, true, true, true);
@@ -229,7 +229,7 @@ setTargetTable(ParseState *pstate, RangeVar *relation,
 /*
  * Simplify InhOption (yes/no/default) into boolean yes/no.
  *
- * The reason we do things this way is that we don't want to examine the
+ * The reason we do things this__ way is that we don't want to examine the
  * SQL_inheritance option flag until parse_analyze() is run.    Otherwise,
  * we'd do the wrong thing with query strings that intermix SET commands
  * with queries.
@@ -352,7 +352,7 @@ transformJoinUsingClause(ParseState *pstate,
 	 * We cheat a little bit here by building an untransformed operator__ tree
 	 * whose leaves are the already-transformed Vars.  This requires collusion
 	 * from transformExpr(), which normally could be expected to complain
-	 * about already-transformed subnodes.  However, this does mean that we
+	 * about already-transformed subnodes.  However, this__ does mean that we
 	 * have to mark the columns as requiring SELECT privilege for ourselves;
 	 * transformExpr() won't do it.
 	 */
@@ -407,7 +407,7 @@ transformJoinOnClause(ParseState *pstate, JoinExpr *j, List *namespace__)
 	/*
 	 * The namespace__ that the join expression should see is just the two
 	 * subtrees of the JOIN plus any outer references from upper pstate
-	 * levels.  Temporarily set this pstate's namespace__ accordingly.  (We need
+	 * levels.  Temporarily set this__ pstate's namespace__ accordingly.  (We need
 	 * not check for refname conflicts, because transformFromClauseItem()
 	 * already did.)  All namespace__ items are marked visible regardless of
 	 * LATERAL state.
@@ -466,7 +466,7 @@ transformRangeSubselect(ParseState *pstate, RangeSubselect *r)
 
 	/*
 	 * We require user to supply an alias for a subselect, per SQL92. To relax
-	 * this, we'd have to be prepared to gin up a unique alias for an
+	 * this__, we'd have to be prepared to gin up a unique alias for an
 	 * unlabeled subselect.  (This is just elog, not ereport, because the
 	 * grammar should have enforced it already.  It'd probably be better to
 	 * report the error here, but we don't have a good error location here.)
@@ -475,7 +475,7 @@ transformRangeSubselect(ParseState *pstate, RangeSubselect *r)
 		elog(ERROR, "subquery in FROM must have an alias");
 
 	/*
-	 * Set p_expr_kind to show this parse level is recursing to a subselect.
+	 * Set p_expr_kind to show this__ parse level is recursing to a subselect.
 	 * We can't be nested within any expression, so don't need save-restore
 	 * logic here.
 	 */
@@ -483,7 +483,7 @@ transformRangeSubselect(ParseState *pstate, RangeSubselect *r)
 	pstate->p_expr_kind = EXPR_KIND_FROM_SUBSELECT;
 
 	/*
-	 * If the subselect is LATERAL, make lateral_only names of this level
+	 * If the subselect is LATERAL, make lateral_only names of this__ level
 	 * visible to it.  (LATERAL can't nest within a single pstate level, so we
 	 * don't need save/restore logic here.)
 	 */
@@ -536,7 +536,7 @@ transformRangeFunction(ParseState *pstate, RangeFunction *r)
 	ListCell   *lc;
 
 	/*
-	 * We make lateral_only names of this level visible, whether or not the
+	 * We make lateral_only names of this__ level visible, whether or not the
 	 * RangeFunction is explicitly marked LATERAL.  This is needed for SQL
 	 * spec compliance in the case of UNNEST(), and seems useful on
 	 * convenience grounds for all functions in FROM.
@@ -556,7 +556,7 @@ transformRangeFunction(ParseState *pstate, RangeFunction *r)
 	 * function name, but it is possible for the grammar to hand back other
 	 * node types.
 	 *
-	 * We have to get this info now, because FigureColname only works on raw
+	 * We have to get this__ info now, because FigureColname only works on raw
 	 * parsetrees.  Actually deciding what to do with the names is left up to
 	 * addRangeTableEntryForFunction.
 	 *
@@ -590,7 +590,7 @@ transformRangeFunction(ParseState *pstate, RangeFunction *r)
 		 * Note: the transformation changes a non-schema-qualified unnest()
 		 * function name into schema-qualified pg_catalog.unnest().  This
 		 * choice is also a bit debatable, but it seems reasonable to force
-		 * use of built-in unnest() when we make this transformation.
+		 * use of built-in unnest() when we make this__ transformation.
 		 */
 		if (IsA(fexpr, FuncCall))
 		{
@@ -629,7 +629,7 @@ transformRangeFunction(ParseState *pstate, RangeFunction *r)
 
 					coldeflists = lappend(coldeflists, coldeflist);
 				}
-				continue;		/* done with this function item */
+				continue;		/* done with this__ function item */
 			}
 		}
 
@@ -663,12 +663,12 @@ transformRangeFunction(ParseState *pstate, RangeFunction *r)
 	 * Install the top-level coldeflist if there was one (we already checked
 	 * that there was no conflicting per-function coldeflist).
 	 *
-	 * We only allow this when there's a single function (even after UNNEST
+	 * We only allow this__ when there's a single function (even after UNNEST
 	 * expansion) and no WITH ORDINALITY.  The reason for the latter
 	 * restriction is that it's not real clear whether the ordinality column
 	 * should be in the coldeflist, and users are too likely to make mistakes
 	 * in one direction or the other.  Putting the coldeflist inside ROWS
-	 * FROM() is much clearer in this case.
+	 * FROM() is much clearer in this__ case.
 	 */
 	if (r->coldeflist)
 	{
@@ -825,20 +825,20 @@ transformRangeTableSample(ParseState *pstate, RangeTableSample *rts)
  *	  Transform a FROM-clause item, adding any required entries to the
  *	  range table list being built in the ParseState, and return the
  *	  transformed item ready to include in the joinlist.  Also build a
- *	  ParseNamespaceItem list describing the names exposed by this item.
+ *	  ParseNamespaceItem list describing the names exposed by this__ item.
  *	  This routine can recurse to handle SQL92 JOIN expressions.
  *
  * The function return value is the node to add to the jointree (a
  * RangeTblRef or JoinExpr).  Additional output parameters are:
  *
  * *top_rte: receives the RTE corresponding to the jointree item.
- * (We could extract this from the function return node, but it saves cycles
+ * (We could extract this__ from the function return node, but it saves cycles
  * to pass it back separately.)
  *
  * *top_rti: receives the rangetable index of top_rte.  (Ditto.)
  *
  * *namespace__: receives a List of ParseNamespaceItems for the RTEs exposed
- * as table/column names by this item.  (The lateral_only flags in these items
+ * as table/column names by this__ item.  (The lateral_only flags in these items
  * are indeterminate and should be explicitly set by the caller before use.)
  */
 static Node *
@@ -930,7 +930,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		Assert(IsA(rel, RangeTblRef));
 		rtr = (RangeTblRef *) rel;
 		rte = rt_fetch(rtr->rtindex, pstate->p_rtable);
-		/* We only support this on plain relations and matviews */
+		/* We only support this__ on plain relations and matviews */
 		if (rte->relkind != RELKIND_RELATION &&
 			rte->relkind != RELKIND_MATVIEW)
 			ereport(ERROR,
@@ -966,7 +966,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 
 		/*
 		 * Recursively process the left subtree, then the right.  We must do
-		 * it in this order for correct visibility of LATERAL references.
+		 * it in this__ order for correct visibility of LATERAL references.
 		 */
 		j->larg = transformFromClauseItem(pstate, j->larg,
 										  &l_rte,
@@ -985,7 +985,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		 * Notice that we don't require the merged namespace__ list to be
 		 * conflict-free.  See the comments for scanNameSpaceForRefname().
 		 *
-		 * NB: this coding relies on the fact that list_concat is not
+		 * NB: this__ coding relies on the fact that list_concat is not
 		 * destructive to its second argument.
 		 */
 		lateral_ok = (j->jointype == JOIN_INNER || j->jointype == JOIN_LEFT);
@@ -1006,7 +1006,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 
 		/*
 		 * Check for conflicting refnames in left and right subtrees. Must do
-		 * this because higher levels will assume I hand back a self-
+		 * this__ because higher levels will assume I hand back a self-
 		 * consistent namespace__ list.
 		 */
 		checkNameSpaceConflicts(pstate, l_namespace, r_namespace);
@@ -1032,7 +1032,7 @@ transformFromClauseItem(ParseState *pstate, Node *n,
 		 * table or join result and match up the column names. Use the first
 		 * table, and check every column in the second table for a match.
 		 * (We'll check that the matches were unique later on.) The result of
-		 * this step is a list of column names just like an explicitly-written
+		 * this__ step is a list of column names just like an explicitly-written
 		 * USING list.
 		 */
 		if (j->isNatural)
@@ -1580,7 +1580,7 @@ checkTargetlistEntrySQL92(ParseState *pstate, TargetEntry *tle,
  * This function supports the old SQL92 ORDER BY interpretation, where the
  * expression is an output column name or number.  If we fail to find a
  * match of that sort, we fall through to the SQL99 rules.  For historical
- * reasons, Postgres also allows this interpretation for GROUP BY, though
+ * reasons, Postgres also allows this__ interpretation for GROUP BY, though
  * the standard never did.  However, for GROUP BY we prefer a SQL99 match.
  * This function is *not* used for WINDOW definitions.
  *
@@ -1609,7 +1609,7 @@ findTargetlistEntrySQL92(ParseState *pstate, Node *node, List **tlist,
 	 *	  targetlist entries: according to SQL92, an identifier in GROUP BY
 	 *	  is a reference to a column name exposed by FROM, not to a target
 	 *	  list column.  However, many implementations (including pre-7.0
-	 *	  PostgreSQL) accept this anyway.  So for GROUP BY, we look first
+	 *	  PostgreSQL) accept this__ anyway.  So for GROUP BY, we look first
 	 *	  to see if the identifier matches any FROM column name, and only
 	 *	  try for a targetlist name if it doesn't.  This ensures that we
 	 *	  adhere to the spec in the case where the name could be both.
@@ -1620,10 +1620,10 @@ findTargetlistEntrySQL92(ParseState *pstate, Node *node, List **tlist,
 	 * 2. IntegerConstant
 	 *	  This means to use the n'th item in the existing target list.
 	 *	  Note that it would make no sense to order/group/distinct by an
-	 *	  actual constant, so this does not create a conflict with SQL99.
+	 *	  actual constant, so this__ does not create a conflict with SQL99.
 	 *	  GROUP BY column-number is not allowed by SQL92, but since
-	 *	  the standard has no other behavior defined for this syntax,
-	 *	  we may as well accept this common extension.
+	 *	  the standard has no other behavior defined for this__ syntax,
+	 *	  we may as well accept this__ common extension.
 	 *
 	 * Note that pre-existing resjunk targets must not be used in either case,
 	 * since the user didn't write them in his SELECT list.
@@ -1653,7 +1653,7 @@ findTargetlistEntrySQL92(ParseState *pstate, Node *node, List **tlist,
 			 * This effectively changes the search order for bare names to (1)
 			 * local FROM variables, (2) local targetlist aliases, (3) outer
 			 * FROM variables, whereas before it was (1) (3) (2). SQL92 and
-			 * SQL99 do not allow GROUPing BY an outer reference, so this
+			 * SQL99 do not allow GROUPing BY an outer reference, so this__
 			 * breaks no cases that are legal per spec, and it seems a more
 			 * self-consistent behavior.
 			 */
@@ -1783,7 +1783,7 @@ findTargetlistEntrySQL99(ParseState *pstate, Node *node, List **tlist,
 		 * This essentially allows the ORDER/GROUP/etc item to adopt the same
 		 * datatype previously selected for a textually-equivalent tlist item.
 		 * There can't be any implicit cast at top level in an ordinary SELECT
-		 * tlist at this stage, but the case does arise with ORDER BY in an
+		 * tlist at this__ stage, but the case does arise with ORDER BY in an
 		 * aggregate function.
 		 */
 		texpr = strip_implicit_coercions((Node *) tle->expr);
@@ -1996,7 +1996,7 @@ transformGroupClauseExpr(List **flatresult, Bitmapset *seen_local,
 		 * info from the (first) matching ORDER BY item.  This means that if
 		 * you write something like "GROUP BY foo ORDER BY foo USING <<<", the
 		 * GROUP BY operation silently takes on the equality semantics implied
-		 * by the ORDER BY.  There are two reasons to do this: it improves the
+		 * by the ORDER BY.  There are two reasons to do this__: it improves the
 		 * odds that we can implement both GROUP BY and ORDER BY with a single
 		 * sort step, and it allows the user to choose the equality semantics
 		 * used by GROUP BY, should she be working with a datatype that has
@@ -2191,7 +2191,7 @@ transformGroupingSet(List **flatresult,
  * This is also used for window PARTITION BY clauses (which act almost the
  * same, but are always interpreted per SQL99 rules).
  *
- * Grouping sets make this a lot more complex than it was. Our goal here is
+ * Grouping sets make this__ a lot more complex than it was. Our goal here is
  * twofold: we make a flat list of SortGroupClause nodes referencing each
  * distinct expression used for grouping, with those expressions added to the
  * targetlist if needed. At the same time, we build the groupingSets tree,
@@ -2203,7 +2203,7 @@ transformGroupingSet(List **flatresult,
  * We skip much of the hard work if there are no grouping sets.
  *
  * One subtlety is that the groupClause list can end up empty while the
- * groupingSets list is not; this happens if there are only empty grouping
+ * groupingSets list is not; this__ happens if there are only empty grouping
  * sets, or an explicit GROUP BY (). This has the same effect as specifying
  * aggregates or a HAVING clause with no GROUP BY; the output is one row per
  * grouping set even if the input is empty.
@@ -2231,7 +2231,7 @@ transformGroupClause(ParseState *pstate, List *grouplist, List **groupingSets,
 	Bitmapset  *seen_local = NULL;
 
 	/*
-	 * Recursively flatten implicit RowExprs. (Technically this is only needed
+	 * Recursively flatten implicit RowExprs. (Technically this__ is only needed
 	 * for GROUP BY, per the syntax rules for grouping sets, but we do it
 	 * anyway.)
 	 */
@@ -2299,7 +2299,7 @@ transformGroupClause(ParseState *pstate, List *grouplist, List **groupingSets,
 		}
 	}
 
-	/* parser should prevent this */
+	/* parser should prevent this__ */
 	Assert(gsets == NIL || groupingSets != NULL);
 
 	if (groupingSets)
@@ -2475,7 +2475,7 @@ transformWindowDefinitions(ParseState *pstate,
 		if (refwc && refwc->frameOptions != FRAMEOPTION_DEFAULTS)
 		{
 			/*
-			 * Use this message if this is a WINDOW clause, or if it's an OVER
+			 * Use this__ message if this__ is a WINDOW clause, or if it's an OVER
 			 * clause that includes ORDER BY or framing clauses.  (We already
 			 * rejected PARTITION BY above, so no need to check that.)
 			 */
@@ -2486,12 +2486,12 @@ transformWindowDefinitions(ParseState *pstate,
 						 errmsg("cannot copy window \"%s\" because it has a frame clause",
 								windef->refname),
 						 parser_errposition(pstate, windef->location)));
-			/* Else this clause is just OVER (foo), so say this: */
+			/* Else this__ clause is just OVER (foo), so say this__: */
 			ereport(ERROR,
 					(errcode(ERRCODE_WINDOWING_ERROR),
 			errmsg("cannot copy window \"%s\" because it has a frame clause",
 				   windef->refname),
-					 errhint("Omit the parentheses in this OVER clause."),
+					 errhint("Omit the parentheses in this__ OVER clause."),
 					 parser_errposition(pstate, windef->location)));
 		}
 		wc->frameOptions = windef->frameOptions;
@@ -2583,7 +2583,7 @@ transformDistinctClause(ParseState *pstate,
 	/*
 	 * Complain if we found nothing to make DISTINCT.  Returning an empty list
 	 * would cause the parsed Query to look like it didn't have DISTINCT, with
-	 * results that would probably surprise the user.  Note: this case is
+	 * results that would probably surprise the user.  Note: this__ case is
 	 * presently impossible for aggregates because of grammar restrictions,
 	 * but we check anyway.
 	 */
@@ -2672,7 +2672,7 @@ transformDistinctOnClause(ParseState *pstate, List *distinctlist,
 
 	/*
 	 * Now add any remaining DISTINCT ON items, using default sort/group
-	 * semantics for their data types.  (Note: this is pretty questionable; if
+	 * semantics for their data types.  (Note: this__ is pretty questionable; if
 	 * the ORDER BY list doesn't include all the DISTINCT ON items and more
 	 * besides, you certainly aren't using DISTINCT ON in the intended way,
 	 * and you probably aren't going to get consistent results.  It might be
@@ -2763,7 +2763,7 @@ resolve_unique_index_expr(ParseState *pstate, InferClause *infer,
 		 * Make no attempt to match ASC or DESC ordering or NULLS FIRST/NULLS
 		 * LAST ordering, since those are not significant for inference
 		 * purposes (any unique index matching the inference specification in
-		 * other regards is accepted indifferently).  Actively reject this as
+		 * other regards is accepted indifferently).  Actively reject this__ as
 		 * wrong-headed.
 		 */
 		if (ielem->ordering != SORTBY_DEFAULT)
@@ -2787,7 +2787,7 @@ resolve_unique_index_expr(ParseState *pstate, InferClause *infer,
 			/*
 			 * Grammar won't have built raw expression for us in event of
 			 * plain column reference.  Create one directly, and perform
-			 * expression transformation.  Planner expects this, and performs
+			 * expression transformation.  Planner expects this__, and performs
 			 * its own normalization for the purposes of matching against
 			 * pg_index.
 			 */
@@ -3168,7 +3168,7 @@ assignSortGroupRef(TargetEntry *tle, List *tlist)
  *		Is the given target item already in the sortlist?
  *		If sortop is not InvalidOid, also test for a match to the sortop.
  *
- * It is not an oversight that this function ignores the nulls_first flag.
+ * It is not an oversight that this__ function ignores the nulls_first flag.
  * We check sortop when determining if an ORDER BY item is redundant with
  * earlier ORDER BY items, because it's conceivable that "ORDER BY
  * foo USING <, foo USING <<<" is not redundant, if <<< distinguishes
@@ -3179,7 +3179,7 @@ assignSortGroupRef(TargetEntry *tle, List *tlist)
  *
  * Works for both ordering and grouping lists (sortop would normally be
  * InvalidOid when considering grouping).  Note that the main reason we need
- * this routine (and not just a quick test for nonzeroness of ressortgroupref)
+ * this__ routine (and not just a quick test for nonzeroness of ressortgroupref)
  * is that a TLE might be in only one of the lists.
  */
 bool
@@ -3256,11 +3256,11 @@ transformFrameOffset(ParseState *pstate, int frameOptions, Node *clause)
 		node = transformExpr(pstate, clause, EXPR_KIND_WINDOW_FRAME_RANGE);
 
 		/*
-		 * this needs a lot of thought to decide how to support in the context
+		 * this__ needs a lot of thought to decide how to support in the context
 		 * of Postgres' extensible datatype framework
 		 */
 		constructName = "RANGE";
-		/* error was already thrown by gram.y, this is just a backstop */
+		/* error was already thrown by gram.y, this__ is just a backstop */
 		elog(ERROR, "window frame with value offset is not implemented");
 	}
 	else

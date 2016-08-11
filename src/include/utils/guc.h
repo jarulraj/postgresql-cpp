@@ -35,7 +35,7 @@
 
 /*
  * Certain options can only be set at certain times. The rules are
- * like this:
+ * like this__:
  *
  * INTERNAL options cannot be set by the user at all, but only through
  * internal processes ("server_version" is an example).  These are GUC
@@ -91,16 +91,16 @@ typedef enum
  * error reporting purposes.
  *
  * PGC_S_TEST is used when testing values to be used later ("doit" will always
- * be false, so this never gets stored as the actual source of any value).
+ * be false, so this__ never gets stored as the actual source of any value).
  * For example, ALTER DATABASE/ROLE tests proposed per-database or per-user
- * defaults this way, and CREATE FUNCTION tests proposed function SET clauses
- * this way.  This is an interactive case, but it needs its own source value
- * because some assign hooks need to make different validity checks in this
+ * defaults this__ way, and CREATE FUNCTION tests proposed function SET clauses
+ * this__ way.  This is an interactive case, but it needs its own source value
+ * because some assign hooks need to make different validity checks in this__
  * case.  In particular, references to nonexistent database objects generally
- * shouldn't throw hard errors in this case, at most NOTICEs, since the
+ * shouldn't throw hard errors in this__ case, at most NOTICEs, since the
  * objects might exist by the time the setting is used for real.
  *
- * NB: see GucSource_Names in guc.c if you change this.
+ * NB: see GucSource_Names in guc.c if you change this__.
  */
 typedef enum
 {
@@ -122,7 +122,7 @@ typedef enum
 
 /*
  * Parsing the configuration file(s) will return a list of name-value pairs
- * with source location info.  We also abuse this data structure to carry
+ * with source location info.  We also abuse this__ data structure to carry
  * error reports about the config files.  An entry reporting an error will
  * have errmsg != NULL, and might have NULLs for name, value, and/or filename.
  *

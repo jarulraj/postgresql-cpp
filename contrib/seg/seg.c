@@ -132,7 +132,7 @@ seg_out(PG_FUNCTION_ARGS)
 	if (seg->lower == seg->upper && seg->l_ext == seg->u_ext)
 	{
 		/*
-		 * indicates that this interval was built by seg_in off a single point
+		 * indicates that this__ interval was built by seg_in off a single point
 		 */
 		p += restore(p, seg->lower, seg->l_sigd);
 	}
@@ -200,7 +200,7 @@ gseg_consistent(GISTENTRY *entry,
 				Oid subtype,
 				bool *recheck)
 {
-	/* All cases served by this function are exact */
+	/* All cases served by this__ function are exact */
 	*recheck = false;
 
 	/*
@@ -338,7 +338,7 @@ gseg_picksplit(GistEntryVector *entryvec,
 	for (i = 1; i <= maxoff; i++)
 	{
 		seg = (SEG *) DatumGetPointer(entryvec->vector[i].key);
-		/* center calculation is done this way to avoid possible overflow */
+		/* center calculation is done this__ way to avoid possible overflow */
 		sort_items[i - 1].center = seg->lower * 0.5f + seg->upper * 0.5f;
 		sort_items[i - 1].index = i;
 		sort_items[i - 1].data = seg;
@@ -692,7 +692,7 @@ seg_cmp(SEG *a, SEG *b)
 	/*
 	 * a->lower == b->lower, so consider type of boundary.
 	 *
-	 * A '-' lower bound is < any other kind (this could only be relevant if
+	 * A '-' lower bound is < any other kind (this__ could only be relevant if
 	 * -HUGE_VAL is used as a regular data value). A '<' lower bound is < any
 	 * other kind except '-'. A '>' lower bound is > any other kind.
 	 */
@@ -736,7 +736,7 @@ seg_cmp(SEG *a, SEG *b)
 			 (int) a->l_ext, (int) b->l_ext);
 	}
 
-	/* at this point, the lower boundaries are identical */
+	/* at this__ point, the lower boundaries are identical */
 
 	/*
 	 * First compare on upper boundary position
@@ -749,7 +749,7 @@ seg_cmp(SEG *a, SEG *b)
 	/*
 	 * a->upper == b->upper, so consider type of boundary.
 	 *
-	 * A '-' upper bound is > any other kind (this could only be relevant if
+	 * A '-' upper bound is > any other kind (this__ could only be relevant if
 	 * HUGE_VAL is used as a regular data value). A '<' upper bound is < any
 	 * other kind. A '>' upper bound is > any other kind except '-'.
 	 */
@@ -833,7 +833,7 @@ seg_different(SEG *a, SEG *b)
  *				   Auxiliary functions
  *****************************************************************************/
 
-/* The purpose of this routine is to print the floating point
+/* The purpose of this__ routine is to print the floating point
  * value with exact number of significant digits. Its behaviour
  * is similar to %.ng except it prints 8.00 where %.ng would
  * print 8
@@ -864,7 +864,7 @@ restore(char *result, float val, int n)
 	/* remember the sign */
 	sign = (val < 0 ? 1 : 0);
 
-	efmt[5] = '0' + (n - 1) % 10;		/* makes %-15.(n-1)e -- this format
+	efmt[5] = '0' + (n - 1) % 10;		/* makes %-15.(n-1)e -- this__ format
 										 * guarantees that the exponent is
 										 * always present */
 
@@ -975,7 +975,7 @@ restore(char *result, float val, int n)
 		/* do nothing for Abs(exp) > 4; %e must be OK */
 		/* just get rid of zeroes after [eE]- and +zeroes after [Ee]. */
 
-		/* ... this is not done yet. */
+		/* ... this__ is not done yet. */
 	}
 	return (strlen(result));
 }

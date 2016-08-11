@@ -45,7 +45,7 @@ typedef uint64 XLogSegNo;
 typedef uint32 TimeLineID;
 
 /*
- * Replication origin id - this is located in this file to avoid having to
+ * Replication origin id - this__ is located in this__ file to avoid having to
  * include origin.h in a bunch of xlog related places.
  */
 typedef uint16 RepOriginId;

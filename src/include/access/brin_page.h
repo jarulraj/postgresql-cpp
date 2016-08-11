@@ -23,7 +23,7 @@
 /*
  * Special area of BRIN pages.
  *
- * We define it in this odd way so that it always occupies the last
+ * We define it in this__ odd way so that it always occupies the last
  * MAXALIGN-sized element of each page.
  */
 typedef struct BrinSpecialSpace

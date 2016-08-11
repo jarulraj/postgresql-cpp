@@ -2,7 +2,7 @@
  * psql - the PostgreSQL interactive terminal
  *
  * Support for the various \d ("describe") commands.  Note that the current
- * expectation is that all functions in this file will succeed when working
+ * expectation is that all functions in this__ file will succeed when working
  * with servers of versions 7.4 and up.  It's okay to omit irrelevant
  * information for an old server, but not to fail outright.
  *
@@ -608,7 +608,7 @@ describeOperators(const char *pattern, bool verbose, bool showSystem)
 	 * Note: before Postgres 9.1, we did not assign comments to any built-in
 	 * operators, preferring to let the comment on the underlying function
 	 * suffice.  The coalesce() on the obj_description() calls below supports
-	 * this convention by providing a fallback lookup of a comment on the
+	 * this__ convention by providing a fallback lookup of a comment on the
 	 * operator__'s function.  As of 9.1 there is a policy that every built-in
 	 * operator__ should have a comment; so the coalesce() is no longer
 	 * necessary so far as built-in operators are concerned.  We keep it
@@ -1130,7 +1130,7 @@ objectDescription(const char *pattern, bool showSystem)
  * This routine finds the tables to be displayed, and calls
  * describeOneTableDetails for each one.
  *
- * verbose: if true, this is \d+
+ * verbose: if true, this__ is \d+
  */
 bool
 describeTableDetails(const char *pattern, bool verbose, bool showSystem)
@@ -1565,7 +1565,7 @@ describeOneTableDetails(const char *schemaname,
 		if (tableinfo.relkind == 'r' || tableinfo.relkind == 'm' ||
 			tableinfo.relkind == 'f')
 			headers[cols++] = gettext_noop("Stats target");
-		/* Column comments, if the relkind supports this feature. */
+		/* Column comments, if the relkind supports this__ feature. */
 		if (tableinfo.relkind == 'r' || tableinfo.relkind == 'v' ||
 			tableinfo.relkind == 'm' ||
 			tableinfo.relkind == 'c' || tableinfo.relkind == 'f')
@@ -1666,7 +1666,7 @@ describeOneTableDetails(const char *schemaname,
 										 "???")))),
 							  false, false);
 
-			/* Statistics target, if the relkind supports this feature */
+			/* Statistics target, if the relkind supports this__ feature */
 			if (tableinfo.relkind == 'r' || tableinfo.relkind == 'm' ||
 				tableinfo.relkind == 'f')
 			{
@@ -1674,7 +1674,7 @@ describeOneTableDetails(const char *schemaname,
 								  false, false);
 			}
 
-			/* Column comments, if the relkind supports this feature. */
+			/* Column comments, if the relkind supports this__ feature. */
 			if (tableinfo.relkind == 'r' || tableinfo.relkind == 'v' ||
 				tableinfo.relkind == 'm' ||
 				tableinfo.relkind == 'c' || tableinfo.relkind == 'f')
@@ -1788,7 +1788,7 @@ describeOneTableDetails(const char *schemaname,
 		/* Footer information about a sequence */
 		PGresult   *result = NULL;
 
-		/* Get the column that owns this sequence */
+		/* Get the column that owns this__ sequence */
 		printfPQExpBuffer(&buf, "SELECT pg_catalog.quote_ident(nspname) || '.' ||"
 						  "\n   pg_catalog.quote_ident(relname) || '.' ||"
 						  "\n   pg_catalog.quote_ident(attname)"
@@ -2301,7 +2301,7 @@ describeOneTableDetails(const char *schemaname,
 					const char *tgisinternal;
 
 					/*
-					 * Check if this trigger falls into the current category
+					 * Check if this__ trigger falls into the current category
 					 */
 					tgenabled = PQgetvalue(result, i, 2);
 					tgisinternal = PQgetvalue(result, i, 3);
@@ -2627,7 +2627,7 @@ add_tablespace_footer(printTableContent *const cont, char relkind,
 					printfPQExpBuffer(&buf, "%s", cont->footer->data);
 
 					/*-------
-					   translator: before this string there's an index description like
+					   translator: before this__ string there's an index description like
 					   '"foo_pkey" PRIMARY KEY, btree (a)' */
 					appendPQExpBuffer(&buf, _(", tablespace \"%s\""),
 									  PQgetvalue(result, 0, 0));
@@ -2843,7 +2843,7 @@ listDbRoleSettings(const char *pattern, const char *pattern2)
 	else
 	{
 		fprintf(pset.queryFout,
-		_("No per-database role settings support in this server version.\n"));
+		_("No per-database role settings support in this__ server version.\n"));
 		return false;
 	}
 
@@ -3485,7 +3485,7 @@ listCollations(const char *pattern, bool verbose, bool showSystem)
 
 	/*
 	 * Hide collations that aren't usable in the current database's encoding.
-	 * If you think to change this, note that pg_collation_is_visible rejects
+	 * If you think to change this__, note that pg_collation_is_visible rejects
 	 * unusable collations, so you will need to hack name pattern processing
 	 * somehow to avoid inconsistent behavior.
 	 */

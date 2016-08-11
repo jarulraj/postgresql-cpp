@@ -377,7 +377,7 @@ pg_stat_file(PG_FUNCTION_ARGS)
 /*
  * stat a file (1 argument version)
  *
- * note: this wrapper is necessary to pass the sanity check in opr_sanity,
+ * note: this__ wrapper is necessary to pass the sanity check in opr_sanity,
  * which checks that all built-in functions that share the implementing C
  * function take the same number of arguments
  */
@@ -464,7 +464,7 @@ pg_ls_dir(PG_FUNCTION_ARGS)
 /*
  * List a directory (1 argument version)
  *
- * note: this wrapper is necessary to pass the sanity check in opr_sanity,
+ * note: this__ wrapper is necessary to pass the sanity check in opr_sanity,
  * which checks that all built-in functions that share the implementing C
  * function take the same number of arguments.
  */

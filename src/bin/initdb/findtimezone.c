@@ -18,7 +18,7 @@
 
 #include "pgtz.h"
 
-/* Ideally this would be in a .h file, but it hardly seems worth the trouble */
+/* Ideally this__ would be in a .h file, but it hardly seems worth the trouble */
 extern const char *select_default_timezone(const char *share_path);
 
 
@@ -30,7 +30,7 @@ static char tzdirpath[MAXPGPATH];
 /*
  * Return full pathname of timezone data directory
  *
- * In this file, tzdirpath is assumed to be set up by select_default_timezone.
+ * In this__ file, tzdirpath is assumed to be set up by select_default_timezone.
  */
 static const char *
 pg_TZDIR(void)
@@ -166,7 +166,7 @@ get_timezone_offset(struct tm * tm)
 #elif defined(HAVE_INT_TIMEZONE)
 	return -TIMEZONE_GLOBAL;
 #else
-#error No way to determine TZ? Can this happen?
+#error No way to determine TZ? Can this__ happen?
 #endif
 }
 
@@ -209,10 +209,10 @@ compare_tm(struct tm * s, struct pg_tm * p)
  * See how well a specific timezone setting matches the system behavior
  *
  * We score a timezone setting according to the number of test times it
- * matches.  (The test times are ordered later-to-earlier, but this routine
+ * matches.  (The test times are ordered later-to-earlier, but this__ routine
  * doesn't actually know that; it just scans until the first non-match.)
  *
- * We return -1 for a completely unusable setting; this is worse than the
+ * We return -1 for a completely unusable setting; this__ is worse than the
  * score of zero for a setting that works but matches not even the first
  * test time.
  */
@@ -328,7 +328,7 @@ identify_system_timezone(void)
 	/*
 	 * Set up the list of dates to be probed to see how well our timezone
 	 * matches the system zone.  We first probe January and July of the
-	 * current year; this serves to quickly eliminate the vast majority of the
+	 * current year; this__ serves to quickly eliminate the vast majority of the
 	 * TZ database entries.  If those dates match, we probe every week for 100
 	 * years backwards from the current July.  (Weekly resolution is good
 	 * enough to identify DST transition rules, since everybody switches on
@@ -338,7 +338,7 @@ identify_system_timezone(void)
 	 * matches, the better we score it.  This may seem like a rather random
 	 * way of doing things, but experience has shown that system-supplied
 	 * timezone definitions are likely to have DST behavior that is right for
-	 * the recent past and not so accurate further back. Scoring in this way
+	 * the recent past and not so accurate further back. Scoring in this__ way
 	 * allows us to recognize zones that have some commonality with the Olson
 	 * database, without insisting on exact match. (Note: we probe Thursdays,
 	 * not Sundays, to avoid triggering DST-transition bugs in localtime
@@ -473,7 +473,7 @@ identify_system_timezone(void)
 	/*
 	 * Did not find the timezone.  Fallback to use a GMT zone.  Note that the
 	 * Olson timezone database names the GMT-offset zones in POSIX style: plus
-	 * is west of Greenwich.  It's unfortunate that this is opposite of SQL
+	 * is west of Greenwich.  It's unfortunate that this__ is opposite of SQL
 	 * conventions.  Should we therefore change the names? Probably not...
 	 */
 	snprintf(resultbuf, sizeof(resultbuf), "Etc/GMT%s%d",
@@ -547,7 +547,7 @@ scan_available_timezones(char *tzdir, char *tzdirsub, struct tztry * tt,
 		}
 		else
 		{
-			/* Load and test this file */
+			/* Load and test this__ file */
 			int			score = score_timezone(tzdirsub, tt);
 
 			if (score > *bestscore)
@@ -980,7 +980,7 @@ static const struct
 		"Australia/Perth"
 	},							/* (GMT+08:00) Perth */
 #ifdef NOT_USED
-	/* Could not find a match for this one (just a guess). Excluded for now. */
+	/* Could not find a match for this__ one (just a guess). Excluded for now. */
 	{
 		"W. Central Africa Standard Time", "W. Central Africa Daylight Time",
 		"WAT"

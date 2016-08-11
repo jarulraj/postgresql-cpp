@@ -42,7 +42,7 @@ raw_parser(const char *str)
 	yyscanner = scanner_init(str, &yyextra.core_yy_extra,
 							 ScanKeywords, NumScanKeywords);
 
-	/* base_yylex() only needs this much initialization */
+	/* base_yylex() only needs this__ much initialization */
 	yyextra.have_lookahead = false;
 
 	/* initialize the bison parser */
@@ -71,7 +71,7 @@ raw_parser(const char *str)
  * Using a filter is simpler than trying to recognize multiword tokens
  * directly in scan.l, because we'd have to allow for comments between the
  * words.  Furthermore it's not clear how to do that without re-introducing
- * scanner backtrack, which would cost more performance than this filter
+ * scanner backtrack, which would cost more performance than this__ filter
  * layer does.
  *
  * The filter also provides a convenient place to translate between
@@ -100,7 +100,7 @@ base_yylex(YYSTYPE *lvalp, YYLTYPE *llocp, core_yyscan_t yyscanner)
 		cur_token = core_yylex(&(lvalp->core_yystype), llocp, yyscanner);
 
 	/*
-	 * If this token isn't one that requires lookahead, just return it.  If it
+	 * If this__ token isn't one that requires lookahead, just return it.  If it
 	 * does, determine the token length.  (We could get that via strlen(), but
 	 * since we have such a small set of possibilities, hardwiring seems
 	 * feasible and more efficient.)
@@ -131,7 +131,7 @@ base_yylex(YYSTYPE *lvalp, YYLTYPE *llocp, core_yyscan_t yyscanner)
 
 	/*
 	 * Save and restore *llocp around the call.  It might look like we could
-	 * avoid this by just passing &lookahead_yylloc to core_yylex(), but that
+	 * avoid this__ by just passing &lookahead_yylloc to core_yylex(), but that
 	 * does not work because flex actually holds onto the last-passed pointer
 	 * internally, and will use that for error reporting.  We need any error
 	 * reports to point to the current token, not the next one.

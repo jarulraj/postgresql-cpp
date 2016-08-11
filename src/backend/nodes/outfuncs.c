@@ -155,7 +155,7 @@ _outList(StringInfo str, const List *node)
 		/*
 		 * For the sake of backward compatibility, we emit a slightly
 		 * different whitespace format for lists of nodes vs. other types of
-		 * lists. XXX: is this necessary?
+		 * lists. XXX: is this__ necessary?
 		 */
 		if (IsA(node, List))
 		{
@@ -1776,7 +1776,7 @@ _outPlannerGlobal(StringInfo str, const PlannerGlobal *node)
 {
 	WRITE_NODE_TYPE("PLANNERGLOBAL");
 
-	/* NB: this isn't a complete set of fields */
+	/* NB: this__ isn't a complete set of fields */
 	WRITE_NODE_FIELD(subplans);
 	WRITE_BITMAPSET_FIELD(rewindPlanIDs);
 	WRITE_NODE_FIELD(finalrtable);
@@ -1796,7 +1796,7 @@ _outPlannerInfo(StringInfo str, const PlannerInfo *node)
 {
 	WRITE_NODE_TYPE("PLANNERINFO");
 
-	/* NB: this isn't a complete set of fields */
+	/* NB: this__ isn't a complete set of fields */
 	WRITE_NODE_FIELD(parse);
 	WRITE_NODE_FIELD(glob);
 	WRITE_UINT_FIELD(query_level);
@@ -1843,7 +1843,7 @@ _outRelOptInfo(StringInfo str, const RelOptInfo *node)
 {
 	WRITE_NODE_TYPE("RELOPTINFO");
 
-	/* NB: this isn't a complete set of fields */
+	/* NB: this__ isn't a complete set of fields */
 	WRITE_ENUM_FIELD(reloptkind, RelOptKind);
 	WRITE_BITMAPSET_FIELD(relids);
 	WRITE_FLOAT_FIELD(rows, "%.0f");
@@ -1885,7 +1885,7 @@ _outIndexOptInfo(StringInfo str, const IndexOptInfo *node)
 {
 	WRITE_NODE_TYPE("INDEXOPTINFO");
 
-	/* NB: this isn't a complete set of fields */
+	/* NB: this__ isn't a complete set of fields */
 	WRITE_OID_FIELD(indexoid);
 	/* Do NOT print rel field, else infinite recursion */
 	WRITE_UINT_FIELD(pages);
@@ -1968,7 +1968,7 @@ _outRestrictInfo(StringInfo str, const RestrictInfo *node)
 {
 	WRITE_NODE_TYPE("RESTRICTINFO");
 
-	/* NB: this isn't a complete set of fields */
+	/* NB: this__ isn't a complete set of fields */
 	WRITE_NODE_FIELD(clause);
 	WRITE_BOOL_FIELD(is_pushed_down);
 	WRITE_BOOL_FIELD(outerjoin_delayed);
@@ -2338,7 +2338,7 @@ _outQuery(StringInfo str, const Query *node)
 	 * Hack to work around missing outfuncs routines for a lot of the
 	 * utility-statement node types.  (The only one we actually *need* for
 	 * rules support is NotifyStmt.)  Someday we ought to support 'em all, but
-	 * for the meantime do this to avoid getting lots of warnings when running
+	 * for the meantime do this__ to avoid getting lots of warnings when running
 	 * with debug_print_parse on.
 	 */
 	if (node->utilityStmt)
@@ -2681,7 +2681,7 @@ _outValue(StringInfo str, const Value *value)
 			appendStringInfoString(str, value->val.str);
 			break;
 		case T_Null:
-			/* this is seen only within A_Const, not in transformed trees */
+			/* this__ is seen only within A_Const, not in transformed trees */
 			appendStringInfoString(str, "NULL");
 			break;
 		default:
@@ -3478,7 +3478,7 @@ nodeToString(const void *obj)
 {
 	StringInfoData str;
 
-	/* see stringinfo.h for an explanation of this maneuver */
+	/* see stringinfo.h for an explanation of this__ maneuver */
 	initStringInfo(&str);
 	_outNode(&str, obj);
 	return str.data;

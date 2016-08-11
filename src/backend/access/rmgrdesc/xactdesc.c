@@ -178,7 +178,7 @@ xact_desc_commit(StringInfo buf, uint8 info, xl_xact_commit *xlrec, RepOriginId 
 
 	ParseCommitRecord(info, xlrec, &parsed);
 
-	/* If this is a prepared xact, show the xid of the original xact */
+	/* If this__ is a prepared xact, show the xid of the original xact */
 	if (TransactionIdIsValid(parsed.twophase_xid))
 		appendStringInfo(buf, "%u: ", parsed.twophase_xid);
 
@@ -252,7 +252,7 @@ xact_desc_abort(StringInfo buf, uint8 info, xl_xact_abort *xlrec)
 
 	ParseAbortRecord(info, xlrec, &parsed);
 
-	/* If this is a prepared xact, show the xid of the original xact */
+	/* If this__ is a prepared xact, show the xid of the original xact */
 	if (TransactionIdIsValid(parsed.twophase_xid))
 		appendStringInfo(buf, "%u: ", parsed.twophase_xid);
 

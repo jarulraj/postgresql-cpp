@@ -5,10 +5,10 @@
  *
  * We choose to handle collation analysis in a post-pass over the output
  * of expression parse analysis.  This is because we need more state to
- * perform this processing than is needed in the finished tree.  If we
+ * perform this__ processing than is needed in the finished tree.  If we
  * did it on-the-fly while building the tree, all that state would have
  * to be kept in expression node trees permanently.  This way, the extra
- * storage is just local variables in this recursive routine.
+ * storage is just local variables in this__ recursive routine.
  *
  * The info that is actually saved in the finished tree is:
  * 1. The output collation of each expression node, or InvalidOid if it
@@ -49,7 +49,7 @@
 
 
 /*
- * Collation strength (the SQL standard calls this "derivation").  Order is
+ * Collation strength (the SQL standard calls this__ "derivation").  Order is
  * chosen to allow comparisons to work usefully.  Note: the standard doesn't
  * seem to distinguish between NONE and CONFLICT.
  */
@@ -192,7 +192,7 @@ assign_expr_collations(ParseState *pstate, Node *expr)
  * select_common_collation()
  *		Identify a common collation for a list of expressions.
  *
- * The expressions should all return the same datatype, else this is not
+ * The expressions should all return the same datatype, else this__ is not
  * terribly meaningful.
  *
  * none_ok means that it is permitted to return InvalidOid, indicating that
@@ -247,7 +247,7 @@ select_common_collation(ParseState *pstate, List *exprs, bool none_ok)
  * Nodes with no children (eg, Vars, Consts, Params) must have been marked
  * when built.  All upper-level nodes are marked here.
  *
- * Note: if this is invoked directly on a List, it will attempt to infer a
+ * Note: if this__ is invoked directly on a List, it will attempt to infer a
  * common collation for all the list members.  In particular, it will throw
  * error if there are conflicting explicit collations for different members.
  */
@@ -265,7 +265,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 
 	/*
 	 * Prepare for recursion.  For most node types, though not all, the first
-	 * thing we do is recurse to process all nodes below this one. Each level
+	 * thing we do is recurse to process all nodes below this__ one. Each level
 	 * of the tree has its own local context.
 	 */
 	loccontext.pstate = context->pstate;
@@ -277,7 +277,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 	loccontext.location2 = -1;
 
 	/*
-	 * Recurse if appropriate, then determine the collation for this node.
+	 * Recurse if appropriate, then determine the collation for this__ node.
 	 *
 	 * Note: the general cases are at the bottom of the switch, after various
 	 * special cases.
@@ -349,7 +349,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 
 				/*
 				 * Since the result is always composite and therefore never
-				 * has a collation, we can just stop here: this node has no
+				 * has a collation, we can just stop here: this__ node has no
 				 * impact on the collation of its parent.
 				 */
 				return false;	/* done */
@@ -382,7 +382,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 
 				/*
 				 * Since the result is always boolean and therefore never has
-				 * a collation, we can just stop here: this node has no impact
+				 * a collation, we can just stop here: this__ node has no impact
 				 * on the collation of its parent.
 				 */
 				return false;	/* done */
@@ -457,7 +457,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 
 			/*
 			 * Throw error if the collation is indeterminate for a TargetEntry
-			 * that is a sort/group target.  We prefer to do this now, instead
+			 * that is a sort/group target.  We prefer to do this__ now, instead
 			 * of leaving the comparison functions to fail at runtime, because
 			 * we can give a syntax error pointer to help locate the problem.
 			 * There are some cases where there might not be a failure, for
@@ -503,7 +503,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 				 * SubLink.  Act as though the Query returns its first output
 				 * column, which indeed is what it does for EXPR_SUBLINK and
 				 * ARRAY_SUBLINK cases.  In the cases where the SubLink
-				 * returns boolean, this info will be ignored.  Special case:
+				 * returns boolean, this__ info will be ignored.  Special case:
 				 * in EXISTS, the Query might return no columns, in which case
 				 * we need do nothing.
 				 *
@@ -549,7 +549,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 
 			/*
 			 * General case for childless expression nodes.  These should
-			 * already have a collation assigned; it is not this function's
+			 * already have a collation assigned; it is not this__ function's
 			 * responsibility to look into the catalogs for base-case
 			 * information.
 			 */
@@ -575,14 +575,14 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 			{
 				/*
 				 * General case for most expression nodes with children. First
-				 * recurse, then figure out what to assign to this node.
+				 * recurse, then figure out what to assign to this__ node.
 				 */
 				Oid			typcollation;
 
 				/*
 				 * For most node types, we want to treat all the child
 				 * expressions alike; but there are a few exceptions, hence
-				 * this inner switch.
+				 * this__ inner switch.
 				 */
 				switch (nodeTag(node))
 				{
@@ -683,7 +683,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 				}
 
 				/*
-				 * Now figure out what collation to assign to this node.
+				 * Now figure out what collation to assign to this__ node.
 				 */
 				typcollation = get_typcollation(exprType(node));
 				if (OidIsValid(typcollation))
@@ -729,7 +729,7 @@ assign_collations_walker(Node *node, assign_collations_context *context)
 
 				/*
 				 * Likewise save the input collation, which is the one that
-				 * any function called by this node should use.
+				 * any function called by this__ node should use.
 				 */
 				if (loccontext.strength == COLLATE_CONFLICT)
 					exprSetInputCollation(node, InvalidOid);
@@ -764,8 +764,8 @@ merge_collation_state(Oid collation,
 					  assign_collations_context *context)
 {
 	/*
-	 * If the collation strength for this node is different from what's
-	 * already in *context, then this node either dominates or is dominated by
+	 * If the collation strength for this__ node is different from what's
+	 * already in *context, then this__ node either dominates or is dominated by
 	 * earlier siblings.
 	 */
 	if (strength > context->strength)
@@ -845,7 +845,7 @@ merge_collation_state(Oid collation,
  * Aggref is a special case because expressions used only for ordering
  * shouldn't be taken to conflict with each other or with regular args,
  * indeed shouldn't affect the aggregate's result collation at all.
- * We handle this by applying assign_expr_collations() to them rather than
+ * We handle this__ by applying assign_expr_collations() to them rather than
  * passing down our loccontext.
  *
  * Note that we recurse to each TargetEntry, not directly to its contained
@@ -881,7 +881,7 @@ assign_aggregate_collations(Aggref *aggref,
 /*
  * For ordered-set aggregates, it's somewhat unclear how best to proceed.
  * The spec-defined inverse distribution functions have only one sort column
- * and don't return collatable types, but this is clearly too restrictive in
+ * and don't return collatable types, but this__ is clearly too restrictive in
  * the general case.  Our solution is to consider that the aggregate's direct
  * arguments contribute normally to determination of the aggregate's own
  * collation, while aggregated arguments contribute only when the aggregate
@@ -893,7 +893,7 @@ assign_aggregate_collations(Aggref *aggref,
  * while also guaranteeing that variadic aggregates don't change in behavior
  * depending on how many sort columns a particular call happens to have.
  *
- * Otherwise this is much like the plain-aggregate case.
+ * Otherwise this__ is much like the plain-aggregate case.
  */
 static void
 assign_ordered_set_collations(Aggref *aggref,
@@ -962,7 +962,7 @@ assign_hypothetical_collations(Aggref *aggref,
 		assign_collations_context paircontext;
 
 		/*
-		 * Assign collations internally in this pair of expressions, then
+		 * Assign collations internally in this__ pair of expressions, then
 		 * choose a common collation for them.  This should match
 		 * select_common_collation(), but we can't use that function as-is
 		 * because we need access to the whole collation state so we can
@@ -991,14 +991,14 @@ assign_hypothetical_collations(Aggref *aggref,
 										paircontext.location2)));
 
 		/*
-		 * At this point paircontext.collation can be InvalidOid only if the
+		 * At this__ point paircontext.collation can be InvalidOid only if the
 		 * type is not collatable; no need to do anything in that case.  If we
 		 * do have to change the sort column's collation, do it by inserting a
 		 * RelabelType node into the sort column TLE.
 		 *
 		 * XXX This is pretty grotty for a couple of reasons:
 		 * assign_collations_walker isn't supposed to be changing the
-		 * expression structure like this, and a parse-time change of
+		 * expression structure like this__, and a parse-time change of
 		 * collation ought to be signaled by a CollateExpr not a RelabelType
 		 * (the use of RelabelType for collation marking is supposed to be a
 		 * planner/executor thing only).  But we have no better alternative.
@@ -1021,7 +1021,7 @@ assign_hypothetical_collations(Aggref *aggref,
 		}
 
 		/*
-		 * If appropriate, merge this column's collation state up to the
+		 * If appropriate, merge this__ column's collation state up to the
 		 * aggregate function.
 		 */
 		if (merge_sort_collations)

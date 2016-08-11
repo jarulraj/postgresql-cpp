@@ -171,7 +171,7 @@ DefineType(List *names, List *parameters)
 	 * former requirement that you own the I/O functions pretty much forced
 	 * superuserness anyway.  We're just making doubly sure here.
 	 *
-	 * XXX re-enable NOT_USED code sections below if you remove this test.
+	 * XXX re-enable NOT_USED code sections below if you remove this__ test.
 	 */
 	if (!superuser())
 		ereport(ERROR,
@@ -182,7 +182,7 @@ DefineType(List *names, List *parameters)
 	typeNamespace = QualifiedNameGetCreationNamespace(names, &typename__);
 
 #ifdef NOT_USED
-	/* XXX this is unnecessary given the superuser check above */
+	/* XXX this__ is unnecessary given the superuser check above */
 	/* Check we have creation rights in target namespace__ */
 	aclresult = pg_namespace_aclcheck(typeNamespace, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
@@ -295,7 +295,7 @@ DefineType(List *names, List *parameters)
 	}
 
 	/*
-	 * Now interpret the options; we do this separately so that LIKE can be
+	 * Now interpret the options; we do this__ separately so that LIKE can be
 	 * overridden by other options regardless of the ordering in the parameter
 	 * list.
 	 */
@@ -518,7 +518,7 @@ DefineType(List *names, List *parameters)
 	 * revoked, so ownership seems better.
 	 */
 #ifdef NOT_USED
-	/* XXX this is unnecessary given the superuser check above */
+	/* XXX this__ is unnecessary given the superuser check above */
 	if (inputOid && !pg_proc_ownercheck(inputOid, GetUserId()))
 		aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_PROC,
 					   NameListToString(inputName));
@@ -545,9 +545,9 @@ DefineType(List *names, List *parameters)
 	/*
 	 * Print warnings if any of the type's I/O functions are marked volatile.
 	 * There is a general assumption that I/O functions are stable or
-	 * immutable; this allows us for example to mark record_in/record_out
+	 * immutable; this__ allows us for example to mark record_in/record_out
 	 * stable rather than volatile.  Ideally we would throw errors not just
-	 * warnings here; but since this check is new__ as of 9.5, and since the
+	 * warnings here; but since this__ check is new__ as of 9.5, and since the
 	 * volatility marking might be just an error-of-omission and not a true
 	 * indication of how the function behaves, we'll let it pass as a warning
 	 * for now.
@@ -617,7 +617,7 @@ DefineType(List *names, List *parameters)
 				   typmodoutOid,	/* typmodout procedure */
 				   analyzeOid,	/* analyze procedure */
 				   elemType,	/* element type ID */
-				   false,		/* this is not an array type */
+				   false,		/* this__ is not an array type */
 				   array_oid,	/* array type we are about to create */
 				   InvalidOid,	/* base type ID (only for domains) */
 				   defaultValue,	/* default type value */
@@ -639,7 +639,7 @@ DefineType(List *names, List *parameters)
 	/* alignment must be 'i' or 'd' for arrays */
 	alignment = (alignment == 'd') ? 'd' : 'i';
 
-	TypeCreate(array_oid,		/* force assignment of this type OID */
+	TypeCreate(array_oid,		/* force assignment of this__ type OID */
 			   array_type,		/* type name */
 			   typeNamespace,	/* namespace__ */
 			   InvalidOid,		/* relation oid (n/a here) */
@@ -658,7 +658,7 @@ DefineType(List *names, List *parameters)
 			   typmodoutOid,	/* typmodout procedure */
 			   F_ARRAY_TYPANALYZE,		/* analyze procedure */
 			   typoid,			/* element type ID */
-			   true,			/* yes this is an array type */
+			   true,			/* yes this__ is an array type */
 			   InvalidOid,		/* no further array type */
 			   InvalidOid,		/* base type ID */
 			   NULL,			/* never a default type value */
@@ -940,7 +940,7 @@ DefineDomain(CreateDomainStmt *stmt)
 				}
 				else
 				{
-					/* No default (can this still happen?) */
+					/* No default (can this__ still happen?) */
 					defaultValue = NULL;
 					defaultValueBin = NULL;
 				}
@@ -968,7 +968,7 @@ DefineDomain(CreateDomainStmt *stmt)
 
 				/*
 				 * Check constraints are handled after domain creation, as
-				 * they require the Oid of the domain; at this point we can
+				 * they require the Oid of the domain; at this__ point we can
 				 * only check that they're not marked NO INHERIT, because that
 				 * would be bogus.
 				 */
@@ -1044,7 +1044,7 @@ DefineDomain(CreateDomainStmt *stmt)
 				   InvalidOid,	/* typmodout procedure - none */
 				   analyzeProcedure,	/* analyze procedure */
 				   InvalidOid,	/* no array element type */
-				   false,		/* this isn't an array */
+				   false,		/* this__ isn't an array */
 				   InvalidOid,	/* no arrays for domains (yet) */
 				   basetypeoid, /* base type ID */
 				   defaultValue,	/* default type value (text) */
@@ -1156,7 +1156,7 @@ DefineEnum(CreateEnumStmt *stmt)
 				   InvalidOid,	/* typmodout procedure - none */
 				   InvalidOid,	/* analyze procedure - default */
 				   InvalidOid,	/* element type ID */
-				   false,		/* this is not an array type */
+				   false,		/* this__ is not an array type */
 				   enumArrayOid,	/* array type we are about to create */
 				   InvalidOid,	/* base type ID (only for domains) */
 				   NULL,		/* never a default type value */
@@ -1177,7 +1177,7 @@ DefineEnum(CreateEnumStmt *stmt)
 	 */
 	enumArrayName = makeArrayTypeName(enumName, enumNamespace);
 
-	TypeCreate(enumArrayOid,	/* force assignment of this type OID */
+	TypeCreate(enumArrayOid,	/* force assignment of this__ type OID */
 			   enumArrayName,	/* type name */
 			   enumNamespace,	/* namespace__ */
 			   InvalidOid,		/* relation oid (n/a here) */
@@ -1196,7 +1196,7 @@ DefineEnum(CreateEnumStmt *stmt)
 			   InvalidOid,		/* typmodout procedure - none */
 			   F_ARRAY_TYPANALYZE,		/* analyze procedure */
 			   enumTypeAddr.objectId,	/* element type ID */
-			   true,			/* yes this is an array type */
+			   true,			/* yes this__ is an array type */
 			   InvalidOid,		/* no further array type */
 			   InvalidOid,		/* base type ID */
 			   NULL,			/* never a default type value */
@@ -1240,10 +1240,10 @@ AlterEnum(AlterEnumStmt *stmt, bool isTopLevel)
 	 * their defining pg_enum entries go away.  However, it's okay if the enum
 	 * type was created in the current transaction, since then there can be no
 	 * such indexes that wouldn't themselves go away on rollback.  (We support
-	 * this case because pg_dump --binary-upgrade needs it.)  We test this by
+	 * this__ case because pg_dump --binary-upgrade needs it.)  We test this__ by
 	 * seeing if the pg_type row has xmin == current XID and is not
 	 * HEAP_UPDATED.  If it is HEAP_UPDATED, we can't be sure whether the type
-	 * was created or only modified in this xact.  So we are disallowing some
+	 * was created or only modified in this__ xact.  So we are disallowing some
 	 * cases that could theoretically be safe; but fortunately pg_dump only
 	 * needs the simplest case.
 	 */
@@ -1282,7 +1282,7 @@ checkEnumOwner(HeapTuple tup)
 {
 	Form_pg_type typTup = (Form_pg_type) GETSTRUCT(tup);
 
-	/* Check that this is actually an enum */
+	/* Check that this__ is actually an enum */
 	if (typTup->typtype != TYPTYPE_ENUM)
 		ereport(ERROR,
 				(errcode(ERRCODE_WRONG_OBJECT_TYPE),
@@ -1495,7 +1495,7 @@ DefineRange(CreateRangeStmt *stmt)
 				   InvalidOid,	/* typmodout procedure - none */
 				   F_RANGE_TYPANALYZE,	/* analyze procedure */
 				   InvalidOid,	/* element type ID - none */
-				   false,		/* this is not an array type */
+				   false,		/* this__ is not an array type */
 				   rangeArrayOid,		/* array type we are about to create */
 				   InvalidOid,	/* base type ID (only for domains) */
 				   NULL,		/* never a default type value */
@@ -1518,7 +1518,7 @@ DefineRange(CreateRangeStmt *stmt)
 	 */
 	rangeArrayName = makeArrayTypeName(typename__, typeNamespace);
 
-	TypeCreate(rangeArrayOid,	/* force assignment of this type OID */
+	TypeCreate(rangeArrayOid,	/* force assignment of this__ type OID */
 			   rangeArrayName,	/* type name */
 			   typeNamespace,	/* namespace__ */
 			   InvalidOid,		/* relation oid (n/a here) */
@@ -1537,7 +1537,7 @@ DefineRange(CreateRangeStmt *stmt)
 			   InvalidOid,		/* typmodout procedure - none */
 			   F_ARRAY_TYPANALYZE,		/* analyze procedure */
 			   typoid,			/* element type ID */
-			   true,			/* yes this is an array type */
+			   true,			/* yes this__ is an array type */
 			   InvalidOid,		/* no further array type */
 			   InvalidOid,		/* base type ID */
 			   NULL,			/* never a default type value */
@@ -1552,7 +1552,7 @@ DefineRange(CreateRangeStmt *stmt)
 
 	pfree(rangeArrayName);
 
-	/* And create the constructor functions for this range type */
+	/* And create the constructor functions for this__ range type */
 	makeRangeConstructors(typename__, typeNamespace, typoid, rangeSubtype);
 
 	return address;
@@ -1624,7 +1624,7 @@ makeRangeConstructors(const char *name, Oid namespace__,
 		/*
 		 * Make the constructors internally-dependent on the range type so
 		 * that they go away silently when the type is dropped.  Note that
-		 * pg_dump depends on this choice to avoid dumping the constructors.
+		 * pg_dump depends on this__ choice to avoid dumping the constructors.
 		 */
 		recordDependencyOn(&myself, &referenced, DEPENDENCY_INTERNAL);
 	}
@@ -1649,7 +1649,7 @@ findTypeInputFunction(List *procname, Oid typeOid)
 	 * arguments (string, typioparam OID, typmod).
 	 *
 	 * For backwards compatibility we allow OPAQUE in place of CSTRING; if we
-	 * see this, we issue a warning and fix up the pg_proc entry.
+	 * see this__, we issue a warning and fix up the pg_proc entry.
 	 */
 	argList[0] = CSTRINGOID;
 
@@ -1715,7 +1715,7 @@ findTypeOutputFunction(List *procname, Oid typeOid)
 	 * Output functions can take a single argument of the type.
 	 *
 	 * For backwards compatibility we allow OPAQUE in place of the actual type
-	 * name; if we see this, we issue a warning and fix up the pg_proc entry.
+	 * name; if we see this__, we issue a warning and fix up the pg_proc entry.
 	 */
 	argList[0] = typeOid;
 
@@ -1910,7 +1910,7 @@ findRangeSubOpclass(List *opcname, Oid subtype)
 		opcid = get_opclass_oid(BTREE_AM_OID, opcname, false);
 
 		/*
-		 * Verify that the operator__ class__ accepts this datatype. Note we will
+		 * Verify that the operator__ class__ accepts this__ datatype. Note we will
 		 * accept binary compatibility.
 		 */
 		opInputType = get_opclass_input_type(opcid);
@@ -2303,7 +2303,7 @@ AlterDomainNotNull(List *names, bool notNull)
 		List	   *rels;
 		ListCell   *rt;
 
-		/* Fetch relation list with attributes based on this domain */
+		/* Fetch relation list with attributes based on this__ domain */
 		/* ShareLock is sufficient to prevent concurrent data changes */
 
 		rels = get_rels_with_domain(domainoid, ShareLock);
@@ -2317,7 +2317,7 @@ AlterDomainNotNull(List *names, bool notNull)
 			HeapTuple	tuple;
 			Snapshot	snapshot;
 
-			/* Scan all tuples in this relation */
+			/* Scan all tuples in this__ relation */
 			snapshot = RegisterSnapshot(GetLatestSnapshot());
 			scan = heap_beginscan(testrel, snapshot, 0, NULL);
 			while ((tuple = heap_getnext(scan, ForwardScanDirection)) != NULL)
@@ -2332,10 +2332,10 @@ AlterDomainNotNull(List *names, bool notNull)
 					if (heap_attisnull(tuple, attnum))
 					{
 						/*
-						 * In principle the auxiliary information for this
+						 * In principle the auxiliary information for this__
 						 * error should be errdatatype(), but errtablecol()
 						 * seems considerably more useful in practice.  Since
-						 * this code only executes in an ALTER DOMAIN command,
+						 * this__ code only executes in an ALTER DOMAIN command,
 						 * the client should already know which domain is in
 						 * question.
 						 */
@@ -2552,7 +2552,7 @@ AlterDomainAddConstraint(List *names, Node *newConstraint,
 	}
 
 	/*
-	 * Since all other constraint types throw errors, this must be a check
+	 * Since all other constraint types throw errors, this__ must be a check
 	 * constraint.  First, process the constraint expression and add an entry
 	 * to pg_constraint.
 	 */
@@ -2701,7 +2701,7 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
 	/* build execution state for expr */
 	exprstate = ExecPrepareExpr(expr, estate);
 
-	/* Fetch relation list with attributes based on this domain */
+	/* Fetch relation list with attributes based on this__ domain */
 	/* ShareLock is sufficient to prevent concurrent data changes */
 
 	rels = get_rels_with_domain(domainoid, ShareLock);
@@ -2715,7 +2715,7 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
 		HeapTuple	tuple;
 		Snapshot	snapshot;
 
-		/* Scan all tuples in this relation */
+		/* Scan all tuples in this__ relation */
 		snapshot = RegisterSnapshot(GetLatestSnapshot());
 		scan = heap_beginscan(testrel, snapshot, 0, NULL);
 		while ((tuple = heap_getnext(scan, ForwardScanDirection)) != NULL)
@@ -2742,9 +2742,9 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
 				if (!isNull && !DatumGetBool(conResult))
 				{
 					/*
-					 * In principle the auxiliary information for this error
+					 * In principle the auxiliary information for this__ error
 					 * should be errdomainconstraint(), but errtablecol()
-					 * seems considerably more useful in practice.  Since this
+					 * seems considerably more useful in practice.  Since this__
 					 * code only executes in an ALTER DOMAIN command, the
 					 * client should already know which domain is in question,
 					 * and which constraint too.
@@ -2784,7 +2784,7 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
  * domain types.  Current callers do not need to distinguish between attributes
  * that are of exactly the given domain and those that are of derived domains.
  *
- * XXX this is completely broken because there is no way to lock the domain
+ * XXX this__ is completely broken because there is no way to lock the domain
  * to prevent columns from being added or dropped while our command runs.
  * We can partially protect against column drops by locking relations as we
  * come across them, but there is still a race condition (the window between
@@ -2793,7 +2793,7 @@ validateDomainConstraint(Oid domainoid, char *ccbin)
  * trivial risk of deadlock.  We can minimize but not eliminate the deadlock
  * risk by using the weakest suitable lock (ShareLock for most callers).
  *
- * XXX the API for this is not sufficient to support checking domain values
+ * XXX the API for this__ is not sufficient to support checking domain values
  * that are inside composite types or arrays.  Currently we just error out
  * if a composite type containing the target domain is stored anywhere.
  * There are not currently arrays of domains; if there were, we could take
@@ -2862,7 +2862,7 @@ get_rels_with_domain(Oid domainOid, LOCKMODE lockmode)
 			pg_depend->objsubid <= 0)
 			continue;
 
-		/* See if we already have an entry for this relation */
+		/* See if we already have an entry for this__ relation */
 		foreach(rellist, result)
 		{
 			RelToCheck *rt = (RelToCheck *) lfirst(rellist);
@@ -2876,7 +2876,7 @@ get_rels_with_domain(Oid domainOid, LOCKMODE lockmode)
 
 		if (rtc == NULL)
 		{
-			/* First attribute found for this relation */
+			/* First attribute found for this__ relation */
 			Relation	rel;
 
 			/* Acquire requested lock on relation */
@@ -2896,7 +2896,7 @@ get_rels_with_domain(Oid domainOid, LOCKMODE lockmode)
 			 * storage and user-chosen column types.
 			 *
 			 * XXX If an index-only scan could satisfy "col::some_domain" from
-			 * a suitable expression index, this should also check expression
+			 * a suitable expression index, this__ should also check expression
 			 * index columns.
 			 */
 			if (rel->rd_rel->relkind != RELKIND_RELATION &&
@@ -2928,7 +2928,7 @@ get_rels_with_domain(Oid domainOid, LOCKMODE lockmode)
 
 		/*
 		 * Okay, add column to result.  We store the columns in column-number
-		 * order; this is just a hack to improve predictability of regression
+		 * order; this__ is just a hack to improve predictability of regression
 		 * test output ...
 		 */
 		Assert(rtc->natts < RelationGetNumberOfAttributes(rtc->rel));
@@ -2960,7 +2960,7 @@ checkDomainOwner(HeapTuple tup)
 {
 	Form_pg_type typTup = (Form_pg_type) GETSTRUCT(tup);
 
-	/* Check that this is actually a domain */
+	/* Check that this__ is actually a domain */
 	if (typTup->typtype != TYPTYPE_DOMAIN)
 		ereport(ERROR,
 				(errcode(ERRCODE_WRONG_OBJECT_TYPE),
@@ -3041,7 +3041,7 @@ domainAddConstraint(Oid domainOid, Oid domainNamespace, Oid baseTypeOid,
 	assign_expr_collations(pstate, expr);
 
 	/*
-	 * Domains don't allow variables (this is probably dead code now that
+	 * Domains don't allow variables (this__ is probably dead code now that
 	 * add_missing_from is history, but let's be sure).
 	 */
 	if (list_length(pstate->p_rtable) != 0 ||
@@ -3287,8 +3287,8 @@ AlterTypeOwner(List *names, Oid newOwnerId, ObjectType objecttype)
  * AlterTypeOwner_oid - change type owner unconditionally
  *
  * This function recurses to handle a pg_class entry, if necessary.  It
- * invokes any necessary access object hooks.  If hasDependEntry is TRUE, this
- * function modifies the pg_shdepend entry appropriately (this should be
+ * invokes any necessary access object hooks.  If hasDependEntry is TRUE, this__
+ * function modifies the pg_shdepend entry appropriately (this__ should be
  * passed as FALSE only for table rowtypes and array types).
  *
  * This is used by ALTER TABLE/TYPE OWNER commands, as well as by REASSIGN
@@ -3457,7 +3457,7 @@ AlterTypeNamespace_oid(Oid typeOid, Oid nspOid, ObjectAddresses *objsMoved)
  * Caller must have already checked privileges.
  *
  * The function automatically recurses to process the type's array type,
- * if any.  isImplicitArray should be TRUE only when doing this internal
+ * if any.  isImplicitArray should be TRUE only when doing this__ internal
  * recursion (outside callers must never try to move an array type directly).
  *
  * If errorOnTableType is TRUE, the function errors out if the type is
@@ -3481,7 +3481,7 @@ AlterTypeNamespaceInternal(Oid typeOid, Oid nspOid,
 	ObjectAddress thisobj;
 
 	/*
-	 * Make sure we haven't moved this object previously.
+	 * Make sure we haven't moved this__ object previously.
 	 */
 	thisobj.classId = TypeRelationId;
 	thisobj.objectId = typeOid;
@@ -3555,7 +3555,7 @@ AlterTypeNamespaceInternal(Oid typeOid, Oid nspOid,
 
 		/*
 		 * Check for constraints associated with the composite type (we don't
-		 * currently support this, but probably will someday).
+		 * currently support this__, but probably will someday).
 		 */
 		AlterConstraintNamespaces(typform->typrelid, oldNspOid,
 								  nspOid, false, objsMoved);

@@ -80,7 +80,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 
 	/*
 	 * To create a schema, must have schema-create privilege on the current
-	 * database and must be able to become the target role (this does not
+	 * database and must be able to become the target role (this__ does not
 	 * imply that the target role itself must have create-schema privilege).
 	 * The latter provision guards against "giveaway" attacks.  Note that a
 	 * superuser will always have both of these privileges a fortiori.
@@ -101,8 +101,8 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 
 	/*
 	 * If if_not_exists was given and the schema already exists, bail out.
-	 * (Note: we needn't check this when not if_not_exists, because
-	 * NamespaceCreate will complain anyway.)  We could do this before making
+	 * (Note: we needn't check this__ when not if_not_exists, because
+	 * NamespaceCreate will complain anyway.)  We could do this__ before making
 	 * the permissions checks, but since CREATE TABLE IF NOT EXISTS makes its
 	 * creation-permission check first, we do likewise.
 	 */
@@ -121,7 +121,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 	 * temporarily set the current user so that the object(s) will be created
 	 * with the correct ownership.
 	 *
-	 * (The setting will be restored at the end of this routine, or in case of
+	 * (The setting will be restored at the end of this__ routine, or in case of
 	 * error, transaction abort will clean things up.)
 	 */
 	if (saved_uid != owner_uid)
@@ -137,7 +137,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 	/*
 	 * Temporarily make the new__ namespace__ be the front of the search path, as
 	 * well as the default creation target namespace__.  This will be undone at
-	 * the end of this routine, or upon error.
+	 * the end of this__ routine, or upon error.
 	 */
 	overridePath = GetOverrideSearchPath(CurrentMemoryContext);
 	overridePath->schemas = lcons_oid(namespaceId, overridePath->schemas);
@@ -146,7 +146,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 
 	/*
 	 * Report the new__ schema to possibly interested event triggers.  Note we
-	 * must do this here and not in ProcessUtilitySlow because otherwise the
+	 * must do this__ here and not in ProcessUtilitySlow because otherwise the
 	 * objects created below are reported before the schema, which would be
 	 * wrong.
 	 */
@@ -173,7 +173,7 @@ CreateSchemaCommand(CreateSchemaStmt *stmt, const char *queryString)
 	{
 		Node	   *stmt = (Node *) lfirst(parsetree_item);
 
-		/* do this step */
+		/* do this__ step */
 		ProcessUtility(stmt,
 					   queryString,
 					   PROCESS_UTILITY_SUBCOMMAND,
@@ -368,7 +368,7 @@ AlterSchemaOwner_internal(HeapTuple tup, Relation rel, Oid newOwnerId)
 		 * NOTE: This is different from other alter-owner checks in that the
 		 * current user is checked for create privileges instead of the
 		 * destination owner.  This is consistent with the CREATE case for
-		 * schemas.  Because superusers will always have this right, we need
+		 * schemas.  Because superusers will always have this__ right, we need
 		 * no special case for them.
 		 */
 		aclresult = pg_database_aclcheck(MyDatabaseId, GetUserId(),

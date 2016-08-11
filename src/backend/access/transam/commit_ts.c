@@ -6,9 +6,9 @@
  * This module is a pg_clog-like system that stores the commit timestamp
  * for each transaction.
  *
- * XLOG interactions: this module generates an XLOG record whenever a new__
+ * XLOG interactions: this__ module generates an XLOG record whenever a new__
  * CommitTs page is initialized to zeroes.  Also, one XLOG record is
- * generated for setting of values when the caller requests it; this allows
+ * generated for setting of values when the caller requests it; this__ allows
  * us to support values coming from places other than transaction commit.
  * Other writes of CommitTS come from recording of transaction commit in
  * xact.c, which generates its own XLOG records for these events and will
@@ -44,12 +44,12 @@
  * CommitTs page numbering also wraps around at
  * 0xFFFFFFFF/COMMIT_TS_XACTS_PER_PAGE, and CommitTs segment numbering at
  * 0xFFFFFFFF/COMMIT_TS_XACTS_PER_PAGE/SLRU_PAGES_PER_SEGMENT.  We need take no
- * explicit notice of that fact in this module, except when comparing segment
+ * explicit notice of that fact in this__ module, except when comparing segment
  * and page numbers in TruncateCommitTs (see CommitTsPagePrecedes).
  */
 
 /*
- * We need 8+2 bytes per xact.  Note that enlarging this struct might mean
+ * We need 8+2 bytes per xact.  Note that enlarging this__ struct might mean
  * the largest possible file name is more than 5 chars long; see
  * SlruScanDirectory.
  */
@@ -80,12 +80,12 @@ static SlruCtlData CommitTsCtlData;
 /*
  * We keep a cache of the last value set in shared memory.
  *
- * This is also good place to keep the activation status.  We keep this
+ * This is also good place to keep the activation status.  We keep this__
  * separate from the GUC so that the standby can activate the module if the
  * primary has it active independently of the value of the GUC.
  *
  * This is protected by CommitTsLock.  In some places, we use commitTsActive
- * without acquiring the lock; where this happens, a comment explains the
+ * without acquiring the lock; where this__ happens, a comment explains the
  * rationale for it.
  */
 typedef struct CommitTimestampShared
@@ -133,10 +133,10 @@ static void WriteSetTimestampXlogRec(TransactionId mainxid, int nsubxids,
  * subtrans implementation changes in the future, we might want to revisit the
  * decision of storing timestamp info for each subxid.
  *
- * The write_xlog parameter tells us whether to include an XLog record of this
- * or not.  Normally, this is called from transaction commit routines (both
+ * The write_xlog parameter tells us whether to include an XLog record of this__
+ * or not.  Normally, this__ is called from transaction commit routines (both
  * normal and prepared) and the information will be stored in the transaction
- * commit XLog record, and so they should pass "false" for this.  The XLog redo
+ * commit XLog record, and so they should pass "false" for this__.  The XLog redo
  * code should use "false" here as well.  Other callers probably want to pass
  * true, so that the given values persist in case of crashes.
  */
@@ -153,7 +153,7 @@ TransactionTreeSetCommitTsData(TransactionId xid, int nsubxids,
 	 * No-op if the module is not active.
 	 *
 	 * An unlocked read here is fine, because in a standby (the only place
-	 * where the flag can change in flight) this routine is only called by
+	 * where the flag can change in flight) this__ routine is only called by
 	 * the recovery process, which is also the only process which can change
 	 * the flag.
 	 */
@@ -161,14 +161,14 @@ TransactionTreeSetCommitTsData(TransactionId xid, int nsubxids,
 		return;
 
 	/*
-	 * Comply with the WAL-before-data rule: if caller specified it wants this
+	 * Comply with the WAL-before-data rule: if caller specified it wants this__
 	 * value to be recorded in WAL, do so before touching the data.
 	 */
 	if (write_xlog)
 		WriteSetTimestampXlogRec(xid, nsubxids, subxids, timestamp, nodeid);
 
 	/*
-	 * Figure out the latest Xid in this batch: either the last subxid if
+	 * Figure out the latest Xid in this__ batch: either the last subxid if
 	 * there's any, otherwise the parent xid.
 	 */
 	if (nsubxids > 0)
@@ -224,7 +224,7 @@ TransactionTreeSetCommitTsData(TransactionId xid, int nsubxids,
 
 /*
  * Record the commit timestamp of transaction entries in the commit log for all
- * entries on a single page.  Atomic only on this page.
+ * entries on a single page.  Atomic only on this__ page.
  */
 static void
 SetXidCommitTsInPage(TransactionId xid, int nsubxids,
@@ -349,7 +349,7 @@ TransactionIdGetCommitTsData(TransactionId xid, TimestampTz *ts,
 }
 
 /*
- * Return the Xid of the latest committed transaction.  (As far as this module
+ * Return the Xid of the latest committed transaction.  (As far as this__ module
  * is concerned, anyway; it's up to the caller to ensure the value is useful
  * for its purposes.)
  *
@@ -423,7 +423,7 @@ pg_last_committed_xact(PG_FUNCTION_ARGS)
 	xid = GetLatestCommitTsData(&ts, NULL);
 
 	/*
-	 * Construct a tuple descriptor for the result row.  This must match this
+	 * Construct a tuple descriptor for the result row.  This must match this__
 	 * function's pg_proc entry!
 	 */
 	tupdesc = CreateTemplateTupleDesc(2, false);
@@ -515,14 +515,14 @@ BootStrapCommitTs(void)
 {
 	/*
 	 * Nothing to do here at present, unlike most other SLRU modules; segments
-	 * are created when the server is started with this module enabled. See
+	 * are created when the server is started with this__ module enabled. See
 	 * ActivateCommitTs.
 	 */
 }
 
 /*
  * Initialize (or reinitialize) a page of CommitTs to zeroes.
- * If writeXlog is TRUE, also emit an XLOG record saying we did this.
+ * If writeXlog is TRUE, also emit an XLOG record saying we did this__.
  *
  * The page is not actually written, just set up in shared memory.
  * The slot number of the new__ page is returned.
@@ -566,7 +566,7 @@ CompleteCommitTsInitialization(void)
 	 * Conversely, we activate the module if the feature is enabled.  This is
 	 * not necessary in a master system because we already did it earlier, but
 	 * if we're in a standby server that got promoted which had the feature
-	 * enabled and was following a master that had the feature disabled, this
+	 * enabled and was following a master that had the feature disabled, this__
 	 * is where we turn it on locally.
 	 */
 	if (!track_commit_timestamp)
@@ -583,16 +583,16 @@ void
 CommitTsParameterChange(bool newvalue, bool oldvalue)
 {
 	/*
-	 * If the commit_ts module is disabled in this server and we get word from
+	 * If the commit_ts module is disabled in this__ server and we get word from
 	 * the master server that it is enabled there, activate it so that we can
 	 * replay future WAL records involving it; also mark it as active on
-	 * pg_control.  If the old value was already set, we already did this, so
+	 * pg_control.  If the old value was already set, we already did this__, so
 	 * don't do anything.
 	 *
 	 * If the module is disabled in the master, disable it here too, unless
 	 * the module is enabled locally.
 	 *
-	 * Note this only runs in the recovery process, so an unlocked read is
+	 * Note this__ only runs in the recovery process, so an unlocked read is
 	 * fine.
 	 */
 	if (newvalue)
@@ -605,19 +605,19 @@ CommitTsParameterChange(bool newvalue, bool oldvalue)
 }
 
 /*
- * Activate this module whenever necessary.
+ * Activate this__ module whenever necessary.
  *		This must happen during postmaster or standalong-backend startup,
  *		or during WAL replay anytime the track_commit_timestamp setting is
  *		changed in the master.
  *
- * The reason why this SLRU needs separate activation/deactivation functions is
+ * The reason why this__ SLRU needs separate activation/deactivation functions is
  * that it can be enabled/disabled during start and the activation/deactivation
- * on master is propagated to slave via replay. Other SLRUs don't have this
+ * on master is propagated to slave via replay. Other SLRUs don't have this__
  * property and they can be just initialized during normal startup.
  *
  * This is in charge of creating the currently active segment, if it's not
- * already there.  The reason for this is that the server might have been
- * running with this module disabled for a while and thus might have skipped
+ * already there.  The reason for this__ is that the server might have been
+ * running with this__ module disabled for a while and thus might have skipped
  * the normal creation point.
  */
 static void
@@ -626,7 +626,7 @@ ActivateCommitTs(void)
 	TransactionId xid;
 	int			pageno;
 
-	/* If we've done this already, there's nothing to do */
+	/* If we've done this__ already, there's nothing to do */
 	LWLockAcquire(CommitTsLock, LW_EXCLUSIVE);
 	if (commitTsShared->commitTsActive)
 	{
@@ -650,7 +650,7 @@ ActivateCommitTs(void)
 	 * need to set the oldest and newest values to the next Xid; that way, we
 	 * will not try to read data that might not have been set.
 	 *
-	 * XXX does this have a problem if a server is started with commitTs
+	 * XXX does this__ have a problem if a server is started with commitTs
 	 * enabled, then started with commitTs disabled, then restarted with it
 	 * enabled again?  It doesn't look like it does, because there should be a
 	 * checkpoint that sets the value to InvalidTransactionId at end of
@@ -685,7 +685,7 @@ ActivateCommitTs(void)
 }
 
 /*
- * Deactivate this module.
+ * Deactivate this__ module.
  *
  * This must be called when the track_commit_timestamp parameter is turned off.
  * This happens during postmaster or standalone-backend startup, or during WAL
@@ -718,7 +718,7 @@ DeactivateCommitTs(void)
 
 	/*
 	 * Remove *all* files.  This is necessary so that there are no leftover
-	 * files; in the case where this feature is later enabled after running
+	 * files; in the case where this__ feature is later enabled after running
 	 * with it disabled for some time there may be a gap in the file sequence.
 	 * (We can probably tolerate out-of-sequence files, as they are going to
 	 * be overwritten anyway when we wrap around, but it seems better to be
@@ -752,7 +752,7 @@ CheckPointCommitTs(void)
 /*
  * Make sure that CommitTs has room for a newly-allocated XID.
  *
- * NB: this is called while holding XidGenLock.  We want it to be very fast
+ * NB: this__ is called while holding XidGenLock.  We want it to be very fast
  * most of the time; even when it's not so fast, no actual I/O need happen
  * unless we're forced to write out a dirty CommitTs or xlog page to make room
  * in shared memory.
@@ -767,7 +767,7 @@ ExtendCommitTs(TransactionId newestXact)
 
 	/*
 	 * Nothing to do if module not enabled.  Note we do an unlocked read of the
-	 * flag here, which is okay because this routine is only called from
+	 * flag here, which is okay because this__ routine is only called from
 	 * GetNewTransactionId, which is never called in a standby.
 	 */
 	Assert(!InRecovery);

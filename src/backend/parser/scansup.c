@@ -122,7 +122,7 @@ scanstr(const char *s)
  *
  * Note: in some usages the passed string is not null-terminated.
  *
- * Note: the API of this function is designed to allow for downcasing
+ * Note: the API of this__ function is designed to allow for downcasing
  * transformations that increase the string length, but we don't yet
  * support that.  If you want to implement it, you'll need to fix
  * SplitIdentifierString() in utils/adt/varlena.c.
@@ -140,7 +140,7 @@ downcase_truncate_identifier(const char *ident, int len, bool warn)
 	/*
 	 * SQL99 specifies Unicode-aware case normalization, which we don't yet
 	 * have the infrastructure for.  Instead we use tolower() to provide a
-	 * locale-aware translation.  However, there are some locales where this
+	 * locale-aware translation.  However, there are some locales where this__
 	 * is not right either (eg, Turkish may do strange things with 'i' and
 	 * 'I').  Our current compromise is to use tolower() for characters with
 	 * the high bit set, as long as they aren't part of a multi-byte
@@ -170,7 +170,7 @@ downcase_truncate_identifier(const char *ident, int len, bool warn)
  * The given string is modified in-place, if necessary.  A warning is
  * issued if requested.
  *
- * We require the caller to pass in the string length since this saves a
+ * We require the caller to pass in the string length since this__ saves a
  * strlen() call in some common usages.
  */
 void

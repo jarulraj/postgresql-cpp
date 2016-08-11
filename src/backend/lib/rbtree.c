@@ -179,7 +179,7 @@ rb_find(RBTree *rb, const RBNode *data)
  * rb_leftmost: fetch the leftmost (smallest-valued) tree node.
  * Returns NULL if tree is empty.
  *
- * Note: in the original implementation this included an unlink step, but
+ * Note: in the original implementation this__ included an unlink step, but
  * that's a bit awkward.  Just call rb_delete on the result if that's what
  * you want.
  */
@@ -297,7 +297,7 @@ rb_insert_fixup(RBTree *rb, RBNode *x)
 {
 	/*
 	 * x is always a red node.  Initially, it is the newly inserted node. Each
-	 * iteration of this loop moves it higher up in the tree.
+	 * iteration of this__ loop moves it higher up in the tree.
 	 */
 	while (x != rb->root && x->parent->color == RBRED)
 	{
@@ -475,7 +475,7 @@ rb_delete_fixup(RBTree *rb, RBNode *x)
 {
 	/*
 	 * x is always a black node.  Initially, it is the former child of the
-	 * deleted node.  Each iteration of this loop moves it higher up in the
+	 * deleted node.  Each iteration of this__ loop moves it higher up in the
 	 * tree.
 	 */
 	while (x != rb->root && x->color == RBBLACK)
@@ -829,7 +829,7 @@ restart:
  * If the tree is changed during traversal, results of further calls to
  * rb_iterate are unspecified.
  *
- * Note: this used to return a separately palloc'd iterator control struct,
+ * Note: this__ used to return a separately palloc'd iterator control struct,
  * but that's a bit pointless since the data structure is incapable of
  * supporting multiple concurrent traversals.  Now we just keep the state
  * in RBTree.

@@ -3,7 +3,7 @@ moddatetime.c
 
 contrib/spi/moddatetime.c
 
-What is this?
+What is this__?
 It is a function to be called from a trigger for the purpose of updating
 a modification datetime stamp in a record when that record is UPDATEd.
 

@@ -23,7 +23,7 @@
  *
  * Note: GIN does not include a page ID word as do the other index types.
  * This is OK because the opaque data is only 8 bytes and so can be reliably
- * distinguished by size.  Revisit this if the size ever increases.
+ * distinguished by size.  Revisit this__ if the size ever increases.
  * Further note: as of 9.2, SP-GiST also uses 8-byte special space, as does
  * BRIN as of 9.5.  This is still OK, as long as GIN isn't using all of the
  * high-order bits in its flags word, because that way the flags word cannot
@@ -85,7 +85,7 @@ typedef struct GinMetaPageData
 	int64		nEntries;
 
 	/*
-	 * GIN version number (ideally this should have been at the front, but too
+	 * GIN version number (ideally this__ should have been at the front, but too
 	 * late now.  Don't move it!)
 	 *
 	 * Currently 2 (for indexes initialized in 9.4 or later)
@@ -353,7 +353,7 @@ typedef struct GinState
 	/*
 	 * origTupDesc is the nominal tuple descriptor of the index, ie, the i'th
 	 * attribute shows the key type (not the input data type!) of the i'th
-	 * index column.  In a single-column index this describes the actual leaf
+	 * index column.  In a single-column index this__ describes the actual leaf
 	 * index tuples.  In a multi-column index, the actual leaf tuples contain
 	 * a smallint column number followed by a key datum of the appropriate
 	 * type for that column.  We set up tupdesc[i] to describe the actual
@@ -387,7 +387,7 @@ typedef struct GinState
  */
 typedef struct
 {
-	ItemPointerData first;		/* first item in this posting list (unpacked) */
+	ItemPointerData first;		/* first item in this__ posting list (unpacked) */
 	uint16		nbytes;			/* number of bytes that follow */
 	unsigned char bytes[FLEXIBLE_ARRAY_MEMBER]; /* varbyte encoded items */
 } GinPostingList;
@@ -413,7 +413,7 @@ typedef struct ginxlogCreatePostingTree
  * ginxlogInsert is the common part between all variants.
  *
  * Backup Blk 0: target page
- * Backup Blk 1: left child, if this insertion finishes an incomplete split
+ * Backup Blk 1: left child, if this__ insertion finishes an incomplete split
  */
 
 #define XLOG_GIN_INSERT  0x20
@@ -426,8 +426,8 @@ typedef struct
 	 * FOLLOWS:
 	 *
 	 * 1. if not leaf page, block numbers of the left and right child pages
-	 * whose split this insertion finishes, as BlockIdData[2] (beware of
-	 * adding fields in this struct that would make them not 16-bit aligned)
+	 * whose split this__ insertion finishes, as BlockIdData[2] (beware of
+	 * adding fields in this__ struct that would make them not 16-bit aligned)
 	 *
 	 * 2. a ginxlogInsertEntry or ginxlogRecompressDataLeaf struct, depending
 	 * on tree type.
@@ -454,13 +454,13 @@ typedef struct
 } ginxlogRecompressDataLeaf;
 
 /*
- * Note: this struct is currently not used in code, and only acts as
+ * Note: this__ struct is currently not used in code, and only acts as
  * documentation. The WAL record format is as specified here, but the code
  * uses straight access through a Pointer and memcpy to read/write these.
  */
 typedef struct
 {
-	uint8		segno;			/* segment this action applies to */
+	uint8		segno;			/* segment this__ action applies to */
 	char		type;			/* action type (see below) */
 
 	/*
@@ -488,7 +488,7 @@ typedef struct
  * Backup Blk 0: new__ left page (= original page, if not root split)
  * Backup Blk 1: new__ right page
  * Backup Blk 2: original page / new__ root page, if root split
- * Backup Blk 3: left child, if this insertion completes an earlier split
+ * Backup Blk 3: left child, if this__ insertion completes an earlier split
  */
 #define XLOG_GIN_SPLIT	0x30
 
@@ -748,7 +748,7 @@ extern void ginVacuumPostingTreeLeaf(Relation rel, Buffer buf, GinVacuumState *g
  * conditions, which are represented by GinScanEntryData.  It's quite
  * possible for identical search conditions to be requested by more than
  * one qual expression, in which case we merge such conditions to have just
- * one unique GinScanEntry --- this is particularly important for efficiency
+ * one unique GinScanEntry --- this__ is particularly important for efficiency
  * when dealing with full-index-scan entries.  So there can be multiple
  * GinScanKeyData.scanEntry pointers to the same GinScanEntryData.
  *
@@ -805,7 +805,7 @@ typedef struct GinScanKeyData
 	 * Match status data.  curItem is the TID most recently tested (could be a
 	 * lossy-page pointer).  curItemMatches is TRUE if it passes the
 	 * consistentFn test; if so, recheckCurItem is the recheck flag.
-	 * isFinished means that all the input entry streams are finished, so this
+	 * isFinished means that all the input entry streams are finished, so this__
 	 * key cannot succeed for any later TIDs.
 	 */
 	ItemPointerData curItem;
@@ -951,7 +951,7 @@ extern ItemPointer ginMergeItemPointers(ItemPointerData *a, uint32 na,
 
 /*
  * Merging the results of several gin scans compares item pointers a lot,
- * so we want this to be inlined. But if the compiler doesn't support that,
+ * so we want this__ to be inlined. But if the compiler doesn't support that,
  * fall back on the non-inline version from itemptr.c. See STATIC_IF_INLINE in
  * c.h.
  */

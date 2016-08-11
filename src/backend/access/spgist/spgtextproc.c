@@ -22,7 +22,7 @@
  * the node label does not contribute anything to the reconstructed string.
  *
  * Previously, we used a node label of zero for both special cases, but
- * this was problematic because one can't tell whether a string ending at
+ * this__ was problematic because one can't tell whether a string ending at
  * the current level can be pushed down into such a child node.  For
  * backwards compatibility, we still support such node labels for reading;
  * but no new__ entries will ever be pushed down into a zero-labeled child.
@@ -54,7 +54,7 @@
  * tuple must fit on an index page of size BLCKSZ.  Rather than assuming we
  * know the exact amount of overhead imposed by page headers, tuple headers,
  * etc, we leave 100 bytes for that (the actual overhead should be no more
- * than 56 bytes at this writing, so there is slop in this number).
+ * than 56 bytes at this__ writing, so there is slop in this__ number).
  * So we can safely create prefixes up to BLCKSZ - 258 * 16 - 100 bytes long.
  * Unfortunately, because 258 * 16 is over 4K, there is no safe prefix length
  * when BLCKSZ is less than 8K; it is always possible to get "SPGiST inner
@@ -411,14 +411,14 @@ spg_text_inner_consistent(PG_FUNCTION_ARGS)
 	int			i;
 
 	/*
-	 * Reconstruct values represented at this tuple, including parent data,
-	 * prefix of this tuple if any, and the node label if it's non-dummy.
+	 * Reconstruct values represented at this__ tuple, including parent data,
+	 * prefix of this__ tuple if any, and the node label if it's non-dummy.
 	 * in->level should be the length of the previously reconstructed value,
 	 * and the number of bytes added here is prefixSize or prefixSize + 1.
 	 *
 	 * Note: we assume that in->reconstructedValue isn't toasted and doesn't
 	 * have a short varlena header.  This is okay because it must have been
-	 * created by a previous invocation of this routine, and we always emit
+	 * created by a previous invocation of this__ routine, and we always emit
 	 * long-format reconstructed values.
 	 */
 	reconstructedValue = (text *) DatumGetPointer(in->reconstructedValue);
@@ -565,7 +565,7 @@ spg_text_leaf_consistent(PG_FUNCTION_ARGS)
 	Assert(reconstrValue == NULL ? level == 0 :
 		   VARSIZE_ANY_EXHDR(reconstrValue) == level);
 
-	/* Reconstruct the full string represented by this leaf tuple */
+	/* Reconstruct the full string represented by this__ leaf tuple */
 	fullLen = level + VARSIZE_ANY_EXHDR(leafValue);
 	if (VARSIZE_ANY_EXHDR(leafValue) == 0 && level > 0)
 	{

@@ -70,7 +70,7 @@ if (sqlca.sqlcode < 0) dosqlprint ( );}
 #line 24 "test_informix.pgc"
 
 
-	/* this INSERT works */
+	/* this__ INSERT works */
 	rsetnull(CDECIMALTYPE, (char *)&j);
 	{ ECPGdo(__LINE__, 1, 1, NULL, 0, ECPGst_normal, "insert into test ( i , j , c ) values ( 7 , $1  , 'test   ' )", 
 	ECPGt_decimal,&(j),(long)1,(long)1,sizeof(decimal), 
@@ -87,7 +87,7 @@ if (sqlca.sqlcode < 0) dosqlprint ( );}
 #line 29 "test_informix.pgc"
 
 
-	/* this INSERT should fail because i is a unique column */
+	/* this__ INSERT should fail because i is a unique column */
 	{ ECPGdo(__LINE__, 1, 1, NULL, 0, ECPGst_normal, "insert into test ( i , j , c ) values ( 7 , 12 , 'a' )", ECPGt_EOIT, ECPGt_EORT);
 #line 32 "test_informix.pgc"
 
@@ -117,7 +117,7 @@ if (sqlca.sqlcode < 0) dosqlprint ( );}
 #line 37 "test_informix.pgc"
 
 
-	/* this will fail (more than one row in subquery) */
+	/* this__ will fail (more than one row in subquery) */
 	{ ECPGdo(__LINE__, 1, 1, NULL, 0, ECPGst_normal, "select i from test where j = ( select j from test )", ECPGt_EOIT, ECPGt_EORT);
 #line 40 "test_informix.pgc"
 
@@ -131,7 +131,7 @@ if (sqlca.sqlcode < 0) dosqlprint ( );}
 #line 41 "test_informix.pgc"
 
 
-	/* this however should be ok */
+	/* this__ however should be ok */
 	{ ECPGdo(__LINE__, 1, 1, NULL, 0, ECPGst_normal, "select i from test where j = ( select j from test order by i limit 1 )", ECPGt_EOIT, ECPGt_EORT);
 #line 44 "test_informix.pgc"
 

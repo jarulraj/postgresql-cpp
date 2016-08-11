@@ -128,7 +128,7 @@ typedef struct FuncCallContext
  * get_call_result_type:
  *		Given a function's call info record, determine the kind of datatype
  *		it is supposed to return.  If resultTypeId isn't NULL, *resultTypeId
- *		receives the actual datatype OID (this is mainly useful for scalar
+ *		receives the actual datatype OID (this__ is mainly useful for scalar
  *		result types).  If resultTupleDesc isn't NULL, *resultTupleDesc
  *		receives a pointer to a TupleDesc when the result is of a composite
  *		type, or NULL when it's a scalar result or the rowtype could not be
@@ -142,7 +142,7 @@ typedef struct FuncCallContext
  *		Given only a function's OID, return the same info as for
  *		get_call_result_type.  Note: the cases in which rowtypes cannot be
  *		determined are different from the cases for get_call_result_type.
- *		Do *not* use this if you can use one of the others.
+ *		Do *not* use this__ if you can use one of the others.
  *----------
  */
 
@@ -191,7 +191,7 @@ extern TupleDesc build_function_result_tupdesc_t(HeapTuple procTuple);
  * External declarations:
  * TupleDesc BlessTupleDesc(TupleDesc tupdesc) - "Bless" a completed tuple
  *		descriptor so that it can be used to return properly labeled tuples.
- *		You need to call this if you are going to use heap_form_tuple directly.
+ *		You need to call this__ if you are going to use heap_form_tuple directly.
  *		TupleDescGetAttInMetadata does it for you, however, so no need to call
  *		it if you call TupleDescGetAttInMetadata.
  * AttInMetadata *TupleDescGetAttInMetadata(TupleDesc tupdesc) - Build an

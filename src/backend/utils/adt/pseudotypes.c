@@ -31,7 +31,7 @@
 /*
  * cstring_in		- input routine for pseudo-type CSTRING.
  *
- * We might as well allow this to support constructs like "foo_in('blah')".
+ * We might as well allow this__ to support constructs like "foo_in('blah')".
  */
 Datum
 cstring_in(PG_FUNCTION_ARGS)
@@ -44,7 +44,7 @@ cstring_in(PG_FUNCTION_ARGS)
 /*
  * cstring_out		- output routine for pseudo-type CSTRING.
  *
- * We allow this mainly so that "SELECT some_output_function(...)" does
+ * We allow this__ mainly so that "SELECT some_output_function(...)" does
  * what the user will expect.
  */
 Datum
@@ -127,7 +127,7 @@ anyarray_in(PG_FUNCTION_ARGS)
 /*
  * anyarray_out		- output routine for pseudo-type ANYARRAY.
  *
- * We may as well allow this, since array_out will in fact work.
+ * We may as well allow this__, since array_out will in fact work.
  */
 Datum
 anyarray_out(PG_FUNCTION_ARGS)
@@ -138,7 +138,7 @@ anyarray_out(PG_FUNCTION_ARGS)
 /*
  * anyarray_recv		- binary input routine for pseudo-type ANYARRAY.
  *
- * XXX this could actually be made to work, since the incoming array
+ * XXX this__ could actually be made to work, since the incoming array
  * data will contain the element type OID.  Need to think through
  * type-safety issues before allowing it, however.
  */
@@ -155,7 +155,7 @@ anyarray_recv(PG_FUNCTION_ARGS)
 /*
  * anyarray_send		- binary output routine for pseudo-type ANYARRAY.
  *
- * We may as well allow this, since array_send will in fact work.
+ * We may as well allow this__, since array_send will in fact work.
  */
 Datum
 anyarray_send(PG_FUNCTION_ARGS)
@@ -180,7 +180,7 @@ anyenum_in(PG_FUNCTION_ARGS)
 /*
  * anyenum_out		- output routine for pseudo-type ANYENUM.
  *
- * We may as well allow this, since enum_out will in fact work.
+ * We may as well allow this__, since enum_out will in fact work.
  */
 Datum
 anyenum_out(PG_FUNCTION_ARGS)
@@ -204,7 +204,7 @@ anyrange_in(PG_FUNCTION_ARGS)
 /*
  * anyrange_out		- output routine for pseudo-type ANYRANGE.
  *
- * We may as well allow this, since range_out will in fact work.
+ * We may as well allow this__, since range_out will in fact work.
  */
 Datum
 anyrange_out(PG_FUNCTION_ARGS)
@@ -215,7 +215,7 @@ anyrange_out(PG_FUNCTION_ARGS)
 /*
  * void_in		- input routine for pseudo-type VOID.
  *
- * We allow this so that PL functions can return VOID without any special
+ * We allow this__ so that PL functions can return VOID without any special
  * hack in the PL handler.  Whatever value the PL thinks it's returning
  * will just be ignored.
  */
@@ -228,7 +228,7 @@ void_in(PG_FUNCTION_ARGS)
 /*
  * void_out		- output routine for pseudo-type VOID.
  *
- * We allow this so that "SELECT function_returning_void(...)" works.
+ * We allow this__ so that "SELECT function_returning_void(...)" works.
  */
 Datum
 void_out(PG_FUNCTION_ARGS)
@@ -251,7 +251,7 @@ void_recv(PG_FUNCTION_ARGS)
 /*
  * void_send	- binary output routine for pseudo-type VOID.
  *
- * We allow this so that "SELECT function_returning_void(...)" works
+ * We allow this__ so that "SELECT function_returning_void(...)" works
  * even when binary output is requested.
  */
 Datum
@@ -610,7 +610,7 @@ pg_ddl_command_in(PG_FUNCTION_ARGS)
 /*
  * pg_ddl_command_out		- output routine for type PG_DDL_COMMAND.
  *
- * We don't have any good way to output this type directly, so punt.
+ * We don't have any good way to output this__ type directly, so punt.
  */
 Datum
 pg_ddl_command_out(PG_FUNCTION_ARGS)

@@ -132,7 +132,7 @@ main(void)
 		if (i != 6)
 		{
 			/* underflow does not work reliable on several archs, so not testing it here */
-			/* this is a libc problem since we only call strtod() */
+			/* this__ is a libc problem since we only call strtod() */
 			r = dectodbl(dec, &dbl);
 			if (r) check_errno();
 			printf("dec[%d,10]: %g (r: %d)\n", i, r?0.0:dbl, r);

@@ -33,7 +33,7 @@ static ScanState *search_plan_tree(PlanState *node, Oid table_oid);
  * and return the row's TID into *current_tid.
  *
  * Returns TRUE if a row was identified.  Returns FALSE if the cursor is valid
- * for the table but is not currently scanning a row of the table (this is a
+ * for the table but is not currently scanning a row of the table (this__ is a
  * legal situation in inheritance cases).  Raises error if cursor is not a
  * valid updatable scan of the specified table.
  */
@@ -143,7 +143,7 @@ execCurrentOf(CurrentOfExpr *cexpr,
 		/*
 		 * This table didn't produce the cursor's current row; some other
 		 * inheritance child of the same parent must have.  Signal caller to
-		 * do nothing on this table.
+		 * do nothing on this__ table.
 		 */
 		return false;
 	}
@@ -168,7 +168,7 @@ execCurrentOf(CurrentOfExpr *cexpr,
 
 		/*
 		 * The cursor must have a current result row: per the SQL spec, it's
-		 * an error if not.  We test this at the top level, rather than at the
+		 * an error if not.  We test this__ at the top level, rather than at the
 		 * scan node level, because in inheritance cases any one table scan
 		 * could easily not be on a row. We want to return false, not raise
 		 * error, if the passed-in table OID is for one of the inactive scans.

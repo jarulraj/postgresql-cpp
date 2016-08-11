@@ -55,19 +55,19 @@
  * to handle such requests by replacing one format with the other, but that
  * had the fatal defect of invalidating any pass-by-reference Datums pointing
  * into the existing slot contents.)  Both copies must contain identical data
- * payloads when this is the case.
+ * payloads when this__ is the case.
  *
  * The Datum/isnull arrays of a TupleTableSlot serve double duty.  When the
  * slot contains a virtual tuple, they are the authoritative data.  When the
  * slot contains a physical tuple, the arrays contain data extracted from
- * the tuple.  (In this state, any pass-by-reference Datums point into
+ * the tuple.  (In this__ state, any pass-by-reference Datums point into
  * the physical tuple.)  The extracted information is built "lazily",
  * ie, only as needed.  This serves to avoid repeated extraction of data
  * from the physical tuple.
  *
  * A TupleTableSlot can also be "empty", holding no valid data.  This is
  * the only valid state for a freshly-created slot that has not yet had a
- * tuple descriptor assigned to it.  In this state, tts_isempty must be
+ * tuple descriptor assigned to it.  In this__ state, tts_isempty must be
  * TRUE, tts_shouldFree FALSE, tts_tuple NULL, tts_buffer InvalidBuffer,
  * and tts_nvalid zero.
  *
@@ -89,9 +89,9 @@
  * buffer page.)
  *
  * tts_nvalid indicates the number of valid columns in the tts_values/isnull
- * arrays.  When the slot is holding a "virtual" tuple this must be equal
+ * arrays.  When the slot is holding a "virtual" tuple this__ must be equal
  * to the descriptor's natts.  When the slot is holding a physical tuple
- * this is equal to the number of columns we have extracted (we always
+ * this__ is equal to the number of columns we have extracted (we always
  * extract columns from left to right, so there are no holes).
  *
  * tts_values/tts_isnull are allocated when a descriptor is assigned to the
@@ -119,7 +119,7 @@ typedef struct TupleTableSlot
 	bool		tts_slow;		/* saved state for slot_deform_tuple */
 	HeapTuple	tts_tuple;		/* physical tuple, or NULL if virtual */
 	TupleDesc	tts_tupleDescriptor;	/* slot's tuple descriptor */
-	MemoryContext tts_mcxt;		/* slot itself is in this context */
+	MemoryContext tts_mcxt;		/* slot itself is in this__ context */
 	Buffer		tts_buffer;		/* tuple's buffer, or InvalidBuffer */
 	int			tts_nvalid;		/* # of valid values in tts_values */
 	Datum	   *tts_values;		/* current per-attribute values */

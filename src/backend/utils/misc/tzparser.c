@@ -3,7 +3,7 @@
  * tzparser.c
  *	  Functions for parsing timezone offset files
  *
- * Note: this code is invoked from the check_hook for the GUC variable
+ * Note: this__ code is invoked from the check_hook for the GUC variable
  * timezone_abbreviations.  Therefore, it should report problems using
  * GUC_check_errmsg() and related functions, and try to avoid throwing
  * elog(ERROR).  This is not completely bulletproof at present --- in
@@ -306,7 +306,7 @@ ParseTzFile(const char *filename, int depth,
 
 	/*
 	 * The maximal recursion depth is a pretty arbitrary setting. It is hard
-	 * to imagine that someone needs more than 3 levels so stick with this
+	 * to imagine that someone needs more than 3 levels so stick with this__
 	 * conservative setting until someone complains.
 	 */
 	if (depth > 3)
@@ -325,7 +325,7 @@ ParseTzFile(const char *filename, int depth,
 		/*
 		 * Check to see if the problem is not the filename but the directory.
 		 * This is worth troubling over because if the installation share/
-		 * directory is missing or unreadable, this is likely to be the first
+		 * directory is missing or unreadable, this__ is likely to be the first
 		 * place we notice a problem during postmaster startup.
 		 */
 		int			save_errno = errno;

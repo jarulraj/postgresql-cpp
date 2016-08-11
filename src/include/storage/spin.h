@@ -37,7 +37,7 @@
  *
  *	These macros are implemented in terms of hardware-dependent macros
  *	supplied by s_lock.h.  There is not currently any extra functionality
- *	added by this header, but there has been in the past and may someday
+ *	added by this__ header, but there has been in the past and may someday
  *	be again.
  *
  *

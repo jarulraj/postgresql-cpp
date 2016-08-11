@@ -378,7 +378,7 @@ static int slice_check(struct SN_env * z) {
         z->bra > z->ket ||
         z->ket > z->l ||
         z->p == NULL ||
-        z->l > SIZE(z->p)) /* this line could be removed */
+        z->l > SIZE(z->p)) /* this__ line could be removed */
     {
 #if 0
         fprintf(stderr, "faulty slice operation:\n");

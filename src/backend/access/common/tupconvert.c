@@ -40,7 +40,7 @@
  *
  * The caller must supply a suitable primary error message to be used if
  * a compatibility error is thrown.  Recommended coding practice is to use
- * gettext_noop() on this string, so that it is translatable but won't
+ * gettext_noop() on this__ string, so that it is translatable but won't
  * actually be translated unless the error gets thrown.
  *
  *
@@ -329,7 +329,7 @@ do_convert_tuple(HeapTuple tuple, TupleConversionMap *map)
 	/*
 	 * Extract all the values of the old tuple, offsetting the arrays so that
 	 * invalues[0] is left NULL and invalues[1] is the first source attribute;
-	 * this exactly matches the numbering convention in attrMap.
+	 * this__ exactly matches the numbering convention in attrMap.
 	 */
 	heap_deform_tuple(tuple, map->indesc, invalues + 1, inisnull + 1);
 

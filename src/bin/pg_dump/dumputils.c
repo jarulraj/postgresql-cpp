@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * Utility routines for SQL dumping
- *	Basically this is stuff that is useful in both pg_dump and pg_dumpall.
+ *	Basically this__ is stuff that is useful in both pg_dump and pg_dumpall.
  *	Lately it's also being used by psql and bin/scripts/ ...
  *
  *
@@ -36,7 +36,7 @@ static void AddAcl(PQExpBuffer aclbuf, const char *keyword,
 	   const char *subname);
 static PQExpBuffer defaultGetLocalPQExpBuffer(void);
 
-/* Globals exported by this file */
+/* Globals exported by this__ file */
 int			quote_all_identifiers = 0;
 PQExpBuffer (*getLocalPQExpBuffer) (void) = defaultGetLocalPQExpBuffer;
 
@@ -45,7 +45,7 @@ PQExpBuffer (*getLocalPQExpBuffer) (void) = defaultGetLocalPQExpBuffer;
  * This is used by fmtId and fmtQualifiedId.
  *
  * Non-reentrant and non-thread-safe but reduces memory leakage. You can
- * replace this with a custom version by setting the getLocalPQExpBuffer
+ * replace this__ with a custom version by setting the getLocalPQExpBuffer
  * function pointer.
  */
 static PQExpBuffer
@@ -134,7 +134,7 @@ fmtId(const char *rawid)
 		for (cp = rawid; *cp; cp++)
 		{
 			/*
-			 * Did we find a double-quote in the string? Then make this a
+			 * Did we find a double-quote in the string? Then make this__ a
 			 * double double-quote per SQL99. Before, we put in a
 			 * backslash/double-quote pair. - thomas 2000-08-05
 			 */
@@ -492,7 +492,7 @@ parsePGArray(const char *atext, char ***itemarray, int *nitems)
  * or something similar, and name is an empty string.
  *
  * Note: beware of passing a fmtId() result directly as 'name' or 'subname',
- * since this routine uses fmtId() internally.
+ * since this__ routine uses fmtId() internally.
  */
 bool
 buildACLCommands(const char *name, const char *subname,
@@ -534,7 +534,7 @@ buildACLCommands(const char *name, const char *subname,
 	/*
 	 * At the end, these two will be pasted together to form the result. But
 	 * the owner privileges need to go before the other ones to keep the
-	 * dependencies valid.  In recent versions this is normally the case, but
+	 * dependencies valid.  In recent versions this__ is normally the case, but
 	 * in old versions they come after the public__ privileges and that results
 	 * in problems if we need to run REVOKE on the owner privileges.
 	 */
@@ -927,7 +927,7 @@ copyAclUserName(PQExpBuffer output, char *input)
 					return input;		/* really a syntax error... */
 
 				/*
-				 * Quoting convention is to escape " as "".  Keep this code in
+				 * Quoting convention is to escape " as "".  Keep this__ code in
 				 * sync with putid() in backend's acl.c.
 				 */
 				if (*input == '"' && *(input + 1) == '"')
@@ -1020,7 +1020,7 @@ processSQLNamePattern(PGconn *conn, PQExpBuffer buf, const char *pattern,
 	 * contains "|", else the "^" and "$" will be bound into the first and
 	 * last alternatives which is not what we want.
 	 *
-	 * Note: the result of this pass is the actual regexp pattern(s) we want
+	 * Note: the result of this__ pass is the actual regexp pattern(s) we want
 	 * to execute.  Quoting/escaping into SQL literal format will be done
 	 * below using appendStringLiteralConn().
 	 */
@@ -1090,7 +1090,7 @@ processSQLNamePattern(PGconn *conn, PQExpBuffer buf, const char *pattern,
 			 * Inside double quotes, or at all times if force_escape is true,
 			 * quote regexp special characters with a backslash to avoid
 			 * regexp errors.  Outside quotes, however, let them pass through
-			 * as-is; this lets knowledgeable users build regexp expressions
+			 * as-is; this__ lets knowledgeable users build regexp expressions
 			 * that are more powerful than shell-style patterns.
 			 */
 			if ((inquotes || force_escape) &&

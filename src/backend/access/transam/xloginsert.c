@@ -41,7 +41,7 @@
  */
 typedef struct
 {
-	bool		in_use;			/* is this slot in use? */
+	bool		in_use;			/* is this__ slot in use? */
 	uint8		flags;			/* REGBUF_* flags */
 	RelFileNode rnode;			/* identifies the relation and block */
 	ForkNumber	forkno;
@@ -49,7 +49,7 @@ typedef struct
 	Page		page;			/* page content */
 	uint32		rdata_len;		/* total length of data in rdata chain */
 	XLogRecData *rdata_head;	/* head of the chain of data registered with
-								 * this block */
+								 * this__ block */
 	XLogRecData *rdata_tail;	/* last entry in the chain, or &rdata_head if
 								 * empty */
 
@@ -234,7 +234,7 @@ XLogRegisterBuffer(uint8 block_id, Buffer buffer, uint8 flags)
 	regbuf->rdata_len = 0;
 
 	/*
-	 * Check that this page hasn't already been registered with some other
+	 * Check that this__ page hasn't already been registered with some other
 	 * block_id.
 	 */
 #ifdef USE_ASSERT_CHECKING
@@ -289,7 +289,7 @@ XLogRegisterBlock(uint8 block_id, RelFileNode *rnode, ForkNumber forknum,
 	regbuf->rdata_len = 0;
 
 	/*
-	 * Check that this page hasn't already been registered with some other
+	 * Check that this__ page hasn't already been registered with some other
 	 * block_id.
 	 */
 #ifdef USE_ASSERT_CHECKING
@@ -348,7 +348,7 @@ XLogRegisterData(char *data, int len)
  * Add buffer-specific data to the WAL record that's being constructed.
  *
  * Block_id must reference a block previously registered with
- * XLogRegisterBuffer(). If this is called more than once for the same
+ * XLogRegisterBuffer(). If this__ is called more than once for the same
  * block_id, the data is appended.
  *
  * The maximum amount of data that can be registered per block is 65535
@@ -384,7 +384,7 @@ XLogRegisterBufData(uint8 block_id, char *data, int len)
 }
 
 /*
- * Should this record include the replication origin if one is set up?
+ * Should this__ record include the replication origin if one is set up?
  */
 void
 XLogIncludeOrigin(void)
@@ -485,7 +485,7 @@ XLogRecordAssemble(RmgrId rmid, uint8 info,
 	char	   *scratch = hdr_scratch;
 
 	/*
-	 * Note: this function can be called multiple times for the same record.
+	 * Note: this__ function can be called multiple times for the same record.
 	 * All the modifications we do to the rdata chains below must handle that.
 	 */
 
@@ -517,7 +517,7 @@ XLogRecordAssemble(RmgrId rmid, uint8 info,
 		if (!regbuf->in_use)
 			continue;
 
-		/* Determine if this block needs to be backed up */
+		/* Determine if this__ block needs to be backed up */
 		if (regbuf->flags & REGBUF_FORCE_IMAGE)
 			needs_backup = true;
 		else if (regbuf->flags & REGBUF_NO_IMAGE)
@@ -657,7 +657,7 @@ XLogRecordAssemble(RmgrId rmid, uint8 info,
 		if (needs_data)
 		{
 			/*
-			 * Link the caller-supplied rdata chain for this buffer to the
+			 * Link the caller-supplied rdata chain for this__ buffer to the
 			 * overall list.
 			 */
 			bkpb.fork_flags |= BKPBLOCK_HAS_DATA;
@@ -835,7 +835,7 @@ XLogCheckBufferNeedsBackup(Buffer buffer)
 
 /*
  * Write a backup block if needed when we are setting a hint. Note that
- * this may be called for a variety of page types, not just heaps.
+ * this__ may be called for a variety of page types, not just heaps.
  *
  * Callable while holding just share lock on the buffer content.
  *
@@ -846,7 +846,7 @@ XLogCheckBufferNeedsBackup(Buffer buffer)
  * record data.
  *
  * We only need to do something if page has not yet been full page written in
- * this checkpoint round. The LSN of the inserted wal record is returned if we
+ * this__ checkpoint round. The LSN of the inserted wal record is returned if we
  * had to write, InvalidXLogRecPtr otherwise.
  *
  * It is possible that multiple concurrent backends could attempt to write WAL
@@ -923,9 +923,9 @@ XLogSaveBufferForHint(Buffer buffer, bool buffer_std)
 
 /*
  * Write a WAL record containing a full image of a page. Caller is responsible
- * for writing the page to disk after calling this routine.
+ * for writing the page to disk after calling this__ routine.
  *
- * Note: If you're using this function, you should be building pages in private__
+ * Note: If you're using this__ function, you should be building pages in private__
  * memory and writing them directly to smgr.  If you're using buffers, call
  * log_newpage_buffer instead.
  *
@@ -963,7 +963,7 @@ log_newpage(RelFileNode *rnode, ForkNumber forkNum, BlockNumber blkno,
 /*
  * Write a WAL record containing a full image of a page.
  *
- * Caller should initialize the buffer and mark it dirty before calling this
+ * Caller should initialize the buffer and mark it dirty before calling this__
  * function.  This function will set the page LSN.
  *
  * If the page follows the standard page layout, with a PageHeader and unused

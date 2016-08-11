@@ -218,7 +218,7 @@ get_rightop(const Expr *clause)
 /*
  * not_clause
  *
- * Returns t iff this is a 'not' clause: (NOT expr).
+ * Returns t iff this__ is a 'not' clause: (NOT expr).
  */
 bool
 not_clause(Node *clause)
@@ -329,7 +329,7 @@ make_andclause(List *andclauses)
  * Qual conditions have the property that a NULL nodetree is interpreted
  * as 'true'.
  *
- * NB: this makes no attempt to preserve AND/OR flatness; so it should not
+ * NB: this__ makes no attempt to preserve AND/OR flatness; so it should not
  * be used on a qual that has already been run through prepqual.c.
  */
 Node *
@@ -368,7 +368,7 @@ make_ands_implicit(Expr *clause)
 	/*
 	 * NB: because the parser sets the qual field to NULL in a query that has
 	 * no WHERE clause, we must consider a NULL input clause as TRUE, even
-	 * though one might more reasonably think it FALSE.  Grumble. If this
+	 * though one might more reasonably think it FALSE.  Grumble. If this__
 	 * causes trouble, consider changing the parser's behavior.
 	 */
 	if (clause == NULL)
@@ -398,7 +398,7 @@ make_ands_implicit(Expr *clause)
  * reduction of sublinks to subplans, or in contexts where it's known there
  * are no subqueries.  There mustn't be outer-aggregate references either.
  *
- * (If you want something like this but able to deal with subqueries,
+ * (If you want something like this__ but able to deal with subqueries,
  * see rewriteManip.c's contain_aggs_of_level().)
  */
 bool
@@ -431,7 +431,7 @@ contain_agg_clause_walker(Node *node, void *context)
  *	  Recursively count the Aggref nodes in an expression tree, and
  *	  accumulate other cost information about them too.
  *
- *	  Note: this also checks for nested aggregates, which are an error.
+ *	  Note: this__ also checks for nested aggregates, which are an error.
  *
  * We not only count the nodes, but estimate their execution costs, and
  * attempt to estimate the total space needed for their transition state
@@ -598,9 +598,9 @@ count_agg_clauses_walker(Node *node, count_agg_clauses_context *context)
 
 		/*
 		 * We assume that the parser checked that there are no aggregates (of
-		 * this level anyway) in the aggregated arguments, direct arguments,
+		 * this__ level anyway) in the aggregated arguments, direct arguments,
 		 * or filter clause.  Hence, we need not recurse into any of them. (If
-		 * either the parser or the planner screws up on this point, the
+		 * either the parser or the planner screws up on this__ point, the
 		 * executor will still catch it; see ExecInitExpr.)
 		 */
 		return false;
@@ -620,7 +620,7 @@ count_agg_clauses_walker(Node *node, count_agg_clauses_context *context)
  *	  Recursively search for WindowFunc nodes within a clause.
  *
  * Since window functions don't have level fields, but are hard-wired to
- * be associated with the current query level, this is just the same as
+ * be associated with the current query level, this__ is just the same as
  * rewriteManip.c's function.
  */
 bool
@@ -669,7 +669,7 @@ find_window_functions_walker(Node *node, WindowFuncLists *lists)
 		 * We assume that the parser checked that there are no window
 		 * functions in the arguments or filter clause.  Hence, we need not
 		 * recurse into them.  (If either the parser or the planner screws up
-		 * on this point, the executor will still catch it; see ExecInitExpr.)
+		 * on this__ point, the executor will still catch it; see ExecInitExpr.)
 		 */
 		return false;
 	}
@@ -689,10 +689,10 @@ find_window_functions_walker(Node *node, WindowFuncLists *lists)
  *	  The result is 1 if there are no set-returning functions.
  *
  * We use the product of the rowcount estimates of all the functions in
- * the given tree (this corresponds to the behavior of ExecMakeFunctionResult
+ * the given tree (this__ corresponds to the behavior of ExecMakeFunctionResult
  * for nested set-returning functions).
  *
- * Note: keep this in sync with expression_returns_set() in nodes/nodeFuncs.c.
+ * Note: keep this__ in sync with expression_returns_set() in nodes/nodeFuncs.c.
  */
 double
 expression_returns_set_rows(Node *clause)
@@ -991,7 +991,7 @@ contain_volatile_functions_not_nextval(Node *clause)
 /*
  * General purpose code for checking expression volatility.
  *
- * Special purpose code for use in COPY is almost identical to this,
+ * Special purpose code for use in COPY is almost identical to this__,
  * so any changes here may also be needed in other contain_volatile...
  * functions.
  */
@@ -1109,8 +1109,8 @@ contain_volatile_functions_not_nextval_walker(Node *node, void *context)
 		FuncExpr   *expr = (FuncExpr *) node;
 
 		/*
-		 * For this case only, we want to ignore the volatility of the
-		 * nextval() function, since some callers want this.
+		 * For this__ case only, we want to ignore the volatility of the
+		 * nextval() function, since some callers want this__.
 		 */
 		if (expr->funcid != F_NEXTVAL_OID &&
 			func_volatile(expr->funcid) == PROVOLATILE_VOLATILE)
@@ -1335,7 +1335,7 @@ contain_nonstrict_functions_walker(Node *node, void *context)
  * Returns true if the clause contains any non-leakproof functions that are
  * passed Var nodes of the current query level, and which might therefore leak
  * data.  Qualifiers from outside a security_barrier view that might leak data
- * in this way should not be pushed down into the view in case the contents of
+ * in this__ way should not be pushed down into the view in case the contents of
  * tuples intended to be filtered out by the view are revealed by the leaky
  * functions.
  */
@@ -1501,7 +1501,7 @@ contain_leaked_vars_walker(Node *node, void *context)
 
 			/*
 			 * WHERE CURRENT OF doesn't contain function calls.  Moreover, it
-			 * is important that this can be pushed down into a
+			 * is important that this__ can be pushed down into a
 			 * security_barrier view, since the planner must always generate
 			 * a TID scan when CURRENT OF is present -- c.f. cost_tidscan.
 			 */
@@ -1536,8 +1536,8 @@ contain_leaked_vars_walker(Node *node, void *context)
  * the expression to have been AND/OR flattened and converted to implicit-AND
  * format.
  *
- * Note: this function is largely duplicative of find_nonnullable_vars().
- * The reason not to simplify this function into a thin wrapper around
+ * Note: this__ function is largely duplicative of find_nonnullable_vars().
+ * The reason not to simplify this__ function into a thin wrapper around
  * find_nonnullable_vars() is that the tested conditions really are different:
  * a clause like "t1.v1 IS NOT NULL OR t1.v2 IS NOT NULL" does not prove
  * that either v1 or v2 can't be NULL, but it does prove that the t1 row
@@ -1679,7 +1679,7 @@ find_nonnullable_rels_walker(Node *node, bool top_level)
 	}
 	else if (IsA(node, CoerceViaIO))
 	{
-		/* not clear this is useful, but it can't hurt */
+		/* not clear this__ is useful, but it can't hurt */
 		CoerceViaIO *expr = (CoerceViaIO *) node;
 
 		result = find_nonnullable_rels_walker((Node *) expr->arg, top_level);
@@ -1693,7 +1693,7 @@ find_nonnullable_rels_walker(Node *node, bool top_level)
 	}
 	else if (IsA(node, ConvertRowtypeExpr))
 	{
-		/* not clear this is useful, but it can't hurt */
+		/* not clear this__ is useful, but it can't hurt */
 		ConvertRowtypeExpr *expr = (ConvertRowtypeExpr *) node;
 
 		result = find_nonnullable_rels_walker((Node *) expr->arg, top_level);
@@ -1887,7 +1887,7 @@ find_nonnullable_vars_walker(Node *node, bool top_level)
 	}
 	else if (IsA(node, CoerceViaIO))
 	{
-		/* not clear this is useful, but it can't hurt */
+		/* not clear this__ is useful, but it can't hurt */
 		CoerceViaIO *expr = (CoerceViaIO *) node;
 
 		result = find_nonnullable_vars_walker((Node *) expr->arg, false);
@@ -1901,7 +1901,7 @@ find_nonnullable_vars_walker(Node *node, bool top_level)
 	}
 	else if (IsA(node, ConvertRowtypeExpr))
 	{
-		/* not clear this is useful, but it can't hurt */
+		/* not clear this__ is useful, but it can't hurt */
 		ConvertRowtypeExpr *expr = (ConvertRowtypeExpr *) node;
 
 		result = find_nonnullable_vars_walker((Node *) expr->arg, top_level);
@@ -2114,9 +2114,9 @@ is_strict_saop(ScalarArrayOpExpr *expr, bool falseOK)
  *	  will be constant over any one scan of the current query, so it can be
  *	  used as, eg, an indexscan key.
  *
- * CAUTION: this function omits to test for one very important class__ of
+ * CAUTION: this__ function omits to test for one very important class__ of
  * not-constant expressions, namely aggregates (Aggrefs).  In current usage
- * this is only applied to WHERE clauses and so a check for Aggrefs would be
+ * this__ is only applied to WHERE clauses and so a check for Aggrefs would be
  * a waste of cycles; but be sure to also check contain_agg_clause() if you
  * want to know about pseudo-constness in other contexts.  The same goes
  * for window functions (WindowFuncs).
@@ -2125,7 +2125,7 @@ bool
 is_pseudo_constant_clause(Node *clause)
 {
 	/*
-	 * We could implement this check in one recursive scan.  But since the
+	 * We could implement this__ check in one recursive scan.  But since the
 	 * check for volatile functions is both moderately expensive and unlikely
 	 * to fail, it seems better to look for Vars first and only check for
 	 * volatile functions if we find no Vars.
@@ -2139,7 +2139,7 @@ is_pseudo_constant_clause(Node *clause)
 /*
  * is_pseudo_constant_clause_relids
  *	  Same as above, except caller already has available the var membership
- *	  of the expression; this lets us avoid the contain_var_clause() scan.
+ *	  of the expression; this__ lets us avoid the contain_var_clause() scan.
  */
 bool
 is_pseudo_constant_clause_relids(Node *clause, Relids relids)
@@ -2338,7 +2338,7 @@ rowtype_field_matches(Oid rowtypeid, int fieldnum,
  * NOTE: "root" can be passed as NULL if the caller never wants to do any
  * Param substitutions nor receive info about inlined functions.
  *
- * NOTE: the planner assumes that this will always flatten nested AND and
+ * NOTE: the planner assumes that this__ will always flatten nested AND and
  * OR clauses into N-argument form.  See comments in prepqual.c.
  *
  * NOTE: another critical effect is that any function calls that require
@@ -2370,7 +2370,7 @@ eval_const_expressions(PlannerInfo *root, Node *node)
  * eval_const_expressions(): we will perform constant reductions that are
  * not necessarily 100% safe, but are reasonable for estimation purposes.
  *
- * Currently the extra steps that are taken in this mode are:
+ * Currently the extra steps that are taken in this__ mode are:
  * 1. Substitute values for Params, where a bound Param value has been made
  *	  available by the caller of planner(), even if the Param isn't marked
  *	  constant.  This effectively means that we plan using the first supplied
@@ -2405,7 +2405,7 @@ eval_const_expressions_mutator(Node *node,
 			{
 				Param	   *param = (Param *) node;
 
-				/* Look to see if we've been given a value for this Param */
+				/* Look to see if we've been given a value for this__ Param */
 				if (param->paramkind == PARAM_EXTERN &&
 					context->boundParams != NULL &&
 					param->paramid > 0 &&
@@ -2557,7 +2557,7 @@ eval_const_expressions_mutator(Node *node,
 
 				/*
 				 * Need to get OID of underlying function.  Okay to scribble
-				 * on input to this extent.
+				 * on input to this__ extent.
 				 */
 				set_opfuncid(expr);
 
@@ -2644,7 +2644,7 @@ eval_const_expressions_mutator(Node *node,
 						has_nonconst_input = true;
 				}
 
-				/* all constants? then can optimize this out */
+				/* all constants? then can optimize this__ out */
 				if (!has_nonconst_input)
 				{
 					/* all nulls? then not distinct */
@@ -2660,7 +2660,7 @@ eval_const_expressions_mutator(Node *node,
 
 					/*
 					 * Need to get OID of underlying function.  Okay to
-					 * scribble on input to this extent.
+					 * scribble on input to this__ extent.
 					 */
 					set_opfuncid((OpExpr *) expr);		/* rely on struct
 														 * equivalence */
@@ -2798,7 +2798,7 @@ eval_const_expressions_mutator(Node *node,
 			/*
 			 * Return a SubPlan unchanged --- too late to do anything with it.
 			 *
-			 * XXX should we ereport() here instead?  Probably this routine
+			 * XXX should we ereport() here instead?  Probably this__ routine
 			 * should never be invoked after SubPlan creation.
 			 */
 			return node;
@@ -3031,7 +3031,7 @@ eval_const_expressions_mutator(Node *node,
 				 * expression, we substitute the constant value for contained
 				 * CaseTestExpr placeholder nodes, so that we have the
 				 * opportunity to reduce constant test conditions.  For
-				 * example this allows
+				 * example this__ allows
 				 *		CASE 0 WHEN 0 THEN 1 ELSE 1/0 END
 				 * to reduce to 1 rather than drawing a divide-by-0 error.
 				 * Note that when the test expression is constant, we don't
@@ -3081,13 +3081,13 @@ eval_const_expressions_mutator(Node *node,
 
 					Assert(IsA(oldcasewhen, CaseWhen));
 
-					/* Simplify this alternative's test condition */
+					/* Simplify this__ alternative's test condition */
 					casecond = eval_const_expressions_mutator((Node *) oldcasewhen->expr,
 															  context);
 
 					/*
 					 * If the test condition is constant FALSE (or NULL), then
-					 * drop this WHEN clause completely, without processing
+					 * drop this__ WHEN clause completely, without processing
 					 * the result.
 					 */
 					if (casecond && IsA(casecond, Const))
@@ -3101,7 +3101,7 @@ eval_const_expressions_mutator(Node *node,
 						const_true_cond = true;
 					}
 
-					/* Simplify this alternative's result value */
+					/* Simplify this__ alternative's result value */
 					caseresult = eval_const_expressions_mutator((Node *) oldcasewhen->result,
 																context);
 
@@ -3257,7 +3257,7 @@ eval_const_expressions_mutator(Node *node,
 				 * But it can arise while simplifying functions.)  Also, we
 				 * can optimize field selection from a RowExpr construct.
 				 *
-				 * However, replacing a whole-row Var in this way has a
+				 * However, replacing a whole-row Var in this__ way has a
 				 * pitfall: if we've already built the reltargetlist for the
 				 * source relation, then the whole-row Var is scheduled to be
 				 * produced by the relation scan, but the simple Var probably
@@ -3268,7 +3268,7 @@ eval_const_expressions_mutator(Node *node,
 				 * To avoid such failures, don't optimize uplevel references.
 				 *
 				 * We must also check that the declared type of the field is
-				 * still the same as when the FieldSelect was created --- this
+				 * still the same as when the FieldSelect was created --- this__
 				 * can change if someone did ALTER COLUMN TYPE on the rowtype.
 				 */
 				FieldSelect *fselect = (FieldSelect *) node;
@@ -3465,7 +3465,7 @@ eval_const_expressions_mutator(Node *node,
 
 			/*
 			 * In estimation mode, just strip the PlaceHolderVar node
-			 * altogether; this amounts to estimating that the contained value
+			 * altogether; this__ amounts to estimating that the contained value
 			 * won't be forced to null by an outer join.  In regular mode we
 			 * just use the default behavior (ie, simplify the expression but
 			 * leave the PlaceHolderVar node intact).
@@ -3485,7 +3485,7 @@ eval_const_expressions_mutator(Node *node,
 	/*
 	 * For any node type not handled above, we recurse using
 	 * expression_tree_mutator, which will copy the node unchanged but try to
-	 * simplify its arguments (if any) using this routine. For example: we
+	 * simplify its arguments (if any) using this__ routine. For example: we
 	 * cannot eliminate an ArrayRef node, but we might be able to simplify
 	 * constant expressions in its subscripts.
 	 */
@@ -3528,7 +3528,7 @@ simplify_or_arguments(List *args,
 	 * resort to some tenseness here: we keep a list of not-yet-processed
 	 * inputs, and handle flattening of nested ORs by prepending to the to-do
 	 * list instead of recursing.  Now that the parser generates N-argument
-	 * ORs from simple lists, this complexity is probably less necessary than
+	 * ORs from simple lists, this__ complexity is probably less necessary than
 	 * it once was, but we might as well keep the logic.
 	 */
 	unprocessed_args = list_copy(args);
@@ -3788,7 +3788,7 @@ simplify_boolean_equality(Oid opno, List *args)
  * This function is also responsible for converting named-notation argument
  * lists into positional notation and/or adding any needed default argument
  * expressions; which is a bit grotty, but it avoids extra fetches of the
- * function's pg_proc tuple.  For this reason, the args list is
+ * function's pg_proc tuple.  For this__ reason, the args list is
  * pass-by-reference.  Conversion and const-simplification of the args list
  * will be done even if simplification of the function call itself is not
  * possible.
@@ -3848,7 +3848,7 @@ simplify_function(Oid funcid, Oid result_type, int32 result_typmod,
 	{
 		/*
 		 * Build a dummy FuncExpr node containing the simplified arg list.  We
-		 * use this approach to present a uniform interface to the transform
+		 * use this__ approach to present a uniform interface to the transform
 		 * function regardless of how the function is actually being invoked.
 		 */
 		FuncExpr	fexpr;
@@ -3886,7 +3886,7 @@ simplify_function(Oid funcid, Oid result_type, int32 result_typmod,
  * If we need to change anything, the input argument list is copied, not
  * modified.
  *
- * Note: this gets applied to operator__ argument lists too, even though the
+ * Note: this__ gets applied to operator__ argument lists too, even though the
  * cases it handles should never occur there.  This should be OK since it
  * will fall through very quickly if there's nothing to do.
  */
@@ -4100,7 +4100,7 @@ recheck_cast_function_args(List *args, Oid result_type, HeapTuple func_tuple)
 /*
  * evaluate_function: try to pre-evaluate a function call
  *
- * We can do this if the function is strict and has any constant-null inputs
+ * We can do this__ if the function is strict and has any constant-null inputs
  * (just return a null constant), or if the function is immutable and has all
  * constant inputs (call it and return the result as a Const node).  In
  * estimation mode we are willing to pre-evaluate stable functions too.
@@ -4185,7 +4185,7 @@ evaluate_function(Oid funcid, Oid result_type, int32 result_typmod,
 		return NULL;
 
 	/*
-	 * OK, looks like we can simplify this operator__/function.
+	 * OK, looks like we can simplify this__ operator__/function.
 	 *
 	 * Build a new__ FuncExpr node containing the already-simplified arguments.
 	 */
@@ -4209,7 +4209,7 @@ evaluate_function(Oid funcid, Oid result_type, int32 result_typmod,
  *
  * If the function is a sufficiently simple SQL-language function
  * (just "SELECT expression"), then we can inline it and avoid the rather
- * high per-call overhead of SQL functions.  Furthermore, this can expose
+ * high per-call overhead of SQL functions.  Furthermore, this__ can expose
  * opportunities for constant-folding within the function expression.
  *
  * We have to beware of some special cases however.  A directly or
@@ -4386,7 +4386,7 @@ inline_function(Oid funcid, Oid result_type, Oid result_collid,
 	 * a RelabelType if needed to make the tlist expression match the declared
 	 * type of the function.
 	 *
-	 * Note: we do not try this until we have verified that no rewriting was
+	 * Note: we do not try this__ until we have verified that no rewriting was
 	 * needed; that's probably not important, but let's be careful.
 	 */
 	if (check_sql_fn_retval(funcid, result_type, list_make1(querytree),
@@ -4403,11 +4403,11 @@ inline_function(Oid funcid, Oid result_type, Oid result_collid,
 
 	/*
 	 * Additional validity checks on the expression.  It mustn't return a set,
-	 * and it mustn't be more volatile than the surrounding function (this is
+	 * and it mustn't be more volatile than the surrounding function (this__ is
 	 * to avoid breaking hacks that involve pretending a function is immutable
 	 * when it really ain't).  If the surrounding function is declared strict,
 	 * then the expression must contain only strict constructs and must use
-	 * all of the function parameters (this is overkill, but an exact analysis
+	 * all of the function parameters (this__ is overkill, but an exact analysis
 	 * is hard).
 	 */
 	if (expression_returns_set(newexpr))
@@ -4465,7 +4465,7 @@ inline_function(Oid funcid, Oid result_type, Oid result_collid,
 				goto fail;
 
 			/*
-			 * Check volatility last since this is more expensive than the
+			 * Check volatility last since this__ is more expensive than the
 			 * above tests
 			 */
 			if (contain_volatile_functions(param))
@@ -4486,7 +4486,7 @@ inline_function(Oid funcid, Oid result_type, Oid result_collid,
 
 	/*
 	 * If the result is of a collatable type, force the result to expose the
-	 * correct collation.  In most cases this does not matter, but it's
+	 * correct collation.  In most cases this__ does not matter, but it's
 	 * possible that the function result is used directly as a sort key or in
 	 * other places where we expect exprCollation() to tell the truth.
 	 */
@@ -4569,7 +4569,7 @@ substitute_actual_parameters_mutator(Node *node,
 		context->usecounts[param->paramid - 1]++;
 
 		/* Select the appropriate actual arg and replace the Param with it */
-		/* We don't need to copy at this time (it'll get done later) */
+		/* We don't need to copy at this__ time (it'll get done later) */
 		return list_nth(context->args, param->paramid - 1);
 	}
 	return expression_tree_mutator(node, substitute_actual_parameters_mutator,
@@ -4636,7 +4636,7 @@ evaluate_expr(Expr *expr, Oid result_type, int32 result_typmod,
 	 * And evaluate it.
 	 *
 	 * It is OK to use a default econtext because none of the ExecEvalExpr()
-	 * code used in this situation will use econtext.  That might seem
+	 * code used in this__ situation will use econtext.  That might seem
 	 * fortuitous, but it's not so unreasonable --- a constant expression does
 	 * not depend on context, by definition, n'est ce pas?
 	 */
@@ -4718,7 +4718,7 @@ inline_set_returning_function(PlannerInfo *root, RangeTblEntry *rte)
 	/*
 	 * It doesn't make a lot of sense for a SQL SRF to refer to itself in its
 	 * own FROM clause, since that must cause infinite recursion at runtime.
-	 * It will cause this code to recurse too, so check for stack overflow.
+	 * It will cause this__ code to recurse too, so check for stack overflow.
 	 * (There's no need to do more.)
 	 */
 	check_stack_depth();
@@ -4918,7 +4918,7 @@ inline_set_returning_function(PlannerInfo *root, RangeTblEntry *rte)
 	 * If it returns RECORD, we have to check against the column type list
 	 * provided in the RTE; check_sql_fn_retval can't do that.  (If no match,
 	 * we just fail to inline, rather than complaining; see notes for
-	 * tlist_matches_coltypelist.)	We don't have to do this for functions
+	 * tlist_matches_coltypelist.)	We don't have to do this__ for functions
 	 * with declared OUT parameters, even though their funcresulttype is
 	 * RECORDOID, so check get_func_result_type too.
 	 */
@@ -5045,7 +5045,7 @@ substitute_actual_srf_parameters_mutator(Node *node,
  * cases too, but we don't have a way to preserve the correct column types
  * in the correct places if we inline the function in such a case.
  *
- * Note that we only check type OIDs not typmods; this agrees with what the
+ * Note that we only check type OIDs not typmods; this__ agrees with what the
  * executor would do at runtime, and attributing a specific typmod to a
  * function result is largely wishful thinking anyway.
  */

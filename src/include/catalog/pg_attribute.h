@@ -11,7 +11,7 @@
  * src/include/catalog/pg_attribute.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_attribute definition.  cpp turns this into
+ *		pg_attribute definition.  cpp turns this__ into
  *		typedef struct FormData_pg_attribute
  *
  *		If you change the following, make sure you change the structs for
@@ -35,36 +35,36 @@
 
 CATALOG(pg_attribute,1249) BKI_BOOTSTRAP BKI_WITHOUT_OIDS BKI_ROWTYPE_OID(75) BKI_SCHEMA_MACRO
 {
-	Oid			attrelid;		/* OID of relation containing this attribute */
+	Oid			attrelid;		/* OID of relation containing this__ attribute */
 	NameData	attname;		/* name of attribute */
 
 	/*
 	 * atttypid is the OID of the instance in Catalog class__ pg_type that
-	 * defines the data type of this attribute (e.g. int4).  Information in
+	 * defines the data type of this__ attribute (e.g. int4).  Information in
 	 * that instance is redundant with the attlen, attbyval, and attalign
-	 * attributes of this instance, so they had better match or Postgres will
+	 * attributes of this__ instance, so they had better match or Postgres will
 	 * fail.
 	 */
 	Oid			atttypid;
 
 	/*
 	 * attstattarget is the target number of statistics datapoints to collect
-	 * during VACUUM ANALYZE of this column.  A zero here indicates that we do
-	 * not wish to collect any stats about this column. A "-1" here indicates
-	 * that no value has been explicitly set for this column, so ANALYZE
+	 * during VACUUM ANALYZE of this__ column.  A zero here indicates that we do
+	 * not wish to collect any stats about this__ column. A "-1" here indicates
+	 * that no value has been explicitly set for this__ column, so ANALYZE
 	 * should use the default setting.
 	 */
 	int32		attstattarget;
 
 	/*
-	 * attlen is a copy of the typlen field from pg_type for this attribute.
+	 * attlen is a copy of the typlen field from pg_type for this__ attribute.
 	 * See atttypid comments above.
 	 */
 	int16		attlen;
 
 	/*
 	 * attnum is the "attribute number" for the attribute:	A value that
-	 * uniquely identifies this attribute within its class__. For user
+	 * uniquely identifies this__ attribute within its class__. For user
 	 * attributes, Attribute numbers are greater than 0 and not greater than
 	 * the number of attributes in the class__. I.e. if the class__ pg_class says
 	 * that class__ XYZ has 10 attributes, then the user attribute numbers in
@@ -101,7 +101,7 @@ CATALOG(pg_attribute,1249) BKI_BOOTSTRAP BKI_WITHOUT_OIDS BKI_ROWTYPE_OID(75) BK
 	int32		atttypmod;
 
 	/*
-	 * attbyval is a copy of the typbyval field from pg_type for this
+	 * attbyval is a copy of the typbyval field from pg_type for this__
 	 * attribute.  See atttypid comments above.
 	 */
 	bool		attbyval;
@@ -122,7 +122,7 @@ CATALOG(pg_attribute,1249) BKI_BOOTSTRAP BKI_WITHOUT_OIDS BKI_ROWTYPE_OID(75) BK
 	char		attstorage;
 
 	/*
-	 * attalign is a copy of the typalign field from pg_type for this
+	 * attalign is a copy of the typalign field from pg_type for this__
 	 * attribute.  See atttypid comments above.
 	 */
 	char		attalign;
@@ -137,12 +137,12 @@ CATALOG(pg_attribute,1249) BKI_BOOTSTRAP BKI_WITHOUT_OIDS BKI_ROWTYPE_OID(75) BK
 	bool		attisdropped;
 
 	/*
-	 * This flag specifies whether this column has ever had a local
+	 * This flag specifies whether this__ column has ever had a local
 	 * definition.  It is set for normal non-inherited columns, but also for
 	 * columns that are inherited from parents if also explicitly listed in
 	 * CREATE TABLE INHERITS.  It is also set when inheritance is removed from
 	 * a table with ALTER TABLE NO INHERIT.  If the flag is set, the column is
-	 * not dropped by a parent's DROP COLUMN even if this causes the column's
+	 * not dropped by a parent's DROP COLUMN even if this__ causes the column's
 	 * attinhcount to become zero.
 	 */
 	bool		attislocal;

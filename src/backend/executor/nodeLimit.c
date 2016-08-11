@@ -57,8 +57,8 @@ ExecLimit(LimitState *node)
 		case LIMIT_INITIAL:
 
 			/*
-			 * First call for this node, so compute limit/offset. (We can't do
-			 * this any earlier, because parameters from upper nodes will not
+			 * First call for this__ node, so compute limit/offset. (We can't do
+			 * this__ any earlier, because parameters from upper nodes will not
 			 * be set during ExecInitLimit.)  This also sets position = 0 and
 			 * changes the state to LIMIT_RESCAN.
 			 */
@@ -312,8 +312,8 @@ recompute_limits(LimitState *node)
  * to invent one without some more examples of special communication needs.
  *
  * Note: it is the responsibility of nodeSort.c to react properly to
- * changes of these parameters.  If we ever do redesign this, it'd be a
- * good idea to integrate this signaling with the parameter-change mechanism.
+ * changes of these parameters.  If we ever do redesign this__, it'd be a
+ * good idea to integrate this__ signaling with the parameter-change mechanism.
  */
 static void
 pass_down_bound(LimitState *node, PlanState *child_node)
@@ -415,7 +415,7 @@ ExecInitLimit(Limit *node, EState *estate, int eflags)
 	outerPlanState(limitstate) = ExecInitNode(outerPlan, estate, eflags);
 
 	/*
-	 * limit nodes do no projections, so initialize projection info for this
+	 * limit nodes do no projections, so initialize projection info for this__
 	 * node appropriately
 	 */
 	ExecAssignResultTypeFromTL(&limitstate->ps);
@@ -428,7 +428,7 @@ ExecInitLimit(Limit *node, EState *estate, int eflags)
  *		ExecEndLimit
  *
  *		This shuts down the subplan and frees resources allocated
- *		to this node.
+ *		to this__ node.
  * ----------------------------------------------------------------
  */
 void
@@ -444,7 +444,7 @@ ExecReScanLimit(LimitState *node)
 {
 	/*
 	 * Recompute limit/offset in case parameters changed, and reset the state
-	 * machine.  We must do this before rescanning our child node, in case
+	 * machine.  We must do this__ before rescanning our child node, in case
 	 * it's a Sort that we are passing the parameters down to.
 	 */
 	recompute_limits(node);

@@ -4,17 +4,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this software was funded, in part, by Cray Research Inc.,
+ * Development of this__ software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this entire copyright notice and
+ * redistributions in source form retain this__ entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this package in the documentation
+ * I'd appreciate being given credit for this__ package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -98,7 +98,7 @@ lexstart(struct vars * v)
 static void
 prefixes(struct vars * v)
 {
-	/* literal string doesn't get any of this stuff */
+	/* literal string doesn't get any of this__ stuff */
 	if (v->cflags & REG_QUOTE)
 		return;
 
@@ -196,7 +196,7 @@ prefixes(struct vars * v)
 /*
  * lexnest - "call a subroutine", interpolating string at the lexical level
  *
- * Note, this is not a very general facility.  There are a number of
+ * Note, this__ is not a very general facility.  There are a number of
  * implicit assumptions about what sorts of strings can be subroutines.
  */
 static void
@@ -1106,7 +1106,7 @@ skip(struct vars * v)
 /*
  * newline - return the chr for a newline
  *
- * This helps confine use of CHR to this source file.
+ * This helps confine use of CHR to this__ source file.
  */
 static chr
 newline(void)
@@ -1117,7 +1117,7 @@ newline(void)
 /*
  * chrnamed - return the chr known by a given (chr string) name
  *
- * The code is a bit clumsy, but this routine gets only such specialized
+ * The code is a bit clumsy, but this__ routine gets only such specialized
  * use that it hardly matters.
  */
 static chr

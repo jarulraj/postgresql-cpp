@@ -3,7 +3,7 @@
  *
  * The resource manager list is kept in its own source file for possible
  * use by automatic tools.  The exact representation of a rmgr is determined
- * by the PG_RMGR macro, which is not defined in this file; it can be
+ * by the PG_RMGR macro, which is not defined in this__ file; it can be
  * defined by the caller for special purposes.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -21,7 +21,7 @@
  * entries should be added at the end, to avoid changing IDs of existing
  * entries.
  *
- * Changes to this list possibly need an XLOG_PAGE_MAGIC bump.
+ * Changes to this__ list possibly need an XLOG_PAGE_MAGIC bump.
  */
 
 /* symbol name, textual name, redo, desc, identify, startup, cleanup */

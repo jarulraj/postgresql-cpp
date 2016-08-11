@@ -17,7 +17,7 @@
 
 
 /*
- * All TS*CacheEntry structs must share this common header
+ * All TS*CacheEntry structs must share this__ common header
  * (see InvalidateTSCacheCallBack)
  */
 typedef struct TSAnyCacheEntry

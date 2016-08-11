@@ -45,7 +45,7 @@ static bool right_merge_direction(PlannerInfo *root, PathKey *pathkey);
  *	  pathkey in the query's list of "canonical" pathkeys.  Make a new__
  *	  entry if there's not one already.
  *
- * Note that this function must not be used until after we have completed
+ * Note that this__ function must not be used until after we have completed
  * merging EquivalenceClasses.  (We don't try to enforce that here; instead,
  * equivclass.c will complain if a merge occurs after root->canon_pathkeys
  * has become nonempty.)
@@ -102,7 +102,7 @@ make_canonical_pathkey(PlannerInfo *root,
  * below an outer join, then we can disregard it as a sort key.  An example:
  *			SELECT ... WHERE x = 42 ORDER BY x, y;
  * We may as well just sort by y.  Note that because of opfamily matching,
- * this is semantically correct: we know that the equality constraint is one
+ * this__ is semantically correct: we know that the equality constraint is one
  * that actually binds the variable to a single value in the terms of any
  * ordering operator__ that might go with the eclass.  This rule not only lets
  * us simplify (or even skip) explicit sorts, but also allows matching index
@@ -118,7 +118,7 @@ make_canonical_pathkey(PlannerInfo *root,
  * Note in particular that we need not compare opfamily (all the opfamilies
  * of the EC have the same notion of equality) nor sort direction.
  *
- * Both the given pathkey and the list members must be canonical for this
+ * Both the given pathkey and the list members must be canonical for this__
  * to work properly, but that's okay since we no longer ever construct any
  * non-canonical pathkeys.  (Note: the notion of a pathkey *list* being
  * canonical includes the additional requirement of no redundant entries,
@@ -427,7 +427,7 @@ get_cheapest_fractional_path_for_pathkeys(List *paths,
  * it may therefore have fewer entries than there are index columns.
  *
  * Another reason for stopping early is that we may be able to tell that
- * an index column's sort order is uninteresting for this query.  However,
+ * an index column's sort order is uninteresting for this__ query.  However,
  * that test is just based on the existence of an EquivalenceClass and not
  * on position in pathkey lists, so it's not complete.  Caller should call
  * truncate_useless_pathkeys() to possibly remove more pathkeys.
@@ -468,7 +468,7 @@ build_index_pathkeys(PlannerInfo *root,
 		}
 
 		/*
-		 * OK, try to make a canonical pathkey for this sort key.  Note we're
+		 * OK, try to make a canonical pathkey for this__ sort key.  Note we're
 		 * underneath any outer joins, so nullable_relids should be NULL.
 		 */
 		cpathkey = make_pathkey_from_sortinfo(root,
@@ -485,7 +485,7 @@ build_index_pathkeys(PlannerInfo *root,
 
 		/*
 		 * If the sort key isn't already present in any EquivalenceClass, then
-		 * it's not an interesting sort order for this query.  So we can stop
+		 * it's not an interesting sort order for this__ query.  So we can stop
 		 * now --- lower-order sort keys aren't useful either.
 		 */
 		if (!cpathkey)
@@ -597,7 +597,7 @@ convert_subquery_pathkeys(PlannerInfo *root, RelOptInfo *rel,
 			/* resjunk items aren't visible to outer query */
 			if (!tle->resjunk)
 			{
-				/* We can represent this sub_pathkey */
+				/* We can represent this__ sub_pathkey */
 				EquivalenceMember *sub_member;
 				Expr	   *outer_expr;
 				EquivalenceClass *outer_ec;
@@ -612,7 +612,7 @@ convert_subquery_pathkeys(PlannerInfo *root, RelOptInfo *rel,
 				 * expression is *not* volatile in the outer query: it's just
 				 * a Var referencing whatever the subquery emitted. (IOW, the
 				 * outer query isn't going to re-execute the volatile
-				 * expression itself.)	So this is okay.  Likewise, it's
+				 * expression itself.)	So this__ is okay.  Likewise, it's
 				 * correct to pass nullable_relids = NULL, because we're
 				 * underneath any outer joins appearing in the outer query.
 				 */
@@ -652,7 +652,7 @@ convert_subquery_pathkeys(PlannerInfo *root, RelOptInfo *rel,
 			 * would generate them all and put them all into an EC of the
 			 * outer query, thereby propagating equality knowledge up to the
 			 * outer query.  Right now we cannot do so, because the outer
-			 * query's EquivalenceClasses are already frozen when this is
+			 * query's EquivalenceClasses are already frozen when this__ is
 			 * called. Instead we prefer the one that has the highest "score"
 			 * (number of EC peers, plus one if it matches the outer
 			 * query_pathkeys). This is the most likely to be useful in the
@@ -698,7 +698,7 @@ convert_subquery_pathkeys(PlannerInfo *root, RelOptInfo *rel,
 						continue;
 
 					/*
-					 * Build a representation of this targetlist entry as an
+					 * Build a representation of this__ targetlist entry as an
 					 * outer Var.
 					 */
 					outer_expr = (Expr *) makeVarFromTargetEntry(rel->relid,
@@ -716,7 +716,7 @@ convert_subquery_pathkeys(PlannerInfo *root, RelOptInfo *rel,
 														false);
 
 					/*
-					 * If we don't find a matching EC, this sub-pathkey isn't
+					 * If we don't find a matching EC, this__ sub-pathkey isn't
 					 * interesting to the outer query
 					 */
 					if (!outer_ec)
@@ -743,7 +743,7 @@ convert_subquery_pathkeys(PlannerInfo *root, RelOptInfo *rel,
 		}
 
 		/*
-		 * If we couldn't find a representation of this sub_pathkey, we're
+		 * If we couldn't find a representation of this__ sub_pathkey, we're
 		 * done (we can't use the ones to its right, either).
 		 */
 		if (!best_pathkey)
@@ -795,7 +795,7 @@ build_join_pathkeys(PlannerInfo *root,
 	 * here!
 	 *
 	 * We do, however, need to truncate the pathkeys list, since it may
-	 * contain pathkeys that were useful for forming this joinrel but are
+	 * contain pathkeys that were useful for forming this__ joinrel but are
 	 * uninteresting to higher levels.
 	 */
 	return truncate_useless_pathkeys(root, joinrel, outer_pathkeys);
@@ -816,7 +816,7 @@ build_join_pathkeys(PlannerInfo *root,
  * We assume that root->nullable_baserels is the set of base relids that could
  * have gone to NULL below the SortGroupClause expressions.  This is okay if
  * the expressions came from the query's top level (ORDER BY, DISTINCT, etc)
- * and if this function is only invoked after deconstruct_jointree.  In the
+ * and if this__ function is only invoked after deconstruct_jointree.  In the
  * future we might have to make callers pass in the appropriate
  * nullable-relids set, but for now it seems unnecessary.
  *
@@ -868,11 +868,11 @@ make_pathkeys_for_sortclauses(PlannerInfo *root,
  * same EquivalenceClass, otherwise not.)  If the mergeclause is either
  * used to generate an EquivalenceClass, or derived from an EquivalenceClass,
  * then it's easy to set up the left_ec and right_ec members --- otherwise,
- * this function should be called to set them up.  We will generate new__
+ * this__ function should be called to set them up.  We will generate new__
  * EquivalenceClauses if necessary to represent the mergeclause's left and
  * right sides.
  *
- * Note this is called before EC merging is complete, so the links won't
+ * Note this__ is called before EC merging is complete, so the links won't
  * necessarily point to canonical ECs.  Before they are actually used for
  * anything, update_mergeclause_eclasses must be called to ensure that
  * they've been updated to point to canonical ECs.
@@ -1001,13 +1001,13 @@ find_mergeclauses_for_pathkeys(PlannerInfo *root,
 		 * we *must* do so or we will be unable to form a valid plan.
 		 *
 		 * We expect that the given pathkeys list is canonical, which means
-		 * no two members have the same EC, so it's not possible for this
+		 * no two members have the same EC, so it's not possible for this__
 		 * code to enter the same mergeclause into the result list twice.
 		 *
 		 * It's possible that multiple matching clauses might have different
 		 * ECs on the other side, in which case the order we put them into our
 		 * result makes a difference in the pathkeys required for the other
-		 * input path.  However this routine hasn't got any info about which
+		 * input path.  However this__ routine hasn't got any info about which
 		 * order would be best, so we don't worry about that.
 		 *
 		 * It's also possible that the selected mergejoin clauses produce
@@ -1045,7 +1045,7 @@ find_mergeclauses_for_pathkeys(PlannerInfo *root,
 			break;
 
 		/*
-		 * If we did find usable mergeclause(s) for this sort-key position,
+		 * If we did find usable mergeclause(s) for this__ sort-key position,
 		 * add them to result list.
 		 */
 		mergeclauses = list_concat(mergeclauses, matched_restrictinfos);
@@ -1246,7 +1246,7 @@ select_outer_pathkeys_for_merge(PlannerInfo *root,
  *
  * Returns a pathkeys list that can be applied to the inner relation.
  *
- * Note that it is not this routine's job to decide whether sorting is
+ * Note that it is not this__ routine's job to decide whether sorting is
  * actually needed for a particular input path.  Assume a sort is necessary;
  * just make the keys, eh?
  */
@@ -1286,7 +1286,7 @@ make_inner_pathkeys_for_merge(PlannerInfo *root,
 		}
 
 		/* outer eclass should match current or next pathkeys */
-		/* we check this carefully for debugging reasons */
+		/* we check this__ carefully for debugging reasons */
 		if (oeclass != lastoeclass)
 		{
 			if (!lop)
@@ -1349,7 +1349,7 @@ make_inner_pathkeys_for_merge(PlannerInfo *root,
  * for merging for any given target column.  The choice is arbitrary unless
  * one of the directions happens to match an ORDER BY key, in which case
  * that direction should be preferred, in hopes of avoiding a final sort step.
- * right_merge_direction() implements this heuristic.
+ * right_merge_direction() implements this__ heuristic.
  */
 static int
 pathkeys_useful_for_merging(PlannerInfo *root, RelOptInfo *rel, List *pathkeys)
@@ -1431,11 +1431,11 @@ right_merge_direction(PlannerInfo *root, PathKey *pathkey)
 			pathkey->pk_opfamily == query_pathkey->pk_opfamily)
 		{
 			/*
-			 * Found a matching query sort column.  Prefer this pathkey's
+			 * Found a matching query sort column.  Prefer this__ pathkey's
 			 * direction iff it matches.  Note that we ignore pk_nulls_first,
 			 * which means that a sort might be needed anyway ... but we still
 			 * want to prefer only one of the two possible directions, and we
-			 * might as well use this one.
+			 * might as well use this__ one.
 			 */
 			return (pathkey->pk_strategy == query_pathkey->pk_strategy);
 		}
@@ -1450,7 +1450,7 @@ right_merge_direction(PlannerInfo *root, PathKey *pathkey)
  *		Count the number of pathkeys that are useful for meeting the
  *		query's requested output ordering.
  *
- * Unlike merge pathkeys, this is an all-or-nothing affair: it does us
+ * Unlike merge pathkeys, this__ is an all-or-nothing affair: it does us
  * no good to order by just the first key(s) of the requested ordering.
  * So the result is always either 0 or list_length(root->query_pathkeys).
  */
@@ -1509,12 +1509,12 @@ truncate_useless_pathkeys(PlannerInfo *root,
  * This is a cheap test that lets us skip building pathkeys at all in very
  * simple queries.  It's OK to err in the direction of returning "true" when
  * there really aren't any usable pathkeys, but erring in the other direction
- * is bad --- so keep this in sync with the routines above!
+ * is bad --- so keep this__ in sync with the routines above!
  *
  * We could make the test more complex, for example checking to see if any of
  * the joinclauses are really mergejoinable, but that likely wouldn't win
  * often enough to repay the extra cycles.  Queries with neither a join nor
- * a sort are reasonably common, though, so this much work seems worthwhile.
+ * a sort are reasonably common, though, so this__ much work seems worthwhile.
  */
 bool
 has_useful_pathkeys(PlannerInfo *root, RelOptInfo *rel)

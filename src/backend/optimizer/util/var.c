@@ -87,7 +87,7 @@ static Relids alias_relid_set(PlannerInfo *root, Relids relids);
  *		Create a set of all the distinct varnos present in a parsetree.
  *		Only varnos that reference level-zero rtable entries are considered.
  *
- * NOTE: this is used on not-yet-planned expressions.  It may therefore find
+ * NOTE: this__ is used on not-yet-planned expressions.  It may therefore find
  * bare SubLinks, and if so it needs to recurse into them to look for uplevel
  * references to the desired rtable level!	But when we find a completed
  * SubPlan, we only need to look at the parameters passed to the subplan.
@@ -211,7 +211,7 @@ pull_varnos_walker(Node *node, pull_varnos_context *context)
  * Attribute numbers are offset by FirstLowInvalidHeapAttributeNumber so that
  * we can include system attributes (e.g., OID) in the bitmap representation.
  *
- * Currently, this does not support unplanned subqueries; that is not needed
+ * Currently, this__ does not support unplanned subqueries; that is not needed
  * for current uses.  It will handle already-planned SubPlan nodes, though,
  * looking into only the "testexpr" and the "args" list.  (The subplan cannot
  * contain any other references to Vars of the current level.)
@@ -429,9 +429,9 @@ contain_vars_of_level_walker(Node *node, int *sublevels_up)
  *
  * Will recurse into sublinks.  Also, may be invoked directly on a Query.
  *
- * Note: it might seem appropriate to merge this functionality into
+ * Note: it might seem appropriate to merge this__ functionality into
  * contain_vars_of_level, but that would complicate that function's API.
- * Currently, the only uses of this function are for error reporting,
+ * Currently, the only uses of this__ function are for error reporting,
  * and so shaving cycles probably isn't very important.
  */
 int
@@ -626,15 +626,15 @@ pull_var_clause_walker(Node *node, pull_var_clause_context *context)
  *
  * If a JOIN contains sub-selects that have been flattened, its join alias
  * entries might now be arbitrary expressions, not just Vars.  This affects
- * this function in one important way: we might find ourselves inserting
+ * this__ function in one important way: we might find ourselves inserting
  * SubLink expressions into subqueries, and we must make sure that their
  * Query.hasSubLinks fields get set to TRUE if so.  If there are any
  * SubLinks in the join alias lists, the outer Query should already have
- * hasSubLinks = TRUE, so this is only relevant to un-flattened subqueries.
+ * hasSubLinks = TRUE, so this__ is only relevant to un-flattened subqueries.
  *
- * NOTE: this is used on not-yet-planned expressions.  We do not expect it
+ * NOTE: this__ is used on not-yet-planned expressions.  We do not expect it
  * to be applied directly to the whole Query, so if we see a Query to start
- * with, we do want to increment sublevels_up (this occurs for LATERAL
+ * with, we do want to increment sublevels_up (this__ occurs for LATERAL
  * subqueries).
  */
 Node *

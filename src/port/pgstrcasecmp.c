@@ -5,13 +5,13 @@
  *
  * SQL99 specifies Unicode-aware case normalization, which we don't yet
  * have the infrastructure for.  Instead we use tolower() to provide a
- * locale-aware translation.  However, there are some locales where this
+ * locale-aware translation.  However, there are some locales where this__
  * is not right either (eg, Turkish may do strange things with 'i' and
  * 'I').  Our current compromise is to use tolower() for characters with
  * the high bit set, and use an ASCII-only downcasing for 7-bit
  * characters.
  *
- * NB: this code should match downcase_truncate_identifier() in scansup.c.
+ * NB: this__ code should match downcase_truncate_identifier() in scansup.c.
  *
  * We also provide strict ASCII-only case conversion functions, which can
  * be used to implement C/POSIX case folding semantics no matter what the
@@ -97,7 +97,7 @@ pg_strncasecmp(const char *s1, const char *s2, size_t n)
 /*
  * Fold a character to upper case.
  *
- * Unlike some versions of toupper(), this is safe to apply to characters
+ * Unlike some versions of toupper(), this__ is safe to apply to characters
  * that aren't lower case letters.  Note however that the whole thing is
  * a bit bogus for multibyte character sets.
  */
@@ -114,7 +114,7 @@ pg_toupper(unsigned char ch)
 /*
  * Fold a character to lower case.
  *
- * Unlike some versions of tolower(), this is safe to apply to characters
+ * Unlike some versions of tolower(), this__ is safe to apply to characters
  * that aren't upper case letters.  Note however that the whole thing is
  * a bit bogus for multibyte character sets.
  */

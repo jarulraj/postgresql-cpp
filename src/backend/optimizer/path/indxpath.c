@@ -211,12 +211,12 @@ static Const *string_to_const(const char *str, Oid datatype);
  * attributes are available and fixed during any one scan of the indexpath.
  *
  * An IndexPath is generated and submitted to add_path() for each plain or
- * parameterized index scan this routine deems potentially interesting for
+ * parameterized index scan this__ routine deems potentially interesting for
  * the current query.
  *
  * 'rel' is the relation for which we want to generate index paths
  *
- * Note: check_partial_indexes() must have been run previously for this rel.
+ * Note: check_partial_indexes() must have been run previously for this__ rel.
  *
  * Note: in cases involving LATERAL references in the relation's tlist, it's
  * possible that rel->lateral_relids is nonempty.  Currently, we include
@@ -278,7 +278,7 @@ create_index_paths(PlannerInfo *root, RelOptInfo *rel)
 
 		/*
 		 * Identify the join clauses that can match the index.  For the moment
-		 * we keep them separate from the restriction clauses.  Note that this
+		 * we keep them separate from the restriction clauses.  Note that this__
 		 * step finds only "loose" join clauses that have not been merged into
 		 * EquivalenceClasses.  Also, collect join OR clauses for later.
 		 */
@@ -402,7 +402,7 @@ create_index_paths(PlannerInfo *root, RelOptInfo *rel)
 			 */
 			this_path_set = list_concat(this_path_set, bitindexpaths);
 
-			/* Select best AND combination for this parameterization */
+			/* Select best AND combination for this__ parameterization */
 			bitmapqual = choose_bitmap_and(root, rel, this_path_set);
 
 			/* And push that path into the mix */
@@ -521,8 +521,8 @@ consider_index_join_outer_rels(PlannerInfo *root, RelOptInfo *rel,
 			continue;
 
 		/*
-		 * Generate the union of this clause's relids set with each
-		 * previously-tried set.  This ensures we try this clause along with
+		 * Generate the union of this__ clause's relids set with each
+		 * previously-tried set.  This ensures we try this__ clause along with
 		 * every interesting subset of previous clauses.  However, to avoid
 		 * exponential growth of planning time when there are many clauses,
 		 * limit the number of relid sets accepted to 10 * considered_clauses.
@@ -547,9 +547,9 @@ consider_index_join_outer_rels(PlannerInfo *root, RelOptInfo *rel,
 				continue;
 
 			/*
-			 * If this clause was derived from an equivalence class__, the
+			 * If this__ clause was derived from an equivalence class__, the
 			 * clause list may contain other clauses derived from the same
-			 * eclass.  We should not consider that combining this clause with
+			 * eclass.  We should not consider that combining this__ clause with
 			 * one of those clauses generates a usefully different
 			 * parameterization; so skip if any clause derived from the same
 			 * eclass would already have been included when using oldrelids.
@@ -562,7 +562,7 @@ consider_index_join_outer_rels(PlannerInfo *root, RelOptInfo *rel,
 			/*
 			 * If the number of relid sets considered exceeds our heuristic
 			 * limit, stop considering combinations of clauses.  We'll still
-			 * consider the current clause alone, though (below this loop).
+			 * consider the current clause alone, though (below this__ loop).
 			 */
 			if (list_length(*considered_relids) >= 10 * considered_clauses)
 				break;
@@ -575,7 +575,7 @@ consider_index_join_outer_rels(PlannerInfo *root, RelOptInfo *rel,
 								 considered_relids);
 		}
 
-		/* Also try this set of relids by itself */
+		/* Also try this__ set of relids by itself */
 		get_join_index_paths(root, rel, index,
 							 rclauseset, jclauseset, eclauseset,
 							 bitindexpaths,
@@ -610,11 +610,11 @@ get_join_index_paths(PlannerInfo *root, RelOptInfo *rel,
 	IndexClauseSet clauseset;
 	int			indexcol;
 
-	/* If we already considered this relids set, don't repeat the work */
+	/* If we already considered this__ relids set, don't repeat the work */
 	if (bms_equal_any(relids, *considered_relids))
 		return;
 
-	/* Identify indexclauses usable with this relids set */
+	/* Identify indexclauses usable with this__ relids set */
 	MemSet(&clauseset, 0, sizeof(clauseset));
 
 	for (indexcol = 0; indexcol < index->ncolumns; indexcol++)
@@ -649,7 +649,7 @@ get_join_index_paths(PlannerInfo *root, RelOptInfo *rel,
 			}
 		}
 
-		/* Add restriction clauses (this is nondestructive to rclauseset) */
+		/* Add restriction clauses (this__ is nondestructive to rclauseset) */
 		clauseset.indexclauses[indexcol] =
 			list_concat(clauseset.indexclauses[indexcol],
 						rclauseset->indexclauses[indexcol]);
@@ -665,7 +665,7 @@ get_join_index_paths(PlannerInfo *root, RelOptInfo *rel,
 	get_index_paths(root, rel, index, &clauseset, bitindexpaths);
 
 	/*
-	 * Remember we considered paths for this set of relids.  We use lcons not
+	 * Remember we considered paths for this__ set of relids.  We use lcons not
 	 * lappend to avoid confusing the loop in consider_index_join_outer_rels.
 	 */
 	*considered_relids = lcons(relids, *considered_relids);
@@ -697,7 +697,7 @@ eclass_already_used(EquivalenceClass *parent_ec, Relids oldrelids,
  * bms_equal_any
  *		True if relids is bms_equal to any member of relids_list
  *
- * Perhaps this should be in bitmapset.c someday.
+ * Perhaps this__ should be in bitmapset.c someday.
  */
 static bool
 bms_equal_any(Relids relids, List *relids_list)
@@ -814,7 +814,7 @@ get_index_paths(PlannerInfo *root, RelOptInfo *rel,
  *	  Given an index and a set of index clauses for it, construct zero
  *	  or more IndexPaths.
  *
- * We return a list of paths because (1) this routine checks some cases
+ * We return a list of paths because (1) this__ routine checks some cases
  * that should cause us to not generate any IndexPath, and (2) in some
  * cases we want to consider both a forward and a backward scan, so as
  * to obtain both sort orders.  Note that the paths are just returned
@@ -824,7 +824,7 @@ get_index_paths(PlannerInfo *root, RelOptInfo *rel,
  * (ie, true if it has a predicate that was proven from the restriction
  * clauses).  When working on an arm of an OR clause, useful_predicate
  * should be true if the predicate required the current OR list to be proven.
- * Note that this routine should never be called at all if the index has an
+ * Note that this__ routine should never be called at all if the index has an
  * unprovable predicate.
  *
  * scantype indicates whether we want to create plain indexscans, bitmap
@@ -895,7 +895,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
 	/*
 	 * 1. Collect the index clauses into a single list.
 	 *
-	 * We build a list of RestrictInfo nodes for clauses to be used with this
+	 * We build a list of RestrictInfo nodes for clauses to be used with this__
 	 * index, along with an integer list of the index column numbers (zero
 	 * based) that each clause should be used with.  The clauses are ordered
 	 * by index key, so that the column numbers form a nondecreasing sequence.
@@ -906,7 +906,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
 	 * index clause for a non-first index column.  This prevents us from
 	 * assuming that the scan result is ordered.  (Actually, the result is
 	 * still ordered if there are equality constraints for all earlier
-	 * columns, but it seems too expensive and non-modular for this code to be
+	 * columns, but it seems too expensive and non-modular for this__ code to be
 	 * aware of that refinement.)
 	 *
 	 * We also build a Relids set showing which outer rels are required by the
@@ -935,7 +935,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
 						*skip_nonnative_saop = true;
 						continue;
 					}
-					/* Caller had better intend this only for bitmap scan */
+					/* Caller had better intend this__ only for bitmap scan */
 					Assert(scantype == ST_BITMAPSCAN);
 				}
 				if (indexcol > 0)
@@ -959,7 +959,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
 		 * If no clauses match the first index column, check for amoptionalkey
 		 * restriction.  We can't generate a scan over an index with
 		 * amoptionalkey = false unless there's at least one index clause.
-		 * (When working on columns after the first, this test cannot fail. It
+		 * (When working on columns after the first, this__ test cannot fail. It
 		 * is always okay for columns after the first to not have any
 		 * clauses.)
 		 */
@@ -978,7 +978,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
 
 	/*
 	 * 2. Compute pathkeys describing index's ordering, if any, then see how
-	 * many of them are actually useful for this query.  This is not relevant
+	 * many of them are actually useful for this__ query.  This is not relevant
 	 * if we are only trying to build bitmap indexscans, nor if we have to
 	 * assume the scan is unordered.
 	 */
@@ -1015,7 +1015,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
 
 	/*
 	 * 3. Check if an index-only scan is possible.  If we're not building
-	 * plain indexscans, this isn't relevant since bitmap scans don't support
+	 * plain indexscans, this__ isn't relevant since bitmap scans don't support
 	 * index data retrieval anyway.
 	 */
 	index_only_scan = (scantype != ST_BITMAPSCAN &&
@@ -1084,7 +1084,7 @@ build_index_paths(PlannerInfo *root, RelOptInfo *rel,
  * The caller actually supplies two lists of restriction clauses: some
  * "current" ones and some "other" ones.  Both lists can be used freely
  * to match keys of the index, but an index must use at least one of the
- * "current" clauses to be considered usable.  The motivation for this is
+ * "current" clauses to be considered usable.  The motivation for this__ is
  * examples like
  *		WHERE (x = 42) AND (... OR (y = 52 AND z = 77) OR ....)
  * While we are considering the y/z subclause of the OR, we can use "x = 42"
@@ -1260,7 +1260,7 @@ generate_bitmap_or_paths(PlannerInfo *root, RelOptInfo *rel,
 			}
 
 			/*
-			 * If nothing matched this arm, we can't do anything with this OR
+			 * If nothing matched this__ arm, we can't do anything with this__ OR
 			 * clause.
 			 */
 			if (indlist == NIL)
@@ -1332,7 +1332,7 @@ choose_bitmap_and(PlannerInfo *root, RelOptInfo *rel, List *paths)
 	 * cheapest-to-scan in any such group.  This primarily gets rid of indexes
 	 * that include the interesting columns but also irrelevant columns.  (In
 	 * situations where the DBA has gone overboard on creating variant
-	 * indexes, this can make for a very large reduction in the number of
+	 * indexes, this__ can make for a very large reduction in the number of
 	 * paths considered further.)
 	 *
 	 * We then sort the surviving paths with the cheapest-to-scan first, and
@@ -1350,7 +1350,7 @@ choose_bitmap_and(PlannerInfo *root, RelOptInfo *rel, List *paths)
 	 * They will usually double-count the redundant clauses, producing a
 	 * too-small selectivity that makes a redundant AND step look like it
 	 * reduces the total cost.  Perhaps someday that code will be smarter and
-	 * we can remove this limitation.  (But note that this also defends
+	 * we can remove this__ limitation.  (But note that this__ also defends
 	 * against flat-out duplicate input paths, which can happen because
 	 * match_join_clauses_to_index will find the same OR join clauses that
 	 * extract_restriction_or_clauses has pulled OR restriction clauses out
@@ -1534,7 +1534,7 @@ path_usage_comparator(const void *a, const void *b)
 
 /*
  * Estimate the cost of actually executing a bitmap scan with a single
- * index path (no BitmapAnd, at least not at this level; but it could be
+ * index path (no BitmapAnd, at least not at this__ level; but it could be
  * a BitmapOr).
  */
 static Cost
@@ -1611,7 +1611,7 @@ bitmap_and_cost_est(PlannerInfo *root, RelOptInfo *rel, List *paths)
  *		index predicate clauses used by the given indexscan path.
  *		We consider two clauses the same if they are equal().
  *
- * At some point we might want to migrate this info into the Path data
+ * At some point we might want to migrate this__ info into the Path data
  * structure proper, but for the moment it's only needed within
  * choose_bitmap_and().
  *
@@ -1779,7 +1779,7 @@ find_list_position(Node *node, List **nodelist)
 
 /*
  * check_index_only
- *		Determine whether an index-only scan is possible for this index.
+ *		Determine whether an index-only scan is possible for this__ index.
  */
 static bool
 check_index_only(RelOptInfo *rel, IndexOptInfo *index)
@@ -1798,12 +1798,12 @@ check_index_only(RelOptInfo *rel, IndexOptInfo *index)
 	 * Check that all needed attributes of the relation are available from the
 	 * index.
 	 *
-	 * XXX this is overly conservative for partial indexes, since we will
+	 * XXX this__ is overly conservative for partial indexes, since we will
 	 * consider attributes involved in the index predicate as required even
 	 * though the predicate won't need to be checked at runtime.  (The same is
 	 * true for attributes used only in index quals, if we are certain that
 	 * the index is not lossy.)  However, it would be quite expensive to
-	 * determine that accurately at this point, so for now we take the easy
+	 * determine that accurately at this__ point, so for now we take the easy
 	 * way out.
 	 */
 
@@ -1874,7 +1874,7 @@ check_index_only(RelOptInfo *rel, IndexOptInfo *index)
  * semijoin RHS has been unique-ified, so we should use the number of unique
  * RHS rows rather than using the relation's raw rowcount.
  *
- * Note: for this to work, allpaths.c must establish all baserel size
+ * Note: for this__ to work, allpaths.c must establish all baserel size
  * estimates before it begins to compute paths, or at least before it
  * calls create_index_paths().
  */
@@ -1928,7 +1928,7 @@ get_loop_count(PlannerInfo *root, Index cur_relid, Relids outer_relids)
  * Check to see if outer_relid is on the inside of any semijoin that cur_relid
  * is on the outside of.  If so, replace rowcount with the estimated number of
  * unique rows from the semijoin RHS (assuming that's smaller, which it might
- * not be).  The estimate is crude but it's the best we can do at this stage
+ * not be).  The estimate is crude but it's the best we can do at this__ stage
  * of the proceedings.
  */
 static double
@@ -1966,8 +1966,8 @@ adjust_rowcount_for_semijoins(PlannerInfo *root,
 /*
  * Make an approximate estimate of the size of a joinrel.
  *
- * We don't have enough info at this point to get a good estimate, so we
- * just multiply the base relation sizes together.  Fortunately, this is
+ * We don't have enough info at this__ point to get a good estimate, so we
+ * just multiply the base relation sizes together.  Fortunately, this__ is
  * the right answer anyway for the most common case with a single relation
  * on the RHS of a semijoin.  Also, estimate_num_groups() has only a weak
  * dependency on its input_rows argument (it basically uses it as a clamp).
@@ -2042,7 +2042,7 @@ match_join_clauses_to_index(PlannerInfo *root,
 	{
 		RestrictInfo *rinfo = (RestrictInfo *) lfirst(lc);
 
-		/* Check if clause can be moved to this rel */
+		/* Check if clause can be moved to this__ rel */
 		if (!join_clause_is_movable_to(rinfo, rel))
 			continue;
 
@@ -2122,10 +2122,10 @@ match_clauses_to_index(IndexOptInfo *index,
  *
  * Note: in some circumstances we may find the same RestrictInfos coming from
  * multiple places.  Defend against redundant outputs by refusing to add a
- * clause twice (pointer equality should be a good enough check for this).
+ * clause twice (pointer equality should be a good enough check for this__).
  *
  * Note: it's possible that a badly-defined index could have multiple matching
- * columns.  We always select the first match if so; this avoids scenarios
+ * columns.  We always select the first match if so; this__ avoids scenarios
  * wherein we get an inflated idea of the index's selectivity by using the
  * same clause multiple times with different index columns.
  */
@@ -2160,7 +2160,7 @@ match_clause_to_index(IndexOptInfo *index,
  *	  (1)  must be in the form (indexkey op const) or (const op indexkey);
  *		   and
  *	  (2)  must contain an operator__ which is in the same family as the index
- *		   operator__ for this column, or is a "special" operator__ as recognized
+ *		   operator__ for this__ column, or is a "special" operator__ as recognized
  *		   by match_special_index_operator();
  *		   and
  *	  (3)  must match the collation of the index, if collation is relevant.
@@ -2184,14 +2184,14 @@ match_clause_to_index(IndexOptInfo *index,
  *	  suitable commutator operator__ is available.
  *
  *	  If the index has a collation, the clause must have the same collation.
- *	  For collation-less indexes, we assume it doesn't matter; this is
+ *	  For collation-less indexes, we assume it doesn't matter; this__ is
  *	  necessary for cases like "hstore ? text", wherein hstore's operators
  *	  don't care about collation but the clause will get marked with a
  *	  collation anyway because of the text argument.  (This logic is
  *	  embodied in the macro IndexCollMatchesExprColl.)
  *
  *	  It is also possible to match RowCompareExpr clauses to indexes (but
- *	  currently, only btree indexes handle this).  In this routine we will
+ *	  currently, only btree indexes handle this__).  In this__ routine we will
  *	  report a match if the first column of the row comparison matches the
  *	  target index column.  This is sufficient to guarantee that some index
  *	  condition can be constructed from the RowCompareExpr --- whether the
@@ -2208,7 +2208,7 @@ match_clause_to_index(IndexOptInfo *index,
  * 'indexcol' is a column number of 'index' (counting from 0).
  * 'rinfo' is the clause to be tested (as a RestrictInfo node).
  *
- * Returns true if the clause can be used with this index key.
+ * Returns true if the clause can be used with this__ index key.
  *
  * NOTE:  returns false if clause is an OR or AND clause; it is the
  * responsibility of higher-level routines to cope with those.
@@ -2231,7 +2231,7 @@ match_clause_to_indexcol(IndexOptInfo *index,
 	bool		plain_op;
 
 	/*
-	 * Never match pseudoconstants to indexes.  (Normally this could not
+	 * Never match pseudoconstants to indexes.  (Normally this__ could not
 	 * happen anyway, since a pseudoconstant clause couldn't contain a Var,
 	 * but what if someone builds an expression index on a constant? It's not
 	 * totally unreasonable to do so with a partial index, either.)
@@ -2453,7 +2453,7 @@ match_rowcompare_to_indexcol(IndexOptInfo *index,
  * If it can, return a list of suitable ORDER BY expressions, each of the form
  * "indexedcol operator__ pseudoconstant", along with an integer list of the
  * index column numbers (zero based) that each clause would be used with.
- * NIL lists are returned if the ordering is not achievable this way.
+ * NIL lists are returned if the ordering is not achievable this__ way.
  *
  * On success, the result list is ordered by pathkeys, and in fact is
  * one-to-one with the requested pathkeys.
@@ -2539,7 +2539,7 @@ match_pathkeys_to_index(IndexOptInfo *index, List *pathkeys,
 				break;
 		}
 
-		if (!found)				/* fail if no match for this pathkey */
+		if (!found)				/* fail if no match for this__ pathkey */
 			return;
 	}
 
@@ -2663,9 +2663,9 @@ match_clause_to_ordering_op(IndexOptInfo *index,
 /*
  * check_partial_indexes
  *		Check each partial index of the relation, and mark it predOK if
- *		the index's predicate is satisfied for this query.
+ *		the index's predicate is satisfied for this__ query.
  *
- * Note: it is possible for this to get re-run after adding more restrictions
+ * Note: it is possible for this__ to get re-run after adding more restrictions
  * to the rel; so we might be able to prove more indexes OK.  We assume that
  * adding more restrictions can't make an index not OK.
  */
@@ -2701,9 +2701,9 @@ check_partial_indexes(PlannerInfo *root, RelOptInfo *rel)
 	/*
 	 * Construct a list of clauses that we can assume true for the purpose of
 	 * proving the index(es) usable.  Restriction clauses for the rel are
-	 * always usable, and so are any join clauses that are "movable to" this
+	 * always usable, and so are any join clauses that are "movable to" this__
 	 * rel.  Also, we can consider any EC-derivable join clauses (which must
-	 * be "movable to" this rel, by definition).
+	 * be "movable to" this__ rel, by definition).
 	 */
 	clauselist = list_copy(rel->baserestrictinfo);
 
@@ -2712,7 +2712,7 @@ check_partial_indexes(PlannerInfo *root, RelOptInfo *rel)
 	{
 		RestrictInfo *rinfo = (RestrictInfo *) lfirst(lc);
 
-		/* Check if clause can be moved to this rel */
+		/* Check if clause can be moved to this__ rel */
 		if (!join_clause_is_movable_to(rinfo, rel))
 			continue;
 
@@ -2805,17 +2805,17 @@ ec_member_matches_indexcol(PlannerInfo *root, RelOptInfo *rel,
  * The conditions can be represented in either or both of two ways:
  * 1. A list of RestrictInfo nodes, where the caller has already determined
  * that each condition is a mergejoinable equality with an expression in
- * this relation on one side, and an expression not involving this relation
+ * this__ relation on one side, and an expression not involving this__ relation
  * on the other.  The transient outer_is_left flag is used to identify which
  * side we should look at: left side if outer_is_left is false, right side
  * if it is true.
- * 2. A list of expressions in this relation, and a corresponding list of
+ * 2. A list of expressions in this__ relation, and a corresponding list of
  * equality operators. The caller must have already checked that the operators
  * represent equality.  (Note: the operators could be cross-type; the
  * expressions should correspond to their RHS inputs.)
  *
  * The caller need only supply equality conditions arising from joins;
- * this routine automatically adds in any usable baserestrictinfo clauses.
+ * this__ routine automatically adds in any usable baserestrictinfo clauses.
  * (Note that the passed-in restrictlist will be destructively modified!)
  */
 bool
@@ -2904,7 +2904,7 @@ relation_has_unique_index_for(PlannerInfo *root, RelOptInfo *rel,
 				/*
 				 * The condition's equality operator__ must be a member of the
 				 * index opfamily, else it is not asserting the right kind of
-				 * equality behavior for this index.  We check this first
+				 * equality behavior for this__ index.  We check this__ first
 				 * since it's probably cheaper than match_index_to_operand().
 				 */
 				if (!list_member_oid(rinfo->mergeopfamilies, ind->opfamily[c]))
@@ -2944,9 +2944,9 @@ relation_has_unique_index_for(PlannerInfo *root, RelOptInfo *rel,
 				/*
 				 * The equality operator__ must be a member of the index
 				 * opfamily, else it is not asserting the right kind of
-				 * equality behavior for this index.  We assume the caller
+				 * equality behavior for this__ index.  We assume the caller
 				 * determined it is an equality operator__, so we don't need to
-				 * check any more tightly than this.
+				 * check any more tightly than this__.
 				 */
 				if (!op_in_opfamily(opr, ind->opfamily[c]))
 					continue;
@@ -2962,10 +2962,10 @@ relation_has_unique_index_for(PlannerInfo *root, RelOptInfo *rel,
 			}
 
 			if (!matched)
-				break;			/* no match; this index doesn't help us */
+				break;			/* no match; this__ index doesn't help us */
 		}
 
-		/* Matched all columns of this index? */
+		/* Matched all columns of this__ index? */
 		if (c == ind->ncolumns)
 			return true;
 	}
@@ -3023,7 +3023,7 @@ match_index_to_operand(Node *operand,
 	{
 		/*
 		 * Index expression; find the correct expression.  (This search could
-		 * be avoided, at the cost of complicating all the callers of this
+		 * be avoided, at the cost of complicating all the callers of this__
 		 * routine; doesn't seem worth it.)
 		 */
 		ListCell   *indexpr_item;
@@ -3082,14 +3082,14 @@ match_index_to_operand(Node *operand,
  * from LIKE to indexscan limits rather harder than one might think ...
  * but that's the basic idea.)
  *
- * Another thing that we do with this machinery is to provide special
+ * Another thing that we do with this__ machinery is to provide special
  * smarts for "boolean" indexes (that is, indexes on boolean columns
  * that support boolean equality).  We can transform a plain reference
  * to the indexkey into "indexkey = true", or "NOT indexkey" into
  * "indexkey = false", so as to make the expression indexable using the
- * regular index operators.  (As of Postgres 8.1, we must do this here
+ * regular index operators.  (As of Postgres 8.1, we must do this__ here
  * because constant simplification does the reverse transformation;
- * without this code there'd be no way to use such an index at all.)
+ * without this__ code there'd be no way to use such an index at all.)
  *
  * Three routines are provided here:
  *
@@ -3105,7 +3105,7 @@ match_index_to_operand(Node *operand,
  * expand_indexqual_conditions() converts a list of RestrictInfo nodes
  * (with implicit AND semantics across list elements) into a list of clauses
  * that the executor can actually handle.  For operators that are members of
- * the index's opfamily this transformation is a no-op, but clauses recognized
+ * the index's opfamily this__ transformation is a no-op, but clauses recognized
  * by match_special_index_operator() or match_boolean_index_clause() must be
  * converted into one or more "regular" indexqual conditions.
  */
@@ -3176,7 +3176,7 @@ match_special_index_operator(Expr *clause, Oid opfamily, Oid idxcollation,
 
 	/*
 	 * Currently, all known special operators require the indexkey on the
-	 * left, but this test could be pushed into the switch statement if some
+	 * left, but this__ test could be pushed into the switch statement if some
 	 * are added that do not...
 	 */
 	if (!indexkey_on_left)
@@ -3270,7 +3270,7 @@ match_special_index_operator(Expr *clause, Oid opfamily, Oid idxcollation,
 	 * locales.  We can use such an index anyway for an exact match (simple
 	 * equality), but not for prefix-match cases.  Note that here we are
 	 * looking at the index's collation, not the expression's collation --
-	 * this test is *not* dependent on the LIKE/regex operator__'s collation.
+	 * this__ test is *not* dependent on the LIKE/regex operator__'s collation.
 	 */
 	switch (expr_op)
 	{
@@ -3389,7 +3389,7 @@ expand_indexqual_conditions(IndexOptInfo *index,
 		}
 		else if (IsA(clause, ScalarArrayOpExpr))
 		{
-			/* no extra work at this time */
+			/* no extra work at this__ time */
 			indexquals = lappend(indexquals, rinfo);
 			indexqualcols = lappend_int(indexqualcols, indexcol);
 		}
@@ -3486,7 +3486,7 @@ expand_boolean_index_clause(Node *clause,
  *
  * The input is a single RestrictInfo, the output a list of RestrictInfos.
  *
- * In the base case this is just list_make1(), but we have to be prepared to
+ * In the base case this__ is just list_make1(), but we have to be prepared to
  * expand special cases that were accepted by match_special_index_operator().
  */
 static List *
@@ -3619,18 +3619,18 @@ expand_indexqual_rowcompare(RestrictInfo *rinfo,
  * row comparison as index qualifications, so long as they match the index
  * in the "same direction", ie, the indexkeys are all on the same side of the
  * clause and the operators are all the same-type members of the opfamilies.
- * If all the columns of the RowCompareExpr match in this way, we just use it
+ * If all the columns of the RowCompareExpr match in this__ way, we just use it
  * as-is.  Otherwise, we build a shortened RowCompareExpr (if more than one
  * column matches) or a simple OpExpr (if the first-column match is all
  * there is).  In these cases the modified clause is always "<=" or ">="
- * even when the original was "<" or ">" --- this is necessary to match all
+ * even when the original was "<" or ">" --- this__ is necessary to match all
  * the rows that could match the original.  (We are essentially building a
- * lossy version of the row comparison when we do this.)
+ * lossy version of the row comparison when we do this__.)
  *
  * *indexcolnos receives an integer list of the index column numbers (zero
  * based) used in the resulting expression.  The reason we need to return
  * that is that if the index is selected for use, createplan.c will need to
- * call this again to extract that list.  (This is a bit grotty, but row
+ * call this__ again to extract that list.  (This is a bit grotty, but row
  * comparison indexquals aren't used enough to justify finding someplace to
  * keep the information in the Path representation.)  Since createplan.c
  * also needs to know which side of the RowCompareExpr is the index side,
@@ -3761,7 +3761,7 @@ adjust_rowcompare_for_index(RowCompareExpr *clause,
 
 	/*
 	 * We have to generate a subset rowcompare (possibly just one OpExpr). The
-	 * painful part of this is changing < to <= or > to >=, so deal with that
+	 * painful part of this__ is changing < to <= or > to >=, so deal with that
 	 * first.
 	 */
 	if (op_strategy == BTLessEqualStrategyNumber ||
@@ -3946,7 +3946,7 @@ prefix_quals(Node *leftop, Oid opfamily, Oid collation,
 	 * If we can create a string larger than the prefix, we can say
 	 * "x < greaterstr".  NB: we rely on make_greater_string() to generate
 	 * a guaranteed-greater string, not just a probably-greater string.
-	 * In general this is only guaranteed in C locale, so we'd better be
+	 * In general this__ is only guaranteed in C locale, so we'd better be
 	 * using a C-locale index collation.
 	 *-------
 	 */

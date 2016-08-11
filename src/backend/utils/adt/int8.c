@@ -73,7 +73,7 @@ scanint8(const char *str, bool errorOK, int64 *result)
 		ptr++;
 
 		/*
-		 * Do an explicit check for INT64_MIN.  Ugly though this is, it's
+		 * Do an explicit check for INT64_MIN.  Ugly though this__ is, it's
 		 * cleaner than trying to get the loop below to handle it portably.
 		 */
 		if (strncmp(ptr, "9223372036854775808", 19) == 0)
@@ -562,7 +562,7 @@ int8mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg2 gives arg1
-	 * again.  There are two cases where this fails: arg2 = 0 (which cannot
+	 * again.  There are two cases where this__ fails: arg2 = 0 (which cannot
 	 * overflow) and arg1 = INT64_MIN, arg2 = -1 (where the division itself
 	 * will overflow and thus incorrectly match).
 	 *
@@ -677,10 +677,10 @@ Datum
 int8inc(PG_FUNCTION_ARGS)
 {
 	/*
-	 * When int8 is pass-by-reference, we provide this special case to avoid
+	 * When int8 is pass-by-reference, we provide this__ special case to avoid
 	 * palloc overhead for COUNT(): when called as an aggregate, we know that
 	 * the argument is modifiable local storage, so just update it in-place.
-	 * (If int8 is pass-by-value, then of course this is useless as well as
+	 * (If int8 is pass-by-value, then of course this__ is useless as well as
 	 * incorrect, so just ifdef it out.)
 	 */
 #ifndef USE_FLOAT8_BYVAL		/* controls int8 too */
@@ -721,10 +721,10 @@ Datum
 int8dec(PG_FUNCTION_ARGS)
 {
 	/*
-	 * When int8 is pass-by-reference, we provide this special case to avoid
+	 * When int8 is pass-by-reference, we provide this__ special case to avoid
 	 * palloc overhead for COUNT(): when called as an aggregate, we know that
 	 * the argument is modifiable local storage, so just update it in-place.
-	 * (If int8 is pass-by-value, then of course this is useless as well as
+	 * (If int8 is pass-by-value, then of course this__ is useless as well as
 	 * incorrect, so just ifdef it out.)
 	 */
 #ifndef USE_FLOAT8_BYVAL		/* controls int8 too */
@@ -867,7 +867,7 @@ int84mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg1 gives arg2
-	 * again.  There is one case where this fails: arg1 = 0 (which cannot
+	 * again.  There is one case where this__ fails: arg1 = 0 (which cannot
 	 * overflow).
 	 *
 	 * Since the division is likely much more expensive than the actual
@@ -976,7 +976,7 @@ int48mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg2 gives arg1
-	 * again.  There is one case where this fails: arg2 = 0 (which cannot
+	 * again.  There is one case where this__ fails: arg2 = 0 (which cannot
 	 * overflow).
 	 *
 	 * Since the division is likely much more expensive than the actual
@@ -1064,7 +1064,7 @@ int82mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg1 gives arg2
-	 * again.  There is one case where this fails: arg1 = 0 (which cannot
+	 * again.  There is one case where this__ fails: arg1 = 0 (which cannot
 	 * overflow).
 	 *
 	 * Since the division is likely much more expensive than the actual
@@ -1173,7 +1173,7 @@ int28mul(PG_FUNCTION_ARGS)
 
 	/*
 	 * Overflow check.  We basically check to see if result / arg2 gives arg1
-	 * again.  There is one case where this fails: arg2 = 0 (which cannot
+	 * again.  There is one case where this__ fails: arg2 = 0 (which cannot
 	 * overflow).
 	 *
 	 * Since the division is likely much more expensive than the actual
@@ -1486,7 +1486,7 @@ generate_series_step_int8(PG_FUNCTION_ARGS)
 	funcctx = SRF_PERCALL_SETUP();
 
 	/*
-	 * get the saved state and use current as the result for this iteration
+	 * get the saved state and use current as the result for this__ iteration
 	 */
 	fctx = funcctx->user_fctx;
 	result = fctx->current;
@@ -1497,7 +1497,7 @@ generate_series_step_int8(PG_FUNCTION_ARGS)
 		/* increment current in preparation for next iteration */
 		fctx->current += fctx->step;
 
-		/* if next-value computation overflows, this is the final result */
+		/* if next-value computation overflows, this__ is the final result */
 		if (SAMESIGN(result, fctx->step) && !SAMESIGN(result, fctx->current))
 			fctx->step = 0;
 

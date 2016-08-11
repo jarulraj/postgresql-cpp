@@ -549,7 +549,7 @@ pg_stat_get_activity(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this context")));
+						"allowed in this__ context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
@@ -764,7 +764,7 @@ pg_stat_get_activity(PG_FUNCTION_ARGS)
 		}
 		else
 		{
-			/* No permissions to view data about this session */
+			/* No permissions to view data about this__ session */
 			values[5] = CStringGetTextDatum("<insufficient privilege>");
 			nulls[4] = true;
 			nulls[6] = true;
@@ -892,7 +892,7 @@ pg_stat_get_backend_activity_start(PG_FUNCTION_ARGS)
 	result = beentry->st_activity_start_timestamp;
 
 	/*
-	 * No time recorded for start of current query -- this is the case if the
+	 * No time recorded for start of current query -- this__ is the case if the
 	 * user hasn't enabled query-level stats collection.
 	 */
 	if (result == 0)

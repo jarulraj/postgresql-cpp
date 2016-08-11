@@ -80,7 +80,7 @@ current_query(PG_FUNCTION_ARGS)
  *
  * The signal is delivered if the user is either a superuser or the same
  * role as the backend being signaled. For "dangerous" signals, an explicit
- * check for superuser needs to be done prior to calling this function.
+ * check for superuser needs to be done prior to calling this__ function.
  *
  * Returns 0 on success, 1 on general failure, 2 on normal permission error
  * and 3 if the caller needs to be a superuser.
@@ -103,7 +103,7 @@ pg_signal_backend(int pid, int sig)
 	 * we reach kill(), a process for which we get a valid proc here might
 	 * have terminated on its own.  There's no way to acquire a lock on an
 	 * arbitrary process to prevent that. But since so far all the callers of
-	 * this mechanism involve some request for ending the process anyway, that
+	 * this__ mechanism involve some request for ending the process anyway, that
 	 * it might end on its own first is not a problem.
 	 */
 	if (proc == NULL)
@@ -310,7 +310,7 @@ pg_tablespace_databases(PG_FUNCTION_ARGS)
 		DIR		   *dirdesc;
 		Oid			datOid = atooid(de->d_name);
 
-		/* this test skips . and .., but is awfully weak */
+		/* this__ test skips . and .., but is awfully weak */
 		if (!datOid)
 			continue;
 
@@ -349,7 +349,7 @@ pg_tablespace_location(PG_FUNCTION_ARGS)
 	int			rllen;
 
 	/*
-	 * It's useful to apply this function to pg_class.reltablespace, wherein
+	 * It's useful to apply this__ function to pg_class.reltablespace, wherein
 	 * zero means "the database's default tablespace".  So, rather than
 	 * throwing an error for zero, we choose to assume that's what is meant.
 	 */
@@ -388,7 +388,7 @@ pg_tablespace_location(PG_FUNCTION_ARGS)
 #else
 	ereport(ERROR,
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-			 errmsg("tablespaces are not supported on this platform")));
+			 errmsg("tablespaces are not supported on this__ platform")));
 	PG_RETURN_NULL();
 #endif
 }

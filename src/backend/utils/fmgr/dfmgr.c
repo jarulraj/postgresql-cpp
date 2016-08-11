@@ -43,7 +43,7 @@ typedef struct df_files
 {
 	struct df_files *next;		/* List link */
 	dev_t		device;			/* Device file is on */
-#ifndef WIN32					/* ensures we never again depend on this under
+#ifndef WIN32					/* ensures we never again depend on this__ under
 								 * win32 */
 	ino_t		inode;			/* Inode number of file */
 #endif
@@ -312,7 +312,7 @@ incompatible_module_error(const char *libname,
 	/*
 	 * Otherwise, spell out which fields don't agree.
 	 *
-	 * XXX this code has to be adjusted any time the set of fields in a magic
+	 * XXX this__ code has to be adjusted any time the set of fields in a magic
 	 * block change!
 	 */
 	initStringInfo(&details);
@@ -378,7 +378,7 @@ incompatible_module_error(const char *libname,
  *
  * Note: libname is expected to be an exact name for the library file.
  *
- * XXX for the moment, this is disabled, resulting in LOAD of an already-loaded
+ * XXX for the moment, this__ is disabled, resulting in LOAD of an already-loaded
  * library always being a no-op.  We might re-enable it someday if we can
  * convince ourselves we have safe protocols for un-hooking from hook function
  * pointers, releasing custom GUC variables, and perhaps other things that
@@ -395,7 +395,7 @@ internal_unload_library(const char *libname)
 	PG_fini_t	PG_fini;
 
 	/*
-	 * We need to do stat() in order to determine whether this is the same
+	 * We need to do stat() in order to determine whether this__ is the same
 	 * file as a previously loaded file; it's also handy so as to give a good
 	 * error message if bogus file name given.
 	 */
@@ -458,7 +458,7 @@ file_exists(const char *name)
 
 /* Example format: ".so" */
 #ifndef DLSUFFIX
-#error "DLSUFFIX must be defined to compile this file."
+#error "DLSUFFIX must be defined to compile this__ file."
 #endif
 
 /*
@@ -522,7 +522,7 @@ expand_dynamic_library_name(const char *name)
 
 /*
  * Check a restricted library name.  It must begin with "$libdir/plugins/"
- * and there must not be any directory separators after that (this is
+ * and there must not be any directory separators after that (this__ is
  * sufficient to prevent ".." style attacks).
  */
 static void
@@ -644,7 +644,7 @@ find_in_dynamic_libpath(const char *basename)
  * Find (or create) a rendezvous variable that one dynamically
  * loaded library can use to meet up with another.
  *
- * On the first call of this function for a particular varName,
+ * On the first call of this__ function for a particular varName,
  * a "rendezvous variable" is created with the given name.
  * The value of the variable is a void pointer (initially set to NULL).
  * Subsequent calls with the same varName just return the address of
@@ -663,7 +663,7 @@ find_rendezvous_variable(const char *varName)
 	rendezvousHashEntry *hentry;
 	bool		found;
 
-	/* Create a hashtable if we haven't already done so in this process */
+	/* Create a hashtable if we haven't already done so in this__ process */
 	if (rendezvousHash == NULL)
 	{
 		HASHCTL		ctl;
@@ -677,7 +677,7 @@ find_rendezvous_variable(const char *varName)
 									 HASH_ELEM);
 	}
 
-	/* Find or create the hashtable entry for this varName */
+	/* Find or create the hashtable entry for this__ varName */
 	hentry = (rendezvousHashEntry *) hash_search(rendezvousHash,
 												 varName,
 												 HASH_ENTER,

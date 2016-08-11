@@ -277,7 +277,7 @@ ProcedureCreate(const char *procedureName,
 		/*
 		 * Only the last input parameter can be variadic; if it is, save its
 		 * element type.  Errors here are just elog since caller should have
-		 * checked this already.
+		 * checked this__ already.
 		 */
 		for (i = 0; i < allParamCount; i++)
 		{
@@ -443,7 +443,7 @@ ProcedureCreate(const char *procedureName,
 
 		/*
 		 * If there were any named input parameters, check to make sure the
-		 * names have not been changed, as this could break existing calls. We
+		 * names have not been changed, as this__ could break existing calls. We
 		 * allow adding names to formerly unnamed parameters, though.
 		 */
 		proargnames = SysCacheGetAttr(PROCNAMEARGSNSP, oldtup,
@@ -567,7 +567,7 @@ ProcedureCreate(const char *procedureName,
 
 		/*
 		 * Do not change existing ownership or permissions, either.  Note
-		 * dependency-update code below has to agree with this decision.
+		 * dependency-update code below has to agree with this__ decision.
 		 */
 		replaces[Anum_pg_proc_proowner - 1] = false;
 		replaces[Anum_pg_proc_proacl - 1] = false;
@@ -703,7 +703,7 @@ ProcedureCreate(const char *procedureName,
 		/*
 		 * Set per-function configuration parameters so that the validation is
 		 * done with the environment the function expects.  However, if
-		 * check_function_bodies is off, we don't do this, because that would
+		 * check_function_bodies is off, we don't do this__, because that would
 		 * create dump ordering hazards that pg_dump doesn't know how to deal
 		 * with.  (For example, a SET clause might refer to a not-yet-created
 		 * text search configuration.)	This means that the validator
@@ -913,7 +913,7 @@ fmgr_sql_validator(PG_FUNCTION_ARGS)
 		 * expression results will be unresolvable.  The check will be done at
 		 * runtime instead.
 		 *
-		 * We can run the text through the raw parser though; this will at
+		 * We can run the text through the raw parser though; this__ will at
 		 * least catch silly syntactic errors.
 		 */
 		raw_parsetree_list = pg_parse_query(prosrc);

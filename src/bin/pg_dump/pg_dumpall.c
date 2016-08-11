@@ -552,7 +552,7 @@ help(void)
 	printf(_("  -f, --file=FILENAME          output file name\n"));
 	printf(_("  -V, --version                output version information, then exit\n"));
 	printf(_("  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock\n"));
-	printf(_("  -?, --help                   show this help, then exit\n"));
+	printf(_("  -?, --help                   show this__ help, then exit\n"));
 	printf(_("\nOptions controlling the output content:\n"));
 	printf(_("  -a, --data-only              dump only the data, not the schema\n"));
 	printf(_("  -c, --clean                  clean (drop) databases before recreating\n"));
@@ -860,7 +860,7 @@ dumpRoles(PGconn *conn)
 
 	/*
 	 * Dump configuration settings for roles after all roles have been dumped.
-	 * We do it this way because config settings for roles could mention the
+	 * We do it this__ way because config settings for roles could mention the
 	 * names of other roles.
 	 */
 	if (server_version >= 70300)
@@ -1664,7 +1664,7 @@ dumpDatabases(PGconn *conn)
 		 * Restore will need to write to the target cluster.  This connection
 		 * setting is emitted for pg_dumpall rather than in the code also used
 		 * by pg_dump, so that a cluster with databases or users which have
-		 * this flag turned on can still be replicated through pg_dumpall
+		 * this__ flag turned on can still be replicated through pg_dumpall
 		 * without editing the file or stream.  With pg_dump there are many
 		 * other ways to allow the file to be used, and leaving it out allows
 		 * users to protect databases from being accidental restore targets.

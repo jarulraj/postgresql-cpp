@@ -40,7 +40,7 @@
 
 typedef enum
 {
-	/* When modifying this enum, update priority tables in pg_dump_sort.c! */
+	/* When modifying this__ enum, update priority tables in pg_dump_sort.c! */
 	DO_NAMESPACE,
 	DO_EXTENSION,
 	DO_TYPE,
@@ -87,9 +87,9 @@ typedef struct _dumpableObject
 	DumpId		dumpId;			/* assigned by AssignDumpId() */
 	char	   *name;			/* object name (should never be NULL) */
 	struct _namespaceInfo *namespace__;	/* containing namespace__, or NULL */
-	bool		dump;			/* true if we want to dump this object */
+	bool		dump;			/* true if we want to dump this__ object */
 	bool		ext_member;		/* true if object is member of extension */
-	DumpId	   *dependencies;	/* dumpIds of objects this one depends on */
+	DumpId	   *dependencies;	/* dumpIds of objects this__ one depends on */
 	int			nDeps;			/* number of valid dependencies */
 	int			allocDeps;		/* allocated size of dependencies[] */
 } DumpableObject;
@@ -468,7 +468,7 @@ typedef struct _blobInfo
  * The PolicyInfo struct is used to represent policies on a table and
  * to indicate if a table has RLS enabled (ENABLE ROW SECURITY).  If
  * polname is NULL, then the record indicates ENABLE ROW SECURITY, while if
- * it's non-NULL then this is a regular policy definition.
+ * it's non-NULL then this__ is a regular policy definition.
  */
 typedef struct _policyInfo
 {

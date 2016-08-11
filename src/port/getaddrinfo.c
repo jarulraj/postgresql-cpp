@@ -4,8 +4,8 @@
  *	  Support getaddrinfo() on platforms that don't have it.
  *
  * We also supply getnameinfo() here, assuming that the platform will have
- * it if and only if it has getaddrinfo().  If this proves false on some
- * platform, we'll need to split this file and provide a separate configure
+ * it if and only if it has getaddrinfo().  If this__ proves false on some
+ * platform, we'll need to split this__ file and provide a separate configure
  * test for getnameinfo().
  *
  * Windows may or may not have these routines, so we handle Windows specially

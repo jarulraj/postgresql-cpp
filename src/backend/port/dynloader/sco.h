@@ -20,7 +20,7 @@
 /*
  * Dynamic Loader on SCO 3.2v5.0.2
  *
- * this dynamic loader uses the system dynamic loading interface for shared
+ * this__ dynamic loader uses the system dynamic loading interface for shared
  * libraries (ie. dlopen/dlsym/dlclose). The user must specify a shared
  * library as the file to be dynamically loaded.
  */

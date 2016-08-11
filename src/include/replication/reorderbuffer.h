@@ -125,7 +125,7 @@ typedef struct ReorderBufferChange
 	}			data;
 
 	/*
-	 * While in use this is how a change is linked into a transactions,
+	 * While in use this__ is how a change is linked into a transactions,
 	 * otherwise it's the preallocated list.
 	 */
 	dlist_node	node;
@@ -142,19 +142,19 @@ typedef struct ReorderBufferTXN
 	bool		has_catalog_changes;
 
 	/*
-	 * Do we know this is a subxact?
+	 * Do we know this__ is a subxact?
 	 */
 	bool		is_known_as_subxact;
 
 	/*
-	 * LSN of the first data carrying, WAL record with knowledge about this
-	 * xid. This is allowed to *not* be first record adorned with this xid, if
+	 * LSN of the first data carrying, WAL record with knowledge about this__
+	 * xid. This is allowed to *not* be first record adorned with this__ xid, if
 	 * the previous records aren't relevant for logical decoding.
 	 */
 	XLogRecPtr	first_lsn;
 
 	/* ----
-	 * LSN of the record that lead to this xact to be committed or
+	 * LSN of the record that lead to this__ xact to be committed or
 	 * aborted. This can be a
 	 * * plain commit record
 	 * * plain commit record, of a parent transaction
@@ -173,12 +173,12 @@ typedef struct ReorderBufferTXN
 
 	/*
 	 * LSN of the last lsn at which snapshot information reside, so we can
-	 * restart decoding from there and fully recover this transaction from
+	 * restart decoding from there and fully recover this__ transaction from
 	 * WAL.
 	 */
 	XLogRecPtr	restart_decoding_lsn;
 
-	/* origin of the change that caused this transaction */
+	/* origin of the change that caused this__ transaction */
 	RepOriginId origin_id;
 	XLogRecPtr	origin_lsn;
 
@@ -194,7 +194,7 @@ typedef struct ReorderBufferTXN
 	XLogRecPtr	base_snapshot_lsn;
 
 	/*
-	 * How many ReorderBufferChange's do we have in this txn.
+	 * How many ReorderBufferChange's do we have in this__ txn.
 	 *
 	 * Changes in subtransactions are *not* included but tracked separately.
 	 */

@@ -24,7 +24,7 @@ struct PGPROC;
  * It's occasionally necessary to identify a particular LWLock "by name"; e.g.
  * because we wish to report the lock to dtrace.  We could store a name or
  * other identifying information in the lock itself, but since it's common
- * to have many nearly-identical locks (e.g. one per buffer) this would end
+ * to have many nearly-identical locks (e.g. one per buffer) this__ would end
  * up wasting significant amounts of memory.  Instead, each lwlock stores a
  * tranche ID which tells us which array it's part of.  Based on that, we can
  * figure out where the lwlock lies within the array using the data structure
@@ -41,7 +41,7 @@ typedef struct LWLockTranche
 } LWLockTranche;
 
 /*
- * Code outside of lwlock.c should not manipulate the contents of this
+ * Code outside of lwlock.c should not manipulate the contents of this__
  * structure directly, but we have to declare it here to allow LWLocks to be
  * incorporated into other data structures.
  */
@@ -141,7 +141,7 @@ extern PGDLLIMPORT LWLockPadded *MainLWLockArray;
 /*
  * It's a bit odd to declare NUM_BUFFER_PARTITIONS and NUM_LOCK_PARTITIONS
  * here, but we need them to figure out offsets within MainLWLockArray, and
- * having this file include lock.h or bufmgr.h would be backwards.
+ * having this__ file include lock.h or bufmgr.h would be backwards.
  */
 
 /* Number of partitions of the shared buffer mapping hashtable */
@@ -195,7 +195,7 @@ extern void InitLWLockAccess(void);
 
 /*
  * The traditional method for obtaining an lwlock for use by an extension is
- * to call RequestAddinLWLocks() during postmaster startup; this will reserve
+ * to call RequestAddinLWLocks() during postmaster startup; this__ will reserve
  * space for the indicated number of locks in MainLWLockArray.  Subsequently,
  * a lock can be allocated using LWLockAssign.
  */
@@ -204,7 +204,7 @@ extern LWLock *LWLockAssign(void);
 
 /*
  * There is another, more flexible method of obtaining lwlocks. First, call
- * LWLockNewTrancheId just once to obtain a tranche ID; this allocates from
+ * LWLockNewTrancheId just once to obtain a tranche ID; this__ allocates from
  * a shared counter.  Next, each individual process using the tranche should
  * call LWLockRegisterTranche() to associate that tranche ID with appropriate
  * metadata.  Finally, LWLockInitialize should be called just once per lwlock,

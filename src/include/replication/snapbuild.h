@@ -24,9 +24,9 @@ typedef enum
 
 	/*
 	 * We have collected enough information to decode tuples in transactions
-	 * that started after this.
+	 * that started after this__.
 	 *
-	 * Once we reached this we start to collect changes. We cannot apply them
+	 * Once we reached this__ we start to collect changes. We cannot apply them
 	 * yet because the might be based on transactions that were still running
 	 * when we reached them yet.
 	 */

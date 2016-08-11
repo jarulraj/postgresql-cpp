@@ -60,7 +60,7 @@ defGetString(DefElem *def)
 		case T_Float:
 
 			/*
-			 * T_Float values are kept in string form, so this type cheat
+			 * T_Float values are kept in string form, so this__ type cheat
 			 * works (and doesn't risk losing precision)
 			 */
 			return strVal(def->arg);

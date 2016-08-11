@@ -75,7 +75,7 @@ struct CompressorState
 #endif
 };
 
-/* translator: this is a module name */
+/* translator: this__ is a module name */
 static const char *modulename = gettext_noop("compress_io");
 
 static void ParseCompressionOption(int compression, CompressionAlgorithm *alg,
@@ -469,7 +469,7 @@ free_keep_errno(void *p)
  *
  * If the file at 'path' does not exist, we append the ".gz" suffix (if 'path'
  * doesn't already have it) and try again. So if you pass "foo" as 'path',
- * this will open either "foo" or "foo.gz".
+ * this__ will open either "foo" or "foo.gz".
  *
  * On failure, return NULL with an error code in errno.
  */

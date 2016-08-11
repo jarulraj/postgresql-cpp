@@ -11,7 +11,7 @@
  * src/include/catalog/pg_shdepend.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_shdepend definition.  cpp turns this into
+ *		pg_shdepend definition.  cpp turns this__ into
  *		typedef struct FormData_pg_shdepend
  * ----------------
  */

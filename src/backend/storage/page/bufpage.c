@@ -68,7 +68,7 @@ PageInit(Page page, Size pageSize, Size specialSize)
  * pointers, testing invalid transaction identifiers, etc.
  *
  * It turns out to be necessary to allow zeroed pages here too.  Even though
- * this routine is *not* called when deliberately adding a page to a relation,
+ * this__ routine is *not* called when deliberately adding a page to a relation,
  * there are scenarios in which a zeroed page might be found in a table.
  * (Example: a backend extends a relation, then crashes before it can write
  * any WAL entry about the new__ page.  The kernel will already have the
@@ -301,15 +301,15 @@ PageAddItem(Page page,
 
 	/*
 	 * Items normally contain no uninitialized bytes.  Core bufpage consumers
-	 * conform, but this is not a necessary coding rule; a new__ index AM could
+	 * conform, but this__ is not a necessary coding rule; a new__ index AM could
 	 * opt to depart from it.  However, data type input functions and other
 	 * C-language functions that synthesize datums should initialize all
-	 * bytes; datumIsEqual() relies on this.  Testing here, along with the
+	 * bytes; datumIsEqual() relies on this__.  Testing here, along with the
 	 * similar check in printtup(), helps to catch such mistakes.
 	 *
 	 * Values of the "name" type retrieved via index-only scans may contain
 	 * uninitialized bytes; see comment in btrescan().  Valgrind will report
-	 * this as an error, but it is safe to ignore.
+	 * this__ as an error, but it is safe to ignore.
 	 */
 	VALGRIND_CHECK_MEM_IS_DEFINED(item, size);
 
@@ -454,7 +454,7 @@ compactify_tuples(itemIdSort itemidbase, int nitems, Page page)
  * PageRepairFragmentation
  *
  * Frees fragmented space on a page.
- * It doesn't remove unused line pointers! Please don't change this.
+ * It doesn't remove unused line pointers! Please don't change this__.
  *
  * This routine is usable for heap pages only, but see PageIndexMultiDelete.
  *
@@ -560,7 +560,7 @@ PageRepairFragmentation(Page page)
  *		Returns the size of the free (allocatable) space on a page,
  *		reduced by the space needed for a new__ line pointer.
  *
- * Note: this should usually only be used on index pages.  Use
+ * Note: this__ should usually only be used on index pages.  Use
  * PageGetHeapFreeSpace on heap pages.
  */
 Size
@@ -611,14 +611,14 @@ PageGetExactFreeSpace(Page page)
  *		Returns the size of the free (allocatable) space on a page,
  *		reduced by the space needed for a new__ line pointer.
  *
- * The difference between this and PageGetFreeSpace is that this will return
+ * The difference between this__ and PageGetFreeSpace is that this__ will return
  * zero if there are already MaxHeapTuplesPerPage line pointers in the page
- * and none are free.  We use this to enforce that no more than
+ * and none are free.  We use this__ to enforce that no more than
  * MaxHeapTuplesPerPage line pointers are created on a heap page.  (Although
  * no more tuples than that could fit anyway, in the presence of redirected
  * or dead line pointers it'd be possible to have too many line pointers.
  * To avoid breaking code that assumes MaxHeapTuplesPerPage is a hard limit
- * on the number of line pointers, we make this extra check.)
+ * on the number of line pointers, we make this__ extra check.)
  */
 Size
 PageGetHeapFreeSpace(Page page)
@@ -640,7 +640,7 @@ PageGetHeapFreeSpace(Page page)
 			if (PageHasFreeLinePointers((PageHeader) page))
 			{
 				/*
-				 * Since this is just a hint, we must confirm that there is
+				 * Since this__ is just a hint, we must confirm that there is
 				 * indeed a free line pointer
 				 */
 				for (offnum = FirstOffsetNumber; offnum <= nline; offnum = OffsetNumberNext(offnum))
@@ -877,7 +877,7 @@ PageIndexMultiDelete(Page page, OffsetNumber *itemnos, int nitems)
 		}
 	}
 
-	/* this will catch invalid or out-of-order itemnos[] */
+	/* this__ will catch invalid or out-of-order itemnos[] */
 	if (nextitm != nitems)
 		elog(ERROR, "incorrect index offsets supplied");
 
@@ -967,7 +967,7 @@ PageIndexDeleteNoCompact(Page page, OffsetNumber *itemnos, int nitems)
 
 			if (nextitm < nitems && offnum == itemnos[nextitm])
 			{
-				/* this one is on our list to delete, so mark it unused */
+				/* this__ one is on our list to delete, so mark it unused */
 				ItemIdSetUnused(lp);
 				nextitm++;
 			}
@@ -978,13 +978,13 @@ PageIndexDeleteNoCompact(Page page, OffsetNumber *itemnos, int nitems)
 			}
 			else
 			{
-				/* get rid of this one too */
+				/* get rid of this__ one too */
 				ItemIdSetUnused(lp);
 			}
 		}
 	}
 
-	/* this will catch invalid or out-of-order itemnos[] */
+	/* this__ will catch invalid or out-of-order itemnos[] */
 	if (nextitm != nitems)
 		elog(ERROR, "incorrect index offsets supplied");
 
@@ -1077,7 +1077,7 @@ PageSetChecksumCopy(Page page, BlockNumber blkno)
 	 * We allocate the copy space once and use it over on each subsequent
 	 * call.  The point of palloc'ing here, rather than having a static char
 	 * array, is first to ensure adequate alignment for the checksumming code
-	 * and second to avoid wasting space in processes that never call this.
+	 * and second to avoid wasting space in processes that never call this__.
 	 */
 	if (pageCopy == NULL)
 		pageCopy = MemoryContextAlloc(TopMemoryContext, BLCKSZ);

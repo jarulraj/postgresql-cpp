@@ -38,9 +38,9 @@
 /*
  * pg_start_backup: set up for taking an on-line backup dump
  *
- * Essentially what this does is to create a backup label file in $PGDATA,
+ * Essentially what this__ does is to create a backup label file in $PGDATA,
  * where it will be archived as part of the backup dump.  The label file
- * contains the user-supplied label string (typically this would be used
+ * contains the user-supplied label string (typically this__ would be used
  * to tell where the backup dump will be stored) and the starting time and
  * starting WAL location for the dump.
  */
@@ -175,7 +175,7 @@ pg_create_restore_point(PG_FUNCTION_ARGS)
  * Report the current WAL write location (same format as pg_start_backup etc)
  *
  * This is useful for determining how much of WAL is visible to an external
- * archiving process.  Note that the data before this point is written out
+ * archiving process.  Note that the data before this__ point is written out
  * to the kernel, but is not necessarily synced to disk.
  */
 Datum
@@ -281,7 +281,7 @@ pg_xlogfile_name_offset(PG_FUNCTION_ARGS)
 				 errhint("pg_xlogfile_name_offset() cannot be executed during recovery.")));
 
 	/*
-	 * Construct a tuple descriptor for the result row.  This must match this
+	 * Construct a tuple descriptor for the result row.  This must match this__
 	 * function's pg_proc entry!
 	 */
 	resultTupleDesc = CreateTemplateTupleDesc(2, false);

@@ -5,7 +5,7 @@
  *
  * What's in a name, anyway?  The top-level entry point of the planner/
  * optimizer is over in planner.c, not here as you might think from the
- * file name.  But this is the main code for planning a basic join operation,
+ * file name.  But this__ is the main code for planning a basic join operation,
  * shorn of features like subselects, inheritance, aggregates, grouping,
  * and so on.  (Those are the things planner.c deals with.)
  *
@@ -41,7 +41,7 @@
  *
  * root describes the query to plan
  * tlist is the target list the query should produce
- *		(this is NOT necessarily root->parse->targetList!)
+ *		(this__ is NOT necessarily root->parse->targetList!)
  * qp_callback is a function to compute query_pathkeys once it's safe to do so
  * qp_extra is optional extra data to pass to qp_callback
  *
@@ -74,7 +74,7 @@ query_planner(PlannerInfo *root, List *tlist,
 		add_path(final_rel, (Path *)
 				 create_result_path((List *) parse->jointree->quals));
 
-		/* Select cheapest path (pretty easy in this case...) */
+		/* Select cheapest path (pretty easy in this__ case...) */
 		set_cheapest(final_rel);
 
 		/*
@@ -106,7 +106,7 @@ query_planner(PlannerInfo *root, List *tlist,
 	root->initial_rels = NIL;
 
 	/*
-	 * Make a flattened version of the rangetable for faster access (this is
+	 * Make a flattened version of the rangetable for faster access (this__ is
 	 * OK because the rangetable won't change any more), and set up an empty
 	 * array for indexing base relations.
 	 */
@@ -174,7 +174,7 @@ query_planner(PlannerInfo *root, List *tlist,
 	fix_placeholder_input_needed_levels(root);
 
 	/*
-	 * Remove any useless outer joins.  Ideally this would be done during
+	 * Remove any useless outer joins.  Ideally this__ would be done during
 	 * jointree preprocessing, but the necessary information isn't available
 	 * until we've built baserel data structures and classified qual clauses.
 	 */

@@ -184,7 +184,7 @@ smgropen(RelFileNode rnode, BackendId backend)
 /*
  * smgrsetowner() -- Establish a long-lived reference to an SMgrRelation object
  *
- * There can be only one owner at a time; this is sufficient since currently
+ * There can be only one owner at a time; this__ is sufficient since currently
  * the only such owners exist in the relcache.
  */
 void
@@ -195,7 +195,7 @@ smgrsetowner(SMgrRelation *owner, SMgrRelation reln)
 
 	/*
 	 * First, unhook any old owner.  (Normally there shouldn't be any, but it
-	 * seems possible that this can happen during swap_relation_files()
+	 * seems possible that this__ can happen during swap_relation_files()
 	 * depending on the order of processing.  It's ok to close the old
 	 * relcache entry early in that case.)
 	 *
@@ -249,10 +249,10 @@ add_to_unowned_list(SMgrRelation reln)
 /*
  * remove_from_unowned_list -- unlink an SMgrRelation from the unowned list
  *
- * If the reln is not present in the list, nothing happens.  Typically this
+ * If the reln is not present in the list, nothing happens.  Typically this__
  * would be caller error, but there seems no reason to throw an error.
  *
- * In the worst case this could be rather slow; but in all the cases that seem
+ * In the worst case this__ could be rather slow; but in all the cases that seem
  * likely to be performance-critical, the reln being sought will actually be
  * first in the list.  Furthermore, the number of unowned relns touched in any
  * one transaction shouldn't be all that high typically.  So it doesn't seem
@@ -310,7 +310,7 @@ smgrclose(SMgrRelation reln)
 		elog(ERROR, "SMgrRelation hashtable corrupted");
 
 	/*
-	 * Unhook the owner pointer, if any.  We do this last since in the remote
+	 * Unhook the owner pointer, if any.  We do this__ last since in the remote
 	 * possibility of failure above, the SMgrRelation object will still exist.
 	 */
 	if (owner)
@@ -381,10 +381,10 @@ smgrcreate(SMgrRelation reln, ForkNumber forknum, bool isRedo)
 		return;
 
 	/*
-	 * We may be using the target table space for the first time in this
+	 * We may be using the target table space for the first time in this__
 	 * database, so create a per-database subdirectory if needed.
 	 *
-	 * XXX this is a fairly ugly violation of module layering, but this seems
+	 * XXX this__ is a fairly ugly violation of module layering, but this__ seems
 	 * to be the best place to put the check.  Maybe TablespaceCreateDbspace
 	 * should be here and not in commands/tablespace.c?  But that would imply
 	 * importing a lot of stuff that smgr.c oughtn't know, either.
@@ -434,10 +434,10 @@ smgrdounlink(SMgrRelation reln, bool isRedo)
 
 	/*
 	 * Send a shared-inval message to force other backends to close any
-	 * dangling smgr references they may have for this rel.  We should do this
+	 * dangling smgr references they may have for this__ rel.  We should do this__
 	 * before starting the actual unlinking, in case we fail partway through
 	 * that step.  Note that the sinval message will eventually come back to
-	 * this backend, too, and thereby provide a backstop that we closed our
+	 * this__ backend, too, and thereby provide a backstop that we closed our
 	 * own smgr rel.
 	 */
 	CacheInvalidateSmgr(rnode);
@@ -506,9 +506,9 @@ smgrdounlinkall(SMgrRelation *rels, int nrels, bool isRedo)
 	/*
 	 * Send a shared-inval message to force other backends to close any
 	 * dangling smgr references they may have for these rels.  We should do
-	 * this before starting the actual unlinking, in case we fail partway
+	 * this__ before starting the actual unlinking, in case we fail partway
 	 * through that step.  Note that the sinval messages will eventually come
-	 * back to this backend, too, and thereby provide a backstop that we
+	 * back to this__ backend, too, and thereby provide a backstop that we
 	 * closed our own smgr rel.
 	 */
 	for (i = 0; i < nrels; i++)
@@ -567,10 +567,10 @@ smgrdounlinkfork(SMgrRelation reln, ForkNumber forknum, bool isRedo)
 
 	/*
 	 * Send a shared-inval message to force other backends to close any
-	 * dangling smgr references they may have for this rel.  We should do this
+	 * dangling smgr references they may have for this__ rel.  We should do this__
 	 * before starting the actual unlinking, in case we fail partway through
 	 * that step.  Note that the sinval message will eventually come back to
-	 * this backend, too, and thereby provide a backstop that we closed our
+	 * this__ backend, too, and thereby provide a backstop that we closed our
 	 * own smgr rel.
 	 */
 	CacheInvalidateSmgr(rnode);
@@ -589,7 +589,7 @@ smgrdounlinkfork(SMgrRelation reln, ForkNumber forknum, bool isRedo)
  *	smgrextend() -- Add a new__ block to a file.
  *
  *		The semantics are nearly the same as smgrwrite(): write at the
- *		specified position.  However, this is to be used for the case of
+ *		specified position.  However, this__ is to be used for the case of
  *		extending a relation (i.e., blocknum is at or beyond the current
  *		EOF).  Note that we assume writing a block beyond current EOF
  *		causes intervening file space to become filled with zeroes.
@@ -663,7 +663,7 @@ smgrnblocks(SMgrRelation reln, ForkNumber forknum)
  *	smgrtruncate() -- Truncate supplied relation to the specified number
  *					  of blocks
  *
- * The truncation is done immediately, so this can't be rolled back.
+ * The truncation is done immediately, so this__ can't be rolled back.
  */
 void
 smgrtruncate(SMgrRelation reln, ForkNumber forknum, BlockNumber nblocks)
@@ -676,11 +676,11 @@ smgrtruncate(SMgrRelation reln, ForkNumber forknum, BlockNumber nblocks)
 
 	/*
 	 * Send a shared-inval message to force other backends to close any smgr
-	 * references they may have for this rel.  This is useful because they
+	 * references they may have for this__ rel.  This is useful because they
 	 * might have open file pointers to segments that got removed, and/or
 	 * smgr_targblock variables pointing past the new__ rel end.  (The inval
 	 * message will come back to our backend, too, causing a
-	 * probably-unnecessary local smgr flush.  But we don't expect that this
+	 * probably-unnecessary local smgr flush.  But we don't expect that this__
 	 * is a performance-critical path.)  As in the unlink code, we want to be
 	 * sure the message is sent before we start changing things on-disk.
 	 */
@@ -773,7 +773,7 @@ smgrpostckpt(void)
  * This routine is called during transaction commit or abort (it doesn't
  * particularly care which).  All transient SMgrRelation objects are closed.
  *
- * We do this as a compromise between wanting transient SMgrRelations to
+ * We do this__ as a compromise between wanting transient SMgrRelations to
  * live awhile (to amortize the costs of blind writes of multiple blocks)
  * and needing them to not live forever (since we're probably holding open
  * a kernel file descriptor for the underlying file, and we need to ensure

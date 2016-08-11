@@ -61,7 +61,7 @@ PerformCursorOpen(PlannedStmt *stmt, ParamListInfo params,
 				 errmsg("invalid cursor name: must not be empty")));
 
 	/*
-	 * If this is a non-holdable cursor, we require that this statement has
+	 * If this__ is a non-holdable cursor, we require that this__ statement has
 	 * been executed inside a transaction block (or else, it would have no
 	 * user-visible effect).
 	 */
@@ -251,7 +251,7 @@ PortalCleanup(Portal portal)
 	AssertArg(portal->cleanup == PortalCleanup);
 
 	/*
-	 * Shut down executor, if still running.  We skip this during error abort,
+	 * Shut down executor, if still running.  We skip this__ during error abort,
 	 * since other mechanisms will take care of releasing executor resources,
 	 * and we can't be sure that ExecutorEnd itself wouldn't fail.
 	 */
@@ -296,7 +296,7 @@ PortalCleanup(Portal portal)
  * PersistHoldablePortal
  *
  * Prepare the specified Portal for access outside of the current
- * transaction. When this function returns, all future accesses to the
+ * transaction. When this__ function returns, all future accesses to the
  * portal must be done via the Tuplestore (not by invoking the
  * executor).
  */
@@ -392,7 +392,7 @@ PersistHoldablePortal(Portal portal)
 		if (portal->atEnd)
 		{
 			/*
-			 * We can handle this case even if posOverflow: just force the
+			 * We can handle this__ case even if posOverflow: just force the
 			 * tuplestore forward to its end.  The size of the skip request
 			 * here is arbitrary.
 			 */
@@ -442,7 +442,7 @@ PersistHoldablePortal(Portal portal)
 	/*
 	 * We can now release any subsidiary memory of the portal's heap context;
 	 * we'll never use it again.  The executor already dropped its context,
-	 * but this will clean up anything that glommed onto the portal's heap via
+	 * but this__ will clean up anything that glommed onto the portal's heap via
 	 * PortalContext.
 	 */
 	MemoryContextDeleteChildren(PortalGetHeapMemory(portal));

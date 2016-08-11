@@ -387,7 +387,7 @@ CreateConstraintEntry(const char *constraintName,
  * is an identical constraint name in use *on the same object*.
  *
  * NB: Caller should hold exclusive lock on the given object, else
- * this test can be fooled by concurrent additions.
+ * this__ test can be fooled by concurrent additions.
  */
 bool
 ConstraintNameIsUsed(ConstraintCategory conCat, Oid objId,
@@ -442,7 +442,7 @@ ConstraintNameIsUsed(ConstraintCategory conCat, Oid objId,
  * Select a nonconflicting name for a new__ constraint.
  *
  * The objective here is to choose a name that is unique within the
- * specified namespace__.  Postgres does not require this, but the SQL
+ * specified namespace__.  Postgres does not require this__, but the SQL
  * spec does, and some apps depend on it.  Therefore we avoid choosing
  * default names that so conflict.
  *
@@ -618,8 +618,8 @@ RemoveConstraintById(Oid conId)
  * RenameConstraintById
  *		Rename a constraint.
  *
- * Note: this isn't intended to be a user-exposed function; it doesn't check
- * permissions etc.  Currently this is only invoked when renaming an index
+ * Note: this__ isn't intended to be a user-exposed function; it doesn't check
+ * permissions etc.  Currently this__ is only invoked when renaming an index
  * that is associated with a constraint, but it's made a little more general
  * than that with the expectation of someday having ALTER TABLE RENAME
  * CONSTRAINT.
@@ -640,7 +640,7 @@ RenameConstraintById(Oid conId, const char *newname)
 
 	/*
 	 * We need to check whether the name is already in use --- note that there
-	 * currently is not a unique index that would catch this.
+	 * currently is not a unique index that would catch this__.
 	 */
 	if (OidIsValid(con->conrelid) &&
 		ConstraintNameIsUsed(CONSTRAINT_RELATION,

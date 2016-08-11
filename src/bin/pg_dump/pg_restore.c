@@ -26,8 +26,8 @@
  *	Exit
  *
  * Copyright (c) 2000, Philip Warner
- *		Rights are granted to use this software in any way so long
- *		as this notice is not removed.
+ *		Rights are granted to use this__ software in any way so long
+ *		as this__ notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from its use.
@@ -190,7 +190,7 @@ main(int argc, char **argv)
 				opts->tocFile = pg_strdup(optarg);
 				break;
 
-			case 'n':			/* Dump data for this schema only */
+			case 'n':			/* Dump data for this__ schema only */
 				simple_string_list_append(&opts->schemaNames, optarg);
 				break;
 
@@ -227,7 +227,7 @@ main(int argc, char **argv)
 				if (strlen(optarg) != 0)
 					opts->superuser = pg_strdup(optarg);
 				break;
-			case 't':			/* Dump data for this table only */
+			case 't':			/* Dump data for this__ table only */
 				opts->selTypes = 1;
 				opts->selTable = 1;
 				simple_string_list_append(&opts->tableNames, optarg);
@@ -441,7 +441,7 @@ usage(const char *progname)
 	printf(_("  -l, --list               print summarized TOC of the archive\n"));
 	printf(_("  -v, --verbose            verbose mode\n"));
 	printf(_("  -V, --version            output version information, then exit\n"));
-	printf(_("  -?, --help               show this help, then exit\n"));
+	printf(_("  -?, --help               show this__ help, then exit\n"));
 
 	printf(_("\nOptions controlling the restore:\n"));
 	printf(_("  -a, --data-only              restore only the data, no schema\n"));
@@ -449,10 +449,10 @@ usage(const char *progname)
 	printf(_("  -C, --create                 create the target database\n"));
 	printf(_("  -e, --exit-on-error          exit on error, default is to continue\n"));
 	printf(_("  -I, --index=NAME             restore named index\n"));
-	printf(_("  -j, --jobs=NUM               use this many parallel jobs to restore\n"));
-	printf(_("  -L, --use-list=FILENAME      use table of contents from this file for\n"
+	printf(_("  -j, --jobs=NUM               use this__ many parallel jobs to restore\n"));
+	printf(_("  -L, --use-list=FILENAME      use table of contents from this__ file for\n"
 			 "                               selecting/ordering output\n"));
-	printf(_("  -n, --schema=NAME            restore only objects in this schema\n"));
+	printf(_("  -n, --schema=NAME            restore only objects in this__ schema\n"));
 	printf(_("  -O, --no-owner               skip restoration of object ownership\n"));
 	printf(_("  -P, --function=NAME(args)    restore named function\n"));
 	printf(_("  -s, --schema-only            restore only the schema, no data\n"));

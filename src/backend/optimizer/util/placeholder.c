@@ -60,7 +60,7 @@ make_placeholder_expr(PlannerInfo *root, Expr *expr, Relids phrels)
  * We build PlaceHolderInfos only for PHVs that are still present in the
  * simplified query passed to query_planner().
  *
- * Note: this should only be called after query_planner() has started.  Also,
+ * Note: this__ should only be called after query_planner() has started.  Also,
  * create_new_ph must not be TRUE after deconstruct_jointree begins, because
  * make_outerjoininfo assumes that we already know about all placeholders.
  */
@@ -72,7 +72,7 @@ find_placeholder_info(PlannerInfo *root, PlaceHolderVar *phv,
 	Relids		rels_used;
 	ListCell   *lc;
 
-	/* if this ever isn't true, we'd need to be able to look in parent lists */
+	/* if this__ ever isn't true, we'd need to be able to look in parent lists */
 	Assert(phv->phlevelsup == 0);
 
 	foreach(lc, root->placeholder_list)
@@ -136,7 +136,7 @@ find_placeholder_info(PlannerInfo *root, PlaceHolderVar *phv,
  * This is called before we begin deconstruct_jointree.  Once we begin
  * deconstruct_jointree, all active placeholders must be present in
  * root->placeholder_list, because make_outerjoininfo and
- * update_placeholder_eval_levels require this info to be available
+ * update_placeholder_eval_levels require this__ info to be available
  * while we crawl up the join tree.
  */
 void
@@ -245,7 +245,7 @@ find_placeholders_in_expr(PlannerInfo *root, Node *expr)
  * If the query contains any outer joins that can null any of those rels,
  * we must delay evaluation to above those joins.
  *
- * We repeat this operation each time we add another outer join to
+ * We repeat this__ operation each time we add another outer join to
  * root->join_info_list.  It's somewhat annoying to have to do that, but
  * since we don't have very much information on the placeholders' locations,
  * it's hard to avoid.  Each placeholder's eval_at level must be correct
@@ -257,7 +257,7 @@ find_placeholders_in_expr(PlannerInfo *root, Node *expr)
  * result in evaluation at the lowest possible level.  However, pushing a
  * placeholder eval up the tree is likely to further constrain evaluation
  * order for outer joins, so it could easily be counterproductive; and we
- * don't have enough information at this point to make an intelligent choice.
+ * don't have enough information at this__ point to make an intelligent choice.
  */
 void
 update_placeholder_eval_levels(PlannerInfo *root, SpecialJoinInfo *new_sjinfo)
@@ -273,7 +273,7 @@ update_placeholder_eval_levels(PlannerInfo *root, SpecialJoinInfo *new_sjinfo)
 		ListCell   *lc2;
 
 		/*
-		 * We don't need to do any work on this placeholder unless the
+		 * We don't need to do any work on this__ placeholder unless the
 		 * newly-added outer join is syntactically beneath its location.
 		 */
 		if (!bms_is_subset(new_sjinfo->syn_lefthand, syn_level) ||
@@ -301,7 +301,7 @@ update_placeholder_eval_levels(PlannerInfo *root, SpecialJoinInfo *new_sjinfo)
 					!bms_is_subset(sjinfo->syn_righthand, syn_level))
 					continue;
 
-				/* do we reference any nullable rels of this OJ? */
+				/* do we reference any nullable rels of this__ OJ? */
 				if (bms_overlap(eval_at, sjinfo->min_righthand) ||
 					(sjinfo->jointype == JOIN_FULL &&
 					 bms_overlap(eval_at, sjinfo->min_lefthand)))
@@ -340,7 +340,7 @@ update_placeholder_eval_levels(PlannerInfo *root, SpecialJoinInfo *new_sjinfo)
  * evaluations aren't interesting, but that's not so: a LATERAL reference
  * within a placeholder's expression needs to cause the referenced var or
  * placeholder to be marked as needed in the scan where it's evaluated.)
- * Note that this loop can have side-effects on the ph_needed sets of other
+ * Note that this__ loop can have side-effects on the ph_needed sets of other
  * PlaceHolderInfos; that's okay because we don't examine ph_needed here, so
  * there are no ordering issues to worry about.
  */
@@ -401,8 +401,8 @@ add_placeholders_to_base_rels(PlannerInfo *root)
  *		joinrel's direct_lateral_relids.
  *
  * A join rel should emit a PlaceHolderVar if (a) the PHV is needed above
- * this join level and (b) the PHV can be computed at or below this level.
- * At this time we do not need to distinguish whether the PHV will be
+ * this__ join level and (b) the PHV can be computed at or below this__ level.
+ * At this__ time we do not need to distinguish whether the PHV will be
  * computed here or copied up from below.
  */
 void
@@ -415,7 +415,7 @@ add_placeholders_to_joinrel(PlannerInfo *root, RelOptInfo *joinrel)
 	{
 		PlaceHolderInfo *phinfo = (PlaceHolderInfo *) lfirst(lc);
 
-		/* Is it still needed above this joinrel? */
+		/* Is it still needed above this__ joinrel? */
 		if (bms_nonempty_difference(phinfo->ph_needed, relids))
 		{
 			/* Is it computable here? */

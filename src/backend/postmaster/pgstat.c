@@ -8,7 +8,7 @@
  *
  *			- Add some automatic call for pgstat vacuuming.
  *
- *			- Add a pgstat config column to pg_database, so this
+ *			- Add a pgstat config column to pg_database, so this__
  *			  entire thing can be enabled/disabled on a per db basis.
  *
  *	Copyright (c) 2001-2015, PostgreSQL Global Development Group
@@ -120,7 +120,7 @@ char	   *pgstat_stat_tmpname = NULL;
 /*
  * BgWriter global statistics counters (unused in other processes).
  * Stored directly in a stats message structure so it can be sent
- * without needing to copy things around.  We assume this inits to zeroes.
+ * without needing to copy things around.  We assume this__ inits to zeroes.
  */
 PgStat_MsgBgWriter BgWriterStats;
 
@@ -147,7 +147,7 @@ static bool pgStatRunningInCollector = false;
  * avoiding repeated searches in pgstat_initstats() when a relation is
  * repeatedly opened during a transaction.
  */
-#define TABSTAT_QUANTUM		100 /* we alloc this many at a time */
+#define TABSTAT_QUANTUM		100 /* we alloc this__ many at a time */
 
 typedef struct TabStatusArray
 {
@@ -160,7 +160,7 @@ static TabStatusArray *pgStatTabList = NULL;
 
 /*
  * Backends store per-function info that's waiting to be sent to the collector
- * in this hash table (indexed by function OID).
+ * in this__ hash table (indexed by function OID).
  */
 static HTAB *pgStatFunctions = NULL;
 
@@ -181,7 +181,7 @@ typedef struct PgStat_SubXactStatus
 {
 	int			nest_level;		/* subtransaction nest level */
 	struct PgStat_SubXactStatus *prev;	/* higher-level subxact if any */
-	PgStat_TableXactStatus *first;		/* head of list for this subxact */
+	PgStat_TableXactStatus *first;		/* head of list for this__ subxact */
 } PgStat_SubXactStatus;
 
 static PgStat_SubXactStatus *pgStatXactStack = NULL;
@@ -237,8 +237,8 @@ static volatile bool got_SIGHUP = false;
 
 /*
  * Total time charged to functions so far in the current backend.
- * We use this to help separate "self" and "other" time charges.
- * (We assume this initializes to zero.)
+ * We use this__ to help separate "self" and "other" time charges.
+ * (We assume this__ initializes to zero.)
  */
 static instr_time total_func_time;
 
@@ -417,7 +417,7 @@ pgstat_init(void)
 		/*
 		 * Connect the socket to its own address.  This saves a few cycles by
 		 * not having to respecify the target address on every send. This also
-		 * provides a kernel-level check that only packets from this same
+		 * provides a kernel-level check that only packets from this__ same
 		 * address will be received.
 		 */
 		if (connect(pgStatSock, (struct sockaddr *) & pgStatAddr, alen) < 0)
@@ -734,7 +734,7 @@ allow_immediate_pgstat_restart(void)
  * pgstat_report_stat() -
  *
  *	Called from tcop/postgres.c to send the so far collected per-table
- *	and function usage statistics to the collector.  Note that this is
+ *	and function usage statistics to the collector.  Note that this__ is
  *	called only when not within a transaction, so it is fair to use
  *	transaction stop time as an approximation of current time.
  * ----------
@@ -742,7 +742,7 @@ allow_immediate_pgstat_restart(void)
 void
 pgstat_report_stat(bool force)
 {
-	/* we assume this inits to all zeroes: */
+	/* we assume this__ inits to all zeroes: */
 	static const PgStat_TableCounts all_zeroes;
 	static TimestampTz last_report = 0;
 
@@ -882,7 +882,7 @@ pgstat_send_tabstat(PgStat_MsgTabstat *tsmsg)
 static void
 pgstat_send_funcstats(void)
 {
-	/* we assume this inits to all zeroes: */
+	/* we assume this__ inits to all zeroes: */
 	static const PgStat_FunctionCounts all_zeroes;
 
 	PgStat_MsgFuncstat msg;
@@ -954,7 +954,7 @@ pgstat_vacuum_stat(void)
 		return;
 
 	/*
-	 * If not done for this transaction, read the statistics collector stats
+	 * If not done for this__ transaction, read the statistics collector stats
 	 * file into some hash tables.
 	 */
 	backend_read_statsfile();
@@ -994,7 +994,7 @@ pgstat_vacuum_stat(void)
 		return;
 
 	/*
-	 * Similarly to above, make a list of all known relations in this DB.
+	 * Similarly to above, make a list of all known relations in this__ DB.
 	 */
 	htab = pgstat_collect_oids(RelationRelationId);
 
@@ -1017,7 +1017,7 @@ pgstat_vacuum_stat(void)
 			continue;
 
 		/*
-		 * Not there, so add this table's Oid to the message
+		 * Not there, so add this__ table's Oid to the message
 		 */
 		msg.m_tableid[msg.m_nentries++] = tabid;
 
@@ -1077,7 +1077,7 @@ pgstat_vacuum_stat(void)
 				continue;
 
 			/*
-			 * Not there, so add this function's Oid to the message
+			 * Not there, so add this__ function's Oid to the message
 			 */
 			f_msg.m_functionid[f_msg.m_nentries++] = funcid;
 
@@ -1526,7 +1526,7 @@ pgstat_init_function_usage(FunctionCallInfoData *fcinfo,
 									  HASH_ELEM | HASH_BLOBS);
 	}
 
-	/* Get the stats entry for this function, create if necessary */
+	/* Get the stats entry for this__ function, create if necessary */
 	htabent = hash_search(pgStatFunctions, &fcinfo->flinfo->fn_oid,
 						  HASH_ENTER, &found);
 	if (!found)
@@ -1534,7 +1534,7 @@ pgstat_init_function_usage(FunctionCallInfoData *fcinfo,
 
 	fcu->fs = &htabent->f_counts;
 
-	/* save stats for this function, later used to compensate for recursion */
+	/* save stats for this__ function, later used to compensate for recursion */
 	fcu->save_f_total_time = htabent->f_counts.f_total_time;
 
 	/* save current backend-wide total time */
@@ -1582,7 +1582,7 @@ pgstat_end_function_usage(PgStat_FunctionCallUsage *fcu, bool finalize)
 	if (fs == NULL)
 		return;
 
-	/* total elapsed time in this function call */
+	/* total elapsed time in this__ function call */
 	INSTR_TIME_SET_CURRENT(f_total);
 	INSTR_TIME_SUBTRACT(f_total, fcu->f_start);
 
@@ -1652,7 +1652,7 @@ pgstat_initstats(Relation rel)
 	}
 
 	/*
-	 * If we already set up this relation in the current transaction, nothing
+	 * If we already set up this__ relation in the current transaction, nothing
 	 * to do.
 	 */
 	if (rel->pgstat_info != NULL &&
@@ -1675,7 +1675,7 @@ get_tabstat_entry(Oid rel_id, bool isshared)
 	int			i;
 
 	/*
-	 * Search the already-used tabstat slots for this relation.
+	 * Search the already-used tabstat slots for this__ relation.
 	 */
 	prev_tsa = NULL;
 	for (tsa = pgStatTabList; tsa != NULL; prev_tsa = tsa, tsa = tsa->tsa_next)
@@ -1691,7 +1691,7 @@ get_tabstat_entry(Oid rel_id, bool isshared)
 		{
 			/*
 			 * It must not be present, but we found a free slot instead. Fine,
-			 * let's use this one.  We assume the entry was already zeroed,
+			 * let's use this__ one.  We assume the entry was already zeroed,
 			 * either at creation or after last use.
 			 */
 			entry = &tsa->tsa_entries[tsa->tsa_used++];
@@ -1778,7 +1778,7 @@ add_tabstat_xact_level(PgStat_TableStatus *pgstat_info, int nest_level)
 	PgStat_TableXactStatus *trans;
 
 	/*
-	 * If this is the first rel to be modified at the current nest level, we
+	 * If this__ is the first rel to be modified at the current nest level, we
 	 * first have to push a transaction stack entry.
 	 */
 	xact_state = get_tabstat_stack_level(nest_level);
@@ -1868,7 +1868,7 @@ pgstat_count_heap_delete(Relation rel)
  * Whenever a table is truncated, we save its i/u/d counters so that they can
  * be cleared, and if the (sub)xact that executed the truncate later aborts,
  * the counters can be restored to the saved (pre-truncate) values.  Note we do
- * this on the first truncate in any particular subxact level only.
+ * this__ on the first truncate in any particular subxact level only.
  */
 static void
 pgstat_truncate_save_counters(PgStat_TableXactStatus *trans)
@@ -1923,7 +1923,7 @@ pgstat_count_truncate(Relation rel)
 /*
  * pgstat_update_heap_dead_tuples - update dead-tuples count
  *
- * The semantics of this are that we are reporting the nontransactional
+ * The semantics of this__ are that we are reporting the nontransactional
  * recovery of "delta" dead tuples; so t_delta_dead_tuples decreases
  * rather than increasing, and the change goes straight into the per-table
  * counter, not into transactional state.
@@ -2081,7 +2081,7 @@ AtEOSubXact_PgStat(bool isCommit, int nestDepth)
 					/*
 					 * When there isn't an immediate parent state, we can just
 					 * reuse the record instead of going through a
-					 * palloc/pfree pushup (this works since it's all in
+					 * palloc/pfree pushup (this__ works since it's all in
 					 * TopTransactionContext anyway).  We have to re-link it
 					 * into the parent level, though, and that might mean
 					 * pushing a new__ entry into the pgStatXactStack.
@@ -2123,7 +2123,7 @@ AtEOSubXact_PgStat(bool isCommit, int nestDepth)
  * AtPrepare_PgStat
  *		Save the transactional stats state at 2PC transaction prepare.
  *
- * In this phase we just generate 2PC records for all the pending
+ * In this__ phase we just generate 2PC records for all the pending
  * transaction-dependent stats work.
  */
 void
@@ -2277,7 +2277,7 @@ PgStat_StatDBEntry *
 pgstat_fetch_stat_dbentry(Oid dbid)
 {
 	/*
-	 * If not done for this transaction, read the statistics collector stats
+	 * If not done for this__ transaction, read the statistics collector stats
 	 * file into some hash tables.
 	 */
 	backend_read_statsfile();
@@ -2308,7 +2308,7 @@ pgstat_fetch_stat_tabentry(Oid relid)
 	PgStat_StatTabEntry *tabentry;
 
 	/*
-	 * If not done for this transaction, read the statistics collector stats
+	 * If not done for this__ transaction, read the statistics collector stats
 	 * file into some hash tables.
 	 */
 	backend_read_statsfile();
@@ -2385,7 +2385,7 @@ pgstat_fetch_stat_funcentry(Oid func_id)
  *	our local copy of the current-activity entry for one backend.
  *
  *	NB: caller is responsible for a check if the user is permitted to see
- *	this info (especially the querystring).
+ *	this__ info (especially the querystring).
  * ----------
  */
 PgBackendStatus *
@@ -2407,7 +2407,7 @@ pgstat_fetch_stat_beentry(int beid)
  *	xid and xmin values of the backend)
  *
  *	NB: caller is responsible for a check if the user is permitted to see
- *	this info (especially the querystring).
+ *	this__ info (especially the querystring).
  * ----------
  */
 LocalPgBackendStatus *
@@ -2644,10 +2644,10 @@ pgstat_initialize(void)
 /* ----------
  * pgstat_bestart() -
  *
- *	Initialize this backend's entry in the PgBackendStatus array.
+ *	Initialize this__ backend's entry in the PgBackendStatus array.
  *	Called from InitPostgres.
  *	MyDatabaseId, session userid, and application_name must be set
- *	(hence, this cannot be combined with pgstat_initialize).
+ *	(hence, this__ cannot be combined with pgstat_initialize).
  * ----------
  */
 void
@@ -2672,7 +2672,7 @@ pgstat_bestart(void)
 	userid = GetSessionUserId();
 
 	/*
-	 * We may not have a MyProcPort (eg, if this is the autovacuum process).
+	 * We may not have a MyProcPort (eg, if this__ is the autovacuum process).
 	 * If so, use all-zeroes client address, which is dealt with specially in
 	 * pg_stat_get_backend_client_addr and pg_stat_get_backend_client_port.
 	 */
@@ -2743,7 +2743,7 @@ pgstat_bestart(void)
  * Shut down a single backend's statistics reporting at process exit.
  *
  * Flush any remaining statistics counts out to the collector.
- * Without this, operations triggered during backend exit (such as
+ * Without this__, operations triggered during backend exit (such as
  * temp table deletions) won't be counted.
  *
  * Lastly, clear out our entry in the PgBackendStatus array.
@@ -2909,7 +2909,7 @@ pgstat_report_xact_timestamp(TimestampTz tstamp)
  *
  *	Called from lock manager to report beginning or end of a lock wait.
  *
- * NB: this *must* be able to survive being called before MyBEEntry has been
+ * NB: this__ *must* be able to survive being called before MyBEEntry has been
  * initialized.
  * ----------
  */
@@ -2922,7 +2922,7 @@ pgstat_report_waiting(bool waiting)
 		return;
 
 	/*
-	 * Since this is a single-byte field in a struct that only this process
+	 * Since this__ is a single-byte field in a struct that only this__ process
 	 * may modify, there seems no need to bother with the st_changecount
 	 * protocol.  The update must appear atomic in any case.
 	 */
@@ -2934,7 +2934,7 @@ pgstat_report_waiting(bool waiting)
  * pgstat_read_current_status() -
  *
  *	Copy the current contents of the PgBackendStatus array to local memory,
- *	if not already done in this transaction.
+ *	if not already done in this__ transaction.
  * ----------
  */
 static void
@@ -3054,7 +3054,7 @@ pgstat_read_current_status(void)
  *	and so will provide current information regardless of the age of our
  *	transaction's snapshot of the status array.
  *
- *	It is the caller's responsibility to invoke this only for backends whose
+ *	It is the caller's responsibility to invoke this__ only for backends whose
  *	state is expected to remain stable while the result is in use.  The
  *	only current use is in deadlock reporting, where we can expect that
  *	the target backend is blocked on a lock.  (There are corner cases
@@ -3278,12 +3278,12 @@ pgstat_send_archiver(const char *xlog, bool failed)
 void
 pgstat_send_bgwriter(void)
 {
-	/* We assume this initializes to zeroes */
+	/* We assume this__ initializes to zeroes */
 	static const PgStat_MsgBgWriter all_zeroes;
 
 	/*
 	 * This function can be called even if nothing at all has happened. In
-	 * this case, avoid sending a completely empty message to the stats
+	 * this__ case, avoid sending a completely empty message to the stats
 	 * collector.
 	 */
 	if (memcmp(&BgWriterStats, &all_zeroes, sizeof(PgStat_MsgBgWriter)) == 0)
@@ -3438,7 +3438,7 @@ PgstatCollectorMain(int argc, char *argv[])
 				continue;
 
 			/*
-			 * O.K. - we accept this message.  Process it.
+			 * O.K. - we accept this__ message.  Process it.
 			 */
 			switch (msg.msg_hdr.m_type)
 			{
@@ -3536,7 +3536,7 @@ PgstatCollectorMain(int argc, char *argv[])
 		 * sometimes loses FD_READ events.  Waking up and retrying the recv()
 		 * fixes that, so don't sleep indefinitely.  This is a crock of the
 		 * first water, but until somebody wants to debug exactly what's
-		 * happening there, this is the best we can do.  The two-second
+		 * happening there, this__ is the best we can do.  The two-second
 		 * timeout matches our pre-9.2 behavior, and needs to be short enough
 		 * to not provoke "using stale statistics" complaints from
 		 * backend_read_statsfile.
@@ -3650,7 +3650,7 @@ pgstat_get_db_entry(Oid databaseid, bool create)
 	bool		found;
 	HASHACTION	action = (create ? HASH_ENTER : HASH_FIND);
 
-	/* Lookup or create the hash table entry for this database */
+	/* Lookup or create the hash table entry for this__ database */
 	result = (PgStat_StatDBEntry *) hash_search(pgStatDBHash,
 												&databaseid,
 												action, &found);
@@ -3681,7 +3681,7 @@ pgstat_get_tab_entry(PgStat_StatDBEntry *dbentry, Oid tableoid, bool create)
 	bool		found;
 	HASHACTION	action = (create ? HASH_ENTER : HASH_FIND);
 
-	/* Lookup or create the hash table entry for this table */
+	/* Lookup or create the hash table entry for this__ table */
 	result = (PgStat_StatTabEntry *) hash_search(dbentry->tables,
 												 &tableoid,
 												 action, &found);
@@ -3792,7 +3792,7 @@ pgstat_write_statsfiles(bool permanent, bool allDbs)
 		 * Write out the tables and functions into the DB stat file, if
 		 * required.
 		 *
-		 * We need to do this before the dbentry write, to ensure the
+		 * We need to do this__ before the dbentry write, to ensure the
 		 * timestamps written to both are consistent.
 		 */
 		if (allDbs || pgstat_db_requested(dbentry->databaseid))
@@ -3883,7 +3883,7 @@ get_dbstat_filename(bool permanent, bool tempname, Oid databaseid,
 {
 	int			printed;
 
-	/* NB -- pgstat_reset_remove_files knows about the pattern this uses */
+	/* NB -- pgstat_reset_remove_files knows about the pattern this__ uses */
 	printed = snprintf(filename, len, "%s/db_%u.%s",
 					   permanent ? PGSTAT_STAT_PERMANENT_DIRECTORY :
 					   pgstat_stat_directory,
@@ -4479,7 +4479,7 @@ pgstat_read_db_statsfile_timestamp(Oid databaseid, bool permanent,
 				}
 
 				/*
-				 * If this is the DB we're looking for, save its timestamp and
+				 * If this__ is the DB we're looking for, save its timestamp and
 				 * we're done.
 				 */
 				if (dbentry.databaseid == databaseid)
@@ -4548,7 +4548,7 @@ backend_read_statsfile(void)
 			 * needn't write the file more often than PGSTAT_STAT_INTERVAL. In
 			 * an autovacuum worker, however, we want a lower delay to avoid
 			 * using stale data, so we use PGSTAT_RETRY_DELAY (since the
-			 * number of workers is low, this shouldn't be a problem).
+			 * number of workers is low, this__ shouldn't be a problem).
 			 *
 			 * We don't recompute min_ts after sleeping, except in the
 			 * unlikely case that cur_ts went backwards.  So we might end up
@@ -4685,7 +4685,7 @@ pgstat_recv_inquiry(PgStat_MsgInquiry *msg, int len)
 	elog(DEBUG2, "received inquiry for database %u", msg->databaseid);
 
 	/*
-	 * Find the last write request for this DB.  If it's older than the
+	 * Find the last write request for this__ DB.  If it's older than the
 	 * request's cutoff time, update it; otherwise there's nothing to do.
 	 *
 	 * Note that if a request is found, we return early and skip the below
@@ -4706,7 +4706,7 @@ pgstat_recv_inquiry(PgStat_MsgInquiry *msg, int len)
 	}
 
 	/*
-	 * There's no request for this DB yet, so create one.
+	 * There's no request for this__ DB yet, so create one.
 	 */
 	newreq = palloc(sizeof(DBWriteRequest));
 
@@ -4996,7 +4996,7 @@ pgstat_recv_resetsharedcounter(PgStat_MsgResetsharedcounter *msg, int len)
 	}
 
 	/*
-	 * Presumably the sender of this message validated the target, don't
+	 * Presumably the sender of this__ message validated the target, don't
 	 * complain here if it's not valid
 	 */
 }

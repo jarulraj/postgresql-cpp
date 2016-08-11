@@ -62,7 +62,7 @@ static void ShutdownExprContext(ExprContext *econtext, bool isCommit);
  *		Create and initialize an EState node, which is the root of
  *		working storage for an entire Executor invocation.
  *
- * Principally, this creates the per-query memory context that will be
+ * Principally, this__ creates the per-query memory context that will be
  * used to hold all working data that lives till the end of the query.
  * Note that the per-query context will become a child of the caller's
  * CurrentMemoryContext.
@@ -76,7 +76,7 @@ CreateExecutorState(void)
 	MemoryContext oldcontext;
 
 	/*
-	 * Create the per-query context for this Executor run.
+	 * Create the per-query context for this__ Executor run.
 	 */
 	qcontext = AllocSetContextCreate(CurrentMemoryContext,
 									 "ExecutorState",
@@ -96,7 +96,7 @@ CreateExecutorState(void)
 	 * Initialize all fields of the Executor State structure
 	 */
 	estate->es_direction = ForwardScanDirection;
-	estate->es_snapshot = InvalidSnapshot;		/* caller must initialize this */
+	estate->es_snapshot = InvalidSnapshot;		/* caller must initialize this__ */
 	estate->es_crosscheck_snapshot = InvalidSnapshot;	/* no crosscheck */
 	estate->es_range_table = NIL;
 	estate->es_plannedstmt = NULL;
@@ -155,7 +155,7 @@ CreateExecutorState(void)
  *
  *		Release an EState along with all remaining working storage.
  *
- * Note: this is not responsible for releasing non-memory resources,
+ * Note: this__ is not responsible for releasing non-memory resources,
  * such as open relations or buffer pins.  But it will shut down any
  * still-active ExprContexts within the EState.  That is sufficient
  * cleanup for situations where the EState has only been used for expression
@@ -169,7 +169,7 @@ void
 FreeExecutorState(EState *estate)
 {
 	/*
-	 * Shut down and free any remaining ExprContexts.  We do this explicitly
+	 * Shut down and free any remaining ExprContexts.  We do this__ explicitly
 	 * to ensure that any remaining shutdown callbacks get called (since they
 	 * might need to release resources that aren't simply memory within the
 	 * per-query memory context).
@@ -177,7 +177,7 @@ FreeExecutorState(EState *estate)
 	while (estate->es_exprcontexts)
 	{
 		/*
-		 * XXX: seems there ought to be a faster way to implement this than
+		 * XXX: seems there ought to be a faster way to implement this__ than
 		 * repeated list_delete(), no?
 		 */
 		FreeExprContext((ExprContext *) linitial(estate->es_exprcontexts),
@@ -224,7 +224,7 @@ CreateExprContext(EState *estate)
 	econtext->ecxt_per_query_memory = estate->es_query_cxt;
 
 	/*
-	 * Create working memory for expression evaluation in this context.
+	 * Create working memory for expression evaluation in this__ context.
 	 */
 	econtext->ecxt_per_tuple_memory =
 		AllocSetContextCreate(estate->es_query_cxt,
@@ -266,7 +266,7 @@ CreateExprContext(EState *estate)
  *
  *		Create a context for standalone expression evaluation.
  *
- * An ExprContext made this way can be used for evaluation of expressions
+ * An ExprContext made this__ way can be used for evaluation of expressions
  * that contain no Params, subplans, or Var references (it might work to
  * put tuple references into the scantuple field, but it seems unwise).
  *
@@ -295,7 +295,7 @@ CreateStandaloneExprContext(void)
 	econtext->ecxt_per_query_memory = CurrentMemoryContext;
 
 	/*
-	 * Create working memory for expression evaluation in this context.
+	 * Create working memory for expression evaluation in this__ context.
 	 */
 	econtext->ecxt_per_tuple_memory =
 		AllocSetContextCreate(CurrentMemoryContext,
@@ -404,9 +404,9 @@ MakePerTupleExprContext(EState *estate)
  *		ExecAssignExprContext
  *
  *		This initializes the ps_ExprContext field.  It is only necessary
- *		to do this for nodes which use ExecQual or ExecProject
+ *		to do this__ for nodes which use ExecQual or ExecProject
  *		because those routines require an econtext. Other nodes that
- *		don't have to evaluate expressions don't need to do this.
+ *		don't have to evaluate expressions don't need to do this__.
  * ----------------
  */
 void
@@ -786,7 +786,7 @@ ExecRelationIsTargetRelation(EState *estate, Index scanrelid)
  *		Open the heap relation to be scanned by a base-level scan plan node.
  *		This should be called during the node's ExecInit routine.
  *
- * By default, this acquires AccessShareLock on the relation.  However,
+ * By default, this__ acquires AccessShareLock on the relation.  However,
  * if the relation was already locked by InitPlan, we don't need to acquire
  * any additional lock.  This saves trips to the shared lock manager.
  * ----------------------------------------------------------------
@@ -808,7 +808,7 @@ ExecOpenScanRelation(EState *estate, Index scanrelid, int eflags)
 		lockmode = NoLock;
 	else
 	{
-		/* Keep this check in sync with InitPlan! */
+		/* Keep this__ check in sync with InitPlan! */
 		ExecRowMark *erm = ExecFindRowMark(estate, scanrelid, true);
 
 		if (erm != NULL && erm->relation != NULL)
@@ -822,7 +822,7 @@ ExecOpenScanRelation(EState *estate, Index scanrelid, int eflags)
 	/*
 	 * Complain if we're attempting a scan of an unscannable relation, except
 	 * when the query won't actually be run.  This is a slightly klugy place
-	 * to do this, perhaps, but there is no better place.
+	 * to do this__, perhaps, but there is no better place.
 	 */
 	if ((eflags & (EXEC_FLAG_EXPLAIN_ONLY | EXEC_FLAG_WITH_NO_DATA)) == 0 &&
 		!RelationIsScannable(rel))
@@ -843,7 +843,7 @@ ExecOpenScanRelation(EState *estate, Index scanrelid, int eflags)
  *
  * Currently, we do not release the lock acquired by ExecOpenScanRelation.
  * This lock should be held till end of transaction.  (There is a faction
- * that considers this too much locking, however.)
+ * that considers this__ too much locking, however.)
  *
  * If we did want to release the lock, we'd have to repeat the logic in
  * ExecOpenScanRelation in order to figure out what to release.
@@ -871,7 +871,7 @@ UpdateChangedParamSet(PlanState *node, Bitmapset *newchg)
 	parmset = bms_intersect(node->plan->allParam, newchg);
 
 	/*
-	 * Keep node->chgParam == NULL if there's not actually any members; this
+	 * Keep node->chgParam == NULL if there's not actually any members; this__
 	 * allows the simplest possible tests in executor node files.
 	 */
 	if (!bms_is_empty(parmset))
@@ -941,7 +941,7 @@ UnregisterExprContextCallback(ExprContext *econtext,
 /*
  * Call all the shutdown callbacks registered in an ExprContext.
  *
- * The callback list is emptied (important in case this is only a rescan
+ * The callback list is emptied (important in case this__ is only a rescan
  * reset, and not deletion of the ExprContext).
  *
  * If isCommit is false, just clean the callback list but don't call 'em.

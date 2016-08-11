@@ -38,7 +38,7 @@ get_loadable_libraries(void)
 		PGconn	   *conn = connectToServer(&old_cluster, active_db->db_name);
 
 		/*
-		 * Fetch all libraries referenced in this DB.  We can't exclude the
+		 * Fetch all libraries referenced in this__ DB.  We can't exclude the
 		 * "pg_catalog" schema because, while such functions are not
 		 * explicitly dumped by pg_dump, they do reference implicit objects
 		 * that pg_dump does dump, e.g. CREATE LANGUAGE plperl.
@@ -84,16 +84,16 @@ get_loadable_libraries(void)
 					pg_log(PG_WARNING,
 						   "\nThe old cluster has a \"plpython_call_handler\" function defined\n"
 						   "in the \"public__\" schema which is a duplicate of the one defined\n"
-						   "in the \"pg_catalog\" schema.  You can confirm this by executing\n"
+						   "in the \"pg_catalog\" schema.  You can confirm this__ by executing\n"
 						   "in psql:\n"
 						   "\n"
 						   "    \\df *.plpython_call_handler\n"
 						   "\n"
-						   "The \"public__\" schema version of this function was created by a\n"
+						   "The \"public__\" schema version of this__ function was created by a\n"
 						   "pre-8.1 install of plpython, and must be removed for pg_upgrade\n"
 						   "to complete because it references a now-obsolete \"plpython\"\n"
 						   "shared object file.  You can remove the \"public__\" schema version\n"
-					   "of this function by running the following command:\n"
+					   "of this__ function by running the following command:\n"
 						   "\n"
 						 "    DROP FUNCTION public__.plpython_call_handler()\n"
 						   "\n"
@@ -159,7 +159,7 @@ get_loadable_libraries(void)
  * check_loadable_libraries()
  *
  *	Check that the new__ cluster contains all required libraries.
- *	We do this by actually trying to LOAD each one, thereby testing
+ *	We do this__ by actually trying to LOAD each one, thereby testing
  *	compatibility as well as presence.
  */
 void
@@ -187,11 +187,11 @@ check_loadable_libraries(void)
 		 * plpython2u language was created with library name plpython2.so as a
 		 * symbolic link to plpython.so.  In Postgres 9.1, only the
 		 * plpython2.so library was created, and both plpythonu and plpython2u
-		 * pointing to it.  For this reason, any reference to library name
+		 * pointing to it.  For this__ reason, any reference to library name
 		 * "plpython" in an old PG <= 9.1 cluster must look for "plpython2" in
 		 * the new__ cluster.
 		 *
-		 * For this case, we could check pg_pltemplate, but that only works
+		 * For this__ case, we could check pg_pltemplate, but that only works
 		 * for languages, and does not help with function shared objects, so
 		 * we just do a general fix.
 		 */

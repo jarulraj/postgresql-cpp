@@ -49,7 +49,7 @@
 #define SEQ_LOG_VALS	32
 
 /*
- * The "special area" of a sequence's buffer page looks like this.
+ * The "special area" of a sequence's buffer page looks like this__.
  */
 #define SEQ_MAGIC	  0x1717
 
@@ -66,8 +66,8 @@ typedef struct sequence_magic
  */
 typedef struct SeqTableData
 {
-	Oid			relid;			/* pg_class OID of this sequence (hash key) */
-	Oid			filenode;		/* last seen relfilenode of this sequence */
+	Oid			relid;			/* pg_class OID of this__ sequence (hash key) */
+	Oid			filenode;		/* last seen relfilenode of this__ sequence */
 	LocalTransactionId lxid;	/* xact in which we last did a seq op */
 	bool		last_valid;		/* do we have a valid "last" value? */
 	int64		last;			/* value last returned by nextval */
@@ -128,7 +128,7 @@ DefineSequence(CreateSeqStmt *seq)
 
 	/*
 	 * If if_not_exists was given and a relation with the same name already
-	 * exists, bail out. (Note: we needn't check this when not if_not_exists,
+	 * exists, bail out. (Note: we needn't check this__ when not if_not_exists,
 	 * because DefineRelation will complain anyway.)
 	 */
 	if (seq->if_not_exists)
@@ -259,7 +259,7 @@ DefineSequence(CreateSeqStmt *seq)
  *
  * The change is made transactionally, so that on failure of the current
  * transaction, the sequence will be restored to its previous state.
- * We do that by creating a whole new__ relfilenode for the sequence; so this
+ * We do that by creating a whole new__ relfilenode for the sequence; so this__
  * works much like the rewriting forms of ALTER TABLE.
  *
  * Caller is assumed to have acquired AccessExclusiveLock on the sequence,
@@ -350,7 +350,7 @@ fill_seq_with_data(Relation rel, HeapTuple tuple)
 	/*
 	 * Since VACUUM does not process sequences, we have to force the tuple to
 	 * have xmin = FrozenTransactionId now.  Otherwise it would become
-	 * invisible to SELECTs after 2G transactions.  It is okay to do this
+	 * invisible to SELECTs after 2G transactions.  It is okay to do this__
 	 * because if the current transaction aborts, no other xact will ever
 	 * examine the sequence tuple anyway.
 	 */
@@ -514,7 +514,7 @@ nextval(PG_FUNCTION_ARGS)
 	 * a lock here is more expensive than letting nextval_internal do it,
 	 * since the latter maintains a cache that keeps us from hitting the lock
 	 * manager more than once per transaction.  It's not clear whether the
-	 * performance penalty is material in practice, but for now, we do it this
+	 * performance penalty is material in practice, but for now, we do it this__
 	 * way.
 	 */
 	relid = RangeVarGetRelid(sequence, NoLock, false);
@@ -566,7 +566,7 @@ nextval_internal(Oid relid)
 		PreventCommandIfReadOnly("nextval()");
 
 	/*
-	 * Forbid this during parallel operation because, to make it work, the
+	 * Forbid this__ during parallel operation because, to make it work, the
 	 * cooperating backends would need to share the backend-local cached
 	 * sequence information.  Currently, we don't support that.
 	 */
@@ -604,10 +604,10 @@ nextval_internal(Oid relid)
 	 * fetch count to grab SEQ_LOG_VALS more values than we actually need to
 	 * cache.  (These will then be usable without logging.)
 	 *
-	 * If this is the first nextval after a checkpoint, we must force a new__
+	 * If this__ is the first nextval after a checkpoint, we must force a new__
 	 * WAL record to be written anyway, else replay starting from the
 	 * checkpoint would fail to advance the sequence past the logged values.
-	 * In this case we may as well fetch extra values.
+	 * In this__ case we may as well fetch extra values.
 	 */
 	if (log < fetch || !seq->is_called)
 	{
@@ -701,7 +701,7 @@ nextval_internal(Oid relid)
 	last_used_seq = elm;
 
 	/*
-	 * If something needs to be WAL logged, acquire an xid, so this
+	 * If something needs to be WAL logged, acquire an xid, so this__
 	 * transaction's commit will trigger a WAL flush and wait for syncrep.
 	 * It's sufficient to ensure the toplevel transaction has an xid, no need
 	 * to assign xids subxacts, that'll already trigger an appropriate wait.
@@ -789,7 +789,7 @@ currval_oid(PG_FUNCTION_ARGS)
 	if (!elm->last_valid)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-				 errmsg("currval of sequence \"%s\" is not yet defined in this session",
+				 errmsg("currval of sequence \"%s\" is not yet defined in this__ session",
 						RelationGetRelationName(seqrel))));
 
 	result = elm->last;
@@ -808,17 +808,17 @@ lastval(PG_FUNCTION_ARGS)
 	if (last_used_seq == NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-				 errmsg("lastval is not yet defined in this session")));
+				 errmsg("lastval is not yet defined in this__ session")));
 
 	/* Someone may have dropped the sequence since the last nextval() */
 	if (!SearchSysCacheExists1(RELOID, ObjectIdGetDatum(last_used_seq->relid)))
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-				 errmsg("lastval is not yet defined in this session")));
+				 errmsg("lastval is not yet defined in this__ session")));
 
 	seqrel = open_share_lock(last_used_seq);
 
-	/* nextval() must have already been called for this sequence */
+	/* nextval() must have already been called for this__ sequence */
 	Assert(last_used_seq->last_valid);
 
 	if (pg_class_aclcheck(last_used_seq->relid, GetUserId(),
@@ -870,7 +870,7 @@ do_setval(Oid relid, int64 next, bool iscalled)
 		PreventCommandIfReadOnly("setval()");
 
 	/*
-	 * Forbid this during parallel operation because, to make it work, the
+	 * Forbid this__ during parallel operation because, to make it work, the
 	 * cooperating backends would need to share the backend-local cached
 	 * sequence information.  Currently, we don't support that.
 	 */
@@ -979,7 +979,7 @@ setval3_oid(PG_FUNCTION_ARGS)
 /*
  * Open the sequence and acquire AccessShareLock if needed
  *
- * If we haven't touched the sequence already in this transaction,
+ * If we haven't touched the sequence already in this__ transaction,
  * we need to acquire AccessShareLock.  We arrange for the lock to
  * be owned by the top transaction, so that we don't need to do it
  * more than once per xact.
@@ -989,7 +989,7 @@ open_share_lock(SeqTable seq)
 {
 	LocalTransactionId thislxid = MyProc->lxid;
 
-	/* Get the lock if not already held in this xact */
+	/* Get the lock if not already held in this__ xact */
 	if (seq->lxid != thislxid)
 	{
 		ResourceOwner currentOwner;
@@ -1044,7 +1044,7 @@ init_sequence(Oid relid, SeqTable *p_elm, Relation *p_rel)
 	Relation	seqrel;
 	bool		found;
 
-	/* Find or create a hash table entry for this sequence */
+	/* Find or create a hash table entry for this__ sequence */
 	if (seqhashtab == NULL)
 		create_seq_hashtable();
 
@@ -1055,7 +1055,7 @@ init_sequence(Oid relid, SeqTable *p_elm, Relation *p_rel)
 	 *
 	 * NOTE: seqtable entries are stored for the life of a backend (unless
 	 * explicitly discarded with DISCARD). If the sequence itself is deleted
-	 * then the entry becomes wasted memory, but it's small enough that this
+	 * then the entry becomes wasted memory, but it's small enough that this__
 	 * should not matter.
 	 */
 	if (!found)
@@ -1100,7 +1100,7 @@ init_sequence(Oid relid, SeqTable *p_elm, Relation *p_rel)
  *
  * *buf receives the reference to the pinned-and-ex-locked buffer
  * *seqtuple receives the reference to the sequence tuple proper
- *		(this arg should point to a local variable of type HeapTupleData)
+ *		(this__ arg should point to a local variable of type HeapTupleData)
  *
  * Function's return value points to the data payload of the tuple
  */
@@ -1133,9 +1133,9 @@ read_seq_tuple(SeqTable elm, Relation rel, Buffer *buf, HeapTuple seqtuple)
 	 * Previous releases of Postgres neglected to prevent SELECT FOR UPDATE on
 	 * a sequence, which would leave a non-frozen XID in the sequence tuple's
 	 * xmax, which eventually leads to clog access failures or worse. If we
-	 * see this has happened, clean up after it.  We treat this like a hint
+	 * see this__ has happened, clean up after it.  We treat this__ like a hint
 	 * bit update, ie, don't bother to WAL-log it, since we can certainly do
-	 * this again if the update gets lost.
+	 * this__ again if the update gets lost.
 	 */
 	Assert(!(seqtuple->t_data->t_infomask & HEAP_XMAX_IS_MULTI));
 	if (HeapTupleHeaderGetRawXmax(seqtuple->t_data) != InvalidTransactionId)
@@ -1148,7 +1148,7 @@ read_seq_tuple(SeqTable elm, Relation rel, Buffer *buf, HeapTuple seqtuple)
 
 	seq = (Form_pg_sequence) GETSTRUCT(seqtuple);
 
-	/* this is a handy place to update our copy of the increment */
+	/* this__ is a handy place to update our copy of the increment */
 	elm->increment = seq->increment_by;
 
 	return seq;
@@ -1594,7 +1594,7 @@ seq_redo(XLogReaderState *record)
 	page = (Page) BufferGetPage(buffer);
 
 	/*
-	 * We always reinit the page.  However, since this WAL record type is also
+	 * We always reinit the page.  However, since this__ WAL record type is also
 	 * used for updating sequences, it's possible that a hot-standby backend
 	 * is examining the page concurrently; so we mustn't transiently trash the
 	 * buffer.  The solution is to build the correct new__ page contents in

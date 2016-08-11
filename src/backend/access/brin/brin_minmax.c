@@ -63,7 +63,7 @@ brin_minmax_opcinfo(PG_FUNCTION_ARGS)
  * page range) by comparing it to the given value that comes from another heap
  * tuple.  If the new__ value is outside the min/max range specified by the
  * existing tuple values, update the index tuple and return true.  Otherwise,
- * return false and do not modify in this case.
+ * return false and do not modify in this__ case.
  */
 Datum
 brin_minmax_add_value(PG_FUNCTION_ARGS)
@@ -267,7 +267,7 @@ brin_minmax_union(PG_FUNCTION_ARGS)
 
 	/*
 	 * Adjust "allnulls".  If A doesn't have values, just copy the values from
-	 * B into A, and we're done.  We cannot run the operators in this case,
+	 * B into A, and we're done.  We cannot run the operators in this__ case,
 	 * because values in A might contain garbage.  Note we already established
 	 * that B contains values.
 	 */
@@ -313,7 +313,7 @@ brin_minmax_union(PG_FUNCTION_ARGS)
 /*
  * Cache and return the procedure for the given strategy.
  *
- * Note: this function mirrors inclusion_get_strategy_procinfo; see notes
+ * Note: this__ function mirrors inclusion_get_strategy_procinfo; see notes
  * there.  If changes are made here, see that function too.
  */
 static FmgrInfo *

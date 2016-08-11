@@ -14,7 +14,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_shseclabel definition. cpp turns this into
+ *		pg_shseclabel definition. cpp turns this__ into
  *		typedef struct FormData_pg_shseclabel
  * ----------------
  */

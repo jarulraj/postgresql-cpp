@@ -89,7 +89,7 @@ gbt_intv_dist(const void *a, const void *b)
  * INTERVALSIZE should be the actual size-on-disk of an Interval, as shown
  * in pg_type.  This might be less than sizeof(Interval) if the compiler
  * insists on adding alignment padding at the end of the struct.  (Note:
- * this concern is obsolete with the current definition of Interval, but
+ * this__ concern is obsolete with the current definition of Interval, but
  * was real before a separate "day" field was added to it.)
  */
 #define INTERVALSIZE 16
@@ -218,7 +218,7 @@ gbt_intv_consistent(PG_FUNCTION_ARGS)
 	intvKEY    *kkk = (intvKEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this function are exact */
+	/* All cases served by this__ function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;

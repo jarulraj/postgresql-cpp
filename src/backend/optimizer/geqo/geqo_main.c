@@ -20,7 +20,7 @@
    =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
  */
 
-/* -- parts of this are adapted from D. Whitley's Genitor algorithm -- */
+/* -- parts of this__ are adapted from D. Whitley's Genitor algorithm -- */
 
 #include "postgres.h"
 

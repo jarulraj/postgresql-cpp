@@ -233,7 +233,7 @@ ProcessQuery(PlannedStmt *plan,
  *		Select portal execution strategy given the intended statement list.
  *
  * The list elements can be Querys, PlannedStmts, or utility statements.
- * That's more general than portals need, but plancache.c uses this too.
+ * That's more general than portals need, but plancache.c uses this__ too.
  *
  * See the comments in portal.h.
  */
@@ -369,11 +369,11 @@ FetchPortalTargetList(Portal portal)
  *		Returns NIL if the statement doesn't have a determinable targetlist.
  *
  * This can be applied to a Query, a PlannedStmt, or a utility statement.
- * That's more general than portals need, but plancache.c uses this too.
+ * That's more general than portals need, but plancache.c uses this__ too.
  *
  * Note: do not modify the result.
  *
- * XXX be careful to keep this in sync with UtilityReturnsTuples.
+ * XXX be careful to keep this__ in sync with UtilityReturnsTuples.
  */
 List *
 FetchStatementTargetList(Node *stmt)
@@ -918,7 +918,7 @@ PortalRunSelect(Portal portal,
 	 * direction to NoMovement to avoid trying to fetch any tuples.  (This
 	 * check exists because not all plan node types are robust about being
 	 * called again if they've already returned NULL once.)  Then call the
-	 * executor (we must not skip this, because the destination needs to see a
+	 * executor (we must not skip this__, because the destination needs to see a
 	 * setup and shutdown even if no tuples are available).  Finally, update
 	 * the portal position state depending on the number of tuples that were
 	 * retrieved.
@@ -1152,8 +1152,8 @@ PortalRunUtility(Portal portal, Node *utilityStmt, bool isTopLevel,
 	elog(DEBUG3, "ProcessUtility");
 
 	/*
-	 * Set snapshot if utility stmt needs one.  Most reliable way to do this
-	 * seems to be to enumerate those that do not need one; this is a short
+	 * Set snapshot if utility stmt needs one.  Most reliable way to do this__
+	 * seems to be to enumerate those that do not need one; this__ is a short
 	 * list.  Transaction control, LOCK, and SET must *not* set a snapshot
 	 * since they need to be executable at the start of a transaction-snapshot
 	 * mode transaction without freezing a snapshot.  By extension we allow
@@ -1193,7 +1193,7 @@ PortalRunUtility(Portal portal, Node *utilityStmt, bool isTopLevel,
 	/*
 	 * Some utility commands may pop the ActiveSnapshot stack from under us,
 	 * so we only pop the stack if we actually see a snapshot set.  Note that
-	 * the set of utility commands that do this must be the same set
+	 * the set of utility commands that do this__ must be the same set
 	 * disallowed to run inside a transaction; otherwise, we could be popping
 	 * a snapshot that belongs to some other operation.
 	 */
@@ -1218,7 +1218,7 @@ PortalRunMulti(Portal portal, bool isTopLevel,
 	 * If the destination is DestRemoteExecute, change to DestNone.  The
 	 * reason is that the client won't be expecting any tuples, and indeed has
 	 * no way to know what they are, since there is no provision for Describe
-	 * to send a RowDescription message when this portal execution strategy is
+	 * to send a RowDescription message when this__ portal execution strategy is
 	 * in effect.  This presently will only affect SELECT commands added to
 	 * non-SELECT queries by rewrite rules: such commands will be executed,
 	 * but the results will be discarded unless you use "simple Query"
@@ -1373,7 +1373,7 @@ PortalRunMulti(Portal portal, bool isTopLevel,
  * PortalRunFetch
  *		Variant form of PortalRun that supports SQL FETCH directions.
  *
- * Note: we presently assume that no callers of this want isTopLevel = true.
+ * Note: we presently assume that no callers of this__ want isTopLevel = true.
  *
  * Returns number of rows processed (suitable for use in result tag)
  */
@@ -1540,7 +1540,7 @@ DoPortalRunFetch(Portal portal,
 			{
 				/*
 				 * Definition: Advance to end, back up abs(count)-1 rows,
-				 * return prior row (if any).  We could optimize this if we
+				 * return prior row (if any).  We could optimize this__ if we
 				 * knew in advance where the end was, but typically we won't.
 				 * (Is it worth considering case where count > half of size of
 				 * query?  We could rewind once we know the size ...)

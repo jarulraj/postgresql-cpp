@@ -61,7 +61,7 @@ RelationPutHeapTuple(Relation relation,
 
 	/*
 	 * Insert the correct position into CTID of the stored tuple, too (unless
-	 * this is a speculative insertion, in which case the token is held in
+	 * this__ is a speculative insertion, in which case the token is held in
 	 * CTID field instead)
 	 */
 	if (!token)
@@ -160,7 +160,7 @@ GetVisibilityMapPins(Relation relation, Buffer buffer1, Buffer buffer2,
 		 * If there are two buffers involved and we pinned just one of them,
 		 * it's possible that the second one became all-visible while we were
 		 * busy pinning the first one.  If it looks like that's a possible
-		 * scenario, we'll need to make a second pass through this loop.
+		 * scenario, we'll need to make a second pass through this__ loop.
 		 */
 		if (buffer2 == InvalidBuffer || buffer1 == buffer2
 			|| (need_to_pin_buffer1 && need_to_pin_buffer2))
@@ -175,20 +175,20 @@ GetVisibilityMapPins(Relation relation, Buffer buffer1, Buffer buffer2,
  *	with free space >= given len.
  *
  *	If otherBuffer is not InvalidBuffer, then it references a previously
- *	pinned buffer of another page in the same relation; on return, this
+ *	pinned buffer of another page in the same relation; on return, this__
  *	buffer will also be exclusive-locked.  (This case is used by heap_update;
  *	the otherBuffer contains the tuple being updated.)
  *
  *	The reason for passing otherBuffer is that if two backends are doing
  *	concurrent heap_update operations, a deadlock could occur if they try
- *	to lock the same two buffers in opposite orders.  To ensure that this
+ *	to lock the same two buffers in opposite orders.  To ensure that this__
  *	can't happen, we impose the rule that buffers of a relation must be
  *	locked in increasing page number order.  This is most conveniently done
  *	by having RelationGetBufferForTuple lock them both, with suitable care
  *	for ordering.
  *
  *	NOTE: it is unlikely, but not quite impossible, for otherBuffer to be the
- *	same buffer we select for insertion of the new__ tuple (this could only
+ *	same buffer we select for insertion of the new__ tuple (this__ could only
  *	happen if space is freed in that page after heap_update finds there's not
  *	enough there).  In that case, the page will be pinned and locked only once.
  *
@@ -208,7 +208,7 @@ GetVisibilityMapPins(Relation relation, Buffer buffer1, Buffer buffer2,
  *	all insertions will occur into newly added pages and not be intermixed
  *	with tuples from other transactions.  That way, a crash can't risk losing
  *	any committed data of other transactions.  (See heap_insert's comments
- *	for additional constraints needed for safe usage of this behavior.)
+ *	for additional constraints needed for safe usage of this__ behavior.)
  *
  *	The caller can also provide a BulkInsertState object to optimize many
  *	insertions into the same relation.  This keeps a pin on the current
@@ -217,11 +217,11 @@ GetVisibilityMapPins(Relation relation, Buffer buffer1, Buffer buffer2,
  *	Passing NULL for bistate selects the default behavior.
  *
  *	We always try to avoid filling existing pages further than the fillfactor.
- *	This is OK since this routine is not consulted when updating a tuple and
+ *	This is OK since this__ routine is not consulted when updating a tuple and
  *	keeping it on the same page, which is the scenario fillfactor is meant
  *	to reserve space for.
  *
- *	ereport(ERROR) is allowed here, so this routine *must* be called
+ *	ereport(ERROR) is allowed here, so this__ routine *must* be called
  *	before any (unlogged) changes are made in buffer pool.
  */
 Buffer
@@ -267,7 +267,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 	 * on, as cached in the BulkInsertState or relcache entry.  If that
 	 * doesn't work, we ask the Free Space Map to locate a suitable page.
 	 * Since the FSM's info might be out of date, we have to be prepared to
-	 * loop around and retry multiple times. (To insure this isn't an infinite
+	 * loop around and retry multiple times. (To insure this__ isn't an infinite
 	 * loop, we must update the FSM with the correct amount of free space on
 	 * each page that proves not to be suitable.)  If the FSM has no record of
 	 * a page with enough free space, we give up and extend the relation.
@@ -370,7 +370,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 		 *
 		 * Note that there's a small possibility that we didn't pin the page
 		 * above but still have the correct page pinned anyway, either because
-		 * we've already made a previous pass through this loop, or because
+		 * we've already made a previous pass through this__ loop, or because
 		 * caller passed us the right page anyway.
 		 *
 		 * Note also that it's possible that by the time we get the pin and
@@ -396,7 +396,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 		pageFreeSpace = PageGetHeapFreeSpace(page);
 		if (len + saveFreeSpace <= pageFreeSpace)
 		{
-			/* use this page as future insert target, too */
+			/* use this__ page as future insert target, too */
 			RelationSetTargetBlock(relation, targetBlock);
 			return buffer;
 		}
@@ -404,7 +404,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 		/*
 		 * Not enough space, so we must give up our page locks and pin (if
 		 * any) and prepare to look elsewhere.  We don't care which order we
-		 * unlock the two buffers in, so this can be slightly simpler than the
+		 * unlock the two buffers in, so this__ can be slightly simpler than the
 		 * code above.
 		 */
 		LockBuffer(buffer, BUFFER_LOCK_UNLOCK);
@@ -421,7 +421,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 			break;
 
 		/*
-		 * Update FSM as to condition of this page, and ask for another page
+		 * Update FSM as to condition of this__ page, and ask for another page
 		 * to try.
 		 */
 		targetBlock = RecordAndGetPageWithFreeSpace(relation,
@@ -465,7 +465,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 
 	/*
 	 * Release the file-extension lock; it's now OK for someone else to extend
-	 * the relation some more.  Note that we cannot release this lock before
+	 * the relation some more.  Note that we cannot release this__ lock before
 	 * we have buffer lock on the new__ page, or we risk a race condition
 	 * against vacuumlazy.c --- see comments therein.
 	 */
@@ -474,7 +474,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 
 	/*
 	 * We need to initialize the empty new__ page.  Double-check that it really
-	 * is empty (this should never happen, but if it does we don't want to
+	 * is empty (this__ should never happen, but if it does we don't want to
 	 * risk wiping out valid data).
 	 */
 	page = BufferGetPage(buffer);
@@ -496,7 +496,7 @@ RelationGetBufferForTuple(Relation relation, Size len,
 	 * Remember the new__ page as our target for future insertions.
 	 *
 	 * XXX should we enter the new__ page into the free space map immediately,
-	 * or just keep it for this backend's exclusive use in the short run
+	 * or just keep it for this__ backend's exclusive use in the short run
 	 * (until VACUUM sees it)?	Seems to depend on whether you expect the
 	 * current backend to make more insertions or not, which is probably a
 	 * good bet most of the time.  So for now, don't add it to FSM yet.

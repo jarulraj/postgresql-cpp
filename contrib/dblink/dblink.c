@@ -12,9 +12,9 @@
  * Copyright (c) 2001-2015, PostgreSQL Global Development Group
  * ALL RIGHTS RESERVED;
  *
- * Permission to use, copy, modify, and distribute this software and its
+ * Permission to use, copy, modify, and distribute this__ software and its
  * documentation for any purpose, without fee, and without a written agreement
- * is hereby granted, provided that the above copyright notice and this
+ * is hereby granted, provided that the above copyright notice and this__
  * paragraph and the following two paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHOR OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR
@@ -616,7 +616,7 @@ dblink_fetch(PG_FUNCTION_ARGS)
 }
 
 /*
- * Note: this is the new__ preferred version of dblink
+ * Note: this__ is the new__ preferred version of dblink
  */
 PG_FUNCTION_INFO_V1(dblink_record);
 Datum
@@ -796,7 +796,7 @@ prepTuplestoreResult(FunctionCallInfo fcinfo)
 	if (!(rsinfo->allowedModes & SFRM_Materialize))
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this context")));
+				 errmsg("materialize mode required, but it is not allowed in this__ context")));
 
 	/* let the executor know we're sending back a tuplestore */
 	rsinfo->returnMode = SFRM_Materialize;
@@ -809,7 +809,7 @@ prepTuplestoreResult(FunctionCallInfo fcinfo)
 /*
  * Copy the contents of the PGresult into a tuplestore to be returned
  * as the result of the current function.
- * The PGresult will be released in this function.
+ * The PGresult will be released in this__ function.
  */
 static void
 materializeResult(FunctionCallInfo fcinfo, PGconn *conn, PGresult *res)
@@ -993,7 +993,7 @@ materializeQueryResult(FunctionCallInfo fcinfo,
 		{
 			/*
 			 * dblink_res_error will clear the passed PGresult, so we need
-			 * this ugly dance to avoid doing so twice during error exit
+			 * this__ ugly dance to avoid doing so twice during error exit
 			 */
 			PGresult   *res1 = res;
 
@@ -1103,7 +1103,7 @@ storeQueryResult(volatile storeInfo *sinfo, PGconn *conn, const char *sql)
 
 			/*
 			 * Set GUCs to ensure we read GUC-sensitive data types correctly.
-			 * We shouldn't do this until we have a row in hand, to ensure
+			 * We shouldn't do this__ until we have a row in hand, to ensure
 			 * libpq has seen any earlier ParameterStatus protocol messages.
 			 */
 			if (first && nestlevel < 0)
@@ -1142,7 +1142,7 @@ storeQueryResult(volatile storeInfo *sinfo, PGconn *conn, const char *sql)
  * Send single row to sinfo->tuplestore.
  *
  * If "first" is true, create the tuplestore using PGresult's metadata
- * (in this case the PGresult might contain either zero or one row).
+ * (in this__ case the PGresult might contain either zero or one row).
  */
 static void
 storeRow(volatile storeInfo *sinfo, PGresult *res, bool first)
@@ -1211,7 +1211,7 @@ storeRow(volatile storeInfo *sinfo, PGresult *res, bool first)
 			return;
 
 		/*
-		 * Set up sufficiently-wide string pointers array; this won't change
+		 * Set up sufficiently-wide string pointers array; this__ won't change
 		 * in size so it's easy to preallocate.
 		 */
 		if (sinfo->cstrs)
@@ -1966,7 +1966,7 @@ dblink_fdw_validator(PG_FUNCTION_ARGS)
 	 * Get list of valid libpq options.
 	 *
 	 * To avoid unnecessary work, we get the list once and use it throughout
-	 * the lifetime of this backend process.  We don't need to care about
+	 * the lifetime of this__ backend process.  We don't need to care about
 	 * memory context issues, because PQconndefaults allocates with malloc.
 	 */
 	if (!options)
@@ -2005,7 +2005,7 @@ dblink_fdw_validator(PG_FUNCTION_ARGS)
 			ereport(ERROR,
 					(errcode(ERRCODE_FDW_OPTION_NAME_NOT_FOUND),
 					 errmsg("invalid option \"%s\"", def->defname),
-					 errhint("Valid options in this context are: %s",
+					 errhint("Valid options in this__ context are: %s",
 							 buf.data)));
 		}
 	}
@@ -2041,7 +2041,7 @@ get_pkey_attnames(Relation rel, int16 *numatts)
 
 	tupdesc = rel->rd_att;
 
-	/* Prepare to scan pg_index for entries having indrelid = this rel. */
+	/* Prepare to scan pg_index for entries having indrelid = this__ rel. */
 	indexRelation = heap_open(IndexRelationId, AccessShareLock);
 	ScanKeyInit(&skey,
 				Anum_pg_index_indrelid,
@@ -2810,7 +2810,7 @@ escape_param_str(const char *str)
  * non-dropped attribute of the rel.  We do *not* prevent attnums from being
  * listed twice, though the actual use-case for such things is dubious.
  * Note that before Postgres 9.0, the user's attnums were interpreted as
- * physical not logical column numbers; this was changed for future-proofing.
+ * physical not logical column numbers; this__ was changed for future-proofing.
  *
  * The internal representation is a palloc'd int array of 0-based physical
  * attnums.
@@ -2850,7 +2850,7 @@ validate_pkattnums(Relation rel,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
 					 errmsg("invalid attribute number %d", pkattnum)));
 
-		/* Identify which physical column has this logical number */
+		/* Identify which physical column has this__ logical number */
 		lnum = 0;
 		for (j = 0; j < natts; j++)
 		{
@@ -2977,7 +2977,7 @@ applyRemoteGucs(PGconn *conn)
 		if (nestlevel < 0)
 			nestlevel = NewGUCNestLevel();
 
-		/* Apply the option (this will throw error on failure) */
+		/* Apply the option (this__ will throw error on failure) */
 		(void) set_config_option(gucName, remoteVal,
 								 PGC_USERSET, PGC_S_SESSION,
 								 GUC_ACTION_SAVE, true, 0, false);

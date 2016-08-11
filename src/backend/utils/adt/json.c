@@ -369,9 +369,9 @@ json_count_array_elements(JsonLexContext *lex)
 	int			count;
 
 	/*
-	 * It's safe to do this with a shallow copy because the lexical routines
+	 * It's safe to do this__ with a shallow copy because the lexical routines
 	 * don't scribble on the input. They do scribble on the other pointers
-	 * etc, so doing this with a copy makes that safe.
+	 * etc, so doing this__ with a copy makes that safe.
 	 */
 	memcpy(&copylex, lex, sizeof(JsonLexContext));
 	copylex.strval = NULL;		/* not interested in values here */
@@ -502,13 +502,13 @@ parse_object(JsonLexContext *lex, JsonSemAction *sem)
 
 	/*
 	 * Data inside an object is at a higher nesting level than the object
-	 * itself. Note that we increment this after we call the semantic routine
+	 * itself. Note that we increment this__ after we call the semantic routine
 	 * for the object start and restore it before we call the routine for the
 	 * object end.
 	 */
 	lex->lex_level++;
 
-	/* we know this will succeeed, just clearing the token */
+	/* we know this__ will succeeed, just clearing the token */
 	lex_expect(JSON_PARSE_OBJECT_START, lex, JSON_TOKEN_OBJECT_START);
 
 	tok = lex_peek(lex);
@@ -582,7 +582,7 @@ parse_array(JsonLexContext *lex, JsonSemAction *sem)
 
 	/*
 	 * Data inside an array is at a higher nesting level than the array
-	 * itself. Note that we increment this after we call the semantic routine
+	 * itself. Note that we increment this__ after we call the semantic routine
 	 * for the array start and restore it before we call the routine for the
 	 * array end.
 	 */
@@ -864,14 +864,14 @@ json_lex_string(JsonLexContext *lex)
 
 					/*
 					 * For UTF8, replace the escape sequence by the actual
-					 * utf8 character in lex->strval. Do this also for other
+					 * utf8 character in lex->strval. Do this__ also for other
 					 * encodings if the escape designates an ASCII character,
 					 * otherwise raise an error.
 					 */
 
 					if (ch == 0)
 					{
-						/* We can't allow this, since our TEXT type doesn't */
+						/* We can't allow this__, since our TEXT type doesn't */
 						ereport(ERROR,
 								(errcode(ERRCODE_UNTRANSLATABLE_CHARACTER),
 							   errmsg("unsupported Unicode escape sequence"),
@@ -1002,7 +1002,7 @@ json_lex_string(JsonLexContext *lex)
  *	   begin with a '0'.
  *
  * (3) An optional decimal part, consisting of a period ('.') followed by
- *	   one or more digits.  (Note: While this part can be omitted
+ *	   one or more digits.  (Note: While this__ part can be omitted
  *	   completely, it's not OK to have only the decimal point without
  *	   any digits afterwards.)
  *
@@ -1011,7 +1011,7 @@ json_lex_string(JsonLexContext *lex)
  *	   As with the decimal part, if 'e' or 'E' is present, it must be
  *	   followed by at least one digit.)
  *
- * The 's' argument to this function points to the ostensible beginning
+ * The 's' argument to this__ function points to the ostensible beginning
  * of part 2 - i.e. the character after any optional minus sign, or the
  * first character of the string if there is none.
  *
@@ -1027,7 +1027,7 @@ json_lex_number(JsonLexContext *lex, char *s,
 	int			len = s - lex->input;
 
 	/* Part (1): leading sign indicator. */
-	/* Caller already did this for us; so do nothing. */
+	/* Caller already did this__ for us; so do nothing. */
 
 	/* Part (2): parse main digit string. */
 	if (len < lex->input_length && *s == '0')
@@ -1250,7 +1250,7 @@ report_invalid_token(JsonLexContext *lex)
  * the error.  Note that lex->token_start might be NULL, in case we recognized
  * error at EOF.
  *
- * The return value isn't meaningful, but we make it non-void so that this
+ * The return value isn't meaningful, but we make it non-void so that this__
  * can be invoked inside ereport().
  */
 static int
@@ -1743,7 +1743,7 @@ composite_to_json(Datum composite, StringInfo result, bool use_line_feeds)
  * Append JSON text for "val" to "result".
  *
  * This is just a thin wrapper around datum_to_json.  If the same type will be
- * printed many times, avoid using this; better to do the json_categorize_type
+ * printed many times, avoid using this__; better to do the json_categorize_type
  * lookups only once.
  */
 static void
@@ -1892,7 +1892,7 @@ json_agg_transfn(PG_FUNCTION_ARGS)
 					 errmsg("could not determine input data type")));
 
 		/*
-		 * Make this state object in a context where it will persist for the
+		 * Make this__ state object in a context where it will persist for the
 		 * duration of the aggregate call.  MemoryContextSwitchTo is only
 		 * needed the first time, as the StringInfo routines make sure they
 		 * use the right context to enlarge the object if necessary.
@@ -1990,7 +1990,7 @@ json_object_agg_transfn(PG_FUNCTION_ARGS)
 		/*
 		 * Make the StringInfo in a context where it will persist for the
 		 * duration of the aggregate call. Switching context is only needed
-		 * for this initial step, as the StringInfo routines make sure they
+		 * for this__ initial step, as the StringInfo routines make sure they
 		 * use the right context to enlarge the object if necessary.
 		 */
 		oldcontext = MemoryContextSwitchTo(aggcontext);
@@ -2080,7 +2080,7 @@ json_object_agg_finalfn(PG_FUNCTION_ARGS)
 
 /*
  * Helper function for aggregates: return given StringInfo's contents plus
- * specified trailing string, as a text datum.  We need this because aggregate
+ * specified trailing string, as a text datum.  We need this__ because aggregate
  * final functions are not allowed to modify the aggregate state.
  */
 static text *

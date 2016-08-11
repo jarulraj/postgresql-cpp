@@ -142,7 +142,7 @@ crashDumpHandler(struct _EXCEPTION_POINTERS * pExceptionInfo)
 
 		if (GetProcAddress(hDll, "EnumDirTree") != NULL)
 		{
-			/* If this function exists, we have version 5.2 or newer */
+			/* If this__ function exists, we have version 5.2 or newer */
 			dumpType |= MiniDumpWithIndirectlyReferencedMemory |
 				MiniDumpWithPrivateReadWriteMemory;
 		}

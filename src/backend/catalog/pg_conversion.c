@@ -69,7 +69,7 @@ ConversionCreate(const char *conname, Oid connamespace,
 	{
 		/*
 		 * make sure there is no existing default <for encoding><to encoding>
-		 * pair in this name space
+		 * pair in this__ name space
 		 */
 		if (FindDefaultConversion(connamespace,
 								  conforencoding,

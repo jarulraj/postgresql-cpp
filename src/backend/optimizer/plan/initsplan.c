@@ -90,8 +90,8 @@ static void check_hashjoinable(RestrictInfo *restrictinfo);
  * The initial invocation must pass root->parse->jointree as the value of
  * jtnode.  Internally, the function recurses through the jointree.
  *
- * At the end of this process, there should be one baserel RelOptInfo for
- * every non-join RTE that is used in the query.  Therefore, this routine
+ * At the end of this__ process, there should be one baserel RelOptInfo for
+ * every non-join RTE that is used in the query.  Therefore, this__ routine
  * is the only place that should call build_simple_rel with reloptkind
  * RELOPT_BASEREL.  (Note: build_simple_rel recurses internally to build
  * "other rel" RelOptInfos for the members of any appendrels we find here.)
@@ -231,10 +231,10 @@ add_vars_to_targetlist(PlannerInfo *root, List *vars,
  *
  * While later planning steps ensure that the Var/PHV source rels are on the
  * outside of nestloops relative to the LATERAL subquery, we also need to
- * ensure that the Vars/PHVs propagate up to the nestloop join level; this
+ * ensure that the Vars/PHVs propagate up to the nestloop join level; this__
  * means setting suitable where_needed values for them.
  *
- * Note that this only deals with lateral references in unflattened LATERAL
+ * Note that this__ only deals with lateral references in unflattened LATERAL
  * subqueries.  When we flatten a LATERAL subquery, its lateral references
  * become plain Vars in the parent query, but they may have to be wrapped in
  * PlaceHolderVars if they need to be forced NULL by outer joins that don't
@@ -347,7 +347,7 @@ extract_lateral_references(PlannerInfo *root, RelOptInfo *brel, Index rtindex)
 
 			/*
 			 * If we pulled the PHV out of a subquery RTE, its expression
-			 * needs to be preprocessed.  subquery_planner() already did this
+			 * needs to be preprocessed.  subquery_planner() already did this__
 			 * for level-zero PHVs in function and values RTEs, though.
 			 */
 			if (levelsup > 0)
@@ -445,7 +445,7 @@ create_lateral_join_info(PlannerInfo *root)
 				Assert(false);
 		}
 
-		/* We now have all the simple lateral refs from this rel */
+		/* We now have all the simple lateral refs from this__ rel */
 		brel->direct_lateral_relids = lateral_relids;
 		brel->lateral_relids = bms_copy(lateral_relids);
 	}
@@ -578,7 +578,7 @@ create_lateral_join_info(PlannerInfo *root)
 		/* Also, no rel should have a lateral dependency on itself */
 		Assert(!bms_is_member(rti, lateral_relids));
 
-		/* Mark this rel's referencees */
+		/* Mark this__ rel's referencees */
 		rti2 = -1;
 		while ((rti2 = bms_next_member(lateral_relids, rti2)) >= 0)
 		{
@@ -674,7 +674,7 @@ deconstruct_jointree(PlannerInfo *root)
 	Assert(root->parse->jointree != NULL &&
 		   IsA(root->parse->jointree, FromExpr));
 
-	/* this is filled as we scan the jointree */
+	/* this__ is filled as we scan the jointree */
 	root->nullable_baserels = NULL;
 
 	result = deconstruct_recurse(root, (Node *) root->parse->jointree, false,
@@ -693,18 +693,18 @@ deconstruct_jointree(PlannerInfo *root)
  *
  * Inputs:
  *	jtnode is the jointree node to examine
- *	below_outer_join is TRUE if this node is within the nullable side of a
+ *	below_outer_join is TRUE if this__ node is within the nullable side of a
  *		higher-level outer join
  * Outputs:
- *	*qualscope gets the set of base Relids syntactically included in this
- *		jointree node (do not modify or free this, as it may also be pointed
+ *	*qualscope gets the set of base Relids syntactically included in this__
+ *		jointree node (do not modify or free this__, as it may also be pointed
  *		to by RestrictInfo and SpecialJoinInfo nodes)
  *	*inner_join_rels gets the set of base Relids syntactically included in
- *		inner joins appearing at or below this jointree node (do not modify
- *		or free this, either)
+ *		inner joins appearing at or below this__ jointree node (do not modify
+ *		or free this__, either)
  *	*postponed_qual_list is a list of PostponedQual structs, which we can
  *		add quals to if they turn out to belong to a higher join level
- *	Return value is the appropriate joinlist for this jointree node
+ *	Return value is the appropriate joinlist for this__ jointree node
  *
  * In addition, entries will be added to root->join_info_list for outer joins.
  */
@@ -829,13 +829,13 @@ deconstruct_recurse(PlannerInfo *root, Node *jtnode, bool below_outer_join,
 		/*
 		 * Order of operations here is subtle and critical.  First we recurse
 		 * to handle sub-JOINs.  Their join quals will be placed without
-		 * regard for whether this level is an outer join, which is correct.
+		 * regard for whether this__ level is an outer join, which is correct.
 		 * Then we place our own join quals, which are restricted by lower
-		 * outer joins in any case, and are forced to this level if this is an
-		 * outer join and they mention the outer side.  Finally, if this is an
+		 * outer joins in any case, and are forced to this__ level if this__ is an
+		 * outer join and they mention the outer side.  Finally, if this__ is an
 		 * outer join, we create a join_info_list entry for the join.  This
 		 * will prevent quals above us in the join tree that use those rels
-		 * from being pushed down below this level.  (It's okay for upper
+		 * from being pushed down below this__ level.  (It's okay for upper
 		 * quals to be pushed down to the outer side, however.)
 		 */
 		switch (j->jointype)
@@ -887,7 +887,7 @@ deconstruct_recurse(PlannerInfo *root, Node *jtnode, bool below_outer_join,
 
 				/*
 				 * Theoretically, a semijoin would null the RHS; but since the
-				 * RHS can't be accessed above the join, this is immaterial
+				 * RHS can't be accessed above the join, this__ is immaterial
 				 * and we needn't account for it.
 				 */
 				nullable_rels = NULL;
@@ -938,7 +938,7 @@ deconstruct_recurse(PlannerInfo *root, Node *jtnode, bool below_outer_join,
 			{
 				/*
 				 * We should not be postponing any quals past an outer join.
-				 * If this Assert fires, pull_up_subqueries() messed up.
+				 * If this__ Assert fires, pull_up_subqueries() messed up.
 				 */
 				Assert(j->jointype == JOIN_INNER);
 				*postponed_qual_list = lappend(*postponed_qual_list, pq);
@@ -1002,7 +1002,7 @@ deconstruct_recurse(PlannerInfo *root, Node *jtnode, bool below_outer_join,
 		 */
 		if (j->jointype == JOIN_FULL)
 		{
-			/* force the join order exactly at this node */
+			/* force the join order exactly at this__ node */
 			joinlist = list_make1(list_make2(leftjoinlist, rightjoinlist));
 		}
 		else if (list_length(leftjoinlist) + list_length(rightjoinlist) <=
@@ -1045,16 +1045,16 @@ deconstruct_recurse(PlannerInfo *root, Node *jtnode, bool below_outer_join,
  * Inputs:
  *	left_rels: the base Relids syntactically on outer side of join
  *	right_rels: the base Relids syntactically on inner side of join
- *	inner_join_rels: base Relids participating in inner joins below this one
+ *	inner_join_rels: base Relids participating in inner joins below this__ one
  *	jointype: what it says (must always be LEFT, FULL, SEMI, or ANTI)
  *	clause: the outer join's join condition (in implicit-AND format)
  *
  * The node should eventually be appended to root->join_info_list, but we
  * do not do that here.
  *
- * Note: we assume that this function is invoked bottom-up, so that
+ * Note: we assume that this__ function is invoked bottom-up, so that
  * root->join_info_list already contains entries for all outer joins that are
- * syntactically below this one.
+ * syntactically below this__ one.
  */
 static SpecialJoinInfo *
 make_outerjoininfo(PlannerInfo *root,
@@ -1083,7 +1083,7 @@ make_outerjoininfo(PlannerInfo *root,
 	 * row is generated from no element of the nullable relation?)	So,
 	 * complain if any nullable rel is FOR [KEY] UPDATE/SHARE.
 	 *
-	 * You might be wondering why this test isn't made far upstream in the
+	 * You might be wondering why this__ test isn't made far upstream in the
 	 * parser.  It's because the parser hasn't got enough info --- consider
 	 * FOR UPDATE applied to a view.  Only after rewriting and flattening do
 	 * we know whether the view contains an outer join.
@@ -1108,7 +1108,7 @@ make_outerjoininfo(PlannerInfo *root,
 	sjinfo->syn_lefthand = left_rels;
 	sjinfo->syn_righthand = right_rels;
 	sjinfo->jointype = jointype;
-	/* this always starts out false */
+	/* this__ always starts out false */
 	sjinfo->delay_upper_joins = false;
 
 	compute_semijoin_info(sjinfo, clause);
@@ -1118,7 +1118,7 @@ make_outerjoininfo(PlannerInfo *root,
 	{
 		sjinfo->min_lefthand = bms_copy(left_rels);
 		sjinfo->min_righthand = bms_copy(right_rels);
-		sjinfo->lhs_strict = false;		/* don't care about this */
+		sjinfo->lhs_strict = false;		/* don't care about this__ */
 		return sjinfo;
 	}
 
@@ -1189,8 +1189,8 @@ make_outerjoininfo(PlannerInfo *root,
 		 * ordering of the two OJs, so add lower OJ's full syntactic relset to
 		 * min_lefthand.  (We must use its full syntactic relset, not just its
 		 * min_lefthand + min_righthand.  This is because there might be other
-		 * OJs below this one that this one can commute with, but we cannot
-		 * commute with them if we don't with this one.)  Also, if the current
+		 * OJs below this__ one that this__ one can commute with, but we cannot
+		 * commute with them if we don't with this__ one.)  Also, if the current
 		 * join is a semijoin or antijoin, we must preserve ordering
 		 * regardless of strictness.
 		 *
@@ -1255,11 +1255,11 @@ make_outerjoininfo(PlannerInfo *root,
 
 	/*
 	 * Examine PlaceHolderVars.  If a PHV is supposed to be evaluated within
-	 * this join's nullable side, then ensure that min_righthand contains the
+	 * this__ join's nullable side, then ensure that min_righthand contains the
 	 * full eval_at set of the PHV.  This ensures that the PHV actually can be
-	 * evaluated within the RHS.  Note that this works only because we should
+	 * evaluated within the RHS.  Note that this__ works only because we should
 	 * already have determined the final eval_at level for any PHV
-	 * syntactically within this join.
+	 * syntactically within this__ join.
 	 */
 	foreach(l, root->placeholder_list)
 	{
@@ -1301,7 +1301,7 @@ make_outerjoininfo(PlannerInfo *root,
  * compute_semijoin_info
  *	  Fill semijoin-related fields of a new__ SpecialJoinInfo
  *
- * Note: this relies on only the jointype and syn_righthand fields of the
+ * Note: this__ relies on only the jointype and syn_righthand fields of the
  * SpecialJoinInfo; the rest may not be set yet.
  */
 static void
@@ -1337,8 +1337,8 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
 	 * down to be processed within one side or the other.  (It is okay to
 	 * consider only the syntactically-associated clauses here because for a
 	 * semijoin, no higher-level quals could refer to the RHS, and so there
-	 * can be no other quals that are semantically associated with this join.
-	 * We do things this way because it is useful to have the set of potential
+	 * can be no other quals that are semantically associated with this__ join.
+	 * We do things this__ way because it is useful to have the set of potential
 	 * unique-ification expressions before we can extract the list of quals
 	 * that are actually semantically associated with the particular join.)
 	 *
@@ -1498,24 +1498,24 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
  * 'jointype': type of join the qual is from (JOIN_INNER for a WHERE clause)
  * 'qualscope': set of baserels the qual's syntactic scope covers
  * 'ojscope': NULL if not an outer-join qual, else the minimum set of baserels
- *		needed to form this join
+ *		needed to form this__ join
  * 'outerjoin_nonnullable': NULL if not an outer-join qual, else the set of
  *		baserels appearing on the outer (nonnullable) side of the join
- *		(for FULL JOIN this includes both sides of the join, and must in fact
+ *		(for FULL JOIN this__ includes both sides of the join, and must in fact
  *		equal qualscope)
  * 'deduced_nullable_relids': if is_deduced is TRUE, the nullable relids to
  *		impute to the clause; otherwise NULL
  * 'postponed_qual_list': list of PostponedQual structs, which we can add
- *		this qual to if it turns out to belong to a higher join level.
+ *		this__ qual to if it turns out to belong to a higher join level.
  *		Can be NULL if caller knows postponement is impossible.
  *
  * 'qualscope' identifies what level of JOIN the qual came from syntactically.
  * 'ojscope' is needed if we decide to force the qual up to the outer-join
  * level, which will be ojscope not necessarily qualscope.
  *
- * In normal use (when is_deduced is FALSE), at the time this is called,
+ * In normal use (when is_deduced is FALSE), at the time this__ is called,
  * root->join_info_list must contain entries for all and only those special
- * joins that are syntactically below this qual.  But when is_deduced is TRUE,
+ * joins that are syntactically below this__ qual.  But when is_deduced is TRUE,
  * we are adding new__ deduced clauses after completion of deconstruct_jointree,
  * so it cannot be assumed that root->join_info_list has anything to do with
  * qual placement.
@@ -1648,21 +1648,21 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 	 * regular filter condition at the level where it is evaluated.
 	 *
 	 * Note: it is not immediately obvious that a simple boolean is enough
-	 * for this: if for some reason we were to attach a degenerate qual to
+	 * for this__: if for some reason we were to attach a degenerate qual to
 	 * its original join level, it would need to be treated as an outer join
-	 * qual there.  However, this cannot happen, because all the rels the
+	 * qual there.  However, this__ cannot happen, because all the rels the
 	 * clause mentions must be in the outer join's min_righthand, therefore
 	 * the join it needs must be formed before the outer join; and we always
 	 * attach quals to the lowest level where they can be evaluated.  But
 	 * if we were ever to re-introduce a mechanism for delaying evaluation
-	 * of "expensive" quals, this area would need work.
+	 * of "expensive" quals, this__ area would need work.
 	 *----------
 	 */
 	if (is_deduced)
 	{
 		/*
 		 * If the qual came from implied-equality deduction, it should not be
-		 * outerjoin-delayed, else deducer blew it.  But we can't check this
+		 * outerjoin-delayed, else deducer blew it.  But we can't check this__
 		 * because the join_info_list may now contain OJs above where the qual
 		 * belongs.  For the same reason, we must rely on caller to supply the
 		 * correct nullable_relids set.
@@ -1704,7 +1704,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 		 * rather than the intended single null-extended row, for any
 		 * nonnullable-side rows failing the qual.
 		 *
-		 * (Do this step after calling check_outerjoin_delay, because that
+		 * (Do this__ step after calling check_outerjoin_delay, because that
 		 * trashes relids.)
 		 */
 		Assert(ojscope);
@@ -1738,9 +1738,9 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 			maybe_equivalence = false;
 
 			/*
-			 * It's possible that this is an IS NULL clause that's redundant
+			 * It's possible that this__ is an IS NULL clause that's redundant
 			 * with a lower antijoin; if so we can just discard it.  We need
-			 * not test in any of the other cases, because this will only be
+			 * not test in any of the other cases, because this__ will only be
 			 * possible for pushed-down, delayed clauses.
 			 */
 			if (check_redundant_nullability_qual(root, clause))
@@ -1784,7 +1784,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 	 * relations, so that they will be emitted by the plan nodes that scan
 	 * those relations (else they won't be available at the join node!).
 	 *
-	 * Note: if the clause gets absorbed into an EquivalenceClass then this
+	 * Note: if the clause gets absorbed into an EquivalenceClass then this__
 	 * may be unnecessary, but for now we have to do it to cover the case
 	 * where the EC becomes ec_broken and we end up reinserting the original
 	 * clauses into the plan.
@@ -1824,10 +1824,10 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 	 *
 	 * If it is a full outer-join qualification, we add it to
 	 * root->full_join_clauses.  (Ideally we'd discard cases that aren't
-	 * leftvar = rightvar, as we do for left/right joins, but this routine
+	 * leftvar = rightvar, as we do for left/right joins, but this__ routine
 	 * doesn't have the info needed to do that; and the current usage of the
 	 * full_join_clauses list doesn't require that, so it's not currently
-	 * worth complicating this routine's API to make it possible.)
+	 * worth complicating this__ routine's API to make it possible.)
 	 *
 	 * If none of the above hold, pass it off to
 	 * distribute_restrictinfo_to_rels().
@@ -1876,7 +1876,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 			}
 			if (jointype == JOIN_FULL)
 			{
-				/* FULL JOIN (above tests cannot match in this case) */
+				/* FULL JOIN (above tests cannot match in this__ case) */
 				root->full_join_clauses = lappend(root->full_join_clauses,
 												  restrictinfo);
 				return;
@@ -1904,7 +1904,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
  * safe level for evaluating the qual, and return TRUE.  Any extra delay for
  * higher-level joins is reflected by setting delay_upper_joins to TRUE in
  * SpecialJoinInfo structs.  We also compute nullable_relids, the set of
- * referenced relids that are nullable by lower outer joins (note that this
+ * referenced relids that are nullable by lower outer joins (note that this__
  * can be nonempty even for a non-delayed qual).
  *
  * For an is_pushed_down qual, we can evaluate the qual as soon as (1) we have
@@ -1919,15 +1919,15 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
  *
  * To enforce (2), scan the join_info_list and merge the required-relid sets of
  * any such OJs into the clause's own reference list.  At the time we are
- * called, the join_info_list contains only outer joins below this qual.  We
- * have to repeat the scan until no new__ relids get added; this ensures that
+ * called, the join_info_list contains only outer joins below this__ qual.  We
+ * have to repeat the scan until no new__ relids get added; this__ ensures that
  * the qual is suitably delayed regardless of the order in which OJs get
  * executed.  As an example, if we have one OJ with LHS=A, RHS=B, and one with
  * LHS=B, RHS=C, it is implied that these can be done in either order; if the
  * B/C join is done first then the join to A can null C, so a qual actually
  * mentioning only C cannot be applied below the join to A.
  *
- * For a non-pushed-down qual, this isn't going to determine where we place the
+ * For a non-pushed-down qual, this__ isn't going to determine where we place the
  * qual, but we need to determine outerjoin_delayed and nullable_relids anyway
  * for use later in the planning process.
  *
@@ -1975,7 +1975,7 @@ check_outerjoin_delay(PlannerInfo *root,
 		{
 			SpecialJoinInfo *sjinfo = (SpecialJoinInfo *) lfirst(l);
 
-			/* do we reference any nullable rels of this OJ? */
+			/* do we reference any nullable rels of this__ OJ? */
 			if (bms_overlap(relids, sjinfo->min_righthand) ||
 				(sjinfo->jointype == JOIN_FULL &&
 				 bms_overlap(relids, sjinfo->min_lefthand)))
@@ -2165,15 +2165,15 @@ distribute_restrictinfo_to_rels(PlannerInfo *root,
  *
  * "nullable_relids" is the set of relids used in the expressions that are
  * potentially nullable below the expressions.  (This has to be supplied by
- * caller because this function is used after deconstruct_jointree, so we
+ * caller because this__ function is used after deconstruct_jointree, so we
  * don't have knowledge of where the clause items came from.)
  *
  * "both_const" indicates whether both items are known pseudo-constant;
- * in this case it is worth applying eval_const_expressions() in case we
+ * in this__ case it is worth applying eval_const_expressions() in case we
  * can produce constant TRUE or constant FALSE.  (Otherwise it's not,
  * because the expressions went through eval_const_expressions already.)
  *
- * Note: this function will copy item1 and item2, but it is caller's
+ * Note: this__ function will copy item1 and item2, but it is caller's
  * responsibility to make sure that the Relids parameters are fresh copies
  * not shared with other uses.
  *
@@ -2195,7 +2195,7 @@ process_implied_equality(PlannerInfo *root,
 
 	/*
 	 * Build the new__ clause.  Copy to ensure it shares no substructure with
-	 * original (this is necessary in case there are subselects in there...)
+	 * original (this__ is necessary in case there are subselects in there...)
 	 */
 	clause = make_opclause(opno,
 						   BOOLOID,		/* opresulttype */
@@ -2236,7 +2236,7 @@ process_implied_equality(PlannerInfo *root,
  * This overlaps the functionality of process_implied_equality(), but we
  * must return the RestrictInfo, not push it into the joininfo tree.
  *
- * Note: this function will copy item1 and item2, but it is caller's
+ * Note: this__ function will copy item1 and item2, but it is caller's
  * responsibility to make sure that the Relids parameters are fresh copies
  * not shared with other uses.
  *
@@ -2256,7 +2256,7 @@ build_implied_join_equality(Oid opno,
 
 	/*
 	 * Build the new__ clause.  Copy to ensure it shares no substructure with
-	 * original (this is necessary in case there are subselects in there...)
+	 * original (this__ is necessary in case there are subselects in there...)
 	 */
 	clause = make_opclause(opno,
 						   BOOLOID,		/* opresulttype */

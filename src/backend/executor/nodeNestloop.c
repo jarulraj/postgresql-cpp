@@ -100,7 +100,7 @@ ExecNestLoop(NestLoopState *node)
 
 	/*
 	 * Reset per-tuple memory context to free any expression evaluation
-	 * storage allocated in the previous tuple cycle.  Note this can't happen
+	 * storage allocated in the previous tuple cycle.  Note this__ can't happen
 	 * until we're done projecting out tuples from a join tuple.
 	 */
 	ResetExprContext(econtext);
@@ -186,7 +186,7 @@ ExecNestLoop(NestLoopState *node)
 			{
 				/*
 				 * We are doing an outer join and there were no join matches
-				 * for this outer tuple.  Generate a fake join tuple with
+				 * for this__ outer tuple.  Generate a fake join tuple with
 				 * nulls for the inner tuple, and return it if it passes the
 				 * non-join quals.
 				 */
@@ -226,7 +226,7 @@ ExecNestLoop(NestLoopState *node)
 		}
 
 		/*
-		 * at this point we have a new__ pair of inner and outer tuples so we
+		 * at this__ point we have a new__ pair of inner and outer tuples so we
 		 * test the inner and outer tuples to see if they satisfy the node's
 		 * qualification.
 		 *
@@ -248,7 +248,7 @@ ExecNestLoop(NestLoopState *node)
 
 			/*
 			 * In a semijoin, we'll consider returning the first match, but
-			 * after that we're done with this outer tuple.
+			 * after that we're done with this__ outer tuple.
 			 */
 			if (node->js.jointype == JOIN_SEMI)
 				node->nl_NeedNewOuter = true;

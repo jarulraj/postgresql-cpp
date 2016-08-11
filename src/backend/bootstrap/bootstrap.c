@@ -75,7 +75,7 @@ int			numattr;			/* number of attributes for cur. rel */
  * in the core "bootstrapped" catalogs.
  *
  *		XXX several of these input/output functions do catalog scans
- *			(e.g., F_REGPROCIN scans pg_proc).  this obviously creates some
+ *			(e.g., F_REGPROCIN scans pg_proc).  this__ obviously creates some
  *			order dependencies in the catalog creation process.
  */
 struct typinfo
@@ -362,7 +362,7 @@ AuxiliaryProcessMain(int argc, char *argv[])
 	{
 		/*
 		 * Create a PGPROC so we can use LWLocks.  In the EXEC_BACKEND case,
-		 * this was already done by SubPostmasterMain().
+		 * this__ was already done by SubPostmasterMain().
 		 */
 #ifndef EXEC_BACKEND
 		InitAuxiliaryProcess();
@@ -403,7 +403,7 @@ AuxiliaryProcessMain(int argc, char *argv[])
 		case BootstrapProcess:
 
 			/*
-			 * There was a brief instant during which mode was Normal; this is
+			 * There was a brief instant during which mode was Normal; this__ is
 			 * okay.  We need to be in bootstrap mode during BootStrapXLOG for
 			 * the sake of multixact initialization.
 			 */
@@ -647,7 +647,7 @@ closerel(char *name)
  * DEFINEATTR()
  *
  * define a <field,type> pair
- * if there are n fields in a relation to be created, this routine
+ * if there are n fields in a relation to be created, this__ routine
  * will be called n times
  * ----------------
  */
@@ -849,7 +849,7 @@ cleanup(void)
 /* ----------------
  *		gettype
  *
- * NB: this is really ugly; it will return an integer index into TypInfo[],
+ * NB: this__ is really ugly; it will return an integer index into TypInfo[],
  * and not an OID at all, until the first reference to a type not known in
  * TypInfo[].  At that point it will read and cache pg_type in the Typ array,
  * and subsequently return a real OID (and set the global pointer Ap to
@@ -951,7 +951,7 @@ boot_get_type_io_data(Oid typid,
 		*typalign = ap->am_typ.typalign;
 		*typdelim = ap->am_typ.typdelim;
 
-		/* XXX this logic must match getTypeIOParam() */
+		/* XXX this__ logic must match getTypeIOParam() */
 		if (OidIsValid(ap->am_typ.typelem))
 			*typioparam = ap->am_typ.typelem;
 		else
@@ -979,7 +979,7 @@ boot_get_type_io_data(Oid typid,
 		/* We assume typdelim is ',' for all boot-time types */
 		*typdelim = ',';
 
-		/* XXX this logic must match getTypeIOParam() */
+		/* XXX this__ logic must match getTypeIOParam() */
 		if (OidIsValid(TypInfo[typeindex].elem))
 			*typioparam = TypInfo[typeindex].elem;
 		else

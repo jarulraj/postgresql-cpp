@@ -11,7 +11,7 @@
  * produce such parsetrees.  The planner wants to flatten all such cases
  * to ensure consistent optimization behavior.
  *
- * Formerly, this module was responsible for doing the initial flattening,
+ * Formerly, this__ module was responsible for doing the initial flattening,
  * but now we leave it to eval_const_expressions to do that since it has to
  * make a complete pass over the expression tree anyway.  Instead, we just
  * have to ensure that our manipulations preserve AND/OR flatness.
@@ -50,14 +50,14 @@ static Expr *process_duplicate_ors(List *orlist);
  * Input is a clause to be negated (e.g., the argument of a NOT clause).
  * Returns a new__ clause equivalent to the negation of the given clause.
  *
- * Although this can be invoked on its own, it's mainly intended as a helper
+ * Although this__ can be invoked on its own, it's mainly intended as a helper
  * for eval_const_expressions(), and that context drives several design
  * decisions.  In particular, if the input is already AND/OR flat, we must
  * preserve that property.  We also don't bother to recurse in situations
  * where we can assume that lower-level executions of eval_const_expressions
  * would already have simplified sub-clauses of the input.
  *
- * The difference between this and a simple make_notclause() is that this
+ * The difference between this__ and a simple make_notclause() is that this__
  * tries to get rid of the NOT node by logical simplification.  It's clearly
  * always a win if the NOT node can be eliminated altogether.  However, our
  * use of DeMorgan's laws could result in having more NOT nodes rather than
@@ -65,7 +65,7 @@ static Expr *process_duplicate_ors(List *orlist);
  * important to expose as much top-level AND/OR structure as possible.
  * Also, eliminating an intermediate NOT may allow us to flatten two levels
  * of AND or OR together that we couldn't have otherwise.  Finally, one of
- * the motivations for doing this is to ensure that logically equivalent
+ * the motivations for doing this__ is to ensure that logically equivalent
  * expressions will be seen as physically equal(), so we should always apply
  * the same transformations.
  */
@@ -147,7 +147,7 @@ negate_clause(Node *node)
 						 * i.e., swap AND for OR and negate each subclause.
 						 *
 						 * If the input is already AND/OR flat and has no NOT
-						 * directly above AND or OR, this transformation preserves
+						 * directly above AND or OR, this__ transformation preserves
 						 * those properties.  For example, if no direct child of
 						 * the given AND clause is an AND or a NOT-above-OR, then
 						 * the recursive calls of negate_clause() can't return any
@@ -258,7 +258,7 @@ negate_clause(Node *node)
 	}
 
 	/*
-	 * Otherwise we don't know how to simplify this, so just tack on an
+	 * Otherwise we don't know how to simplify this__, so just tack on an
 	 * explicit NOT node.
 	 */
 	return (Node *) make_notclause((Expr *) node);
@@ -269,14 +269,14 @@ negate_clause(Node *node)
  * canonicalize_qual
  *	  Convert a qualification expression to the most useful form.
  *
- * The name of this routine is a holdover from a time when it would try to
+ * The name of this__ routine is a holdover from a time when it would try to
  * force the expression into canonical AND-of-ORs or OR-of-ANDs form.
  * Eventually, we recognized that that had more theoretical purity than
  * actual usefulness, and so now the transformation doesn't involve any
  * notion of reaching a canonical form.
  *
  * NOTE: we assume the input has already been through eval_const_expressions
- * and therefore possesses AND/OR flatness.  Formerly this function included
+ * and therefore possesses AND/OR flatness.  Formerly this__ function included
  * its own flattening logic, but that requires a useless extra pass over the
  * tree.
  *
@@ -292,7 +292,7 @@ canonicalize_qual(Expr *qual)
 		return NULL;
 
 	/*
-	 * Pull up redundant subclauses in OR-of-AND trees.  We do this only
+	 * Pull up redundant subclauses in OR-of-AND trees.  We do this__ only
 	 * within the top-level AND/OR structure; there's no point in looking
 	 * deeper.  Also remove any NULL constants in the top-level structure.
 	 */
@@ -511,7 +511,7 @@ process_duplicate_ors(List *orlist)
 
 	/*
 	 * Choose the shortest AND clause as the reference list --- obviously, any
-	 * subclause not in this clause isn't in all the clauses. If we find a
+	 * subclause not in this__ clause isn't in all the clauses. If we find a
 	 * clause that's not an AND, we can treat it as a one-element AND clause,
 	 * which necessarily wins as shortest.
 	 */

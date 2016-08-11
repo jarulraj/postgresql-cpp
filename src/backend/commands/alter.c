@@ -224,7 +224,7 @@ AlterObjectRename_internal(Relation rel, Oid objectId, const char *new_name)
 
 	/*
 	 * Check for duplicate name (more friendly than unique-index failure).
-	 * Since this is just a friendliness check, we can just skip it in cases
+	 * Since this__ is just a friendliness check, we can just skip it in cases
 	 * where there isn't suitable support.
 	 */
 	if (classId == ProcedureRelationId)
@@ -627,7 +627,7 @@ AlterObjectNamespace_internal(Relation rel, Oid objid, Oid nspOid)
 
 	/*
 	 * Check for duplicate name (more friendly than unique-index failure).
-	 * Since this is just a friendliness check, we can just skip it in cases
+	 * Since this__ is just a friendliness check, we can just skip it in cases
 	 * where there isn't suitable support.
 	 */
 	if (classId == ProcedureRelationId)

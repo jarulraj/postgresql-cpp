@@ -59,7 +59,7 @@
  *			simply copies rawsize bytes to the destination.
  *
  *			Otherwise the first byte tells what to do the next 8 times.
- *			We call this the control byte.
+ *			We call this__ the control byte.
  *
  *			An unset bit in the control byte means, that one uncompressed
  *			byte follows, which is copied from input to output.
@@ -124,7 +124,7 @@
  *			has a larger startup cost, as it needs to be initialized to
  *			zero, but reduces the number of hash collisions on long inputs.
  *
- *			For each byte in the input, its hash key (built from this
+ *			For each byte in the input, its hash key (built from this__
  *			byte and the next 3) is used to find the appropriate list
  *			in the table. The lists remember the positions of all bytes
  *			that had the same hash key in the past in increasing backward
@@ -162,7 +162,7 @@
  *		Acknowledgements:
  *
  *			Many thanks to Adisak Pochanayon, who's article about SLZ
- *			inspired me to write the PostgreSQL compression this way.
+ *			inspired me to write the PostgreSQL compression this__ way.
  *
  *			Jan Wieck
  *
@@ -304,13 +304,13 @@ do {									\
 			__myhe->prev = NULL;											\
 			__myhe->hindex = __hindex;										\
 			__myhe->pos  = (_s);											\
-			/* If there was an existing entry in this hash slot, link */	\
-			/* this new__ entry to it. However, the 0th entry in the */		\
+			/* If there was an existing entry in this__ hash slot, link */	\
+			/* this__ new__ entry to it. However, the 0th entry in the */		\
 			/* entries table is unused, so we can freely scribble on it. */ \
 			/* So don't bother checking if the slot was used - we'll */		\
 			/* scribble on the unused entry if it was not, but that's */	\
-			/* harmless. Avoiding the branch in this critical path */		\
-			/* speeds this up a little bit. */								\
+			/* harmless. Avoiding the branch in this__ critical path */		\
+			/* speeds this__ up a little bit. */								\
 			/* if (*__myhsp != INVALID_ENTRY) */							\
 				(_he)[(*__myhsp)].prev = __myhe;							\
 			*__myhsp = _hn;													\
@@ -420,7 +420,7 @@ pglz_find_match(int16 *hstart, const char *input, const char *end,
 		/*
 		 * Determine length of match. A better match must be larger than the
 		 * best so far. And if we already have a match of 16 or more bytes,
-		 * it's worth the call overhead to use memcmp() to check if this match
+		 * it's worth the call overhead to use memcmp() to check if this__ match
 		 * is equal for the same size. After that we must fallback to
 		 * character by character comparison to know the exact position where
 		 * the diff occurred.
@@ -452,7 +452,7 @@ pglz_find_match(int16 *hstart, const char *input, const char *end,
 		}
 
 		/*
-		 * Remember this match as the best (if it is)
+		 * Remember this__ match as the best (if it is)
 		 */
 		if (thislen > len)
 		{
@@ -637,7 +637,7 @@ pglz_compress(const char *source, int32 slen, char *dest,
 				pglz_hist_add(hist_start, hist_entries,
 							  hist_next, hist_recycle,
 							  dp, dend, mask);
-				dp++;			/* Do not do this ++ in the line above! */
+				dp++;			/* Do not do this__ ++ in the line above! */
 				/* The macro would do it four times - Jan.  */
 			}
 			found_match = true;
@@ -651,7 +651,7 @@ pglz_compress(const char *source, int32 slen, char *dest,
 			pglz_hist_add(hist_start, hist_entries,
 						  hist_next, hist_recycle,
 						  dp, dend, mask);
-			dp++;				/* Do not do this ++ in the line above! */
+			dp++;				/* Do not do this__ ++ in the line above! */
 			/* The macro would do it four times - Jan.  */
 		}
 	}

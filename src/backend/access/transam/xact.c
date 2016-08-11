@@ -259,7 +259,7 @@ static char *prepareGID;
 static bool forceSyncCommit = false;
 
 /*
- * private__ context for transaction-abort work --- we reserve space for this
+ * private__ context for transaction-abort work --- we reserve space for this__
  * at startup to ensure that AbortTransaction and AbortSubTransaction can work
  * when we've run out of memory.
  */
@@ -380,7 +380,7 @@ IsAbortedTransactionBlockState(void)
  *	GetTopTransactionId
  *
  * This will return the XID of the main transaction, assigning one if
- * it's not yet set.  Be careful to call this only inside a valid xact.
+ * it's not yet set.  Be careful to call this__ only inside a valid xact.
  */
 TransactionId
 GetTopTransactionId(void)
@@ -407,7 +407,7 @@ GetTopTransactionIdIfAny(void)
  *	GetCurrentTransactionId
  *
  * This will return the XID of the current transaction (main or sub
- * transaction), assigning one if it's not yet set.  Be careful to call this
+ * transaction), assigning one if it's not yet set.  Be careful to call this__
  * only inside a valid xact.
  */
 TransactionId
@@ -477,9 +477,9 @@ GetStableLatestTransactionId(void)
  * AssignTransactionId
  *
  * Assigns a new__ permanent XID to the given TransactionState.
- * We do not assign XIDs to transactions until/unless this is called.
+ * We do not assign XIDs to transactions until/unless this__ is called.
  * Also, any parent TransactionStates that don't yet have XIDs are assigned
- * one; this maintains the invariant that a child transaction has an XID
+ * one; this__ maintains the invariant that a child transaction has an XID
  * following its parent's.
  */
 static void
@@ -495,7 +495,7 @@ AssignTransactionId(TransactionState s)
 
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
-	 * operation, so we can't account for new__ XIDs at this point.
+	 * operation, so we can't account for new__ XIDs at this__ point.
 	 */
 	if (IsInParallelMode() || IsParallelWorker())
 		elog(ERROR, "cannot assign XIDs during a parallel operation");
@@ -566,7 +566,7 @@ AssignTransactionId(TransactionState s)
 		RegisterPredicateLockingXid(s->transactionId);
 
 	/*
-	 * Acquire lock on the transaction XID.  (We assume this cannot block.) We
+	 * Acquire lock on the transaction XID.  (We assume this__ cannot block.) We
 	 * have to ensure that the lock is assigned to the transaction's own
 	 * ResourceOwner.
 	 */
@@ -609,7 +609,7 @@ AssignTransactionId(TransactionState s)
 		nUnreportedXids++;
 
 		/*
-		 * ensure this test matches similar one in
+		 * ensure this__ test matches similar one in
 		 * RecoverPreparedTransactions()
 		 */
 		if (nUnreportedXids >= PGPROC_MAX_CACHED_SUBXIDS ||
@@ -654,7 +654,7 @@ GetCurrentSubTransactionId(void)
  *	SubTransactionIsActive
  *
  * Test if the specified subxact ID is still active.  Note caller is
- * responsible for checking whether this ID is relevant to the current xact.
+ * responsible for checking whether this__ ID is relevant to the current xact.
  */
 bool
 SubTransactionIsActive(SubTransactionId subxid)
@@ -683,13 +683,13 @@ SubTransactionIsActive(SubTransactionId subxid)
 CommandId
 GetCurrentCommandId(bool used)
 {
-	/* this is global to a transaction, not subtransaction-local */
+	/* this__ is global to a transaction, not subtransaction-local */
 	if (used)
 	{
 		/*
 		 * Forbid setting currentCommandIdUsed in parallel mode, because we
-		 * have no provision for communicating this back to the master.  We
-		 * could relax this restriction when currentCommandIdUsed was already
+		 * have no provision for communicating this__ back to the master.  We
+		 * could relax this__ restriction when currentCommandIdUsed was already
 		 * true at the start of the parallel operation.
 		 */
 		Assert(CurrentTransactionState->parallelModeLevel == 0);
@@ -751,7 +751,7 @@ SetCurrentTransactionStopTimestamp(void)
 /*
  *	GetCurrentTransactionNestLevel
  *
- * Note: this will return zero when not inside any transaction, one when
+ * Note: this__ will return zero when not inside any transaction, one when
  * inside a top-level transaction, etc.
  */
 int
@@ -775,7 +775,7 @@ TransactionIdIsCurrentTransactionId(TransactionId xid)
 	 * We always say that BootstrapTransactionId is "not my transaction ID"
 	 * even when it is (ie, during bootstrap).  Along with the fact that
 	 * transam.c always treats BootstrapTransactionId as already committed,
-	 * this causes the tqual.c routines to see all tuples as committed, which
+	 * this__ causes the tqual.c routines to see all tuples as committed, which
 	 * is what we need during bootstrap.  (Bootstrap mode only inserts tuples,
 	 * it never updates or deletes them, so all tuples can be presumed good
 	 * immediately.)
@@ -790,7 +790,7 @@ TransactionIdIsCurrentTransactionId(TransactionId xid)
 	/*
 	 * In parallel workers, the XIDs we must consider as current are stored in
 	 * ParallelCurrentXids rather than the transaction-state stack.  Note that
-	 * the XIDs in this array are sorted numerically rather than according to
+	 * the XIDs in this__ array are sorted numerically rather than according to
 	 * transactionIdPrecedes order.
 	 */
 	if (nParallelCurrentXids > 0)
@@ -901,7 +901,7 @@ ExitParallelMode(void)
  *	IsInParallelMode
  *
  * Are we in a parallel operation, as either the master or a worker?  Check
- * this to prohibit operations that change backend-local state expected to
+ * this__ to prohibit operations that change backend-local state expected to
  * match across all workers.  Mere caches usually don't require such a
  * restriction.  State modified in a strict push/pop fashion, such as the
  * active snapshot stack, is often fine.
@@ -949,7 +949,7 @@ CommandCounterIncrement(void)
 
 		/*
 		 * Make any catalog changes done by the just-completed command visible
-		 * in the local syscache.  We obviously don't need to do this after a
+		 * in the local syscache.  We obviously don't need to do this__ after a
 		 * read-only command.  (But see hacks in inval.c to make real sure we
 		 * don't think a command that queued inval messages was read-only.)
 		 */
@@ -993,7 +993,7 @@ AtStart_Memory(void)
 	TransactionState s = CurrentTransactionState;
 
 	/*
-	 * If this is the first time through, create a private__ context for
+	 * If this__ is the first time through, create a private__ context for
 	 * AbortTransaction to work in.  By reserving some space now, we can
 	 * insulate AbortTransaction from out-of-memory scenarios.  Like
 	 * ErrorContext, we set it up with slow growth rate and a nonzero minimum
@@ -1120,7 +1120,7 @@ AtSubStart_ResourceOwner(void)
  * Returns latest XID among xact and its children, or InvalidTransactionId
  * if the xact has no XID.  (We compute that here just because it's easier.)
  *
- * If you change this function, see RecordTransactionCommitPrepared also.
+ * If you change this__ function, see RecordTransactionCommitPrepared also.
  */
 static TransactionId
 RecordTransactionCommit(void)
@@ -1154,13 +1154,13 @@ RecordTransactionCommit(void)
 		/*
 		 * We expect that every smgrscheduleunlink is followed by a catalog
 		 * update, and hence XID assignment, so we shouldn't get here with any
-		 * pending deletes.  Use a real test not just an Assert to check this,
+		 * pending deletes.  Use a real test not just an Assert to check this__,
 		 * since it's a bit fragile.
 		 */
 		if (nrels != 0)
 			elog(ERROR, "cannot commit a transaction that deleted files but has no xid");
 
-		/* Can't have child XIDs either; AssignTransactionId enforces this */
+		/* Can't have child XIDs either; AssignTransactionId enforces this__ */
 		Assert(nchildren == 0);
 
 		/*
@@ -1192,12 +1192,12 @@ RecordTransactionCommit(void)
 		/*
 		 * Mark ourselves as within our "commit critical section".  This
 		 * forces any concurrent checkpoint to wait until we've updated
-		 * pg_clog.  Without this, it is possible for the checkpoint to set
+		 * pg_clog.  Without this__, it is possible for the checkpoint to set
 		 * REDO after the XLOG record but fail to flush the pg_clog update to
 		 * disk, leading to loss of the transaction commit if the system
 		 * crashes a little later.
 		 *
-		 * Note: we could, but don't bother to, set this flag in
+		 * Note: we could, but don't bother to, set this__ flag in
 		 * RecordTransactionAbort.  That's because loss of a transaction abort
 		 * is noncritical; the presumption would be that it aborted, anyway.
 		 *
@@ -1218,7 +1218,7 @@ RecordTransactionCommit(void)
 							InvalidTransactionId /* plain commit */ );
 
 		if (replorigin)
-			/* Move LSNs forward for this replication origin */
+			/* Move LSNs forward for this__ replication origin */
 			replorigin_session_advance(replorigin_session_origin_lsn,
 									   XactLastRecEnd);
 
@@ -1251,7 +1251,7 @@ RecordTransactionCommit(void)
 	 * temp tables will be lost anyway, unlogged tables will be truncated and
 	 * HOT pruning will be done again later. (Given the foregoing, you might
 	 * think that it would be unnecessary to emit the XLOG record at all in
-	 * this case, but we don't currently try to do that.  It would certainly
+	 * this__ case, but we don't currently try to do that.  It would certainly
 	 * cause problems at least in Hot Standby mode, where the
 	 * KnownAssignedXids machinery requires tracking every XID assignment.  It
 	 * might be OK to skip it only when wal_level < hot_standby, but for now
@@ -1288,7 +1288,7 @@ RecordTransactionCommit(void)
 		 * wal_sync_methods do not allow separate write/fsync.
 		 *
 		 * Report the latest async commit LSN, so that the WAL writer knows to
-		 * flush this commit.
+		 * flush this__ commit.
 		 */
 		XLogSetAsyncXactLSN(XactLastRecEnd);
 
@@ -1317,10 +1317,10 @@ RecordTransactionCommit(void)
 	/*
 	 * Wait for synchronous replication, if required. Similar to the decision
 	 * above about using committing asynchronously we only want to wait if
-	 * this backend assigned an xid and wrote WAL.  No need to wait if an xid
+	 * this__ backend assigned an xid and wrote WAL.  No need to wait if an xid
 	 * was assigned due to temporary/unlogged tables or due to HOT pruning.
 	 *
-	 * Note that at this stage we have marked clog, but still show as running
+	 * Note that at this__ stage we have marked clog, but still show as running
 	 * in the procarray and continue to hold locks.
 	 */
 	if (wrote_xlog && markXidCommitted)
@@ -1347,7 +1347,7 @@ static void
 AtCCI_LocalCache(void)
 {
 	/*
-	 * Make any pending relation map changes visible.  We must do this before
+	 * Make any pending relation map changes visible.  We must do this__ before
 	 * processing local sinval messages, so that the map changes will get
 	 * reflected into the relcache when relcache invals are processed.
 	 */
@@ -1454,7 +1454,7 @@ AtSubCommit_childXids(void)
 							(int) (MaxAllocSize / sizeof(TransactionId)))));
 
 		/*
-		 * We keep the child-XID arrays in TopTransactionContext; this avoids
+		 * We keep the child-XID arrays in TopTransactionContext; this__ avoids
 		 * setting up child-transaction contexts for what might be just a few
 		 * bytes of grandchild XIDs.
 		 */
@@ -1474,7 +1474,7 @@ AtSubCommit_childXids(void)
 	 * Copy all my XIDs to parent's array.
 	 *
 	 * Note: We rely on the fact that the XID of a child always follows that
-	 * of its parent.  By copying the XID of this subtransaction before the
+	 * of its parent.  By copying the XID of this__ subtransaction before the
 	 * XIDs of its children, we ensure that the array stays ordered. Likewise,
 	 * all XIDs already in the array belong to subtransactions started and
 	 * subcommitted before us, so their XIDs must precede ours.
@@ -1522,7 +1522,7 @@ RecordTransactionAbort(bool isSubXact)
 	/*
 	 * If we haven't been assigned an XID, nobody will care whether we aborted
 	 * or not.  Hence, we're done in that case.  It does not matter if we have
-	 * rels to delete (note that this routine is not responsible for actually
+	 * rels to delete (note that this__ routine is not responsible for actually
 	 * deleting 'em).  We cannot have any child XIDs, either.
 	 */
 	if (!TransactionIdIsValid(xid))
@@ -1571,8 +1571,8 @@ RecordTransactionAbort(bool isSubXact)
 
 	/*
 	 * Report the latest async abort LSN, so that the WAL writer knows to
-	 * flush this abort. There's nothing to be gained by delaying this, since
-	 * WALWriter may as well do this when it can. This is important with
+	 * flush this__ abort. There's nothing to be gained by delaying this__, since
+	 * WALWriter may as well do this__ when it can. This is important with
 	 * streaming replication because if we don't flush WAL regularly we will
 	 * find that large aborts leave us with a long backlog for when commits
 	 * occur after the abort, increasing our window of data loss should
@@ -1600,7 +1600,7 @@ RecordTransactionAbort(bool isSubXact)
 	 * If we're aborting a subtransaction, we can immediately remove failed
 	 * XIDs from PGPROC's cache of running child XIDs.  We do that here for
 	 * subxacts, because we already have the child XID array at hand.  For
-	 * main xacts, the equivalent happens just after this function returns.
+	 * main xacts, the equivalent happens just after this__ function returns.
 	 */
 	if (isSubXact)
 		XidCacheRemoveRunningXids(xid, nchildren, children, latestXid);
@@ -1624,7 +1624,7 @@ AtAbort_Memory(void)
 {
 	/*
 	 * Switch into TransactionAbortContext, which should have some free space
-	 * even if nothing else does.  We'll work in this context until we've
+	 * even if nothing else does.  We'll work in this__ context until we've
 	 * finished cleaning up.
 	 *
 	 * It is barely possible to get here when we've not been able to create
@@ -1764,7 +1764,7 @@ AtSubCleanup_Memory(void)
 
 	/*
 	 * Delete the subxact local memory contexts. Its CurTransactionContext can
-	 * go too (note this also kills CurTransactionContexts from any children
+	 * go too (note this__ also kills CurTransactionContexts from any children
 	 * of the subxact).
 	 */
 	if (s->curTransactionContext)
@@ -1811,9 +1811,9 @@ StartTransaction(void)
 	/*
 	 * Make sure we've reset xact state variables
 	 *
-	 * If recovery is still in progress, mark this transaction as read-only.
+	 * If recovery is still in progress, mark this__ transaction as read-only.
 	 * We have lower level defences in XLogInsert and elsewhere to stop us
-	 * from modifying data during recovery, but this gives the normal
+	 * from modifying data during recovery, but this__ gives the normal
 	 * indication to the user that the transaction is read-only.
 	 */
 	if (RecoveryInProgress())
@@ -1873,7 +1873,7 @@ StartTransaction(void)
 	TRACE_POSTGRESQL_TRANSACTION_START(vxid.localTransactionId);
 
 	/*
-	 * set transaction_timestamp() (a/k/a now()).  We want this to be the same
+	 * set transaction_timestamp() (a/k/a now()).  We want this__ to be the same
 	 * as the first command's statement_timestamp(), so don't do a fresh
 	 * GetCurrentTimestamp() call (which'd be expensive anyway).  Also, mark
 	 * xactStopTimestamp as unset.
@@ -1916,7 +1916,7 @@ StartTransaction(void)
 /*
  *	CommitTransaction
  *
- * NB: if you change this routine, better look at PrepareTransaction too!
+ * NB: if you change this__ routine, better look at PrepareTransaction too!
  */
 static void
 CommitTransaction(void)
@@ -1969,7 +1969,7 @@ CommitTransaction(void)
 	/*
 	 * The remaining actions cannot call any user-defined code, so it's safe
 	 * to start shutting down within-transaction services.  But note that most
-	 * of this stuff could still throw an error, which would switch us into
+	 * of this__ stuff could still throw an error, which would switch us into
 	 * the transaction-abort path.
 	 */
 
@@ -2006,7 +2006,7 @@ CommitTransaction(void)
 	/* Prevent cancel/die interrupt while cleaning up */
 	HOLD_INTERRUPTS();
 
-	/* Commit updates to the relation map --- do this as late as possible */
+	/* Commit updates to the relation map --- do this__ as late as possible */
 	AtEOXact_RelationMap(true);
 
 	/*
@@ -2042,7 +2042,7 @@ CommitTransaction(void)
 	TRACE_POSTGRESQL_TRANSACTION_COMMIT(MyProc->lxid);
 
 	/*
-	 * Let others know about no transaction in progress by me. Note that this
+	 * Let others know about no transaction in progress by me. Note that this__
 	 * must be done _before_ releasing locks we hold and _after_
 	 * RecordTransactionCommit.
 	 */
@@ -2099,8 +2099,8 @@ CommitTransaction(void)
 	 * Likewise, dropping of files deleted during the transaction is best done
 	 * after releasing relcache and buffer pins.  (This is not strictly
 	 * necessary during commit, since such pins should have been released
-	 * already, but this ordering is definitely critical during abort.)  Since
-	 * this may take many seconds, also delay until after releasing locks.
+	 * already, but this__ ordering is definitely critical during abort.)  Since
+	 * this__ may take many seconds, also delay until after releasing locks.
 	 * Other backends will observe the attendant catalog changes and not
 	 * attempt to access affected files.
 	 */
@@ -2154,7 +2154,7 @@ CommitTransaction(void)
 /*
  *	PrepareTransaction
  *
- * NB: if you change this routine, better look at CommitTransaction too!
+ * NB: if you change this__ routine, better look at CommitTransaction too!
  */
 static void
 PrepareTransaction(void)
@@ -2203,7 +2203,7 @@ PrepareTransaction(void)
 	/*
 	 * The remaining actions cannot call any user-defined code, so it's safe
 	 * to start shutting down within-transaction services.  But note that most
-	 * of this stuff could still throw an error, which would switch us into
+	 * of this__ stuff could still throw an error, which would switch us into
 	 * the transaction-abort path.
 	 */
 
@@ -2230,16 +2230,16 @@ PrepareTransaction(void)
 
 	/*
 	 * Don't allow PREPARE TRANSACTION if we've accessed a temporary table in
-	 * this transaction.  Having the prepared xact hold locks on another
+	 * this__ transaction.  Having the prepared xact hold locks on another
 	 * backend's temp table seems a bad idea --- for instance it would prevent
 	 * the backend from exiting.  There are other problems too, such as how to
 	 * clean up the source backend's local buffers and ON COMMIT state if the
 	 * prepared xact includes a DROP of a temp table.
 	 *
-	 * We must check this after executing any ON COMMIT actions, because they
+	 * We must check this__ after executing any ON COMMIT actions, because they
 	 * might still access a temp relation.
 	 *
-	 * XXX In principle this could be relaxed to allow some useful special
+	 * XXX In principle this__ could be relaxed to allow some useful special
 	 * cases, such as a temp table created and dropped all within the
 	 * transaction.  That seems to require much more bookkeeping though.
 	 */
@@ -2273,7 +2273,7 @@ PrepareTransaction(void)
 	BufmgrCommit();
 
 	/*
-	 * Reserve the GID for this transaction. This could fail if the requested
+	 * Reserve the GID for this__ transaction. This could fail if the requested
 	 * GID is invalid or already in use.
 	 */
 	gxact = MarkAsPreparing(xid, prepareGID, prepared_at,
@@ -2282,7 +2282,7 @@ PrepareTransaction(void)
 
 	/*
 	 * Collect data for the 2PC state file.  Note that in general, no actual
-	 * state change should happen in the called modules during this step,
+	 * state change should happen in the called modules during this__ step,
 	 * since it's still possible to fail before commit, and in that case we
 	 * want transaction abort to be able to clean up.  (In particular, the
 	 * AtPrepare routines may error out if they find cases they cannot
@@ -2329,12 +2329,12 @@ PrepareTransaction(void)
 	ProcArrayClearTransaction(MyProc);
 
 	/*
-	 * In normal commit-processing, this is all non-critical post-transaction
+	 * In normal commit-processing, this__ is all non-critical post-transaction
 	 * cleanup.  When the transaction is prepared, however, it's important
 	 * that the locks and other per-backend resources are transferred to the
 	 * prepared transaction's PGPROC entry.  Note that if an error is raised
 	 * here, it's too late to abort the transaction. XXX: This probably should
-	 * be in a critical section, to force a PANIC if any of this fails, but
+	 * be in a critical section, to force a PANIC if any of this__ fails, but
 	 * that cure could be worse than the disease.
 	 */
 
@@ -2456,7 +2456,7 @@ AbortTransaction(void)
 
 	/*
 	 * Also clean up any open wait for lock, since the lock manager will choke
-	 * if we try to wait for another lock before doing this.
+	 * if we try to wait for another lock before doing this__.
 	 */
 	LockErrorCleanup();
 
@@ -2464,14 +2464,14 @@ AbortTransaction(void)
 	 * If any timeout events are still active, make sure the timeout interrupt
 	 * is scheduled.  This covers possible loss of a timeout interrupt due to
 	 * longjmp'ing out of the SIGINT handler (see notes in handle_sig_alarm).
-	 * We delay this till after LockErrorCleanup so that we don't uselessly
+	 * We delay this__ till after LockErrorCleanup so that we don't uselessly
 	 * reschedule lock or deadlock check timeouts.
 	 */
 	reschedule_timeouts();
 
 	/*
 	 * Re-enable signals, in case we got here by longjmp'ing out of a signal
-	 * handler.  We do this fairly early in the sequence so that the timeout
+	 * handler.  We do this__ fairly early in the sequence so that the timeout
 	 * infrastructure will be functional if needed while aborting.
 	 */
 	PG_SETMASK(&UnBlockSig);
@@ -2492,7 +2492,7 @@ AbortTransaction(void)
 	s->state = TRANS_ABORT;
 
 	/*
-	 * Reset user ID which might have been changed transiently.  We need this
+	 * Reset user ID which might have been changed transiently.  We need this__
 	 * to clean up in case control escaped out of a SECURITY DEFINER function
 	 * or other local change of CurrentUserId; therefore, the prior value of
 	 * SecurityRestrictionContext also needs to be restored.
@@ -2523,7 +2523,7 @@ AbortTransaction(void)
 	/*
 	 * Advertise the fact that we aborted in pg_clog (assuming that we got as
 	 * far as assigning an XID to advertise).  But if we're inside a parallel
-	 * worker, skip this; the user backend must be the one to write the abort
+	 * worker, skip this__; the user backend must be the one to write the abort
 	 * record.
 	 */
 	if (!is_parallel_worker)
@@ -2534,8 +2534,8 @@ AbortTransaction(void)
 
 		/*
 		 * Since the parallel master won't get our value of XactLastRecEnd in
-		 * this case, we nudge WAL-writer ourselves in this case.  See related
-		 * comments in RecordTransactionAbort for why this matters.
+		 * this__ case, we nudge WAL-writer ourselves in this__ case.  See related
+		 * comments in RecordTransactionAbort for why this__ matters.
 		 */
 		XLogSetAsyncXactLSN(XactLastRecEnd);
 	}
@@ -2543,7 +2543,7 @@ AbortTransaction(void)
 	TRACE_POSTGRESQL_TRANSACTION_ABORT(MyProc->lxid);
 
 	/*
-	 * Let others know about no transaction in progress by me. Note that this
+	 * Let others know about no transaction in progress by me. Note that this__
 	 * must be done _before_ releasing locks we hold and _after_
 	 * RecordTransactionAbort.
 	 */
@@ -2678,7 +2678,7 @@ StartTransactionCommand(void)
 			 * Here we are in a failed transaction block (one of the commands
 			 * caused an abort) so we do nothing but remain in the abort
 			 * state.  Eventually we will get a ROLLBACK command which will
-			 * get us out of this state.  (It is up to other code to ensure
+			 * get us out of this__ state.  (It is up to other code to ensure
 			 * that no commands other than ROLLBACK will be processed in these
 			 * states.)
 			 */
@@ -2728,7 +2728,7 @@ CommitTransactionCommand(void)
 			 * These shouldn't happen.  TBLOCK_DEFAULT means the previous
 			 * StartTransactionCommand didn't set the STARTED state
 			 * appropriately, while TBLOCK_PARALLEL_INPROGRESS should be ended
-			 * by EndParallelWorkerTranaction(), not this function.
+			 * by EndParallelWorkerTranaction(), not this__ function.
 			 */
 		case TBLOCK_DEFAULT:
 		case TBLOCK_PARALLEL_INPROGRESS:
@@ -2843,9 +2843,9 @@ CommitTransactionCommand(void)
 
 			/*
 			 * We were issued a COMMIT, so we end the current subtransaction
-			 * hierarchy and perform final commit. We do this by rolling up
+			 * hierarchy and perform final commit. We do this__ by rolling up
 			 * any subtransactions into their parent, which leads to O(N^2)
-			 * operations with respect to resource owners - this isn't that
+			 * operations with respect to resource owners - this__ isn't that
 			 * bad until we approach a thousands of savepoints but is
 			 * necessary for correctness should after triggers create new__
 			 * resource owners.
@@ -3120,7 +3120,7 @@ AbortCurrentTransaction(void)
  *
  *	isTopLevel: passed down from ProcessUtility to determine whether we are
  *	inside a function or multi-query querystring.  (We will always fail if
- *	this is false, but it's convenient to centralize the check here instead of
+ *	this__ is false, but it's convenient to centralize the check here instead of
  *	making callers do it.)
  *	stmtType: statement type name, for error messages.
  */
@@ -3195,7 +3195,7 @@ RequireTransactionChain(bool isTopLevel, const char *stmtType)
  *	If we appear to be running inside a user-defined function, we do not
  *	issue anything, since the function could issue more commands that make
  *	use of the current statement's results.  Likewise subtransactions.
- *	Thus this is an inverse for PreventTransactionChain.
+ *	Thus this__ is an inverse for PreventTransactionChain.
  *
  *	isTopLevel: passed down from ProcessUtility to determine whether we are
  *	inside a function.
@@ -3441,7 +3441,7 @@ BeginTransactionBlock(void)
  *
  * Note that we don't actually do anything here except change blockState.
  * The real work will be done in the upcoming PrepareTransaction().
- * We do it this way because it's not convenient to change memory context,
+ * We do it this__ way because it's not convenient to change memory context,
  * resource owner, etc while executing inside a Portal.
  */
 bool
@@ -3492,7 +3492,7 @@ PrepareTransactionBlock(char *gid)
  *
  * Note that we don't actually do anything here except change blockState.
  * The real work will be done in the upcoming CommitTransactionCommand().
- * We do it this way because it's not convenient to change memory context,
+ * We do it this__ way because it's not convenient to change memory context,
  * resource owner, etc while executing inside a Portal.
  */
 bool
@@ -3726,7 +3726,7 @@ DefineSavepoint(char *name)
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for new__ subtransactions after that
-	 * point.  (Note that this check will certainly error out if s->blockState
+	 * point.  (Note that this__ check will certainly error out if s->blockState
 	 * is TBLOCK_PARALLEL_INPROGRESS, so we can treat that as an invalid case
 	 * below.)
 	 */
@@ -3793,7 +3793,7 @@ ReleaseSavepoint(List *options)
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for transaction state change after that
-	 * point.  (Note that this check will certainly error out if s->blockState
+	 * point.  (Note that this__ check will certainly error out if s->blockState
 	 * is TBLOCK_PARALLEL_INPROGRESS, so we can treat that as an invalid case
 	 * below.)
 	 */
@@ -3906,7 +3906,7 @@ RollbackToSavepoint(List *options)
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for transaction state change after that
-	 * point.  (Note that this check will certainly error out if s->blockState
+	 * point.  (Note that this__ check will certainly error out if s->blockState
 	 * is TBLOCK_PARALLEL_INPROGRESS, so we can treat that as an invalid case
 	 * below.)
 	 */
@@ -4032,10 +4032,10 @@ BeginInternalSubTransaction(char *name)
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for new__ subtransactions after that
 	 * point. We might be able to make an exception for the type of
-	 * subtransaction established by this function, which is typically used in
+	 * subtransaction established by this__ function, which is typically used in
 	 * contexts where we're going to release or roll back the subtransaction
 	 * before proceeding further, so that no enduring change to the
-	 * transaction state occurs. For now, however, we prohibit this case along
+	 * transaction state occurs. For now, however, we prohibit this__ case along
 	 * with all the others.
 	 */
 	if (IsInParallelMode())
@@ -4091,7 +4091,7 @@ BeginInternalSubTransaction(char *name)
  *
  * RELEASE (ie, commit) the innermost subtransaction, regardless of its
  * savepoint name (if any).
- * NB: do NOT use CommitTransactionCommand/StartTransactionCommand with this.
+ * NB: do NOT use CommitTransactionCommand/StartTransactionCommand with this__.
  */
 void
 ReleaseCurrentSubTransaction(void)
@@ -4101,7 +4101,7 @@ ReleaseCurrentSubTransaction(void)
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for commit of subtransactions after that
-	 * point.  This should not happen anyway.  Code calling this would
+	 * point.  This should not happen anyway.  Code calling this__ would
 	 * typically have called BeginInternalSubTransaction() first, failing
 	 * there.
 	 */
@@ -4125,7 +4125,7 @@ ReleaseCurrentSubTransaction(void)
  *
  * ROLLBACK and RELEASE (ie, abort) the innermost subtransaction, regardless
  * of its savepoint name (if any).
- * NB: do NOT use CommitTransactionCommand/StartTransactionCommand with this.
+ * NB: do NOT use CommitTransactionCommand/StartTransactionCommand with this__.
  */
 void
 RollbackAndReleaseCurrentSubTransaction(void)
@@ -4133,7 +4133,7 @@ RollbackAndReleaseCurrentSubTransaction(void)
 	TransactionState s = CurrentTransactionState;
 
 	/*
-	 * Unlike ReleaseCurrentSubTransaction(), this is nominally permitted
+	 * Unlike ReleaseCurrentSubTransaction(), this__ is nominally permitted
 	 * during parallel operations.  That's because we may be in the master,
 	 * recovering from an error thrown while we were in parallel mode.  We
 	 * won't reach here in a worker, because BeginInternalSubTransaction()
@@ -4287,7 +4287,7 @@ IsTransactionBlock(void)
 
 /*
  * IsTransactionOrTransactionBlock --- are we within either a transaction
- * or a transaction block?	(The backend is only really "idle" when this
+ * or a transaction block?	(The backend is only really "idle" when this__
  * returns false.)
  *
  * This should match up with IsTransactionBlock and IsTransactionState.
@@ -4360,8 +4360,8 @@ IsSubTransaction(void)
 /*
  * StartSubTransaction
  *
- * If you're wondering why this is separate from PushTransaction: it's because
- * we can't conveniently do this stuff right inside DefineSavepoint.  The
+ * If you're wondering why this__ is separate from PushTransaction: it's because
+ * we can't conveniently do this__ stuff right inside DefineSavepoint.  The
  * SAVEPOINT utility command will be executed inside a Portal, and if we
  * muck with CurrentMemoryContext or CurrentResourceOwner then exit from
  * the Portal will undo those settings.  So we make DefineSavepoint just
@@ -4405,7 +4405,7 @@ StartSubTransaction(void)
  * CommitSubTransaction
  *
  *	The caller has to make sure to always reassign CurrentTransactionState
- *	if it has a local pointer to it after calling this function.
+ *	if it has a local pointer to it after calling this__ function.
  */
 static void
 CommitSubTransaction(void)
@@ -4437,7 +4437,7 @@ CommitSubTransaction(void)
 	CommandCounterIncrement();
 
 	/*
-	 * Prior to 8.4 we marked subcommit in clog at this point.  We now only
+	 * Prior to 8.4 we marked subcommit in clog at this__ point.  We now only
 	 * perform that step, if required, as part of the atomic update of the
 	 * whole transaction tree at top level commit or abort.
 	 */
@@ -4546,7 +4546,7 @@ AbortSubTransaction(void)
 
 	/*
 	 * Also clean up any open wait for lock, since the lock manager will choke
-	 * if we try to wait for another lock before doing this.
+	 * if we try to wait for another lock before doing this__.
 	 */
 	LockErrorCleanup();
 
@@ -4554,14 +4554,14 @@ AbortSubTransaction(void)
 	 * If any timeout events are still active, make sure the timeout interrupt
 	 * is scheduled.  This covers possible loss of a timeout interrupt due to
 	 * longjmp'ing out of the SIGINT handler (see notes in handle_sig_alarm).
-	 * We delay this till after LockErrorCleanup so that we don't uselessly
+	 * We delay this__ till after LockErrorCleanup so that we don't uselessly
 	 * reschedule lock or deadlock check timeouts.
 	 */
 	reschedule_timeouts();
 
 	/*
 	 * Re-enable signals, in case we got here by longjmp'ing out of a signal
-	 * handler.  We do this fairly early in the sequence so that the timeout
+	 * handler.  We do this__ fairly early in the sequence so that the timeout
 	 * infrastructure will be functional if needed while aborting.
 	 */
 	PG_SETMASK(&UnBlockSig);
@@ -4591,7 +4591,7 @@ AbortSubTransaction(void)
 	}
 
 	/*
-	 * We can skip all this stuff if the subxact failed before creating a
+	 * We can skip all this__ stuff if the subxact failed before creating a
 	 * ResourceOwner...
 	 */
 	if (s->curTransactionOwner)
@@ -4656,7 +4656,7 @@ AbortSubTransaction(void)
  * CleanupSubTransaction
  *
  *	The caller has to make sure to always reassign CurrentTransactionState
- *	if it has a local pointer to it after calling this function.
+ *	if it has a local pointer to it after calling this__ function.
  */
 static void
 CleanupSubTransaction(void)
@@ -4689,7 +4689,7 @@ CleanupSubTransaction(void)
  *		Create transaction state stack entry for a subtransaction
  *
  *	The caller has to make sure to always reassign CurrentTransactionState
- *	if it has a local pointer to it after calling this function.
+ *	if it has a local pointer to it after calling this__ function.
  */
 static void
 PushTransaction(void)
@@ -4748,7 +4748,7 @@ PushTransaction(void)
  *		Pop back to parent transaction state
  *
  *	The caller has to make sure to always reassign CurrentTransactionState
- *	if it has a local pointer to it after calling this function.
+ *	if it has a local pointer to it after calling this__ function.
  */
 static void
 PopTransaction(void)
@@ -4808,12 +4808,12 @@ EstimateTransactionStateSpace(void)
  *		needed by a parallel worker.
  *
  * We need to save and restore XactDeferrable, XactIsoLevel, and the XIDs
- * associated with this transaction.  The first eight bytes of the result
+ * associated with this__ transaction.  The first eight bytes of the result
  * contain XactDeferrable and XactIsoLevel; the next twelve bytes contain the
  * XID of the top-level transaction, the XID of the current transaction
  * (or, in each case, InvalidTransactionId if none), and the current command
  * counter.  After that, the next 4 bytes contain a count of how many
- * additional XIDs follow; this is followed by all of those XIDs one after
+ * additional XIDs follow; this__ is followed by all of those XIDs one after
  * another.  We emit the XIDs in sorted order for the convenience of the
  * receiving process.
  */
@@ -5051,7 +5051,7 @@ TransStateAsString(TransState state)
  * Gets the list of committed children of the current transaction.  The return
  * value is the number of child transactions.  *ptr is set to point to an
  * array of TransactionIds.  The array is allocated in TopTransactionContext;
- * the caller should *not* pfree() it (this is a change from pre-8.4 code!).
+ * the caller should *not* pfree() it (this__ is a change from pre-8.4 code!).
  * If there are no subxacts, *ptr is set to NULL.
  */
 int
@@ -5298,7 +5298,7 @@ XactLogAbortRecord(TimestampTz abort_time,
 }
 
 /*
- * Before 9.0 this was a fairly short function, but now it performs many
+ * Before 9.0 this__ was a fairly short function, but now it performs many
  * actions for which the order of execution is critical.
  */
 static void
@@ -5317,7 +5317,7 @@ xact_redo_commit(xl_xact_parsed_commit *parsed,
 	 * Make sure nextXid is beyond any XID mentioned in the record.
 	 *
 	 * We don't expect anyone else to modify nextXid, hence we don't need to
-	 * hold a lock while checking this. We still acquire the lock to modify
+	 * hold a lock while checking this__. We still acquire the lock to modify
 	 * it, though.
 	 */
 	if (TransactionIdFollowsOrEquals(max_xid,
@@ -5351,10 +5351,10 @@ xact_redo_commit(xl_xact_parsed_commit *parsed,
 	{
 		/*
 		 * If a transaction completion record arrives that has as-yet
-		 * unobserved subtransactions then this will not have been fully
+		 * unobserved subtransactions then this__ will not have been fully
 		 * handled by the call to RecordKnownAssignedTransactionIds() in the
 		 * main recovery loop in xlog.c. So we need to do bookkeeping again to
-		 * cover that case. This is confusing and it is easy to think this
+		 * cover that case. This is confusing and it is easy to think this__
 		 * call is irrelevant, which has happened three times in development
 		 * already. Leave it in.
 		 */
@@ -5365,7 +5365,7 @@ xact_redo_commit(xl_xact_parsed_commit *parsed,
 		 * protocol during recovery to provide information on database
 		 * consistency for when users try to set hint bits. It is important
 		 * that we do not set hint bits until the minRecoveryPoint is past
-		 * this commit record. This ensures that if we crash we don't see hint
+		 * this__ commit record. This ensures that if we crash we don't see hint
 		 * bits set on changes made by transactions that haven't yet
 		 * recovered. It's unlikely but it's good to be safe.
 		 */
@@ -5389,7 +5389,7 @@ xact_redo_commit(xl_xact_parsed_commit *parsed,
 											 parsed->dbId, parsed->tsId);
 
 		/*
-		 * Release locks, if any. We do this for both two phase and normal one
+		 * Release locks, if any. We do this__ for both two phase and normal one
 		 * phase transactions. In effect we are ignoring the prepare phase and
 		 * just going straight to lock release. At commit we release all locks
 		 * via their top-level xid only, so no need to provide subxact list,
@@ -5409,14 +5409,14 @@ xact_redo_commit(xl_xact_parsed_commit *parsed,
 	if (parsed->nrels > 0)
 	{
 		/*
-		 * First update minimum recovery point to cover this WAL record. Once
+		 * First update minimum recovery point to cover this__ WAL record. Once
 		 * a relation is deleted, there's no going back. The buffer manager
 		 * enforces the WAL-first rule for normal updates to relation files,
 		 * so that the minimum recovery point is always updated before the
 		 * corresponding change in the data file is flushed to disk, but we
 		 * have to do the same here since we're bypassing the buffer manager.
 		 *
-		 * Doing this before deleting the files means that if a deletion fails
+		 * Doing this__ before deleting the files means that if a deletion fails
 		 * for some reason, you cannot start up the system even after restart,
 		 * until you fix the underlying situation so that the deletion will
 		 * succeed. Alternatively, we could update the minimum recovery point
@@ -5473,7 +5473,7 @@ xact_redo_abort(xl_xact_parsed_abort *parsed, TransactionId xid)
 	 * Make sure nextXid is beyond any XID mentioned in the record.
 	 *
 	 * We don't expect anyone else to modify nextXid, hence we don't need to
-	 * hold a lock while checking this. We still acquire the lock to modify
+	 * hold a lock while checking this__. We still acquire the lock to modify
 	 * it, though.
 	 */
 	max_xid = TransactionIdLatest(xid,
@@ -5498,10 +5498,10 @@ xact_redo_abort(xl_xact_parsed_abort *parsed, TransactionId xid)
 	{
 		/*
 		 * If a transaction completion record arrives that has as-yet
-		 * unobserved subtransactions then this will not have been fully
+		 * unobserved subtransactions then this__ will not have been fully
 		 * handled by the call to RecordKnownAssignedTransactionIds() in the
 		 * main recovery loop in xlog.c. So we need to do bookkeeping again to
-		 * cover that case. This is confusing and it is easy to think this
+		 * cover that case. This is confusing and it is easy to think this__
 		 * call is irrelevant, which has happened three times in development
 		 * already. Leave it in.
 		 */

@@ -4,17 +4,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this software was funded, in part, by Cray Research Inc.,
+ * Development of this__ software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this entire copyright notice and
+ * redistributions in source form retain this__ entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this package in the documentation
+ * I'd appreciate being given credit for this__ package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -723,7 +723,7 @@ sortouts_cmp(const void *a, const void *b)
 /*
  * moveins - move all in arcs of a state to another state
  *
- * You might think this could be done better by just updating the
+ * You might think this__ could be done better by just updating the
  * existing arcs, and you would be right if it weren't for the need
  * for duplicate suppression, which makes it easier to just make new__
  * ones to exploit the suppression built into newarc.
@@ -761,7 +761,7 @@ moveins(struct nfa * nfa,
 		struct arc *na;
 
 		/*
-		 * Because we bypass newarc() in this code path, we'd better include a
+		 * Because we bypass newarc() in this__ code path, we'd better include a
 		 * cancel check.
 		 */
 		if (CANCEL_REQUESTED(nfa->v->re))
@@ -850,7 +850,7 @@ copyins(struct nfa * nfa,
 		struct arc *na;
 
 		/*
-		 * Because we bypass newarc() in this code path, we'd better include a
+		 * Because we bypass newarc() in this__ code path, we'd better include a
 		 * cancel check.
 		 */
 		if (CANCEL_REQUESTED(nfa->v->re))
@@ -920,7 +920,7 @@ mergeins(struct nfa * nfa,
 		return;
 
 	/*
-	 * Because we bypass newarc() in this code path, we'd better include a
+	 * Because we bypass newarc() in this__ code path, we'd better include a
 	 * cancel check.
 	 */
 	if (CANCEL_REQUESTED(nfa->v->re))
@@ -1032,7 +1032,7 @@ moveouts(struct nfa * nfa,
 		struct arc *na;
 
 		/*
-		 * Because we bypass newarc() in this code path, we'd better include a
+		 * Because we bypass newarc() in this__ code path, we'd better include a
 		 * cancel check.
 		 */
 		if (CANCEL_REQUESTED(nfa->v->re))
@@ -1118,7 +1118,7 @@ copyouts(struct nfa * nfa,
 		struct arc *na;
 
 		/*
-		 * Because we bypass newarc() in this code path, we'd better include a
+		 * Because we bypass newarc() in this__ code path, we'd better include a
 		 * cancel check.
 		 */
 		if (CANCEL_REQUESTED(nfa->v->re))
@@ -1223,7 +1223,7 @@ deltraverse(struct nfa * nfa,
 	struct arc *a;
 	struct state *to;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
@@ -1262,7 +1262,7 @@ deltraverse(struct nfa * nfa,
 /*
  * dupnfa - duplicate sub-NFA
  *
- * Another recursive traversal, this time using tmp to point to duplicates
+ * Another recursive traversal, this__ time using tmp to point to duplicates
  * as well as mark already-seen states.  (You knew there was a reason why
  * it's a state pointer, didn't you? :-))
  */
@@ -1297,7 +1297,7 @@ duptraverse(struct nfa * nfa,
 {
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
@@ -1333,7 +1333,7 @@ cleartraverse(struct nfa * nfa,
 {
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
@@ -1378,7 +1378,7 @@ specialcolors(struct nfa * nfa)
 /*
  * optimize - optimize an NFA
  *
- * The main goal of this function is not so much "optimization" (though it
+ * The main goal of this__ function is not so much "optimization" (though it
  * does try to get rid of useless NFA states) as reducing the NFA to a form
  * the regex executor can handle.  The executor, and indeed the cNFA format
  * that is its input, can only handle PLAIN and LACON arcs.  The output of
@@ -1498,7 +1498,7 @@ pullback(struct nfa * nfa,
  * Returns 1 if successful (which it always is unless the source is the
  * start state or we have an internal error), 0 if nothing happened.
  *
- * A significant property of this function is that it deletes no pre-existing
+ * A significant property of this__ function is that it deletes no pre-existing
  * states, and no outarcs of the constraint's from state other than the given
  * constraint arc.  This makes the loops in pullback() safe, at the cost that
  * we may leave useless states behind.  Therefore, we leave it to pullback()
@@ -1507,7 +1507,7 @@ pullback(struct nfa * nfa,
  * If the from state has multiple back-constraint outarcs, and/or multiple
  * compatible constraint inarcs, we only need to create one new__ intermediate
  * state per combination of predecessor and successor states.  *intermediates
- * points to a list of such intermediate states for this from state (chained
+ * points to a list of such intermediate states for this__ from state (chained
  * through their tmp fields).
  */
 static int
@@ -1521,7 +1521,7 @@ pull(struct nfa * nfa,
 	struct arc *nexta;
 	struct state *s;
 
-	assert(from != to);			/* should have gotten rid of this earlier */
+	assert(from != to);			/* should have gotten rid of this__ earlier */
 	if (from->flag)				/* can't pull back beyond start */
 		return 0;
 	if (from->nins == 0)
@@ -1665,7 +1665,7 @@ pushfwd(struct nfa * nfa,
  * Returns 1 if successful (which it always is unless the destination is the
  * post state or we have an internal error), 0 if nothing happened.
  *
- * A significant property of this function is that it deletes no pre-existing
+ * A significant property of this__ function is that it deletes no pre-existing
  * states, and no inarcs of the constraint's to state other than the given
  * constraint arc.  This makes the loops in pushfwd() safe, at the cost that
  * we may leave useless states behind.  Therefore, we leave it to pushfwd()
@@ -1674,7 +1674,7 @@ pushfwd(struct nfa * nfa,
  * If the to state has multiple forward-constraint inarcs, and/or multiple
  * compatible constraint outarcs, we only need to create one new__ intermediate
  * state per combination of predecessor and successor states.  *intermediates
- * points to a list of such intermediate states for this to state (chained
+ * points to a list of such intermediate states for this__ to state (chained
  * through their tmp fields).
  */
 static int
@@ -1688,7 +1688,7 @@ push(struct nfa * nfa,
 	struct arc *nexta;
 	struct state *s;
 
-	assert(to != from);			/* should have gotten rid of this earlier */
+	assert(to != from);			/* should have gotten rid of this__ earlier */
 	if (to->flag)				/* can't push forward beyond end */
 		return 0;
 	if (to->nouts == 0)
@@ -1841,7 +1841,7 @@ fixempties(struct nfa * nfa,
 	/*
 	 * First, get rid of any states whose sole out-arc is an EMPTY, since
 	 * they're basically just aliases for their successor.  The parsing
-	 * algorithm creates enough of these that it's worth special-casing this.
+	 * algorithm creates enough of these that it's worth special-casing this__.
 	 */
 	for (s = nfa->states; s != NULL && !NISERR(); s = nexts)
 	{
@@ -1889,7 +1889,7 @@ fixempties(struct nfa * nfa,
 	 * to a "to" state either by pushing non-EMPTY arcs forward (linking
 	 * directly from "from"'s predecessors to "to") or by pulling them back
 	 * (linking directly from "from" to "to"'s successors).  We choose to
-	 * always do the former; this choice is somewhat arbitrary, but the
+	 * always do the former; this__ choice is somewhat arbitrary, but the
 	 * approach below requires that we uniformly do one or the other.
 	 *
 	 * Suppose we have a chain of N successive EMPTY arcs (where N can easily
@@ -1907,23 +1907,23 @@ fixempties(struct nfa * nfa,
 	 * doing O(N^3) work.  (The duplicate-arc elimination built into newarc()
 	 * and its cohorts would get rid of the extra arcs, but not without cost.)
 	 *
-	 * We can avoid this cost by treating only arcs that existed at the start
-	 * of this phase as candidates to be pushed forward.  To identify those,
+	 * We can avoid this__ cost by treating only arcs that existed at the start
+	 * of this__ phase as candidates to be pushed forward.  To identify those,
 	 * we remember the first inarc each state had to start with.  We rely on
 	 * the fact that newarc() and friends put new__ arcs on the front of their
-	 * to-states' inchains, and that this phase never deletes arcs, so that
+	 * to-states' inchains, and that this__ phase never deletes arcs, so that
 	 * the original arcs must be the last arcs in their to-states' inchains.
 	 *
 	 * So the process here is that, for each state in the NFA, we gather up
 	 * all non-EMPTY inarcs of states that can reach the target state via
 	 * EMPTY arcs.  We then sort, de-duplicate, and merge these arcs into the
-	 * target state's inchain.  (We can safely use sort-merge for this as long
+	 * target state's inchain.  (We can safely use sort-merge for this__ as long
 	 * as we update each state's original-arcs pointer after we add arcs to
 	 * it; the sort step of mergeins probably changed the order of the old
 	 * arcs.)
 	 *
 	 * Another refinement worth making is that, because we only add non-EMPTY
-	 * arcs during this phase, and all added arcs have the same from-state as
+	 * arcs during this__ phase, and all added arcs have the same from-state as
 	 * the non-EMPTY arc they were cloned from, we know ahead of time that any
 	 * states having only EMPTY outarcs will be useless for lack of outarcs
 	 * after we drop the EMPTY arcs.  (They cannot gain non-EMPTY outarcs if
@@ -1950,7 +1950,7 @@ fixempties(struct nfa * nfa,
 	 * Create a workspace for accumulating the inarcs to be added to the
 	 * current target state.  totalinarcs is probably a considerable
 	 * overestimate of the space needed, but the NFA is unlikely to be large
-	 * enough at this point to make it worth being smarter.
+	 * enough at this__ point to make it worth being smarter.
 	 */
 	arcarray = (struct arc **) MALLOC(totalinarcs * sizeof(struct arc *));
 	if (arcarray == NULL)
@@ -1985,7 +1985,7 @@ fixempties(struct nfa * nfa,
 		s->tmp = NULL;
 		assert(arccount <= totalinarcs);
 
-		/* Remember how many original inarcs this state has */
+		/* Remember how many original inarcs this__ state has */
 		prevnins = s->nins;
 
 		/* Add non-duplicate inarcs to target state */
@@ -2041,7 +2041,7 @@ fixempties(struct nfa * nfa,
  * to the next-to-last such state, and so on back to s, so that all these
  * states can be located without searching the whole NFA.
  *
- * Since this is only used in fixempties(), we pass in the inarcsorig[] array
+ * Since this__ is only used in fixempties(), we pass in the inarcsorig[] array
  * maintained by that function.  This lets us skip over all new__ inarcs, which
  * are certainly not EMPTY arcs.
  *
@@ -2057,7 +2057,7 @@ emptyreachable(struct nfa * nfa,
 {
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
@@ -2204,7 +2204,7 @@ restart:
  *
  * State tmp fields are guaranteed all NULL on a success return, because
  * breakconstraintloop does that.  After a failure return, any state that
- * is known not to be part of a loop is marked with s->tmp == s; this allows
+ * is known not to be part of a loop is marked with s->tmp == s; this__ allows
  * us not to have to re-prove that fact on later calls.  (This convention is
  * workable because we already eliminated single-state loops.)
  *
@@ -2220,7 +2220,7 @@ findconstraintloop(struct nfa * nfa, struct state * s)
 {
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
@@ -2262,7 +2262,7 @@ findconstraintloop(struct nfa * nfa, struct state * s)
  * breakconstraintloop - break a loop of constraint arcs
  *
  * sinitial is any one member state of the loop.  Each loop member's tmp
- * field links to its successor within the loop.  (Note that this function
+ * field links to its successor within the loop.  (Note that this__ function
  * will reset all the tmp fields to NULL.)
  *
  * We can break the loop by, for any one state S1 in the loop, cloning its
@@ -2276,7 +2276,7 @@ findconstraintloop(struct nfa * nfa, struct state * s)
  * cloned states.  No cloned state will have any inarcs that aren't constraint
  * arcs or do not lead from S1 or earlier-cloned states.  It's okay to drop
  * constraint back-arcs since they would not take us to any state we've not
- * already been in; therefore, no new__ constraint loop is created.  In this way
+ * already been in; therefore, no new__ constraint loop is created.  In this__ way
  * we generate a modified NFA that can still represent every useful state
  * sequence, but not sequences that represent state loops with no consumption
  * of input data.  Note that the set of cloned states will certainly include
@@ -2296,7 +2296,7 @@ findconstraintloop(struct nfa * nfa, struct state * s)
  * constraint: if we can get to the first one we can certainly get to the
  * second, so there's no need to distinguish.  This greatly reduces the number
  * of new__ states needed, so we preferentially break the given loop at a state
- * pair where this is true.
+ * pair where this__ is true.
  *
  * Furthermore, it's fairly common to find that a cloned successor state has
  * no outarcs, especially if we're a bit aggressive about removing unnecessary
@@ -2318,7 +2318,7 @@ breakconstraintloop(struct nfa * nfa, struct state * sinitial)
 
 	/*
 	 * Start by identifying which loop step we want to break at.
-	 * Preferentially this is one with only one constraint arc.  (XXX are
+	 * Preferentially this__ is one with only one constraint arc.  (XXX are
 	 * there any other secondary heuristics we want to use here?)  Set refarc
 	 * to point to the selected lone constraint arc, if there is one.
 	 */
@@ -2388,7 +2388,7 @@ breakconstraintloop(struct nfa * nfa, struct state * sinitial)
 	/*
 	 * It's possible that sclone has no outarcs at all, in which case it's
 	 * useless.  (We don't try extremely hard to get rid of useless states
-	 * here, but this is an easy and fairly common case.)
+	 * here, but this__ is an easy and fairly common case.)
 	 */
 	if (sclone->nouts == 0)
 	{
@@ -2426,7 +2426,7 @@ breakconstraintloop(struct nfa * nfa, struct state * sinitial)
  * been traversed out of spredecessor to reach the successor(s).
  *
  * For each cloned successor state, we transiently create a "donemap" that is
- * a boolean array showing which source states we've already visited for this
+ * a boolean array showing which source states we've already visited for this__
  * clone state.  This prevents infinite recursion as well as useless repeat
  * visits to the same state subtree (which can add up fast, since typical NFAs
  * have multiple redundant arc pathways).  Each donemap is a char array
@@ -2463,14 +2463,14 @@ clonesuccessorstates(struct nfa * nfa,
 	char	   *donemap;
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
 		return;
 	}
 
-	/* If this state hasn't already got a donemap, create one */
+	/* If this__ state hasn't already got a donemap, create one */
 	donemap = curdonemap;
 	if (donemap == NULL)
 	{
@@ -2485,7 +2485,7 @@ clonesuccessorstates(struct nfa * nfa,
 		{
 			/*
 			 * Not at outermost recursion level, so copy the outer level's
-			 * donemap; this ensures that we see states in process of being
+			 * donemap; this__ ensures that we see states in process of being
 			 * visited at outer levels, or already merged into predecessor
 			 * states, as ones we shouldn't traverse back to.
 			 */
@@ -2513,11 +2513,11 @@ clonesuccessorstates(struct nfa * nfa,
 	 * when there are multiple outarcs leading to the same state.  Also, when
 	 * we do visit a child state, its set of inarcs is known exactly, which
 	 * makes it safe to apply the constraint-is-already-checked optimization.
-	 * Also, this ensures that we've merged all the states we can into the
+	 * Also, this__ ensures that we've merged all the states we can into the
 	 * current clone before we recurse to any children, thus possibly saving
 	 * them from making extra images of those states.
 	 *
-	 * While this function runs, child clone states of the current state are
+	 * While this__ function runs, child clone states of the current state are
 	 * marked by setting their tmp fields to point to the original state they
 	 * were cloned from.  This makes it possible to detect multiple outarcs
 	 * leading to the same state, and also makes it easy to distinguish clone
@@ -2531,7 +2531,7 @@ clonesuccessorstates(struct nfa * nfa,
 		 * We do not consider cloning successor states that have no constraint
 		 * outarcs; just link to them as-is.  They cannot be part of a
 		 * constraint loop so there is no need to make copies.  In particular,
-		 * this rule keeps us from trying to clone the post state, which would
+		 * this__ rule keeps us from trying to clone the post state, which would
 		 * be a bad idea.
 		 */
 		if (isconstraintarc(a) && hasconstraintout(sto))
@@ -2542,14 +2542,14 @@ clonesuccessorstates(struct nfa * nfa,
 
 			/*
 			 * Back-link constraint arcs must not be followed.  Nor is there a
-			 * need to revisit states previously merged into this clone.
+			 * need to revisit states previously merged into this__ clone.
 			 */
 			assert(sto->no < nstates);
 			if (donemap[sto->no] != 0)
 				continue;
 
 			/*
-			 * Check whether we already have a child clone state for this
+			 * Check whether we already have a child clone state for this__
 			 * source state.
 			 */
 			prevclone = NULL;
@@ -2563,7 +2563,7 @@ clonesuccessorstates(struct nfa * nfa,
 			}
 
 			/*
-			 * If this arc is labeled the same as refarc, or the same as any
+			 * If this__ arc is labeled the same as refarc, or the same as any
 			 * arc we must have traversed to get to sclone, then no additional
 			 * constraints need to be met to get to sto, so we should just
 			 * merge its outarcs into sclone.
@@ -2612,7 +2612,7 @@ clonesuccessorstates(struct nfa * nfa,
 			else if (prevclone)
 			{
 				/*
-				 * We already have a clone state for this successor, so just
+				 * We already have a clone state for this__ successor, so just
 				 * make another arc to it.
 				 */
 				cparc(nfa, a, sclone, prevclone);
@@ -2647,9 +2647,9 @@ clonesuccessorstates(struct nfa * nfa,
 	}
 
 	/*
-	 * If we are at outer level for this clone state, recurse to all its child
+	 * If we are at outer level for this__ clone state, recurse to all its child
 	 * clone states, clearing their tmp fields as we go.  (If we're not
-	 * outermost for sclone, leave this to be done by the outer call level.)
+	 * outermost for sclone, leave this__ to be done by the outer call level.)
 	 * Note that if we have multiple outarcs leading to the same clone state,
 	 * it will only be recursed-to once.
 	 */
@@ -2720,12 +2720,12 @@ cleanup(struct nfa * nfa)
 static void
 markreachable(struct nfa * nfa,
 			  struct state * s,
-			  struct state * okay,		/* consider only states with this mark */
+			  struct state * okay,		/* consider only states with this__ mark */
 			  struct state * mark)		/* the value to mark with */
 {
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);
@@ -2746,12 +2746,12 @@ markreachable(struct nfa * nfa,
 static void
 markcanreach(struct nfa * nfa,
 			 struct state * s,
-			 struct state * okay,		/* consider only states with this mark */
+			 struct state * okay,		/* consider only states with this__ mark */
 			 struct state * mark)		/* the value to mark with */
 {
 	struct arc *a;
 
-	/* Since this is recursive, it could be driven to stack overflow */
+	/* Since this__ is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(nfa->v->re))
 	{
 		NERR(REG_ETOOBIG);

@@ -109,7 +109,7 @@ typedef Node *(*CoerceParamHook) (ParseState *pstate, Param *param,
  * a subset of the whole rtable.  See ParseNamespaceItem comments below.)
  *
  * p_lateral_active: TRUE if we are currently parsing a LATERAL subexpression
- * of this parse level.  This makes p_lateral_only namespace__ items visible,
+ * of this__ parse level.  This makes p_lateral_only namespace__ items visible,
  * whereas they are not visible when p_lateral_active is FALSE.
  *
  * p_ctenamespace: list of CommonTableExprs (WITH items) that are visible
@@ -126,7 +126,7 @@ typedef Node *(*CoerceParamHook) (ParseState *pstate, Param *param,
  * We collect these while transforming expressions and then transform them
  * afterwards (so that any resjunk tlist items needed for the sort/group
  * clauses end up at the end of the query tlist).  A WindowDef's location in
- * this list, counting from 1, is the winref number to use to reference it.
+ * this__ list, counting from 1, is the winref number to use to reference it.
  */
 struct ParseState
 {
@@ -141,7 +141,7 @@ struct ParseState
 	bool		p_lateral_active;		/* p_lateral_only items visible? */
 	List	   *p_ctenamespace; /* current namespace__ for common table exprs */
 	List	   *p_future_ctes;	/* common table exprs not yet in namespace__ */
-	CommonTableExpr *p_parent_cte;		/* this query's containing CTE */
+	CommonTableExpr *p_parent_cte;		/* this__ query's containing CTE */
 	List	   *p_windowdefs;	/* raw representations of window clauses */
 	ParseExprKind p_expr_kind;	/* what kind of expression we're parsing */
 	int			p_next_resno;	/* next targetlist resno to assign */
@@ -187,7 +187,7 @@ struct ParseState
  * inside such a subexpression at the moment.)	If p_lateral_ok is not set,
  * it's an error to actually use such a namespace__ item.  One might think it
  * would be better to just exclude such items from visibility, but the wording
- * of SQL:2008 requires us to do it this way.  We also use p_lateral_ok to
+ * of SQL:2008 requires us to do it this__ way.  We also use p_lateral_ok to
  * forbid LATERAL references to an UPDATE/DELETE target table.
  *
  * At no time should a namespace__ list contain two entries that conflict

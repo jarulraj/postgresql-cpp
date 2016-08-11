@@ -42,16 +42,16 @@
  *
  * Note: in pg_class we allow reltablespace == 0 to denote that the
  * relation is stored in its database's "default" tablespace (as
- * identified by pg_database.dattablespace).  However this shorthand
+ * identified by pg_database.dattablespace).  However this__ shorthand
  * is NOT allowed in RelFileNode structs --- the real tablespace ID
  * must be supplied when setting spcNode.
  *
  * Note: in pg_class, relfilenode can be zero to denote that the relation
  * is a "mapped" relation, whose current true filenode number is available
- * from relmapper.c.  Again, this case is NOT allowed in RelFileNodes.
+ * from relmapper.c.  Again, this__ case is NOT allowed in RelFileNodes.
  *
  * Note: various places use RelFileNode in hashtable keys.  Therefore,
- * there *must not* be any unused padding bytes in this struct.  That
+ * there *must not* be any unused padding bytes in this__ struct.  That
  * should be safe as long as all the fields are of type Oid.
  */
 // Peloton : explicitly define operator= for volatile object

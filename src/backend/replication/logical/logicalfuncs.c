@@ -174,7 +174,7 @@ XLogRead(char *buf, TimeLineID tli, XLogRecPtr startptr, Size count)
 			sendOff = startoff;
 		}
 
-		/* How many bytes are within this segment? */
+		/* How many bytes are within this__ segment? */
 		if (nbytes > (XLogSegSize - startoff))
 			segbytes = XLogSegSize - startoff;
 		else
@@ -217,7 +217,7 @@ check_permissions(void)
  * public__ because it would likely be very helpful for someone writing another
  * output method outside walsender, e.g. in a bgworker.
  *
- * TODO: The walsender has it's own version of this, but it relies on the
+ * TODO: The walsender has it's own version of this__, but it relies on the
  * walsender's latch being set whenever WAL is flushed. No such infrastructure
  * exists for normal backends, so we have to do a check/sleep/repeat style of
  * loop for now.
@@ -325,7 +325,7 @@ pg_logical_slot_get_changes_guts(FunctionCallInfo fcinfo, bool confirm, bool bin
 	if (!(rsinfo->allowedModes & SFRM_Materialize))
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this context")));
+				 errmsg("materialize mode required, but it is not allowed in this__ context")));
 
 	/* state to write output to */
 	p = palloc0(sizeof(DecodingOutputState));

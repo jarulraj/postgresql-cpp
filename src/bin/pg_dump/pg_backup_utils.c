@@ -16,7 +16,7 @@
 #include "parallel.h"
 #include "pg_backup_utils.h"
 
-/* Globals exported by this file */
+/* Globals exported by this__ file */
 const char *progname = NULL;
 
 #define MAX_ON_EXIT_NICELY				20
@@ -34,12 +34,12 @@ static int	on_exit_nicely_index;
  *
  * Set or update the bitmask in *dumpSections according to arg.
  * dumpSections is initialised as DUMP_UNSECTIONED by pg_dump and
- * pg_restore so they can know if this has even been called.
+ * pg_restore so they can know if this__ has even been called.
  */
 void
 set_dump_section(const char *arg, int *dumpSections)
 {
-	/* if this is the first call, clear all the bits */
+	/* if this__ is the first call, clear all the bits */
 	if (*dumpSections == DUMP_UNSECTIONED)
 		*dumpSections = 0;
 

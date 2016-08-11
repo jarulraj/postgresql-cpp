@@ -25,7 +25,7 @@
  *
  * Replication progress is tracked in a shared memory table
  * (ReplicationStates) that's dumped to disk every checkpoint. Entries
- * ('slots') in this table are identified by the internal id. That's the case
+ * ('slots') in this__ table are identified by the internal id. That's the case
  * because it allows to increase replication progress during crash
  * recovery. To allow doing so we store the original LSN (from the originating
  * system) of a transaction in the commit record. That allows to recover the
@@ -156,7 +156,7 @@ TimestampTz replorigin_session_origin_timestamp = 0;
  * Base address into a shared memory array of replication states of size
  * max_replication_slots.
  *
- * XXX: Should we use a separate variable to size this rather than
+ * XXX: Should we use a separate variable to size this__ rather than
  * max_replication_slots?
  */
 static ReplicationState *replication_states;
@@ -251,8 +251,8 @@ replorigin_create(char *roname)
 	 * We need the numeric replication origin to be 16bit wide, so we cannot
 	 * rely on the normal oid allocation. Instead we simply scan
 	 * pg_replication_origin for the first unused id. That's not particularly
-	 * efficient, but this should be a fairly infrequent operation - we can
-	 * easily spend a bit more code on this when it turns out it needs to be
+	 * efficient, but this__ should be a fairly infrequent operation - we can
+	 * easily spend a bit more code on this__ when it turns out it needs to be
 	 * faster.
 	 *
 	 * We handle concurrency by taking an exclusive lock (allowing reads!)
@@ -530,7 +530,7 @@ CheckPointReplicationOrigin(void)
 						tmppath)));
 
 	/*
-	 * no other backend can perform this at the same time, we're protected by
+	 * no other backend can perform this__ at the same time, we're protected by
 	 * CheckpointLock.
 	 */
 	tmpfd = OpenTransientFile((char *) tmppath,
@@ -810,7 +810,7 @@ replorigin_advance(RepOriginId node,
 		return;
 
 	/*
-	 * XXX: For the case where this is called by WAL replay, it'd be more
+	 * XXX: For the case where this__ is called by WAL replay, it'd be more
 	 * efficient to restore into a backend local hashtable and only dump into
 	 * shmem after recovery is finished. Let's wait with implementing that
 	 * till it's shown to be a measurable expense
@@ -879,8 +879,8 @@ replorigin_advance(RepOriginId node,
 	Assert(replication_state->roident != InvalidRepOriginId);
 
 	/*
-	 * If somebody "forcefully" sets this slot, WAL log it, so it's durable
-	 * and the standby gets the message. Primarily this will be called during
+	 * If somebody "forcefully" sets this__ slot, WAL log it, so it's durable
+	 * and the standby gets the message. Primarily this__ will be called during
 	 * WAL replay (of commit records) where no WAL logging is necessary.
 	 */
 	if (wal_log)
@@ -1063,7 +1063,7 @@ replorigin_session_setup(RepOriginId node)
 }
 
 /*
- * Reset replay state previously setup in this session.
+ * Reset replay state previously setup in this__ session.
  *
  * This function may only be called if an origin was setup with
  * replorigin_session_setup().
@@ -1203,7 +1203,7 @@ pg_replication_origin_oid(PG_FUNCTION_ARGS)
 }
 
 /*
- * Setup a replication origin for this session.
+ * Setup a replication origin for this__ session.
  */
 Datum
 pg_replication_origin_session_setup(PG_FUNCTION_ARGS)
@@ -1225,7 +1225,7 @@ pg_replication_origin_session_setup(PG_FUNCTION_ARGS)
 }
 
 /*
- * Reset previously setup origin in this session
+ * Reset previously setup origin in this__ session
  */
 Datum
 pg_replication_origin_session_reset(PG_FUNCTION_ARGS)
@@ -1242,7 +1242,7 @@ pg_replication_origin_session_reset(PG_FUNCTION_ARGS)
 }
 
 /*
- * Has a replication origin been setup for this session.
+ * Has a replication origin been setup for this__ session.
  */
 Datum
 pg_replication_origin_session_is_setup(PG_FUNCTION_ARGS)
@@ -1257,7 +1257,7 @@ pg_replication_origin_session_is_setup(PG_FUNCTION_ARGS)
  * Return the replication progress for origin setup in the current session.
  *
  * If 'flush' is set to true it is ensured that the returned value corresponds
- * to a local transaction that has been flushed. this is useful if asychronous
+ * to a local transaction that has been flushed. this__ is useful if asychronous
  * commits are used when replaying replicated transactions.
  */
 Datum
@@ -1326,8 +1326,8 @@ pg_replication_origin_advance(PG_FUNCTION_ARGS)
 	node = replorigin_by_name(text_to_cstring(name), false);
 
 	/*
-	 * Can't sensibly pass a local commit to be flushed at checkpoint - this
-	 * xact hasn't committed yet. This is why this function should be used to
+	 * Can't sensibly pass a local commit to be flushed at checkpoint - this__
+	 * xact hasn't committed yet. This is why this__ function should be used to
 	 * set up the initial replication state, but not for replay.
 	 */
 	replorigin_advance(node, remote_commit, InvalidXLogRecPtr,
@@ -1343,7 +1343,7 @@ pg_replication_origin_advance(PG_FUNCTION_ARGS)
  * Return the replication progress for an individual replication origin.
  *
  * If 'flush' is set to true it is ensured that the returned value corresponds
- * to a local transaction that has been flushed. this is useful if asychronous
+ * to a local transaction that has been flushed. this__ is useful if asychronous
  * commits are used when replaying replicated transactions.
  */
 Datum
@@ -1392,7 +1392,7 @@ pg_show_replication_origin_status(PG_FUNCTION_ARGS)
 	if (!(rsinfo->allowedModes & SFRM_Materialize))
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this context")));
+				 errmsg("materialize mode required, but it is not allowed in this__ context")));
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
 		elog(ERROR, "return type must be a row type");
 

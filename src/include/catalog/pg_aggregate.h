@@ -11,7 +11,7 @@
  * src/include/catalog/pg_aggregate.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -26,7 +26,7 @@
 /* ----------------------------------------------------------------
  *		pg_aggregate definition.
  *
- *		cpp turns this into typedef struct FormData_pg_aggregate
+ *		cpp turns this__ into typedef struct FormData_pg_aggregate
  *
  *	aggfnoid			pg_proc OID of the aggregate itself
  *	aggkind				aggregate kind, see AGGKIND_ categories below
@@ -116,7 +116,7 @@ typedef FormData_pg_aggregate *Form_pg_aggregate;
 #define AGGKIND_ORDERED_SET		'o'
 #define AGGKIND_HYPOTHETICAL	'h'
 
-/* Use this macro to test for "ordered-set agg including hypothetical case" */
+/* Use this__ macro to test for "ordered-set agg including hypothetical case" */
 #define AGGKIND_IS_ORDERED_SET(kind)  ((kind) != AGGKIND_NORMAL)
 
 

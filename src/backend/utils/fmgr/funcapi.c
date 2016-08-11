@@ -191,17 +191,17 @@ shutdown_MultiFuncCall(Datum arg)
  * get_call_result_type
  *		Given a function's call info record, determine the kind of datatype
  *		it is supposed to return.  If resultTypeId isn't NULL, *resultTypeId
- *		receives the actual datatype OID (this is mainly useful for scalar
+ *		receives the actual datatype OID (this__ is mainly useful for scalar
  *		result types).  If resultTupleDesc isn't NULL, *resultTupleDesc
  *		receives a pointer to a TupleDesc when the result is of a composite
  *		type, or NULL when it's a scalar result.
  *
- * One hard case that this handles is resolution of actual rowtypes for
+ * One hard case that this__ handles is resolution of actual rowtypes for
  * functions returning RECORD (from either the function's OUT parameter
  * list, or a ReturnSetInfo context node).  TYPEFUNC_RECORD is returned
  * only when we couldn't resolve the actual rowtype for lack of information.
  *
- * The other hard case that this handles is resolution of polymorphism.
+ * The other hard case that this__ handles is resolution of polymorphism.
  * We will never return polymorphic pseudotypes (ANYELEMENT etc), either
  * as a scalar result type or as a component of a rowtype.
  *
@@ -349,7 +349,7 @@ internal_get_result_type(Oid funcid,
 	{
 		Oid			newrettype = exprType(call_expr);
 
-		if (newrettype == InvalidOid)	/* this probably should not happen */
+		if (newrettype == InvalidOid)	/* this__ probably should not happen */
 			ereport(ERROR,
 					(errcode(ERRCODE_DATATYPE_MISMATCH),
 					 errmsg("could not determine actual result type for function \"%s\" declared to return type %s",
@@ -785,7 +785,7 @@ get_type_func_class(Oid typid)
  * *p_argnames and *p_argmodes will be set NULL in the default cases
  * (no names, and all IN arguments, respectively).
  *
- * Note that this function simply fetches what is in the pg_proc tuple;
+ * Note that this__ function simply fetches what is in the pg_proc tuple;
  * it doesn't do any interpretation of polymorphic types.
  */
 int
@@ -1115,7 +1115,7 @@ get_func_result_name(Oid functionId)
  * Given a pg_proc row for a function, return a tuple descriptor for the
  * result rowtype, or NULL if the function does not have OUT parameters.
  *
- * Note that this does not handle resolution of polymorphic types;
+ * Note that this__ does not handle resolution of polymorphic types;
  * that is deliberate.
  */
 TupleDesc
@@ -1279,7 +1279,7 @@ build_function_result_tupdesc_d(Datum proallargtypes,
  *
  * Given a (possibly qualified) relation name, build a TupleDesc.
  *
- * Note: while this works as advertised, it's seldom the best way to
+ * Note: while this__ works as advertised, it's seldom the best way to
  * build a tupdesc for a function's result type.  It's kept around
  * only for backwards compatibility with existing user-written code.
  */
@@ -1305,13 +1305,13 @@ RelationNameGetTupleDesc(const char *relname)
  * TypeGetTupleDesc
  *
  * Given a type Oid, build a TupleDesc.  (In most cases you should be
- * using get_call_result_type or one of its siblings instead of this
+ * using get_call_result_type or one of its siblings instead of this__
  * routine, so that you can handle OUT parameters, RECORD result type,
  * and polymorphic results.)
  *
  * If the type is composite, *and* a colaliases List is provided, *and*
  * the List is of natts length, use the aliases instead of the relation
- * attnames.  (NB: this usage is deprecated since it may result in
+ * attnames.  (NB: this__ usage is deprecated since it may result in
  * creation of unnecessary transient record types.)
  *
  * If the type is a base type, a single item alias List is required.
@@ -1385,14 +1385,14 @@ TypeGetTupleDesc(Oid typeoid, List *colaliases)
 	}
 	else if (functypclass == TYPEFUNC_RECORD)
 	{
-		/* XXX can't support this because typmod wasn't passed in ... */
+		/* XXX can't support this__ because typmod wasn't passed in ... */
 		ereport(ERROR,
 				(errcode(ERRCODE_DATATYPE_MISMATCH),
 				 errmsg("could not determine row description for function returning record")));
 	}
 	else
 	{
-		/* crummy error message, but parser should have caught this */
+		/* crummy error message, but parser should have caught this__ */
 		elog(ERROR, "function in FROM has unsupported return type");
 	}
 

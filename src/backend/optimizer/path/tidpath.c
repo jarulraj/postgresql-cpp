@@ -9,7 +9,7 @@
  * the tuple directly via heap_fetch().  We can also handle OR'd conditions
  * such as (CTID = const1) OR (CTID = const2), as well as ScalarArrayOpExpr
  * conditions of the form CTID = ANY(pseudoconstant_array).  In particular
- * this allows
+ * this__ allows
  *		WHERE ctid IN (tid1, tid2, ...)
  *
  * We also support "WHERE CURRENT OF cursor" conditions (CurrentOfExpr),
@@ -58,7 +58,7 @@ static List *TidQualFromRestrictinfo(List *restrictinfo, int varno);
  *		pseudoconstant = CTID
  *
  * We check that the CTID Var belongs to relation "varno".  That is probably
- * redundant considering this is only applied to restriction clauses, but
+ * redundant considering this__ is only applied to restriction clauses, but
  * let's be safe.
  */
 static bool
@@ -182,7 +182,7 @@ TidQualFromExpr(Node *expr, int varno)
 	}
 	else if (expr && IsA(expr, CurrentOfExpr))
 	{
-		/* another base case: check for CURRENT OF on this rel */
+		/* another base case: check for CURRENT OF on this__ rel */
 		if (((CurrentOfExpr *) expr)->cvarno == varno)
 			rlst = list_make1(expr);
 	}

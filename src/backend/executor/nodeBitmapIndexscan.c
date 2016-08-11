@@ -77,7 +77,7 @@ MultiExecBitmapIndexScan(BitmapIndexScanState *node)
 	}
 	else
 	{
-		/* XXX should we use less than work_mem for this? */
+		/* XXX should we use less than work_mem for this__? */
 		tbm = tbm_create(work_mem * 1024L);
 	}
 
@@ -119,7 +119,7 @@ ExecReScanBitmapIndexScan(BitmapIndexScanState *node)
 
 	/*
 	 * Reset the runtime-key context so we don't leak memory as each outer
-	 * tuple is scanned.  Note this assumes that we will recalculate *all*
+	 * tuple is scanned.  Note this__ assumes that we will recalculate *all*
 	 * runtime keys on each call.
 	 */
 	if (econtext)
@@ -213,7 +213,7 @@ ExecInitBitmapIndexScan(BitmapIndexScan *node, EState *estate, int eflags)
 	/*
 	 * Miscellaneous initialization
 	 *
-	 * We do not need a standard exprcontext for this node, though we may
+	 * We do not need a standard exprcontext for this__ node, though we may
 	 * decide below to create a runtime-key exprcontext
 	 */
 

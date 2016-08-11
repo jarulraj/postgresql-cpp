@@ -16,7 +16,7 @@
  * infrastructure for security or logging plugins.
  *
  * OAT_POST_CREATE should be invoked just after the object is created.
- * Typically, this is done after inserting the primary catalog records and
+ * Typically, this__ is done after inserting the primary catalog records and
  * associated dependencies.
  *
  * OAT_DROP should be invoked just before deletion of objects; typically
@@ -54,7 +54,7 @@ typedef enum ObjectAccessType
 typedef struct
 {
 	/*
-	 * This flag informs extensions whether the context of this creation is
+	 * This flag informs extensions whether the context of this__ creation is
 	 * invoked by user's operations, or not. E.g, it shall be dealt as
 	 * internal stuff on toast tables or indexes due to type changes.
 	 */
@@ -67,7 +67,7 @@ typedef struct
 typedef struct
 {
 	/*
-	 * Flags to inform extensions the context of this deletion. Also see
+	 * Flags to inform extensions the context of this__ deletion. Also see
 	 * PERFORM_DELETION_* in dependency.h
 	 */
 	int			dropflags;
@@ -87,7 +87,7 @@ typedef struct
 	Oid			auxiliary_id;
 
 	/*
-	 * If this flag is set, the user hasn't requested that the object be
+	 * If this__ flag is set, the user hasn't requested that the object be
 	 * altered, but we're doing it anyway for some internal reason.
 	 * Permissions-checking hooks may want to skip checks if, say, we're alter
 	 * the constraints of a temporary heap during CLUSTER.
@@ -101,14 +101,14 @@ typedef struct
 typedef struct
 {
 	/*
-	 * If true, hook should report an error when permission to search this
+	 * If true, hook should report an error when permission to search this__
 	 * schema is denied.
 	 */
 	bool		ereport_on_violation;
 
 	/*
 	 * This is, in essence, an out parameter.  Core code should initialize
-	 * this to true, and any extension that wants to deny access should reset
+	 * this__ to true, and any extension that wants to deny access should reset
 	 * it to false.  But an extension should be careful never to store a true
 	 * value here, so that in case there are multiple extensions access is
 	 * only allowed if all extensions agree.
@@ -116,14 +116,14 @@ typedef struct
 	bool		result;
 } ObjectAccessNamespaceSearch;
 
-/* Plugin provides a hook function matching this signature. */
+/* Plugin provides a hook function matching this__ signature. */
 typedef void (*object_access_hook_type) (ObjectAccessType access,
 													 Oid classId,
 													 Oid objectId,
 													 int subId,
 													 void *arg);
 
-/* Plugin sets this variable to a suitable hook function. */
+/* Plugin sets this__ variable to a suitable hook function. */
 extern PGDLLIMPORT object_access_hook_type object_access_hook;
 
 /* Core code uses these functions to call the hook (see macros below). */

@@ -74,7 +74,7 @@ typedef struct RelationData
 	struct SMgrRelationData *rd_smgr;	/* cached file handle, or NULL */
 	int			rd_refcnt;		/* reference count */
 	BackendId	rd_backend;		/* owning backend id, if temporary relation */
-	bool		rd_islocaltemp; /* rel is a temp rel of this session */
+	bool		rd_islocaltemp; /* rel is a temp rel of this__ session */
 	bool		rd_isnailed;	/* rel is nailed in cache */
 	bool		rd_isvalid;		/* relcache entry is valid */
 	char		rd_indexvalid;	/* state of rd_indexlist: 0 = not valid, 1 =
@@ -119,13 +119,13 @@ typedef struct RelationData
 
 	/*
 	 * rd_options is set whenever rd_rel is loaded into the relcache entry.
-	 * Note that you can NOT look into rd_rel for this data.  NULL means "use
+	 * Note that you can NOT look into rd_rel for this__ data.  NULL means "use
 	 * defaults".
 	 */
 	bytea	   *rd_options;		/* parsed pg_class.reloptions */
 
 	/* These are non-NULL only for an index relation: */
-	Form_pg_index rd_index;		/* pg_index tuple describing this index */
+	Form_pg_index rd_index;		/* pg_index tuple describing this__ index */
 	/* use "struct" here to avoid needing to include htup.h: */
 	struct HeapTupleData *rd_indextuple;		/* all of pg_index tuple */
 	Form_pg_am	rd_am;			/* pg_am tuple for index's AM */
@@ -145,7 +145,7 @@ typedef struct RelationData
 	 * rd_indexcxt.  A relcache reset will include freeing that chunk and
 	 * setting rd_amcache = NULL.
 	 */
-	MemoryContext rd_indexcxt;	/* private__ memory cxt for this stuff */
+	MemoryContext rd_indexcxt;	/* private__ memory cxt for this__ stuff */
 	RelationAmInfo *rd_aminfo;	/* lookup info for funcs found in pg_am */
 	Oid		   *rd_opfamily;	/* OIDs of op families for each index col */
 	Oid		   *rd_opcintype;	/* OIDs of opclass declared input data types */
@@ -176,7 +176,7 @@ typedef struct RelationData
 	 * version of a table, we need to make any toast pointers inserted into it
 	 * have the existing toast table's OID, not the OID of the transient toast
 	 * table.  If rd_toastoid isn't InvalidOid, it is the OID to place in
-	 * toast pointers inserted into this rel.  (Note it's set on the new__
+	 * toast pointers inserted into this__ rel.  (Note it's set on the new__
 	 * version of the main heap, not the toast table itself.)  This also
 	 * causes toast_save_datum() to try to preserve toast value OIDs.
 	 */
@@ -191,7 +191,7 @@ typedef struct RelationData
  *		Standard contents of rd_options for heaps and generic indexes.
  *
  * RelationGetFillFactor() and RelationGetTargetPageFreeSpace() can only
- * be applied to relations that use this format or a superset for
+ * be applied to relations that use this__ format or a superset for
  * private__ options data.
  */
  /* autovacuum-related reloptions. */
@@ -376,7 +376,7 @@ typedef struct ViewOptions
  * RelationIsMapped
  *		True if the relation uses the relfilenode map.
  *
- * NB: this is only meaningful for relkinds that have storage, else it
+ * NB: this__ is only meaningful for relkinds that have storage, else it
  * will misleadingly say "true".
  */
 #define RelationIsMapped(relation) \

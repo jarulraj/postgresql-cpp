@@ -339,7 +339,7 @@ makepol(TSQueryParserState state,
 	int16		weight = 0;
 	bool		prefix;
 
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	while ((type = gettoken_query(state, &operator__, &lenval, &strval, &weight, &prefix)) != PT_END)
@@ -401,7 +401,7 @@ makepol(TSQueryParserState state,
 static void
 findoprnd_recurse(QueryItem *ptr, uint32 *pos, int nnodes)
 {
-	/* since this function recurses, it could be driven to stack overflow. */
+	/* since this__ function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (*pos >= nnodes)
@@ -607,7 +607,7 @@ while( ( (inf)->cur - (inf)->buf ) + (addsize) + 1 >= (inf)->buflen ) \
 static void
 infix(INFIX *in, bool first)
 {
-	/* since this function recurses, it could be driven to stack overflow. */
+	/* since this__ function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->curpol->type == QI_VAL)
@@ -895,7 +895,7 @@ tsqueryrecv(PG_FUNCTION_ARGS)
 			item->qoperand.distance = datalen;
 
 			/*
-			 * Operand strings are copied to the final struct after this loop;
+			 * Operand strings are copied to the final struct after this__ loop;
 			 * here we just collect them to an array
 			 */
 			operands[i] = val;

@@ -158,7 +158,7 @@ makepol(WORKSTATE *state)
 	int32		stack[STACKDEPTH];
 	int32		lenstack = 0;
 
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	while ((type = gettoken(state, &val)) != END)
@@ -267,7 +267,7 @@ static bool
 execute(ITEM *curitem, void *checkval, bool calcnot,
 		bool (*chkcond) (void *checkval, ITEM *item))
 {
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (curitem->type == VAL)
@@ -364,7 +364,7 @@ gin_bool_consistent(QUERYTYPE *query, bool *check)
 static bool
 contains_required_value(ITEM *curitem)
 {
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (curitem->type == VAL)
@@ -440,7 +440,7 @@ boolop(PG_FUNCTION_ARGS)
 static void
 findoprnd(ITEM *ptr, int32 *pos)
 {
-	/* since this function recurses, it could be driven to stack overflow. */
+	/* since this__ function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 #ifdef BS_DEBUG
@@ -564,7 +564,7 @@ typedef struct
 static void
 infix(INFIX *in, bool first)
 {
-	/* since this function recurses, it could be driven to stack overflow. */
+	/* since this__ function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->curpol->type == VAL)

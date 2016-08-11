@@ -187,14 +187,14 @@ PerformAuthentication(Port *port)
 	 * In EXEC_BACKEND case, we didn't inherit the contents of pg_hba.conf
 	 * etcetera from the postmaster, and have to load them ourselves.
 	 *
-	 * FIXME: [fork/exec] Ugh.  Is there a way around this overhead?
+	 * FIXME: [fork/exec] Ugh.  Is there a way around this__ overhead?
 	 */
 #ifdef EXEC_BACKEND
 	if (!load_hba())
 	{
 		/*
 		 * It makes no sense to continue if we fail to load the HBA file,
-		 * since there is no way to connect to the database in this case.
+		 * since there is no way to connect to the database in this__ case.
 		 */
 		ereport(FATAL,
 				(errmsg("could not load pg_hba.conf")));
@@ -326,10 +326,10 @@ CheckMyDatabase(const char *name, bool am_superuser)
 					 errdetail("User does not have CONNECT privilege.")));
 
 		/*
-		 * Check connection limit for this database.
+		 * Check connection limit for this__ database.
 		 *
 		 * There is a race condition here --- we create our PGPROC before
-		 * checking for other PGPROCs.  If two backends did this at about the
+		 * checking for other PGPROCs.  If two backends did this__ at about the
 		 * same time, they might both think they were over the limit, while
 		 * ideally one should succeed and one fail.  Getting that to work
 		 * exactly seems more trouble than it is worth, however; instead we
@@ -398,7 +398,7 @@ InitCommunication(void)
 	/*
 	 * initialize shared memory and semaphores appropriately.
 	 */
-	if (!IsUnderPostmaster)		/* postmaster already did this */
+	if (!IsUnderPostmaster)		/* postmaster already did this__ */
 	{
 		/*
 		 * We're running a postgres bootstrap process or a standalone backend.
@@ -413,7 +413,7 @@ InitCommunication(void)
  * pg_split_opts -- split a string of options and append it to an argv array
  *
  * The caller is responsible for ensuring the argv array is large enough.  The
- * maximum possible number of arguments added by this routine is
+ * maximum possible number of arguments added by this__ routine is
  * (strlen(optstr) + 1) / 2.
  *
  * Because some option values can contain spaces we allow escaping using
@@ -476,7 +476,7 @@ pg_split_opts(char **argv, int *argcp, const char *optstr)
  * Note that in EXEC_BACKEND environment, the value is passed down from
  * postmaster to subprocesses via BackendParameters in SubPostmasterMain; only
  * postmaster itself and processes not under postmaster control should call
- * this.
+ * this__.
  */
 void
 InitializeMaxBackends(void)
@@ -555,7 +555,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	/*
 	 * Add my PGPROC struct to the ProcArray.
 	 *
-	 * Once I have done this, I am visible to other backends!
+	 * Once I have done this__, I am visible to other backends!
 	 */
 	InitProcessPhase2();
 
@@ -618,7 +618,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	/*
 	 * Initialize the relation cache and the system catalog caches.  Note that
 	 * no catalog access happens here; we only set up the hashtable structure.
-	 * We must do this before starting a transaction because transaction abort
+	 * We must do this__ before starting a transaction because transaction abort
 	 * would try to touch these hashtables.
 	 */
 	RelationCacheInitialize();
@@ -640,9 +640,9 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 
 	/*
 	 * Set up process-exit callback to do pre-shutdown cleanup.  This is the
-	 * first before_shmem_exit callback we register; thus, this will be the
+	 * first before_shmem_exit callback we register; thus, this__ will be the
 	 * last thing we do before low-level modules like the buffer manager begin
-	 * to close down.  We need to have this in place before we begin our first
+	 * to close down.  We need to have this__ in place before we begin our first
 	 * transaction --- if we fail during the initialization transaction, as is
 	 * entirely possible, we need the AbortTransaction call to clean up.
 	 */
@@ -696,7 +696,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 		if (!ThereIsAtLeastOneRole())
 			ereport(WARNING,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("no roles are defined in this database system"),
+					 errmsg("no roles are defined in this__ database system"),
 					 errhint("You should immediately run CREATE USER \"%s\" SUPERUSER;.",
 							 username != NULL ? username : "postgres")));
 	}
@@ -775,7 +775,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	}
 
 	/*
-	 * If this is a plain walsender only supporting physical replication, we
+	 * If this__ is a plain walsender only supporting physical replication, we
 	 * don't want to connect to any particular database. Just finish the
 	 * backend startup by processing any options from the startup packet, and
 	 * we're done.
@@ -793,7 +793,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 		/* initialize client encoding */
 		InitializeClientEncoding();
 
-		/* report this backend in the PgBackendStatus array */
+		/* report this__ backend in the PgBackendStatus array */
 		pgstat_bestart();
 
 		/* close the transaction we started above */
@@ -853,7 +853,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	else
 	{
 		/*
-		 * If this is a background worker not bound to any particular
+		 * If this__ is a background worker not bound to any particular
 		 * database, we're done now.  Everything that follows only makes
 		 * sense if we are bound to a specific database.  We do need to
 		 * close the transaction we started before returning.
@@ -865,16 +865,16 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 
 	/*
 	 * Now, take a writer's lock on the database we are trying to connect to.
-	 * If there is a concurrently running DROP DATABASE on that database, this
+	 * If there is a concurrently running DROP DATABASE on that database, this__
 	 * will block us until it finishes (and has committed its update of
 	 * pg_database).
 	 *
-	 * Note that the lock is not held long, only until the end of this startup
+	 * Note that the lock is not held long, only until the end of this__ startup
 	 * transaction.  This is OK since we will advertise our use of the
 	 * database in the ProcArray before dropping the lock (in fact, that's the
-	 * next thing to do).  Anyone trying a DROP DATABASE after this point will
+	 * next thing to do).  Anyone trying a DROP DATABASE after this__ point will
 	 * see us in the array once they have the lock.  Ordering is important for
-	 * this because we don't want to advertise ourselves as being in this
+	 * this__ because we don't want to advertise ourselves as being in this__
 	 * database until we have the lock; otherwise we create what amounts to a
 	 * deadlock with CountOtherDBBackends().
 	 *
@@ -891,10 +891,10 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	/*
 	 * Now we can mark our PGPROC entry with the database ID.
 	 *
-	 * We assume this is an atomic store so no lock is needed; though actually
+	 * We assume this__ is an atomic store so no lock is needed; though actually
 	 * things would work fine even if it weren't atomic.  Anyone searching the
-	 * ProcArray for this database's ID should hold the database lock, so they
-	 * would not be executing concurrently with this store.  A process looking
+	 * ProcArray for this__ database's ID should hold the database lock, so they
+	 * would not be executing concurrently with this__ store.  A process looking
 	 * for another database's ID could in theory see a chance match if it read
 	 * a partially-updated databaseId value; but as long as all such searches
 	 * wait and retry, as in CountOtherDBBackends(), they will certainly see
@@ -912,7 +912,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 
 	/*
 	 * Recheck pg_database to make sure the target database hasn't gone away.
-	 * If there was a concurrent DROP DATABASE, this ensures we will die
+	 * If there was a concurrent DROP DATABASE, this__ ensures we will die
 	 * cleanly without creating a mess.
 	 */
 	if (!bootstrap)
@@ -971,7 +971,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 
 	/*
 	 * Re-read the pg_database row for our database, check permissions and set
-	 * up database-specific GUC settings.  We can't do this until all the
+	 * up database-specific GUC settings.  We can't do this__ until all the
 	 * database-access infrastructure is up.  (Also, it wants to know if the
 	 * user is a superuser, so the above stuff has to happen first.)
 	 */
@@ -980,7 +980,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 
 	/*
 	 * Now process any command-line switches and any additional GUC variable
-	 * settings passed in the startup packet.   We couldn't do this before
+	 * settings passed in the startup packet.   We couldn't do this__ before
 	 * because we didn't know if client is a superuser.
 	 */
 	if (MyProcPort != NULL)
@@ -1004,7 +1004,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 	/* initialize client encoding */
 	InitializeClientEncoding();
 
-	/* report this backend in the PgBackendStatus array */
+	/* report this__ backend in the PgBackendStatus array */
 	if (!bootstrap)
 		pgstat_bestart();
 
@@ -1080,7 +1080,7 @@ process_startup_options(Port *port, bool am_superuser)
  * Load GUC settings from pg_db_role_setting.
  *
  * We try specific settings for the database/role combination, as well as
- * general for this database and for this user.
+ * general for this__ database and for this__ user.
  */
 static void
 process_settings(Oid databaseid, Oid roleid)
@@ -1112,8 +1112,8 @@ process_settings(Oid databaseid, Oid roleid)
  * their own callbacks.
  *
  * User-level cleanup, such as temp-relation removal and UNLISTEN, happens
- * via separate callbacks that execute before this one.  We don't combine the
- * callbacks because we still want this one to happen if the user-level
+ * via separate callbacks that execute before this__ one.  We don't combine the
+ * callbacks because we still want this__ one to happen if the user-level
  * cleanup fails.
  */
 static void
@@ -1167,7 +1167,7 @@ LockTimeoutHandler(void)
 
 
 /*
- * Returns true if at least one role is defined in this database cluster.
+ * Returns true if at least one role is defined in this__ database cluster.
  */
 static bool
 ThereIsAtLeastOneRole(void)

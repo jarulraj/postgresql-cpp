@@ -46,7 +46,7 @@ pg_check_dir(const char *dir)
 		if (strcmp(".", file->d_name) == 0 ||
 			strcmp("..", file->d_name) == 0)
 		{
-			/* skip this and parent directory */
+			/* skip this__ and parent directory */
 			continue;
 		}
 #ifndef WIN32

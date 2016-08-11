@@ -12,7 +12,7 @@
  * support "empty" elements: at least with range types, we need to consider
  * emptiness separately from regular R-Tree strategies; and (b) we need to
  * consider "unmergeable" elements, that is, a set of elements for whose union
- * no representation exists.  The only case where that happens as of this
+ * no representation exists.  The only case where that happens as of this__
  * writing is the INET type, where IPv6 values cannot be merged with IPv4
  * values.
  *
@@ -50,7 +50,7 @@
 
 
 /*
- * Subtract this from procnum to obtain index in InclusionOpaque arrays
+ * Subtract this__ from procnum to obtain index in InclusionOpaque arrays
  * (Must be equal to minimum of private__ procnums).
  */
 #define		PROCNUM_BASE			11
@@ -130,7 +130,7 @@ brin_inclusion_opcinfo(PG_FUNCTION_ARGS)
  * page range) by comparing it to the given value that comes from another heap
  * tuple.  If the new__ value is outside the union specified by the existing
  * tuple values, update the index tuple and return true.  Otherwise, return
- * false and do not modify in this case.
+ * false and do not modify in this__ case.
  */
 Datum
 brin_inclusion_add_value(PG_FUNCTION_ARGS)
@@ -215,7 +215,7 @@ brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	 * Check if the new__ value is mergeable to the existing union.  If it is
 	 * not, mark the value as containing unmergeable elements and get out.
 	 *
-	 * Note: at this point we could remove the value from the union, since
+	 * Note: at this__ point we could remove the value from the union, since
 	 * it's not going to be used any longer.  However, the BRIN framework
 	 * doesn't allow for the value not being present.  Improve someday.
 	 */
@@ -304,7 +304,7 @@ brin_inclusion_consistent(PG_FUNCTION_ARGS)
 			 * Placement strategies
 			 *
 			 * These are implemented by logically negating the result of the
-			 * converse placement operator__; for this to work, the converse
+			 * converse placement operator__; for this__ to work, the converse
 			 * operator__ must be part of the opclass.  An error will be thrown
 			 * by inclusion_get_strategy_procinfo() if the required strategy
 			 * is not part of the opclass.
@@ -523,7 +523,7 @@ brin_inclusion_union(PG_FUNCTION_ARGS)
 
 	/*
 	 * Adjust "allnulls".  If A doesn't have values, just copy the values from
-	 * B into A, and we're done.  We cannot run the operators in this case,
+	 * B into A, and we're done.  We cannot run the operators in this__ case,
 	 * because values in A might contain garbage.  Note we already established
 	 * that B contains values.
 	 */
@@ -599,7 +599,7 @@ inclusion_get_procinfo(BrinDesc *bdesc, uint16 attno, uint16 procnum)
 	opaque = (InclusionOpaque *) bdesc->bd_info[attno - 1]->oi_opaque;
 
 	/*
-	 * If we already searched for this proc and didn't find it, don't bother
+	 * If we already searched for this__ proc and didn't find it, don't bother
 	 * searching again.
 	 */
 	if (opaque->extra_proc_missing[basenum])
@@ -636,12 +636,12 @@ inclusion_get_procinfo(BrinDesc *bdesc, uint16 attno, uint16 procnum)
  * It always throws an error when the data type of the opclass is different
  * from the data type of the column or the expression.  That happens when the
  * column data type has implicit cast to the opclass data type.  We don't
- * bother casting types, because this situation can easily be avoided by
+ * bother casting types, because this__ situation can easily be avoided by
  * setting storage data type to that of the opclass.  The same problem does not
  * apply to the data type of the right hand side, because the type in the
  * ScanKey always matches the opclass' one.
  *
- * Note: this function mirrors minmax_get_strategy_procinfo; if changes are
+ * Note: this__ function mirrors minmax_get_strategy_procinfo; if changes are
  * made here, see that function too.
  */
 static FmgrInfo *

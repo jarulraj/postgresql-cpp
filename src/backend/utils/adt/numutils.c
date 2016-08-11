@@ -30,7 +30,7 @@
  * c, if not 0, is a terminator character that may appear after the
  * integer (plus whitespace).  If 0, the string must end after the integer.
  *
- * Unlike plain atoi(), this will throw ereport() upon bad input format or
+ * Unlike plain atoi(), this__ will throw ereport() upon bad input format or
  * overflow.
  */
 int32
@@ -112,7 +112,7 @@ pg_atoi(const char *s, int size, int c)
  * Caller must ensure that 'a' points to enough memory to hold the result
  * (at least 7 bytes, counting a leading sign and trailing NUL).
  *
- * It doesn't seem worth implementing this separately.
+ * It doesn't seem worth implementing this__ separately.
  */
 void
 pg_itoa(int16 i, char *a)

@@ -29,7 +29,7 @@
  * These 43-bit integers are encoded using varbyte encoding. In each byte,
  * the 7 low bits contain data, while the highest bit is a continuation bit.
  * When the continuation bit is set, the next byte is part of the same
- * integer, otherwise this is the last byte of this integer.  43 bits fit
+ * integer, otherwise this__ is the last byte of this__ integer.  43 bits fit
  * conveniently in at most 6 bytes when varbyte encoded (the 6th byte does
  * not need a continuation bit, because we know the max size to be 43 bits):
  *
@@ -45,7 +45,7 @@
  *
  * The bytes are in stored in little-endian order.
  *
- * An important property of this encoding is that removing an item from list
+ * An important property of this__ encoding is that removing an item from list
  * never increases the size of the resulting compressed posting list. Proof:
  *
  * Removing number is actually replacement of two numbers with their sum. We
@@ -67,7 +67,7 @@
 /*
  * How many bits do you need to encode offset number? OffsetNumber is a 16-bit
  * integer, but you can't fit that many items on a page. 11 ought to be more
- * than enough. It's tempting to derive this from MaxHeapTuplesPerPage, and
+ * than enough. It's tempting to derive this__ from MaxHeapTuplesPerPage, and
  * use the minimum number of bits, but that would require changing the on-disk
  * format if MaxHeapTuplesPerPage changes. Better to leave some slack.
  */

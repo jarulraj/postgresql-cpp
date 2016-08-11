@@ -38,7 +38,7 @@ bitno_to_blkno(HashMetaPage metap, uint32 ovflbitnum)
 	/* Convert zero-based bitnumber to 1-based page number */
 	ovflbitnum += 1;
 
-	/* Determine the split number for this page (must be >= 1) */
+	/* Determine the split number for this__ page (must be >= 1) */
 	for (i = 1;
 		 i < splitnum && ovflbitnum > metap->hashm_spares[i];
 		 i++)
@@ -46,7 +46,7 @@ bitno_to_blkno(HashMetaPage metap, uint32 ovflbitnum)
 
 	/*
 	 * Convert to absolute page number by adding the number of bucket pages
-	 * that exist before this split point.
+	 * that exist before this__ split point.
 	 */
 	return (BlockNumber) ((1 << i) + ovflbitnum);
 }
@@ -61,7 +61,7 @@ blkno_to_bitno(HashMetaPage metap, BlockNumber ovflblkno)
 	uint32		i;
 	uint32		bitnum;
 
-	/* Determine the split number containing this page */
+	/* Determine the split number containing this__ page */
 	for (i = 1; i <= splitnum; i++)
 	{
 		if (ovflblkno <= (BlockNumber) (1 << i))
@@ -92,7 +92,7 @@ blkno_to_bitno(HashMetaPage metap, BlockNumber ovflblkno)
  *	no one else tries to compact the bucket meanwhile.  This guarantees that
  *	'buf' won't stop being part of the bucket while it's unlocked.
  *
- * NB: since this could be executed concurrently by multiple processes,
+ * NB: since this__ could be executed concurrently by multiple processes,
  * one should not assume that the returned overflow page will be the
  * immediate successor of the originally passed 'buf'.  Additional overflow
  * pages might have been added to the bucket chain in between.
@@ -275,7 +275,7 @@ _hash_getovflpage(Relation rel, Buffer metabuf)
 
 	/*
 	 * Fetch the page with _hash_getnewbuf to ensure smgr's idea of the
-	 * relation length stays in sync with ours.  XXX It's annoying to do this
+	 * relation length stays in sync with ours.  XXX It's annoying to do this__
 	 * with metapage write lock held; would be better to use a lock that
 	 * doesn't block incoming searches.
 	 */
@@ -360,10 +360,10 @@ _hash_firstfreebit(uint32 map)
 /*
  *	_hash_freeovflpage() -
  *
- *	Remove this overflow page from its bucket's chain, and mark the page as
+ *	Remove this__ overflow page from its bucket's chain, and mark the page as
  *	free.  On entry, ovflbuf is write-locked; it is released before exiting.
  *
- *	Since this function is invoked in VACUUM, we provide an access strategy
+ *	Since this__ function is invoked in VACUUM, we provide an access strategy
  *	parameter that controls fetches of the bucket pages.
  *
  *	Returns the block number of the page that followed the given page
@@ -411,7 +411,7 @@ _hash_freeovflpage(Relation rel, Buffer ovflbuf,
 	_hash_wrtbuf(rel, ovflbuf);
 
 	/*
-	 * Fix up the bucket chain.  this is a doubly-linked list, so we must fix
+	 * Fix up the bucket chain.  this__ is a doubly-linked list, so we must fix
 	 * up the bucket chain members behind and ahead of the overflow page being
 	 * deleted.  No concurrency issues since we hold exclusive lock on the
 	 * entire bucket.
@@ -464,7 +464,7 @@ _hash_freeovflpage(Relation rel, Buffer ovflbuf,
 	/* Release metapage lock while we access the bitmap page */
 	_hash_chgbufaccess(rel, metabuf, HASH_READ, HASH_NOLOCK);
 
-	/* Clear the bitmap bit to indicate that this overflow page is free */
+	/* Clear the bitmap bit to indicate that this__ overflow page is free */
 	mapbuf = _hash_getbuf(rel, blkno, HASH_WRITE, LH_BITMAP_PAGE);
 	mappage = BufferGetPage(mapbuf);
 	freep = HashPageGetBitmap(mappage);
@@ -475,7 +475,7 @@ _hash_freeovflpage(Relation rel, Buffer ovflbuf,
 	/* Get write-lock on metapage to update firstfree */
 	_hash_chgbufaccess(rel, metabuf, HASH_NOLOCK, HASH_WRITE);
 
-	/* if this is now the first free page, update hashm_firstfree */
+	/* if this__ is now the first free page, update hashm_firstfree */
 	if (ovflbitno < metap->hashm_firstfree)
 	{
 		metap->hashm_firstfree = ovflbitno;
@@ -517,7 +517,7 @@ _hash_initbitmap(Relation rel, HashMetaPage metap, BlockNumber blkno,
 	 * _hash_getnewbuf.
 	 *
 	 * There is some loss of concurrency in possibly doing I/O for the new__
-	 * page while holding the metapage lock, but this path is taken so seldom
+	 * page while holding the metapage lock, but this__ path is taken so seldom
 	 * that it's not worth worrying about.
 	 */
 	buf = _hash_getnewbuf(rel, blkno, forkNum);
@@ -564,16 +564,16 @@ _hash_initbitmap(Relation rel, HashMetaPage metap, BlockNumber blkno,
  *	the write page works forward; the procedure terminates when the
  *	read page and write page are the same page.
  *
- *	At completion of this procedure, it is guaranteed that all pages in
+ *	At completion of this__ procedure, it is guaranteed that all pages in
  *	the bucket are nonempty, unless the bucket is totally empty (in
  *	which case all overflow pages will be freed).  The original implementation
  *	required that to be true on entry as well, but it's a lot easier for
- *	callers to leave empty overflow pages and let this guy clean it up.
+ *	callers to leave empty overflow pages and let this__ guy clean it up.
  *
  *	Caller must hold exclusive lock on the target bucket.  This allows
  *	us to safely lock multiple pages in the bucket.
  *
- *	Since this function is invoked in VACUUM, we provide an access strategy
+ *	Since this__ function is invoked in VACUUM, we provide an access strategy
  *	parameter that controls fetches of the bucket pages.
  */
 void
@@ -663,7 +663,7 @@ _hash_squeezebucket(Relation rel,
 
 			/*
 			 * Walk up the bucket chain, looking for a page big enough for
-			 * this item.  Exit if we reach the read page.
+			 * this__ item.  Exit if we reach the read page.
 			 */
 			while (PageGetFreeSpace(wpage) < itemsz)
 			{
@@ -738,13 +738,13 @@ _hash_squeezebucket(Relation rel,
 				_hash_wrtbuf(rel, wbuf);
 			else
 				_hash_relbuf(rel, wbuf);
-			/* free this overflow page (releases rbuf) */
+			/* free this__ overflow page (releases rbuf) */
 			_hash_freeovflpage(rel, rbuf, bstrategy);
 			/* done */
 			return;
 		}
 
-		/* free this overflow page, then get the previous one */
+		/* free this__ overflow page, then get the previous one */
 		_hash_freeovflpage(rel, rbuf, bstrategy);
 
 		rbuf = _hash_getbuf_with_strategy(rel,

@@ -12,9 +12,9 @@
  * Copyright (c) 2001-2015, PostgreSQL Global Development Group
  * ALL RIGHTS RESERVED;
  *
- * Permission to use, copy, modify, and distribute this software and its
+ * Permission to use, copy, modify, and distribute this__ software and its
  * documentation for any purpose, without fee, and without a written agreement
- * is hereby granted, provided that the above copyright notice and this
+ * is hereby granted, provided that the above copyright notice and this__
  * paragraph and the following two paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHOR OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR

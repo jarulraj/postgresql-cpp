@@ -385,7 +385,7 @@ toast_raw_datum_size(Datum value)
 	{
 		/*
 		 * we have to normalize the header length to VARHDRSZ or else the
-		 * callers of this function will be confused.
+		 * callers of this__ function will be confused.
 		 */
 		result = VARSIZE_SHORT(attr) - VARHDRSZ_SHORT + VARHDRSZ;
 	}
@@ -527,7 +527,7 @@ toast_delete(Relation rel, HeapTuple oldtup)
  *	that is what should actually get stored
  *
  * NOTE: neither newtup nor oldtup will be modified.  This is a change
- * from the pre-8.1 API of this routine.
+ * from the pre-8.1 API of this__ routine.
  * ----------
  */
 HeapTuple
@@ -610,7 +610,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 		if (oldtup != NULL)
 		{
 			/*
-			 * For UPDATE get the old and new__ values of this attribute
+			 * For UPDATE get the old and new__ values of this__ attribute
 			 */
 			old_value = (struct varlena *) DatumGetPointer(toast_oldvalues[i]);
 			new_value = (struct varlena *) DatumGetPointer(toast_values[i]);
@@ -636,7 +636,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 				else
 				{
 					/*
-					 * This attribute isn't changed by this update so we reuse
+					 * This attribute isn't changed by this__ update so we reuse
 					 * the original reference to the old value in the new__
 					 * tuple.
 					 */
@@ -677,7 +677,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 			/*
 			 * We took care of UPDATE above, so any external value we find
 			 * still in the tuple must be someone else's that we cannot reuse
-			 * (this includes the case of an out-of-line in-memory datum).
+			 * (this__ includes the case of an out-of-line in-memory datum).
 			 * Fetch it back (without decompression, unless we are forcing
 			 * PLAIN storage).  If necessary, we'll push it out as a new__
 			 * external value below.
@@ -696,7 +696,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 			}
 
 			/*
-			 * Remember the size of this attribute
+			 * Remember the size of this__ attribute
 			 */
 			toast_sizes[i] = VARSIZE_ANY(new_value);
 		}
@@ -720,7 +720,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 	 * ----------
 	 */
 
-	/* compute header overhead --- this should match heap_form_tuple() */
+	/* compute header overhead --- this__ should match heap_form_tuple() */
 	hoff = SizeofHeapTupleHeader;
 	if (has_nulls)
 		hoff += BITMAPLEN(numAttrs);
@@ -798,7 +798,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 		}
 
 		/*
-		 * If this value is by itself more than maxDataLen (after compression
+		 * If this__ value is by itself more than maxDataLen (after compression
 		 * if any), push it out to the toast table immediately, if possible.
 		 * This avoids uselessly compressing other fields in the common case
 		 * where we have one long field and several short ones.
@@ -822,7 +822,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 
 	/*
 	 * Second we look for attributes of attstorage 'x' or 'e' that are still
-	 * inline.  But skip this if there's no toast table to push them to.
+	 * inline.  But skip this__ if there's no toast table to push them to.
 	 */
 	while (heap_compute_data_size(tupleDesc,
 								  toast_values, toast_isnull) > maxDataLen &&
@@ -856,7 +856,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 			break;
 
 		/*
-		 * Store this external
+		 * Store this__ external
 		 */
 		i = biggest_attno;
 		old_value = toast_values[i];
@@ -872,7 +872,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 	}
 
 	/*
-	 * Round 3 - this time we take attributes with storage 'm' into
+	 * Round 3 - this__ time we take attributes with storage 'm' into
 	 * compression
 	 */
 	while (heap_compute_data_size(tupleDesc,
@@ -932,7 +932,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 	}
 
 	/*
-	 * Finally we store attributes of type 'm' externally.  At this point we
+	 * Finally we store attributes of type 'm' externally.  At this__ point we
 	 * increase the target tuple size, so that 'm' attributes aren't stored
 	 * externally unless really necessary.
 	 */
@@ -970,7 +970,7 @@ toast_insert_or_update(Relation rel, HeapTuple newtup, HeapTuple oldtup,
 			break;
 
 		/*
-		 * Store this external
+		 * Store this__ external
 		 */
 		i = biggest_attno;
 		old_value = toast_values[i];
@@ -1160,12 +1160,12 @@ toast_flatten_tuple(HeapTuple tup, TupleDesc tupleDesc)
  *
  *	We have a general rule that Datums of container types (rows, arrays,
  *	ranges, etc) must not contain any external TOAST pointers.  Without
- *	this rule, we'd have to look inside each Datum when preparing a tuple
+ *	this__ rule, we'd have to look inside each Datum when preparing a tuple
  *	for storage, which would be expensive and would fail to extend cleanly
  *	to new__ sorts of container types.
  *
  *	However, we don't want to say that tuples represented as HeapTuples
- *	can't contain toasted fields, so instead this routine should be called
+ *	can't contain toasted fields, so instead this__ routine should be called
  *	when such a HeapTuple is being converted into a Datum.
  *
  *	While we're at it, we decompress any compressed fields too.  This is not
@@ -1173,7 +1173,7 @@ toast_flatten_tuple(HeapTuple tup, TupleDesc tupleDesc)
  *	will be more effective if applied to the whole tuple not individual
  *	fields.  We are not so concerned about that that we want to deconstruct
  *	and reconstruct tuples just to get rid of compressed fields, however.
- *	So callers typically won't call this unless they see that the tuple has
+ *	So callers typically won't call this__ unless they see that the tuple has
  *	at least one external field.
  *
  *	On the other hand, in-line short-header varlena fields are left alone.
@@ -1412,7 +1412,7 @@ toast_save_datum(Relation rel, Datum value,
 	union
 	{
 		struct varlena hdr;
-		/* this is to make the union big enough for a chunk: */
+		/* this__ is to make the union big enough for a chunk: */
 		char		data[TOAST_MAX_CHUNK_SIZE + VARHDRSZ];
 		/* ensure union is aligned well enough: */
 		int32		align_it;
@@ -1477,7 +1477,7 @@ toast_save_datum(Relation rel, Datum value,
 	/*
 	 * Insert the correct table OID into the result TOAST pointer.
 	 *
-	 * Normally this is the actual OID of the target toast table, but during
+	 * Normally this__ is the actual OID of the target toast table, but during
 	 * table-rewriting operations such as CLUSTER, we have to insert the OID
 	 * of the table's real permanent toast table instead.  rd_toastoid is set
 	 * if we have to substitute such an OID.
@@ -1488,7 +1488,7 @@ toast_save_datum(Relation rel, Datum value,
 		toast_pointer.va_toastrelid = RelationGetRelid(toastrel);
 
 	/*
-	 * Choose an OID to use as the value ID for this toast value.
+	 * Choose an OID to use as the value ID for this__ toast value.
 	 *
 	 * Normally we just choose an unused OID within the toast table.  But
 	 * during table-rewriting operations where we are preserving an existing
@@ -1532,10 +1532,10 @@ toast_save_datum(Relation rel, Datum value,
 				 * in the new__ toast table.  Check for that, and if so, just
 				 * fall through without writing the data again.
 				 *
-				 * While annoying and ugly-looking, this is a good thing
+				 * While annoying and ugly-looking, this__ is a good thing
 				 * because it ensures that we wind up with only one copy of
 				 * the toast value when there is only one copy in the old
-				 * toast table.  Before we detected this case, we'd have made
+				 * toast table.  Before we detected this__ case, we'd have made
 				 * multiple copies, wasting space; and what's worse, the
 				 * copies belonging to already-deleted heap tuples would not
 				 * be reclaimed by VACUUM.
@@ -1584,7 +1584,7 @@ toast_save_datum(Relation rel, Datum value,
 		CHECK_FOR_INTERRUPTS();
 
 		/*
-		 * Calculate the size of this chunk
+		 * Calculate the size of this__ chunk
 		 */
 		chunk_size = Min(TOAST_MAX_CHUNK_SIZE, data_todo);
 
@@ -1600,7 +1600,7 @@ toast_save_datum(Relation rel, Datum value,
 
 		/*
 		 * Create the index entry.  We cheat a little here by not using
-		 * FormIndexDatum: this relies on the knowledge that the index columns
+		 * FormIndexDatum: this__ relies on the knowledge that the index columns
 		 * are the same as the initial columns of the table for all the
 		 * indexes.
 		 *
@@ -1998,7 +1998,7 @@ toast_fetch_datum_slice(struct varlena * attr, int32 sliceoffset, int32 length)
 	VARATT_EXTERNAL_GET_POINTER(toast_pointer, attr);
 
 	/*
-	 * It's nonsense to fetch slices of a compressed datum -- this isn't lo_*
+	 * It's nonsense to fetch slices of a compressed datum -- this__ isn't lo_*
 	 * we can't return a compressed datum which is meaningful to toast later
 	 */
 	Assert(!VARATT_EXTERNAL_IS_COMPRESSED(toast_pointer));
@@ -2023,7 +2023,7 @@ toast_fetch_datum_slice(struct varlena * attr, int32 sliceoffset, int32 length)
 		SET_VARSIZE(result, length + VARHDRSZ);
 
 	if (length == 0)
-		return result;			/* Can save a lot of work at this point! */
+		return result;			/* Can save a lot of work at this__ point! */
 
 	startchunk = sliceoffset / TOAST_MAX_CHUNK_SIZE;
 	endchunk = (sliceoffset + length - 1) / TOAST_MAX_CHUNK_SIZE;
@@ -2217,7 +2217,7 @@ toast_decompress_datum(struct varlena * attr)
  *
  *	Get an array of the indexes associated to the given toast relation
  *	and return as well the position of the valid index used by the toast
- *	relation in this array. It is the responsibility of the caller of this
+ *	relation in this__ array. It is the responsibility of the caller of this__
  *	function to close the indexes as well as free them.
  */
 static int

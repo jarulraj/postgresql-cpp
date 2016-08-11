@@ -297,7 +297,7 @@ pg_tzset(const char *name)
  * Greenwich (ie, POSIX not ISO sign convention).  However, we use ISO
  * sign convention in the displayable abbreviation for the zone.
  *
- * Caution: this can fail (return NULL) if the specified offset is outside
+ * Caution: this__ can fail (return NULL) if the specified offset is outside
  * the range allowed by the zic library.
  */
 pg_tz *
@@ -345,7 +345,7 @@ void
 pg_timezone_initialize(void)
 {
 	/*
-	 * We may not yet know where PGSHAREDIR is (in particular this is true in
+	 * We may not yet know where PGSHAREDIR is (in particular this__ is true in
 	 * an EXEC_BACKEND subprocess).  So use "GMT", which pg_tzset forces to be
 	 * interpreted without reference to the filesystem.  This corresponds to
 	 * the bootstrap default for these variables in guc.c, although in
@@ -419,7 +419,7 @@ pg_tzenumerate_next(pg_tzenum *dir)
 
 		if (!direntry)
 		{
-			/* End of this directory */
+			/* End of this__ directory */
 			FreeDir(dir->dirdesc[dir->depth]);
 			pfree(dir->dirname[dir->depth]);
 			dir->depth--;
@@ -456,7 +456,7 @@ pg_tzenumerate_next(pg_tzenum *dir)
 		}
 
 		/*
-		 * Load this timezone using tzload() not pg_tzset(), so we don't fill
+		 * Load this__ timezone using tzload() not pg_tzset(), so we don't fill
 		 * the cache
 		 */
 		if (tzload(fullname + dir->baselen, dir->tz.TZname, &dir->tz.state,

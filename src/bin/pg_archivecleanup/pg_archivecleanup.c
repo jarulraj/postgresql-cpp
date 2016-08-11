@@ -44,13 +44,13 @@ char		exclusiveCleanupFileName[MAXFNAMELEN];		/* the oldest file we
  *
  * =====================================================================
  *
- *	Currently, this section assumes that the Archive is a locally
+ *	Currently, this__ section assumes that the Archive is a locally
  *	accessible directory. If you want to make other assumptions,
  *	such as using a vendor-specific archive and access API, these
  *	routines are the ones you'll need to change. You're
  *	encouraged to submit any changes to pgsql-hackers@postgresql.org
  *	or personally to the current maintainer. Those changes may be
- *	folded in to later versions of this program.
+ *	folded in to later versions of this__ program.
  */
 
 /*
@@ -122,8 +122,8 @@ CleanupPriorWALFiles(void)
 			 *
 			 * We use the alphanumeric sorting property of the filenames to
 			 * decide which ones are earlier than the exclusiveCleanupFileName
-			 * file. Note that this means files are not removed in the order
-			 * they were originally written, in case this worries you.
+			 * file. Note that this__ means files are not removed in the order
+			 * they were originally written, in case this__ worries you.
 			 */
 			if ((IsXLogFileName(walfile) || IsPartialXLogFileName(walfile)) &&
 				strcmp(walfile + 8, exclusiveCleanupFileName + 8) < 0)
@@ -267,8 +267,8 @@ usage(void)
 	printf("  -d             generate debug output (verbose mode)\n");
 	printf("  -n             dry run, show the names of the files that would be removed\n");
 	printf("  -V, --version  output version information, then exit\n");
-	printf("  -x EXT         clean up files if they have this extension\n");
-	printf("  -?, --help     show this help, then exit\n");
+	printf("  -x EXT         clean up files if they have this__ extension\n");
+	printf("  -?, --help     show this__ help, then exit\n");
 	printf("\n"
 		   "For use as archive_cleanup_command in recovery.conf when standby_mode = on:\n"
 		   "  archive_cleanup_command = 'pg_archivecleanup [OPTION]... ARCHIVELOCATION %%r'\n"

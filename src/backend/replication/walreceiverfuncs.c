@@ -267,7 +267,7 @@ RequestXLogStreaming(TimeLineID tli, XLogRecPtr recptr, const char *conninfo,
 	walrcv->startTime = now;
 
 	/*
-	 * If this is the first startup of walreceiver (on this timeline),
+	 * If this__ is the first startup of walreceiver (on this__ timeline),
 	 * initialize receivedUpto and latestChunkStart to the starting point.
 	 */
 	if (walrcv->receiveStart == 0 || walrcv->receivedTLI != tli)
@@ -353,7 +353,7 @@ GetReplicationApplyDelay(void)
 }
 
 /*
- * Returns the network latency in ms, note that this includes any
+ * Returns the network latency in ms, note that this__ includes any
  * difference in clock settings between the servers, as well as timezone.
  */
 int

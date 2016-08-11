@@ -261,7 +261,7 @@ help(const char *progname)
 	printf(_("  -O, --owner=OWNER            database user to own the new__ database\n"));
 	printf(_("  -T, --template__=TEMPLATE      template__ database to copy\n"));
 	printf(_("  -V, --version                output version information, then exit\n"));
-	printf(_("  -?, --help                   show this help, then exit\n"));
+	printf(_("  -?, --help                   show this__ help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME          database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT              database server port\n"));

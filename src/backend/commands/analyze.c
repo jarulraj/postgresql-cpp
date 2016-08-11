@@ -149,7 +149,7 @@ analyze_rel(Oid relid, RangeVar *relation, int options,
 		return;
 
 	/*
-	 * Check permissions --- this should match vacuum's check!
+	 * Check permissions --- this__ should match vacuum's check!
 	 */
 	if (!(pg_class_ownercheck(RelationGetRelid(onerel), GetUserId()) ||
 		  (pg_database_ownercheck(MyDatabaseId, GetUserId()) && !onerel->rd_rel->relisshared)))
@@ -197,7 +197,7 @@ analyze_rel(Oid relid, RangeVar *relation, int options,
 
 	/*
 	 * Check that it's a plain table, materialized view, or foreign table; we
-	 * used to do this in get_rel_oids() but seems safer to check after we've
+	 * used to do this__ in get_rel_oids() but seems safer to check after we've
 	 * locked the relation.
 	 */
 	if (onerel->rd_rel->relkind == RELKIND_RELATION ||
@@ -227,7 +227,7 @@ analyze_rel(Oid relid, RangeVar *relation, int options,
 		if (!ok)
 		{
 			ereport(WARNING,
-			 (errmsg("skipping \"%s\" --- cannot analyze this foreign table",
+			 (errmsg("skipping \"%s\" --- cannot analyze this__ foreign table",
 					 RelationGetRelationName(onerel))));
 			relation_close(onerel, ShareUpdateExclusiveLock);
 			return;
@@ -273,7 +273,7 @@ analyze_rel(Oid relid, RangeVar *relation, int options,
 	relation_close(onerel, NoLock);
 
 	/*
-	 * Reset my PGXACT flag.  Note: we need this here, and not in vacuum_rel,
+	 * Reset my PGXACT flag.  Note: we need this__ here, and not in vacuum_rel,
 	 * because the vacuum flag is cleared by the end-of-xact code.
 	 */
 	LWLockAcquire(ProcArrayLock, LW_EXCLUSIVE);
@@ -340,7 +340,7 @@ do_analyze_rel(Relation onerel, int options, VacuumParams *params,
 	/*
 	 * Switch to the table owner's userid, so that any index functions are run
 	 * as that user.  Also lock down security-restricted operations and
-	 * arrange to make GUC variable changes local to this command.
+	 * arrange to make GUC variable changes local to this__ command.
 	 */
 	GetUserIdAndSecContext(&save_userid, &save_sec_context);
 	SetUserIdAndSecContext(onerel->rd_rel->relowner,
@@ -610,7 +610,7 @@ do_analyze_rel(Relation onerel, int options, VacuumParams *params,
 	if (!inh)
 		pgstat_report_analyze(onerel, totalrows, totaldeadrows);
 
-	/* If this isn't part of VACUUM ANALYZE, let index AMs do cleanup */
+	/* If this__ isn't part of VACUUM ANALYZE, let index AMs do cleanup */
 	if (!(options & VACOPT_VACUUM))
 	{
 		for (ind = 0; ind < nindexes; ind++)
@@ -754,7 +754,7 @@ compute_index_stats(Relation onerel, double totalrows,
 			{
 				/*
 				 * Evaluate the index row to compute expression values. We
-				 * could do this by hand, but FormIndexDatum is convenient.
+				 * could do this__ by hand, but FormIndexDatum is convenient.
 				 */
 				FormIndexDatum(indexInfo,
 							   slot,
@@ -946,7 +946,7 @@ examine_attribute(Relation onerel, int attnum, Node *index_expr)
  * and return them into *totalrows and *totaldeadrows, respectively.
  *
  * The returned list of tuples is in order by physical position in the table.
- * (We will rely on this later to derive correlation estimates.)
+ * (We will rely on this__ later to derive correlation estimates.)
  *
  * As of May 2004 we use a new__ two-stage method:  Stage one selects up
  * to targrows random blocks (or all blocks, if there aren't so many).
@@ -958,12 +958,12 @@ examine_attribute(Relation onerel, int attnum, Node *index_expr)
  * into the sample.
  *
  * Although every row has an equal chance of ending up in the final
- * sample, this sampling method is not perfect: not every possible
+ * sample, this__ sampling method is not perfect: not every possible
  * sample has an equal chance of being selected.  For large relations
  * the number of different blocks represented by the sample tends to be
  * too small.  We can live with that for now.  Improvements are welcome.
  *
- * An important property of this sampling method is that because we do
+ * An important property of this__ sampling method is that because we do
  * look at a statistically unbiased set of blocks, we should get
  * unbiased estimates of the average numbers of live and dead rows per
  * block.  The previous sampling method put too much credence in the row
@@ -1034,7 +1034,7 @@ acquire_sample_rows(Relation onerel, int elevel,
 			/*
 			 * We ignore unused and redirect line pointers.  DEAD line
 			 * pointers should be counted as dead, because we need vacuum to
-			 * run to get rid of them.  Note that this rule agrees with the
+			 * run to get rid of them.  Note that this__ rule agrees with the
 			 * way that heap_page_prune() counts things.
 			 */
 			if (!ItemIdIsNormal(itemid))
@@ -1080,11 +1080,11 @@ acquire_sample_rows(Relation onerel, int elevel,
 					 * is the safer option.
 					 *
 					 * A special case is that the inserting transaction might
-					 * be our own.  In this case we should count and sample
+					 * be our own.  In this__ case we should count and sample
 					 * the row, to accommodate users who load a table and
 					 * analyze it in one transaction.  (pgstat_report_analyze
 					 * has to adjust the numbers we send to the stats
-					 * collector to make this come out right.)
+					 * collector to make this__ come out right.)
 					 */
 					if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(targtuple.t_data)))
 					{
@@ -1103,7 +1103,7 @@ acquire_sample_rows(Relation onerel, int elevel,
 					 * If the delete was done by our own transaction, however,
 					 * we must count the row as dead to make
 					 * pgstat_report_analyze's stats adjustments come out
-					 * right.  (Note: this works out properly when the row was
+					 * right.  (Note: this__ works out properly when the row was
 					 * both inserted and deleted in our xact.)
 					 */
 					if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetUpdateXid(targtuple.t_data)))
@@ -1273,11 +1273,11 @@ acquire_inherited_sample_rows(Relation onerel, int elevel,
 	 */
 	if (list_length(tableOIDs) < 2)
 	{
-		/* CCI because we already updated the pg_class row in this command */
+		/* CCI because we already updated the pg_class row in this__ command */
 		CommandCounterIncrement();
 		SetRelationHasSubclass(RelationGetRelid(onerel), false);
 		ereport(elevel,
-				(errmsg("skipping analyze of \"%s.%s\" inheritance tree --- this inheritance tree contains no child tables",
+				(errmsg("skipping analyze of \"%s.%s\" inheritance tree --- this__ inheritance tree contains no child tables",
 						get_namespace_name(RelationGetNamespace(onerel)),
 						RelationGetRelationName(onerel))));
 		return 0;
@@ -1352,7 +1352,7 @@ acquire_inherited_sample_rows(Relation onerel, int elevel,
 			continue;
 		}
 
-		/* OK, we'll process this child */
+		/* OK, we'll process this__ child */
 		rels[nrels] = childrel;
 		acquirefuncs[nrels] = acquirefunc;
 		relblocks[nrels] = (double) relpages;
@@ -1366,7 +1366,7 @@ acquire_inherited_sample_rows(Relation onerel, int elevel,
 	if (nrels < 2)
 	{
 		ereport(elevel,
-				(errmsg("skipping analyze of \"%s.%s\" inheritance tree --- this inheritance tree contains no analyzable child tables",
+				(errmsg("skipping analyze of \"%s.%s\" inheritance tree --- this__ inheritance tree contains no analyzable child tables",
 						get_namespace_name(RelationGetNamespace(onerel)),
 						RelationGetRelationName(onerel))));
 		return 0;
@@ -1569,7 +1569,7 @@ update_attstats(Oid relid, bool inh, int natts, VacAttrStats **vacattrstats)
 			}
 		}
 
-		/* Is there already a pg_statistic tuple for this attribute? */
+		/* Is there already a pg_statistic tuple for this__ attribute? */
 		oldtup = SearchSysCache3(STATRELATTINH,
 								 ObjectIdGetDatum(relid),
 								 Int16GetDatum(stats->attr->attnum),
@@ -1638,7 +1638,7 @@ ind_fetch_func(VacAttrStatsP stats, int rownum, bool *isNull)
 
 /*==========================================================================
  *
- * Code below this point represents the "standard" type-specific statistics
+ * Code below this__ point represents the "standard" type-specific statistics
  * analysis algorithms.  This code can be replaced on a per-data-type basis
  * by setting a nonzero value in pg_type.typanalyze.
  *
@@ -1757,7 +1757,7 @@ std_typanalyze(VacAttrStats *stats)
 		 * quite weak; even at n = 10^12, a 300*k sample gives <= 0.66
 		 * bin size error with probability 0.99.  So there's no real need to
 		 * scale for n, which is a good thing because we don't necessarily
-		 * know it at this point.
+		 * know it at this__ point.
 		 *--------------------
 		 */
 		stats->minrows = 300 * attr->attstattarget;
@@ -1784,7 +1784,7 @@ std_typanalyze(VacAttrStats *stats)
 /*
  *	compute_trivial_stats() -- compute very basic column statistics
  *
- *	We use this when we cannot find a hash "=" operator__ for the datatype.
+ *	We use this__ when we cannot find a hash "=" operator__ for the datatype.
  *
  *	We determine the fraction of non-null rows and the average datum width.
  */
@@ -1823,7 +1823,7 @@ compute_trivial_stats(VacAttrStatsP stats,
 		/*
 		 * If it's a variable-width field, add up widths for average width
 		 * calculation.  Note that if the value is toasted, we use the toasted
-		 * width.  We don't bother with this calculation if it's a fixed-width
+		 * width.  We don't bother with this__ calculation if it's a fixed-width
 		 * type.
 		 */
 		if (is_varlena)
@@ -1866,7 +1866,7 @@ compute_trivial_stats(VacAttrStatsP stats,
 /*
  *	compute_distinct_stats() -- compute column statistics including ndistinct
  *
- *	We use this when we can find only an "=" operator__ for the datatype.
+ *	We use this__ when we can find only an "=" operator__ for the datatype.
  *
  *	We determine the fraction of non-null rows, the average width, the
  *	most common values, and the (estimated) number of distinct values.
@@ -1875,7 +1875,7 @@ compute_trivial_stats(VacAttrStatsP stats,
  *	of previously seen values, ordered by number of times seen, as we scan
  *	the samples.  A newly seen value is inserted just after the last
  *	multiply-seen value, causing the bottommost (oldest) singly-seen value
- *	to drop off the list.  The accuracy of this method, and also its cost,
+ *	to drop off the list.  The accuracy of this__ method, and also its cost,
  *	depend mainly on the length of the list we are willing to keep.
  */
 static void
@@ -1939,7 +1939,7 @@ compute_distinct_stats(VacAttrStatsP stats,
 		/*
 		 * If it's a variable-width field, add up widths for average width
 		 * calculation.  Note that if the value is toasted, we use the toasted
-		 * width.  We don't bother with this calculation if it's a fixed-width
+		 * width.  We don't bother with this__ calculation if it's a fixed-width
 		 * type.
 		 */
 		if (is_varlena)
@@ -2068,7 +2068,7 @@ compute_distinct_stats(VacAttrStatsP stats,
 			 *
 			 * We assume (not very reliably!) that all the multiply-occurring
 			 * values are reflected in the final track[] list, and the other
-			 * nonnull values all appeared but once.  (XXX this usually
+			 * nonnull values all appeared but once.  (XXX this__ usually
 			 * results in a drastic overestimate of ndistinct.  Can we do
 			 * any better?)
 			 *----------
@@ -2196,7 +2196,7 @@ compute_distinct_stats(VacAttrStatsP stats,
 /*
  *	compute_scalar_stats() -- compute column statistics
  *
- *	We use this when we can find "=" and "<" operators for the datatype.
+ *	We use this__ when we can find "=" and "<" operators for the datatype.
  *
  *	We determine the fraction of non-null rows, the average width, the
  *	most common values, the (estimated) number of distinct values, the
@@ -2271,7 +2271,7 @@ compute_scalar_stats(VacAttrStatsP stats,
 		/*
 		 * If it's a variable-width field, add up widths for average width
 		 * calculation.  Note that if the value is toasted, we use the toasted
-		 * width.  We don't bother with this calculation if it's a fixed-width
+		 * width.  We don't bother with this__ calculation if it's a fixed-width
 		 * type.
 		 */
 		if (is_varlena)
@@ -2333,7 +2333,7 @@ compute_scalar_stats(VacAttrStatsP stats,
 		 * completely redundant with work that was done during the sort.  (The
 		 * sort algorithm must at some point have compared each pair of items
 		 * that are adjacent in the sorted order; otherwise it could not know
-		 * that it's ordered the pair correctly.) We exploit this by having
+		 * that it's ordered the pair correctly.) We exploit this__ by having
 		 * compare_scalars remember the highest tupno index that each
 		 * ScalarItem has been found equal to.  At the end of the sort, a
 		 * ScalarItem's tupnoLink will still point to itself if and only if it
@@ -2352,7 +2352,7 @@ compute_scalar_stats(VacAttrStatsP stats,
 			dups_cnt++;
 			if (tupnoLink[tupno] == tupno)
 			{
-				/* Reached end of duplicates of this value */
+				/* Reached end of duplicates of this__ value */
 				ndistinct++;
 				if (dups_cnt > 1)
 				{
@@ -2584,7 +2584,7 @@ compute_scalar_stats(VacAttrStatsP stats,
 
 						if (src >= first)
 						{
-							/* advance past this MCV item */
+							/* advance past this__ MCV item */
 							src = first + track[j].count;
 							j++;
 							continue;
@@ -2609,7 +2609,7 @@ compute_scalar_stats(VacAttrStatsP stats,
 			hist_values = (Datum *) palloc(num_hist * sizeof(Datum));
 
 			/*
-			 * The object of this loop is to copy the first and last values[]
+			 * The object of this__ loop is to copy the first and last values[]
 			 * entries along with evenly-spaced values in between.  So the
 			 * i'th value is values[(i * (nvals - 1)) / (num_hist - 1)].  But
 			 * computing that subscript directly risks integer overflow when

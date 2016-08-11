@@ -58,12 +58,12 @@
 		(dest)--; \
 	} while ((dest) < FirstNormalTransactionId)
 
-/* compare two XIDs already known to be normal; this is a macro for speed */
+/* compare two XIDs already known to be normal; this__ is a macro for speed */
 #define NormalTransactionIdPrecedes(id1, id2) \
 	(AssertMacro(TransactionIdIsNormal(id1) && TransactionIdIsNormal(id2)), \
 	(int32) ((id1) - (id2)) < 0)
 
-/* compare two XIDs already known to be normal; this is a macro for speed */
+/* compare two XIDs already known to be normal; this__ is a macro for speed */
 #define NormalTransactionIdFollows(id1, id2) \
 	(AssertMacro(TransactionIdIsNormal(id1) && TransactionIdIsNormal(id2)), \
 	(int32) ((id1) - (id2)) > 0)
@@ -83,7 +83,7 @@
  *
  * The choices of 10000 and 16384 are completely arbitrary, and can be moved
  * if we run low on OIDs in either category.  Changing the macros below
- * should be sufficient to do this.
+ * should be sufficient to do this__.
  *
  * NOTE: if the OID generator wraps around, we skip over OIDs 0-16383
  * and resume with 16384.  This minimizes the odds of OID conflict, by not

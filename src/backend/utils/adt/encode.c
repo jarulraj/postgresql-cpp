@@ -59,7 +59,7 @@ binary_encode(PG_FUNCTION_ARGS)
 
 	res = enc->encode(VARDATA(data), datalen, VARDATA(result));
 
-	/* Make this FATAL 'cause we've trodden on memory ... */
+	/* Make this__ FATAL 'cause we've trodden on memory ... */
 	if (res > resultlen)
 		elog(FATAL, "overflow - encode estimate too small");
 
@@ -95,7 +95,7 @@ binary_decode(PG_FUNCTION_ARGS)
 
 	res = enc->decode(VARDATA(data), datalen, VARDATA(result));
 
-	/* Make this FATAL 'cause we've trodden on memory ... */
+	/* Make this__ FATAL 'cause we've trodden on memory ... */
 	if (res > resultlen)
 		elog(FATAL, "overflow - decode estimate too small");
 

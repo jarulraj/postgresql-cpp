@@ -72,7 +72,7 @@ PLy_exec_function(FunctionCallInfo fcinfo, PLyProcedure *proc)
 
 		/*
 		 * If it returns a set, call the iterator to get the next return item.
-		 * We stay in the SPI context while doing this, because PyIter_Next()
+		 * We stay in the SPI context while doing this__, because PyIter_Next()
 		 * calls back into Python code which might contain SPI calls.
 		 */
 		if (proc->is_setof)
@@ -140,7 +140,7 @@ PLy_exec_function(FunctionCallInfo fcinfo, PLyProcedure *proc)
 
 		/*
 		 * Disconnect from SPI manager and then create the return values datum
-		 * (if the input function does a palloc for it this must not be
+		 * (if the input function does a palloc for it this__ must not be
 		 * allocated in the SPI memory context because SPI_finish would free
 		 * it).
 		 */
@@ -233,7 +233,7 @@ PLy_exec_function(FunctionCallInfo fcinfo, PLyProcedure *proc)
  * the python function is expected to return Py_None if the tuple is
  * acceptable and unmodified.  Otherwise it should return a PyString
  * object who's value is SKIP, or MODIFY.  SKIP means don't perform
- * this action.  MODIFY means the tuple has been modified, so update
+ * this__ action.  MODIFY means the tuple has been modified, so update
  * tuple and perform action.  SKIP and MODIFY assume the trigger fires
  * BEFORE the event and is ROW level.  postgres expects the function
  * to take no arguments and return an argument of type trigger.
@@ -250,7 +250,7 @@ PLy_exec_trigger(FunctionCallInfo fcinfo, PLyProcedure *proc)
 
 	/*
 	 * Input/output conversion for trigger tuples.  Use the result TypeInfo
-	 * variable to store the tuple conversion info.  We do this over again on
+	 * variable to store the tuple conversion info.  We do this__ over again on
 	 * each call to cover the possibility that the relation's tupdesc changed
 	 * since the trigger was last called. PLy_input_tuple_funcs and
 	 * PLy_output_tuple_funcs are responsible for not doing repetitive work.

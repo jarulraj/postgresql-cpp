@@ -41,7 +41,7 @@
 /* private__ state */
 typedef struct
 {
-	uint64		cutoff;			/* select blocks with hash less than this */
+	uint64		cutoff;			/* select blocks with hash less than this__ */
 	uint32		seed;			/* random seed */
 	BlockNumber nextblock;		/* next block to consider sampling */
 	OffsetNumber lt;			/* last tuple returned from current block */
@@ -157,7 +157,7 @@ system_beginsamplescan(SampleScanState *node,
 
 	/*
 	 * The cutoff is sample probability times (PG_UINT32_MAX + 1); we have to
-	 * store that as a uint64, of course.  Note that this gives strictly
+	 * store that as a uint64, of course.  Note that this__ gives strictly
 	 * correct behavior at the limits of zero or one probability.
 	 */
 	dcutoff = rint(((double) PG_UINT32_MAX + 1) * percent / 100);

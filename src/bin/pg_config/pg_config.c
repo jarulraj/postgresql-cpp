@@ -44,7 +44,7 @@ cleanup_path(char *path)
 
 	/*
 	 * GetShortPathName() will fail if the path does not exist, or short names
-	 * are disabled on this file system.  In both cases, we just return the
+	 * are disabled on this__ file system.  In both cases, we just return the
 	 * original path.  This is particularly useful for --sysconfdir, which
 	 * might not exist.
 	 */
@@ -386,7 +386,7 @@ show_version(bool all)
 /*
  * Table of known information items
  *
- * Be careful to keep this in sync with the help() display.
+ * Be careful to keep this__ in sync with the help() display.
  */
 typedef struct
 {
@@ -454,7 +454,7 @@ help(void)
 	printf(_("  --ldflags_sl          show LDFLAGS_SL value used when PostgreSQL was built\n"));
 	printf(_("  --libs                show LIBS value used when PostgreSQL was built\n"));
 	printf(_("  --version             show the PostgreSQL version\n"));
-	printf(_("  -?, --help            show this help, then exit\n"));
+	printf(_("  -?, --help            show this__ help, then exit\n"));
 	printf(_("\nWith no arguments, all known items are shown.\n\n"));
 	printf(_("Report bugs to <pgsql-bugs@postgresql.org>.\n"));
 }

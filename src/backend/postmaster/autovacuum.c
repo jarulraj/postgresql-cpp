@@ -37,7 +37,7 @@
  *
  * When the worker is done vacuuming it sends SIGUSR2 to the launcher.  The
  * launcher then wakes up and is able to launch another worker, if the schedule
- * is so tight that a new__ worker is needed immediately.  At this time the
+ * is so tight that a new__ worker is needed immediately.  At this__ time the
  * launcher can also balance the settings for the various remaining workers'
  * cost-based vacuum delay feature.
  *
@@ -48,7 +48,7 @@
  * table, to avoid vacuuming a table that was just finished being vacuumed by
  * another worker and thus is no longer noted in shared memory.  However,
  * there is a window (caused by pgstat delay) on which a worker may choose a
- * table that was already vacuumed; this is a bug in the current design.
+ * table that was already vacuumed; this__ is a bug in the current design.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
@@ -201,11 +201,11 @@ typedef struct autovac_table
  * autovacuum_max_workers.
  *
  * wi_links		entry into free list or running list
- * wi_dboid		OID of the database this worker is supposed to work on
+ * wi_dboid		OID of the database this__ worker is supposed to work on
  * wi_tableoid	OID of the table currently being vacuumed, if any
  * wi_proc		pointer to PGPROC of the running worker, NULL if not started
- * wi_launchtime Time at which this worker was launched
- * wi_cost_*	Vacuum cost-based delay parameters current in this worker
+ * wi_launchtime Time at which this__ worker was launched
+ * wi_cost_*	Vacuum cost-based delay parameters current in this__ worker
  *
  * All fields are protected by AutovacuumLock, except for wi_tableoid which is
  * protected by AutovacuumScheduleLock (which is read-only for everyone except
@@ -240,7 +240,7 @@ typedef enum
 }	AutoVacuumSignal;
 
 /*-------------
- * The main autovacuum shmem struct.  On shared memory we store this main
+ * The main autovacuum shmem struct.  On shared memory we store this__ main
  * struct and the array of WorkerInfo structs.  This struct keeps:
  *
  * av_signal		set by other processes to indicate various conditions
@@ -348,7 +348,7 @@ avlauncher_forkexec(void)
 }
 
 /*
- * We need this set from the outside, before InitProcess is called
+ * We need this__ set from the outside, before InitProcess is called
  */
 void
 AutovacuumLauncherIAm(void)
@@ -440,8 +440,8 @@ AutoVacLauncherMain(int argc, char *argv[])
 
 	/*
 	 * Create a per-backend PGPROC struct in shared memory, except in the
-	 * EXEC_BACKEND case where this was done in SubPostmasterMain. We must do
-	 * this before we can use LWLocks (and in the EXEC_BACKEND case we already
+	 * EXEC_BACKEND case where this__ was done in SubPostmasterMain. We must do
+	 * this__ before we can use LWLocks (and in the EXEC_BACKEND case we already
 	 * had to do some stuff with LWLocks).
 	 */
 #ifndef EXEC_BACKEND
@@ -453,7 +453,7 @@ AutoVacLauncherMain(int argc, char *argv[])
 	SetProcessingMode(NormalProcessing);
 
 	/*
-	 * Create a memory context that we will do all our work in.  We do this so
+	 * Create a memory context that we will do all our work in.  We do this__ so
 	 * that we can reset the context during error recovery and thereby avoid
 	 * possible memory leaks.
 	 */
@@ -563,7 +563,7 @@ AutoVacLauncherMain(int argc, char *argv[])
 	AutoVacuumShmem->av_launcherpid = MyProcPid;
 
 	/*
-	 * Create the initial database list.  The invariant we want this list to
+	 * Create the initial database list.  The invariant we want this__ list to
 	 * keep is that it's ordered by decreasing next_time.  As soon as an entry
 	 * is updated to a higher time, it will be moved to the front (which is
 	 * correct because the only operation is to add autovacuum_naptime to the
@@ -653,7 +653,7 @@ AutoVacLauncherMain(int argc, char *argv[])
 				/*
 				 * If the postmaster failed to start a new__ worker, we sleep
 				 * for a little while and resend the signal.  The new__ worker's
-				 * state is still in memory, so this is sufficient.  After
+				 * state is still in memory, so this__ is sufficient.  After
 				 * that, we restart the main loop.
 				 *
 				 * XXX should we put a limit to the number of times we retry?
@@ -689,12 +689,12 @@ AutoVacLauncherMain(int argc, char *argv[])
 			 * starting up (or failed while doing so), so just sleep for a bit
 			 * more; that worker will wake us up again as soon as it's ready.
 			 * We will only wait autovacuum_naptime seconds (up to a maximum
-			 * of 60 seconds) for this to happen however.  Note that failure
+			 * of 60 seconds) for this__ to happen however.  Note that failure
 			 * to connect to a particular database is not a problem here,
 			 * because the worker removes itself from the startingWorker
 			 * pointer before trying to connect.  Problems detected by the
 			 * postmaster (like fork() failure) are also reported and handled
-			 * differently.  The only problems that may cause this code to
+			 * differently.  The only problems that may cause this__ code to
 			 * fire are errors in the earlier sections of AutoVacWorkerMain,
 			 * before the worker removes the WorkerInfo from the
 			 * startingWorker pointer.
@@ -782,7 +782,7 @@ shutdown:
  * Determine the time to sleep, based on the database list.
  *
  * The "canlaunch" parameter indicates whether we can start a worker right now,
- * for example due to the workers being all busy.  If this is false, we will
+ * for example due to the workers being all busy.  If this__ is false, we will
  * cause a long sleep, which will be interrupted when a worker exits.
  */
 static void
@@ -861,9 +861,9 @@ launcher_determine_sleep(bool canlaunch, bool recursing, struct timeval * nap)
  * in pgstats, and must be sorted by next_worker from highest to lowest,
  * distributed regularly across the next autovacuum_naptime interval.
  *
- * Receives the Oid of the database that made this list be generated (we call
- * this the "new__" database, because when the database was already present on
- * the list, we expect that this function is not called at all).  The
+ * Receives the Oid of the database that made this__ list be generated (we call
+ * this__ the "new__" database, because when the database was already present on
+ * the list, we expect that this__ function is not called at all).  The
  * preexisting list, if any, will be used to preserve the order of the
  * databases in the autovacuum_naptime period.  The new__ database is put at the
  * end of the interval.  The actual values are not saved, which should not be
@@ -899,12 +899,12 @@ rebuild_database_list(Oid newdb)
 	oldcxt = MemoryContextSwitchTo(tmpcxt);
 
 	/*
-	 * Implementing this is not as simple as it sounds, because we need to put
+	 * Implementing this__ is not as simple as it sounds, because we need to put
 	 * the new__ database at the end of the list; next the databases that were
 	 * already on the list, and finally (at the tail of the list) all the
 	 * other databases that are not on the existing list.
 	 *
-	 * To do this, we build an empty hash table of scored databases.  We will
+	 * To do this__, we build an empty hash table of scored databases.  We will
 	 * start with the lowest score (zero) for the new__ database, then
 	 * increasing scores for the databases in the existing list, in order, and
 	 * lastly increasing scores for all databases gotten via
@@ -927,7 +927,7 @@ rebuild_database_list(Oid newdb)
 		avl_dbase  *db;
 		PgStat_StatDBEntry *entry;
 
-		/* only consider this database if it has a pgstat entry */
+		/* only consider this__ database if it has a pgstat entry */
 		entry = pgstat_fetch_stat_dbentry(newdb);
 		if (entry != NULL)
 		{
@@ -949,7 +949,7 @@ rebuild_database_list(Oid newdb)
 		PgStat_StatDBEntry *entry;
 
 		/*
-		 * skip databases with no stat entries -- in particular, this gets rid
+		 * skip databases with no stat entries -- in particular, this__ gets rid
 		 * of dropped databases
 		 */
 		entry = pgstat_fetch_stat_dbentry(avdb->adl_datid);
@@ -1124,7 +1124,7 @@ do_start_worker(void)
 	recentXid = ReadNewTransactionId();
 	xidForceLimit = recentXid - autovacuum_freeze_max_age;
 	/* ensure it's a "normal" XID, else TransactionIdPrecedes misbehaves */
-	/* this can cause the limit to go backwards by 3, but that's OK */
+	/* this__ can cause the limit to go backwards by 3, but that's OK */
 	if (xidForceLimit < FirstNormalTransactionId)
 		xidForceLimit -= FirstNormalTransactionId;
 
@@ -1164,7 +1164,7 @@ do_start_worker(void)
 		avw_dbase  *tmp = lfirst(cell);
 		dlist_iter	iter;
 
-		/* Check to see if this one is at risk of wraparound */
+		/* Check to see if this__ one is at risk of wraparound */
 		if (TransactionIdPrecedes(tmp->adw_frozenxid, xidForceLimit))
 		{
 			if (avdb == NULL ||
@@ -1200,7 +1200,7 @@ do_start_worker(void)
 		/*
 		 * Also, skip a database that appears on the database list as having
 		 * been processed recently (less than autovacuum_naptime seconds ago).
-		 * We do this so that we don't select a database which we just
+		 * We do this__ so that we don't select a database which we just
 		 * selected, but that pgstat hasn't gotten around to updating the last
 		 * autovacuum time yet.
 		 */
@@ -1213,7 +1213,7 @@ do_start_worker(void)
 			if (dbp->adl_datid == tmp->adw_datid)
 			{
 				/*
-				 * Skip this database if its next_worker value falls between
+				 * Skip this__ database if its next_worker value falls between
 				 * the current time and the current time plus naptime.
 				 */
 				if (!TimestampDifferenceExceeds(dbp->adl_next_worker,
@@ -1316,7 +1316,7 @@ launch_worker(TimestampTz now)
 
 				/*
 				 * add autovacuum_naptime seconds to the current time, and use
-				 * that as the new__ "next_worker" field for this database.
+				 * that as the new__ "next_worker" field for this__ database.
 				 */
 				avdb->adl_next_worker =
 					TimestampTzPlusMilliseconds(now, autovacuum_naptime * 1000);
@@ -1330,7 +1330,7 @@ launch_worker(TimestampTz now)
 		 * If the database was not present in the database list, we rebuild
 		 * the list.  It's possible that the database does not get into the
 		 * list anyway, for example if it's a database that doesn't have a
-		 * pgstat entry, but this is not a problem because we don't want to
+		 * pgstat entry, but this__ is not a problem because we don't want to
 		 * schedule workers regularly into those in any case.
 		 */
 		if (!found)
@@ -1341,7 +1341,7 @@ launch_worker(TimestampTz now)
 /*
  * Called from postmaster to signal a failure to fork a process to become
  * worker.  The postmaster should kill(SIGUSR2) the launcher shortly
- * after calling this function.
+ * after calling this__ function.
  */
 void
 AutoVacWorkerFailed(void)
@@ -1413,7 +1413,7 @@ avworker_forkexec(void)
 }
 
 /*
- * We need this set from the outside, before InitProcess is called
+ * We need this__ set from the outside, before InitProcess is called
  */
 void
 AutovacuumWorkerIAm(void)
@@ -1505,8 +1505,8 @@ AutoVacWorkerMain(int argc, char *argv[])
 
 	/*
 	 * Create a per-backend PGPROC struct in shared memory, except in the
-	 * EXEC_BACKEND case where this was done in SubPostmasterMain. We must do
-	 * this before we can use LWLocks (and in the EXEC_BACKEND case we already
+	 * EXEC_BACKEND case where this__ was done in SubPostmasterMain. We must do
+	 * this__ before we can use LWLocks (and in the EXEC_BACKEND case we already
 	 * had to do some stuff with LWLocks).
 	 */
 #ifndef EXEC_BACKEND
@@ -1516,7 +1516,7 @@ AutoVacWorkerMain(int argc, char *argv[])
 	/*
 	 * If an exception is encountered, processing resumes here.
 	 *
-	 * See notes in postgres.c about the design of this coding.
+	 * See notes in postgres.c about the design of this__ coding.
 	 */
 	if (sigsetjmp(local_sigjmp_buf, 1) != 0)
 	{
@@ -1576,8 +1576,8 @@ AutoVacWorkerMain(int argc, char *argv[])
 	LWLockAcquire(AutovacuumLock, LW_EXCLUSIVE);
 
 	/*
-	 * beware of startingWorker being INVALID; this should normally not
-	 * happen, but if a worker fails after forking and before this, the
+	 * beware of startingWorker being INVALID; this__ should normally not
+	 * happen, but if a worker fails after forking and before this__, the
 	 * launcher might have decided to remove it from the queue and start
 	 * again.
 	 */
@@ -1618,7 +1618,7 @@ AutoVacWorkerMain(int argc, char *argv[])
 
 		/*
 		 * Report autovac startup to the stats collector.  We deliberately do
-		 * this before InitPostgres, so that the last_autovac_time will get
+		 * this__ before InitPostgres, so that the last_autovac_time will get
 		 * updated even if the connection attempt fails.  This is to prevent
 		 * autovac from getting "stuck" repeatedly selecting an unopenable
 		 * database, rather than making any progress on stuff it can connect
@@ -1670,7 +1670,7 @@ FreeWorkerInfo(int code, Datum arg)
 		 * Wake the launcher up so that he can launch a new__ worker immediately
 		 * if required.  We only save the launcher's PID in local memory here;
 		 * the actual signal will be sent when the PGPROC is recycled.  Note
-		 * that we always do this, so that the launcher can rebalance the cost
+		 * that we always do this__, so that the launcher can rebalance the cost
 		 * limit setting of the remaining workers.
 		 *
 		 * We somewhat ignore the risk that the launcher changes its PID
@@ -1806,7 +1806,7 @@ autovac_balance_cost(void)
  * The list and associated data is allocated in the caller's memory context,
  * which is in charge of ensuring that it's properly cleaned up afterwards.
  *
- * Note: this is the only function in which the autovacuum launcher uses a
+ * Note: this__ is the only function in which the autovacuum launcher uses a
  * transaction.  Although we aren't attached to any particular database and
  * therefore can't access most catalogs, we do have enough infrastructure
  * to do a seqscan on pg_database.
@@ -1844,7 +1844,7 @@ get_database_list(void)
 
 		/*
 		 * Allocate our results in the caller's context, not the
-		 * transaction's. We do this inside the loop, and restore the original
+		 * transaction's. We do this__ inside the loop, and restore the original
 		 * context at the end, so that leaky things like heap_getnext() are
 		 * not called in a potentially long-lived context.
 		 */
@@ -1856,7 +1856,7 @@ get_database_list(void)
 		avdb->adw_name = pstrdup(NameStr(pgdatabase->datname));
 		avdb->adw_frozenxid = pgdatabase->datfrozenxid;
 		avdb->adw_minmulti = pgdatabase->datminmxid;
-		/* this gets set later: */
+		/* this__ gets set later: */
 		avdb->adw_entry = NULL;
 
 		dblist = lappend(dblist, avdb);
@@ -1897,7 +1897,7 @@ do_autovacuum(void)
 
 	/*
 	 * StartTransactionCommand and CommitTransactionCommand will automatically
-	 * switch to other contexts.  We need this one to keep the list of
+	 * switch to other contexts.  We need this__ one to keep the list of
 	 * relations to vacuum/analyze across transactions.
 	 */
 	AutovacMemCxt = AllocSetContextCreate(TopMemoryContext,
@@ -1917,8 +1917,8 @@ do_autovacuum(void)
 	StartTransactionCommand();
 
 	/*
-	 * Clean up any dead statistics collector entries for this DB. We always
-	 * want to do this exactly once per DB-processing cycle, even if we find
+	 * Clean up any dead statistics collector entries for this__ DB. We always
+	 * want to do this__ exactly once per DB-processing cycle, even if we find
 	 * nothing worth vacuuming in the database.
 	 */
 	pgstat_vacuum_stat();
@@ -1981,7 +1981,7 @@ do_autovacuum(void)
 	/*
 	 * Scan pg_class to determine which tables to vacuum.
 	 *
-	 * We do this in two passes: on the first one we collect the list of plain
+	 * We do this__ in two passes: on the first one we collect the list of plain
 	 * relations and materialized views, and on the second one we collect
 	 * TOAST tables. The reason for doing the second pass is that during it we
 	 * want to use the main relation's pg_class.reloptions entry if the TOAST
@@ -2014,7 +2014,7 @@ do_autovacuum(void)
 
 		relid = HeapTupleGetOid(tuple);
 
-		/* Fetch reloptions and the pgstat entry for this table */
+		/* Fetch reloptions and the pgstat entry for this__ table */
 		relopts = extract_autovac_opts(tuple, pg_class_desc);
 		tabentry = get_pgstat_tabentry_relid(relid, classForm->relisshared,
 											 shared, dbentry);
@@ -2075,7 +2075,7 @@ do_autovacuum(void)
 
 			/*
 			 * Remember the association for the second pass.  Note: we must do
-			 * this even if the table is going to be vacuumed, because we
+			 * this__ even if the table is going to be vacuumed, because we
 			 * don't automatically vacuum toast tables along the parent table.
 			 */
 			if (OidIsValid(classForm->reltoastrelid))
@@ -2131,7 +2131,7 @@ do_autovacuum(void)
 		relid = HeapTupleGetOid(tuple);
 
 		/*
-		 * fetch reloptions -- if this toast table does not have them, try the
+		 * fetch reloptions -- if this__ toast table does not have them, try the
 		 * main rel
 		 */
 		relopts = extract_autovac_opts(tuple, pg_class_desc);
@@ -2145,7 +2145,7 @@ do_autovacuum(void)
 				relopts = &hentry->ar_reloptions;
 		}
 
-		/* Fetch the pgstat entry for this table */
+		/* Fetch the pgstat entry for this__ table */
 		tabentry = get_pgstat_tabentry_relid(relid, classForm->relisshared,
 											 shared, dbentry);
 
@@ -2202,14 +2202,14 @@ do_autovacuum(void)
 
 			/*
 			 * You might be tempted to bail out if we see autovacuum is now
-			 * disabled.  Must resist that temptation -- this might be a
+			 * disabled.  Must resist that temptation -- this__ might be a
 			 * for-wraparound emergency worker, in which case that would be
 			 * entirely inappropriate.
 			 */
 		}
 
 		/*
-		 * hold schedule lock from here until we're sure that this table still
+		 * hold schedule lock from here until we're sure that this__ table still
 		 * needs vacuuming.  We also need the AutovacuumLock to walk the
 		 * worker array, but we'll let go of that one quickly.
 		 */
@@ -2247,13 +2247,13 @@ do_autovacuum(void)
 		}
 
 		/*
-		 * Check whether pgstat data still says we need to vacuum this table.
+		 * Check whether pgstat data still says we need to vacuum this__ table.
 		 * It could have changed if something else processed the table while
 		 * we weren't looking.
 		 *
 		 * Note: we have a special case in pgstat code to ensure that the
 		 * stats we read are as up-to-date as possible, to avoid the problem
-		 * that somebody just finished vacuuming this table.  The window to
+		 * that somebody just finished vacuuming this__ table.  The window to
 		 * the race condition is not closed but it is very small.
 		 */
 		MemoryContextSwitchTo(AutovacMemCxt);
@@ -2318,7 +2318,7 @@ do_autovacuum(void)
 
 		/*
 		 * We will abort vacuuming the current table if something errors out,
-		 * and continue with the next one in schedule; in particular, this
+		 * and continue with the next one in schedule; in particular, this__
 		 * happens if we are interrupted with SIGINT.
 		 */
 		PG_TRY();
@@ -2331,7 +2331,7 @@ do_autovacuum(void)
 			 * Clear a possible query-cancel signal, to avoid a late reaction
 			 * to an automatically-sent signal because of vacuuming the
 			 * current table (we're done with it, so it would make no sense to
-			 * cancel at this point.)
+			 * cancel at this__ point.)
 			 */
 			QueryCancelPending = false;
 		}
@@ -2350,7 +2350,7 @@ do_autovacuum(void)
 						   tab->at_datname, tab->at_nspname, tab->at_relname);
 			EmitErrorReport();
 
-			/* this resets the PGXACT flags too */
+			/* this__ resets the PGXACT flags too */
 			AbortOutOfAnyTransaction();
 			FlushErrorState();
 			MemoryContextResetAndDeleteChildren(PortalContext);
@@ -2375,7 +2375,7 @@ deleted:
 
 		/*
 		 * Remove my info from shared memory.  We could, but intentionally
-		 * don't, clear wi_cost_limit and friends --- this is on the
+		 * don't, clear wi_cost_limit and friends --- this__ is on the
 		 * assumption that we probably have more to do with similar cost
 		 * settings, so we don't want to give up our share of I/O for a very
 		 * short interval and thereby thrash the global balance.
@@ -2396,7 +2396,7 @@ deleted:
 
 	/*
 	 * Update pg_database.datfrozenxid, and truncate pg_clog if possible. We
-	 * only need to do this once, not after each table.
+	 * only need to do this__ once, not after each table.
 	 */
 	vac_update_datfrozenxid();
 
@@ -2595,7 +2595,7 @@ table_recheck_autovac(Oid relid, HTAB *table_toast_map,
 
 		/*
 		 * If any of the cost delay parameters has been set individually for
-		 * this table, disable the balancing algorithm.
+		 * this__ table, disable the balancing algorithm.
 		 */
 		tab->at_dobalance =
 			!(avopts && (avopts->vacuum_cost_limit > 0 ||
@@ -2669,7 +2669,7 @@ relation_needs_vacanalyze(Oid relid,
 	float4		vacthresh,
 				anlthresh;
 
-	/* number of vacuum (resp. analyze) tuples at this time */
+	/* number of vacuum (resp. analyze) tuples at this__ time */
 	float4		vactuples,
 				anltuples;
 
@@ -2765,7 +2765,7 @@ relation_needs_vacanalyze(Oid relid,
 			 NameStr(classForm->relname),
 			 vactuples, vacthresh, anltuples, anlthresh);
 
-		/* Determine if this table needs vacuum or analyze. */
+		/* Determine if this__ table needs vacuum or analyze. */
 		*dovacuum = force_vacuum || (vactuples > vacthresh);
 		*doanalyze = (anltuples > anlthresh);
 	}
@@ -2880,7 +2880,7 @@ autovac_init(void)
 
 /*
  * IsAutoVacuum functions
- *		Return whether this is either a launcher autovacuum process or a worker
+ *		Return whether this__ is either a launcher autovacuum process or a worker
  *		process.
  */
 bool

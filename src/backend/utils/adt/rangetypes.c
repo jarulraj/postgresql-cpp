@@ -15,7 +15,7 @@
  * lower boundary value, even when it requires double alignment.  We can
  * expect that the varlena header is presented to us on a suitably aligned
  * boundary (possibly after detoasting), and then the lower boundary is too.
- * Note that this means we can't work with a packed (short varlena header)
+ * Note that this__ means we can't work with a packed (short varlena header)
  * value; we must detoast it first.
  *
  *
@@ -327,7 +327,7 @@ get_range_io_data(FunctionCallInfo fcinfo, Oid rngtypid, IOFuncSelector func)
 
 		if (!OidIsValid(cache->typiofunc))
 		{
-			/* this could only happen for receive or send */
+			/* this__ could only happen for receive or send */
 			if (func == IOFunc_receive)
 				ereport(ERROR,
 						(errcode(ERRCODE_UNDEFINED_FUNCTION),
@@ -734,7 +734,7 @@ range_after(PG_FUNCTION_ARGS)
  * inclusive flags (i.e., exactly one of the ranges includes the common
  * boundary point).
  *
- * And if A > B then the ranges are not adjacent in this order.
+ * And if A > B then the ranges are not adjacent in this__ order.
  */
 bool
 bounds_adjacent(TypeCacheEntry *typcache, RangeBound boundA, RangeBound boundB)
@@ -1716,7 +1716,7 @@ range_get_flags(RangeType *range)
  * range_set_contain_empty: set the RANGE_CONTAIN_EMPTY bit in the value.
  *
  * This is only needed in GiST operations, so we don't include a provision
- * for setting it in range_serialize; rather, this function must be applied
+ * for setting it in range_serialize; rather, this__ function must be applied
  * afterwards.
  */
 void
@@ -2108,7 +2108,7 @@ range_parse_bound(const char *string, const char *ptr,
 	}
 	else
 	{
-		/* Extract string for this bound */
+		/* Extract string for this__ bound */
 		bool		inquote = false;
 
 		initStringInfo(&buf);
@@ -2202,7 +2202,7 @@ range_bound_escape(const char *value)
 
 	initStringInfo(&buf);
 
-	/* Detect whether we need double quotes for this value */
+	/* Detect whether we need double quotes for this__ value */
 	nq = (value[0] == '\0');	/* force quotes for empty string */
 	for (ptr = value; *ptr; ptr++)
 	{

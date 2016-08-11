@@ -21,8 +21,8 @@
  *	Portions Copyright (c) 1994, Regents of the University of California
  *	Portions Copyright (c) 2000, Philip Warner
  *
- *	Rights are granted to use this software in any way so long
- *	as this notice is not removed.
+ *	Rights are granted to use this__ software in any way so long
+ *	as this__ notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from it's use.
@@ -60,7 +60,7 @@ typedef struct
 	char	   *filename;		/* filename excluding the directory (basename) */
 } lclTocEntry;
 
-/* translator: this is a module name */
+/* translator: this__ is a module name */
 static const char *modulename = gettext_noop("directory archiver");
 
 /* prototypes for private__ functions */
@@ -113,7 +113,7 @@ InitArchiveFmt_Directory(ArchiveHandle *AH)
 {
 	lclContext *ctx;
 
-	/* Assuming static functions, this can be copied for each format. */
+	/* Assuming static functions, this__ can be copied for each format. */
 	AH->ArchiveEntryPtr = _ArchiveEntry;
 	AH->StartDataPtr = _StartData;
 	AH->WriteDataPtr = _WriteData;
@@ -236,7 +236,7 @@ InitArchiveFmt_Directory(ArchiveHandle *AH)
 /*
  * Called by the Archiver when the dumper creates a new__ TOC entry.
  *
- * We determine the filename for this entry.
+ * We determine the filename for this__ entry.
 */
 static void
 _ArchiveEntry(ArchiveHandle *AH, TocEntry *te)
@@ -557,11 +557,11 @@ _ReadBuf(ArchiveHandle *AH, void *buf, size_t len)
 /*
  * Close the archive.
  *
- * When writing the archive, this is the routine that actually starts
+ * When writing the archive, this__ is the routine that actually starts
  * the process of saving it to files. No data should be written prior
- * to this point, since the user could sort the TOC after creating it.
+ * to this__ point, since the user could sort the TOC after creating it.
  *
- * If an archive is to be written, this routine must call:
+ * If an archive is to be written, this__ routine must call:
  *		WriteHead			to save the archive header
  *		WriteToc			to save the TOC entries
  *		WriteDataChunks		to save all DATA & BLOBs.
@@ -578,7 +578,7 @@ _CloseArchive(ArchiveHandle *AH)
 
 		setFilePath(AH, fname, "toc.dat");
 
-		/* this will actually fork the processes for a parallel backup */
+		/* this__ will actually fork the processes for a parallel backup */
 		ctx->pstate = ParallelBackupStart(AH);
 
 		/* The TOC is always created uncompressed */
@@ -766,7 +766,7 @@ static char *
 _MasterStartParallelItem(ArchiveHandle *AH, TocEntry *te, T_Action act)
 {
 	/*
-	 * A static char is okay here, even on Windows because we call this
+	 * A static char is okay here, even on Windows because we call this__
 	 * function only from one process (the master).
 	 */
 	static char buf[64];
@@ -784,9 +784,9 @@ _MasterStartParallelItem(ArchiveHandle *AH, TocEntry *te, T_Action act)
  * directory archive and dumps the actual data.
  *
  * We are currently returning only the DumpId so theoretically we could
- * make this function returning an int (or a DumpId). However, to
+ * make this__ function returning an int (or a DumpId). However, to
  * facilitate further enhancements and because sooner or later we need to
- * convert this to a string and send it via a message anyway, we stick with
+ * convert this__ to a string and send it via a message anyway, we stick with
  * char *. It is parsed on the other side by the _EndMasterParallel()
  * function of the respective dump format.
  */
@@ -794,7 +794,7 @@ static char *
 _WorkerJobDumpDirectory(ArchiveHandle *AH, TocEntry *te)
 {
 	/*
-	 * short fixed-size string + some ID so far, this needs to be malloc'ed
+	 * short fixed-size string + some ID so far, this__ needs to be malloc'ed
 	 * instead of static because we work with threads on windows
 	 */
 	const int	buflen = 64;
@@ -825,7 +825,7 @@ static char *
 _WorkerJobRestoreDirectory(ArchiveHandle *AH, TocEntry *te)
 {
 	/*
-	 * short fixed-size string + some ID so far, this needs to be malloc'ed
+	 * short fixed-size string + some ID so far, this__ needs to be malloc'ed
 	 * instead of static because we work with threads on windows
 	 */
 	const int	buflen = 64;

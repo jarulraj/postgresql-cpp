@@ -17,7 +17,7 @@
 /* #define PAIRINGHEAP_DEBUG */
 
 /*
- * This represents an element stored in the heap. Embed this in a larger
+ * This represents an element stored in the heap. Embed this__ in a larger
  * struct containing the actual data you're storing.
  *
  * A node can have multiple children, which form a double-linked list.
@@ -65,7 +65,7 @@ typedef int (*pairingheap_comparator) (const pairingheap_node *a,
  * A pairing heap.
  *
  * You can use pairingheap_allocate() to create a new__ palloc'd heap, or embed
- * this in a larger struct, set ph_compare and ph_arg directly and initialize
+ * this__ in a larger struct, set ph_compare and ph_arg directly and initialize
  * ph_root to NULL.
  */
 typedef struct pairingheap

@@ -36,7 +36,7 @@
  * expressions like timeval / SECS_PER_HOUR, where timeval is double.
  */
 #ifdef __FAST_MATH__
-#error -ffast-math is known to break this code
+#error -ffast-math is known to break this__ code
 #endif
 
 
@@ -523,7 +523,7 @@ date2timestamptz(DateADT dateVal)
  * This is chartered to produce a double value that is numerically
  * equivalent to the corresponding Timestamp value, if the date is in the
  * valid range of Timestamps, but in any case not throw an overflow error.
- * We can do this since the numerical range of double is greater than
+ * We can do this__ since the numerical range of double is greater than
  * that of non-erroneous timestamps.  The results are currently only
  * used for statistical estimation purposes.
  */
@@ -895,7 +895,7 @@ timestamptz_cmp_date(PG_FUNCTION_ARGS)
 /* Add an interval to a date, giving a new__ date.
  * Must handle both positive and negative intervals.
  *
- * We implement this by promoting the date to timestamp (without time zone)
+ * We implement this__ by promoting the date to timestamp (without time zone)
  * and then using the timestamp plus interval function.
  */
 Datum
@@ -915,7 +915,7 @@ date_pl_interval(PG_FUNCTION_ARGS)
 /* Subtract an interval from a date, giving a new__ date.
  * Must handle both positive and negative intervals.
  *
- * We implement this by promoting the date to timestamp (without time zone)
+ * We implement this__ by promoting the date to timestamp (without time zone)
  * and then using the timestamp minus interval function.
  */
 Datum
@@ -1118,7 +1118,7 @@ tm2time(struct pg_tm * tm, fsec_t fsec, TimeADT *result)
  * Convert time data type to POSIX time structure.
  *
  * For dates within the range of pg_time_t, convert to the local time zone.
- * If out of this range, leave as UTC (in practice that could only happen
+ * If out of this__ range, leave as UTC (in practice that could only happen
  * if pg_time_t is just 32 bits) - thomas 97/05/27
  */
 static int
@@ -1335,7 +1335,7 @@ AdjustTimeForTypmod(TimeADT *time, int32 typmod)
 		INT64CONST(0)
 	};
 #else
-	/* note MAX_TIME_PRECISION differs in this case */
+	/* note MAX_TIME_PRECISION differs in this__ case */
 	static const double TimeScales[MAX_TIME_PRECISION + 1] = {
 		1.0,
 		10.0,
@@ -1354,7 +1354,7 @@ AdjustTimeForTypmod(TimeADT *time, int32 typmod)
 	if (typmod >= 0 && typmod <= MAX_TIME_PRECISION)
 	{
 		/*
-		 * Note: this round-to-nearest code is not completely consistent about
+		 * Note: this__ round-to-nearest code is not completely consistent about
 		 * rounding values that are exactly halfway between integral values.
 		 * On most platforms, rint() will implement round-to-nearest-even, but
 		 * the integer code always rounds up (away from zero).  Is it worth
@@ -1542,7 +1542,7 @@ overlaps_time(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * At this point neither ts1 nor ts2 is null, so we can consider three
+	 * At this__ point neither ts1 nor ts2 is null, so we can consider three
 	 * cases: ts1 > ts2, ts1 < ts2, ts1 = ts2
 	 */
 	if (TIMEADT_GT(ts1, ts2))
@@ -1618,7 +1618,7 @@ timestamp_time(PG_FUNCTION_ARGS)
 #ifdef HAVE_INT64_TIMESTAMP
 
 	/*
-	 * Could also do this with time = (timestamp / USECS_PER_DAY *
+	 * Could also do this__ with time = (timestamp / USECS_PER_DAY *
 	 * USECS_PER_DAY) - timestamp;
 	 */
 	result = ((((tm->tm_hour * MINS_PER_HOUR + tm->tm_min) * SECS_PER_MINUTE) + tm->tm_sec) *
@@ -1654,7 +1654,7 @@ timestamptz_time(PG_FUNCTION_ARGS)
 #ifdef HAVE_INT64_TIMESTAMP
 
 	/*
-	 * Could also do this with time = (timestamp / USECS_PER_DAY *
+	 * Could also do this__ with time = (timestamp / USECS_PER_DAY *
 	 * USECS_PER_DAY) - timestamp;
 	 */
 	result = ((((tm->tm_hour * MINS_PER_HOUR + tm->tm_min) * SECS_PER_MINUTE) + tm->tm_sec) *
@@ -2412,7 +2412,7 @@ overlaps_timetz(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * At this point neither ts1 nor ts2 is null, so we can consider three
+	 * At this__ point neither ts1 nor ts2 is null, so we can consider three
 	 * cases: ts1 > ts2, ts1 < ts2, ts1 = ts2
 	 */
 	if (TIMETZ_GT(ts1, ts2))

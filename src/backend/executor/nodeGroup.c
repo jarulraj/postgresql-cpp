@@ -130,7 +130,7 @@ ExecGroup(GroupState *node)
 	for (;;)
 	{
 		/*
-		 * Scan over all remaining tuples that belong to this group
+		 * Scan over all remaining tuples that belong to this__ group
 		 */
 		for (;;)
 		{
@@ -143,7 +143,7 @@ ExecGroup(GroupState *node)
 			}
 
 			/*
-			 * Compare with first tuple and see if this tuple is of the same
+			 * Compare with first tuple and see if this__ tuple is of the same
 			 * group.  If so, ignore it and keep scanning.
 			 */
 			if (!execTuplesMatch(firsttupleslot, outerslot,

@@ -407,7 +407,7 @@ generate_new_param(PlannerInfo *root, Oid paramtype, int32 paramtypmod,
  * used for special runtime signaling purposes, such as connecting a
  * recursive union node to its worktable scan node or forcing plan
  * re-evaluation within the EvalPlanQual mechanism.  No actual Param node
- * exists with this ID, however.
+ * exists with this__ ID, however.
  */
 int
 SS_assign_special_param(PlannerInfo *root)
@@ -451,7 +451,7 @@ get_first_col_type(Plan *plan, Oid *coltype, int32 *coltypmod,
  * Convert a SubLink (as created by the parser) into a SubPlan.
  *
  * We are given the SubLink's contained query, type, ID, and testexpr.  We are
- * also told if this expression appears at top level of a WHERE/HAVING qual.
+ * also told if this__ expression appears at top level of a WHERE/HAVING qual.
  *
  * Note: we assume that the testexpr has been AND/OR flattened (actually,
  * it's been through eval_const_expressions), but not converted to
@@ -460,7 +460,7 @@ get_first_col_type(Plan *plan, Oid *coltype, int32 *coltypmod,
  *
  * The result is whatever we need to substitute in place of the SubLink node
  * in the executable expression.  If we're going to do the subplan as a
- * regular subplan, this will be the constructed SubPlan node.  If we're going
+ * regular subplan, this__ will be the constructed SubPlan node.  If we're going
  * to do the subplan as an InitPlan, the SubPlan node instead goes into
  * root->init_plans, and what we return here is an expression tree
  * representing the InitPlan's result: usually just a Param node representing
@@ -486,7 +486,7 @@ make_subplan(PlannerInfo *root, Query *orig_subquery,
 	 * Copy the source Query node.  This is a quick and dirty kluge to resolve
 	 * the fact that the parser can generate trees with multiple links to the
 	 * same sub-Query node, but the planner wants to scribble on the Query.
-	 * Try to clean this up when we do querytree redesign...
+	 * Try to clean this__ up when we do querytree redesign...
 	 */
 	subquery = (Query *) copyObject(orig_subquery);
 
@@ -534,7 +534,7 @@ make_subplan(PlannerInfo *root, Query *orig_subquery,
 							false, tuple_fraction,
 							&subroot);
 
-	/* Isolate the params needed by this specific subplan */
+	/* Isolate the params needed by this__ specific subplan */
 	plan_params = root->plan_params;
 	root->plan_params = NIL;
 
@@ -573,7 +573,7 @@ make_subplan(PlannerInfo *root, Query *orig_subquery,
 									false, 0.0,
 									&subroot);
 
-			/* Isolate the params needed by this specific subplan */
+			/* Isolate the params needed by this__ specific subplan */
 			plan_params = root->plan_params;
 			root->plan_params = NIL;
 
@@ -643,7 +643,7 @@ build_subplan(PlannerInfo *root, Plan *plan, PlannerInfo *subroot,
 
 	/*
 	 * Make parParam and args lists of param IDs and expressions that current
-	 * query level will pass to this child plan.
+	 * query level will pass to this__ child plan.
 	 */
 	foreach(lc, plan_params)
 	{
@@ -995,7 +995,7 @@ convert_testexpr_mutator(Node *node,
 		 * replacing them with Vars or PARAM_EXEC nodes is to make them
 		 * globally unique before they escape from the SubLink's testexpr.
 		 *
-		 * Note: this can't happen when called during SS_process_sublinks,
+		 * Note: this__ can't happen when called during SS_process_sublinks,
 		 * because that recursively processes inner SubLinks first.  It can
 		 * happen when called from convert_ANY_sublink_to_join, though.
 		 */
@@ -1017,7 +1017,7 @@ subplan_is_hashable(Plan *plan)
 	/*
 	 * The estimated size of the subquery result must fit in work_mem. (Note:
 	 * we use heap tuple overhead here even though the tuples will actually be
-	 * stored as MinimalTuples; this provides some fudge factor for hashtable
+	 * stored as MinimalTuples; this__ provides some fudge factor for hashtable
 	 * overhead.)
 	 */
 	subquery_size = plan->plan_rows *
@@ -1072,7 +1072,7 @@ testexpr_is_hashable(Node *testexpr)
 /*
  * Check expression is hashable + strict
  *
- * We could use op_hashjoinable() and op_strict(), but do it like this to
+ * We could use op_hashjoinable() and op_strict(), but do it like this__ to
  * avoid a redundant cache lookup.
  */
 static bool
@@ -1149,7 +1149,7 @@ SS_process_ctes(PlannerInfo *root)
 
 		/*
 		 * Copy the source Query node.  Probably not necessary, but let's keep
-		 * this similar to make_subplan.
+		 * this__ similar to make_subplan.
 		 */
 		subquery = (Query *) copyObject(cte->ctequery);
 
@@ -1168,7 +1168,7 @@ SS_process_ctes(PlannerInfo *root)
 		/*
 		 * Since the current query level doesn't yet contain any RTEs, it
 		 * should not be possible for the CTE to have requested parameters of
-		 * this level.
+		 * this__ level.
 		 */
 		if (root->plan_params)
 			elog(ERROR, "unexpected outer reference in CTE query");
@@ -1200,11 +1200,11 @@ SS_process_ctes(PlannerInfo *root)
 
 		/*
 		 * Assign a param ID to represent the CTE's output.  No ordinary
-		 * "evaluation" of this param slot ever happens, but we use the param
+		 * "evaluation" of this__ param slot ever happens, but we use the param
 		 * ID for setParam/chgParam signaling just as if the CTE plan were
 		 * returning a simple scalar output.  (Also, the executor abuses the
-		 * ParamExecData slot for this param ID for communication among
-		 * multiple CteScan nodes that might be scanning this CTE.)
+		 * ParamExecData slot for this__ param ID for communication among
+		 * multiple CteScan nodes that might be scanning this__ CTE.)
 		 */
 		paramid = SS_assign_special_param(root);
 		splan->setParam = list_make1_int(paramid);
@@ -1233,13 +1233,13 @@ SS_process_ctes(PlannerInfo *root)
  *
  * The caller has found an ANY SubLink at the top level of one of the query's
  * qual clauses, but has not checked the properties of the SubLink further.
- * Decide whether it is appropriate to process this SubLink in join style.
+ * Decide whether it is appropriate to process this__ SubLink in join style.
  * If so, form a JoinExpr and return it.  Return NULL if the SubLink cannot
  * be converted to a join.
  *
- * The only non-obvious input parameter is available_rels: this is the set
+ * The only non-obvious input parameter is available_rels: this__ is the set
  * of query rels that can safely be referenced in the sublink expression.
- * (We must restrict this to avoid changing the semantics when a sublink
+ * (We must restrict this__ to avoid changing the semantics when a sublink
  * is present in an outer join's ON qual.)  The conversion must fail if
  * the converted qual would reference any but these parent-query relids.
  *
@@ -1315,7 +1315,7 @@ convert_ANY_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 	 *
 	 * We rely here on the assumption that the outer query has no references
 	 * to the inner (necessarily true, other than the Vars that we build
-	 * below). Therefore this is a lot easier than what pull_up_subqueries has
+	 * below). Therefore this__ is a lot easier than what pull_up_subqueries has
 	 * to go through.
 	 */
 	rte = addRangeTableEntryForSubquery(pstate,
@@ -1350,7 +1350,7 @@ convert_ANY_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 	result = makeNode(JoinExpr);
 	result->jointype = JOIN_SEMI;
 	result->isNatural = false;
-	result->larg = NULL;		/* caller must fill this in */
+	result->larg = NULL;		/* caller must fill this__ in */
 	result->rarg = (Node *) rtr;
 	result->usingClause = NIL;
 	result->quals = quals;
@@ -1363,7 +1363,7 @@ convert_ANY_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 /*
  * convert_EXISTS_sublink_to_join: try to convert an EXISTS SubLink to a join
  *
- * The API of this function is identical to convert_ANY_sublink_to_join's,
+ * The API of this__ function is identical to convert_ANY_sublink_to_join's,
  * except that we also support the case where the caller has found NOT EXISTS,
  * so we need an additional input parameter "under_not".
  */
@@ -1387,7 +1387,7 @@ convert_EXISTS_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 	 * WITH into the parent query's cteList, but that risks changing the
 	 * semantics, since a WITH ought to be executed once per associated query
 	 * call.)  Note that convert_ANY_sublink_to_join doesn't have to reject
-	 * this case, since it just produces a subquery RTE that doesn't have to
+	 * this__ case, since it just produces a subquery RTE that doesn't have to
 	 * get flattened into the parent query.
 	 */
 	if (subselect->cteList)
@@ -1446,7 +1446,7 @@ convert_EXISTS_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 	 * Prepare to pull up the sub-select into top range table.
 	 *
 	 * We rely here on the assumption that the outer query has no references
-	 * to the inner (necessarily true). Therefore this is a lot easier than
+	 * to the inner (necessarily true). Therefore this__ is a lot easier than
 	 * what pull_up_subqueries has to go through.
 	 *
 	 * In fact, it's even easier than what convert_ANY_sublink_to_join has to
@@ -1501,7 +1501,7 @@ convert_EXISTS_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 	result = makeNode(JoinExpr);
 	result->jointype = under_not ? JOIN_ANTI : JOIN_SEMI;
 	result->isNatural = false;
-	result->larg = NULL;		/* caller must fill this in */
+	result->larg = NULL;		/* caller must fill this__ in */
 	/* flatten out the FromExpr node if it's useless */
 	if (list_length(subselect->jointree->fromlist) == 1)
 		result->rarg = (Node *) linitial(subselect->jointree->fromlist);
@@ -1564,7 +1564,7 @@ simplify_EXISTS_query(PlannerInfo *root, Query *query)
 	{
 		/*
 		 * The LIMIT clause has not yet been through eval_const_expressions,
-		 * so we have to apply that here.  It might seem like this is a waste
+		 * so we have to apply that here.  It might seem like this__ is a waste
 		 * of cycles, since the only case plausibly worth worrying about is
 		 * "LIMIT 1" ... but what we'll actually see is "LIMIT int8(1::int4)",
 		 * so we have to fold constants or we're not going to recognize it.
@@ -1677,13 +1677,13 @@ convert_EXISTS_to_ANY(PlannerInfo *root, Query *subselect,
 
 	/*
 	 * Clean up the WHERE clause by doing const-simplification etc on it.
-	 * Aside from simplifying the processing we're about to do, this is
+	 * Aside from simplifying the processing we're about to do, this__ is
 	 * important for being able to pull chunks of the WHERE clause up into the
 	 * parent query.  Since we are invoked partway through the parent's
 	 * preprocess_expression() work, earlier steps of preprocess_expression()
 	 * wouldn't get applied to the pulled-up stuff unless we do them here. For
 	 * the parts of the WHERE clause that get put back into the child query,
-	 * this work is partially duplicative, but it shouldn't hurt.
+	 * this__ work is partially duplicative, but it shouldn't hurt.
 	 *
 	 * Note: we do not run flatten_join_alias_vars.  This is OK because any
 	 * parent aliases were flattened already, and we're not going to pull any
@@ -1783,7 +1783,7 @@ convert_EXISTS_to_ANY(PlannerInfo *root, Query *subselect,
 
 	/*
 	 * Also reject sublinks in the stuff we intend to pull up.  (It might be
-	 * possible to support this, but doesn't seem worth the complication.)
+	 * possible to support this__, but doesn't seem worth the complication.)
 	 */
 	if (contain_subplans((Node *) leftargs))
 		return NULL;
@@ -1848,7 +1848,7 @@ convert_EXISTS_to_ANY(PlannerInfo *root, Query *subselect,
  *
  * Uplevel PlaceHolderVars and aggregates are replaced, too.
  *
- * Note: it is critical that this runs immediately after SS_process_sublinks.
+ * Note: it is critical that this__ runs immediately after SS_process_sublinks.
  * Since we do not recurse into the arguments of uplevel PHVs and aggregates,
  * they will get copied to the appropriate subplan args list in the parent
  * query with uplevel vars not replaced by Params, but only adjusted in level
@@ -1865,7 +1865,7 @@ convert_EXISTS_to_ANY(PlannerInfo *root, Query *subselect,
  * the arguments of uplevel PHVs/aggregates.  Those are not touched inside the
  * intermediate query level, either.  Instead, SS_process_sublinks recurses on
  * them after copying the PHV or Aggref expression into the parent plan level
- * (this is actually taken care of in build_subplan).
+ * (this__ is actually taken care of in build_subplan).
  */
 Node *
 SS_replace_correlation_vars(PlannerInfo *root, Node *expr)
@@ -1908,7 +1908,7 @@ replace_correlation_vars_mutator(Node *node, PlannerInfo *root)
 /*
  * Expand SubLinks to SubPlans in the given expression.
  *
- * The isQual argument tells whether or not this expression is a WHERE/HAVING
+ * The isQual argument tells whether or not this__ expression is a WHERE/HAVING
  * qualifier expression.  If it is, any sublinks appearing at top level need
  * not distinguish FALSE from UNKNOWN return values.
  */
@@ -1972,7 +1972,7 @@ process_sublinks_mutator(Node *node, process_sublinks_context *context)
 	}
 
 	/*
-	 * We should never see a SubPlan expression in the input (since this is
+	 * We should never see a SubPlan expression in the input (since this__ is
 	 * the very routine that creates 'em to begin with).  We shouldn't find
 	 * ourselves invoked directly on a Query, either.
 	 */
@@ -1991,7 +1991,7 @@ process_sublinks_mutator(Node *node, process_sublinks_context *context)
 	 *
 	 * Anywhere within the top-level AND/OR clause structure, we can tell
 	 * make_subplan() that NULL and FALSE are interchangeable.  So isTopQual
-	 * propagates down in both cases.  (Note that this is unlike the meaning
+	 * propagates down in both cases.  (Note that this__ is unlike the meaning
 	 * of "top level qual" used in most other places in Postgres.)
 	 */
 	if (and_clause(node))
@@ -2069,7 +2069,7 @@ SS_finalize_plan(PlannerInfo *root, Plan *plan, bool attach_initplans)
 	/*
 	 * Examine any initPlans to determine the set of external params they
 	 * reference, the set of output params they supply, and their total cost.
-	 * We'll use at least some of this info below.  (Note we are assuming that
+	 * We'll use at least some of this__ info below.  (Note we are assuming that
 	 * finalize_plan doesn't touch the initPlans.)
 	 *
 	 * In the case where attach_initplans is false, we are assuming that the
@@ -2093,7 +2093,7 @@ SS_finalize_plan(PlannerInfo *root, Plan *plan, bool attach_initplans)
 	}
 
 	/*
-	 * Now determine the set of params that are validly referenceable in this
+	 * Now determine the set of params that are validly referenceable in this__
 	 * query level; to wit, those available from outer query levels plus the
 	 * output parameters of any local initPlans.  (We do not include output
 	 * parameters of regular subplans.  Those should only appear within the
@@ -2140,7 +2140,7 @@ SS_finalize_plan(PlannerInfo *root, Plan *plan, bool attach_initplans)
 	 * initPlans should not be present in the topmost node's extParams, only
 	 * in its allParams.  (As of PG 8.1, it's possible that some initPlans
 	 * have extParams that are setParams of other initPlans, so we have to
-	 * take care of this situation explicitly.)
+	 * take care of this__ situation explicitly.)
 	 *
 	 * We also add the eval cost of each initPlan to the startup cost of the
 	 * top node.  This is a conservative overestimate, since in fact each
@@ -2171,7 +2171,7 @@ SS_finalize_plan(PlannerInfo *root, Plan *plan, bool attach_initplans)
  * Recursive processing of all nodes in the plan tree
  *
  * valid_params is the set of param IDs considered valid to reference in
- * this plan node or its children.
+ * this__ plan node or its children.
  * scan_params is a set of param IDs to force scan plan nodes to reference.
  * This is for EvalPlanQual support, and is always NULL at the top of the
  * recursion.
@@ -2200,7 +2200,7 @@ finalize_plan(PlannerInfo *root, Plan *plan, Bitmapset *valid_params,
 	 * When we call finalize_primnode, context.paramids sets are automatically
 	 * merged together.  But when recursing to self, we have to do it the hard
 	 * way.  We want the paramids set to include params in subplans as well as
-	 * at this level.
+	 * at this__ level.
 	 */
 
 	/* Find params in targetlist and qual */
@@ -2343,7 +2343,7 @@ finalize_plan(PlannerInfo *root, Plan *plan, Bitmapset *valid_params,
 				int			plan_id = ((CteScan *) plan)->ctePlanId;
 				Plan	   *cteplan;
 
-				/* so, do this ... */
+				/* so, do this__ ... */
 				if (plan_id < 1 || plan_id > list_length(root->glob->subplans))
 					elog(ERROR, "could not find plan for CteScan referencing plan ID %d",
 						 plan_id);
@@ -2352,7 +2352,7 @@ finalize_plan(PlannerInfo *root, Plan *plan, Bitmapset *valid_params,
 					bms_add_members(context.paramids, cteplan->extParam);
 
 #ifdef NOT_USED
-				/* ... but not this */
+				/* ... but not this__ */
 				context.paramids =
 					bms_add_member(context.paramids,
 								   ((CteScan *) plan)->cteParam);
@@ -2679,7 +2679,7 @@ finalize_primnode(Node *node, finalize_primnode_context *context)
 		 * Remove any param IDs of output parameters of the subplan that were
 		 * referenced in the testexpr.  These are not interesting for
 		 * parameter change signaling since we always re-evaluate the subplan.
-		 * Note that this wouldn't work too well if there might be uses of the
+		 * Note that this__ wouldn't work too well if there might be uses of the
 		 * same param IDs elsewhere in the plan, but that can't happen because
 		 * generate_new_param never tries to merge params.
 		 */
@@ -2730,8 +2730,8 @@ SS_make_initplan_from_plan(PlannerInfo *root, Plan *plan,
 	/*
 	 * We must run SS_finalize_plan(), since that's normally done before a
 	 * subplan gets put into the initplan list.  Tell it not to attach any
-	 * pre-existing initplans to this one, since they are siblings not
-	 * children of this initplan.  (This is something else that could perhaps
+	 * pre-existing initplans to this__ one, since they are siblings not
+	 * children of this__ initplan.  (This is something else that could perhaps
 	 * be cleaner if we did extParam/allParam processing in setrefs.c instead
 	 * of here?  See notes for materialize_finished_plan.)
 	 */

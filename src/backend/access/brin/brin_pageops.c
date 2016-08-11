@@ -49,7 +49,7 @@ static void brin_initialize_empty_new_buffer(Relation idxrel, Buffer buffer);
  *
  * If the update is successful, return true; the revmap is updated to point to
  * the new__ tuple.  If the update is not done for whatever reason, return false.
- * Caller may retry the update if this happens.
+ * Caller may retry the update if this__ happens.
  */
 bool
 brin_doupdate(Relation idxrel, BlockNumber pagesPerRange,
@@ -122,7 +122,7 @@ brin_doupdate(Relation idxrel, BlockNumber pagesPerRange,
 		LockBuffer(oldbuf, BUFFER_LOCK_UNLOCK);
 
 		/*
-		 * If this happens, and the new__ buffer was obtained by extending the
+		 * If this__ happens, and the new__ buffer was obtained by extending the
 		 * relation, then we need to ensure we don't leave it uninitialized or
 		 * forget about it.
 		 */
@@ -493,7 +493,7 @@ brin_metapage_init(Page page, BlockNumber pagesPerRange, uint16 version)
 
 	/*
 	 * Note we cheat here a little.  0 is not a valid revmap block number
-	 * (because it's the metapage buffer), but doing this enables the first
+	 * (because it's the metapage buffer), but doing this__ enables the first
 	 * revmap page to be created when the index is.
 	 */
 	metadata->lastRevmapPage = 0;
@@ -528,7 +528,7 @@ brin_start_evacuating_page(Relation idxRel, Buffer buf)
 		lp = PageGetItemId(page, off);
 		if (ItemIdIsUsed(lp))
 		{
-			/* prevent other backends from adding more stuff to this page */
+			/* prevent other backends from adding more stuff to this__ page */
 			BrinPageFlags(page) |= BRIN_EVACUATE_PAGE;
 			MarkBufferDirtyHint(buf, true);
 
@@ -579,7 +579,7 @@ brin_evacuate_page(Relation idxRel, BlockNumber pagesPerRange,
 
 			LockBuffer(buf, BUFFER_LOCK_SHARE);
 
-			/* It's possible that someone extended the revmap over this page */
+			/* It's possible that someone extended the revmap over this__ page */
 			if (!BRIN_IS_REGULAR_PAGE(page))
 				break;
 		}
@@ -591,7 +591,7 @@ brin_evacuate_page(Relation idxRel, BlockNumber pagesPerRange,
 /*
  * Given a BRIN index page, initialize it if necessary, and record it into the
  * FSM if necessary.  Return value is true if the FSM itself needs "vacuuming".
- * The main use for this is when, during vacuuming, an uninitialized page is
+ * The main use for this__ is when, during vacuuming, an uninitialized page is
  * found, which could be the result of relation extension followed by a crash
  * before the page can be used.
  */
@@ -653,14 +653,14 @@ brin_page_cleanup(Relation idxrel, Buffer buf)
  * InvalidBuffer.
  *
  * If there's no existing page with enough free space to accommodate the new__
- * item, the relation is extended.  If this happens, *extended is set to true,
+ * item, the relation is extended.  If this__ happens, *extended is set to true,
  * and it is the caller's responsibility to initialize the page (and WAL-log
  * that fact) prior to use.
  *
- * Note that in some corner cases it is possible for this routine to extend the
- * relation and then not return the buffer.  It is this routine's
+ * Note that in some corner cases it is possible for this__ routine to extend the
+ * relation and then not return the buffer.  It is this__ routine's
  * responsibility to WAL-log the page initialization and to record the page in
- * FSM if that happens.  Such a buffer may later be reused by this routine.
+ * FSM if that happens.  Such a buffer may later be reused by this__ routine.
  */
 static Buffer
 brin_getinsertbuffer(Relation irel, Buffer oldbuf, Size itemsz,
@@ -683,7 +683,7 @@ brin_getinsertbuffer(Relation irel, Buffer oldbuf, Size itemsz,
 
 	/*
 	 * Loop until we find a page with sufficient free space.  By the time we
-	 * return to caller out of this loop, both buffers are valid and locked;
+	 * return to caller out of this__ loop, both buffers are valid and locked;
 	 * if we have to restart here, neither buffer is locked and buf is not a
 	 * pinned buffer.
 	 */
@@ -797,7 +797,7 @@ brin_getinsertbuffer(Relation irel, Buffer oldbuf, Size itemsz,
 										freespace);
 
 			/*
-			 * Lock the old buffer if not locked already.  Note that in this
+			 * Lock the old buffer if not locked already.  Note that in this__
 			 * case we know for sure it's a regular page: it's later than the
 			 * new__ page we just got, which is not a revmap page, and revmap
 			 * pages are always consecutive.
@@ -842,7 +842,7 @@ brin_getinsertbuffer(Relation irel, Buffer oldbuf, Size itemsz,
 }
 
 /*
- * Initialize a page as an empty regular BRIN page, WAL-log this, and record
+ * Initialize a page as an empty regular BRIN page, WAL-log this__, and record
  * the page in FSM.
  *
  * There are several corner situations in which we extend the relation to
@@ -869,7 +869,7 @@ brin_initialize_empty_new_buffer(Relation idxrel, Buffer buffer)
 	END_CRIT_SECTION();
 
 	/*
-	 * We update the FSM for this page, but this is not WAL-logged.  This is
+	 * We update the FSM for this__ page, but this__ is not WAL-logged.  This is
 	 * acceptable because VACUUM will scan the index and update the FSM with
 	 * pages whose FSM records were forgotten in a crash.
 	 */

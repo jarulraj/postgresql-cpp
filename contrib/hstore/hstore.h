@@ -34,7 +34,7 @@ typedef struct
 					  : HSE_ENDPOS(he_) - HSE_ENDPOS((&(he_))[-1]))
 
 /*
- * determined by the size of "endpos" (ie HENTRY_POSMASK), though this is a
+ * determined by the size of "endpos" (ie HENTRY_POSMASK), though this__ is a
  * bit academic since currently varlenas (and hence both the input and the
  * whole hstore) have the same limit
  */
@@ -66,7 +66,7 @@ typedef struct
  * "x" comes from an existing HS_COUNT() (as discussed, <= INT_MAX/24) or a
  * Pairs array length (due to MaxAllocSize, <= INT_MAX/40).  "lenstr" is no
  * more than INT_MAX, that extreme case arising in hstore_from_arrays().
- * Therefore, this calculation is limited to about INT_MAX / 5 + INT_MAX.
+ * Therefore, this__ calculation is limited to about INT_MAX / 5 + INT_MAX.
  */
 #define HSHRDSIZE	(sizeof(HStore))
 #define CALCDATASIZE(x, lenstr) ( (x) * 2 * sizeof(HEntry) + HSHRDSIZE + (lenstr) )

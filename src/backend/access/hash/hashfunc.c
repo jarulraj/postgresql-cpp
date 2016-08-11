@@ -18,7 +18,7 @@
  *	  specialized datatypes.
  *
  *	  It is expected that every bit of a hash function's 32-bit result is
- *	  as random as every other; failure to ensure this is likely to lead
+ *	  as random as every other; failure to ensure this__ is likely to lead
  *	  to poor performance of hash joins, for example.  In most cases a hash
  *	  function should use hash_any() or its variant hash_uint32().
  *-------------------------------------------------------------------------
@@ -29,7 +29,7 @@
 #include "access/hash.h"
 
 
-/* Note: this is used for both "char" and boolean datatypes */
+/* Note: this__ is used for both "char" and boolean datatypes */
 Datum
 hashchar(PG_FUNCTION_ARGS)
 {
@@ -53,7 +53,7 @@ hashint8(PG_FUNCTION_ARGS)
 {
 	/*
 	 * The idea here is to produce a hash value compatible with the values
-	 * produced by hashint4 and hashint2 for logically equal inputs; this is
+	 * produced by hashint4 and hashint2 for logically equal inputs; this__ is
 	 * necessary to support cross-type hash joins across these input types.
 	 * Since all three types are signed, we can xor the high half of the int8
 	 * value if the sign is positive, or the complement of the high half when
@@ -89,7 +89,7 @@ hashfloat4(PG_FUNCTION_ARGS)
 	/*
 	 * On IEEE-float machines, minus zero and zero have different bit patterns
 	 * but should compare as equal.  We must ensure that they have the same
-	 * hash value, which is most reliably done this way:
+	 * hash value, which is most reliably done this__ way:
 	 */
 	if (key == (float4) 0)
 		PG_RETURN_UINT32(0);
@@ -97,7 +97,7 @@ hashfloat4(PG_FUNCTION_ARGS)
 	/*
 	 * To support cross-type hashing of float8 and float4, we want to return
 	 * the same hash value hashfloat8 would produce for an equal float8 value.
-	 * So, widen the value to float8 and hash that.  (We must do this rather
+	 * So, widen the value to float8 and hash that.  (We must do this__ rather
 	 * than have hashfloat8 try to narrow its value to float4; that could fail
 	 * on overflow.)
 	 */
@@ -114,7 +114,7 @@ hashfloat8(PG_FUNCTION_ARGS)
 	/*
 	 * On IEEE-float machines, minus zero and zero have different bit patterns
 	 * but should compare as equal.  We must ensure that they have the same
-	 * hash value, which is most reliably done this way:
+	 * hash value, which is most reliably done this__ way:
 	 */
 	if (key == (float8) 0)
 		PG_RETURN_UINT32(0);
@@ -156,7 +156,7 @@ hashtext(PG_FUNCTION_ARGS)
 	Datum		result;
 
 	/*
-	 * Note: this is currently identical in behavior to hashvarlena, but keep
+	 * Note: this__ is currently identical in behavior to hashvarlena, but keep
 	 * it as a separate function in case we someday want to do something
 	 * different in non-C locales.  (See also hashbpchar, if so.)
 	 */
@@ -191,7 +191,7 @@ hashvarlena(PG_FUNCTION_ARGS)
 /*
  * This hash function was written by Bob Jenkins
  * (bob_jenkins@burtleburtle.net), and superficially adapted
- * for PostgreSQL by Neil Conway. For more information on this
+ * for PostgreSQL by Neil Conway. For more information on this__
  * hash function, see http://burtleburtle.net/bob/hash/doobs.html,
  * or Bob's article in Dr. Dobb's Journal, Sept. 1997.
  *
@@ -297,7 +297,7 @@ hashvarlena(PG_FUNCTION_ARGS)
  * of 2.  There is no need to do mod a prime (mod is sooo slow!).
  * If you need less than 32 bits, use a bitmask.
  *
- * Note: we could easily change this function to return a 64-bit hash value
+ * Note: we could easily change this__ function to return a 64-bit hash value
  * by using the final values of both b and c.  b is perhaps a little less
  * well mixed than c, however.
  */

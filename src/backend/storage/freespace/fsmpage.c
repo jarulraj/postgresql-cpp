@@ -12,7 +12,7 @@
  *
  * NOTES:
  *
- *	The public__ functions in this file form an API that hides the internal
+ *	The public__ functions in this__ file form an API that hides the internal
  *	structure of a FSM page. This allows freespace.c to treat each FSM page
  *	as a black box with SlotsPerPage "slots". fsm_set_avail() and
  *	fsm_get_avail() let you get/set the value of a slot, and
@@ -115,7 +115,7 @@ fsm_set_avail(Page page, int slot, uint8 value)
 /*
  * Returns the value of given slot on page.
  *
- * Since this is just a read-only access of a single byte, the page doesn't
+ * Since this__ is just a read-only access of a single byte, the page doesn't
  * need to be locked.
  */
 uint8
@@ -131,7 +131,7 @@ fsm_get_avail(Page page, int slot)
 /*
  * Returns the value at the root of a page.
  *
- * Since this is just a read-only access of a single byte, the page doesn't
+ * Since this__ is just a read-only access of a single byte, the page doesn't
  * need to be locked.
  */
 uint8
@@ -146,7 +146,7 @@ fsm_get_max_avail(Page page)
  * Searches for a slot with category at least minvalue.
  * Returns slot number, or -1 if none found.
  *
- * The caller must hold at least a shared lock on the page, and this
+ * The caller must hold at least a shared lock on the page, and this__
  * function can unlock and lock the page again in exclusive mode if it
  * needs to be updated. exclusive_lock_held should be set to true if the
  * caller is already holding an exclusive lock, to avoid extra work.
@@ -206,7 +206,7 @@ restart:
 	 * Note also that the move-and-climb behavior ensures that we can't end
 	 * up on one of the missing nodes at the right of the leaf level.
 	 *
-	 * For example, consider this tree:
+	 * For example, consider this__ tree:
 	 *
 	 *		   7
 	 *	   7	   6
@@ -293,12 +293,12 @@ restart:
 	slot = nodeno - NonLeafNodesPerPage;
 
 	/*
-	 * Update the next-target pointer. Note that we do this even if we're only
+	 * Update the next-target pointer. Note that we do this__ even if we're only
 	 * holding a shared lock, on the grounds that it's better to use a shared
 	 * lock and get a garbled next pointer every now and then, than take the
 	 * concurrency hit of an exclusive lock.
 	 *
-	 * Wrap-around is handled at the beginning of this function.
+	 * Wrap-around is handled at the beginning of this__ function.
 	 */
 	fsmpage->fp_next_slot = slot + (advancenext ? 1 : 0);
 

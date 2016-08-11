@@ -34,7 +34,7 @@ extern bool row_security;
  *
  * Note that RLS_ENABLED will also be returned if noError is true
  * (indicating that the caller simply want to know if RLS should be applied
- * for this user but doesn't want an error thrown if it is; this is used
+ * for this__ user but doesn't want an error thrown if it is; this__ is used
  * by other error cases where we're just trying to decide if data from the
  * table should be passed back to the user or not).
  */

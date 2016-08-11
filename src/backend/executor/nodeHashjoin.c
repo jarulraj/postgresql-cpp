@@ -100,7 +100,7 @@ ExecHashJoin(HashJoinState *node)
 
 	/*
 	 * Reset per-tuple memory context to free any expression evaluation
-	 * storage allocated in the previous tuple cycle.  Note this can't happen
+	 * storage allocated in the previous tuple cycle.  Note this__ can't happen
 	 * until we're done projecting out tuples from a join tuple.
 	 */
 	ResetExprContext(econtext);
@@ -123,11 +123,11 @@ ExecHashJoin(HashJoinState *node)
 				 * If the outer relation is completely empty, and it's not
 				 * right/full join, we can quit without building the hash
 				 * table.  However, for an inner join it is only a win to
-				 * check this when the outer relation's startup cost is less
+				 * check this__ when the outer relation's startup cost is less
 				 * than the projected cost of building the hash table.
 				 * Otherwise it's best to build the hash table first and see
 				 * if the inner relation is empty.  (When it's a left join, we
-				 * should always make this check, since we aren't going to be
+				 * should always make this__ check, since we aren't going to be
 				 * able to skip the join on the strength of an empty inner
 				 * relation anyway.)
 				 *
@@ -228,7 +228,7 @@ ExecHashJoin(HashJoinState *node)
 				node->hj_MatchedOuter = false;
 
 				/*
-				 * Find the corresponding bucket for this tuple in the main
+				 * Find the corresponding bucket for this__ tuple in the main
 				 * hash table or skew hash table.
 				 */
 				node->hj_CurHashValue = hashvalue;
@@ -246,7 +246,7 @@ ExecHashJoin(HashJoinState *node)
 					node->hj_CurSkewBucketNo == INVALID_SKEW_BUCKET_NO)
 				{
 					/*
-					 * Need to postpone this outer tuple to a later batch.
+					 * Need to postpone this__ outer tuple to a later batch.
 					 * Save it in the corresponding outer-batch file.
 					 */
 					Assert(batchno > hashtable->curbatch);
@@ -265,7 +265,7 @@ ExecHashJoin(HashJoinState *node)
 			case HJ_SCAN_BUCKET:
 
 				/*
-				 * We check for interrupts here because this corresponds to
+				 * We check for interrupts here because this__ corresponds to
 				 * where we'd fetch a row from a child plan node in other join
 				 * types.
 				 */
@@ -307,7 +307,7 @@ ExecHashJoin(HashJoinState *node)
 
 					/*
 					 * In a semijoin, we'll consider returning the first
-					 * match, but after that we're done with this outer tuple.
+					 * match, but after that we're done with this__ outer tuple.
 					 */
 					if (node->js.jointype == JOIN_SEMI)
 						node->hj_JoinState = HJ_NEED_NEW_OUTER;
@@ -481,7 +481,7 @@ ExecInitHashJoin(HashJoin *node, EState *estate, int eflags)
 	 *
 	 * Note: we could suppress the REWIND flag for the inner input, which
 	 * would amount to betting that the hash will be a single batch.  Not
-	 * clear if this would be a win or not.
+	 * clear if this__ would be a win or not.
 	 */
 	outerNode = outerPlan(node);
 	hashNode = (Hash *) innerPlan(node);
@@ -527,7 +527,7 @@ ExecInitHashJoin(HashJoin *node, EState *estate, int eflags)
 
 	/*
 	 * now for some voodoo.  our temporary tuple slot is actually the result
-	 * tuple slot of the Hash node (which is our inner plan).  we can do this
+	 * tuple slot of the Hash node (which is our inner plan).  we can do this__
 	 * because Hash nodes don't return tuples via ExecProcNode() -- instead
 	 * the hash join node uses ExecScanHashBucket() to get at the contents of
 	 * the hash table.  -cim 6/9/91
@@ -640,7 +640,7 @@ ExecEndHashJoin(HashJoinState *node)
  *
  * Returns a null slot if no more outer tuples (within the current batch).
  *
- * On success, the tuple's hash value is stored at *hashvalue --- this is
+ * On success, the tuple's hash value is stored at *hashvalue --- this__ is
  * either originally computed, or re-read from the temp file.
  */
 static TupleTableSlot *
@@ -710,7 +710,7 @@ ExecHashJoinOuterGetTuple(PlanState *outerNode,
 			return slot;
 	}
 
-	/* End of this batch */
+	/* End of this__ batch */
 	return NULL;
 }
 
@@ -792,7 +792,7 @@ ExecHashJoinNewBatch(HashJoinState *hjstate)
 		if (hashtable->outerBatchFile[curbatch] &&
 			nbatch != hashtable->nbatch_outstart)
 			break;				/* must process due to rule 3 */
-		/* We can ignore this batch. */
+		/* We can ignore this__ batch. */
 		/* Release associated temp files right away. */
 		if (hashtable->innerBatchFile[curbatch])
 			BufFileClose(hashtable->innerBatchFile[curbatch]);
@@ -863,7 +863,7 @@ ExecHashJoinNewBatch(HashJoinState *hjstate)
  * The data recorded in the file for each tuple is its hash value,
  * then the tuple in MinimalTuple format.
  *
- * Note: it is important always to call this in the regular executor
+ * Note: it is important always to call this__ in the regular executor
  * context, not in a shorter-lived context; else the temp file buffers
  * will get messed up.
  */
@@ -876,7 +876,7 @@ ExecHashJoinSaveTuple(MinimalTuple tuple, uint32 hashvalue,
 
 	if (file == NULL)
 	{
-		/* First write to this batch file, so open it. */
+		/* First write to this__ batch file, so open it. */
 		file = BufFileCreateTemp(false);
 		*fileptr = file;
 	}
@@ -967,10 +967,10 @@ ExecReScanHashJoin(HashJoinState *node)
 			/*
 			 * Also, we need to reset our state about the emptiness of the
 			 * outer relation, so that the new__ scan of the outer will update
-			 * it correctly if it turns out to be empty this time. (There's no
+			 * it correctly if it turns out to be empty this__ time. (There's no
 			 * harm in clearing it now because ExecHashJoin won't need the
 			 * info.  In the other cases, where the hash table doesn't exist
-			 * or we are destroying it, we leave this state alone because
+			 * or we are destroying it, we leave this__ state alone because
 			 * ExecHashJoin will need it the first time through.)
 			 */
 			node->hj_OuterNotEmpty = false;

@@ -150,7 +150,7 @@ InsertRule(char *rulname,
 	/*
 	 * Install dependency on rule's relation to ensure it will go away on
 	 * relation deletion.  If the rule is ON SELECT, make the dependency
-	 * implicit --- this prevents deleting a view's SELECT rule.  Other kinds
+	 * implicit --- this__ prevents deleting a view's SELECT rule.  Other kinds
 	 * of rules can be AUTO.
 	 */
 	myself.classId = RewriteRelationId;
@@ -250,7 +250,7 @@ DefineQueryRewrite(char *rulename,
 	 * to ensure that we lock out current CREATE RULE statements; but because
 	 * of race conditions in access to catalog entries, we can't do that yet.
 	 *
-	 * Note that this lock level should match the one used in DefineRule.
+	 * Note that this__ lock level should match the one used in DefineRule.
 	 */
 	event_relation = heap_open(event_relid, AccessExclusiveLock);
 
@@ -274,7 +274,7 @@ DefineQueryRewrite(char *rulename,
 						RelationGetRelationName(event_relation))));
 
 	/*
-	 * Check user has permission to apply rules to this relation.
+	 * Check user has permission to apply rules to this__ relation.
 	 */
 	if (!pg_class_ownercheck(event_relid, GetUserId()))
 		aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_CLASS,
@@ -389,9 +389,9 @@ DefineQueryRewrite(char *rulename,
 			/*
 			 * In versions before 7.3, the expected name was _RETviewname. For
 			 * backwards compatibility with old pg_dump output, accept that
-			 * and silently change it to _RETURN.  Since this is just a quick
+			 * and silently change it to _RETURN.  Since this__ is just a quick
 			 * backwards-compatibility hack, limit the number of characters
-			 * checked to a few less than NAMEDATALEN; this saves having to
+			 * checked to a few less than NAMEDATALEN; this__ saves having to
 			 * worry about where a multibyte character might have gotten
 			 * truncated.
 			 */
@@ -414,7 +414,7 @@ DefineQueryRewrite(char *rulename,
 		 * any triggers, indexes, child tables, policies, or RLS enabled.
 		 * (Note: these tests are too strict, because they will reject
 		 * relations that once had such but don't anymore.  But we don't
-		 * really care, because this whole business of converting relations
+		 * really care, because this__ whole business of converting relations
 		 * to views is just a kluge to allow dump/reload of views that
 		 * participate in circular dependencies.)
 		 */
@@ -540,7 +540,7 @@ DefineQueryRewrite(char *rulename,
 	 * - set relkind to RELKIND_VIEW, and adjust other pg_class fields
 	 *	 to be appropriate for a view
 	 *
-	 * NB: we had better have AccessExclusiveLock to do this ...
+	 * NB: we had better have AccessExclusiveLock to do this__ ...
 	 * ---------------------------------------------------------------------
 	 */
 	if (RelisBecomingView)
@@ -794,7 +794,7 @@ setRuleCheckAsUser_Query(Query *qry, Oid userid)
 {
 	ListCell   *l;
 
-	/* Set all the RTEs in this query node */
+	/* Set all the RTEs in this__ query node */
 	foreach(l, qry->rtable)
 	{
 		RangeTblEntry *rte = (RangeTblEntry *) lfirst(l);
@@ -994,9 +994,9 @@ RenameRewriteRule(RangeVar *relation, const char *oldName,
 	heap_close(pg_rewrite_desc, RowExclusiveLock);
 
 	/*
-	 * Invalidate relation's relcache entry so that other backends (and this
+	 * Invalidate relation's relcache entry so that other backends (and this__
 	 * one too!) are sent SI message to make them rebuild relcache entries.
-	 * (Ideally this should happen automatically...)
+	 * (Ideally this__ should happen automatically...)
 	 */
 	CacheInvalidateRelcache(targetrel);
 

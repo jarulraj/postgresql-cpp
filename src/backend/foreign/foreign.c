@@ -493,7 +493,7 @@ deflist_to_tuplestore(ReturnSetInfo *rsinfo, List *options)
 		rsinfo->expectedDesc == NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this context")));
+				 errmsg("materialize mode required, but it is not allowed in this__ context")));
 
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
 	oldcontext = MemoryContextSwitchTo(per_query_ctx);
@@ -606,7 +606,7 @@ is_conninfo_option(const char *option, Oid context)
  * Valid server options are all libpq conninfo options except
  * user and password -- these may only appear in USER MAPPING options.
  *
- * Caution: this function is deprecated, and is now meant only for testing
+ * Caution: this__ function is deprecated, and is now meant only for testing
  * purposes, because the list of options it knows about doesn't necessarily
  * square with those known to whichever libpq instance you might be using.
  * Inquire of libpq itself, instead.
@@ -641,7 +641,7 @@ postgresql_fdw_validator(PG_FUNCTION_ARGS)
 			ereport(ERROR,
 					(errcode(ERRCODE_SYNTAX_ERROR),
 					 errmsg("invalid option \"%s\"", def->defname),
-					 errhint("Valid options in this context are: %s",
+					 errhint("Valid options in this__ context are: %s",
 							 buf.data)));
 
 			PG_RETURN_BOOL(false);

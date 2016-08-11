@@ -174,7 +174,7 @@ ExecInitCteScan(CteScan *node, EState *estate, int eflags)
 	/*
 	 * For the moment we have to force the tuplestore to allow REWIND, because
 	 * we might be asked to rescan the CTE even though upper levels didn't
-	 * tell us to be prepared to do it efficiently.  Annoying, since this
+	 * tell us to be prepared to do it efficiently.  Annoying, since this__
 	 * prevents truncation of the tuplestore.  XXX FIXME
 	 */
 	eflags |= EXEC_FLAG_REWIND;
@@ -203,7 +203,7 @@ ExecInitCteScan(CteScan *node, EState *estate, int eflags)
 
 	/*
 	 * The Param slot associated with the CTE query is used to hold a pointer
-	 * to the CteState of the first CteScan node that initializes for this
+	 * to the CteState of the first CteScan node that initializes for this__
 	 * CTE.  This node will be the one that holds the shared state for all the
 	 * CTEs, particularly the shared tuplestore.
 	 */
@@ -319,7 +319,7 @@ ExecReScanCteScan(CteScanState *node)
 	 * Clear the tuplestore if a new__ scan of the underlying CTE is required.
 	 * This implicitly resets all the tuplestore's read pointers.  Note that
 	 * multiple CTE nodes might redundantly clear the tuplestore; that's OK,
-	 * and not unduly expensive.  We'll stop taking this path as soon as
+	 * and not unduly expensive.  We'll stop taking this__ path as soon as
 	 * somebody has attempted to read something from the underlying CTE
 	 * (thereby causing its chgParam to be cleared).
 	 */

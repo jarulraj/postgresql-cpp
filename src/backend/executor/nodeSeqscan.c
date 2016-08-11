@@ -74,9 +74,9 @@ SeqNext(SeqScanState *node)
 	if (tuple)
 		ExecStoreTuple(tuple,	/* tuple to store */
 					   slot,	/* slot to store in */
-					   scandesc->rs_cbuf,		/* buffer associated with this
+					   scandesc->rs_cbuf,		/* buffer associated with this__
 												 * tuple */
-					   false);	/* don't pfree this pointer */
+					   false);	/* don't pfree this__ pointer */
 	else
 		ExecClearTuple(slot);
 
@@ -91,7 +91,7 @@ SeqRecheck(SeqScanState *node, TupleTableSlot *slot)
 {
 	/*
 	 * Note that unlike IndexScan, SeqScan never use keys in heap_beginscan
-	 * (and this is very bad) - so, here we do not check are keys ok or not.
+	 * (and this__ is very bad) - so, here we do not check are keys ok or not.
 	 */
 	return true;
 }

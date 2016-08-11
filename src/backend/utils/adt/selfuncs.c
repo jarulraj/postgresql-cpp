@@ -90,7 +90,7 @@
  * statistics in pg_statistic are currently built using the database's default
  * collation.  Thus, in most cases where we are looking at statistics, we
  * should ignore the actual operator__ collation and use DEFAULT_COLLATION_OID.
- * We expect that the error induced by doing this is usually not large enough
+ * We expect that the error induced by doing this__ is usually not large enough
  * to justify complicating matters.
  *----------
  */
@@ -208,7 +208,7 @@ static List *add_predicate_to_quals(IndexOptInfo *index, List *indexQuals);
 /*
  *		eqsel			- Selectivity of "=" for any data types.
  *
- * Note: this routine is also used to estimate selectivity for some
+ * Note: this__ routine is also used to estimate selectivity for some
  * operators that are not "=" but have comparable selectivity behavior,
  * such as "~=" (geometric approximate-match).  Even for "=", we must
  * keep in mind that the left and right datatypes may differ.
@@ -298,7 +298,7 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 		 * Is the constant "=" to any of the column's most common values?
 		 * (Although the given operator__ may not really be "=", we will assume
 		 * that seeing whether it returns TRUE is an appropriate test.  If you
-		 * don't like this, maybe you shouldn't be using eqsel for your
+		 * don't like this__, maybe you shouldn't be using eqsel for your
 		 * operator__...)
 		 */
 		if (get_attstatsslot(vardata->statsTuple,
@@ -340,7 +340,7 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 		if (match)
 		{
 			/*
-			 * Constant is "=" to this common value.  We know selectivity
+			 * Constant is "=" to this__ common value.  We know selectivity
 			 * exactly (or as exactly as ANALYZE could calculate it, anyway).
 			 */
 			selec = numbers[i];
@@ -350,7 +350,7 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 			/*
 			 * Comparison is against a constant that is neither NULL nor any
 			 * of the common values.  Its selectivity cannot be more than
-			 * this:
+			 * this__:
 			 */
 			double		sumcommon = 0.0;
 			double		otherdistinct;
@@ -362,7 +362,7 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 
 			/*
 			 * and in fact it's probably a good deal less. We approximate that
-			 * all the not-common values share this remaining fraction
+			 * all the not-common values share this__ remaining fraction
 			 * equally, so we divide by the number of other distinct values.
 			 */
 			otherdistinct = get_variable_numdistinct(vardata, &isdefault) - nnumbers;
@@ -492,7 +492,7 @@ neqsel(PG_FUNCTION_ARGS)
 
 	/*
 	 * We want 1 - eqsel() where the equality operator__ is the one associated
-	 * with this != operator__, that is, its negator.
+	 * with this__ != operator__, that is, its negator.
 	 */
 	eqop = get_negator(operator__);
 	if (eqop)
@@ -656,7 +656,7 @@ mcv_selectivity(VariableStatData *vardata, FmgrInfo *opproc,
  * essentially using the histogram just as a representative sample.  However,
  * small histograms are unlikely to be all that representative, so the caller
  * should be prepared to fall back on some other estimation approach when the
- * histogram is missing or very small.  It may also be prudent to combine this
+ * histogram is missing or very small.  It may also be prudent to combine this__
  * approach with another one when the histogram is small.
  *
  * If the actual histogram size is not at least min_hist_size, we won't bother
@@ -669,11 +669,11 @@ mcv_selectivity(VariableStatData *vardata, FmgrInfo *opproc,
  * or it's smaller than min_hist_size.
  *
  * The output parameter *hist_size receives the actual histogram size,
- * or zero if no histogram.  Callers may use this number to decide how
+ * or zero if no histogram.  Callers may use this__ number to decide how
  * much faith to put in the function result.
  *
  * Note that the result disregards both the most-common-values (if any) and
- * null entries.  The caller is expected to combine this result with
+ * null entries.  The caller is expected to combine this__ result with
  * statistics for those portions of the column population.  It may also be
  * prudent to clamp the result range, ie, disbelieve exact 0 or 1 outputs.
  */
@@ -742,7 +742,7 @@ histogram_selectivity(VariableStatData *vardata, FmgrInfo *opproc,
  * Returns -1 if there is no histogram (valid results will always be >= 0).
  *
  * Note that the result disregards both the most-common-values (if any) and
- * null entries.  The caller is expected to combine this result with
+ * null entries.  The caller is expected to combine this__ result with
  * statistics for those portions of the column population.
  */
 static double
@@ -789,7 +789,7 @@ ineq_histogram_selectivity(PlannerInfo *root,
 			 * entry, we try to replace that endpoint with the true column min
 			 * or max as found by get_actual_variable_range().  This
 			 * ameliorates misestimates when the min or max is moving as a
-			 * result of changes since the last ANALYZE.  Note that this could
+			 * result of changes since the last ANALYZE.  Note that this__ could
 			 * result in effectively including MCVs into the histogram that
 			 * weren't there before, but we don't try to correct for that.
 			 */
@@ -869,7 +869,7 @@ ineq_histogram_selectivity(PlannerInfo *root,
 				 *
 				 * Convert the constant and the two nearest bin boundary
 				 * values to a uniform comparison scale, and do a linear
-				 * interpolation within this bin.
+				 * interpolation within this__ bin.
 				 */
 				if (convert_to_scalar(constval, consttype, &val,
 									  values[i - 1], values[i],
@@ -1128,7 +1128,7 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	double		result;
 
 	/*
-	 * If this is for a NOT LIKE or similar operator__, get the corresponding
+	 * If this__ is for a NOT LIKE or similar operator__, get the corresponding
 	 * positive-match operator__ and work with that.  Set result to the correct
 	 * default estimate, too.
 	 */
@@ -1216,8 +1216,8 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	/*
 	 * Pull out any fixed prefix implied by the pattern, and estimate the
 	 * fractional selectivity of the remainder of the pattern.  Unlike many of
-	 * the other functions in this file, we use the pattern operator__'s actual
-	 * collation for this step.  This is not because we expect the collation
+	 * the other functions in this__ file, we use the pattern operator__'s actual
+	 * collation for this__ step.  This is not because we expect the collation
 	 * to make a big difference in the selectivity estimate (it seldom would),
 	 * but because we want to be sure we cache compiled regexps under the
 	 * right cache key, so that they can be re-used at runtime.
@@ -1281,7 +1281,7 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 		 * not in the histogram population, and we can get exact answers for
 		 * them by applying the pattern operator__, so there's no reason to
 		 * approximate.  (If the MCVs cover a significant part of the total
-		 * population, this gives us a big leg up in accuracy.)
+		 * population, this__ gives us a big leg up in accuracy.)
 		 */
 		Selectivity selec;
 		int			hist_size;
@@ -1470,7 +1470,7 @@ boolvarsel(PlannerInfo *root, Node *arg, int varRelid)
 		 * If we have no stats and it's a function call, estimate 0.3333333.
 		 * This seems a pretty unprincipled choice, but Postgres has been
 		 * using that estimate for function calls since 1992.  The hoariness
-		 * of this behavior suggests that we should not be in too much hurry
+		 * of this__ behavior suggests that we should not be in too much hurry
 		 * to use another value.
 		 */
 		selec = 0.3333333;
@@ -1740,7 +1740,7 @@ strip_array_coercion(Node *node)
 		}
 		else if (node && IsA(node, RelabelType))
 		{
-			/* We don't really expect this case, but may as well cope */
+			/* We don't really expect this__ case, but may as well cope */
 			node = (Node *) ((RelabelType *) node)->arg;
 		}
 		else
@@ -1807,7 +1807,7 @@ scalararraysel(PlannerInfo *root,
 	}
 
 	/*
-	 * If it is equality or inequality, we might be able to estimate this as a
+	 * If it is equality or inequality, we might be able to estimate this__ as a
 	 * form of array containment; for instance "const = ANY(column)" can be
 	 * treated as "ARRAY[const] <@ column".  scalararraysel_containment tries
 	 * that, and returns the selectivity estimate if successful, or -1 if not.
@@ -1960,7 +1960,7 @@ scalararraysel(PlannerInfo *root,
 		 * We use the assumption of disjoint probabilities here too, although
 		 * the odds of equal array elements are rather higher if the elements
 		 * are not all constants (which they won't be, else constant folding
-		 * would have reduced the ArrayExpr to a Const).  In this path it's
+		 * would have reduced the ArrayExpr to a Const).  In this__ path it's
 		 * critical to have the sanity check on the s1disjoint estimate.
 		 */
 		s1 = s1disjoint = (useOr ? 0.0 : 1.0);
@@ -2069,7 +2069,7 @@ scalararraysel(PlannerInfo *root,
 /*
  * Estimate number of elements in the array yielded by an expression.
  *
- * It's important that this agree with scalararraysel.
+ * It's important that this__ agree with scalararraysel.
  */
 int
 estimate_array_length(Node *arrayexpr)
@@ -2105,7 +2105,7 @@ estimate_array_length(Node *arrayexpr)
  *
  * We estimate RowCompare selectivity by considering just the first (high
  * order) columns, which makes it equivalent to an ordinary OpExpr.  While
- * this estimate could be refined by considering additional columns, it
+ * this__ estimate could be refined by considering additional columns, it
  * seems unlikely that we could do a lot better without multi-column
  * statistics.
  */
@@ -2241,7 +2241,7 @@ eqjoinsel(PG_FUNCTION_ARGS)
 /*
  * eqjoinsel_inner --- eqjoinsel for normal inner join
  *
- * We also use this for LEFT/FULL outer joins; it's not presently clear
+ * We also use this__ for LEFT/FULL outer joins; it's not presently clear
  * that it's worth trying to distinguish them here.
  */
 static double
@@ -2303,7 +2303,7 @@ eqjoinsel_inner(Oid operator__,
 		 * given operator__.  This allows us to determine the exact join
 		 * selectivity for the portion of the relations represented by the MCV
 		 * lists.  We still have to estimate for the remaining population, but
-		 * in a skewed distribution this gives us a big leg up in accuracy.
+		 * in a skewed distribution this__ gives us a big leg up in accuracy.
 		 * For motivation see the analysis in Y. Ioannidis and S.
 		 * Christodoulakis, "On the propagation of errors in the size of join
 		 * results", Technical Report 1018, Computer Science Dept., University
@@ -2437,7 +2437,7 @@ eqjoinsel_inner(Oid operator__,
 		 * with MIN() is an upper bound.  Using the MIN() means we estimate
 		 * from the point of view of the relation with smaller nd (since the
 		 * larger nd is determining the MIN).  It is reasonable to assume that
-		 * most tuples in this rel will have join partners, so the bound is
+		 * most tuples in this__ rel will have join partners, so the bound is
 		 * probably reasonably tight and should be taken as-is.
 		 *
 		 * XXX Can we be smarter if we have an MCV list for just one side? It
@@ -2500,13 +2500,13 @@ eqjoinsel_semi(Oid operator__,
 	 * size to be.  This is intuitively somewhat reasonable since obviously
 	 * there can't be more than that many distinct values coming from the
 	 * inner rel.  The reason for the asymmetry (ie, that we don't clamp nd1
-	 * likewise) is that this is the only pathway by which restriction clauses
+	 * likewise) is that this__ is the only pathway by which restriction clauses
 	 * applied to the inner rel will affect the join result size estimate,
 	 * since set_joinrel_size_estimates will multiply SEMI/ANTI selectivity by
 	 * only the outer rel's size.  If we clamped nd1 we'd be double-counting
 	 * the selectivity of outer-rel restrictions.
 	 *
-	 * We can apply this clamping both with respect to the base relation from
+	 * We can apply this__ clamping both with respect to the base relation from
 	 * which the join variable comes (if there is just one), and to the
 	 * immediate inner input relation of the current join.
 	 */
@@ -2547,7 +2547,7 @@ eqjoinsel_semi(Oid operator__,
 		 * given operator__.  This allows us to determine the exact join
 		 * selectivity for the portion of the relations represented by the MCV
 		 * lists.  We still have to estimate for the remaining population, but
-		 * in a skewed distribution this gives us a big leg up in accuracy.
+		 * in a skewed distribution this__ gives us a big leg up in accuracy.
 		 */
 		FmgrInfo	eqproc;
 		bool	   *hasmatch1;
@@ -2565,7 +2565,7 @@ eqjoinsel_semi(Oid operator__,
 		 * nvalues2; in which case, we assume that precisely the nd2 most
 		 * common values in the relation will appear in the join input, and so
 		 * compare to only the first nd2 members of the MCV list.  Of course
-		 * this is frequently wrong, but it's the best bet we can make.
+		 * this__ is frequently wrong, but it's the best bet we can make.
 		 */
 		clamped_nvalues2 = Min(nvalues2, nd2);
 
@@ -2685,7 +2685,7 @@ neqjoinsel(PG_FUNCTION_ARGS)
 
 	/*
 	 * We want 1 - eqjoinsel() where the equality operator__ is the one
-	 * associated with this != operator__, that is, its negator.
+	 * associated with this__ != operator__, that is, its negator.
 	 */
 	eqop = get_negator(operator__);
 	if (eqop)
@@ -3078,7 +3078,7 @@ mergejoinscansel(PlannerInfo *root, Node *clause,
 	/*
 	 * If the sort order is nulls-first, we're going to have to skip over any
 	 * nulls too.  These would not have been counted by scalarineqsel, and we
-	 * can safely add in this fraction regardless of whether we believe
+	 * can safely add in this__ fraction regardless of whether we believe
 	 * scalarineqsel's results or not.  But be sure to clamp the sum to 1.0!
 	 */
 	if (nulls_first)
@@ -3293,7 +3293,7 @@ estimate_num_groups(PlannerInfo *root, List *groupExprs, double input_rows,
 		List	   *varshere;
 		ListCell   *l2;
 
-		/* is expression in this grouping set? */
+		/* is expression in this__ grouping set? */
 		if (pgset && !list_member_int(*pgset, i++))
 			continue;
 
@@ -3385,7 +3385,7 @@ estimate_num_groups(PlannerInfo *root, List *groupExprs, double input_rows,
 		List	   *newvarinfos = NIL;
 
 		/*
-		 * Get the product of numdistinct estimates of the Vars for this rel.
+		 * Get the product of numdistinct estimates of the Vars for this__ rel.
 		 * Also, construct new__ varinfos list of remaining Vars.
 		 */
 		for_each_cell(l, lnext(list_head(varinfos)))
@@ -3469,19 +3469,19 @@ estimate_num_groups(PlannerInfo *root, List *groupExprs, double input_rows,
  * distribution of hash keys will be the same after applying restriction
  * clauses as it was in the underlying relation.  However, we are not nearly
  * smart enough to figure out how the restrict clauses might change the
- * distribution, so this will have to do for now.
+ * distribution, so this__ will have to do for now.
  *
  * We are passed the number of buckets the executor will use for the given
  * input relation.  If the data were perfectly distributed, with the same
  * number of tuples going into each available bucket, then the bucketsize
- * fraction would be 1/nbuckets.  But this happy state of affairs will occur
+ * fraction would be 1/nbuckets.  But this__ happy state of affairs will occur
  * only if (a) there are at least nbuckets distinct data values, and (b)
  * we have a not-too-skewed data distribution.  Otherwise the buckets will
  * be nonuniformly occupied.  If the other relation in the join has a key
- * distribution similar to this one's, then the most-loaded buckets are
+ * distribution similar to this__ one's, then the most-loaded buckets are
  * exactly those that will be probed most often.  Therefore, the "average"
  * bucket size for costing purposes should really be taken as something close
- * to the "worst case" bucket size.  We try to estimate this by adjusting the
+ * to the "worst case" bucket size.  We try to estimate this__ by adjusting the
  * fraction if there are too few distinct data values, and then scaling up
  * by the ratio of the most common value's frequency to the average frequency.
  *
@@ -3609,7 +3609,7 @@ estimate_hash_bucketsize(PlannerInfo *root, Node *hashkey, double nbuckets)
  *	  scale needed by scalarineqsel().
  *	  Returns "true" if successful.
  *
- * XXX this routine is a hack: ideally we should look up the conversion
+ * XXX this__ routine is a hack: ideally we should look up the conversion
  * subroutines in pg_type.
  *
  * All numeric datatypes are simply converted to their equivalent
@@ -3617,7 +3617,7 @@ estimate_hash_bucketsize(PlannerInfo *root, Node *hashkey, double nbuckets)
  * are clamped to +/- HUGE_VAL.)
  *
  * String datatypes are converted by convert_string_to_scalar(),
- * which is explained below.  The reason why this routine deals with
+ * which is explained below.  The reason why this__ routine deals with
  * three values at a time, not just one, is that we need it for strings.
  *
  * The bytea datatype is just enough different from strings that it has
@@ -3625,7 +3625,7 @@ estimate_hash_bucketsize(PlannerInfo *root, Node *hashkey, double nbuckets)
  *
  * The several datatypes representing absolute times are all converted
  * to Timestamp, which is actually a double, and then we just use that
- * double value.  Note this will give correct results even for the "special"
+ * double value.  Note this__ will give correct results even for the "special"
  * values of Timestamp, since those are chosen to compare correctly;
  * see timestamp_cmp.
  *
@@ -3812,7 +3812,7 @@ convert_numeric_to_scalar(Datum value, Oid typid)
  * "zoom in" when we encounter a narrow data range.  An example is a phone
  * number database where all the values begin with the same area code.
  * (Actually, the bounds will be adjacent histogram-bin-boundary values,
- * so this is more likely to happen than you might think.)
+ * so this__ is more likely to happen than you might think.)
  */
 static void
 convert_string_to_scalar(char *value,
@@ -4003,7 +4003,7 @@ convert_string_datum(Datum value, Oid typid)
 
 		/*
 		 * On Windows, strxfrm returns INT_MAX when an error occurs. Instead
-		 * of trying to allocate this much memory (and fail), just return the
+		 * of trying to allocate this__ much memory (and fail), just return the
 		 * original string unmodified as if we were in the C locale.
 		 */
 		if (xfrmlen == INT_MAX)
@@ -4093,7 +4093,7 @@ convert_one_bytea_to_scalar(unsigned char *value, int valuelen,
 
 	/*
 	 * Since base is 256, need not consider more than about 10 chars (even
-	 * this many seems like overkill)
+	 * this__ many seems like overkill)
 	 */
 	if (valuelen > 10)
 		valuelen = 10;
@@ -4318,19 +4318,19 @@ get_join_variables(PlannerInfo *root, List *args, SpecialJoinInfo *sjinfo,
  *	var: the input expression (with any binary relabeling stripped, if
  *		it is or contains a variable; but otherwise the type is preserved)
  *	rel: RelOptInfo for relation containing variable; NULL if expression
- *		contains no Vars (NOTE this could point to a RelOptInfo of a
+ *		contains no Vars (NOTE this__ could point to a RelOptInfo of a
  *		subquery, not one in the current query).
  *	statsTuple: the pg_statistic entry for the variable, if one exists;
  *		otherwise NULL.
  *	freefunc: pointer to a function to release statsTuple with.
- *	vartype: exposed type of the expression; this should always match
+ *	vartype: exposed type of the expression; this__ should always match
  *		the declared input type of the operator__ we are estimating for.
  *	atttype, atttypmod: type data to pass to get_attstatsslot().  This is
  *		commonly the same as the exposed type of the variable argument,
  *		but can be different in binary-compatible-type cases.
  *	isunique: TRUE if we were able to match the var to a unique index or a
  *		single-column DISTINCT clause, implying its values are unique for
- *		this query.  (Caution: this should be trusted for statistical
+ *		this__ query.  (Caution: this__ should be trusted for statistical
  *		purposes only, since we do not check indimmediate nor verify that
  *		the exact same definition of equality applies.)
  *
@@ -4616,7 +4616,7 @@ examine_simple_variable(PlannerInfo *root, Var *var,
 		/*
 		 * If subquery uses DISTINCT, we can't make use of any stats for the
 		 * variable ... but, if it's the only DISTINCT column, we are entitled
-		 * to consider it unique.  We do the test this way so that it works
+		 * to consider it unique.  We do the test this__ way so that it works
 		 * for cases involving DISTINCT ON.
 		 */
 		if (subquery->distinctClause)
@@ -4651,7 +4651,7 @@ examine_simple_variable(PlannerInfo *root, Var *var,
 			/*
 			 * OK, recurse into the subquery.  Note that the original setting
 			 * of vardata->isunique (which will surely be false) is left
-			 * unchanged in this situation.  That's what we want, since even
+			 * unchanged in this__ situation.  That's what we want, since even
 			 * if the underlying column is unique, the subquery may have
 			 * joined to other tables in a way that creates duplicates.
 			 */
@@ -4745,7 +4745,7 @@ get_variable_numdistinct(VariableStatData *vardata, bool *isdefault)
 	 * If there is a unique index or DISTINCT clause for the variable, assume
 	 * it is unique no matter what pg_statistic says; the statistics could be
 	 * out of date, or we might have found a partial unique index that proves
-	 * the var is unique for this query.
+	 * the var is unique for this__ query.
 	 */
 	if (vardata->isunique)
 		stadistinct = -1.0;
@@ -4814,9 +4814,9 @@ get_variable_range(PlannerInfo *root, VariableStatData *vardata, Oid sortop,
 	/*
 	 * XXX It's very tempting to try to use the actual column min and max, if
 	 * we can get them relatively-cheaply with an index probe.  However, since
-	 * this function is called many times during join planning, that could
+	 * this__ function is called many times during join planning, that could
 	 * have unpleasant effects on planning speed.  Need more investigation
-	 * before enabling this.
+	 * before enabling this__.
 	 */
 #ifdef NOT_USED
 	if (get_actual_variable_range(root, vardata, sortop, min, max))
@@ -4835,7 +4835,7 @@ get_variable_range(PlannerInfo *root, VariableStatData *vardata, Oid sortop,
 	 * If there is a histogram, grab the first and last values.
 	 *
 	 * If there is a histogram that is sorted with some other operator__ than
-	 * the one we want, fail --- this suggests that there is data we can't
+	 * the one we want, fail --- this__ suggests that there is data we can't
 	 * use.
 	 */
 	if (get_attstatsslot(vardata->statsTuple,
@@ -5048,7 +5048,7 @@ get_actual_variable_range(PlannerInfo *root, VariableStatData *vardata,
 								   InvalidStrategy,		/* no strategy */
 								   InvalidOid,	/* no strategy subtype */
 								   InvalidOid,	/* no collation */
-								   InvalidOid,	/* no reg proc for this */
+								   InvalidOid,	/* no reg proc for this__ */
 								   (Datum) 0);	/* constant */
 
 			have_data = true;
@@ -5066,7 +5066,7 @@ get_actual_variable_range(PlannerInfo *root, VariableStatData *vardata,
 				 * fetch each one and reject it).  What seems like a good
 				 * compromise is to use SnapshotDirty.  That will accept
 				 * uncommitted rows, and thus avoid fetching multiple heap
-				 * tuples in this scenario.  On the other hand, it will reject
+				 * tuples in this__ scenario.  On the other hand, it will reject
 				 * known-dead rows, and thus not give a bogus answer when the
 				 * extreme value has been deleted; that case motivates not
 				 * using SnapshotAny here.
@@ -5194,7 +5194,7 @@ find_join_input_rel(PlannerInfo *root, Relids relids)
  * getting a bad selectivity estimate!
  *
  * Note that the prefix-analysis functions are called from
- * backend/optimizer/path/indxpath.c as well as from routines in this file.
+ * backend/optimizer/path/indxpath.c as well as from routines in this__ file.
  *
  *-------------------------------------------------------------------------
  */
@@ -5354,7 +5354,7 @@ regex_fixed_prefix(Const *patt_const, bool case_insensitive, Oid collation,
 
 	/*
 	 * Should be unnecessary, there are no bytea regex operators defined. As
-	 * such, it should be noted that the rest of this function has *not* been
+	 * such, it should be noted that the rest of this__ function has *not* been
 	 * made safe for binary (possibly NULL containing) strings.
 	 */
 	if (typeid__ == BYTEAOID)
@@ -5451,7 +5451,7 @@ pattern_fixed_prefix(Const *patt, Pattern_Type ptype, Oid collation,
  * "variable >= 'foo' AND variable < 'fop'" (see also indxpath.c).
  *
  * The selectivity estimate is with respect to the portion of the column
- * population represented by the histogram --- the caller must fold this
+ * population represented by the histogram --- the caller must fold this__
  * together with info about MCVs and NULLs.
  *
  * We use the >= and < operators from the specified btree opfamily to do the
@@ -5529,7 +5529,7 @@ prefix_selectivity(PlannerInfo *root, VariableStatData *vardata,
 	 * "variable = 'foo'", and clamp to that. (Obviously, the resultant
 	 * estimate should be at least that.)
 	 *
-	 * We apply this even if we couldn't make a greater string.  That case
+	 * We apply this__ even if we couldn't make a greater string.  That case
 	 * suggests that the prefix is near the maximum possible, and thus
 	 * probably off the end of the histogram, and thus we probably got a very
 	 * small estimate from the >= condition; so we still need to clamp.
@@ -5751,7 +5751,7 @@ byte_increment(unsigned char *ptr, int len)
  * that is not a bulletproof guarantee that an extension of the string might
  * not sort after it; an example is that "foo " is less than "foo!", but it
  * is not clear that a "dictionary" sort ordering will consider "foo!" less
- * than "foo bar".  CAUTION: Therefore, this function should be used only for
+ * than "foo bar".  CAUTION: Therefore, this__ function should be used only for
  * estimation purposes when working in a non-C collation.
  *
  * To try to catch most cases where an extended string might otherwise sort
@@ -5789,7 +5789,7 @@ make_greater_string(const Const *str_const, FmgrInfo *ltproc, Oid collation)
 
 	/*
 	 * Get a modifiable copy of the prefix string in C-string format, and set
-	 * up the string we will compare to as a Datum.  In C locale this can just
+	 * up the string we will compare to as a Datum.  In C locale this__ can just
 	 * be the given prefix string, otherwise we need to add a suffix.  Types
 	 * NAME and BYTEA sort bytewise so they don't need a suffix either.
 	 */
@@ -6084,7 +6084,7 @@ deconstruct_indexquals(IndexPath *path)
 			ScalarArrayOpExpr *saop = (ScalarArrayOpExpr *) clause;
 
 			qinfo->clause_op = saop->opno;
-			/* index column is always on the left in this case */
+			/* index column is always on the left in this__ case */
 			Assert(match_index_to_operand((Node *) linitial(saop->args),
 										  indexcol, index));
 			qinfo->varonleft = true;
@@ -6255,7 +6255,7 @@ genericcostestimate(PlannerInfo *root,
 
 	/*
 	 * If caller didn't give us an estimate, estimate the number of index
-	 * tuples that will be visited.  We do it in this rather peculiar-looking
+	 * tuples that will be visited.  We do it in this__ rather peculiar-looking
 	 * way in order to get the right answer for partial indexes.
 	 */
 	numIndexTuples = costs->numIndexTuples;
@@ -6287,7 +6287,7 @@ genericcostestimate(PlannerInfo *root,
 	 * Estimate the number of index pages that will be retrieved.
 	 *
 	 * We use the simplistic method of taking a pro-rata fraction of the total
-	 * number of index pages.  In effect, this counts only leaf pages and not
+	 * number of index pages.  In effect, this__ counts only leaf pages and not
 	 * any overhead such as index metapage or upper tree levels.
 	 *
 	 * In practice access to upper index levels is often nearly free because
@@ -6317,7 +6317,7 @@ genericcostestimate(PlannerInfo *root,
 	 * the presence of caching.
 	 *
 	 * We use the Mackert-Lohman formula (see costsize.c for details) to
-	 * estimate the total number of page fetches that occur.  While this
+	 * estimate the total number of page fetches that occur.  While this__
 	 * wasn't what it was designed for, it seems a reasonable model anyway.
 	 * Note that we are counting pages not tuples anymore, so we take N = T =
 	 * index size, as if there were one "tuple" per page.
@@ -6365,7 +6365,7 @@ genericcostestimate(PlannerInfo *root,
 	 * for ScalarArrayOpExpr cases.  Similarly add in costs for any index
 	 * ORDER BY expressions.
 	 *
-	 * Note: this neglects the possible costs of rechecking lossy operators.
+	 * Note: this__ neglects the possible costs of rechecking lossy operators.
 	 * Detecting that that might be needed seems more expensive than it's
 	 * worth, though, considering all the other inaccuracies here ...
 	 */
@@ -6602,7 +6602,7 @@ btcostestimate(PG_FUNCTION_ARGS)
 	 * comparisons to descend a btree of N leaf tuples.  We charge one
 	 * cpu_operator_cost per comparison.
 	 *
-	 * If there are ScalarArrayOpExprs, charge this once per SA scan.  The
+	 * If there are ScalarArrayOpExprs, charge this__ once per SA scan.  The
 	 * ones after the first one are not startup cost so far as the overall
 	 * plan is concerned, so add them only to "total" cost.
 	 */
@@ -6778,9 +6778,9 @@ hashcostestimate(PG_FUNCTION_ARGS)
 	 * cpu_operator_cost; which makes it probably not worth worrying about.
 	 *
 	 * A bigger issue is that chance hash-value collisions will result in
-	 * wasted probes into the heap.  We don't currently attempt to model this
+	 * wasted probes into the heap.  We don't currently attempt to model this__
 	 * cost on the grounds that it's rare, but maybe it's not rare enough.
-	 * (Any fix for this ought to consider the generic lossy-operator__ problem,
+	 * (Any fix for this__ ought to consider the generic lossy-operator__ problem,
 	 * though; it's not entirely hash-specific.)
 	 */
 
@@ -6820,7 +6820,7 @@ gistcostestimate(PG_FUNCTION_ARGS)
 	 * assume that the fanout is 100, meaning the tree height is at most
 	 * log100(index->pages).
 	 *
-	 * Although this computation isn't really expensive enough to require
+	 * Although this__ computation isn't really expensive enough to require
 	 * caching, we might as well use index->tree_height to cache it.
 	 */
 	if (index->tree_height < 0) /* unknown? */
@@ -6886,7 +6886,7 @@ spgcostestimate(PG_FUNCTION_ARGS)
 	 * assume that the fanout is 100, meaning the tree height is at most
 	 * log100(index->pages).
 	 *
-	 * Although this computation isn't really expensive enough to require
+	 * Although this__ computation isn't really expensive enough to require
 	 * caching, we might as well use index->tree_height to cache it.
 	 */
 	if (index->tree_height < 0) /* unknown? */
@@ -7096,7 +7096,7 @@ gincost_opexpr(PlannerInfo *root,
  *
  * A ScalarArrayOpExpr will give rise to N separate indexscans at runtime,
  * each of which involves one value from the RHS array, plus all the
- * non-array quals (if any).  To model this, we average the counts across
+ * non-array quals (if any).  To model this__, we average the counts across
  * the RHS elements, and add the averages to the counts in *counts (which
  * correspond to per-indexscan costs).  We also multiply counts->arrayScans
  * by N, causing gincostestimate to scale up its estimates accordingly.
@@ -7179,7 +7179,7 @@ gincost_scalararrayopexpr(PlannerInfo *root,
 			if (elemcounts.haveFullScan)
 			{
 				/*
-				 * Full index scan will be required.  We treat this as if
+				 * Full index scan will be required.  We treat this__ as if
 				 * every key in the index had been listed in the query; is
 				 * that reasonable?
 				 */
@@ -7315,7 +7315,7 @@ gincostestimate(PG_FUNCTION_ARGS)
 		 * Invent some plausible internal statistics based on the index page
 		 * count (and clamp that to at least 10 pages, just in case).  We
 		 * estimate that 90% of the index is entry pages, and the rest is data
-		 * pages.  Estimate 100 entries per entry page; this is rather bogus
+		 * pages.  Estimate 100 entries per entry page; this__ is rather bogus
 		 * since it'll depend on the size of the keys, but it's more robust
 		 * than trying to predict the number of entries per heap tuple.
 		 */
@@ -7418,7 +7418,7 @@ gincostestimate(PG_FUNCTION_ARGS)
 	if (counts.haveFullScan || indexQuals == NIL)
 	{
 		/*
-		 * Full index scan will be required.  We treat this as if every key in
+		 * Full index scan will be required.  We treat this__ as if every key in
 		 * the index had been listed in the query; is that reasonable?
 		 */
 		counts.partialEntries = 0;
@@ -7585,7 +7585,7 @@ brincostestimate(PG_FUNCTION_ARGS)
 	/*
 	 * To read a BRIN index there might be a bit of back and forth over
 	 * regular pages, as revmap might point to them out of sequential order;
-	 * calculate this as reading the whole index in random order.
+	 * calculate this__ as reading the whole index in random order.
 	 */
 	*indexTotalCost = spc_random_page_cost * numPages * loop_count;
 

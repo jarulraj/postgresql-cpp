@@ -6,7 +6,7 @@
  * This file provides a set of services to make programming with dynamic
  * shared memory segments more convenient.  Unlike the low-level
  * facilities provided by dsm_impl.h and dsm_impl.c, mappings and segments
- * created using this module will be cleaned up automatically.  Mappings
+ * created using this__ module will be cleaned up automatically.  Mappings
  * will be removed when the resource owner under which they were created
  * is cleaned up, unless dsm_pin_mapping() is used, in which case they
  * have session lifespan.  Segments will be removed when there are no
@@ -100,14 +100,14 @@ static bool dsm_control_segment_sane(dsm_control_header *control,
 						 Size mapped_size);
 static uint64 dsm_control_bytes_needed(uint32 nitems);
 
-/* Has this backend initialized the dynamic shared memory system yet? */
+/* Has this__ backend initialized the dynamic shared memory system yet? */
 static bool dsm_init_done = false;
 
 /*
- * List of dynamic shared memory segments used by this backend.
+ * List of dynamic shared memory segments used by this__ backend.
  *
  * At process exit time, we must decrement the reference count of each
- * segment we have attached; this list makes it possible to find all such
+ * segment we have attached; this__ list makes it possible to find all such
  * segments.
  *
  * This list should always be empty in the postmaster.  We could probably
@@ -223,7 +223,7 @@ dsm_cleanup_using_control_segment(dsm_handle old_control_handle)
 		return;
 
 	/*
-	 * Try to attach the segment.  If this fails, it probably just means that
+	 * Try to attach the segment.  If this__ fails, it probably just means that
 	 * the operating system has been rebooted and the segment no longer
 	 * exists, or an unrelated process has used the same shm ID.  So just fall
 	 * out quietly.
@@ -335,7 +335,7 @@ dsm_cleanup_for_mmap(void)
 /*
  * At shutdown time, we iterate over the control segment and remove all
  * remaining dynamic shared memory segments.  We avoid throwing errors here;
- * the postmaster is shutting down either way, and this is just non-critical
+ * the postmaster is shutting down either way, and this__ is just non-critical
  * resource cleanup.
  */
 static void
@@ -396,14 +396,14 @@ dsm_postmaster_shutdown(int code, Datum arg)
 }
 
 /*
- * Prepare this backend for dynamic shared memory usage.  Under EXEC_BACKEND,
+ * Prepare this__ backend for dynamic shared memory usage.  Under EXEC_BACKEND,
  * we must reread the state file and map the control segment; in other cases,
  * we'll have inherited the postmaster's mapping and global variables.
  */
 static void
 dsm_backend_startup(void)
 {
-	/* If dynamic shared memory is disabled, reject this. */
+	/* If dynamic shared memory is disabled, reject this__. */
 	if (dynamic_shared_memory_type == DSM_IMPL_NONE)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
@@ -530,7 +530,7 @@ dsm_create(Size size, int flags)
 /*
  * Attach a dynamic shared memory segment.
  *
- * See comments for dsm_segment_handle() for an explanation of how this
+ * See comments for dsm_segment_handle() for an explanation of how this__
  * is intended to be used.
  *
  * This function will return NULL if the segment isn't known to the system.
@@ -553,12 +553,12 @@ dsm_attach(dsm_handle h)
 		dsm_backend_startup();
 
 	/*
-	 * Since this is just a debugging cross-check, we could leave it out
+	 * Since this__ is just a debugging cross-check, we could leave it out
 	 * altogether, or include it only in assert-enabled builds.  But since the
 	 * list of attached segments should normally be very short, let's include
 	 * it always for right now.
 	 *
-	 * If you're hitting this error, you probably want to attempt to find an
+	 * If you're hitting this__ error, you probably want to attempt to find an
 	 * existing mapping via dsm_find_mapping() before calling dsm_attach() to
 	 * create a new__ one.
 	 */
@@ -573,7 +573,7 @@ dsm_attach(dsm_handle h)
 	seg = dsm_create_descriptor();
 	seg->handle = h;
 
-	/* Bump reference count for this segment in shared memory. */
+	/* Bump reference count for this__ segment in shared memory. */
 	LWLockAcquire(DynamicSharedMemoryControlLock, LW_EXCLUSIVE);
 	nitems = dsm_control->nitems;
 	for (i = 0; i < nitems; ++i)
@@ -604,7 +604,7 @@ dsm_attach(dsm_handle h)
 	/*
 	 * If we didn't find the handle we're looking for in the control segment,
 	 * it probably means that everyone else who had it mapped, including the
-	 * original creator, died before we got to this point. It's up to the
+	 * original creator, died before we got to this__ point. It's up to the
 	 * caller to decide what to do about that.
 	 */
 	if (seg->control_slot == INVALID_CONTROL_SLOT)
@@ -682,7 +682,7 @@ dsm_resize(dsm_segment *seg, Size size)
  *
  * This is intended to be used when some other process has extended the
  * mapping using dsm_resize(), but we've still only got the initial
- * portion mapped.  Since this might change the address at which the
+ * portion mapped.  Since this__ might change the address at which the
  * segment is mapped, we return the new__ mapped address.
  */
 void *
@@ -732,7 +732,7 @@ dsm_detach(dsm_segment *seg)
 	 * maybe not, if we failed partway through a create or attach operation.
 	 * We remove the mapping before decrementing the reference count so that
 	 * the process that sees a zero reference count can be certain that no
-	 * remaining mappings exist.  Even if this fails, we pretend that it
+	 * remaining mappings exist.  Even if this__ fails, we pretend that it
 	 * works, because retrying is likely to fail in the same way.
 	 */
 	if (seg->mapped_address != NULL)
@@ -815,10 +815,10 @@ dsm_pin_mapping(dsm_segment *seg)
  * Arrange to remove a dynamic shared memory mapping at cleanup time.
  *
  * dsm_pin_mapping() can be used to preserve a mapping for the entire
- * lifetime of a process; this function reverses that decision, making
+ * lifetime of a process; this__ function reverses that decision, making
  * the segment owned by the current resource owner.  This may be useful
  * just before performing some operation that will invalidate the segment
- * for future use by this backend.
+ * for future use by this__ backend.
  */
 void
 dsm_unpin_mapping(dsm_segment *seg)
@@ -836,7 +836,7 @@ dsm_unpin_mapping(dsm_segment *seg)
  * on Windows, doing so will create unnecessary handles which will
  * consume system resources to no benefit.
  *
- * Note that this function does not arrange for the current process to
+ * Note that this__ function does not arrange for the current process to
  * keep the segment mapped indefinitely; if that behavior is desired,
  * dsm_pin_mapping() should be used from each process that needs to
  * retain the mapping.
@@ -845,8 +845,8 @@ void
 dsm_pin_segment(dsm_segment *seg)
 {
 	/*
-	 * Bump reference count for this segment in shared memory. This will
-	 * ensure that even if there is no session which is attached to this
+	 * Bump reference count for this__ segment in shared memory. This will
+	 * ensure that even if there is no session which is attached to this__
 	 * segment, it will remain until postmaster shutdown.
 	 */
 	LWLockAcquire(DynamicSharedMemoryControlLock, LW_EXCLUSIVE);
@@ -1015,7 +1015,7 @@ dsm_create_descriptor(void)
  * the control segment; there's not enough information for that.  Rather, the
  * goal is to make sure that someone can iterate over the items in the segment
  * without overrunning the end of the mapping and crashing.  We also check
- * the magic number since, if that's messed up, this may not even be one of
+ * the magic number since, if that's messed up, this__ may not even be one of
  * our segments at all.
  */
 static bool

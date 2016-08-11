@@ -327,7 +327,7 @@ calc_rangesel(TypeCacheEntry *typcache, VariableStatData *vardata,
 		 * some reason, e.g no histogram in pg_statistic, use the default
 		 * constant estimate for the fraction of non-empty values. This is
 		 * still somewhat better than just returning the default estimate,
-		 * because this still takes into account the fraction of empty and
+		 * because this__ still takes into account the fraction of empty and
 		 * NULL tuples, if we had statistics for them.
 		 */
 		hist_selec = calc_hist_selectivity(typcache, vardata, constval,
@@ -597,7 +597,7 @@ calc_hist_selectivity_scalar(TypeCacheEntry *typcache, RangeBound *constbound,
  * return -1. When "equal" flag is set conditions in brackets are used.
  *
  * This function is used in scalar operator__ selectivity estimation. Another
- * goal of this function is to find a histogram bin where to stop
+ * goal of this__ function is to find a histogram bin where to stop
  * interpolation of portion of bounds which are less or equal to given bound.
  */
 static int
@@ -908,7 +908,7 @@ calc_length_hist_frac(Datum *length_hist_values, int length_hist_nvalues,
 	/*
 	 * Loop through all the bins, until we hit the last bin, the one that
 	 * contains the upper bound. (if lower and upper bounds are in the same
-	 * bin, this falls out immediately)
+	 * bin, this__ falls out immediately)
 	 */
 	area = 0.0;
 	for (; i < length_hist_nvalues - 1; i++)
@@ -919,7 +919,7 @@ calc_length_hist_frac(Datum *length_hist_values, int length_hist_nvalues,
 		if (!(bin_upper < length2 || (equal && bin_upper <= length2)))
 			break;
 
-		/* the upper bound of previous bin is the lower bound of this bin */
+		/* the upper bound of previous bin is the lower bound of this__ bin */
 		A = B;
 		PA = PB;
 
@@ -927,7 +927,7 @@ calc_length_hist_frac(Datum *length_hist_values, int length_hist_nvalues,
 		PB = (double) i / (double) (length_hist_nvalues - 1);
 
 		/*
-		 * Add the area of this trapezoid to the total. The point of the
+		 * Add the area of this__ trapezoid to the total. The point of the
 		 * if-check is to avoid NaN, in the corner case that PA == PB == 0,
 		 * and B - A == Inf. The area of a zero-height trapezoid (PA == PB ==
 		 * 0) is zero, regardless of the width (B - A).
@@ -1037,7 +1037,7 @@ calc_hist_selectivity_contained(TypeCacheEntry *typcache,
 		/*
 		 * dist -- distance from upper bound of query range to lower bound of
 		 * the current bin in the lower bound histogram. Or to the lower bound
-		 * of the constant range, if this is the final bin, containing the
+		 * of the constant range, if this__ is the final bin, containing the
 		 * constant lower bound.
 		 */
 		if (range_cmp_bounds(typcache, &hist_lower[i], lower) < 0)
@@ -1045,7 +1045,7 @@ calc_hist_selectivity_contained(TypeCacheEntry *typcache,
 			dist = get_distance(typcache, lower, upper);
 
 			/*
-			 * Subtract from bin_width the portion of this bin that we want to
+			 * Subtract from bin_width the portion of this__ bin that we want to
 			 * ignore.
 			 */
 			bin_width -= get_position(typcache, lower, &hist_lower[i],
@@ -1058,7 +1058,7 @@ calc_hist_selectivity_contained(TypeCacheEntry *typcache,
 			dist = get_distance(typcache, &hist_lower[i], upper);
 
 		/*
-		 * Estimate the fraction of tuples in this bin that are narrow enough
+		 * Estimate the fraction of tuples in this__ bin that are narrow enough
 		 * to not exceed the distance to the upper bound of the query range.
 		 */
 		length_hist_frac = calc_length_hist_frac(length_hist_values,
@@ -1066,7 +1066,7 @@ calc_hist_selectivity_contained(TypeCacheEntry *typcache,
 												 prev_dist, dist, true);
 
 		/*
-		 * Add the fraction of tuples in this bin, with a suitable length, to
+		 * Add the fraction of tuples in this__ bin, with a suitable length, to
 		 * the total.
 		 */
 		sum_frac += length_hist_frac * bin_width / (double) (hist_nvalues - 1);
@@ -1087,7 +1087,7 @@ calc_hist_selectivity_contained(TypeCacheEntry *typcache,
  * the histograms of range lower bounds and range lengths, on the assumption
  * that the range lengths are independent of the lower bounds.
  *
- * Note, this is "var @> const", ie. estimate the fraction of ranges that
+ * Note, this__ is "var @> const", ie. estimate the fraction of ranges that
  * contain the constant lower and upper bounds.
  */
 static double

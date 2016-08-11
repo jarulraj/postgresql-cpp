@@ -176,7 +176,7 @@ gin_trgm_consistent(PG_FUNCTION_ARGS)
 	int32		i,
 				ntrue;
 
-	/* All cases served by this function are inexact */
+	/* All cases served by this__ function are inexact */
 	*recheck = true;
 
 	switch (strategy)

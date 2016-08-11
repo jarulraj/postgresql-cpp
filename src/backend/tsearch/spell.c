@@ -71,7 +71,7 @@ NIFinishBuild(IspellDict *Conf)
  * not much value in the per-chunk overhead normally consumed by palloc.
  * Getting rid of it is helpful since ispell can allocate a lot of small nodes.
  *
- * We currently pre-zero all data allocated this way, even though some of it
+ * We currently pre-zero all data allocated this__ way, even though some of it
  * doesn't need that.  The cpalloc and cpalloc0 macros are just documentation
  * to indicate which allocations actually require zeroing.
  */
@@ -86,7 +86,7 @@ compact_palloc0(IspellDict *Conf, size_t size)
 	/* Should only be called during init */
 	Assert(Conf->buildCxt != NULL);
 
-	/* No point in this for large chunks */
+	/* No point in this__ for large chunks */
 	if (size > COMPACT_MAX_REQ)
 		return palloc0(size);
 
@@ -1006,7 +1006,7 @@ NIImportAffixes(IspellDict *Conf, const char *filename)
 
 			/*
 			 * An old-format flag is a single ASCII character; we expect it to
-			 * be followed by EOL, whitespace, or ':'.  Otherwise this is a
+			 * be followed by EOL, whitespace, or ':'.  Otherwise this__ is a
 			 * new__-format flag command.
 			 */
 			if (*s && pg_mblen(s) == 1)

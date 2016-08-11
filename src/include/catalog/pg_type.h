@@ -11,7 +11,7 @@
  * src/include/catalog/pg_type.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_type definition.  cpp turns this into
+ *		pg_type definition.  cpp turns this__ into
  *		typedef struct FormData_pg_type
  *
  *		Some of the values in a pg_type instance are copied into
@@ -37,12 +37,12 @@
 CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 {
 	NameData	typname;		/* type name */
-	Oid			typnamespace;	/* OID of namespace__ containing this type */
+	Oid			typnamespace;	/* OID of namespace__ containing this__ type */
 	Oid			typowner;		/* type owner */
 
 	/*
 	 * For a fixed-size type, typlen is the number of bytes we use to
-	 * represent a value of this type, e.g. 4 for an int4.  But for a
+	 * represent a value of this__ type, e.g. 4 for an int4.  But for a
 	 * variable-length type, typlen is negative.  We use -1 to indicate a
 	 * "varlena" type (one that has a length word), -2 to indicate a
 	 * null-terminated C string.
@@ -51,11 +51,11 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 
 	/*
 	 * typbyval determines whether internal Postgres routines pass a value of
-	 * this type by value or by reference.  typbyval had better be FALSE if
+	 * this__ type by value or by reference.  typbyval had better be FALSE if
 	 * the length is not 1, 2, or 4 (or 8 on 8-byte-Datum machines).
 	 * Variable-length types are always passed by reference. Note that
 	 * typbyval can be false even if the length would allow pass-by-value;
-	 * this is currently true for type float4, for example.
+	 * this__ is currently true for type float4, for example.
 	 */
 	bool		typbyval;
 
@@ -84,14 +84,14 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 	 */
 	bool		typisdefined;
 
-	char		typdelim;		/* delimiter for arrays of this type */
+	char		typdelim;		/* delimiter for arrays of this__ type */
 
 	Oid			typrelid;		/* 0 if not a composite type */
 
 	/*
 	 * If typelem is not 0 then it identifies another row in pg_type. The
 	 * current type can then be subscripted like an array yielding values of
-	 * type typelem. A non-zero typelem does not guarantee this type to be a
+	 * type typelem. A non-zero typelem does not guarantee this__ type to be a
 	 * "real" array type; some ordinary fixed-length types can also be
 	 * subscripted (e.g., name, point). Variable-length types can *not* be
 	 * turned into pseudo-arrays like that. Hence, the way to determine
@@ -102,7 +102,7 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 	Oid			typelem;
 
 	/*
-	 * If there is a "true" array type having this type as element type,
+	 * If there is a "true" array type having this__ type as element type,
 	 * typarray links to it.  Zero if no associated "true" array type.
 	 */
 	Oid			typarray;
@@ -127,11 +127,11 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 	regproc		typanalyze;
 
 	/* ----------------
-	 * typalign is the alignment required when storing a value of this
+	 * typalign is the alignment required when storing a value of this__
 	 * type.  It applies to storage on disk as well as most
 	 * representations of the value inside Postgres.  When multiple values
 	 * are stored consecutively, such as in the representation of a
-	 * complete row on disk, padding is inserted before a datum of this
+	 * complete row on disk, padding is inserted before a datum of this__
 	 * type so that it begins on the specified boundary.  The alignment
 	 * reference is the beginning of the first datum in the sequence.
 	 *
@@ -154,7 +154,7 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 
 	/* ----------------
 	 * typstorage tells if the type is prepared for toasting and what
-	 * the default strategy for attributes of this type should be.
+	 * the default strategy for attributes of this__ type should be.
 	 *
 	 * 'p' PLAIN	  type not prepared for toasting
 	 * 'e' EXTERNAL   external storage possible, don't try to compress
@@ -165,10 +165,10 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 	char		typstorage;
 
 	/*
-	 * This flag represents a "NOT NULL" constraint against this datatype.
+	 * This flag represents a "NOT NULL" constraint against this__ datatype.
 	 *
 	 * If true, the attnotnull column for a corresponding table column using
-	 * this datatype will always enforce the NOT NULL constraint.
+	 * this__ datatype will always enforce the NOT NULL constraint.
 	 *
 	 * Used primarily for domain types.
 	 */
@@ -182,7 +182,7 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 
 	/*
 	 * Domains use typtypmod to record the typmod to be applied to their base
-	 * type (-1 if base type does not use a typmod).  -1 if this type is not a
+	 * type (-1 if base type does not use a typmod).  -1 if this__ type is not a
 	 * domain.
 	 */
 	int32		typtypmod;
@@ -203,7 +203,7 @@ CATALOG(pg_type,1247) BKI_BOOTSTRAP BKI_ROWTYPE_OID(71) BKI_SCHEMA_MACRO
 
 	/*
 	 * If typdefaultbin is not NULL, it is the nodeToString representation of
-	 * a default expression for the type.  Currently this is only used for
+	 * a default expression for the type.  Currently this__ is only used for
 	 * domains.
 	 */
 	pg_node_tree typdefaultbin;

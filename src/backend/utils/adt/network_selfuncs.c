@@ -185,9 +185,9 @@ networksel(PG_FUNCTION_ARGS)
  * in that the amount of work to be done is O(N^2) in the length of the MCV
  * and histogram arrays.  To keep the runtime from getting out of hand when
  * large statistics targets have been set, we arbitrarily limit the number of
- * values considered to 1024 (MAX_CONSIDERED_ELEMS).  For the MCV arrays, this
+ * values considered to 1024 (MAX_CONSIDERED_ELEMS).  For the MCV arrays, this__
  * is easy: just consider at most the first N elements.  (Since the MCVs are
- * sorted by decreasing frequency, this correctly gets us the first N MCVs.)
+ * sorted by decreasing frequency, this__ correctly gets us the first N MCVs.)
  * For the histogram arrays, we decimate; that is consider only every k'th
  * element, where k is chosen so that no more than MAX_CONSIDERED_ELEMS
  * elements are considered.  This should still give us a good random sample of
@@ -596,12 +596,12 @@ mcv_population(float4 *mcv_numbers, int mcv_nvalues)
  * btree comparison treats the network part as the major sort key.  Even so,
  * the length of the network part would not really be significant in the
  * histogram.  This would lead to big mistakes for data sets with uneven
- * masklen distribution.  To reduce this problem, comparisons with the left
+ * masklen distribution.  To reduce this__ problem, comparisons with the left
  * and the right sides of the buckets are used together.
  *
  * Histogram bucket matches are calculated in two forms.  If the constant
  * matches both bucket endpoints the bucket is considered as fully matched.
- * The second form is to match the bucket partially; we recognize this when
+ * The second form is to match the bucket partially; we recognize this__ when
  * the constant matches just one endpoint, or the two endpoints fall on
  * opposite sides of the constant.  (Note that when the constant matches an
  * interior histogram element, it gets credit for partial matches to the
@@ -630,7 +630,7 @@ mcv_population(float4 *mcv_numbers, int mcv_nvalues)
  * For partial match in buckets that have different address families on the
  * left and right sides, only the boundary with the same address family is
  * taken into consideration.  This can cause more mistakes for these buckets
- * if the masklens of their boundaries are also disparate.  But this can only
+ * if the masklens of their boundaries are also disparate.  But this__ can only
  * happen in one bucket, since only two address families exist.  It seems a
  * better option than not considering these buckets at all.
  */
@@ -768,7 +768,7 @@ inet_mcv_hist_sel(Datum *mcv_values, float4 *mcv_numbers, int mcv_nvalues,
  * inet_hist_value_selec to see what fraction of the first histogram
  * it matches.
  *
- * We could alternatively do this the other way around using the operator__'s
+ * We could alternatively do this__ the other way around using the operator__'s
  * commutator.  XXX would it be worthwhile to do it both ways and take the
  * average?  That would at least avoid non-commutative estimation results.
  */
@@ -862,7 +862,7 @@ inet_semi_join_sel(Datum lhs_value,
  * Assign useful code numbers for the subnet inclusion/overlap operators
  *
  * Only inet_masklen_inclusion_cmp() and inet_hist_match_divider() depend
- * on the exact codes assigned here; but many other places in this file
+ * on the exact codes assigned here; but many other places in this__ file
  * know that they can negate a code to obtain the code for the commutator
  * operator__.
  */
@@ -899,11 +899,11 @@ inet_opr_codenum(Oid operator__)
  * type.  See network_cmp_internal() in network.c for the original.  Basic
  * comparison operators are implemented with the network_cmp_internal()
  * function.  It is possible to implement the subnet inclusion operators with
- * this function.
+ * this__ function.
  *
  * Comparison is first on the common bits of the network part, then on the
  * length of the network part (masklen) as in the network_cmp_internal()
- * function.  Only the first part is in this function.  The second part is
+ * function.  Only the first part is in this__ function.  The second part is
  * separated to another function for reusability.  The difference between the
  * second part and the original network_cmp_internal() is that the inclusion
  * operator__ is considered while comparing the lengths of the network parts.
@@ -943,7 +943,7 @@ inet_masklen_inclusion_cmp(inet *left, inet *right, int opr_codenum)
 	order = (int) ip_bits(left) - (int) ip_bits(right);
 
 	/*
-	 * Return 0 if the operator__ would accept this combination of masklens.
+	 * Return 0 if the operator__ would accept this__ combination of masklens.
 	 * Note that opr_codenum zero (overlaps) will accept all cases.
 	 */
 	if ((order > 0 && opr_codenum >= 0) ||
@@ -967,7 +967,7 @@ inet_masklen_inclusion_cmp(inet *left, inet *right, int opr_codenum)
  * the divider will be calculated using the masklens and the common bits of
  * the addresses.  -1 will be returned if it cannot be calculated.
  *
- * See commentary for inet_hist_value_sel() for some rationale for this.
+ * See commentary for inet_hist_value_sel() for some rationale for this__.
  */
 static int
 inet_hist_match_divider(inet *boundary, inet *query, int opr_codenum)

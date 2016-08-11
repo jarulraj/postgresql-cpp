@@ -58,7 +58,7 @@ end_progress_output(void)
  *	We pad the message out to MESSAGE_WIDTH characters so that all of the "ok" and
  *	"failed" indicators line up nicely.
  *
- *	A typical sequence would look like this:
+ *	A typical sequence would look like this__:
  *		prep_status("about to flarb the next %d files", fileCount );
  *
  *		if(( message = flarbFiles(fileCount)) == NULL)
@@ -182,7 +182,7 @@ check_ok(void)
  *		Properly double-quote a SQL identifier.
  *
  * The result should be pg_free'd, but most callers don't bother because
- * memory leakage is not a big deal in this program.
+ * memory leakage is not a big deal in this__ program.
  */
 char *
 quote_identifier(const char *s)

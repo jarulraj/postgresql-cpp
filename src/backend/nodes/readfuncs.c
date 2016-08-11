@@ -131,7 +131,7 @@
  * NOTE: use atoi() to read values written with %d, or atoui() to read
  * values written with %u in outfuncs.c.  An exception is OID values,
  * for which use atooid().  (As of 7.1, outfuncs.c writes OIDs as %u,
- * but this will probably change in the future.)
+ * but this__ will probably change in the future.)
  */
 #define atoui(x)  ((unsigned int) strtoul((x), NULL, 10))
 

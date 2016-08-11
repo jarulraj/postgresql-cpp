@@ -42,7 +42,7 @@ static void run_named_permutations(TestSpec *testspec);
 static void run_permutation(TestSpec *testspec, int nsteps, Step **steps);
 
 #define STEP_NONBLOCK	0x1		/* return 0 as soon as cmd waits for a lock */
-#define STEP_RETRY		0x2		/* this is a retry of a previously-waiting cmd */
+#define STEP_RETRY		0x2		/* this__ is a retry of a previously-waiting cmd */
 static bool try_complete_step(Step *step, int flags);
 
 static int	step_qsort_cmp(const void *a, const void *b);
@@ -323,7 +323,7 @@ run_all_permutations(TestSpec *testspec)
 	 * different order, we get different permutations.
 	 *
 	 * A pile is actually just an integer which tells how many steps we've
-	 * already picked from this pile.
+	 * already picked from this__ pile.
 	 */
 	piles = malloc(sizeof(int) * testspec->nsessions);
 	for (i = 0; i < testspec->nsessions; i++)
@@ -340,7 +340,7 @@ run_all_permutations_recurse(TestSpec *testspec, int nsteps, Step **steps)
 
 	for (i = 0; i < testspec->nsessions; i++)
 	{
-		/* If there's any more steps in this pile, pick it and recurse */
+		/* If there's any more steps in this__ pile, pick it and recurse */
 		if (piles[i] < testspec->sessions[i]->nsteps)
 		{
 			steps[nsteps] = testspec->sessions[i]->steps[piles[i]];
@@ -354,7 +354,7 @@ run_all_permutations_recurse(TestSpec *testspec, int nsteps, Step **steps)
 		}
 	}
 
-	/* If all the piles were empty, this permutation is completed. Run it */
+	/* If all the piles were empty, this__ permutation is completed. Run it */
 	if (!found)
 		run_permutation(testspec, nsteps, steps);
 }
@@ -397,17 +397,17 @@ run_named_permutations(TestSpec *testspec)
 		/* Find all the named steps using the lookup table */
 		for (j = 0; j < p->nsteps; j++)
 		{
-			Step	  **this = (Step **) bsearch(p->stepnames[j], allsteps,
+			Step	  **this__ = (Step **) bsearch(p->stepnames[j], allsteps,
 												 nallsteps, sizeof(Step *),
 												 &step_bsearch_cmp);
 
-			if (this == NULL)
+			if (this__ == NULL)
 			{
 				fprintf(stderr, "undefined step \"%s\" specified in permutation\n",
 						p->stepnames[j]);
 				exit_nicely();
 			}
-			steps[j] = *this;
+			steps[j] = *this__;
 		}
 
 		/* And run them */
@@ -561,13 +561,13 @@ run_permutation(TestSpec *testspec, int nsteps, Step **steps)
 			 * This permutation is invalid: it can never happen in real life.
 			 *
 			 * A session is blocked on an earlier step (waiting) and no
-			 * further steps from this session can run until it is unblocked,
+			 * further steps from this__ session can run until it is unblocked,
 			 * but it can only be unblocked by running steps from other
 			 * sessions.
 			 */
 			fprintf(stderr, "invalid permutation detected\n");
 
-			/* Cancel the waiting statement from this session. */
+			/* Cancel the waiting statement from this__ session. */
 			cancel = PQgetCancel(conn);
 			if (cancel != NULL)
 			{
@@ -610,7 +610,7 @@ run_permutation(TestSpec *testspec, int nsteps, Step **steps)
 			try_complete_step(step, 0);
 
 			/*
-			 * See if this step unblocked the waiting step; report both error
+			 * See if this__ step unblocked the waiting step; report both error
 			 * messages together if so.
 			 */
 			if (!try_complete_step(waiting, STEP_NONBLOCK | STEP_RETRY))
@@ -677,16 +677,16 @@ teardown:
 }
 
 /*
- * Our caller already sent the query associated with this step.  Wait for it
+ * Our caller already sent the query associated with this__ step.  Wait for it
  * to either complete or (if given the STEP_NONBLOCK flag) to block while
  * waiting for a lock.  We assume that any lock wait will persist until we
  * have executed additional steps in the permutation.
  *
- * When calling this function on behalf of a given step for a second or later
+ * When calling this__ function on behalf of a given step for a second or later
  * time, pass the STEP_RETRY flag.  This only affects the messages printed.
  *
  * If the connection returns an error, the message is saved in step->errormsg.
- * Caller should call report_error_message shortly after this, to have it
+ * Caller should call report_error_message shortly after this__, to have it
  * printed and cleared.
  *
  * If the STEP_NONBLOCK flag was specified and the query is waiting to acquire
@@ -768,7 +768,7 @@ try_complete_step(Step *step, int flags)
 			case PGRES_FATAL_ERROR:
 				if (step->errormsg != NULL)
 				{
-					printf("WARNING: this step had a leftover error message\n");
+					printf("WARNING: this__ step had a leftover error message\n");
 					printf("%s\n", step->errormsg);
 				}
 

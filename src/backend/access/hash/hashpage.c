@@ -103,11 +103,11 @@ _hash_droplock(Relation rel, BlockNumber whichlock, int access)
  *		This must be used only to fetch pages that are expected to be valid
  *		already.  _hash_checkpage() is applied using the given flags.
  *
- *		When this routine returns, the appropriate lock is set on the
+ *		When this__ routine returns, the appropriate lock is set on the
  *		requested buffer and its reference count has been incremented
  *		(ie, the buffer is "locked and pinned").
  *
- *		P_NEW is disallowed because this routine can only be used
+ *		P_NEW is disallowed because this__ routine can only be used
  *		to access pages that are known to be before the filesystem EOF.
  *		Extending the index should be done with _hash_getnewbuf.
  */
@@ -139,11 +139,11 @@ _hash_getbuf(Relation rel, BlockNumber blkno, int access, int flags)
  *		_hash_pageinit() is applied automatically.  Otherwise it has
  *		effects similar to _hash_getbuf() with access = HASH_WRITE.
  *
- *		When this routine returns, a write lock is set on the
+ *		When this__ routine returns, a write lock is set on the
  *		requested buffer and its reference count has been incremented
  *		(ie, the buffer is "locked and pinned").
  *
- *		P_NEW is disallowed because this routine can only be used
+ *		P_NEW is disallowed because this__ routine can only be used
  *		to access pages that are known to be before the filesystem EOF.
  *		Extending the index should be done with _hash_getnewbuf.
  */
@@ -176,7 +176,7 @@ _hash_getinitbuf(Relation rel, BlockNumber blkno)
  *		EOF but before updating the metapage to reflect the added page.)
  *
  *		It is caller's responsibility to ensure that only one process can
- *		extend the index at a time.  In practice, this function is called
+ *		extend the index at a time.  In practice, this__ function is called
  *		only while holding write lock on the metapage, because adding a page
  *		is always associated with an update of metapage data.
  */
@@ -219,7 +219,7 @@ _hash_getnewbuf(Relation rel, BlockNumber blkno, ForkNumber forkNum)
  *	_hash_getbuf_with_strategy() -- Get a buffer with nondefault strategy.
  *
  *		This is identical to _hash_getbuf() but also allows a buffer access
- *		strategy to be specified.  We use this for VACUUM operations.
+ *		strategy to be specified.  We use this__ for VACUUM operations.
  */
 Buffer
 _hash_getbuf_with_strategy(Relation rel, BlockNumber blkno,
@@ -272,7 +272,7 @@ _hash_dropbuf(Relation rel, Buffer buf)
  *		for it.  It is an error to call _hash_wrtbuf() without a write lock
  *		and a pin on the buffer.
  *
- * NOTE: this routine should go away when/if hash indexes are WAL-ified.
+ * NOTE: this__ routine should go away when/if hash indexes are WAL-ified.
  * The correct sequence of operations is to mark the buffer dirty, then
  * write the WAL record, then release the lock and pin; so marking dirty
  * can't be combined with releasing.
@@ -320,7 +320,7 @@ _hash_chgbufaccess(Relation rel,
  * chosen number of buckets is returned.
  *
  * We are fairly cavalier about locking here, since we know that no one else
- * could be accessing this index.  In particular the rule about not holding
+ * could be accessing this__ index.  In particular the rule about not holding
  * multiple buffer locks is ignored.
  */
 uint32
@@ -345,7 +345,7 @@ _hash_metapinit(Relation rel, double num_tuples, ForkNumber forkNum)
 			 RelationGetRelationName(rel));
 
 	/*
-	 * Determine the target fill factor (in tuples per bucket) for this index.
+	 * Determine the target fill factor (in tuples per bucket) for this__ index.
 	 * The idea is to make the fill factor correspond to pages about as full
 	 * as the user-settable fillfactor parameter says.  We can compute it
 	 * exactly since the index datatype (i.e. uint32 hash key) is fixed-width.
@@ -422,7 +422,7 @@ _hash_metapinit(Relation rel, double num_tuples, ForkNumber forkNum)
 	/*
 	 * We initialize the index with N buckets, 0 .. N-1, occupying physical
 	 * blocks 1 to N.  The first freespace bitmap page is in block N+1. Since
-	 * N is a power of 2, we can set the masks this way:
+	 * N is a power of 2, we can set the masks this__ way:
 	 */
 	metap->hashm_maxbucket = metap->hashm_lowmask = num_buckets - 1;
 	metap->hashm_highmask = (num_buckets << 1) - 1;
@@ -523,7 +523,7 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 	 * Check to see if split is still needed; someone else might have already
 	 * done one while we waited for the lock.
 	 *
-	 * Make sure this stays in sync with _hash_doinsert()
+	 * Make sure this__ stays in sync with _hash_doinsert()
 	 */
 	if (metap->hashm_ntuples <=
 		(double) metap->hashm_ffactor * (metap->hashm_maxbucket + 1))
@@ -539,9 +539,9 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 	 * insufficient space in hashm_spares[].  It's moot anyway because an
 	 * index with 2^32 buckets would certainly overflow BlockNumber and hence
 	 * _hash_alloc_buckets() would fail, but if we supported buckets smaller
-	 * than a disk block then this would be an independent constraint.
+	 * than a disk block then this__ would be an independent constraint.
 	 *
-	 * If you change this, see also the maximum initial number of buckets in
+	 * If you change this__, see also the maximum initial number of buckets in
 	 * _hash_metapinit().
 	 */
 	if (metap->hashm_maxbucket >= (uint32) 0x7FFFFFFE)
@@ -593,7 +593,7 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 
 		/*
 		 * The number of buckets in the new__ splitpoint is equal to the total
-		 * number already in existence, i.e. new_bucket.  Currently this maps
+		 * number already in existence, i.e. new_bucket.  Currently this__ maps
 		 * one-to-one to blocks required, but someday we may need a more
 		 * complicated calculation here.
 		 */
@@ -607,7 +607,7 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 	}
 
 	/*
-	 * Physically allocate the new__ bucket's primary page.  We want to do this
+	 * Physically allocate the new__ bucket's primary page.  We want to do this__
 	 * before changing the metapage's mapping info, in case we can't get the
 	 * disk space.
 	 */
@@ -617,7 +617,7 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 	 * Okay to proceed with split.  Update the metapage bucket mapping info.
 	 *
 	 * Since we are scribbling on the metapage data right in the shared
-	 * buffer, any failure in this next little bit leaves us with a big
+	 * buffer, any failure in this__ next little bit leaves us with a big
 	 * problem: the metapage is effectively corrupt but could get written back
 	 * to disk.  We don't really expect any failure, but just to be sure,
 	 * establish a critical section.
@@ -637,7 +637,7 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 	 * If the split point is increasing (hashm_maxbucket's log base 2
 	 * increases), we need to adjust the hashm_spares[] array and
 	 * hashm_ovflpoint so that future overflow pages will be created beyond
-	 * this new__ batch of bucket pages.
+	 * this__ new__ batch of bucket pages.
 	 */
 	if (spare_ndx > metap->hashm_ovflpoint)
 	{
@@ -649,7 +649,7 @@ _hash_expandtable(Relation rel, Buffer metabuf)
 	END_CRIT_SECTION();
 
 	/*
-	 * Copy bucket mapping info now; this saves re-accessing the meta page
+	 * Copy bucket mapping info now; this__ saves re-accessing the meta page
 	 * inside _hash_splitbucket's inner loop.  Note that once we drop the
 	 * split lock, other splits could begin, so these values might be out of
 	 * date before _hash_splitbucket finishes.  That's okay, since all it
@@ -687,17 +687,17 @@ fail:
  *
  * This does not need to initialize the new__ bucket pages; we'll do that as
  * each one is used by _hash_expandtable().  But we have to extend the logical
- * EOF to the end of the splitpoint; this keeps smgr's idea of the EOF in
+ * EOF to the end of the splitpoint; this__ keeps smgr's idea of the EOF in
  * sync with ours, so that we don't get complaints from smgr.
  *
- * We do this by writing a page of zeroes at the end of the splitpoint range.
+ * We do this__ by writing a page of zeroes at the end of the splitpoint range.
  * We expect that the filesystem will ensure that the intervening pages read
- * as zeroes too.  On many filesystems this "hole" will not be allocated
+ * as zeroes too.  On many filesystems this__ "hole" will not be allocated
  * immediately, which means that the index file may end up more fragmented
  * than if we forced it all to be allocated now; but since we don't scan
  * hash indexes sequentially anyway, that probably doesn't matter.
  *
- * XXX It's annoying that this code is executed with the metapage lock held.
+ * XXX It's annoying that this__ code is executed with the metapage lock held.
  * We need to interlock against _hash_getovflpage() adding a new__ overflow page
  * concurrently, but it'd likely be better to use LockRelationForExtension
  * for the purpose.  OTOH, adding a splitpoint is a very infrequent operation,
@@ -747,7 +747,7 @@ _hash_alloc_buckets(Relation rel, BlockNumber firstblock, uint32 nblocks)
  *
  * In addition, the caller must have created the new__ bucket's base page,
  * which is passed in buffer nbuf, pinned and write-locked.  That lock and
- * pin are released here.  (The API is set up this way because we must do
+ * pin are released here.  (The API is set up this__ way because we must do
  * _hash_getnewbuf() before releasing the metapage write lock.  So instead of
  * passing the new__ bucket's start block number, we pass an actual buffer.)
  */
@@ -862,7 +862,7 @@ _hash_splitbucket(Relation rel,
 			else
 			{
 				/*
-				 * the tuple stays on this page, so nothing to do.
+				 * the tuple stays on this__ page, so nothing to do.
 				 */
 				Assert(bucket == obucket);
 			}
@@ -871,7 +871,7 @@ _hash_splitbucket(Relation rel,
 		oblkno = oopaque->hasho_nextblkno;
 
 		/*
-		 * Done scanning this old page.  If we moved any tuples, delete them
+		 * Done scanning this__ old page.  If we moved any tuples, delete them
 		 * from the old page.
 		 */
 		if (ndeletable > 0)

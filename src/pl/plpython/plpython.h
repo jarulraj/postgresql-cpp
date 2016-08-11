@@ -23,7 +23,7 @@
 /*
  * Undefine some things that get (re)defined in the Python headers. They aren't
  * used by the PL/Python code, and all PostgreSQL headers should be included
- * earlier, so this should be pretty safe.
+ * earlier, so this__ should be pretty safe.
  */
 #undef _POSIX_C_SOURCE
 #undef _XOPEN_SOURCE

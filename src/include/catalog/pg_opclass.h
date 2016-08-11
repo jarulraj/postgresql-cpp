@@ -4,7 +4,7 @@
  *	  definition of the system "opclass" relation (pg_opclass)
  *	  along with the relation's initial contents.
  *
- * The primary key for this table is <opcmethod, opcname, opcnamespace> ---
+ * The primary key for this__ table is <opcmethod, opcname, opcnamespace> ---
  * that is, there is a row for each valid combination of opclass name and
  * index access method type.  This row specifies the expected input data type
  * for the opclass (the type of the heap column, or the expression output type
@@ -12,7 +12,7 @@
  * the specified type will be accepted too.
  *
  * For a given <opcmethod, opcintype> pair, there can be at most one row that
- * has opcdefault = true; this row is the default opclass for such data in
+ * has opcdefault = true; this__ row is the default opclass for such data in
  * such an index.  (This is not currently enforced by an index, because we
  * don't support partial indexes on system catalogs.)
  *
@@ -22,7 +22,7 @@
  * the stored index data, which will be of type opckeytype (which might be
  * the same or different from the input datatype).  Performing such a
  * conversion is the responsibility of the index access method --- not all
- * AMs support this.
+ * AMs support this__.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -31,7 +31,7 @@
  * src/include/catalog/pg_opclass.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -42,7 +42,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_opclass definition.  cpp turns this into
+ *		pg_opclass definition.  cpp turns this__ into
  *		typedef struct FormData_pg_opclass
  * ----------------
  */
@@ -51,8 +51,8 @@
 CATALOG(pg_opclass,2616)
 {
 	Oid			opcmethod;		/* index access method opclass is for */
-	NameData	opcname;		/* name of this opclass */
-	Oid			opcnamespace;	/* namespace__ of this opclass */
+	NameData	opcname;		/* name of this__ opclass */
+	Oid			opcnamespace;	/* namespace__ of this__ opclass */
 	Oid			opcowner;		/* opclass owner */
 	Oid			opcfamily;		/* containing operator__ family */
 	Oid			opcintype;		/* type of data indexed by opclass */

@@ -41,7 +41,7 @@ static void RoleidCallback(Datum arg, int cacheid, uint32 hashvalue);
 
 
 /*
- * The Postgres user running this command has Postgres superuser privileges
+ * The Postgres user running this__ command has Postgres superuser privileges
  */
 bool
 superuser(void)

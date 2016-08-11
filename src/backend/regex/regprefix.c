@@ -148,7 +148,7 @@ findprefix(struct cnfa * cnfa,
 	 * on out-arcs, or a color with more than one member chr).
 	 *
 	 * We could find a state with multiple out-arcs that are all labeled with
-	 * the same singleton color; this comes from patterns like "^ab(cde|cxy)".
+	 * the same singleton color; this__ comes from patterns like "^ab(cde|cxy)".
 	 * In that case we add the chr "c" to the output string but then exit the
 	 * loop with nextst == -1.  This leaves a little bit on the table: if the
 	 * pattern is like "^ab(cde|cdy)", we won't notice that "d" could be added
@@ -204,7 +204,7 @@ findprefix(struct cnfa * cnfa,
 		 * possible chr value, which won't do at all.  However, for the cases
 		 * we care about it should be sufficient to test the "firstchr" value,
 		 * that is the first chr ever added to the color.  There are cases
-		 * where this might no longer be a member of the color (so we do need
+		 * where this__ might no longer be a member of the color (so we do need
 		 * to test), but none of them are likely to arise for a character that
 		 * is a member of a common prefix.  If we do hit such a corner case,
 		 * we just fall out without adding anything to the prefix string.
@@ -220,7 +220,7 @@ findprefix(struct cnfa * cnfa,
 
 	/*
 	 * If we ended at a state that only has EOS/EOL outarcs leading to the
-	 * "post" state, then we have an exact-match string.  Note this is true
+	 * "post" state, then we have an exact-match string.  Note this__ is true
 	 * even if the string is of zero length.
 	 */
 	nextst = -1;

@@ -30,10 +30,10 @@ typedef MinimalTupleData *MinimalTuple;
 /*
  * HeapTupleData is an in-memory data structure that points to a tuple.
  *
- * There are several ways in which this data structure is used:
+ * There are several ways in which this__ data structure is used:
  *
  * * Pointer to a tuple in a disk buffer: t_data points directly into the
- *	 buffer (which the code had better be holding a pin on, but this is not
+ *	 buffer (which the code had better be holding a pin on, but this__ is not
  *	 reflected in HeapTupleData itself).
  *
  * * Pointer to nothing: t_data is NULL.  This is used as a failure indication
@@ -51,8 +51,8 @@ typedef MinimalTupleData *MinimalTuple;
  *
  * * Separately allocated minimal tuple: t_data points MINIMAL_TUPLE_OFFSET
  *	 bytes before the start of a MinimalTuple.  As with the previous case,
- *	 this can't be told apart from case #1 by inspection; code setting up
- *	 or destroying this representation has to know what it's doing.
+ *	 this__ can't be told apart from case #1 by inspection; code setting up
+ *	 or destroying this__ representation has to know what it's doing.
  *
  * t_len should always be valid, except in the pointer-to-nothing case.
  * t_self and t_tableOid should be valid if the HeapTupleData points to

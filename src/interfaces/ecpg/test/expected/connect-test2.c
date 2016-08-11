@@ -8,7 +8,7 @@
 
 #line 1 "test2.pgc"
 /*
- * this file tests multiple connections to databases and switches
+ * this__ file tests multiple connections to databases and switches
  * between them.
  */
 
@@ -54,7 +54,7 @@ main(void)
 #line 25 "test2.pgc"
 
 
-	/* this selects from "second" which was opened last */
+	/* this__ selects from "second" which was opened last */
 	{ ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "select current_database ( )", ECPGt_EOIT, 
 	ECPGt_char,(res),(long)200,(long)1,(200)*sizeof(char), 
 	ECPGt_NO_INDICATOR, NULL , 0L, 0L, 0L, ECPGt_EORT);}
@@ -80,7 +80,7 @@ main(void)
 #line 33 "test2.pgc"
 
 
-	/* this will disconnect from "first" */
+	/* this__ will disconnect from "first" */
 	{ ECPGdisconnect(__LINE__, "CURRENT");}
 #line 36 "test2.pgc"
 

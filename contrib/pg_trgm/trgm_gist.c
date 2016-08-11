@@ -20,7 +20,7 @@ typedef struct
 	TrgmPackedGraph *graph;
 
 	/*
-	 * The "query" and "trigrams" are stored in the same palloc block as this
+	 * The "query" and "trigrams" are stored in the same palloc block as this__
 	 * cache struct, at MAXALIGN'ed offsets.  The graph however isn't.
 	 */
 } gtrgm_consistent_cache;
@@ -202,7 +202,7 @@ gtrgm_consistent(PG_FUNCTION_ARGS)
 	 * gtrgm_consistent_cache header, then the input query (starting at a
 	 * MAXALIGN boundary), then the TRGM value (also starting at a MAXALIGN
 	 * boundary).  However we don't try to include the regex graph (if any) in
-	 * that struct.  (XXX currently, this approach can leak regex graphs
+	 * that struct.  (XXX currently, this__ approach can leak regex graphs
 	 * across index rescans.  Not clear if that's worth fixing.)
 	 */
 	cache = (gtrgm_consistent_cache *) fcinfo->flinfo->fn_extra;

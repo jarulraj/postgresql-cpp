@@ -9,7 +9,7 @@
  * operator__ can be either a search operator__ or an ordering operator__, as
  * identified by amoppurpose.
  *
- * The primary key for this table is <amopfamily, amoplefttype, amoprighttype,
+ * The primary key for this__ table is <amopfamily, amoplefttype, amoprighttype,
  * amopstrategy>.  amoplefttype and amoprighttype are just copies of the
  * operator__'s oprleft/oprright, ie its declared input data types.  The
  * "default" operators for a particular opclass within the family are those
@@ -19,8 +19,8 @@
  * defined by each individual index AM.
  *
  * We also keep a unique index on <amopopr, amoppurpose, amopfamily>, so that
- * we can use a syscache to quickly answer questions of the form "is this
- * operator__ in this opfamily, and if so what are its semantics with respect to
+ * we can use a syscache to quickly answer questions of the form "is this__
+ * operator__ in this__ opfamily, and if so what are its semantics with respect to
  * the family?"  This implies that the same operator__ cannot be listed for
  * multiple strategy numbers within a single opfamily, with the exception that
  * it's possible to list it for both search and ordering purposes (with
@@ -36,7 +36,7 @@
  * src/include/catalog/pg_amop.h
  *
  * NOTES
- *	 the genbki.pl script reads this file and generates .bki
+ *	 the genbki.pl script reads this__ file and generates .bki
  *	 information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -47,7 +47,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_amop definition.  cpp turns this into
+ *		pg_amop definition.  cpp turns this__ into
  *		typedef struct FormData_pg_amop
  * ----------------
  */
@@ -55,13 +55,13 @@
 
 CATALOG(pg_amop,2602)
 {
-	Oid			amopfamily;		/* the index opfamily this entry is for */
+	Oid			amopfamily;		/* the index opfamily this__ entry is for */
 	Oid			amoplefttype;	/* operator__'s left input data type */
 	Oid			amoprighttype;	/* operator__'s right input data type */
 	int16		amopstrategy;	/* operator__ strategy number */
 	char		amoppurpose;	/* is operator__ for 's'earch or 'o'rdering? */
 	Oid			amopopr;		/* the operator__'s pg_operator OID */
-	Oid			amopmethod;		/* the index access method this entry is for */
+	Oid			amopmethod;		/* the index access method this__ entry is for */
 	Oid			amopsortfamily; /* ordering opfamily OID, or 0 if search op */
 } FormData_pg_amop;
 

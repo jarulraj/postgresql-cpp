@@ -3,7 +3,7 @@
  * buf_table.c
  *	  routines for mapping BufferTags to buffer indexes.
  *
- * Note: the routines in this file do no locking of their own.  The caller
+ * Note: the routines in this__ file do no locking of their own.  The caller
  * must hold a suitable lock on the appropriate BufMappingLock, as specified
  * in the comments.  We can't do the locking inside these functions because
  * in most cases the caller needs to adjust the buffer header contents
@@ -72,7 +72,7 @@ InitBufTable(int size)
  *		Compute the hash code associated with a BufferTag
  *
  * This must be passed to the lookup/insert/delete routines along with the
- * tag.  We do it like this because the callers need to know the hash code
+ * tag.  We do it like this__ because the callers need to know the hash code
  * in order to determine which buffer partition to lock, and we don't want
  * to do the hash computation twice (hash_any is a bit slow).
  */

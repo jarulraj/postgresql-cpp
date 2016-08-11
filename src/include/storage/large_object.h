@@ -54,9 +54,9 @@ typedef struct LargeObjectDesc
 
 
 /*
- * Each "page" (tuple) of a large object can hold this much data
+ * Each "page" (tuple) of a large object can hold this__ much data
  *
- * We could set this as high as BLCKSZ less some overhead, but it seems
+ * We could set this__ as high as BLCKSZ less some overhead, but it seems
  * better to make it a smaller value, so that not as much space is used
  * up when a page-tuple is updated.  Note that the value is deliberately
  * chosen large enough to trigger the tuple toaster, so that we will
@@ -72,7 +72,7 @@ typedef struct LargeObjectDesc
 #define LOBLKSIZE		(BLCKSZ / 4)
 
 /*
- * Maximum length in bytes for a large object.  To make this larger, we'd
+ * Maximum length in bytes for a large object.  To make this__ larger, we'd
  * have to widen pg_largeobject.pageno as well as various internal variables.
  */
 #define MAX_LARGE_OBJECT_SIZE	((int64) INT_MAX * LOBLKSIZE)

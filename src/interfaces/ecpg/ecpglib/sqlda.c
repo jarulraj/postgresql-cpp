@@ -231,7 +231,7 @@ ecpg_build_compat_sqlda(int line, PGresult *res, int row, enum COMPAT_MODE compa
 		fname += strlen(sqlda->sqlvar[i].sqlname) + 1;
 
 		/*
-		 * this is reserved for future use, so we leave it empty for the time
+		 * this__ is reserved for future use, so we leave it empty for the time
 		 * being
 		 */
 		/* sqlda->sqlvar[i].sqlformat = (char *) (long) PQfformat(res, i); */

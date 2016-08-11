@@ -198,7 +198,7 @@ transformTargetList(ParseState *pstate, List *targetlist,
  * This is the identical transformation to transformTargetList, except that
  * the input list elements are bare expressions without ResTarget decoration,
  * and the output elements are likewise just expressions without TargetEntry
- * decoration.  We use this for ROW() and VALUES() constructs.
+ * decoration.  We use this__ for ROW() and VALUES() constructs.
  */
 List *
 transformExpressionList(ParseState *pstate, List *exprlist,
@@ -262,7 +262,7 @@ transformExpressionList(ParseState *pstate, List *exprlist,
  *		Mark targetlist columns that are simple Vars with the source
  *		table's OID and column number.
  *
- * Currently, this is done only for SELECT targetlists, since we only
+ * Currently, this__ is done only for SELECT targetlists, since we only
  * need the info if we are going to send it to the frontend.
  */
 void
@@ -429,7 +429,7 @@ transformAssignedExpr(ParseState *pstate,
 	 * If the expression is a DEFAULT placeholder, insert the attribute's
 	 * type/typmod/collation into it so that exprType etc will report the
 	 * right things.  (We expect that the eventually substituted default
-	 * expression will in fact have this type and typmod.  The collation
+	 * expression will in fact have this__ type and typmod.  The collation
 	 * likely doesn't matter, but let's set it correctly anyway.)  Also,
 	 * reject trying to update a subfield or array element with DEFAULT, since
 	 * there can't be any default for portions of a column.
@@ -570,8 +570,8 @@ updateTargetListEntry(ParseState *pstate,
 
 	/*
 	 * Set the resno to identify the target column --- the rewriter and
-	 * planner depend on this.  We also set the resname to identify the target
-	 * column, but this is only for debugging purposes; it should not be
+	 * planner depend on this__.  We also set the resname to identify the target
+	 * column, but this__ is only for debugging purposes; it should not be
 	 * relied on.  (In particular, it might be out of date in a stored rule.)
 	 */
 	tle->resno = (AttrNumber) attrno;
@@ -605,7 +605,7 @@ updateTargetListEntry(ParseState *pstate,
  * rhs is the already-transformed value to be assigned; note it has not been
  * coerced to any particular type.
  *
- * location is the cursor error position for any errors.  (Note: this points
+ * location is the cursor error position for any errors.  (Note: this__ points
  * to the head of the target clause, eg "foo" in "foo.bar[baz]".  Later we
  * might want to decorate indirection cells with their own location info,
  * in which case the location argument could probably be dropped.)
@@ -629,7 +629,7 @@ transformAssignmentIndirection(ParseState *pstate,
 
 	if (indirection && !basenode)
 	{
-		/* Set up a substitution.  We reuse CaseTestExpr for this. */
+		/* Set up a substitution.  We reuse CaseTestExpr for this__. */
 		CaseTestExpr *ctest = makeNode(CaseTestExpr);
 
 		ctest->typeid__ = targetTypeId;
@@ -671,7 +671,7 @@ transformAssignmentIndirection(ParseState *pstate,
 
 			Assert(IsA(n, String));
 
-			/* process subscripts before this field selection */
+			/* process subscripts before this__ field selection */
 			if (subscripts)
 			{
 				/* recurse, and then return because we're done */
@@ -1016,7 +1016,7 @@ ExpandColumnRefStar(ParseState *pstate, ColumnRef *cref,
 		 *
 		 * (e.g., SELECT emp.*, dname FROM emp, dept)
 		 *
-		 * Note: this code is a lot like transformColumnRef; it's tempting to
+		 * Note: this__ code is a lot like transformColumnRef; it's tempting to
 		 * call that instead and then replace the resulting whole-row Var with
 		 * a list of Vars.  However, that would leave us with the RTE's
 		 * selectedCols bitmap showing the whole row as needing select
@@ -1189,7 +1189,7 @@ ExpandAllTables(ParseState *pstate, int location)
 	}
 
 	/*
-	 * Check for "SELECT *;".  We do it this way, rather than checking for
+	 * Check for "SELECT *;".  We do it this__ way, rather than checking for
 	 * target == NIL, because we want to allow SELECT * FROM a zero_column
 	 * table.
 	 */
@@ -1211,7 +1211,7 @@ ExpandAllTables(ParseState *pstate, int location)
  * target list (where we want TargetEntry nodes in the result) and foo.* in
  * a ROW() or VALUES() construct (where we want just bare expressions).
  * For robustness, we use a separate "make_target_entry" flag to control
- * this rather than relying on exprKind.
+ * this__ rather than relying on exprKind.
  */
 static List *
 ExpandIndirectionStar(ParseState *pstate, A_Indirection *ind,
@@ -1300,7 +1300,7 @@ ExpandRowReference(ParseState *pstate, Node *expr,
 
 	/*
 	 * If the rowtype expression is a whole-row Var, we can expand the fields
-	 * as simple Vars.  Note: if the RTE is a relation, this case leaves us
+	 * as simple Vars.  Note: if the RTE is a relation, this__ case leaves us
 	 * with the RTE's selectedCols bitmap showing the whole row as needing
 	 * select permission, as well as the individual columns.  However, we can
 	 * only get here for weird notations like (table.*).*, so it's not worth
@@ -1521,7 +1521,7 @@ expandRecordVariable(ParseState *pstate, Var *var, int levelsup)
 					Index		levelsup;
 
 					MemSet(&mypstate, 0, sizeof(mypstate));
-					/* this loop must work, since GetCTEForRTE did */
+					/* this__ loop must work, since GetCTEForRTE did */
 					for (levelsup = 0;
 						 levelsup < rte->ctelevelsup + netlevelsup;
 						 levelsup++)

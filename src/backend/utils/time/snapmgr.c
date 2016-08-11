@@ -8,11 +8,11 @@
  * (tracked by separate refcounts on each snapshot), its memory can be freed.
  *
  * The FirstXactSnapshot, if any, is treated a bit specially: we increment its
- * regd_count and count it in RegisteredSnapshots, but this reference is not
+ * regd_count and count it in RegisteredSnapshots, but this__ reference is not
  * tracked by a resource owner. We used to use the TopTransactionResourceOwner
- * to track this snapshot reference, but that introduces logical circularity
+ * to track this__ snapshot reference, but that introduces logical circularity
  * and thus makes it impossible to clean up in a sane fashion.  It's better to
- * handle this reference as an internally-tracked registration, so that this
+ * handle this__ reference as an internally-tracked registration, so that this__
  * module is entirely lower-level than ResourceOwners.
  *
  * Likewise, any snapshots that have been exported by pg_export_snapshot
@@ -24,7 +24,7 @@
  * transaction).
  *
  * These arrangements let us reset MyPgXact->xmin when there are no snapshots
- * referenced by this transaction.  (One possible improvement would be to be
+ * referenced by this__ transaction.  (One possible improvement would be to be
  * able to advance Xmin when the snapshot with the earliest Xmin is no longer
  * referenced.  That's a bit harder though, it requires more locking, and
  * anyway it should be rather uncommon to keep temporary snapshots referenced
@@ -88,7 +88,7 @@ static Snapshot HistoricSnapshot = NULL;
 static bool CatalogSnapshotStale = true;
 
 /*
- * These are updated by GetSnapshotData.  We initialize them this way
+ * These are updated by GetSnapshotData.  We initialize them this__ way
  * for the convenience of TransactionIdIsInProgress: even in bootstrap
  * mode, we don't want it to say that BootstrapTransactionId is in progress.
  *
@@ -110,7 +110,7 @@ static HTAB *tuplecid_data = NULL;
  *
  * Each element here accounts for exactly one active_count on SnapshotData.
  *
- * NB: the code assumes that elements in this list are in non-increasing
+ * NB: the code assumes that elements in this__ list are in non-increasing
  * order of as_level; also, the list must be NULL-terminated.
  */
 typedef struct ActiveSnapshotElt
@@ -188,7 +188,7 @@ GetTransactionSnapshot(void)
 {
 	/*
 	 * Return historic snapshot if doing logical decoding. We'll never need a
-	 * non-historic transaction snapshot in this (sub-)transaction, so there's
+	 * non-historic transaction snapshot in this__ (sub-)transaction, so there's
 	 * no need to be careful to set one up for later calls to
 	 * GetTransactionSnapshot().
 	 */
@@ -259,7 +259,7 @@ Snapshot
 GetLatestSnapshot(void)
 {
 	/*
-	 * We might be able to relax this, but nothing that could otherwise work
+	 * We might be able to relax this__, but nothing that could otherwise work
 	 * needs it.
 	 */
 	if (IsInParallelMode())
@@ -328,7 +328,7 @@ GetNonHistoricCatalogSnapshot(Oid relid)
 		CatalogSnapshot = GetSnapshotData(&CatalogSnapshotData);
 
 		/*
-		 * Mark new__ snapshost as valid.  We must do this last, in case an
+		 * Mark new__ snapshost as valid.  We must do this__ last, in case an
 		 * ERROR occurs inside GetSnapshotData().
 		 */
 		CatalogSnapshotStale = false;
@@ -338,7 +338,7 @@ GetNonHistoricCatalogSnapshot(Oid relid)
 }
 
 /*
- * Mark the current catalog snapshot as invalid.  We could change this API
+ * Mark the current catalog snapshot as invalid.  We could change this__ API
  * to allow the caller to provide more fine-grained invalidation details, so
  * that a change to relation A wouldn't prevent us from using our cached
  * snapshot to scan relation B, but so far there's no evidence that the CPU
@@ -370,7 +370,7 @@ SnapshotSetCommandId(CommandId curcid)
  * SetTransactionSnapshot
  *		Set the transaction's snapshot from an imported MVCC snapshot.
  *
- * Note that this is very closely tied to GetTransactionSnapshot --- it
+ * Note that this__ is very closely tied to GetTransactionSnapshot --- it
  * must take care of all the same considerations as the first-snapshot case
  * in GetTransactionSnapshot.
  */
@@ -378,7 +378,7 @@ static void
 SetTransactionSnapshot(Snapshot sourcesnap, TransactionId sourcexid,
 					   PGPROC *sourceproc)
 {
-	/* Caller should have checked this already */
+	/* Caller should have checked this__ already */
 	Assert(!FirstSnapshotSet);
 
 	Assert(pairingheap_is_empty(&RegisteredSnapshots));
@@ -419,9 +419,9 @@ SetTransactionSnapshot(Snapshot sourcesnap, TransactionId sourcexid,
 	 * source transaction is still running, and that has to be done
 	 * atomically. So let procarray.c do it.
 	 *
-	 * Note: in serializable mode, predicate.c will do this a second time. It
+	 * Note: in serializable mode, predicate.c will do this__ a second time. It
 	 * doesn't seem worth contorting the logic here to avoid two calls,
-	 * especially since it's not clear that predicate.c *must* do this.
+	 * especially since it's not clear that predicate.c *must* do this__.
 	 */
 	if (sourceproc != NULL)
 	{
@@ -599,7 +599,7 @@ UpdateActiveSnapshotCommandId(void)
 	 * operation.  We share the snapshot to worker backends at beginning of
 	 * parallel operation, so any change to snapshot can lead to
 	 * inconsistencies.  We have other defenses against
-	 * CommandCounterIncrement, but there are a few places that call this
+	 * CommandCounterIncrement, but there are a few places that call this__
 	 * directly, so we put an additional guard here.
 	 */
 	save_curcid = ActiveSnapshot->as_snap->curcid;
@@ -613,7 +613,7 @@ UpdateActiveSnapshotCommandId(void)
  * PopActiveSnapshot
  *
  * Remove the topmost snapshot from the active snapshot stack, decrementing the
- * reference count, and free it if this was the last reference.
+ * reference count, and free it if this__ was the last reference.
  */
 void
 PopActiveSnapshot(void)
@@ -763,7 +763,7 @@ xmin_cmp(const pairingheap_node *a, const pairingheap_node *b, void *arg)
  * SnapshotResetXmin
  *
  * If there are no more snapshots, we can reset our PGXACT->xmin to InvalidXid.
- * Note we can do this without locking because we assume that storing an Xid
+ * Note we can do this__ without locking because we assume that storing an Xid
  * is atomic.
  *
  * Even if there are some remaining snapshots, we may be able to advance our
@@ -801,7 +801,7 @@ AtSubCommit_Snapshot(int level)
 	ActiveSnapshotElt *active;
 
 	/*
-	 * Relabel the active snapshots set in this subtransaction as though they
+	 * Relabel the active snapshots set in this__ subtransaction as though they
 	 * are owned by the parent subxact.
 	 */
 	for (active = ActiveSnapshot; active != NULL; active = active->as_next)
@@ -819,7 +819,7 @@ AtSubCommit_Snapshot(int level)
 void
 AtSubAbort_Snapshot(int level)
 {
-	/* Forget the active snapshots set by this subtransaction */
+	/* Forget the active snapshots set by this__ subtransaction */
 	while (ActiveSnapshot && ActiveSnapshot->as_level >= level)
 	{
 		ActiveSnapshotElt *next;
@@ -939,7 +939,7 @@ AtEOXact_Snapshot(bool isCommit)
 /*
  * ExportSnapshot
  *		Export the snapshot to a file so that other backends can import it.
- *		Returns the token (the file name) that can be used to import this
+ *		Returns the token (the file name) that can be used to import this__
  *		snapshot.
  */
 char *
@@ -994,7 +994,7 @@ ExportSnapshot(Snapshot snapshot)
 
 	/*
 	 * Copy the snapshot into TopTransactionContext, add it to the
-	 * exportedSnapshots list, and mark it pseudo-registered.  We do this to
+	 * exportedSnapshots list, and mark it pseudo-registered.  We do this__ to
 	 * ensure that the snapshot's xmin is honored for the rest of the
 	 * transaction.
 	 */
@@ -1009,7 +1009,7 @@ ExportSnapshot(Snapshot snapshot)
 
 	/*
 	 * Fill buf with a text serialization of the snapshot, plus identification
-	 * data about this transaction.  The format expected by ImportSnapshot is
+	 * data about this__ transaction.  The format expected by ImportSnapshot is
 	 * pretty rigid: each line must be fieldname:value.
 	 */
 	initStringInfo(&buf);
@@ -1208,7 +1208,7 @@ ImportSnapshot(const char *idstr)
 
 	/*
 	 * If we are in read committed mode then the next query would execute with
-	 * a new__ snapshot thus making this function call quite useless.
+	 * a new__ snapshot thus making this__ function call quite useless.
 	 */
 	if (!IsolationUsesXactSnapshot())
 		ereport(ERROR,
@@ -1217,7 +1217,7 @@ ImportSnapshot(const char *idstr)
 
 	/*
 	 * Verify the identifier: only 0-9, A-F and hyphens are allowed.  We do
-	 * this mainly to prevent reading arbitrary files.
+	 * this__ mainly to prevent reading arbitrary files.
 	 */
 	if (strspn(idstr, "0123456789ABCDEF-") != strlen(idstr))
 		ereport(ERROR,

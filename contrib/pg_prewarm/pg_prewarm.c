@@ -114,7 +114,7 @@ pg_prewarm(PG_FUNCTION_ARGS)
 	if (!smgrexists(rel->rd_smgr, forkNumber))
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-				 errmsg("fork \"%s\" does not exist for this relation",
+				 errmsg("fork \"%s\" does not exist for this__ relation",
 						forkString)));
 
 	/* Validate block numbers, or handle nulls. */
@@ -155,7 +155,7 @@ pg_prewarm(PG_FUNCTION_ARGS)
 		 * It would probably be better to pass our prefetch requests in chunks
 		 * of a megabyte or maybe even a whole segment at a time, but there's
 		 * no practical way to do that at present without a gross modularity
-		 * violation, so we just do this.
+		 * violation, so we just do this__.
 		 */
 		for (block = first_block; block <= last_block; ++block)
 		{
@@ -166,7 +166,7 @@ pg_prewarm(PG_FUNCTION_ARGS)
 #else
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("prefetch is not supported by this build")));
+				 errmsg("prefetch is not supported by this__ build")));
 #endif
 	}
 	else if (ptype == PREWARM_READ)

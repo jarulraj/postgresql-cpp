@@ -10,12 +10,12 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this list of conditions and the following disclaimer.
+ *	  notice, this__ list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this list of conditions and the following disclaimer in the
+ *	  notice, this__ list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University nor the names of its contributors
- *	  may be used to endorse or promote products derived from this software
+ *	  may be used to endorse or promote products derived from this__ software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
@@ -65,7 +65,7 @@ char	   *optarg;				/* argument associated with option */
  * This implementation does not use optreset.  Instead, we guarantee that
  * it can be restarted on a new__ argv array after a previous call returned -1,
  * if the caller resets optind to 1 before the first call of the new__ series.
- * (Internally, this means we must be sure to reset "place" to EMSG before
+ * (Internally, this__ means we must be sure to reset "place" to EMSG before
  * returning -1.)
  */
 int

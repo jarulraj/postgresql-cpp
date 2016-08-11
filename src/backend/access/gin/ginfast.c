@@ -497,7 +497,7 @@ ginHeapTupleFastCollect(GinState *ginstate,
  * Deletes pending list pages up to (not including) newHead page.
  * If newHead == InvalidBlockNumber then function drops the whole list.
  *
- * metapage is pinned and exclusive-locked throughout this function.
+ * metapage is pinned and exclusive-locked throughout this__ function.
  *
  * Returns true if another cleanup process is running concurrently
  * (if so, we can just abandon our own efforts)
@@ -783,7 +783,7 @@ ginInsertCleanup(GinState *ginstate,
 	accum.ginstate = ginstate;
 
 	/*
-	 * At the top of this loop, we have pin and lock on the current page of
+	 * At the top of this__ loop, we have pin and lock on the current page of
 	 * the pending list.  However, we'll release that before exiting the loop.
 	 * Note we also have pin but not lock on the metapage.
 	 */
@@ -862,9 +862,9 @@ ginInsertCleanup(GinState *ginstate,
 			 * While we left the page unlocked, more stuff might have gotten
 			 * added to it.  If so, process those entries immediately.  There
 			 * shouldn't be very many, so we don't worry about the fact that
-			 * we're doing this with exclusive lock. Insertion algorithm
+			 * we're doing this__ with exclusive lock. Insertion algorithm
 			 * guarantees that inserted row(s) will not continue on next page.
-			 * NOTE: intentionally no vacuum_delay_point in this loop.
+			 * NOTE: intentionally no vacuum_delay_point in this__ loop.
 			 */
 			if (PageGetMaxOffsetNumber(page) != maxoff)
 			{
@@ -886,7 +886,7 @@ ginInsertCleanup(GinState *ginstate,
 												 * locking */
 
 			/*
-			 * remove read pages from pending list, at this point all
+			 * remove read pages from pending list, at this__ point all
 			 * content of read pages is in regular structure
 			 */
 			if (shiftList(index, metabuffer, blkno, stats))

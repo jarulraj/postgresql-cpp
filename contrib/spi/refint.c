@@ -288,7 +288,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 	trigtuple = trigdata->tg_trigtuple;
 
 	/*
-	 * But if this is UPDATE then we have to return tg_newtuple. Also, if key
+	 * But if this__ is UPDATE then we have to return tg_newtuple. Also, if key
 	 * in tg_newtuple is the same as in tg_trigtuple then nothing to do.
 	 */
 	is_update = 0;
@@ -384,7 +384,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 
 		/*
 		 * If UPDATE then get column value from new__ tuple being inserted and
-		 * compare is this the same as old one. For the moment we use string
+		 * compare is this__ the same as old one. For the moment we use string
 		 * presentation of values...
 		 */
 		if (newtuple != NULL)
@@ -392,7 +392,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 			char	   *oldval = SPI_getvalue(trigtuple, tupdesc, fnumber);
 			char	   *newval;
 
-			/* this shouldn't happen! SPI_ERROR_NOOUTFUNC ? */
+			/* this__ shouldn't happen! SPI_ERROR_NOOUTFUNC ? */
 			if (oldval == NULL)
 				/* internal error */
 				elog(ERROR, "check_foreign_key: SPI_getvalue returned %d", SPI_result);

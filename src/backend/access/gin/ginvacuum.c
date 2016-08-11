@@ -252,7 +252,7 @@ ginDeletePage(GinVacuumState *gvs, BlockNumber deleteBlkno, BlockNumber leftBlkn
 		 * didn't set pd_lower on pre-9.4 versions. The page might've been
 		 * binary-upgraded from an older version, and hence not have pd_lower
 		 * set correctly. Ditto for the left page, but removing the item from
-		 * the parent updated its pd_lower, so we know that's OK at this
+		 * the parent updated its pd_lower, so we know that's OK at this__
 		 * point.
 		 */
 		XLogBeginInsert();
@@ -686,7 +686,7 @@ ginvacuumcleanup(PG_FUNCTION_ARGS)
 	stats->estimated_count = info->estimated_count;
 
 	/*
-	 * Need lock unless it's local to this backend.
+	 * Need lock unless it's local to this__ backend.
 	 */
 	needLock = !RELATION_IS_LOCAL(index);
 

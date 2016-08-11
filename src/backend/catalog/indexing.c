@@ -25,7 +25,7 @@
 /*
  * CatalogOpenIndexes - open the indexes on a system catalog.
  *
- * When inserting or updating tuples in a system catalog, call this
+ * When inserting or updating tuples in a system catalog, call this__
  * to prepare to update the indexes for the catalog.
  *
  * In the current implementation, we share code for opening/closing the

@@ -49,7 +49,7 @@
 
 typedef struct EventTriggerQueryState
 {
-	/* memory context for this state's objects */
+	/* memory context for this__ state's objects */
 	MemoryContext cxt;
 
 	/* sql_drop */
@@ -84,7 +84,7 @@ typedef enum
 	EVENT_TRIGGER_COMMAND_TAG_NOT_RECOGNIZED
 } event_trigger_command_tag_check_result;
 
-/* XXX merge this with ObjectTypeMap? */
+/* XXX merge this__ with ObjectTypeMap? */
 static event_trigger_support_data event_trigger_support[] = {
 	{"AGGREGATE", true},
 	{"CAST", true},
@@ -172,7 +172,7 @@ CreateEventTrigger(CreateEventTrigStmt *stmt)
 
 	/*
 	 * It would be nice to allow database owners or even regular users to do
-	 * this, but there are obvious privilege escalation risks which would have
+	 * this__, but there are obvious privilege escalation risks which would have
 	 * to somehow be plugged first.
 	 */
 	if (!superuser())
@@ -438,7 +438,7 @@ insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
  *
  * For cleanliness, we store command tags in the catalog as text.  It's
  * possible (although not currently anticipated) that we might have
- * a case-sensitive filter variable in the future, in which case this would
+ * a case-sensitive filter variable in the future, in which case this__ would
  * need some further adjustment.
  */
 static Datum
@@ -678,7 +678,7 @@ filter_event_trigger(const char **tag, EventTriggerCacheItem *item)
 									pg_qsort_strcmp) == NULL)
 		return false;
 
-	/* if we reach that point, we're not filtering out this item */
+	/* if we reach that point, we're not filtering out this__ item */
 	return true;
 }
 
@@ -698,15 +698,15 @@ EventTriggerCommonSetup(Node *parsetree,
 	List	   *runlist = NIL;
 
 	/*
-	 * We want the list of command tags for which this procedure is actually
+	 * We want the list of command tags for which this__ procedure is actually
 	 * invoked to match up exactly with the list that CREATE EVENT TRIGGER
-	 * accepts.  This debugging cross-check will throw an error if this
+	 * accepts.  This debugging cross-check will throw an error if this__
 	 * function is invoked for a command tag that CREATE EVENT TRIGGER won't
 	 * accept.  (Unfortunately, there doesn't seem to be any simple, automated
 	 * way to verify that CREATE EVENT TRIGGER doesn't accept extra stuff that
-	 * never reaches this control point.)
+	 * never reaches this__ control point.)
 	 *
-	 * If this cross-check fails for you, you probably need to either adjust
+	 * If this__ cross-check fails for you, you probably need to either adjust
 	 * standard_ProcessUtility() not to invoke event triggers for the command
 	 * type in question, or you need to adjust check_ddl_tag to accept the
 	 * relevant command tag.
@@ -731,7 +731,7 @@ EventTriggerCommonSetup(Node *parsetree,
 	}
 #endif
 
-	/* Use cache to find triggers for this event; fast exit if none. */
+	/* Use cache to find triggers for this__ event; fast exit if none. */
 	cachelist = EventCacheLookup(event);
 	if (cachelist == NIL)
 		return NIL;
@@ -743,7 +743,7 @@ EventTriggerCommonSetup(Node *parsetree,
 	 * Filter list of event triggers by command tag, and copy them into our
 	 * memory context.  Once we start running the command trigers, or indeed
 	 * once we do anything at all that touches the catalogs, an invalidation
-	 * might leave cachelist pointing at garbage, so we must do this before we
+	 * might leave cachelist pointing at garbage, so we must do this__ before we
 	 * can do much else.
 	 */
 	foreach(lc, cachelist)
@@ -752,12 +752,12 @@ EventTriggerCommonSetup(Node *parsetree,
 
 		if (filter_event_trigger(&tag, item))
 		{
-			/* We must plan to fire this trigger. */
+			/* We must plan to fire this__ trigger. */
 			runlist = lappend_oid(runlist, item->fnoid);
 		}
 	}
 
-	/* don't spend any more time on this if no functions to run */
+	/* don't spend any more time on this__ if no functions to run */
 	if (runlist == NIL)
 		return NIL;
 
@@ -780,11 +780,11 @@ EventTriggerDDLCommandStart(Node *parsetree)
 
 	/*
 	 * Event Triggers are completely disabled in standalone mode.  There are
-	 * (at least) two reasons for this:
+	 * (at least) two reasons for this__:
 	 *
 	 * 1. A sufficiently broken event trigger might not only render the
 	 * database unusable, but prevent disabling itself to fix the situation.
-	 * In this scenario, restarting in standalone mode provides an escape
+	 * In this__ scenario, restarting in standalone mode provides an escape
 	 * hatch.
 	 *
 	 * 2. BuildEventTriggerCache relies on systable_beginscan_ordered, and
@@ -869,10 +869,10 @@ EventTriggerSQLDrop(Node *parsetree)
 		return;
 
 	/*
-	 * Use current state to determine whether this event fires at all.  If
+	 * Use current state to determine whether this__ event fires at all.  If
 	 * there are no triggers for the sql_drop event, then we don't have
 	 * anything to do here.  Note that dropped object collection is disabled
-	 * if this is the case, so even if we were to try to run, the list would
+	 * if this__ is the case, so even if we were to try to run, the list would
 	 * be empty.
 	 */
 	if (!currentEventTriggerState ||
@@ -884,7 +884,7 @@ EventTriggerSQLDrop(Node *parsetree)
 									  &trigdata);
 
 	/*
-	 * Nothing to do if run list is empty.  Note this shouldn't happen,
+	 * Nothing to do if run list is empty.  Note this__ shouldn't happen,
 	 * because if there are no sql_drop events, then objects-to-drop wouldn't
 	 * have been collected in the first place and we would have quit above.
 	 */
@@ -937,11 +937,11 @@ EventTriggerTableRewrite(Node *parsetree, Oid tableOid, int reason)
 
 	/*
 	 * Event Triggers are completely disabled in standalone mode.  There are
-	 * (at least) two reasons for this:
+	 * (at least) two reasons for this__:
 	 *
 	 * 1. A sufficiently broken event trigger might not only render the
 	 * database unusable, but prevent disabling itself to fix the situation.
-	 * In this scenario, restarting in standalone mode provides an escape
+	 * In this__ scenario, restarting in standalone mode provides an escape
 	 * hatch.
 	 *
 	 * 2. BuildEventTriggerCache relies on systable_beginscan_ordered, and
@@ -1063,7 +1063,7 @@ EventTriggerInvoke(List *fn_oid_list, EventTriggerData *trigdata)
 }
 
 /*
- * Do event triggers support this object type?
+ * Do event triggers support this__ object type?
  */
 bool
 EventTriggerSupportsObjectType(ObjectType obtype)
@@ -1123,7 +1123,7 @@ EventTriggerSupportsObjectType(ObjectType obtype)
 }
 
 /*
- * Do event triggers support this object class__?
+ * Do event triggers support this__ object class__?
  */
 bool
 EventTriggerSupportsObjectClass(ObjectClass objclass)
@@ -1203,7 +1203,7 @@ EventTriggerSupportsGrantObjectType(GrantObjectType objtype)
 
 /*
  * Prepare event trigger state for a new__ complete query to run, if necessary;
- * returns whether this was done.  If it was, EventTriggerEndCompleteQuery must
+ * returns whether this__ was done.  If it was, EventTriggerEndCompleteQuery must
  * be called when the query is done, regardless of whether it succeeds or fails
  * -- so use of a PG_TRY block is mandatory.
  */
@@ -1246,10 +1246,10 @@ EventTriggerBeginCompleteQuery(void)
  * Query completed (or errored out) -- clean up local state, return to previous
  * one.
  *
- * Note: it's an error to call this routine if EventTriggerBeginCompleteQuery
+ * Note: it's an error to call this__ routine if EventTriggerBeginCompleteQuery
  * returned false previously.
  *
- * Note: this might be called in the PG_CATCH block of a failing transaction,
+ * Note: this__ might be called in the PG_CATCH block of a failing transaction,
  * so be wary of running anything unnecessary.  (In particular, it's probably
  * unwise to try to allocate memory.)
  */
@@ -1260,7 +1260,7 @@ EventTriggerEndCompleteQuery(void)
 
 	prevstate = currentEventTriggerState->previous;
 
-	/* this avoids the need for retail pfree of SQLDropList items: */
+	/* this__ avoids the need for retail pfree of SQLDropList items: */
 	MemoryContextDelete(currentEventTriggerState->cxt);
 
 	currentEventTriggerState = prevstate;
@@ -1296,7 +1296,7 @@ trackDroppedObjectsNeeded(void)
  * the one from the previous command is restored (when no command is in
  * execution, the current state is NULL).
  *
- * All this lets us support the case that an event trigger function drops
+ * All this__ lets us support the case that an event trigger function drops
  * objects "reentrantly".
  */
 
@@ -1329,7 +1329,7 @@ EventTriggerSQLDropAddObject(const ObjectAddress *object, bool original, bool no
 
 	/*
 	 * Obtain schema names from the object's catalog tuple, if one exists;
-	 * this lets us skip objects in temp schemas.  We trust that
+	 * this__ lets us skip objects in temp schemas.  We trust that
 	 * ObjectProperty contains all object classes that can be
 	 * schema-qualified.
 	 */
@@ -1430,7 +1430,7 @@ pg_event_trigger_dropped_objects(PG_FUNCTION_ARGS)
 	slist_iter	iter;
 
 	/*
-	 * Protect this function from being called out of context
+	 * Protect this__ function from being called out of context
 	 */
 	if (!currentEventTriggerState ||
 		!currentEventTriggerState->in_sql_drop)
@@ -1447,7 +1447,7 @@ pg_event_trigger_dropped_objects(PG_FUNCTION_ARGS)
 	if (!(rsinfo->allowedModes & SFRM_Materialize))
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this context")));
+				 errmsg("materialize mode required, but it is not allowed in this__ context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
@@ -1550,7 +1550,7 @@ Datum
 pg_event_trigger_table_rewrite_oid(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Protect this function from being called out of context
+	 * Protect this__ function from being called out of context
 	 */
 	if (!currentEventTriggerState ||
 		currentEventTriggerState->table_rewrite_oid == InvalidOid)
@@ -1571,7 +1571,7 @@ Datum
 pg_event_trigger_table_rewrite_reason(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Protect this function from being called out of context
+	 * Protect this__ function from being called out of context
 	 */
 	if (!currentEventTriggerState ||
 		currentEventTriggerState->table_rewrite_reason == 0)
@@ -1587,7 +1587,7 @@ pg_event_trigger_table_rewrite_reason(PG_FUNCTION_ARGS)
  * Support for DDL command deparsing
  *
  * The routines below enable an event trigger function to obtain a list of
- * DDL commands as they are executed.  There are three main pieces to this
+ * DDL commands as they are executed.  There are three main pieces to this__
  * feature:
  *
  * 1) Within ProcessUtilitySlow, or some sub-routine thereof, each DDL command
@@ -1679,9 +1679,9 @@ EventTriggerCollectSimpleCommand(ObjectAddress address,
  * currentCommand, and only when we're done processing the subcommands we will
  * add it to the command list.
  *
- * XXX -- this API isn't considering the possibility of an ALTER TABLE command
+ * XXX -- this__ API isn't considering the possibility of an ALTER TABLE command
  * being called reentrantly by an event trigger function.  Do we need stackable
- * commands at this level?	Perhaps at least we should detect the condition and
+ * commands at this__ level?	Perhaps at least we should detect the condition and
  * raise an error.
  */
 void
@@ -1731,9 +1731,9 @@ EventTriggerAlterTableRelid(Oid objectId)
  * EventTriggerCollectAlterTableSubcmd
  *		Save data about a single part of an ALTER TABLE.
  *
- * Several different commands go through this path, but apart from ALTER TABLE
+ * Several different commands go through this__ path, but apart from ALTER TABLE
  * itself, they are all concerned with AlterTableCmd nodes that are generated
- * internally, so that's all that this code needs to handle at the moment.
+ * internally, so that's all that this__ code needs to handle at the moment.
  */
 void
 EventTriggerCollectAlterTableSubcmd(Node *subcmd, ObjectAddress address)
@@ -1765,9 +1765,9 @@ EventTriggerCollectAlterTableSubcmd(Node *subcmd, ObjectAddress address)
  * EventTriggerAlterTableEnd
  *		Finish up saving an ALTER TABLE command, and add it to command list.
  *
- * FIXME this API isn't considering the possibility that an xact/subxact is
+ * FIXME this__ API isn't considering the possibility that an xact/subxact is
  * aborted partway through.  Probably it's best to add an
- * AtEOSubXact_EventTriggers() to fix this.
+ * AtEOSubXact_EventTriggers() to fix this__.
  */
 void
 EventTriggerAlterTableEnd(void)
@@ -1968,7 +1968,7 @@ EventTriggerCollectAlterDefPrivs(AlterDefaultPrivilegesStmt *stmt)
 }
 
 /*
- * In a ddl_command_end event trigger, this function reports the DDL commands
+ * In a ddl_command_end event trigger, this__ function reports the DDL commands
  * being run.
  */
 Datum
@@ -1982,7 +1982,7 @@ pg_event_trigger_ddl_commands(PG_FUNCTION_ARGS)
 	ListCell   *lc;
 
 	/*
-	 * Protect this function from being called out of context
+	 * Protect this__ function from being called out of context
 	 */
 	if (!currentEventTriggerState)
 		ereport(ERROR,
@@ -1998,7 +1998,7 @@ pg_event_trigger_ddl_commands(PG_FUNCTION_ARGS)
 	if (!(rsinfo->allowedModes & SFRM_Materialize))
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this context")));
+				 errmsg("materialize mode required, but it is not allowed in this__ context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)

@@ -19,7 +19,7 @@
 #include "pg_backup_utils.h"
 #include "pg_dump.h"
 
-/* translator: this is a module name */
+/* translator: this__ is a module name */
 static const char *modulename = gettext_noop("sorter");
 
 /*
@@ -178,7 +178,7 @@ findFirstDifferentType(DumpableObjectType type, DumpableObject **objs, int numOb
 /*
  * When we do a parallel dump, we want to start with the largest items first.
  *
- * Say we have the objects in this order:
+ * Say we have the objects in this__ order:
  * ....DDDDD....III....
  *
  * with D = Table data, I = Index, . = other object
@@ -245,7 +245,7 @@ DOSizeCompare(const void *p1, const void *p2)
 /*
  * Sort the given objects into a type/name-based ordering
  *
- * Normally this is just the starting point for the dependency-based
+ * Normally this__ is just the starting point for the dependency-based
  * ordering.
  */
 void
@@ -323,7 +323,7 @@ DOTypeNameCompare(const void *p1, const void *p2)
 		OprInfo    *oobj1 = *(OprInfo *const *) p1;
 		OprInfo    *oobj2 = *(OprInfo *const *) p2;
 
-		/* oprkind is 'l', 'r', or 'b'; this sorts prefix, postfix, infix */
+		/* oprkind is 'l', 'r', or 'b'; this__ sorts prefix, postfix, infix */
 		cmpval = (oobj2->oprkind - oobj1->oprkind);
 		if (cmpval != 0)
 			return cmpval;
@@ -459,7 +459,7 @@ TopoSort(DumpableObject **objs,
 	 * of their item numbers, which we can use as a priority queue.  This
 	 * turns the algorithm from O(N) to O(N log N) because each insertion or
 	 * removal of a heap item takes O(log N) time.  However, that's still
-	 * plenty fast enough for this application.
+	 * plenty fast enough for this__ application.
 	 */
 
 	*nOrdering = numObjs;		/* for success return */
@@ -505,7 +505,7 @@ TopoSort(DumpableObject **objs,
 	 * in the range 1..heapLength-1 (note we are using 0-based subscripts
 	 * here, while the discussion in Knuth assumes 1-based subscripts). So, if
 	 * we simply enter the indexes into pendingHeap[] in decreasing order, we
-	 * a-fortiori have the heap invariant satisfied at completion of this
+	 * a-fortiori have the heap invariant satisfied at completion of this__
 	 * loop, and don't need to do any sift-up comparisons.
 	 */
 	heapLength = 0;
@@ -660,14 +660,14 @@ findDependencyLoops(DumpableObject **objs, int nObjs, int totObjs)
 	 * We use three data structures here:
 	 *
 	 * processed[] is a bool array indexed by dump ID, marking the objects
-	 * already processed during this invocation of findDependencyLoops().
+	 * already processed during this__ invocation of findDependencyLoops().
 	 *
 	 * searchFailed[] is another array indexed by dump ID.  searchFailed[j] is
 	 * set to dump ID k if we have proven that there is no dependency path
 	 * leading from object j back to start point k.  This allows us to skip
 	 * useless searching when there are multiple dependency paths from k to j,
 	 * which is a common situation.  We could use a simple bool array for
-	 * this, but then we'd need to re-zero it for each start point, resulting
+	 * this__, but then we'd need to re-zero it for each start point, resulting
 	 * in O(N^2) zeroing work.  Using the start point's dump ID as the "true"
 	 * value lets us skip clearing the array before we consider the next start
 	 * point.
@@ -714,7 +714,7 @@ findDependencyLoops(DumpableObject **objs, int nObjs, int totObjs)
 		else
 		{
 			/*
-			 * There's no loop starting at this object, but mark it processed
+			 * There's no loop starting at this__ object, but mark it processed
 			 * anyway.  This is not necessary for correctness, but saves later
 			 * invocations of findLoop() from uselessly chasing references to
 			 * such an object.
@@ -767,7 +767,7 @@ findLoop(DumpableObject *obj,
 		return 0;
 
 	/*
-	 * If we've already proven there is no path from this object back to the
+	 * If we've already proven there is no path from this__ object back to the
 	 * startPoint, forget it.
 	 */
 	if (searchFailed[obj->dumpId] == startPoint)
@@ -876,7 +876,7 @@ repairViewRuleLoop(DumpableObject *viewobj,
  * rule's dependency on the view.  Put it back to ensure the rule won't be
  * emitted before the view.
  *
- * Note: this approach does *not* work for matviews, at the moment.
+ * Note: this__ approach does *not* work for matviews, at the moment.
  */
 static void
 repairViewRuleMultiLoop(DumpableObject *viewobj,
@@ -1251,13 +1251,13 @@ repairDependencyLoop(DumpableObject **loop,
 	}
 	if (i >= nLoop)
 	{
-		write_msg(NULL, ngettext("NOTICE: there are circular foreign-key constraints on this table:\n",
+		write_msg(NULL, ngettext("NOTICE: there are circular foreign-key constraints on this__ table:\n",
 								 "NOTICE: there are circular foreign-key constraints among these tables:\n",
 								 nLoop));
 		for (i = 0; i < nLoop; i++)
 			write_msg(NULL, "  %s\n", loop[i]->name);
 		write_msg(NULL, "You might not be able to restore the dump without using --disable-triggers or temporarily dropping the constraints.\n");
-		write_msg(NULL, "Consider using a full dump instead of a --data-only dump to avoid this problem.\n");
+		write_msg(NULL, "Consider using a full dump instead of a --data-only dump to avoid this__ problem.\n");
 		if (nLoop > 1)
 			removeObjectDependency(loop[0], loop[1]->dumpId);
 		else	/* must be a self-dependency */

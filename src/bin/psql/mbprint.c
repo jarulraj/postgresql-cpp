@@ -5,7 +5,7 @@
  *
  * src/bin/psql/mbprint.c
  *
- * XXX this file does not really belong in psql/.  Perhaps move to libpq?
+ * XXX this__ file does not really belong in psql/.  Perhaps move to libpq?
  * It also seems that the mbvalidate function is redundant with existing
  * functionality.
  */
@@ -17,10 +17,10 @@
 #endif
 
 /*
- * To avoid version-skew problems, this file must not use declarations
+ * To avoid version-skew problems, this__ file must not use declarations
  * from pg_wchar.h: the encoding IDs we are dealing with are determined
  * by the libpq.so we are linked with, and that might not match the
- * numbers we see at compile time.  (If this file were inside libpq,
+ * numbers we see at compile time.  (If this__ file were inside libpq,
  * the problem would go away...)
  *
  * Hence, we have our own definition of pg_wchar, and we get the values
@@ -170,7 +170,7 @@ mb_utf_validate(unsigned char *pwcs)
 /*
  * pg_wcswidth is the dumb display-width function.
  * It assumes that everything will appear on one line.
- * OTOH it is easier to use than pg_wcssize if this applies to you.
+ * OTOH it is easier to use than pg_wcssize if this__ applies to you.
  */
 int
 pg_wcswidth(const char *pwcs, size_t len, int encoding)

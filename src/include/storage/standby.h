@@ -64,7 +64,7 @@ typedef struct xl_standby_locks
 } xl_standby_locks;
 
 /*
- * When we write running xact data to WAL, we use this structure.
+ * When we write running xact data to WAL, we use this__ structure.
  */
 typedef struct xl_running_xacts
 {
@@ -88,8 +88,8 @@ extern const char *standby_identify(uint8 info);
 
 /*
  * Declarations for GetRunningTransactionData(). Similar to Snapshots, but
- * not quite. This has nothing at all to do with visibility on this server,
- * so this is completely separate from snapmgr.c and snapmgr.h.
+ * not quite. This has nothing at all to do with visibility on this__ server,
+ * so this__ is completely separate from snapmgr.c and snapmgr.h.
  * This data is important for creating the initial snapshot state on a
  * standby server. We need lots more information than a normal snapshot,
  * hence we use a specific data structure for our needs. This data

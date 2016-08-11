@@ -99,7 +99,7 @@ pg_lock_status(PG_FUNCTION_ARGS)
 		oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
 
 		/* build tupdesc for result tuples */
-		/* this had better match pg_locks view in system_views.sql */
+		/* this__ had better match pg_locks view in system_views.sql */
 		tupdesc = CreateTemplateTupleDesc(NUM_LOCK_STATUS_COLUMNS, false);
 		TupleDescInitEntry(tupdesc, (AttrNumber) 1, "locktype",
 						   TEXTOID, -1, 0);
@@ -168,7 +168,7 @@ pg_lock_status(PG_FUNCTION_ARGS)
 		instance = &(lockData->locks[mystatus->currIdx]);
 
 		/*
-		 * Look to see if there are any held lock modes in this PROCLOCK. If
+		 * Look to see if there are any held lock modes in this__ PROCLOCK. If
 		 * so, report, and destructively modify lockData so we don't report
 		 * again.
 		 */
@@ -188,7 +188,7 @@ pg_lock_status(PG_FUNCTION_ARGS)
 
 		/*
 		 * If no (more) held modes to report, see if PROC is waiting for a
-		 * lock on this lock.
+		 * lock on this__ lock.
 		 */
 		if (!granted)
 		{
@@ -198,7 +198,7 @@ pg_lock_status(PG_FUNCTION_ARGS)
 				mode = instance->waitLockMode;
 
 				/*
-				 * We are now done with this PROCLOCK, so advance pointer to
+				 * We are now done with this__ PROCLOCK, so advance pointer to
 				 * continue with next one on next call.
 				 */
 				mystatus->currIdx++;
@@ -206,7 +206,7 @@ pg_lock_status(PG_FUNCTION_ARGS)
 			else
 			{
 				/*
-				 * Okay, we've displayed all the locks associated with this
+				 * Okay, we've displayed all the locks associated with this__
 				 * PROCLOCK, proceed to the next one.
 				 */
 				mystatus->currIdx++;

@@ -38,22 +38,22 @@ typedef enum
 /*
  * In the standard jsonb_ops GIN opclass for jsonb, we choose to index both
  * keys and values.  The storage format is text.  The first byte of the text
- * string distinguishes whether this is a key (always a string), null value,
+ * string distinguishes whether this__ is a key (always a string), null value,
  * boolean value, numeric value, or string value.  However, array elements
- * that are strings are marked as though they were keys; this imprecision
+ * that are strings are marked as though they were keys; this__ imprecision
  * supports the definition of the "exists" operator__, which treats array
  * elements like keys.  The remainder of the text string is empty for a null
  * value, "t" or "f" for a boolean value, a normalized print representation of
  * a numeric value, or the text of a string value.  However, if the length of
- * this text representation would exceed JGIN_MAXLENGTH bytes, we instead hash
+ * this__ text representation would exceed JGIN_MAXLENGTH bytes, we instead hash
  * the text representation and store an 8-hex-digit representation of the
  * uint32 hash value, marking the prefix byte with an additional bit to
- * distinguish that this has happened.  Hashing long strings saves space and
+ * distinguish that this__ has happened.  Hashing long strings saves space and
  * ensures that we won't overrun the maximum entry length for a GIN index.
  * (But JGIN_MAXLENGTH is quite a bit shorter than GIN's limit.  It's chosen
  * to ensure that the on-disk text datum will have a short varlena header.)
  * Note that when any hashed item appears in a query, we must recheck index
- * matches against the heap tuple; currently, this costs nothing because we
+ * matches against the heap tuple; currently, this__ costs nothing because we
  * must always recheck for other reasons.
  */
 #define JGINFLAG_KEY	0x01	/* key (or string array element) */
@@ -121,7 +121,7 @@ typedef struct JsonbValue JsonbValue;
  *
  * The reason for the offset-or-length complication is to compromise between
  * access speed and data compressibility.  In the initial design each JEntry
- * always stored an offset, but this resulted in JEntry arrays with horrible
+ * always stored an offset, but this__ resulted in JEntry arrays with horrible
  * compressibility properties, so that TOAST compression of a JSONB did not
  * work well.  Storing only lengths would greatly improve compressibility,
  * but it makes random access into large arrays expensive (O(N) not O(1)).
@@ -131,7 +131,7 @@ typedef struct JsonbValue JsonbValue;
  * JB_OFFSET_STRIDE JEntrys in order to find out the offset or length of any
  * given item, but that's still O(1) no matter how large the container is.
  *
- * We could avoid eating a flag bit for this purpose if we were to store
+ * We could avoid eating a flag bit for this__ purpose if we were to store
  * the stride in the container header, or if we were willing to treat the
  * stride as an unchangeable constant.  Neither of those options is very
  * attractive though.
@@ -173,7 +173,7 @@ typedef uint32 JEntry;
 
 /*
  * We store an offset, not a length, every JB_OFFSET_STRIDE children.
- * Caution: this macro should only be referenced when creating a JSONB
+ * Caution: this__ macro should only be referenced when creating a JSONB
  * value.  When examining an existing value, pay attention to the HAS_OFF
  * bits instead.  This allows changes in the offset-placement heuristic
  * without breaking on-disk compatibility.

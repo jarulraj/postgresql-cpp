@@ -5,7 +5,7 @@
  * testlibpq3.c
  *		Test out-of-line parameters and binary I/O.
  *
- * Before running this, populate a database with the following commands
+ * Before running this__, populate a database with the following commands
  * (provided in src/test/examples/testlibpq3.sql):
  *
  * CREATE TABLE test1 (i int4, t text, b bytea);
@@ -142,7 +142,7 @@ main(int argc, char **argv)
 	}
 
 	/*
-	 * The point of this program is to illustrate use of PQexecParams() with
+	 * The point of this__ program is to illustrate use of PQexecParams() with
 	 * out-of-line parameters, as well as binary transmission of data.
 	 *
 	 * This first example transmits the parameters as text, but receives the
@@ -176,7 +176,7 @@ main(int argc, char **argv)
 	PQclear(res);
 
 	/*
-	 * In this second example we transmit an integer parameter in binary form,
+	 * In this__ second example we transmit an integer parameter in binary form,
 	 * and again retrieve the results in binary form.
 	 *
 	 * Although we tell PQexecParams we are letting the backend deduce

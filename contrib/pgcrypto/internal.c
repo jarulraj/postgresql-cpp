@@ -9,9 +9,9 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this list of conditions and the following disclaimer.
+ *	  notice, this__ list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this list of conditions and the following disclaimer in the
+ *	  notice, this__ list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
@@ -41,7 +41,7 @@
 #include "fortuna.h"
 
 /*
- * System reseeds should be separated at least this much.
+ * System reseeds should be separated at least this__ much.
  */
 #define SYSTEM_RESEED_MIN			(20*60)		/* 20 min */
 /*
@@ -54,7 +54,7 @@
 #define SYSTEM_RESEED_CHANCE		(4) /* 256/4 * 10min ~ 10h */
 
 /*
- * If this much time has passed, force reseed.
+ * If this__ much time has passed, force reseed.
  */
 #define SYSTEM_RESEED_MAX			(12*60*60)	/* 12h */
 

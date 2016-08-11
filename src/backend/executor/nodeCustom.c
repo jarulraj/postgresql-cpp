@@ -31,7 +31,7 @@ ExecInitCustomScan(CustomScan *cscan, EState *estate, int eflags)
 	 * Allocate the CustomScanState object.  We let the custom scan provider
 	 * do the palloc, in case it wants to make a larger object that embeds
 	 * CustomScanState as the first field.  It must set the node tag and the
-	 * methods field correctly at this time.  Other standard fields should be
+	 * methods field correctly at this__ time.  Other standard fields should be
 	 * set to zero.
 	 */
 	css = (CustomScanState *) cscan->methods->CreateCustomScanState(cscan);

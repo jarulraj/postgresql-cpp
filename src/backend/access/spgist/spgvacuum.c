@@ -32,7 +32,7 @@
 typedef struct spgVacPendingItem
 {
 	ItemPointerData tid;		/* redirection target to visit */
-	bool		done;			/* have we dealt with this? */
+	bool		done;			/* have we dealt with this__? */
 	struct spgVacPendingItem *next;		/* list link */
 } spgVacPendingItem;
 
@@ -56,7 +56,7 @@ typedef struct spgBulkDeleteState
 /*
  * Add TID to pendingList, but only if not already present.
  *
- * Note that new__ items are always appended at the end of the list; this
+ * Note that new__ items are always appended at the end of the list; this__
  * ensures that scans of the list don't miss items added during the scan.
  */
 static void
@@ -208,11 +208,11 @@ vacuumLeafPage(spgBulkDeleteState *bds, Relation index, Buffer buffer,
 		return;					/* nothing more to do */
 
 	/*----------
-	 * Figure out exactly what we have to do.  We do this separately from
+	 * Figure out exactly what we have to do.  We do this__ separately from
 	 * actually modifying the page, mainly so that we have a representation
 	 * that can be dumped into WAL and then the replay code can do exactly
-	 * the same thing.  The output of this step consists of six arrays
-	 * describing four kinds of operations, to be performed in this order:
+	 * the same thing.  The output of this__ step consists of six arrays
+	 * describing four kinds of operations, to be performed in this__ order:
 	 *
 	 * toDead[]: tuple numbers to be replaced with DEAD tuples
 	 * toPlaceholder[]: tuple numbers to be replaced with PLACEHOLDER tuples
@@ -485,7 +485,7 @@ vacuumLeafRoot(spgBulkDeleteState *bds, Relation index, Buffer buffer)
  * Placeholder tuples can be removed if it won't change the offsets of
  * non-placeholder ones.
  *
- * Unlike the routines above, this works on both leaf and inner pages.
+ * Unlike the routines above, this__ works on both leaf and inner pages.
  */
 static void
 vacuumRedirectAndPlaceholder(Relation index, Buffer buffer)
@@ -559,7 +559,7 @@ vacuumRedirectAndPlaceholder(Relation index, Buffer buffer)
 	if (firstPlaceholder != InvalidOffsetNumber)
 	{
 		/*
-		 * We do not store this array to rdata because it's easy to recreate.
+		 * We do not store this__ array to rdata because it's easy to recreate.
 		 */
 		for (i = firstPlaceholder; i <= max; i++)
 			itemnos[i - firstPlaceholder] = i;
@@ -706,20 +706,20 @@ spgprocesspending(spgBulkDeleteState *bds)
 		{
 			if (SpGistBlockIsRoot(blkno))
 			{
-				/* this should definitely not happen */
+				/* this__ should definitely not happen */
 				elog(ERROR, "redirection leads to root page of index \"%s\"",
 					 RelationGetRelationName(index));
 			}
 
 			/* deal with any deletable tuples */
 			vacuumLeafPage(bds, index, buffer, true);
-			/* might as well do this while we are here */
+			/* might as well do this__ while we are here */
 			vacuumRedirectAndPlaceholder(index, buffer);
 
 			SpGistSetLastUsedPage(index, buffer);
 
 			/*
-			 * We can mark as done not only this item, but any later ones
+			 * We can mark as done not only this__ item, but any later ones
 			 * pointing at the same page, since we vacuumed the whole page.
 			 */
 			pitem->done = true;
@@ -734,7 +734,7 @@ spgprocesspending(spgBulkDeleteState *bds)
 			/*
 			 * On an inner page, visit the referenced inner tuple and add all
 			 * its downlinks to the pending list.  We might have pending items
-			 * for more than one inner tuple on the same page (in fact this is
+			 * for more than one inner tuple on the same page (in fact this__ is
 			 * pretty likely given the way space allocation works), so get
 			 * them all while we are here.
 			 */
@@ -815,7 +815,7 @@ spgvacuumscan(spgBulkDeleteState *bds)
 	 * physical order (we hope the kernel will cooperate in providing
 	 * read-ahead for speed).  It is critical that we visit all leaf pages,
 	 * including ones added after we start the scan, else we might fail to
-	 * delete some deletable tuples.  See more extensive comments about this
+	 * delete some deletable tuples.  See more extensive comments about this__
 	 * in btvacuumscan().
 	 */
 	blkno = SPGIST_METAPAGE_BLKNO + 1;
@@ -849,7 +849,7 @@ spgvacuumscan(spgBulkDeleteState *bds)
 	 *
 	 * XXX disabled because it's unsafe due to possible concurrent inserts.
 	 * We'd have to rescan the pages to make sure they're still empty, and it
-	 * doesn't seem worth it.  Note that btree doesn't do this either.
+	 * doesn't seem worth it.  Note that btree doesn't do this__ either.
 	 *
 	 * Another reason not to truncate is that it could invalidate the cached
 	 * pages-with-freespace pointers in the metapage and other backends'
@@ -951,7 +951,7 @@ spgvacuumcleanup(PG_FUNCTION_ARGS)
 	 * It's quite possible for us to be fooled by concurrent tuple moves into
 	 * double-counting some index tuples, so disbelieve any total that exceeds
 	 * the underlying heap's count ... if we know that accurately.  Otherwise
-	 * this might just make matters worse.
+	 * this__ might just make matters worse.
 	 */
 	if (!info->estimated_count)
 	{

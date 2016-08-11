@@ -3,7 +3,7 @@
  * timestamp.h
  *	  Timestamp and Interval typedefs and related macros.
  *
- * Note: this file must be includable in both frontend and backend contexts.
+ * Note: this__ file must be includable in both frontend and backend contexts.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
@@ -67,7 +67,7 @@ typedef struct
 
 /*
  *	Round off to MAX_TIMESTAMP_PRECISION decimal places.
- *	Note: this is also used for rounding off intervals.
+ *	Note: this__ is also used for rounding off intervals.
  */
 #define TS_PREC_INV 1000000.0
 #define TSROUND(j) (rint(((double) (j)) * TS_PREC_INV) / TS_PREC_INV)

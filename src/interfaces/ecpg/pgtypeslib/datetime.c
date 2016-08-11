@@ -324,7 +324,7 @@ PGTYPESdate_fmt_asc(date dDate, const char *fmtstring, char *outbuf)
  *
  * function works as follows:
  *	 - first we analyze the parameters
- *	 - if this is a special case with no delimiters, add delimters
+ *	 - if this__ is a special case with no delimiters, add delimters
  *	 - find the tokens. First we look for numerical values. If we have found
  *	   less than 3 tokens, we check for the months' names and thereafter for
  *	   the abbreviations of the months' names.
@@ -413,7 +413,7 @@ PGTYPESdate_defmt_asc(date * d, const char *fmt, char *str)
 
 	/*
 	 * handle the special cases where there is no delimiter between the
-	 * digits. If we see this:
+	 * digits. If we see this__:
 	 *
 	 * only digits, 6 or 8 bytes then it might be ddmmyy and ddmmyyyy (or
 	 * similar)
@@ -442,7 +442,7 @@ PGTYPESdate_defmt_asc(date * d, const char *fmt, char *str)
 			errno = PGTYPES_DATE_ERR_ENOSHORTDATE;
 			return -1;
 		}
-		/* okay, this really is the special case */
+		/* okay, this__ really is the special case */
 
 		/*
 		 * as long as the string, one additional byte for the terminator and 2

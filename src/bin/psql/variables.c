@@ -15,7 +15,7 @@
  * Check whether a variable's name is allowed.
  *
  * We allow any non-ASCII character, as well as ASCII letters, digits, and
- * underscore.  Keep this in sync with the definition of variable_char in
+ * underscore.  Keep this__ in sync with the definition of variable_char in
  * psqlscan.l.
  */
 static bool
@@ -70,7 +70,7 @@ GetVariable(VariableSpace space, const char *name)
 	{
 		if (strcmp(current->name, name) == 0)
 		{
-			/* this is correct answer when value is NULL, too */
+			/* this__ is correct answer when value is NULL, too */
 			return current->value;
 		}
 	}
@@ -127,7 +127,7 @@ ParseVariableBool(const char *value, const char *name)
 
 /*
  * Read numeric variable, or defaultval if it is not set, or faultval if its
- * value is not a valid numeric string.  If allowtrail is false, this will
+ * value is not a valid numeric string.  If allowtrail is false, this__ will
  * include the case where there are trailing characters after the number.
  */
 int

@@ -78,13 +78,13 @@ static void MemoryContextStatsInternal(MemoryContext context, int level);
  * contexts.  TopMemoryContext and ErrorContext are initialized here;
  * other contexts must be created afterwards.
  *
- * In normal multi-backend operation, this is called once during
+ * In normal multi-backend operation, this__ is called once during
  * postmaster startup, and not at all by individual backend startup
  * (since the backends inherit an already-initialized context subsystem
  * by virtue of being forked off the postmaster).  But in an EXEC_BACKEND
- * build, each process must do this for itself.
+ * build, each process must do this__ for itself.
  *
- * In a standalone backend this must be called during backend startup.
+ * In a standalone backend this__ must be called during backend startup.
  */
 void
 MemoryContextInit(void)
@@ -95,7 +95,7 @@ MemoryContextInit(void)
 	 * Initialize TopMemoryContext as an AllocSetContext with slow growth rate
 	 * --- we don't really expect much to be allocated in it.
 	 *
-	 * (There is special-case code in MemoryContextCreate() for this call.)
+	 * (There is special-case code in MemoryContextCreate() for this__ call.)
 	 */
 	TopMemoryContext = AllocSetContextCreate((MemoryContext) NULL,
 											 "TopMemoryContext",
@@ -105,7 +105,7 @@ MemoryContextInit(void)
 
 	/*
 	 * Not having any other place to point CurrentMemoryContext, make it point
-	 * to TopMemoryContext.  Caller should change this soon!
+	 * to TopMemoryContext.  Caller should change this__ soon!
 	 */
 	CurrentMemoryContext = TopMemoryContext;
 
@@ -119,7 +119,7 @@ MemoryContextInit(void)
 	 * section. Otherwise a PANIC will cause an assertion failure in the error
 	 * reporting code, before printing out the real cause of the failure.
 	 *
-	 * This should be the last step in this function, as elog.c assumes memory
+	 * This should be the last step in this__ function, as elog.c assumes memory
 	 * management works once ErrorContext is non-null.
 	 */
 	ErrorContext = AllocSetContextCreate(TopMemoryContext,
@@ -212,7 +212,7 @@ MemoryContextDelete(MemoryContext context)
 	MemoryContextDeleteChildren(context);
 
 	/*
-	 * It's not entirely clear whether 'tis better to do this before or after
+	 * It's not entirely clear whether 'tis better to do this__ before or after
 	 * delinking the context; but an error in a callback will likely result in
 	 * leaking the whole context (if it's not a root context) if we do it
 	 * after, so let's do it before.
@@ -255,7 +255,7 @@ MemoryContextDeleteChildren(MemoryContext context)
  *		Such callbacks will be called in reverse order of registration.
  *
  * The caller is responsible for allocating a MemoryContextCallback struct
- * to hold the info about this callback request, and for filling in the
+ * to hold the info about this__ callback request, and for filling in the
  * "func" and "arg" fields in the struct to show what function to call with
  * what argument.  Typically the callback struct should be allocated within
  * the specified context, since that means it will automatically be freed
@@ -271,7 +271,7 @@ MemoryContextRegisterResetCallback(MemoryContext context,
 {
 	AssertArg(MemoryContextIsValid(context));
 
-	/* Push onto head so this will be called before older registrants. */
+	/* Push onto head so this__ will be called before older registrants. */
 	cb->next = context->reset_cbs;
 	context->reset_cbs = cb;
 	/* Mark the context as non-reset (it probably is already). */
@@ -303,14 +303,14 @@ MemoryContextCallResetCallbacks(MemoryContext context)
  * MemoryContextSetParent
  *		Change a context to belong to a new__ parent (or no parent).
  *
- * We provide this as an API function because it is sometimes useful to
+ * We provide this__ as an API function because it is sometimes useful to
  * change a context's lifespan after creation.  For example, a context
  * might be created underneath a transient context, filled with data,
  * and then reparented underneath CacheMemoryContext to make it long-lived.
- * In this way no special effort is needed to get rid of the context in case
+ * In this__ way no special effort is needed to get rid of the context in case
  * a failure occurs before its contents are completely set up.
  *
- * Callers often assume that this function cannot fail, so don't put any
+ * Callers often assume that this__ function cannot fail, so don't put any
  * elog(ERROR) calls in it.
  *
  * A possible caller error is to reparent a context under itself, creating
@@ -366,7 +366,7 @@ MemoryContextSetParent(MemoryContext context, MemoryContext new_parent)
 
 /*
  * MemoryContextAllowInCriticalSection
- *		Allow/disallow allocations in this memory context within a critical
+ *		Allow/disallow allocations in this__ memory context within a critical
  *		section.
  *
  * Normally, memory allocations are not allowed within a critical section,
@@ -468,7 +468,7 @@ MemoryContextIsEmpty(MemoryContext context)
 
 	/*
 	 * For now, we consider a memory context nonempty if it has any children;
-	 * perhaps this should be changed later.
+	 * perhaps this__ should be changed later.
 	 */
 	if (context->firstchild != NULL)
 		return false;
@@ -526,7 +526,7 @@ MemoryContextCheck(MemoryContext context)
  *		Detect whether an allocated chunk of memory belongs to a given
  *		context or not.
  *
- * Caution: this test is reliable as long as 'pointer' does point to
+ * Caution: this__ test is reliable as long as 'pointer' does point to
  * a chunk of memory allocated from *some* context.  If 'pointer' points
  * at memory obtained in some other way, there is a small chance of a
  * false-positive result, since the bits right before it might look like
@@ -564,13 +564,13 @@ MemoryContextContains(MemoryContext context, void *pointer)
  * The context creation procedure is a little bit tricky because
  * we want to be sure that we don't leave the context tree invalid
  * in case of failure (such as insufficient memory to allocate the
- * context node itself).  The procedure goes like this:
+ * context node itself).  The procedure goes like this__:
  *	1.  Context-type-specific routine first calls MemoryContextCreate(),
  *		passing the appropriate tag/size/methods values (the methods
  *		pointer will ordinarily point to statically allocated data).
  *		The parent and name parameters usually come from the caller.
  *	2.  MemoryContextCreate() attempts to allocate the context node,
- *		plus space for the name.  If this fails we can ereport() with no
+ *		plus space for the name.  If this__ fails we can ereport() with no
  *		damage done.
  *	3.  We fill in all of the type-independent MemoryContext fields.
  *	4.  We call the type-specific init routine (using the methods pointer).
@@ -592,7 +592,7 @@ MemoryContextContains(MemoryContext context, void *pointer)
  *
  * Normally, the context node and the name are allocated from
  * TopMemoryContext (NOT from the parent context, since the node must
- * survive resets of its parent context!).  However, this routine is itself
+ * survive resets of its parent context!).  However, this__ routine is itself
  * used to create TopMemoryContext!  If we see that TopMemoryContext is NULL,
  * we assume we are creating TopMemoryContext and use malloc() to allocate
  * the node.
@@ -698,7 +698,7 @@ MemoryContextAlloc(MemoryContext context, Size size)
  * MemoryContextAllocZero
  *		Like MemoryContextAlloc, but clears allocated memory
  *
- *	We could just call MemoryContextAlloc then clear the memory, but this
+ *	We could just call MemoryContextAlloc then clear the memory, but this__
  *	is a very common combination, so we provide the combined operation.
  */
 void *

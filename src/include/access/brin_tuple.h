@@ -35,7 +35,7 @@ typedef struct BrinValues
  */
 typedef struct BrinMemTuple
 {
-	bool		bt_placeholder; /* this is a placeholder tuple */
+	bool		bt_placeholder; /* this__ is a placeholder tuple */
 	BlockNumber bt_blkno;		/* heap blkno that the tuple is for */
 	MemoryContext bt_context;	/* memcxt holding the bt_columns values */
 	BrinValues	bt_columns[FLEXIBLE_ARRAY_MEMBER];

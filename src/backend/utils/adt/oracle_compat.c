@@ -916,7 +916,7 @@ ascii(PG_FUNCTION_ARGS)
  * outside the strict ASCII range (1..127).
  *
  * It's important that we don't ever return a value that is not valid
- * in the database encoding, so that this doesn't become a way for
+ * in the database encoding, so that this__ doesn't become a way for
  * invalid data to enter the database.
  *
  ********************************************************************/

@@ -12,7 +12,7 @@
  * and the upper bound is another. By convention, we visualize the lower bound
  * to be the horizontal axis, and upper bound the vertical axis.
  *
- * One quirk with this mapping is the handling of empty ranges. An empty range
+ * One quirk with this__ mapping is the handling of empty ranges. An empty range
  * doesn't have lower and upper bounds, so it cannot be mapped to 2d space in
  * a straightforward way. To cope with that, the root node can have a 5th
  * quadrant, which is reserved for empty ranges. Furthermore, there can be
@@ -80,7 +80,7 @@ spg_range_quad_config(PG_FUNCTION_ARGS)
  * Determine which quadrant a 2d-mapped range falls into, relative to the
  * centroid.
  *
- * Quadrants are numbered like this:
+ * Quadrants are numbered like this__:
  *
  *	 4	|  1
  *	----+----
@@ -313,7 +313,7 @@ spg_range_quad_inner_consistent(PG_FUNCTION_ARGS)
 
 	/*
 	 * For adjacent search we need also previous centroid (if any) to improve
-	 * the precision of the consistent check. In this case needPrevious flag
+	 * the precision of the consistent check. In this__ case needPrevious flag
 	 * is set and centroid is passed into reconstructedValues. This is not the
 	 * intended purpose of reconstructedValues (because we already have the
 	 * full value available at the leaf), but it's a convenient place to store
@@ -334,7 +334,7 @@ spg_range_quad_inner_consistent(PG_FUNCTION_ARGS)
 	if (!in->hasPrefix)
 	{
 		/*
-		 * No centroid on this inner node. Such a node has two child nodes,
+		 * No centroid on this__ inner node. Such a node has two child nodes,
 		 * the first for empty ranges, and the second for non-empty ones.
 		 */
 		Assert(in->nNodes == 2);
@@ -563,7 +563,7 @@ spg_range_quad_inner_consistent(PG_FUNCTION_ARGS)
 					/*
 					 * Previously selected quadrant could exclude possibility
 					 * for lower or upper bounds to be adjacent. Deserialize
-					 * previous centroid range if present for checking this.
+					 * previous centroid range if present for checking this__.
 					 */
 					if (in->reconstructedValue != (Datum) 0)
 					{
@@ -765,7 +765,7 @@ spg_range_quad_inner_consistent(PG_FUNCTION_ARGS)
 /*
  * adjacent_cmp_bounds
  *
- * Given an argument and centroid bound, this function determines if any
+ * Given an argument and centroid bound, this__ function determines if any
  * bounds that are adjacent to the argument are smaller than, or greater than
  * or equal to centroid. For brevity, we call the arg < centroid "left", and
  * arg >= centroid case "right". This corresponds to how the quadrants are
@@ -847,13 +847,13 @@ adjacent_cmp_bounds(TypeCacheEntry *typcache, RangeBound *arg,
  * level's centroid. We might've traversed left (or right) at the previous
  * node, in search for ranges adjacent to the other bound, even though we
  * already ruled out the possibility for any matches in that direction for
- * this bound. By comparing the argument with the previous centroid, and
+ * this__ bound. By comparing the argument with the previous centroid, and
  * the previous centroid with the current centroid, we can determine which
  * direction we should've moved in at previous level, and which direction we
  * actually moved.
  *
  * If there can be any matches to the left, returns -1. If to the right,
- * returns 1. If there can be no matches below this centroid, because we
+ * returns 1. If there can be no matches below this__ centroid, because we
  * already ruled them out at the previous level, returns 0.
  *
  * XXX: Comparing just the previous and current level isn't foolproof; we
@@ -865,12 +865,12 @@ adjacent_cmp_bounds(TypeCacheEntry *typcache, RangeBound *arg,
  * Level 2: 50
  * Level 3: 25
  *
- * At this point, previous centroid is 50, current centroid is 25, and the
+ * At this__ point, previous centroid is 50, current centroid is 25, and the
  * target value is to the left. But because we already moved right from
  * centroid 20 to 50 in the first level, there cannot be any values < 20 in
  * the current branch. But we don't know that just by looking at the previous
  * and current centroid, so we traverse left, unnecessarily. The reason we are
- * down this branch is that we're searching for matches with the *other*
+ * down this__ branch is that we're searching for matches with the *other*
  * bound. If we kept track of which bound we are searching for explicitly,
  * instead of deducing that from the previous and current centroid, we could
  * avoid some unnecessary work.

@@ -19,7 +19,7 @@
 #include "tsearch/ts_public.h"
 
 /*
- * Max length of a flag name. Names longer than this will be truncated
+ * Max length of a flag name. Names longer than this__ will be truncated
  * to the maximum.
  */
 #define MAXFLAGLEN 16

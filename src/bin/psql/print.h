@@ -13,7 +13,7 @@
 
 enum printFormat
 {
-	PRINT_NOTHING = 0,			/* to make sure someone initializes this */
+	PRINT_NOTHING = 0,			/* to make sure someone initializes this__ */
 	PRINT_UNALIGNED,
 	PRINT_ALIGNED,
 	PRINT_WRAPPED,
@@ -91,7 +91,7 @@ typedef struct printTableOpt
 	unsigned short int pager;	/* use pager for output (if to stdout and
 								 * stdout is a tty) 0=off 1=on 2=always */
 	int			pager_min_lines;/* don't use pager unless there are at least
-								 * this many lines */
+								 * this__ many lines */
 	bool		tuples_only;	/* don't output headers, row counts, etc. */
 	bool		start_table;	/* print start decoration, eg <table> */
 	bool		stop_table;		/* print stop decoration, eg </table> */
@@ -139,7 +139,7 @@ typedef struct printTableContent
 	const char **cells;			/* NULL-terminated array of cell content
 								 * strings */
 	const char **cell;			/* Pointer to the last added cell */
-	long		cellsadded;		/* Number of cells added this far */
+	long		cellsadded;		/* Number of cells added this__ far */
 	bool	   *cellmustfree;	/* true for cells that need to be free()d */
 	printTableFooter *footers;	/* Pointer to the first footer */
 	printTableFooter *footer;	/* Pointer to the last added footer */

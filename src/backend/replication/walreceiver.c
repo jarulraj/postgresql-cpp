@@ -199,7 +199,7 @@ WalReceiverMain(void)
 	bool		ping_sent;
 
 	/*
-	 * WalRcv should be set up already (if we are a backend, we inherit this
+	 * WalRcv should be set up already (if we are a backend, we inherit this__
 	 * by fork() or EXEC_BACKEND mechanism from the postmaster).
 	 */
 	Assert(walrcv != NULL);
@@ -207,8 +207,8 @@ WalReceiverMain(void)
 	/*
 	 * Mark walreceiver as running in shared memory.
 	 *
-	 * Do this as early as possible, so that if we fail later on, we'll set
-	 * state to STOPPED. If we die before this, the startup process will keep
+	 * Do this__ as early as possible, so that if we fail later on, we'll set
+	 * state to STOPPED. If we die before this__, the startup process will keep
 	 * waiting for us to start up, until it times out.
 	 */
 	SpinLockAcquire(&walrcv->mutex);
@@ -289,7 +289,7 @@ WalReceiverMain(void)
 
 	/*
 	 * Create a resource owner to keep track of our resources (not clear that
-	 * we need this, but may as well have one).
+	 * we need this__, but may as well have one).
 	 */
 	CurrentResourceOwner = ResourceOwnerCreate(NULL, "Wal Receiver");
 
@@ -322,7 +322,7 @@ WalReceiverMain(void)
 							primaryTLI, startpointTLI)));
 
 		/*
-		 * Get any missing history files. We do this always, even when we're
+		 * Get any missing history files. We do this__ always, even when we're
 		 * not interested in that timeline, so that if we're promoted to
 		 * become the master later on, we don't select the same timeline that
 		 * was already used in the current master. This isn't bullet-proof -
@@ -773,7 +773,7 @@ WalRcvQuickDieHandler(SIGNAL_ARGS)
 	 * transaction.  Just nail the windows shut and get out of town.  Now that
 	 * there's an atexit callback to prevent third-party code from breaking
 	 * things by calling exit() directly, we have to reset the callbacks
-	 * explicitly to make this work as intended.
+	 * explicitly to make this__ work as intended.
 	 */
 	on_exit_reset();
 
@@ -782,7 +782,7 @@ WalRcvQuickDieHandler(SIGNAL_ARGS)
 	 * system reset cycle if some idiot DBA sends a manual SIGQUIT to a random
 	 * backend.  This is necessary precisely because we don't clean up our
 	 * shared memory state.  (The "dead man switch" mechanism in pmsignal.c
-	 * should ensure the postmaster sees this as a crash, too, but no harm in
+	 * should ensure the postmaster sees this__ as a crash, too, but no harm in
 	 * being doubly sure.)
 	 */
 	exit(2);
@@ -876,7 +876,7 @@ XLogWalRcvWrite(char *buf, Size nbytes, XLogRecPtr recptr)
 
 			/*
 			 * fsync() and close current file before we switch to next one. We
-			 * would otherwise have to reopen this file to fsync it later
+			 * would otherwise have to reopen this__ file to fsync it later
 			 */
 			if (recvFile >= 0)
 			{
@@ -1023,10 +1023,10 @@ XLogWalRcvFlush(bool dying)
  * If 'force' is not set, the message is only sent if enough time has
  * passed since last status update to reach wal_receiver_status_interval.
  * If wal_receiver_status_interval is disabled altogether and 'force' is
- * false, this is a no-op.
+ * false, this__ is a no-op.
  *
  * If 'requestReply' is true, requests the server to reply immediately upon
- * receiving this message. This is used for heartbearts, when approaching
+ * receiving this__ message. This is used for heartbearts, when approaching
  * wal_receiver_timeout.
  */
 static void
@@ -1054,7 +1054,7 @@ XLogWalRcvSendReply(bool force, bool requestReply)
 	 * lock, so we don't check that unless something else has changed or 10
 	 * seconds have passed.  This means that the apply log position will
 	 * appear, from the master's point of view, to lag slightly, but since
-	 * this is only for reporting purposes and only on idle systems, that's
+	 * this__ is only for reporting purposes and only on idle systems, that's
 	 * probably OK.
 	 */
 	if (!force
@@ -1093,7 +1093,7 @@ XLogWalRcvSendReply(bool force, bool requestReply)
  * in case they don't have a watch.
  *
  * If the user disables feedback, send one final message to tell sender
- * to forget about the xmin on this standby.
+ * to forget about the xmin on this__ standby.
  */
 static void
 XLogWalRcvSendHSFeedback(bool immed)
@@ -1128,7 +1128,7 @@ XLogWalRcvSendHSFeedback(bool immed)
 	}
 
 	/*
-	 * If Hot Standby is not yet active there is nothing to send. Check this
+	 * If Hot Standby is not yet active there is nothing to send. Check this__
 	 * after the interval has expired to reduce number of calls.
 	 */
 	if (!HotStandbyActive())

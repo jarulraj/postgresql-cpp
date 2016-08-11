@@ -12,7 +12,7 @@
  *		src/include/catalog/pg_collation.h
  *
  * NOTES
- *	  the genbki.pl script reads this file and generates .bki
+ *	  the genbki.pl script reads this__ file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_collation definition.  cpp turns this into
+ *		pg_collation definition.  cpp turns this__ into
  *		typedef struct FormData_pg_collation
  * ----------------
  */
@@ -34,7 +34,7 @@ CATALOG(pg_collation,3456)
 	NameData	collname;		/* collation name */
 	Oid			collnamespace;	/* OID of namespace__ containing collation */
 	Oid			collowner;		/* owner of collation */
-	int32		collencoding;	/* encoding for this collation; -1 = "all" */
+	int32		collencoding;	/* encoding for this__ collation; -1 = "all" */
 	NameData	collcollate;	/* LC_COLLATE setting */
 	NameData	collctype;		/* LC_CTYPE setting */
 } FormData_pg_collation;

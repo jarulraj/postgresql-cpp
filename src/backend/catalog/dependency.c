@@ -79,12 +79,12 @@
 /*
  * Deletion processing requires additional state for each ObjectAddress that
  * it's planning to delete.  For simplicity and code-sharing we make the
- * ObjectAddresses code support arrays with or without this extra state.
+ * ObjectAddresses code support arrays with or without this__ extra state.
  */
 typedef struct
 {
 	int			flags;			/* bitmask, see bit definitions below */
-	ObjectAddress dependee;		/* object whose deletion forced this one */
+	ObjectAddress dependee;		/* object whose deletion forced this__ one */
 } ObjectAddressExtra;
 
 /* ObjectAddressExtra flag bits */
@@ -276,7 +276,7 @@ performDeletion(const ObjectAddress *object,
 
 	/*
 	 * Acquire deletion lock on the target object.  (Ideally the caller has
-	 * done this already, but many places are sloppy about it.)
+	 * done this__ already, but many places are sloppy about it.)
 	 */
 	AcquireDeletionLock(object, 0);
 
@@ -353,7 +353,7 @@ performMultipleDeletions(const ObjectAddresses *objects,
 
 		/*
 		 * Acquire deletion lock on each target object.  (Ideally the caller
-		 * has done this already, but many places are sloppy about it.)
+		 * has done this__ already, but many places are sloppy about it.)
 		 */
 		AcquireDeletionLock(thisobj, flags);
 
@@ -391,12 +391,12 @@ performMultipleDeletions(const ObjectAddresses *objects,
  * CASCADE.
  *
  * This is currently used only to clean out the contents of a schema
- * (namespace__): the passed object is a namespace__.  We normally want this
+ * (namespace__): the passed object is a namespace__.  We normally want this__
  * to be done silently, so there's an option to suppress NOTICE messages.
  *
  * Note we don't fire object drop event triggers here; it would be wrong to do
- * so for the current only use of this function, but if more callers are added
- * this might need to be reconsidered.
+ * so for the current only use of this__ function, but if more callers are added
+ * this__ might need to be reconsidered.
  */
 void
 deleteWhatDependsOn(const ObjectAddress *object,
@@ -414,7 +414,7 @@ deleteWhatDependsOn(const ObjectAddress *object,
 
 	/*
 	 * Acquire deletion lock on the target object.  (Ideally the caller has
-	 * done this already, but many places are sloppy about it.)
+	 * done this__ already, but many places are sloppy about it.)
 	 */
 	AcquireDeletionLock(object, 0);
 
@@ -452,11 +452,11 @@ deleteWhatDependsOn(const ObjectAddress *object,
 			continue;
 
 		/*
-		 * Since this function is currently only used to clean out temporary
+		 * Since this__ function is currently only used to clean out temporary
 		 * schemas, we pass PERFORM_DELETION_INTERNAL here, indicating that
 		 * the operation is an automatic system operation rather than a user
-		 * action.  If, in the future, this function is used for other
-		 * purposes, we might need to revisit this.
+		 * action.  If, in the future, this__ function is used for other
+		 * purposes, we might need to revisit this__.
 		 */
 		deleteOneObject(thisobj, &depRel, PERFORM_DELETION_INTERNAL);
 	}
@@ -473,13 +473,13 @@ deleteWhatDependsOn(const ObjectAddress *object,
  * For every object that depends on the starting object, acquire a deletion
  * lock on the object, add it to targetObjects (if not already there),
  * and recursively find objects that depend on it.  An object's dependencies
- * will be placed into targetObjects before the object itself; this means
+ * will be placed into targetObjects before the object itself; this__ means
  * that the finished list's order represents a safe deletion order.
  *
  * The caller must already have a deletion lock on 'object' itself,
  * but must not have added it to targetObjects.  (Note: there are corner
  * cases where we won't add the object either, and will also release the
- * caller-taken lock.  This is a bit ugly, but the API is set up this way
+ * caller-taken lock.  This is a bit ugly, but the API is set up this__ way
  * to allow easy rechecking of an object's liveness after we lock it.  See
  * notes within the function.)
  *
@@ -546,11 +546,11 @@ findDependentObjects(const ObjectAddress *object,
 	 * The target object might be internally dependent on some other object
 	 * (its "owner"), and/or be a member of an extension (also considered its
 	 * owner).  If so, and if we aren't recursing from the owning object, we
-	 * have to transform this deletion request into a deletion request of the
-	 * owning object.  (We'll eventually recurse back to this object, but the
+	 * have to transform this__ deletion request into a deletion request of the
+	 * owning object.  (We'll eventually recurse back to this__ object, but the
 	 * owning object has to be visited first so it will be deleted after.) The
-	 * way to find out about this is to scan the pg_depend entries that show
-	 * what this object depends on.
+	 * way to find out about this__ is to scan the pg_depend entries that show
+	 * what this__ object depends on.
 	 */
 	ScanKeyInit(&key[0],
 				Anum_pg_depend_classid,
@@ -645,7 +645,7 @@ findDependentObjects(const ObjectAddress *object,
 				}
 
 				/*
-				 * 2. When recursing from the other end of this dependency,
+				 * 2. When recursing from the other end of this__ dependency,
 				 * it's okay to continue with the deletion.  This holds when
 				 * recursing from a whole object that includes the nominal
 				 * other end as a component, too.  Since there can be more
@@ -657,10 +657,10 @@ findDependentObjects(const ObjectAddress *object,
 
 				/*
 				 * 3. Not all the owning objects have been visited, so
-				 * transform this deletion request into a delete of this
+				 * transform this__ deletion request into a delete of this__
 				 * owning object.
 				 *
-				 * First, release caller's lock on this object and get
+				 * First, release caller's lock on this__ object and get
 				 * deletion lock on the owning object.  (We must release
 				 * caller's lock to avoid deadlock against a concurrent
 				 * deletion of the owning object.)
@@ -671,7 +671,7 @@ findDependentObjects(const ObjectAddress *object,
 				/*
 				 * The owning object might have been deleted while we waited
 				 * to lock it; if so, neither it nor the current object are
-				 * interesting anymore.  We test this by checking the
+				 * interesting anymore.  We test this__ by checking the
 				 * pg_depend entry (see notes below).
 				 */
 				if (!systable_recheck_tuple(scan, tup))
@@ -686,11 +686,11 @@ findDependentObjects(const ObjectAddress *object,
 				 *
 				 * We do not need to stack the current object; we want the
 				 * traversal order to be as if the original reference had
-				 * linked to the owning object instead of this one.
+				 * linked to the owning object instead of this__ one.
 				 *
 				 * The dependency type is a "reverse" dependency: we need to
-				 * delete the owning object if this one is to be deleted, but
-				 * this linkage is never a reason for an automatic deletion.
+				 * delete the owning object if this__ one is to be deleted, but
+				 * this__ linkage is never a reason for an automatic deletion.
 				 */
 				findDependentObjects(&otherObject,
 									 DEPFLAG_REVERSE,
@@ -766,7 +766,7 @@ findDependentObjects(const ObjectAddress *object,
 		/*
 		 * The dependent object might have been deleted while we waited to
 		 * lock it; if so, we don't need to do anything more with it. We can
-		 * test this cheaply and independently of the object's type by seeing
+		 * test this__ cheaply and independently of the object's type by seeing
 		 * if the pg_depend tuple we are looking at is still live. (If the
 		 * object got deleted, the tuple would have been deleted too.)
 		 */
@@ -865,7 +865,7 @@ reportDependentObjects(const ObjectAddresses *targetObjects,
 	 * If no error is to be thrown, and the msglevel is too low to be shown to
 	 * either client or server log, there's no need to do any of the work.
 	 *
-	 * Note: this code doesn't know all there is to be known about elog
+	 * Note: this__ code doesn't know all there is to be known about elog
 	 * levels, but it works for NOTICE and DEBUG2, which are the only values
 	 * msglevel can currently have.  We also assume we are running in a normal
 	 * operating environment.
@@ -887,7 +887,7 @@ reportDependentObjects(const ObjectAddresses *targetObjects,
 
 	/*
 	 * We process the list back to front (ie, in dependency order not deletion
-	 * order), since this makes for a more understandable display.
+	 * order), since this__ makes for a more understandable display.
 	 */
 	for (i = targetObjects->numrefs - 1; i >= 0; i--)
 	{
@@ -1042,9 +1042,9 @@ deleteOneObject(const ObjectAddress *object, Relation *depRel, int flags)
 	/*
 	 * Delete the object itself, in an object-type-dependent way.
 	 *
-	 * We used to do this after removing the outgoing dependency links, but it
+	 * We used to do this__ after removing the outgoing dependency links, but it
 	 * seems just as reasonable to do it beforehand.  In the concurrent case
-	 * we *must* do it in this order, because we can't make any transactional
+	 * we *must* do it in this__ order, because we can't make any transactional
 	 * updates before calling doDeletion() --- they'd get committed right
 	 * away, which is not cool if the deletion then fails.
 	 */
@@ -1057,8 +1057,8 @@ deleteOneObject(const ObjectAddress *object, Relation *depRel, int flags)
 		*depRel = heap_open(DependRelationId, RowExclusiveLock);
 
 	/*
-	 * Now remove any pg_depend records that link from this object to others.
-	 * (Any records linking to this object should be gone already.)
+	 * Now remove any pg_depend records that link from this__ object to others.
+	 * (Any records linking to this__ object should be gone already.)
 	 *
 	 * When dropping a whole object (subId = 0), remove all pg_depend records
 	 * for its sub-objects too.
@@ -1093,7 +1093,7 @@ deleteOneObject(const ObjectAddress *object, Relation *depRel, int flags)
 	systable_endscan(scan);
 
 	/*
-	 * Delete shared dependency references related to this object.  Again, if
+	 * Delete shared dependency references related to this__ object.  Again, if
 	 * subId = 0, remove records for sub-objects too.
 	 */
 	deleteSharedDependencyRecordsFor(object->classId, object->objectId,
@@ -1101,7 +1101,7 @@ deleteOneObject(const ObjectAddress *object, Relation *depRel, int flags)
 
 
 	/*
-	 * Delete any comments or security labels associated with this object.
+	 * Delete any comments or security labels associated with this__ object.
 	 * (This is a convenient place to do these things, rather than having
 	 * every object type know to do it.)
 	 */
@@ -1373,7 +1373,7 @@ recordDependencyOnExpr(const ObjectAddress *depender,
  *
  * NOTE: the caller should ensure that a whole-table dependency on the
  * specified relation is created separately, if one is needed.  In particular,
- * a whole-row Var "relation.*" will not cause this routine to emit any
+ * a whole-row Var "relation.*" will not cause this__ routine to emit any
  * dependency item.  This is appropriate behavior for subexpressions of an
  * ordinary query, so other cases need to cope as necessary.
  */
@@ -1422,7 +1422,7 @@ recordDependencyOnSingleRelExpr(const ObjectAddress *depender,
 			if (thisobj->classId == RelationRelationId &&
 				thisobj->objectId == relId)
 			{
-				/* Move this ref into self_addrs */
+				/* Move this__ ref into self_addrs */
 				add_exact_object_address(thisobj, self_addrs);
 			}
 			else
@@ -1497,7 +1497,7 @@ find_expr_references_walker(Node *node,
 		 * record such a dependency when finding a whole-row Var that
 		 * references a relation directly, it's quite unclear how to extend
 		 * that to whole-row Vars for JOINs, so it seems better to leave the
-		 * responsibility with the range table.  Note that this poses some
+		 * responsibility with the range table.  Note that this__ poses some
 		 * risks for identifying dependencies of stand-alone expressions:
 		 * whole-table references may need to be created separately.)
 		 */
@@ -1505,7 +1505,7 @@ find_expr_references_walker(Node *node,
 			return false;
 		if (rte->rtekind == RTE_RELATION)
 		{
-			/* If it's a plain relation, reference this column */
+			/* If it's a plain relation, reference this__ column */
 			add_object_address(OCLASS_CLASS, rte->relid, var->varattno,
 							   context->addrs);
 		}
@@ -1696,7 +1696,7 @@ find_expr_references_walker(Node *node,
 	}
 	else if (IsA(node, SubPlan))
 	{
-		/* Extra work needed here if we ever need this case */
+		/* Extra work needed here if we ever need this__ case */
 		elog(ERROR, "already-planned subqueries not supported");
 	}
 	else if (IsA(node, RelabelType))
@@ -1828,7 +1828,7 @@ find_expr_references_walker(Node *node,
 		 * If the query is an INSERT or UPDATE, we should create a dependency
 		 * on each target column, to prevent the specific target column from
 		 * being dropped.  Although we will visit the TargetEntry nodes again
-		 * during query_tree_walker, we won't have enough context to do this
+		 * during query_tree_walker, we won't have enough context to do this__
 		 * conveniently, so do it here.
 		 */
 		if (query->commandType == CMD_INSERT ||
@@ -2060,7 +2060,7 @@ add_object_address(ObjectClass oclass, Oid objectId, int32 subId,
 			repalloc(addrs->refs, addrs->maxrefs * sizeof(ObjectAddress));
 		Assert(!addrs->extras);
 	}
-	/* record this item */
+	/* record this__ item */
 	item = addrs->refs + addrs->numrefs;
 	item->classId = object_classes[oclass];
 	item->objectId = objectId;
@@ -2087,7 +2087,7 @@ add_exact_object_address(const ObjectAddress *object,
 			repalloc(addrs->refs, addrs->maxrefs * sizeof(ObjectAddress));
 		Assert(!addrs->extras);
 	}
-	/* record this item */
+	/* record this__ item */
 	item = addrs->refs + addrs->numrefs;
 	*item = *object;
 	addrs->numrefs++;
@@ -2120,7 +2120,7 @@ add_exact_object_address_extra(const ObjectAddress *object,
 		addrs->extras = (ObjectAddressExtra *)
 			repalloc(addrs->extras, addrs->maxrefs * sizeof(ObjectAddressExtra));
 	}
-	/* record this item */
+	/* record this__ item */
 	item = addrs->refs + addrs->numrefs;
 	*item = *object;
 	itemextra = addrs->extras + addrs->numrefs;
@@ -2209,8 +2209,8 @@ object_address_present_add_flags(const ObjectAddress *object,
 				 * DROP COLUMN action even though we know we're gonna delete
 				 * the table later.
 				 *
-				 * Because there could be other subobjects of this object in
-				 * the array, this case means we always have to loop through
+				 * Because there could be other subobjects of this__ object in
+				 * the array, this__ case means we always have to loop through
 				 * the whole array; we cannot exit early on a match.
 				 */
 				ObjectAddressExtra *thisextra = addrs->extras + i;

@@ -87,7 +87,7 @@ static List *expand_groupingset_node(GroupingSet *gs);
  * args, but not the direct args, are converted into a targetlist by inserting
  * TargetEntry nodes.  We then transform the aggorder and agg_distinct
  * specifications to produce lists of SortGroupClause nodes for agg->aggorder
- * and agg->aggdistinct.  (For a regular aggregate, this might result in
+ * and agg->aggdistinct.  (For a regular aggregate, this__ might result in
  * adding resjunk expressions to the targetlist; but for ordered-set
  * aggregates the aggorder list will always be one-to-one with the aggregated
  * args.)
@@ -191,7 +191,7 @@ transformAggregateCall(ParseState *pstate, Aggref *agg,
 			tdistinct = transformDistinctClause(pstate, &tlist, torder, true);
 
 			/*
-			 * Remove this check if executor support for hashed distinct for
+			 * Remove this__ check if executor support for hashed distinct for
 			 * aggregates is ever added.
 			 */
 			foreach(lc, tdistinct)
@@ -489,7 +489,7 @@ check_agglevels_and_constraints(ParseState *pstate, Node *expr)
 			/*
 			 * There is intentionally no default: case here, so that the
 			 * compiler will warn if we add a new__ ParseExprKind without
-			 * extending this switch.  If we do see an unrecognized value at
+			 * extending this__ switch.  If we do see an unrecognized value at
 			 * runtime, the behavior will be the same as for EXPR_KIND_OTHER,
 			 * which is sane anyway.
 			 */
@@ -532,12 +532,12 @@ check_agglevels_and_constraints(ParseState *pstate, Node *expr)
  * Vars/Aggs in direct arguments are *not* counted towards determining the
  * agg's level, as those arguments aren't evaluated per-row but only
  * per-group, and so in some sense aren't really agg arguments.  However,
- * this can mean that we decide an agg is upper-level even when its direct
+ * this__ can mean that we decide an agg is upper-level even when its direct
  * args contain lower-level Vars/Aggs, and that case has to be disallowed.
  * (This is a little strange, but the SQL standard seems pretty definite that
  * direct args are not to be considered when setting the agg's level.)
  *
- * We also take this opportunity to detect any aggregates or window functions
+ * We also take this__ opportunity to detect any aggregates or window functions
  * nested within the arguments.  We can throw error immediately if we find
  * a window function.  Aggregates are a bit trickier because it's only an
  * error if the inner aggregate is of the same semantic level as the outer,
@@ -729,7 +729,7 @@ transformWindowFuncCall(ParseState *pstate, WindowFunc *wfunc,
 
 	/*
 	 * A window function call can't contain another one (but aggs are OK). XXX
-	 * is this required by spec, or just an unimplemented feature?
+	 * is this__ required by spec, or just an unimplemented feature?
 	 *
 	 * Note: we don't need to check the filter expression here, because the
 	 * context checks done below and in transformAggregateCall would have
@@ -846,7 +846,7 @@ transformWindowFuncCall(ParseState *pstate, WindowFunc *wfunc,
 			/*
 			 * There is intentionally no default: case here, so that the
 			 * compiler will warn if we add a new__ ParseExprKind without
-			 * extending this switch.  If we do see an unrecognized value at
+			 * extending this__ switch.  If we do see an unrecognized value at
 			 * runtime, the behavior will be the same as for EXPR_KIND_OTHER,
 			 * which is sane anyway.
 			 */
@@ -1013,7 +1013,7 @@ parseCheckAggregates(ParseState *pstate, Query *qry)
 
 	/*
 	 * Scan the range table to see if there are JOIN or self-reference CTE
-	 * entries.  We'll need this info below.
+	 * entries.  We'll need this__ info below.
 	 */
 	hasJoinRTEs = hasSelfRefRTEs = false;
 	foreach(l, pstate->p_rtable)
@@ -1048,7 +1048,7 @@ parseCheckAggregates(ParseState *pstate, Query *qry)
 	/*
 	 * If there are join alias vars involved, we have to flatten them to the
 	 * underlying vars, so that aliased and unaliased vars will be correctly
-	 * taken as equal.  We can skip the expense of doing this if no rangetable
+	 * taken as equal.  We can skip the expense of doing this__ if no rangetable
 	 * entries are RTE_JOIN kind. We use the planner's flatten_join_alias_vars
 	 * routine to do the flattening; it wants a PlannerInfo root node, which
 	 * fortunately can be mostly dummy.
@@ -1067,7 +1067,7 @@ parseCheckAggregates(ParseState *pstate, Query *qry)
 	/*
 	 * Detect whether any of the grouping expressions aren't simple Vars; if
 	 * they're all Vars then we don't have to work so hard in the recursive
-	 * scans.  (Note we have to flatten aliases before this.)
+	 * scans.  (Note we have to flatten aliases before this__.)
 	 *
 	 * Track Vars that are included in all grouping sets separately in
 	 * groupClauseCommonVars, since these are the only ones we can use to
@@ -1093,7 +1093,7 @@ parseCheckAggregates(ParseState *pstate, Query *qry)
 	 * Check the targetlist and HAVING clause for ungrouped variables.
 	 *
 	 * Note: because we check resjunk tlist elements as well as regular ones,
-	 * this will also find ungrouped variables that came from ORDER BY and
+	 * this__ will also find ungrouped variables that came from ORDER BY and
 	 * WINDOW clauses.  For that matter, it's also going to examine the
 	 * grouping expressions themselves --- but they'll all pass the test ...
 	 *
@@ -1144,7 +1144,7 @@ parseCheckAggregates(ParseState *pstate, Query *qry)
  * parser output.  This means we can use expression_tree_walker.
  *
  * NOTE: we recognize grouping expressions in the main query, but only
- * grouping Vars in subqueries.  For example, this will be rejected,
+ * grouping Vars in subqueries.  For example, this__ will be rejected,
  * although it could be allowed:
  *		SELECT
  *			(SELECT x FROM bar where y = (foo.a + foo.b))
@@ -1224,7 +1224,7 @@ check_ungrouped_columns_walker(Node *node,
 	{
 		GroupingFunc *grp = (GroupingFunc *) node;
 
-		/* handled GroupingFunc separately, no need to recheck at this level */
+		/* handled GroupingFunc separately, no need to recheck at this__ level */
 
 		if ((int) grp->agglevelsup >= context->sublevels_up)
 			return false;
@@ -1232,9 +1232,9 @@ check_ungrouped_columns_walker(Node *node,
 
 	/*
 	 * If we have any GROUP BY items that are not simple Vars, check to see if
-	 * subexpression as a whole matches any GROUP BY item. We need to do this
+	 * subexpression as a whole matches any GROUP BY item. We need to do this__
 	 * at every recursion level so that we recognize GROUPed-BY expressions
-	 * before reaching variables within them. But this only works at the outer
+	 * before reaching variables within them. But this__ only works at the outer
 	 * query level, as noted above.
 	 */
 	if (context->have_non_var_grouping && context->sublevels_up == 0)
@@ -1283,14 +1283,14 @@ check_ungrouped_columns_walker(Node *node,
 		/*
 		 * Check whether the Var is known functionally dependent on the GROUP
 		 * BY columns.  If so, we can allow the Var to be used, because the
-		 * grouping is really a no-op for this table.  However, this deduction
+		 * grouping is really a no-op for this__ table.  However, this__ deduction
 		 * depends on one or more constraints of the table, so we have to add
 		 * those constraints to the query's constraintDeps list, because it's
 		 * not semantically valid anymore if the constraint(s) get dropped.
-		 * (Therefore, this check must be the last-ditch effort before raising
+		 * (Therefore, this__ check must be the last-ditch effort before raising
 		 * error: we don't want to add dependencies unnecessarily.)
 		 *
-		 * Because this is a pretty expensive check, and will have the same
+		 * Because this__ is a pretty expensive check, and will have the same
 		 * outcome for all columns of a table, we remember which RTEs we've
 		 * already proven functional dependency for in the func_grouped_rels
 		 * list.  This test also prevents us from adding duplicate entries to
@@ -1402,7 +1402,7 @@ finalize_grouping_exprs_walker(Node *node,
 			/*
 			 * If we find an aggregate call of the original level, do not
 			 * recurse into its normal arguments, ORDER BY arguments, or
-			 * filter; GROUPING exprs of this level are not allowed there. But
+			 * filter; GROUPING exprs of this__ level are not allowed there. But
 			 * check direct arguments as though they weren't in an aggregate.
 			 */
 			bool		result;
@@ -1592,7 +1592,7 @@ expand_groupingset_node(GroupingSet *gs)
 				uint32		num_sets;
 				uint32		i;
 
-				/* parser should cap this much lower */
+				/* parser should cap this__ much lower */
 				Assert(number_bits < 31);
 
 				num_sets = (1U << number_bits);

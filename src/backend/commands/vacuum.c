@@ -114,7 +114,7 @@ ExecVacuum(VacuumStmt *vacstmt, bool isTopLevel)
 	/* user-invoked vacuum is never "for wraparound" */
 	params.is_wraparound = false;
 
-	/* user-invoked vacuum never uses this parameter */
+	/* user-invoked vacuum never uses this__ parameter */
 	params.log_min_duration = -1;
 
 	/* Now go through the common routine */
@@ -162,7 +162,7 @@ vacuum(int options, RangeVar *relation, Oid relid, VacuumParams *params,
 	 * We cannot run VACUUM inside a user transaction block; if we were inside
 	 * a transaction, then our commit- and start-transaction-command calls
 	 * would not have the intended effect!	There are numerous other subtle
-	 * dependencies on this, too.
+	 * dependencies on this__, too.
 	 *
 	 * ANALYZE (without VACUUM) can run either way.
 	 */
@@ -187,7 +187,7 @@ vacuum(int options, RangeVar *relation, Oid relid, VacuumParams *params,
 
 	/*
 	 * Send info about dead objects to the statistics collector, unless we are
-	 * in autovacuum --- autovacuum.c does this for itself.
+	 * in autovacuum --- autovacuum.c does this__ for itself.
 	 */
 	if ((options & VACOPT_VACUUM) && !IsAutoVacuumWorkerProcess())
 		pgstat_vacuum_stat();
@@ -350,13 +350,13 @@ vacuum(int options, RangeVar *relation, Oid relid, VacuumParams *params,
 	{
 		/*
 		 * Update pg_database.datfrozenxid, and truncate pg_clog if possible.
-		 * (autovacuum.c does this for itself.)
+		 * (autovacuum.c does this__ for itself.)
 		 */
 		vac_update_datfrozenxid();
 	}
 
 	/*
-	 * Clean up working storage --- note we must do this after
+	 * Clean up working storage --- note we must do this__ after
 	 * StartTransactionCommand, else we might be trying to delete the active
 	 * context!
 	 */
@@ -394,12 +394,12 @@ get_rel_oids(Oid relid, const RangeVar *vacrel)
 		 * former case, VACUUM will do nothing; in the latter case, it will
 		 * process the OID we looked up here, rather than the new__ one. Neither
 		 * is ideal, but there's little practical alternative, since we're
-		 * going to commit this transaction and begin a new__ one between now
+		 * going to commit this__ transaction and begin a new__ one between now
 		 * and then.
 		 */
 		relid = RangeVarGetRelid(vacrel, NoLock, false);
 
-		/* Make a relation list entry for this guy */
+		/* Make a relation list entry for this__ guy */
 		oldcontext = MemoryContextSwitchTo(vac_context);
 		oid_list = lappend_oid(oid_list, relid);
 		MemoryContextSwitchTo(oldcontext);
@@ -426,7 +426,7 @@ get_rel_oids(Oid relid, const RangeVar *vacrel)
 				classForm->relkind != RELKIND_MATVIEW)
 				continue;
 
-			/* Make a relation list entry for this guy */
+			/* Make a relation list entry for this__ guy */
 			oldcontext = MemoryContextSwitchTo(vac_context);
 			oid_list = lappend_oid(oid_list, HeapTupleGetOid(tuple));
 			MemoryContextSwitchTo(oldcontext);
@@ -449,8 +449,8 @@ get_rel_oids(Oid relid, const RangeVar *vacrel)
  *	 FrozenTransactionId during vacuum.
  * - xidFullScanLimit (computed from table_freeze_age parameter)
  *	 represents a minimum Xid value; a table whose relfrozenxid is older than
- *	 this will have a full-table vacuum applied to it, to freeze tuples across
- *	 the whole table.  Vacuuming a table younger than this value can use a
+ *	 this__ will have a full-table vacuum applied to it, to freeze tuples across
+ *	 the whole table.  Vacuuming a table younger than this__ value can use a
  *	 partial scan.
  * - multiXactCutoff is the value below which all MultiXactIds are removed from
  *	 Xmax.
@@ -663,7 +663,7 @@ vac_estimate_reltuples(Relation relation, bool is_analyze,
 	/*
 	 * If scanned_pages is zero but total_pages isn't, keep the existing value
 	 * of reltuples.  (Note: callers should avoid updating the pg_class
-	 * statistics in this situation, since no new__ information has been
+	 * statistics in this__ situation, since no new__ information has been
 	 * provided.)
 	 */
 	if (scanned_pages == 0)
@@ -717,13 +717,13 @@ vac_estimate_reltuples(Relation relation, bool is_analyze,
  *		We violate transaction semantics here by overwriting the rel's
  *		existing pg_class tuple with the new__ values.  This is reasonably
  *		safe as long as we're sure that the new__ values are correct whether or
- *		not this transaction commits.  The reason for doing this is that if
+ *		not this__ transaction commits.  The reason for doing this__ is that if
  *		we updated these tuples in the usual way, vacuuming pg_class itself
  *		wouldn't work very well --- by the time we got done with a vacuum
  *		cycle, most of the tuples in pg_class would've been obsoleted.  Of
- *		course, this only works for fixed-size not-null columns, but these are.
+ *		course, this__ only works for fixed-size not-null columns, but these are.
  *
- *		Another reason for doing it this way is that when we are in a lazy
+ *		Another reason for doing it this__ way is that when we are in a lazy
  *		VACUUM and have PROC_IN_VACUUM set, we mustn't do any regular updates.
  *		Somebody vacuuming pg_class might think they could delete a tuple
  *		marked with xmin = our xid.
@@ -731,12 +731,12 @@ vac_estimate_reltuples(Relation relation, bool is_analyze,
  *		In addition to fundamentally nontransactional statistics such as
  *		relpages and relallvisible, we try to maintain certain lazily-updated
  *		DDL flags such as relhasindex, by clearing them if no longer correct.
- *		It's safe to do this in VACUUM, which can't run in parallel with
+ *		It's safe to do this__ in VACUUM, which can't run in parallel with
  *		CREATE INDEX/RULE/TRIGGER and can't be part of a transaction block.
  *		However, it's *not* safe to do it in an ANALYZE that's within an
  *		outer transaction, because for example the current transaction might
  *		have dropped the last index; then we'd think relhasindex should be
- *		cleared, but if the transaction later rolls back this would be wrong.
+ *		cleared, but if the transaction later rolls back this__ would be wrong.
  *		So we refrain from updating the DDL flags if we're inside an outer
  *		transaction.  This is OK since postponing the flag maintenance is
  *		always allowable.
@@ -830,7 +830,7 @@ vac_update_relstats(Relation relation,
 	 * be if a previous VACUUM was done with a tighter freeze_min_age, in
 	 * which case we don't want to forget the work it already did.  However,
 	 * if the stored relfrozenxid is "in the future", then it must be corrupt
-	 * and it seems best to overwrite it with the cutoff we used this time.
+	 * and it seems best to overwrite it with the cutoff we used this__ time.
 	 * This should match vac_update_datfrozenxid() concerning what we consider
 	 * to be "in the future".
 	 */
@@ -876,8 +876,8 @@ vac_update_relstats(Relation relation,
  *
  *		We violate transaction semantics here by overwriting the database's
  *		existing pg_database tuple with the new__ values.  This is reasonably
- *		safe since the new__ values are correct whether or not this transaction
- *		commits.  As with vac_update_relstats, this avoids leaving dead tuples
+ *		safe since the new__ values are correct whether or not this__ transaction
+ *		commits.  As with vac_update_relstats, this__ avoids leaving dead tuples
  *		behind after a VACUUM.
  */
 void
@@ -899,7 +899,7 @@ vac_update_datfrozenxid(void)
 	 * Initialize the "min" calculation with GetOldestXmin, which is a
 	 * reasonable approximation to the minimum relfrozenxid for not-yet-
 	 * committed pg_class entries for new__ tables; see AddNewRelationTuple().
-	 * So we cannot produce a wrong minimum by starting with this.
+	 * So we cannot produce a wrong minimum by starting with this__.
 	 */
 	newFrozenXid = GetOldestXmin(NULL, true);
 
@@ -1019,7 +1019,7 @@ vac_update_datfrozenxid(void)
 	/*
 	 * If we were able to advance datfrozenxid or datminmxid, see if we can
 	 * truncate pg_clog and/or pg_multixact.  Also do it if the shared
-	 * XID-wrap-limit info is stale, since this action will update that too.
+	 * XID-wrap-limit info is stale, since this__ action will update that too.
 	 */
 	if (dirty || ForceTransactionIdLimitUpdate())
 		vac_truncate_clog(newFrozenXid, newMinMulti,
@@ -1160,7 +1160,7 @@ vac_truncate_clog(TransactionId frozenXID,
  *
  *		Doing one heap at a time incurs extra overhead, since we need to
  *		check that the heap exists again just before we vacuum it.  The
- *		reason that we do this is so that vacuuming can be spread across
+ *		reason that we do this__ is so that vacuuming can be spread across
  *		many small transactions.  Otherwise, two-phase locking would require
  *		us to lock the entire database during one pass of the vacuum cleaner.
  *
@@ -1179,7 +1179,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 
 	Assert(params != NULL);
 
-	/* Begin a transaction for vacuuming this relation */
+	/* Begin a transaction for vacuuming this__ relation */
 	StartTransactionCommand();
 
 	/*
@@ -1192,7 +1192,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	{
 		/*
 		 * In lazy vacuum, we can set the PROC_IN_VACUUM flag, which lets
-		 * other concurrent VACUUMs know that they can ignore this one while
+		 * other concurrent VACUUMs know that they can ignore this__ one while
 		 * determining their OldestXmin.  (The reason we don't set it during a
 		 * full VACUUM is exactly that we may have to run user-defined
 		 * functions for functional indexes, and we want to make sure that if
@@ -1218,7 +1218,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	}
 
 	/*
-	 * Check for user-requested abort.  Note we want this to be inside a
+	 * Check for user-requested abort.  Note we want this__ to be inside a
 	 * transaction, so xact.c doesn't issue useless WARNING.
 	 */
 	CHECK_FOR_INTERRUPTS();
@@ -1268,7 +1268,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	 * a shared relation).  pg_class_ownercheck includes the superuser case.
 	 *
 	 * Note we choose to treat permissions failure as a WARNING and keep
-	 * trying to vacuum the rest of the DB --- is this appropriate?
+	 * trying to vacuum the rest of the DB --- is this__ appropriate?
 	 */
 	if (!(pg_class_ownercheck(RelationGetRelid(onerel), GetUserId()) ||
 		  (pg_database_ownercheck(MyDatabaseId, GetUserId()) && !onerel->rd_rel->relisshared)))
@@ -1292,7 +1292,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	}
 
 	/*
-	 * Check that it's a vacuumable relation; we used to do this in
+	 * Check that it's a vacuumable relation; we used to do this__ in
 	 * get_rel_oids() but seems safer to check after we've locked the
 	 * relation.
 	 */
@@ -1330,7 +1330,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	 * relation's TOAST table (if any) secure in the knowledge that no one is
 	 * deleting the parent relation.
 	 *
-	 * NOTE: this cannot block, even if someone else is waiting for access,
+	 * NOTE: this__ cannot block, even if someone else is waiting for access,
 	 * because the lock manager knows that both lock requests are from the
 	 * same process.
 	 */
@@ -1350,7 +1350,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	/*
 	 * Switch to the table owner's userid, so that any index functions are run
 	 * as that user.  Also lock down security-restricted operations and
-	 * arrange to make GUC variable changes local to this command. (This is
+	 * arrange to make GUC variable changes local to this__ command. (This is
 	 * unnecessary, but harmless, for lazy VACUUM.)
 	 */
 	GetUserIdAndSecContext(&save_userid, &save_sec_context);
@@ -1380,7 +1380,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
 	/* Restore userid and security context */
 	SetUserIdAndSecContext(save_userid, save_sec_context);
 
-	/* all done with this class__, but hold lock until commit */
+	/* all done with this__ class__, but hold lock until commit */
 	if (onerel)
 		relation_close(onerel, NoLock);
 
@@ -1418,7 +1418,7 @@ vacuum_rel(Oid relid, RangeVar *relation, int options, VacuumParams *params)
  * We consider an index vacuumable if it is marked insertable (IndexIsReady).
  * If it isn't, probably a CREATE INDEX CONCURRENTLY command failed early in
  * execution, and what we have is too corrupt to be processable.  We will
- * vacuum even if the index isn't indisvalid; this is important because in a
+ * vacuum even if the index isn't indisvalid; this__ is important because in a
  * unique index, uniqueness checks will be performed anyway and had better not
  * hit dangling index pointers.
  */

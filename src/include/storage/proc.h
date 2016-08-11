@@ -85,15 +85,15 @@ struct PGPROC
 	Latch		procLatch;		/* generic latch for process */
 
 	LocalTransactionId lxid;	/* local id of top-level transaction currently
-								 * being executed by this proc, if running;
+								 * being executed by this__ proc, if running;
 								 * else InvalidLocalTransactionId */
 	int			pid;			/* Backend's process ID; 0 if prepared xact */
 	int			pgprocno;
 
 	/* These fields are zero while a backend is still starting up: */
 	BackendId	backendId;		/* This backend's backend ID (if assigned) */
-	Oid			databaseId;		/* OID of database this backend is using */
-	Oid			roleId;			/* OID of role using this backend */
+	Oid			databaseId;		/* OID of database this__ backend is using */
+	Oid			roleId;			/* OID of role using this__ backend */
 
 	/*
 	 * While in hot standby mode, shows that a conflict signal has been sent
@@ -112,8 +112,8 @@ struct PGPROC
 	LOCK	   *waitLock;		/* Lock object we're sleeping on ... */
 	PROCLOCK   *waitProcLock;	/* Per-holder info for awaited lock */
 	LOCKMODE	waitLockMode;	/* type of lock we're waiting for */
-	LOCKMASK	heldLocks;		/* bitmask for lock types already held on this
-								 * lock object by this backend */
+	LOCKMASK	heldLocks;		/* bitmask for lock types already held on this__
+								 * lock object by this__ backend */
 
 	/*
 	 * Info to allow us to wait for synchronous replication, if needed.
@@ -121,12 +121,12 @@ struct PGPROC
 	 * syncRepState must not be touched except by owning process or WALSender.
 	 * syncRepLinks used only while holding SyncRepLock.
 	 */
-	XLogRecPtr	waitLSN;		/* waiting for this LSN or higher */
+	XLogRecPtr	waitLSN;		/* waiting for this__ LSN or higher */
 	int			syncRepState;	/* wait state for sync rep */
 	SHM_QUEUE	syncRepLinks;	/* list link if process is in syncrep queue */
 
 	/*
-	 * All PROCLOCK objects for locks held or awaited by this backend are
+	 * All PROCLOCK objects for locks held or awaited by this__ backend are
 	 * linked into one of these lists, according to the partition number of
 	 * their lock.
 	 */
@@ -137,7 +137,7 @@ struct PGPROC
 	/* Per-backend LWLock.  Protects fields below. */
 	LWLock	   *backendLock;	/* protects the fields below */
 
-	/* Lock manager data, recording fast-path locks taken by this backend. */
+	/* Lock manager data, recording fast-path locks taken by this__ backend. */
 	uint64		fpLockBits;		/* lock modes held for each fast-path slot */
 	Oid			fpRelId[FP_LOCK_SLOTS_PER_BACKEND];		/* slots for rel oids */
 	bool		fpVXIDLock;		/* are we holding a fast-path VXID lock? */
@@ -162,7 +162,7 @@ extern PGDLLIMPORT struct PGXACT *MyPgXact;
 typedef struct PGXACT
 {
 	TransactionId xid;			/* id of top-level transaction currently being
-								 * executed by this proc, if running and XID
+								 * executed by this__ proc, if running and XID
 								 * is assigned; else InvalidTransactionId */
 
 	TransactionId xmin;			/* minimal running XID as it was when we were
@@ -172,7 +172,7 @@ typedef struct PGXACT
 
 	uint8		vacuumFlags;	/* vacuum-related flags, see above */
 	bool		overflowed;
-	bool		delayChkpt;		/* true if this proc delays checkpoint start;
+	bool		delayChkpt;		/* true if this__ proc delays checkpoint start;
 								 * previously called InCommit */
 
 	uint8		nxids;

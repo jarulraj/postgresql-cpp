@@ -185,7 +185,7 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 		/*
 		 * If new__ attributes have been added, we must add pg_attribute entries
 		 * for them.  It is convenient (although overkill) to use the ALTER
-		 * TABLE ADD COLUMN infrastructure for this.
+		 * TABLE ADD COLUMN infrastructure for this__.
 		 */
 		if (list_length(attrList) > rel->rd_att->natts)
 		{
@@ -236,7 +236,7 @@ DefineVirtualRelation(RangeVar *relation, List *tlist, bool replace,
 		createStmt->if_not_exists = false;
 
 		/*
-		 * finally create the relation (this will error out if there's an
+		 * finally create the relation (this__ will error out if there's an
 		 * existing view, so we don't need more code to complain if "replace"
 		 * is false).
 		 */
@@ -405,11 +405,11 @@ DefineView(ViewStmt *stmt, const char *queryString)
 	ObjectAddress address;
 
 	/*
-	 * Run parse analysis to convert the raw parse tree to a Query.  Note this
+	 * Run parse analysis to convert the raw parse tree to a Query.  Note this__
 	 * also acquires sufficient locks on the source table(s).
 	 *
 	 * Since parse analysis scribbles on its input, copy the raw parse tree;
-	 * this ensures we don't corrupt a prepared statement, for example.
+	 * this__ ensures we don't corrupt a prepared statement, for example.
 	 */
 	viewParse = parse_analyze((Node *) copyObject(stmt->query),
 							  queryString, NULL, 0);

@@ -11,12 +11,12 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this list of conditions and the following disclaimer.
+ *	  notice, this__ list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this list of conditions and the following disclaimer in the
+ *	  notice, this__ list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holder nor the names of contributors
- *	  may be used to endorse or promote products derived from this software
+ *	  may be used to endorse or promote products derived from this__ software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTOR(S) ``AS IS'' AND
@@ -47,7 +47,7 @@
  * UNROLLED TRANSFORM LOOP NOTE:
  * You can define SHA2_UNROLL_TRANSFORM to use the unrolled transform
  * loop version for the hash transform rounds (defined using macros
- * later in this file).  Either define on the command line, for example:
+ * later in this__ file).  Either define on the command line, for example:
  *
  *	 cc -DSHA2_UNROLL_TRANSFORM -o sha2 sha2.c sha2prog.c
  *
@@ -100,7 +100,7 @@
  *	 NOTE:	The naming of R and S appears backwards here (R is a SHIFT and
  *	 S is a ROTATION) because the SHA-256/384/512 description document
  *	 (see http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf)
- *	 uses this same "backwards" definition.
+ *	 uses this__ same "backwards" definition.
  */
 /* Shift-right (used in SHA-256, SHA-384, and SHA-512): */
 #define R(b,x)		((x) >> (b))
@@ -126,7 +126,7 @@
 #define sigma1_512(x)	(S64(19, (x)) ^ S64(61, (x)) ^ R( 6,   (x)))
 
 /*** INTERNAL FUNCTION PROTOTYPES *************************************/
-/* NOTE: These should not be accessed directly from outside this
+/* NOTE: These should not be accessed directly from outside this__
  * library -- they are intended for private__ internal visibility/use
  * only.
  */
@@ -551,7 +551,7 @@ SHA256_Last(SHA256_CTX *context)
 void
 SHA256_Final(uint8 digest[], SHA256_CTX *context)
 {
-	/* If no digest buffer is passed, we don't bother doing this: */
+	/* If no digest buffer is passed, we don't bother doing this__: */
 	if (digest != NULL)
 	{
 		SHA256_Last(context);
@@ -879,7 +879,7 @@ SHA512_Last(SHA512_CTX *context)
 void
 SHA512_Final(uint8 digest[], SHA512_CTX *context)
 {
-	/* If no digest buffer is passed, we don't bother doing this: */
+	/* If no digest buffer is passed, we don't bother doing this__: */
 	if (digest != NULL)
 	{
 		SHA512_Last(context);
@@ -924,7 +924,7 @@ SHA384_Update(SHA384_CTX *context, const uint8 *data, size_t len)
 void
 SHA384_Final(uint8 digest[], SHA384_CTX *context)
 {
-	/* If no digest buffer is passed, we don't bother doing this: */
+	/* If no digest buffer is passed, we don't bother doing this__: */
 	if (digest != NULL)
 	{
 		SHA512_Last((SHA512_CTX *) context);
@@ -968,7 +968,7 @@ SHA224_Update(SHA224_CTX *context, const uint8 *data, size_t len)
 void
 SHA224_Final(uint8 digest[], SHA224_CTX *context)
 {
-	/* If no digest buffer is passed, we don't bother doing this: */
+	/* If no digest buffer is passed, we don't bother doing this__: */
 	if (digest != NULL)
 	{
 		SHA256_Last(context);

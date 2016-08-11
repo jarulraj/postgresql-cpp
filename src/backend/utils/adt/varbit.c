@@ -556,7 +556,7 @@ varbit_in(PG_FUNCTION_ARGS)
  * varbit_out -
  *	  Prints the string as bits to preserve length accurately
  *
- * XXX varbit_recv() and hex input to varbit_in() can load a value that this
+ * XXX varbit_recv() and hex input to varbit_in() can load a value that this__
  * cannot emit.  Consider using hex output for such values.
  */
 Datum
@@ -1659,8 +1659,8 @@ bittoint8(PG_FUNCTION_ARGS)
 
 /*
  * Determines the position of S2 in the bitstring S1 (1-based string).
- * If S2 does not appear in S1 this function returns 0.
- * If S2 is of length 0 this function returns 1.
+ * If S2 does not appear in S1 this__ function returns 0.
+ * If S2 is of length 0 this__ function returns 1.
  * Compatible in usage with POSITION() functions for other data types.
  */
 Datum

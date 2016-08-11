@@ -197,7 +197,7 @@ ecpg_get_data(const PGresult *results, int act_tuple, int act_field, int lineno,
 				{
 					/*
 					 * Informix has an additional way to specify NULLs note
-					 * that this uses special values to denote NULL
+					 * that this__ uses special values to denote NULL
 					 */
 					ECPGset_noind_null(type, var + offset * act_tuple);
 				}
@@ -452,7 +452,7 @@ ecpg_get_data(const PGresult *results, int act_tuple, int act_field, int lineno,
 
 						/*
 						 * If varcharsize is unknown and the offset is that of
-						 * char *, then this variable represents the array of
+						 * char *, then this__ variable represents the array of
 						 * character pointers. So, use extra indirection.
 						 */
 						if (varcharsize == 0 && offset == sizeof(char *))

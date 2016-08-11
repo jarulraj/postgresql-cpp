@@ -97,11 +97,11 @@ typedef struct
 	AttrNumber	attnum_namespace;		/* attnum of namespace__ field */
 	AttrNumber	attnum_owner;	/* attnum of owner field */
 	AttrNumber	attnum_acl;		/* attnum of acl field */
-	AclObjectKind acl_kind;		/* ACL_KIND_* of this object type */
+	AclObjectKind acl_kind;		/* ACL_KIND_* of this__ object type */
 	bool		is_nsp_name_unique;		/* can the nsp/name combination (or
 										 * name alone, if there's no
 										 * namespace__) be considered a unique
-										 * identifier for an object of this
+										 * identifier for an object of this__
 										 * class__? */
 } ObjectPropertyType;
 
@@ -443,10 +443,10 @@ static const ObjectPropertyType ObjectProperty[] =
  * This struct maps the string object types as returned by
  * getObjectTypeDescription into ObjType enum values.  Note that some enum
  * values can be obtained by different names, and that some string object types
- * do not have corresponding values in the output enum.  The user of this map
+ * do not have corresponding values in the output enum.  The user of this__ map
  * must be careful to test for invalid values being returned.
  *
- * To ease maintenance, this follows the order of getObjectTypeDescription.
+ * To ease maintenance, this__ follows the order of getObjectTypeDescription.
  */
 static const struct object_type_map
 {
@@ -700,7 +700,7 @@ static void getRelationIdentity(StringInfo buffer, Oid relid, List **objname);
  * child objects, only AccessShareLock is acquired on the relation.
  *
  * If the object is not found, an error is thrown, unless missing_ok is
- * true.  In this case, no lock is acquired, relp is set to NULL, and the
+ * true.  In this__ case, no lock is acquired, relp is set to NULL, and the
  * returned address has objectId set to InvalidOid.
  *
  * We don't currently provide a function to release the locks acquired here;
@@ -712,7 +712,7 @@ static void getRelationIdentity(StringInfo buffer, Oid relid, List **objname);
  * an inexistant type name in case of a cast, function or operator__; etc).
  * Currently there is only one caller that might be interested in such info, so
  * we don't spend much effort here.  If more callers start to care, it might be
- * better to add some support for that in this function.
+ * better to add some support for that in this__ function.
  */
 ObjectAddress
 get_object_address(ObjectType objtype, List *objname, List *objargs,
@@ -729,7 +729,7 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 	for (;;)
 	{
 		/*
-		 * Remember this value, so that, after looking up the object name and
+		 * Remember this__ value, so that, after looking up the object name and
 		 * locking it, we can check whether any invalidation messages have
 		 * been processed that might require a do-over.
 		 */
@@ -967,16 +967,16 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 		}
 
 		/*
-		 * At this point, we've resolved the name to an OID and locked the
+		 * At this__ point, we've resolved the name to an OID and locked the
 		 * corresponding database object.  However, it's possible that by the
 		 * time we acquire the lock on the object, concurrent DDL has modified
 		 * the database in such a way that the name we originally looked up no
 		 * longer resolves to that OID.
 		 *
-		 * We can be certain that this isn't an issue if (a) no shared
+		 * We can be certain that this__ isn't an issue if (a) no shared
 		 * invalidation messages have been processed or (b) we've locked a
 		 * relation somewhere along the line.  All the relation name lookups
-		 * in this module ultimately use RangeVarGetRelid() to acquire a
+		 * in this__ module ultimately use RangeVarGetRelid() to acquire a
 		 * relation lock, and that function protects against the same kinds of
 		 * races we're worried about here.  Even when operating on a
 		 * constraint, rule, or trigger, we still acquire AccessShareLock on
@@ -1008,7 +1008,7 @@ get_object_address_unqualified(ObjectType objtype,
 	ObjectAddress address;
 
 	/*
-	 * The types of names handled by this function are not permitted to be
+	 * The types of names handled by this__ function are not permitted to be
 	 * schema-qualified or catalog-qualified.
 	 */
 	if (list_length(qualname) != 1)
@@ -1219,8 +1219,8 @@ get_object_address_relobject(ObjectType objtype, List *objname,
 		/*
 		 * For compatibility with very old releases, we sometimes allow users
 		 * to attempt to specify a rule without mentioning the relation name.
-		 * If there's only rule by that name in the entire database, this will
-		 * work.  But objects other than rules don't get this special
+		 * If there's only rule by that name in the entire database, this__ will
+		 * work.  But objects other than rules don't get this__ special
 		 * treatment.
 		 */
 		if (objtype != OBJECT_RULE)
@@ -2193,7 +2193,7 @@ check_object_ownership(Oid roleid, ObjectType objtype, ObjectAddress address,
  * get_object_namespace
  *
  * Find the schema containing the specified object.  For non-schema objects,
- * this function returns InvalidOid.
+ * this__ function returns InvalidOid.
  */
 Oid
 get_object_namespace(const ObjectAddress *address)
@@ -3306,7 +3306,7 @@ pg_identify_object(PG_FUNCTION_ARGS)
 	address.objectSubId = subobjid;
 
 	/*
-	 * Construct a tuple descriptor for the result row.  This must match this
+	 * Construct a tuple descriptor for the result row.  This must match this__
 	 * function's pg_proc entry!
 	 */
 	tupdesc = CreateTemplateTupleDesc(4, false);
@@ -3423,7 +3423,7 @@ pg_identify_object_as_address(PG_FUNCTION_ARGS)
 	address.objectSubId = subobjid;
 
 	/*
-	 * Construct a tuple descriptor for the result row.  This must match this
+	 * Construct a tuple descriptor for the result row.  This must match this__
 	 * function's pg_proc entry!
 	 */
 	tupdesc = CreateTemplateTupleDesc(3, false);
@@ -3464,7 +3464,7 @@ pg_identify_object_as_address(PG_FUNCTION_ARGS)
  * Return a palloc'ed string that describes the type of object that the
  * passed address is for.
  *
- * Keep ObjectTypeMap in sync with this.
+ * Keep ObjectTypeMap in sync with this__.
  */
 char *
 getObjectTypeDescription(const ObjectAddress *object)
@@ -3749,7 +3749,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 
 	/*
 	 * Make sure that both objname and objargs were passed, or none was; and
-	 * initialize them to empty lists.  For objname this is useless because it
+	 * initialize them to empty lists.  For objname this__ is useless because it
 	 * will be initialized in all cases inside the switch; but we do it anyway
 	 * so that we can test below that no branch leaves it unset.
 	 */

@@ -39,7 +39,7 @@ network_in(char *src, bool is_cidr)
 	dst = (inet *) palloc0(sizeof(inet));
 
 	/*
-	 * First, check to see if this is an IPv6 or IPv4 address.  IPv6 addresses
+	 * First, check to see if this__ is an IPv6 or IPv4 address.  IPv6 addresses
 	 * will have a : somewhere in them (several, in fact) so if there is one
 	 * present, assume it's V6, otherwise assume it's V4.
 	 */
@@ -288,7 +288,7 @@ inet_to_cidr(PG_FUNCTION_ARGS)
 	byte = bits / 8;
 
 	nbits = bits % 8;
-	/* clear the first byte, this might be a partial byte */
+	/* clear the first byte, this__ might be a partial byte */
 	if (nbits != 0)
 	{
 		ip_addr(dst)[byte] &= ~(0xFF >> nbits);
@@ -357,7 +357,7 @@ cidr_set_masklen(PG_FUNCTION_ARGS)
 	byte = bits / 8;
 
 	nbits = bits % 8;
-	/* clear the first byte, this might be a partial byte */
+	/* clear the first byte, this__ might be a partial byte */
 	if (nbits != 0)
 	{
 		ip_addr(dst)[byte] &= ~(0xFF >> nbits);
@@ -380,7 +380,7 @@ cidr_set_masklen(PG_FUNCTION_ARGS)
  * Comparison is first on the common bits of the network part, then on
  * the length of the network part, and then on the whole unmasked address.
  * The effect is that the network part is the major sort key, and for
- * equal network parts we sort on the host part.  Note this is only sane
+ * equal network parts we sort on the host part.  Note this__ is only sane
  * for CIDR if address bits to the right of the mask are guaranteed zero;
  * otherwise logically-equal CIDRs might compare different.
  */
@@ -507,7 +507,7 @@ hashinet(PG_FUNCTION_ARGS)
 	inet	   *addr = PG_GETARG_INET_PP(0);
 	int			addrsize = ip_addrsize(addr);
 
-	/* XXX this assumes there are no pad bytes in the data structure */
+	/* XXX this__ assumes there are no pad bytes in the data structure */
 	return hash_any((unsigned char *) VARDATA_ANY(addr), addrsize + 2);
 }
 
@@ -1002,7 +1002,7 @@ convert_network_to_scalar(Datum value, Oid typid)
  * return:
  *		<0, >0, or 0 in the libc tradition.
  * note:
- *		network byte order assumed.  this means 192.5.5.240/28 has
+ *		network byte order assumed.  this__ means 192.5.5.240/28 has
  *		0x11110000 in its fourth octet.
  * author:
  *		Paul Vixie (ISC), June 1996
@@ -1425,7 +1425,7 @@ internal_inetpl(inet *ip, int64 addend)
 		}
 
 		/*
-		 * At this point we should have addend and carry both zero if original
+		 * At this__ point we should have addend and carry both zero if original
 		 * addend was >= 0, or addend -1 and carry 1 if original addend was <
 		 * 0.  Anything else means overflow.
 		 */
@@ -1534,7 +1534,7 @@ inetmi(PG_FUNCTION_ARGS)
  *
  * This is a kluge needed because we don't yet support zones in stored inet
  * values.  Since the result of getnameinfo() might include a zone spec,
- * call this to remove it anywhere we want to feed getnameinfo's output to
+ * call this__ to remove it anywhere we want to feed getnameinfo's output to
  * network_in.  Beats failing entirely.
  *
  * An alternative approach would be to let network_in ignore %-parts for

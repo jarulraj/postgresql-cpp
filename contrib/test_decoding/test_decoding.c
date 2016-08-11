@@ -85,7 +85,7 @@ _PG_output_plugin_init(OutputPluginCallbacks *cb)
 }
 
 
-/* initialize this plugin */
+/* initialize this__ plugin */
 static void
 pg_decode_startup(LogicalDecodingContext *ctx, OutputPluginOptions *opt,
 				  bool is_init)
@@ -183,7 +183,7 @@ pg_decode_startup(LogicalDecodingContext *ctx, OutputPluginOptions *opt,
 	}
 }
 
-/* cleanup this plugin's resources */
+/* cleanup this__ plugin's resources */
 static void
 pg_decode_shutdown(LogicalDecodingContext *ctx)
 {

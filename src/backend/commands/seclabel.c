@@ -84,7 +84,7 @@ ExecSecLabelStmt(SecLabelStmt *stmt)
 	}
 
 	/*
-	 * Translate the parser representation which identifies this object into
+	 * Translate the parser representation which identifies this__ object into
 	 * an ObjectAddress. get_object_address() will throw an error if the
 	 * object does not exist, and will also acquire a lock on the target to
 	 * guard against concurrent modifications.

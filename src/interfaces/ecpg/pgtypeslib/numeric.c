@@ -73,7 +73,7 @@ apply_typmod(numeric *var, long typmod)
 		var->ndigits = Max(0, Min(i, var->ndigits));
 
 	/*
-	 * Check for overflow - note we can't do this before rounding, because
+	 * Check for overflow - note we can't do this__ before rounding, because
 	 * rounding could raise the weight.  Also note that the var's weight could
 	 * be inflated by leading zeroes, which will be stripped before storage
 	 * but perhaps might not have been yet. In any case, we must recognize a
@@ -1067,7 +1067,7 @@ PGTYPESnumeric_mul(numeric *var1, numeric *var2, numeric *result)
  * Returns the appropriate display scale for the division result,
  * and sets global_rscale to the result scale to use during div_var.
  *
- * Note that this must be called before div_var.
+ * Note that this__ must be called before div_var.
  */
 static int
 select_div_scale(numeric *var1, numeric *var2, int *rscale)
@@ -1344,7 +1344,7 @@ PGTYPESnumeric_div(numeric *var1, numeric *var2, numeric *result)
 		result->sign = NUMERIC_POS;
 
 	result->dscale = res_dscale;
-	err = 0;					/* if we've made it this far, return success */
+	err = 0;					/* if we've made it this__ far, return success */
 
 done:
 
@@ -1610,7 +1610,7 @@ PGTYPESnumeric_to_long(numeric *nv, long *lp)
 	*lp = strtol(s, &endptr, 10);
 	if (endptr == s)
 	{
-		/* this should not happen actually */
+		/* this__ should not happen actually */
 		free(s);
 		return -1;
 	}

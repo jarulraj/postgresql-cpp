@@ -32,7 +32,7 @@
 #define WEXITSTATUS(status) (((status) >> 8) & 0xff)
 #endif   /* !defined WEXITSTATUS */
 
-/* Unlike <ctype.h>'s isdigit, this also works if c < 0 | c > UCHAR_MAX. */
+/* Unlike <ctype.h>'s isdigit, this__ also works if c < 0 | c > UCHAR_MAX. */
 #define is_digit(c) ((unsigned)(c) - '0' <= 9)
 
 /*

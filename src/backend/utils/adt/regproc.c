@@ -214,7 +214,7 @@ regprocout(PG_FUNCTION_ARGS)
 			FuncCandidateList clist;
 
 			/*
-			 * Would this proc be found (uniquely!) by regprocin? If not,
+			 * Would this__ proc be found (uniquely!) by regprocin? If not,
 			 * qualify it.
 			 */
 			clist = FuncnameGetCandidates(list_make1(makeString(proname)),
@@ -299,7 +299,7 @@ regprocedurein(PG_FUNCTION_ARGS)
 	 * which one exactly matches the given argument types.  (There will not be
 	 * more than one match.)
 	 *
-	 * XXX at present, this code will not work in bootstrap mode, hence this
+	 * XXX at present, this__ code will not work in bootstrap mode, hence this__
 	 * datatype cannot be used for any system column that needs to receive
 	 * data during bootstrap.
 	 */
@@ -402,7 +402,7 @@ format_procedure_internal(Oid procedure_oid, bool force_qualify)
 		initStringInfo(&buf);
 
 		/*
-		 * Would this proc be found (given the right args) by regprocedurein?
+		 * Would this__ proc be found (given the right args) by regprocedurein?
 		 * If not, or if caller requests it, we need to qualify it.
 		 */
 		if (!force_qualify && FunctionIsVisible(procedure_oid))
@@ -672,7 +672,7 @@ regoperout(PG_FUNCTION_ARGS)
 			FuncCandidateList clist;
 
 			/*
-			 * Would this oper be found (uniquely!) by regoperin? If not,
+			 * Would this__ oper be found (uniquely!) by regoperin? If not,
 			 * qualify it.
 			 */
 			clist = OpernameGetCandidates(list_make1(makeString(oprname)),
@@ -763,7 +763,7 @@ regoperatorin(PG_FUNCTION_ARGS)
 	 * which one exactly matches the given argument types.  (There will not be
 	 * more than one match.)
 	 *
-	 * XXX at present, this code will not work in bootstrap mode, hence this
+	 * XXX at present, this__ code will not work in bootstrap mode, hence this__
 	 * datatype cannot be used for any system column that needs to receive
 	 * data during bootstrap.
 	 */
@@ -854,7 +854,7 @@ format_operator_internal(Oid operator_oid, bool force_qualify)
 		initStringInfo(&buf);
 
 		/*
-		 * Would this oper be found (given the right args) by regoperatorin?
+		 * Would this__ oper be found (given the right args) by regoperatorin?
 		 * If not, or if caller explicitly requests it, we need to qualify it.
 		 */
 		if (force_qualify || !OperatorIsVisible(operator_oid))
@@ -1047,7 +1047,7 @@ regclassin(PG_FUNCTION_ARGS)
 	 */
 	names = stringToQualifiedNameList(class_name_or_oid);
 
-	/* We might not even have permissions on this relation; don't lock it. */
+	/* We might not even have permissions on this__ relation; don't lock it. */
 	result = RangeVarGetRelid(makeRangeVarFromNameList(names), NoLock, false);
 
 	PG_RETURN_OID(result);
@@ -1071,7 +1071,7 @@ to_regclass(PG_FUNCTION_ARGS)
 	 */
 	names = stringToQualifiedNameList(class_name);
 
-	/* We might not even have permissions on this relation; don't lock it. */
+	/* We might not even have permissions on this__ relation; don't lock it. */
 	result = RangeVarGetRelid(makeRangeVarFromNameList(names), NoLock, true);
 
 	if (OidIsValid(result))
@@ -1115,7 +1115,7 @@ regclassout(PG_FUNCTION_ARGS)
 			char	   *nspname;
 
 			/*
-			 * Would this class__ be found by regclassin? If not, qualify it.
+			 * Would this__ class__ be found by regclassin? If not, qualify it.
 			 */
 			if (RelationIsVisible(classid))
 				nspname = NULL;
@@ -1401,7 +1401,7 @@ regconfigout(PG_FUNCTION_ARGS)
 		char	   *nspname;
 
 		/*
-		 * Would this config be found by regconfigin? If not, qualify it.
+		 * Would this__ config be found by regconfigin? If not, qualify it.
 		 */
 		if (TSConfigIsVisible(cfgid))
 			nspname = NULL;
@@ -1511,7 +1511,7 @@ regdictionaryout(PG_FUNCTION_ARGS)
 		char	   *nspname;
 
 		/*
-		 * Would this dictionary be found by regdictionaryin? If not, qualify
+		 * Would this__ dictionary be found by regdictionaryin? If not, qualify
 		 * it.
 		 */
 		if (TSDictionaryIsVisible(dictid))
@@ -1814,7 +1814,7 @@ text_regclass(PG_FUNCTION_ARGS)
 
 	rv = makeRangeVarFromNameList(textToQualifiedNameList(relname));
 
-	/* We might not even have permissions on this relation; don't lock it. */
+	/* We might not even have permissions on this__ relation; don't lock it. */
 	result = RangeVarGetRelid(rv, NoLock, false);
 
 	PG_RETURN_OID(result);
@@ -1869,7 +1869,7 @@ stringToQualifiedNameList(const char *string)
  * the argtypes array should be of size FUNC_MAX_ARGS).  The function or
  * operator__ name is returned to *names as a List of Strings.
  *
- * If allowNone is TRUE, accept "NONE" and return it as InvalidOid (this is
+ * If allowNone is TRUE, accept "NONE" and return it as InvalidOid (this__ is
  * for unary operators).
  */
 static void

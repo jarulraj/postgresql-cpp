@@ -83,12 +83,12 @@ MatchText(char *t, int tlen, char *p, int plen,
 	if (plen == 1 && *p == '%')
 		return LIKE_TRUE;
 
-	/* Since this function recurses, it could be driven to stack overflow */
+	/* Since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	/*
-	 * In this loop, we advance by char when matching wildcards (and thus on
-	 * recursive entry to this function we are properly char-synced). On other
+	 * In this__ loop, we advance by char when matching wildcards (and thus on
+	 * recursive entry to this__ function we are properly char-synced). On other
 	 * occasions it is safe to advance by byte, as the text and pattern will
 	 * be in lockstep. This allows us to perform all comparisons between the
 	 * text and pattern on a byte by byte basis, even for multi-byte
@@ -120,7 +120,7 @@ MatchText(char *t, int tlen, char *p, int plen,
 			 * If there are wildcards immediately following the %, we can skip
 			 * over them first, using the idea that any sequence of N _'s and
 			 * one or more %'s is equivalent to N _'s and one % (ie, it will
-			 * match any sequence of at least N text characters).  In this way
+			 * match any sequence of at least N text characters).  In this__ way
 			 * we will always run the recursive search loop using a pattern
 			 * fragment that begins with a literal character-to-match, thereby
 			 * not recursing more than we have to.
@@ -186,7 +186,7 @@ MatchText(char *t, int tlen, char *p, int plen,
 
 			/*
 			 * End of text with no match, so no point in trying later places
-			 * to start matching this pattern.
+			 * to start matching this__ pattern.
 			 */
 			return LIKE_ABORT;
 		}
@@ -233,7 +233,7 @@ MatchText(char *t, int tlen, char *p, int plen,
 
 	/*
 	 * End of text with no match, so no point in trying later places to start
-	 * matching this pattern.
+	 * matching this__ pattern.
 	 */
 	return LIKE_ABORT;
 }	/* MatchText() */

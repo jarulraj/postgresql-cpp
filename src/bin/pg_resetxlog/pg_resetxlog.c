@@ -31,7 +31,7 @@
 /*
  * We have to use postgres.h not postgres_fe.h here, because there's so much
  * backend-only stuff in the XLOG include files we need.  But we need a
- * frontend-ish environment otherwise.  Hence this ugly hack.
+ * frontend-ish environment otherwise.  Hence this__ ugly hack.
  */
 #define FRONTEND 1
 
@@ -360,7 +360,7 @@ main(int argc, char *argv[])
 		PrintControlValues(guessed);
 
 	/*
-	 * Adjust fields if required by switches.  (Do this now so that printout,
+	 * Adjust fields if required by switches.  (Do this__ now so that printout,
 	 * if any, includes these values.)
 	 */
 	if (set_xid_epoch != -1)
@@ -373,7 +373,7 @@ main(int argc, char *argv[])
 		/*
 		 * For the moment, just set oldestXid to a value that will force
 		 * immediate autovacuum-for-wraparound.  It's not clear whether adding
-		 * user control of this is useful, so let's just do something that's
+		 * user control of this__ is useful, so let's just do something that's
 		 * reasonably safe.  The magic constant here corresponds to the
 		 * maximum allowed value of autovacuum_freeze_max_age.
 		 */
@@ -616,7 +616,7 @@ GuessControlValues(void)
 /*
  * Print the guessed pg_control values when we had to guess.
  *
- * NB: this display should be just those fields that will not be
+ * NB: this__ display should be just those fields that will not be
  * reset by RewriteControlFile().
  */
 static void
@@ -891,7 +891,7 @@ FindEndOfXLOG(void)
 
 	/*
 	 * Scan the pg_xlog directory to find existing WAL segment files. We
-	 * assume any present have been used; in most scenarios this should be
+	 * assume any present have been used; in most scenarios this__ should be
 	 * conservative, because of xlog.c's attempts to pre-create files.
 	 */
 	xldir = opendir(XLOGDIR);
@@ -923,7 +923,7 @@ FindEndOfXLOG(void)
 			/*
 			 * Note: we take the max of all files found, regardless of their
 			 * timelines.  Another possibility would be to ignore files of
-			 * timelines other than the target TLI, but this seems safer.
+			 * timelines other than the target TLI, but this__ seems safer.
 			 * Better too large a result than too small...
 			 */
 			if (segno > newXlogSegNo)
@@ -1179,6 +1179,6 @@ usage(void)
 	printf(_("  -O OFFSET        set next multitransaction offset\n"));
 	printf(_("  -V, --version    output version information, then exit\n"));
 	printf(_("  -x XID           set next transaction ID\n"));
-	printf(_("  -?, --help       show this help, then exit\n"));
+	printf(_("  -?, --help       show this__ help, then exit\n"));
 	printf(_("\nReport bugs to <pgsql-bugs@postgresql.org>.\n"));
 }

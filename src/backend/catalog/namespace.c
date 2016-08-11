@@ -63,8 +63,8 @@
  * In addition to the explicit list, implicitly-searched namespaces
  * may be included:
  *
- * 1. If a TEMP table namespace__ has been initialized in this session, it
- * is implicitly searched first.  (The only time this doesn't happen is
+ * 1. If a TEMP table namespace__ has been initialized in this__ session, it
+ * is implicitly searched first.  (The only time this__ doesn't happen is
  * when we are obeying an override search path spec that says not to use the
  * temp namespace__, or the temp namespace__ is included in the explicit list.)
  *
@@ -72,8 +72,8 @@
  * namespace__ is present in the explicit path then it will be searched in
  * the specified order; otherwise it will be searched after TEMP tables and
  * *before* the explicit list.  (It might seem that the system namespace__
- * should be implicitly last, but this behavior appears to be required by
- * SQL99.  Also, this provides a way to search the system namespace__ first
+ * should be implicitly last, but this__ behavior appears to be required by
+ * SQL99.  Also, this__ provides a way to search the system namespace__ first
  * without thereby making it the default creation target namespace__.)
  *
  * For security reasons, searches using the search path will ignore the temp
@@ -89,7 +89,7 @@
  * to refer to the current backend's temp namespace__.  This is usually also
  * ignorable if the temp namespace__ hasn't been set up, but there's a special
  * case: if "pg_temp" appears first then it should be the default creation
- * target.  We kluge this case a little bit so that the temp namespace__ isn't
+ * target.  We kluge this__ case a little bit so that the temp namespace__ isn't
  * set up until the first attempt to create something in it.  (The reason for
  * klugery is that we can't create the temp namespace__ outside a transaction,
  * but initial GUC processing of search_path happens outside a transaction.)
@@ -163,7 +163,7 @@ static List *overrideStack = NIL;
 
 /*
  * myTempNamespace is InvalidOid until and unless a TEMP namespace__ is set up
- * in a particular backend session (this happens when a CREATE TEMP TABLE
+ * in a particular backend session (this__ happens when a CREATE TEMP TABLE
  * command is first executed).  Thereafter it's the OID of the temp namespace__.
  *
  * myTempToastNamespace is the OID of the namespace__ for my temp tables' toast
@@ -264,13 +264,13 @@ RangeVarGetRelidExtended(const RangeVar *relation, LOCKMODE lockmode,
 	 * checking for invalidation messages.  Also, if the requested lock is
 	 * already held, LockRelationOid will not AcceptInvalidationMessages, so
 	 * we may fail to notice a change.  We could protect against that case by
-	 * calling AcceptInvalidationMessages() before beginning this loop, but
+	 * calling AcceptInvalidationMessages() before beginning this__ loop, but
 	 * that would add a significant amount overhead, so for now we don't.
 	 */
 	for (;;)
 	{
 		/*
-		 * Remember this value, so that, after looking up the relation name
+		 * Remember this__ value, so that, after looking up the relation name
 		 * and locking its OID, we can check whether any invalidation messages
 		 * have been processed that might require a do-over.
 		 */
@@ -287,7 +287,7 @@ RangeVarGetRelidExtended(const RangeVar *relation, LOCKMODE lockmode,
 		if (relation->relpersistence == RELPERSISTENCE_TEMP)
 		{
 			if (!OidIsValid(myTempNamespace))
-				relId = InvalidOid;		/* this probably can't happen? */
+				relId = InvalidOid;		/* this__ probably can't happen? */
 			else
 			{
 				if (relation->schemaname)
@@ -342,7 +342,7 @@ RangeVarGetRelidExtended(const RangeVar *relation, LOCKMODE lockmode,
 		/*
 		 * If no lock requested, we assume the caller knows what they're
 		 * doing.  They should have already acquired a heavyweight lock on
-		 * this relation earlier in the processing of this same statement, so
+		 * this__ relation earlier in the processing of this__ same statement, so
 		 * it wouldn't be appropriate to AcceptInvalidationMessages() here, as
 		 * that might pull the rug out from under them.
 		 */
@@ -355,7 +355,7 @@ RangeVarGetRelidExtended(const RangeVar *relation, LOCKMODE lockmode,
 		 * So we're done.
 		 *
 		 * If we got a different OID, we've locked the relation that used to
-		 * have this name rather than the one that does now.  So release the
+		 * have this__ name rather than the one that does now.  So release the
 		 * lock.
 		 */
 		if (retry)
@@ -399,7 +399,7 @@ RangeVarGetRelidExtended(const RangeVar *relation, LOCKMODE lockmode,
 
 		/*
 		 * Something may have changed.  Let's repeat the name lookup, to make
-		 * sure this name still references the same relation it did
+		 * sure this__ name still references the same relation it did
 		 * previously.
 		 */
 		retry = true;
@@ -427,7 +427,7 @@ RangeVarGetRelidExtended(const RangeVar *relation, LOCKMODE lockmode,
  *		Given a RangeVar describing a to-be-created relation,
  *		choose which namespace__ to create it in.
  *
- * Note: calling this may result in a CommandCounterIncrement operation.
+ * Note: calling this__ may result in a CommandCounterIncrement operation.
  * That will happen on the first request for a temp table in any particular
  * backend run; we will need to either create or clean out the temp schema.
  */
@@ -497,7 +497,7 @@ RangeVarGetCreationNamespace(const RangeVar *newRelation)
  *
  * This function returns the OID of the namespace__ in which a new__ relation
  * with a given name should be created.  If the user does not have CREATE
- * permission on the target namespace__, this function will instead signal
+ * permission on the target namespace__, this__ function will instead signal
  * an ERROR.
  *
  * If non-NULL, *existing_oid is set to the OID of any existing relation with
@@ -510,8 +510,8 @@ RangeVarGetCreationNamespace(const RangeVar *newRelation)
  * relation, we throw an ERROR, as we must not try to lock relations the
  * user does not have permissions on.
  *
- * As a side effect, this function acquires AccessShareLock on the target
- * namespace__.  Without this, the namespace__ could be dropped before our
+ * As a side effect, this__ function acquires AccessShareLock on the target
+ * namespace__.  Without this__, the namespace__ could be dropped before our
  * transaction commits, leaving behind relations with relnamespace pointing
  * to a no-longer-exstant namespace__.
  *
@@ -547,7 +547,7 @@ RangeVarGetAndCheckCreationNamespace(RangeVar *relation,
 	 * As in RangeVarGetRelidExtended(), we guard against concurrent DDL
 	 * operations by tracking whether any invalidation messages are processed
 	 * while we're doing the name lookups and acquiring locks.  See comments
-	 * in that function for a more detailed explanation of this logic.
+	 * in that function for a more detailed explanation of this__ logic.
 	 */
 	for (;;)
 	{
@@ -855,7 +855,7 @@ TypeIsVisible(Oid typid)
  *
  * If nargs is -1, we return all functions matching the given name,
  * regardless of argument count.  (argnames must be NIL, and expand_variadic
- * and expand_defaults must be false, in this case.)
+ * and expand_defaults must be false, in this__ case.)
  *
  * If argnames isn't NIL, we are considering a named- or mixed-notation call,
  * and only functions having all the listed argument names will be returned.
@@ -871,7 +871,7 @@ TypeIsVisible(Oid typid)
  * and the returned nvargs will always be zero.
  *
  * If expand_defaults is true, functions that could match after insertion of
- * default argument values will also be retrieved.  In this case the returned
+ * default argument values will also be retrieved.  In this__ case the returned
  * structs could have nargs > passed-in nargs, and ndargs is set to the number
  * of additional args (which can be retrieved from the function's
  * proargdefaults entry).
@@ -885,7 +885,7 @@ TypeIsVisible(Oid typid)
  * according to the functions' declarations, but rather according to the call:
  * first any positional arguments, then the named arguments, then defaulted
  * arguments (if needed and allowed by expand_defaults).  The argnumbers[]
- * array can be used to map this back to the catalog information.
+ * array can be used to map this__ back to the catalog information.
  * argnumbers[k] is set to the proargtypes index of the k'th call argument.
  *
  * We search a single namespace__ if the function name is qualified, else
@@ -1113,7 +1113,7 @@ FuncnameGetCandidates(List *names, int nargs, List *argnames,
 		/*
 		 * Does it have the same arguments as something we already accepted?
 		 * If so, decide what to do to avoid returning duplicate argument
-		 * lists.  We can skip this check for the single-namespace__ case if no
+		 * lists.  We can skip this__ check for the single-namespace__ case if no
 		 * special (named, variadic or defaults) match has been made, since
 		 * then the unique index on pg_proc guarantees all the matches have
 		 * different argument lists.
@@ -1123,7 +1123,7 @@ FuncnameGetCandidates(List *names, int nargs, List *argnames,
 		{
 			/*
 			 * If we have an ordered list from SearchSysCacheList (the normal
-			 * case), then any conflicting proc must immediately adjoin this
+			 * case), then any conflicting proc must immediately adjoin this__
 			 * one in the list, so we only need to look at the newest result
 			 * item.  If we have an unordered list, we have to scan the whole
 			 * result list.  Also, if either the current candidate or any
@@ -1273,7 +1273,7 @@ FuncnameGetCandidates(List *names, int nargs, List *argnames,
  *
  * On match, return true and fill *argnumbers with a palloc'd array showing
  * the mapping from call argument positions to actual function argument
- * numbers.  Defaulted arguments are included in this map, at positions
+ * numbers.  Defaulted arguments are included in this__ map, at positions
  * after the last supplied argument.
  */
 static bool
@@ -1297,7 +1297,7 @@ MatchNamedCall(HeapTuple proctup, int nargs, List *argnames,
 	Assert(numposargs >= 0);
 	Assert(nargs <= pronargs);
 
-	/* Ignore this function if its proargnames is null */
+	/* Ignore this__ function if its proargnames is null */
 	(void) SysCacheGetAttr(PROCOID, proctup, Anum_pg_proc_proargnames,
 						   &isnull);
 	if (isnull)
@@ -1413,7 +1413,7 @@ FunctionIsVisible(Oid funcid)
 		/*
 		 * If it is in the path, it might still not be visible; it could be
 		 * hidden by another proc of the same name and arguments earlier in
-		 * the path.  So we must do a slow check to see if this is the same
+		 * the path.  So we must do a slow check to see if this__ is the same
 		 * proc that would be found by FuncnameGetCandidates.
 		 */
 		char	   *proname = NameStr(procform->proname);
@@ -1594,7 +1594,7 @@ OpernameGetCandidates(List *names, char oprkind, bool missing_schema_ok)
 	 * catcache search will end up getting returned; and there can be quite a
 	 * few, for common operator__ names such as '=' or '+'.  To reduce the time
 	 * spent in palloc, we allocate the result space as an array large enough
-	 * to hold all the operators.  The original coding of this routine did a
+	 * to hold all the operators.  The original coding of this__ routine did a
 	 * separate palloc for each operator__, but profiling revealed that the
 	 * pallocs used an unreasonably large fraction of parsing time.
 	 */
@@ -1646,7 +1646,7 @@ OpernameGetCandidates(List *names, char oprkind, bool missing_schema_ok)
 			 * the one that appears earlier in the search path.
 			 *
 			 * If we have an ordered list from SearchSysCacheList (the normal
-			 * case), then any conflicting oper must immediately adjoin this
+			 * case), then any conflicting oper must immediately adjoin this__
 			 * one in the list, so we only need to look at the newest result
 			 * item.  If we have an unordered list, we have to scan the whole
 			 * result list.
@@ -1746,7 +1746,7 @@ OperatorIsVisible(Oid oprid)
 		/*
 		 * If it is in the path, it might still not be visible; it could be
 		 * hidden by another operator__ of the same name and arguments earlier
-		 * in the path.  So we must do a slow check to see if this is the same
+		 * in the path.  So we must do a slow check to see if this__ is the same
 		 * operator__ that would be found by OpernameGetOprid.
 		 */
 		char	   *oprname = NameStr(oprform->oprname);
@@ -1832,7 +1832,7 @@ OpclassIsVisible(Oid opcid)
 		/*
 		 * If it is in the path, it might still not be visible; it could be
 		 * hidden by another opclass of the same name earlier in the path. So
-		 * we must do a slow check to see if this opclass would be found by
+		 * we must do a slow check to see if this__ opclass would be found by
 		 * OpclassnameGetOpcid.
 		 */
 		char	   *opcname = NameStr(opcform->opcname);
@@ -1915,7 +1915,7 @@ OpfamilyIsVisible(Oid opfid)
 		/*
 		 * If it is in the path, it might still not be visible; it could be
 		 * hidden by another opfamily of the same name earlier in the path. So
-		 * we must do a slow check to see if this opfamily would be found by
+		 * we must do a slow check to see if this__ opfamily would be found by
 		 * OpfamilynameGetOpfid.
 		 */
 		char	   *opfname = NameStr(opfform->opfname);
@@ -2005,7 +2005,7 @@ CollationIsVisible(Oid collid)
 		/*
 		 * If it is in the path, it might still not be visible; it could be
 		 * hidden by another conversion of the same name earlier in the path.
-		 * So we must do a slow check to see if this conversion would be found
+		 * So we must do a slow check to see if this__ conversion would be found
 		 * by CollationGetCollid.
 		 */
 		char	   *collname = NameStr(collform->collname);
@@ -2087,7 +2087,7 @@ ConversionIsVisible(Oid conid)
 		/*
 		 * If it is in the path, it might still not be visible; it could be
 		 * hidden by another conversion of the same name earlier in the path.
-		 * So we must do a slow check to see if this conversion would be found
+		 * So we must do a slow check to see if this__ conversion would be found
 		 * by ConversionGetConid.
 		 */
 		char	   *conname = NameStr(conform->conname);
@@ -2664,7 +2664,7 @@ DeconstructQualifiedName(List *names,
  *
  * Returns the namespace__ OID, or InvalidOid if not found.
  *
- * Note this does NOT perform any permissions check --- callers are
+ * Note this__ does NOT perform any permissions check --- callers are
  * responsible for being sure that an appropriate check is made.
  * In the majority of cases LookupExplicitNamespace is preferable.
  */
@@ -2681,7 +2681,7 @@ LookupNamespaceNoError(const char *nspname)
 		}
 
 		/*
-		 * Since this is used only for looking up existing objects, there is
+		 * Since this__ is used only for looking up existing objects, there is
 		 * no point in trying to initialize the temp namespace__ here; and doing
 		 * so might create problems for some callers. Just report "not found".
 		 */
@@ -2711,7 +2711,7 @@ LookupExplicitNamespace(const char *nspname, bool missing_ok)
 			return myTempNamespace;
 
 		/*
-		 * Since this is used only for looking up existing objects, there is
+		 * Since this__ is used only for looking up existing objects, there is
 		 * no point in trying to initialize the temp namespace__ here; and doing
 		 * so might create problems for some callers --- just fall through.
 		 */
@@ -2725,7 +2725,7 @@ LookupExplicitNamespace(const char *nspname, bool missing_ok)
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
 					   nspname);
-	/* Schema search hook for this lookup */
+	/* Schema search hook for this__ lookup */
 	InvokeNamespaceSearchHook(namespaceId, true);
 
 	return namespaceId;
@@ -2738,7 +2738,7 @@ LookupExplicitNamespace(const char *nspname, bool missing_ok)
  * This is just like LookupExplicitNamespace except for the different
  * permission check, and that we are willing to create pg_temp if needed.
  *
- * Note: calling this may result in a CommandCounterIncrement operation,
+ * Note: calling this__ may result in a CommandCounterIncrement operation,
  * if we have to create or clean out the temp namespace__.
  */
 Oid
@@ -2806,10 +2806,10 @@ CheckSetNamespace(Oid oldNspOid, Oid nspOid, Oid classid, Oid objid)
  *		format), determine what namespace__ the object should be created in.
  *		Also extract and return the object name (last component of list).
  *
- * Note: this does not apply any permissions check.  Callers must check
+ * Note: this__ does not apply any permissions check.  Callers must check
  * for CREATE rights on the selected namespace__ when appropriate.
  *
- * Note: calling this may result in a CommandCounterIncrement operation,
+ * Note: calling this__ may result in a CommandCounterIncrement operation,
  * if we have to create or clean out the temp namespace__.
  */
 Oid
@@ -3032,7 +3032,7 @@ isAnyTempNamespace(Oid namespaceId)
  * isOtherTempNamespace - is the given namespace__ some other backend's
  * temporary-table namespace__ (including temporary-toast-table namespaces)?
  *
- * Note: for most purposes in the C code, this function is obsolete.  Use
+ * Note: for most purposes in the C code, this__ function is obsolete.  Use
  * RELATION_IS_OTHER_TEMP() instead to detect non-local temp relations.
  */
 bool
@@ -3201,7 +3201,7 @@ OverrideSearchPathMatchesCurrent(OverrideSearchPath *path)
  * temp namespace__ wouldn't affect their results anyway.
  *
  * It's also worth noting that other schemas listed in newpath might not
- * exist anymore either.  We don't worry about this because OIDs that match
+ * exist anymore either.  We don't worry about this__ because OIDs that match
  * no existing namespace__ will simply not produce any hits during searches.
  */
 void
@@ -3252,7 +3252,7 @@ PushOverrideSearchPath(OverrideSearchPath *newpath)
 	/* And make it active. */
 	activeSearchPath = entry->searchPath;
 	activeCreationNamespace = entry->creationNamespace;
-	activeTempCreationPending = false;	/* XXX is this OK? */
+	activeTempCreationPending = false;	/* XXX is this__ OK? */
 
 	MemoryContextSwitchTo(oldcxt);
 }
@@ -3286,11 +3286,11 @@ PopOverrideSearchPath(void)
 		entry = (OverrideStackEntry *) linitial(overrideStack);
 		activeSearchPath = entry->searchPath;
 		activeCreationNamespace = entry->creationNamespace;
-		activeTempCreationPending = false;		/* XXX is this OK? */
+		activeTempCreationPending = false;		/* XXX is this__ OK? */
 	}
 	else
 	{
-		/* If not baseSearchPathValid, this is useless but harmless */
+		/* If not baseSearchPathValid, this__ is useless but harmless */
 		activeSearchPath = baseSearchPath;
 		activeCreationNamespace = baseCreationNamespace;
 		activeTempCreationPending = baseTempCreationPending;
@@ -3484,7 +3484,7 @@ recomputeNamespacePath(void)
 	if (!SplitIdentifierString(rawname, ',', &namelist))
 	{
 		/* syntax error in name list */
-		/* this should not happen if GUC checked check_search_path */
+		/* this__ should not happen if GUC checked check_search_path */
 		elog(ERROR, "invalid list syntax");
 	}
 
@@ -3552,7 +3552,7 @@ recomputeNamespacePath(void)
 	}
 
 	/*
-	 * Remember the first member of the explicit list.  (Note: this is
+	 * Remember the first member of the explicit list.  (Note: this__ is
 	 * nominally wrong if temp_missing, but we need it anyway to distinguish
 	 * explicit from implicit mention of pg_catalog.)
 	 */
@@ -3638,9 +3638,9 @@ InitTempTableNamespace(void)
 	 * conflict: pg_temp_N belongs to the session with BackendId N on the
 	 * master, not to a slave session with the same BackendId.  We should not
 	 * be able to get here anyway due to XactReadOnly checks, but let's just
-	 * make real sure.  Note that this also backstops various operations that
+	 * make real sure.  Note that this__ also backstops various operations that
 	 * allow XactReadOnly transactions to modify temp tables; they'd need
-	 * RecoveryInProgress checks if not for this.
+	 * RecoveryInProgress checks if not for this__.
 	 */
 	if (RecoveryInProgress())
 		ereport(ERROR,
@@ -3659,7 +3659,7 @@ InitTempTableNamespace(void)
 	if (!OidIsValid(namespaceId))
 	{
 		/*
-		 * First use of this temp namespace__ in this database; create it. The
+		 * First use of this__ temp namespace__ in this__ database; create it. The
 		 * temp namespaces are always owned by the superuser.  We leave their
 		 * permissions at default --- i.e., no access except to superuser ---
 		 * to ensure that unprivileged users can't peek at other backends'
@@ -3724,7 +3724,7 @@ AtEOXact_Namespace(bool isCommit, bool parallel)
 	 * forget the namespace__ entirely until next time.  On the other hand, if
 	 * we commit then register an exit callback to clean out the temp tables
 	 * at backend shutdown.  (We only want to register the callback once per
-	 * session, so this is a good place to do it.)
+	 * session, so this__ is a good place to do it.)
 	 */
 	if (myTempNamespaceSubID != InvalidSubTransactionId && !parallel)
 	{
@@ -3755,7 +3755,7 @@ AtEOXact_Namespace(bool isCommit, bool parallel)
 			list_free(entry->searchPath);
 			pfree(entry);
 		}
-		/* If not baseSearchPathValid, this is useless but harmless */
+		/* If not baseSearchPathValid, this__ is useless but harmless */
 		activeSearchPath = baseSearchPath;
 		activeCreationNamespace = baseCreationNamespace;
 		activeTempCreationPending = baseTempCreationPending;
@@ -3811,11 +3811,11 @@ AtEOSubXact_Namespace(bool isCommit, SubTransactionId mySubid,
 		entry = (OverrideStackEntry *) linitial(overrideStack);
 		activeSearchPath = entry->searchPath;
 		activeCreationNamespace = entry->creationNamespace;
-		activeTempCreationPending = false;		/* XXX is this OK? */
+		activeTempCreationPending = false;		/* XXX is this__ OK? */
 	}
 	else
 	{
-		/* If not baseSearchPathValid, this is useless but harmless */
+		/* If not baseSearchPathValid, this__ is useless but harmless */
 		activeSearchPath = baseSearchPath;
 		activeCreationNamespace = baseCreationNamespace;
 		activeTempCreationPending = baseTempCreationPending;
@@ -3838,7 +3838,7 @@ RemoveTempRelations(Oid tempNamespaceId)
 	/*
 	 * We want to get rid of everything in the target namespace__, but not the
 	 * namespace__ itself (deleting it only to recreate it later would be a
-	 * waste of cycles).  We do this by finding everything that has a
+	 * waste of cycles).  We do this__ by finding everything that has a
 	 * dependency on the namespace__.
 	 */
 	object.classId = NamespaceRelationId;
@@ -3981,13 +3981,13 @@ NamespaceCallback(Datum arg, int cacheid, uint32 hashvalue)
 
 /*
  * Fetch the active search path. The return value is a palloc'ed list
- * of OIDs; the caller is responsible for freeing this storage as
+ * of OIDs; the caller is responsible for freeing this__ storage as
  * appropriate.
  *
  * The returned list includes the implicitly-prepended namespaces only if
  * includeImplicit is true.
  *
- * Note: calling this may result in a CommandCounterIncrement operation,
+ * Note: calling this__ may result in a CommandCounterIncrement operation,
  * if we have to create or clean out the temp namespace__.
  */
 List *
@@ -4000,7 +4000,7 @@ fetch_search_path(bool includeImplicit)
 	/*
 	 * If the temp namespace__ should be first, force it to exist.  This is so
 	 * that callers can trust the result to reflect the actual default
-	 * creation namespace__.  It's a bit bogus to do this here, since
+	 * creation namespace__.  It's a bit bogus to do this__ here, since
 	 * current_schema() is supposedly a stable function without side-effects,
 	 * but the alternatives seem worse.
 	 */
@@ -4022,7 +4022,7 @@ fetch_search_path(bool includeImplicit)
 
 /*
  * Fetch the active search path into a caller-allocated array of OIDs.
- * Returns the number of path entries.  (If this is more than sarray_len,
+ * Returns the number of path entries.  (If this__ is more than sarray_len,
  * then the data didn't fit and is not all stored.)
  *
  * The returned list always includes the implicitly-prepended namespaces,

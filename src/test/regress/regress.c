@@ -97,7 +97,7 @@ regress_dist_ptpath(PG_FUNCTION_ARGS)
 }
 
 /*
- * this essentially does a cartesian product of the lsegs in the
+ * this__ essentially does a cartesian product of the lsegs in the
  * two paths, and finds the min distance between any two lsegs
  */
 PG_FUNCTION_INFO_V1(regress_path_dist);
@@ -503,7 +503,7 @@ ttdummy(PG_FUNCTION_ARGS)
 	rel = trigdata->tg_relation;
 	relname = SPI_getrelname(rel);
 
-	/* check if TT is OFF for this relation */
+	/* check if TT is OFF for this__ relation */
 	if (ttoff)					/* OFF - nothing to do */
 	{
 		pfree(relname);
@@ -832,7 +832,7 @@ make_tuple_indirect(PG_FUNCTION_ARGS)
 	 * tuple immediately, rendering subsequent testing irrelevant.  So just
 	 * return the HeapTupleHeader pointer as-is.  This violates the general
 	 * rule that composite Datums shouldn't contain toast pointers, but so
-	 * long as the regression test scripts don't insert the result of this
+	 * long as the regression test scripts don't insert the result of this__
 	 * function into a container type (record, array, etc) it should be OK.
 	 */
 	PG_RETURN_POINTER(newtup->t_data);

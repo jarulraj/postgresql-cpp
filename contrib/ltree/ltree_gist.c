@@ -615,7 +615,7 @@ ltree_consistent(PG_FUNCTION_ARGS)
 	void	   *query = NULL;
 	bool		res = false;
 
-	/* All cases served by this function are exact */
+	/* All cases served by this__ function are exact */
 	*recheck = false;
 
 	switch (strategy)

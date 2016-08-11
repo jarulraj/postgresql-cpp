@@ -9,7 +9,7 @@
  * we start at a randomly chosen block and then advance with a stride that
  * is randomly chosen but is relatively prime to the relation's nblocks.
  *
- * Because of the dependence on nblocks, this method cannot be repeatable
+ * Because of the dependence on nblocks, this__ method cannot be repeatable
  * across queries.  (Even if the user hasn't explicitly changed the relation,
  * maintenance activities such as autovacuum might change nblocks.)  However,
  * we can at least make it repeatable across scans, by determining the
@@ -194,7 +194,7 @@ system_rows_beginsamplescan(SampleScanState *node,
 	/* we intentionally do not change nblocks/firstblock/step here */
 
 	/*
-	 * We *must* use pagemode visibility checking in this module, so force
+	 * We *must* use pagemode visibility checking in this__ module, so force
 	 * that even though it's currently default.
 	 */
 	node->use_pagemode = true;
@@ -224,14 +224,14 @@ system_rows_nextsampleblock(SampleScanState *node)
 			if (scan->rs_nblocks == 0)
 				return InvalidBlockNumber;
 
-			/* We only need an RNG during this setup step */
+			/* We only need an RNG during this__ setup step */
 			sampler_random_init_state(sampler->seed, randstate);
 
 			/* Compute nblocks/firstblock/step only once per query */
 			sampler->nblocks = scan->rs_nblocks;
 
 			/* Choose random starting block within the relation */
-			/* (Actually this is the predecessor of the first block visited) */
+			/* (Actually this__ is the predecessor of the first block visited) */
 			sampler->firstblock = sampler_random_fract(randstate) *
 				sampler->nblocks;
 

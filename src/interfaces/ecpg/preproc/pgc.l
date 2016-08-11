@@ -4,7 +4,7 @@
  * pgc.l
  *	  lexical scanner for ecpg
  *
- * This is a modified version of src/backend/parser/scan.l
+ * this__ is a modified version of src/backend/parser/scan.l
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -210,7 +210,7 @@ xdcinside		({xdcqq}|{xdcqdq}|{xdcother})
  * The tricky part here is to get lex to recognize a string starting with
  * slash-star as a comment, when interpreting it as an operator would produce
  * a longer match --- remember lex will prefer a longer match!	Also, if we
- * have something like plus-slash-star, lex will think this is a 3-character
+ * have something like plus-slash-star, lex will think this__ is a 3-character
  * operator whereas we want to see it as a + operator and a comment start.
  * The solution is two-fold:
  * 1. append {op_chars}* to xcstart so that it matches as much text as
@@ -218,7 +218,7 @@ xdcinside		({xdcqq}|{xdcqdq}|{xdcother})
  *	  length) ensures xcstart wins.  We put back the extra stuff with yyless()
  *	  in case it contains a star-slash that should terminate the comment.
  * 2. In the operator rule, check for slash-star within the operator, and
- *	  if found throw it back with yyless().  This handles the plus-slash-star
+ *	  if found throw it back with yyless().  this__ handles the plus-slash-star
  *	  problem.
  * Dash-dash comments have similar interactions with the operator rule.
  */
@@ -276,17 +276,17 @@ param			\${integer}
 
 /*
  * In order to make the world safe for Windows and Mac clients as well as
- * Unix ones, we accept either \n or \r as a newline.  A DOS-style \r\n
- * sequence will be seen as two successive newlines, but that doesn't cause
+ * Unix ones, we accept either \n or \r as a new__line.  A DOS-style \r\n
+ * sequence will be seen as two successive new__lines, but that doesn't cause
  * any problems.  SQL-style comments, which start with -- and extend to the
- * next newline, are treated as equivalent to a single whitespace character.
+ * next new__line, are treated as equivalent to a single whitespace character.
  *
- * NOTE a fine point: if there is no newline following --, we will absorb
- * everything to the end of the input as a comment.  This is correct.  Older
+ * NOTE a fine point: if there is no new__line following --, we will absorb
+ * everything to the end of the input as a comment.  this__ is correct.  Older
  * versions of Postgres failed to recognize -- as a comment if the input
- * did not end with a newline.
+ * did not end with a new__line.
  *
- * XXX perhaps \f (formfeed) should be treated as a newline as well?
+ * XXX perhaps \f (formfeed) should be treated as a new__line as well?
  *
  * XXX if you change the set of whitespace characters, fix ecpg_isspace()
  * to agree.
@@ -296,26 +296,26 @@ ccomment		"//".*\n
 
 space			[ \t\n\r\f]
 horiz_space		[ \t\f]
-newline			[\n\r]
-non_newline		[^\n\r]
+new__line			[\n\r]
+non_new__line		[^\n\r]
 
-comment			("--"{non_newline}*)
+comment			("--"{non_new__line}*)
 
 whitespace		({space}+|{comment})
 
 /*
- * SQL requires at least one newline in the whitespace separating
+ * SQL requires at least one new__line in the whitespace separating
  * string literals that are to be concatenated.  Silly, but who are we
- * to argue?  Note that {whitespace_with_newline} should not have * after
+ * to argue?  Note that {whitespace_with_new__line} should not have * after
  * it, whereas {whitespace} should generally have a * after it...
  */
 
 horiz_whitespace	({horiz_space}|{comment})
-whitespace_with_newline ({horiz_whitespace}*{newline}{whitespace}*)
+whitespace_with_new__line ({horiz_whitespace}*{new__line}{whitespace}*)
 
 quote			'
 quotestop		{quote}{whitespace}*
-quotecontinue	{quote}{whitespace_with_newline}{quote}
+quotecontinue	{quote}{whitespace_with_new__line}{quote}
 quotefail		{quote}{whitespace}*"-"
 
 /* special characters for other dbms */
@@ -354,12 +354,12 @@ cppinclude_next		{space}*#{include_next}{space}*
 /* first a general line for all commands not starting with "i" */
 /* and then the other commands starting with "i", we have to add these
  * separately because the cppline production would match on "include" too */
-cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.*{newline}
+cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.*{new__line}
 
 /*
  * Dollar quoted strings are totally opaque, and no escaping is done on them.
  * Other quoted strings must allow some special characters such as single-quote
- *	and newline.
+ *	and new__line.
  * Embedded single-quotes are implemented both in the SQL standard
  *	style of two adjacent single quotes "''" and in the Postgres/Java style
  *	of escaped-quote "\'".
@@ -538,7 +538,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 <xe>{xehexesc}		{ addlit(yytext, yyleng); }
 <xq,xqc,xe,xn,xus>{quotecontinue}	{ /* ignore */ }
 <xe>.		{
-			   /* This is only needed for \ just before EOF */
+			   /* this__ is only needed for \ just before EOF */
 			   addlitchar(yytext[0]);
 			}
 <xq,xqc,xe,xn,xus><<EOF>>	{ mmfatal(PARSE_ERROR, "unterminated quoted string"); }
@@ -646,7 +646,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 <SQL>{self}			{ /*
 					   * We may find a ';' inside a structure
 					   * definition in a TYPE or VAR statement.
-					   * This is not an EOL marker.
+					   * this__ is not an EOL marker.
 					   */
 					  if (yytext[0] == ';' && struct_level == 0)
 						 BEGIN(C);
@@ -657,7 +657,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 						 * Check for embedded slash-star or dash-dash; those
 						 * are comment starts, so operator must stop there.
 						 * Note that slash-star or dash-dash at the first
-						 * character will match a prior rule, not this one.
+						 * character will match a prior rule, not this__ one.
 						 */
 						int		nchars = yyleng;
 						char   *slashstar = strstr(yytext, "/*");
@@ -957,7 +957,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 								defines = ptr->next;
 							else
 								ptr2->next = ptr->next;
-							free(ptr->new);
+							free(ptr->new__);
 							free(ptr->old);
 							free(ptr);
 							break;
@@ -1166,26 +1166,26 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 				yyterminate();
 			}
 <def>{space}*";"	{
-						struct _defines *ptr, *this;
+						struct _defines *ptr, *this__;
 
 						for (ptr = defines; ptr != NULL; ptr = ptr->next)
 						{
 							 if (strcmp(old, ptr->old) == 0)
 							 {
-								free(ptr->new);
-								ptr->new = mm_strdup(literalbuf);
+								free(ptr->new__);
+								ptr->new__ = mm_strdup(literalbuf);
 							 }
 						}
 						if (ptr == NULL)
 						{
-							this = (struct _defines *) mm_alloc(sizeof(struct _defines));
+							this__ = (struct _defines *) mm_alloc(sizeof(struct _defines));
 
 							/* initial definition */
-							this->old = old;
-							this->new = mm_strdup(literalbuf);
-							this->next = defines;
-							this->used = NULL;
-							defines = this;
+							this__->old = old;
+							this__->new__ = mm_strdup(literalbuf);
+							this__->next = defines;
+							this__->used = NULL;
+							defines = this__;
 						}
 
 						BEGIN(C);
@@ -1244,7 +1244,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 
 					}
 				}
-<INITIAL>{other}|\n	{ mmfatal(PARSE_ERROR, "internal error: unreachable state; please report this to <pgsql-bugs@postgresql.org>"); }
+<INITIAL>{other}|\n	{ mmfatal(PARSE_ERROR, "internal error: unreachable state; please report this__ to <pgsql-bugs@postgresql.org>"); }
 %%
 void
 lex_init(void)
@@ -1281,7 +1281,7 @@ addlit(char *ytext, int yleng)
 		while ((literallen+yleng) >= literalalloc);
 		literalbuf = (char *) realloc(literalbuf, literalalloc);
 	}
-	/* append new data, add trailing null */
+	/* append new__ data, add trailing null */
 	memcpy(literalbuf+literallen, ytext, yleng);
 	literallen += yleng;
 	literalbuf[literallen] = '\0';
@@ -1296,7 +1296,7 @@ addlitchar(unsigned char ychar)
 		literalalloc *= 2;
 		literalbuf = (char *) realloc(literalbuf, literalalloc);
 	}
-	/* append new data, add trailing null */
+	/* append new__ data, add trailing null */
 	literalbuf[literallen] = ychar;
 	literallen += 1;
 	literalbuf[literallen] = '\0';
@@ -1436,7 +1436,7 @@ static bool isdefine(void)
 
 			ptr->used = yy_buffer = yb;
 
-			yy_scan_string(ptr->new);
+			yy_scan_string(ptr->new__);
 			return true;
 		}
 	}
@@ -1446,16 +1446,16 @@ static bool isdefine(void)
 
 static bool isinformixdefine(void)
 {
-	const char *new = NULL;
+	const char *new__ = NULL;
 
 	if (strcmp(yytext, "dec_t") == 0)
-		new = "decimal";
+		new__ = "decimal";
 	else if (strcmp(yytext, "intrvl_t") == 0)
-		new = "interval";
+		new__ = "interval";
 	else if (strcmp(yytext, "dtime_t") == 0)
-		new = "timestamp";
+		new__ = "timestamp";
 
-	if (new)
+	if (new__)
 	{
 		struct _yy_buffer *yb;
 
@@ -1467,7 +1467,7 @@ static bool isinformixdefine(void)
 		yb->next = yy_buffer;
 		yy_buffer = yb;
 
-		yy_scan_string(new);
+		yy_scan_string(new__);
 		return true;
 	}
 

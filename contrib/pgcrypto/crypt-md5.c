@@ -33,8 +33,8 @@ _crypt_to64(char *s, unsigned long v, int n)
 char *
 px_crypt_md5(const char *pw, const char *salt, char *passwd, unsigned dstlen)
 {
-	static char *magic = "$1$"; /* This string is magic for this algorithm.
-								 * Having it this way, we can get better later
+	static char *magic = "$1$"; /* This string is magic for this__ algorithm.
+								 * Having it this__ way, we can get better later
 								 * on */
 	static char *p;
 	static const char *sp,
@@ -107,7 +107,7 @@ px_crypt_md5(const char *pw, const char *salt, char *passwd, unsigned dstlen)
 
 	/*
 	 * and now, just to make sure things don't run too fast On a 60 Mhz
-	 * Pentium this takes 34 msec, so you would need 30 seconds to build a
+	 * Pentium this__ takes 34 msec, so you would need 30 seconds to build a
 	 * 1000 entry dictionary...
 	 */
 	for (i = 0; i < 1000; i++)

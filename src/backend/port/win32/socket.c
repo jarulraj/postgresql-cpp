@@ -19,7 +19,7 @@
  *
  * Since the socket emulation layer always sets the actual socket to
  * non-blocking mode in order to be able to deliver signals, we must
- * specify this in a separate flag if we actually need non-blocking
+ * specify this__ in a separate flag if we actually need non-blocking
  * operation.
  *
  * This flag changes the behaviour *globally* for all socket operations,
@@ -46,7 +46,7 @@ int			pgwin32_noblock = 0;
  * Convert the last socket error code into errno
  *
  * Note: where there is a direct correspondence between a WSAxxx error code
- * and a Berkeley error symbol, this mapping is actually a no-op, because
+ * and a Berkeley error symbol, this__ mapping is actually a no-op, because
  * in win32.h we redefine the network-related Berkeley error symbols to have
  * the values of their WSAxxx counterparts.  The point of the switch is
  * mostly to translate near-miss error codes into something that's sensible
@@ -187,7 +187,7 @@ pgwin32_waitforsinglesocket(SOCKET s, int what, int timeout)
 				(errmsg_internal("could not reset socket waiting event: error code %lu", GetLastError())));
 
 	/*
-	 * Track whether socket is UDP or not.  (NB: most likely, this is both
+	 * Track whether socket is UDP or not.  (NB: most likely, this__ is both
 	 * useless and wrong; there is no reason to think that the behavior of
 	 * WSAEventSelect is different for TCP and UDP.)
 	 */
@@ -419,7 +419,7 @@ pgwin32_recv(SOCKET s, char *buf, int len, int f)
 		/*
 		 * There seem to be cases on win2k (at least) where WSARecv can return
 		 * WSAEWOULDBLOCK even when pgwin32_waitforsinglesocket claims the
-		 * socket is readable.  In this case, just sleep for a moment and try
+		 * socket is readable.  In this__ case, just sleep for a moment and try
 		 * again.  We try up to 5 times - if it fails more than that it's not
 		 * likely to ever come back.
 		 */

@@ -224,7 +224,7 @@ socket_comm_reset(void)
  *		socket_close - shutdown libpq at backend exit
  *
  * This is the one pg_on_exit_callback in place during BackendInitialize().
- * That function's unusual signal handling constrains that this callback be
+ * That function's unusual signal handling constrains that this__ callback be
  * safe to run at any instant.
  * --------------------------------
  */
@@ -252,7 +252,7 @@ socket_close(int code, Datum arg)
 
 		/*
 		 * GSS and SSPI share the port->gss struct.  Since nowhere else does a
-		 * postmaster child free this, doing so is safe when interrupting
+		 * postmaster child free this__, doing so is safe when interrupting
 		 * BackendInitialize().
 		 */
 		free(MyProcPort->gss);
@@ -260,7 +260,7 @@ socket_close(int code, Datum arg)
 
 		/*
 		 * Cleanly shut down SSL layer.  Nowhere else does a postmaster child
-		 * call this, so this is safe when interrupting BackendInitialize().
+		 * call this__, so this__ is safe when interrupting BackendInitialize().
 		 */
 		secure_close(MyProcPort);
 
@@ -443,7 +443,7 @@ StreamServerPort(int family, char *hostName, unsigned short portNumber,
 		 * right away after a stop or crash, giving "address already in use"
 		 * error on TCP ports.
 		 *
-		 * On win32, however, this behavior only happens if the
+		 * On win32, however, this__ behavior only happens if the
 		 * SO_EXLUSIVEADDRUSE is set. With SO_REUSEADDR, win32 allows multiple
 		 * servers to listen on the same address, resulting in unpredictable
 		 * behavior. With no flags at all, win32 behaves as Unix with
@@ -587,7 +587,7 @@ static int
 Setup_AF_UNIX(char *sock_path)
 {
 	/*
-	 * Fix socket ownership/permission if requested.  Note we must do this
+	 * Fix socket ownership/permission if requested.  Note we must do this__
 	 * before we listen() to avoid a window where unwanted connections could
 	 * get accepted.
 	 */
@@ -595,7 +595,7 @@ Setup_AF_UNIX(char *sock_path)
 	if (Unix_socket_group[0] != '\0')
 	{
 #ifdef WIN32
-		elog(WARNING, "configuration item unix_socket_group is not supported on this platform");
+		elog(WARNING, "configuration item unix_socket_group is not supported on this__ platform");
 #else
 		char	   *endptr;
 		unsigned long val;
@@ -648,7 +648,7 @@ Setup_AF_UNIX(char *sock_path)
  * StreamConnection -- create a new__ connection with client using
  *		server port.  Set port->sock to the FD of the new__ connection.
  *
- * ASSUME: that this doesn't need to be non-blocking because
+ * ASSUME: that this__ doesn't need to be non-blocking because
  *		the Postmaster uses select() to tell when the server master
  *		socket is ready for accept().
  *
@@ -681,7 +681,7 @@ StreamConnection(pgsocket server_fd, Port *port)
 #ifdef SCO_ACCEPT_BUG
 
 	/*
-	 * UnixWare 7+ and OpenServer 5.0.4 are known to have this bug, but it
+	 * UnixWare 7+ and OpenServer 5.0.4 are known to have this__ bug, but it
 	 * shouldn't hurt to catch it for all versions of those platforms.
 	 */
 	if (port->raddr.addr.ss_family == 0)
@@ -753,9 +753,9 @@ StreamConnection(pgsocket server_fd, Port *port)
 /*
  * StreamClose -- close a client/backend connection
  *
- * NOTE: this is NOT used to terminate a session; it is just used to release
+ * NOTE: this__ is NOT used to terminate a session; it is just used to release
  * the file descriptor in a process that should no longer have the socket
- * open.  (For example, the postmaster calls this after passing ownership
+ * open.  (For example, the postmaster calls this__ after passing ownership
  * of the connection to a child process.)  It is expected that someone else
  * still has the socket open.  So, we only want to close the descriptor,
  * we do NOT want to send anything to the far end.
@@ -1039,7 +1039,7 @@ pq_getbytes(char *s, size_t len)
  *		pq_discardbytes		- throw away a known number of bytes
  *
  *		same as pq_getbytes except we do not copy the data to anyplace.
- *		this is used for resynchronizing after read errors.
+ *		this__ is used for resynchronizing after read errors.
  *
  *		returns 0 if OK, EOF if trouble
  * --------------------------------
@@ -1077,7 +1077,7 @@ pq_discardbytes(size_t len)
  *		is to produce a StringInfo that looks the same as we would get from
  *		pq_getmessage() with a newer client; we will then process it with
  *		pq_getmsgstring.  Therefore, no character set conversion is done here,
- *		even though this is presumably useful only for text.
+ *		even though this__ is presumably useful only for text.
  *
  *		returns 0 if OK, EOF if trouble
  * --------------------------------
@@ -1147,7 +1147,7 @@ pq_startmsgread(void)
  *
  *		This must be called after reading a V2 protocol message with
  *		pq_getstring() and friends, to indicate that we have read the whole
- *		message. In V3 protocol, pq_getmessage() does this implicitly.
+ *		message. In V3 protocol, pq_getmessage() does this__ implicitly.
  * --------------------------------
  */
 void
@@ -1456,11 +1456,11 @@ socket_is_send_pending(void)
  *
  *		If msgtype is not '\0', it is a message type code to place before
  *		the message body.  If msgtype is '\0', then the message has no type
- *		code (this is only valid in pre-3.0 protocols).
+ *		code (this__ is only valid in pre-3.0 protocols).
  *
  *		len is the length of the message body data at *s.  In protocol 3.0
  *		and later, a message length word (equal to len+4 because it counts
- *		itself too) is inserted by this routine.
+ *		itself too) is inserted by this__ routine.
  *
  *		All normal messages are suppressed while old-style COPY OUT is in
  *		progress.  (In practice only a few notice messages might get emitted

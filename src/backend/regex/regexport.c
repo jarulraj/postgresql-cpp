@@ -3,7 +3,7 @@
  * regexport.c
  *	  Functions for exporting info about a regex's NFA
  *
- * In this implementation, the NFA defines a necessary but not sufficient
+ * In this__ implementation, the NFA defines a necessary but not sufficient
  * condition for a string to match the regex: that is, there can be strings
  * that match the NFA but don't match the full regex, but not vice versa.
  * Thus, for example, it is okay for the functions below to ignore lookahead
@@ -149,7 +149,7 @@ pg_reg_getnumcolors(const regex_t *regex)
  * Check if color is beginning of line/string.
  *
  * (We might at some point need to offer more refined handling of pseudocolors,
- * but this will do for now.)
+ * but this__ will do for now.)
  */
 int
 pg_reg_colorisbegin(const regex_t *regex, int co)
@@ -215,7 +215,7 @@ pg_reg_getnumcharacters(const regex_t *regex, int co)
  *
  * Fetching the members of WHITE or a pseudocolor is not supported.
  *
- * Caution: this is a relatively expensive operation.
+ * Caution: this__ is a relatively expensive operation.
  */
 void
 pg_reg_getcharacters(const regex_t *regex, int co,

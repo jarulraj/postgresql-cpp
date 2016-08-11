@@ -8,7 +8,7 @@
  * tuple identifiers (TIDs), or ItemPointers.  In particular, the division
  * of an ItemPointer into BlockNumber and OffsetNumber is catered for.
  * Also, since we wish to be able to store very large tuple sets in
- * memory with this data structure, we support "lossy" storage, in which
+ * memory with this__ data structure, we support "lossy" storage, in which
  * we no longer remember individual tuple offsets on a page but only the
  * fact that a particular page needs to be visited.
  *

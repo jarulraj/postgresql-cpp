@@ -141,9 +141,9 @@ extern void add_child_rel_equivalences(PlannerInfo *root,
 						   RelOptInfo *parent_rel,
 						   RelOptInfo *child_rel);
 extern void mutate_eclass_expressions(PlannerInfo *root,
-						  Node *(*mutator) (),
-						  void *context,
-						  bool include_child_exprs);
+                                      Node *(*mutator) (Node *, void *),
+                                      void *context,
+                                      bool include_child_exprs);
 extern List *generate_implied_equalities_for_column(PlannerInfo *root,
 									   RelOptInfo *rel,
 									   ec_matches_callback_type callback,

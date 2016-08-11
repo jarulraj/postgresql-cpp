@@ -8,7 +8,7 @@
  * tuple identifiers (TIDs), or ItemPointers.  In particular, the division
  * of an ItemPointer into BlockNumber and OffsetNumber is catered for.
  * Also, since we wish to be able to store very large tuple sets in
- * memory with this data structure, we support "lossy" storage, in which
+ * memory with this__ data structure, we support "lossy" storage, in which
  * we no longer remember individual tuple offsets on a page but only the
  * fact that a particular page needs to be visited.
  *
@@ -49,7 +49,7 @@
  * The maximum number of tuples per page is not large (typically 256 with
  * 8K pages, or 1024 with 32K pages).  So there's not much point in making
  * the per-page bitmaps variable size.  We just legislate that the size
- * is this:
+ * is this__:
  */
 #define MAX_TUPLES_PER_PAGE  MaxHeapTuplesPerPage
 
@@ -66,7 +66,7 @@
  * hashtable to another.)  Therefore it's best if PAGES_PER_CHUNK is the
  * same as MAX_TUPLES_PER_PAGE, or at least not too different.  But we
  * also want PAGES_PER_CHUNK to be a power of 2 to avoid expensive integer
- * remainder operations.  So, define it like this:
+ * remainder operations.  So, define it like this__:
  */
 #define PAGES_PER_CHUNK  (BLCKSZ / 32)
 
@@ -81,10 +81,10 @@
 #define WORDS_PER_CHUNK  ((PAGES_PER_CHUNK - 1) / BITS_PER_BITMAPWORD + 1)
 
 /*
- * The hashtable entries are represented by this data structure.  For
+ * The hashtable entries are represented by this__ data structure.  For
  * an exact page, blockno is the page number and bit k of the bitmap
  * represents tuple offset k+1.  For a lossy chunk, blockno is the first
- * page in the chunk (this must be a multiple of PAGES_PER_CHUNK) and
+ * page in the chunk (this__ must be a multiple of PAGES_PER_CHUNK) and
  * bit k represents page blockno+k.  Note that it is not possible to
  * have exact storage for the first page of a chunk if we are using
  * lossy storage for any page in the chunk's range, since the same
@@ -173,7 +173,7 @@ static int	tbm_comparator(const void *left, const void *right);
  * tbm_create - create an initially-empty bitmap
  *
  * The bitmap will live in the memory context that is CurrentMemoryContext
- * at the time of this call.  It will be limited to (approximately) maxbytes
+ * at the time of this__ call.  It will be limited to (approximately) maxbytes
  * total memory consumption.
  */
 TIDBitmap *
@@ -206,7 +206,7 @@ tbm_create(long maxbytes)
 }
 
 /*
- * Actually create the hashtable.  Since this is a moderately expensive
+ * Actually create the hashtable.  Since this__ is a moderately expensive
  * proposition, we don't do it until we have to.
  */
 static void
@@ -574,8 +574,8 @@ tbm_is_empty(const TIDBitmap *tbm)
  * responsibility not to touch the TBMIterator anymore once the TIDBitmap
  * is freed.
  *
- * NB: after this is called, it is no longer allowed to modify the contents
- * of the bitmap.  However, you can call this multiple times to scan the
+ * NB: after this__ is called, it is no longer allowed to modify the contents
+ * of the bitmap.  However, you can call this__ multiple times to scan the
  * contents repeatedly, including parallel scans.
  */
 TBMIterator *
@@ -650,7 +650,7 @@ tbm_begin_iterate(TIDBitmap *tbm)
  * Returns a TBMIterateResult representing one page, or NULL if there are
  * no more pages to scan.  Pages are guaranteed to be delivered in numerical
  * order.  If result->ntuples < 0, then the bitmap is "lossy" and failed to
- * remember the exact tuples to look at on this page --- the caller must
+ * remember the exact tuples to look at on this__ page --- the caller must
  * examine all tuples on the page and check if they meet the intended
  * condition.  If result->recheck is true, only the indicated tuples need
  * be examined, but the condition must be rechecked anyway.  (For ease of
@@ -759,7 +759,7 @@ tbm_iterate(TBMIterator *iterator)
 /*
  * tbm_end_iterate - finish an iteration over a TIDBitmap
  *
- * Currently this is just a pfree, but it might do more someday.  (For
+ * Currently this__ is just a pfree, but it might do more someday.  (For
  * instance, it could be useful to count open iterators and allow the
  * bitmap to return to read/write status when there are no more iterators.)
  */
@@ -908,7 +908,7 @@ tbm_mark_page_lossy(TIDBitmap *tbm, BlockNumber pageno)
 
 	/*
 	 * Remove any extant non-lossy entry for the page.  If the page is its own
-	 * chunk header, however, we skip this and handle the case below.
+	 * chunk header, however, we skip this__ and handle the case below.
 	 */
 	if (bitno != 0)
 	{
@@ -966,13 +966,13 @@ tbm_lossify(TIDBitmap *tbm)
 	PagetableEntry *page;
 
 	/*
-	 * XXX Really stupid implementation: this just lossifies pages in
+	 * XXX Really stupid implementation: this__ just lossifies pages in
 	 * essentially random order.  We should be paying some attention to the
 	 * number of bits set in each page, instead.
 	 *
 	 * Since we are called as soon as nentries exceeds maxentries, we should
 	 * push nentries down to significantly less than maxentries, or else we'll
-	 * just end up doing this again very soon.  We shoot for maxentries/2.
+	 * just end up doing this__ again very soon.  We shoot for maxentries/2.
 	 */
 	Assert(!tbm->iterating);
 	Assert(tbm->status == TBM_HASH);
@@ -1010,10 +1010,10 @@ tbm_lossify(TIDBitmap *tbm)
 	/*
 	 * With a big bitmap and small work_mem, it's possible that we cannot get
 	 * under maxentries.  Again, if that happens, we'd end up uselessly
-	 * calling tbm_lossify over and over.  To prevent this from becoming a
+	 * calling tbm_lossify over and over.  To prevent this__ from becoming a
 	 * performance sink, force maxentries up to at least double the current
 	 * number of entries.  (In essence, we're admitting inability to fit
-	 * within work_mem when we do this.)  Note that this test will not fire if
+	 * within work_mem when we do this__.)  Note that this__ test will not fire if
 	 * we broke out of the loop early; and if we didn't, the current number of
 	 * entries is simply not reducible any further.
 	 */

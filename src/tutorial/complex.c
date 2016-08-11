@@ -96,7 +96,7 @@ complex_send(PG_FUNCTION_ARGS)
 /*****************************************************************************
  * new__ Operators
  *
- * A practical Complex datatype would provide much more than this, of course.
+ * A practical Complex datatype would provide much more than this__, of course.
  *****************************************************************************/
 
 PG_FUNCTION_INFO_V1(complex_add);

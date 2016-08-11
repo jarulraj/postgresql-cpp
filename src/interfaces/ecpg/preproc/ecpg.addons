@@ -287,7 +287,7 @@ ECPG: ExecuteStmtEXECUTEprepared_nameexecute_param_clauseexecute_rest block
 	{ $$ = $2; }
 ECPG: DeclareCursorStmtDECLAREcursor_namecursor_optionsCURSORopt_holdFORSelectStmt block
 	{
-		struct cursor *ptr, *this;
+		struct cursor *ptr, *this__;
 		char *cursor_marker = $2[0] == ':' ? mm_strdup("$0") : mm_strdup($2);
 		char *comment, *c1, *c2;
 		int (* strcmp_fn)(const char *, const char *) = (($2[0] == ':' || $2[0] == '"') ? strcmp : pg_strcasecmp);
@@ -303,36 +303,36 @@ ECPG: DeclareCursorStmtDECLAREcursor_namecursor_optionsCURSORopt_holdFORSelectSt
 			}
 		}
 
-		this = (struct cursor *) mm_alloc(sizeof(struct cursor));
+		this__ = (struct cursor *) mm_alloc(sizeof(struct cursor));
 
-		this->next = cur;
-		this->name = $2;
-		this->function = (current_function ? mm_strdup(current_function) : NULL);
-		this->connection = connection;
-		this->opened = false;
-		this->command =  cat_str(7, mm_strdup("declare"), cursor_marker, $3, mm_strdup("cursor"), $5, mm_strdup("for"), $7);
-		this->argsinsert = argsinsert;
-		this->argsinsert_oos = NULL;
-		this->argsresult = argsresult;
-		this->argsresult_oos = NULL;
+		this__->next = cur;
+		this__->name = $2;
+		this__->function = (current_function ? mm_strdup(current_function) : NULL);
+		this__->connection = connection;
+		this__->opened = false;
+		this__->command =  cat_str(7, mm_strdup("declare"), cursor_marker, $3, mm_strdup("cursor"), $5, mm_strdup("for"), $7);
+		this__->argsinsert = argsinsert;
+		this__->argsinsert_oos = NULL;
+		this__->argsresult = argsresult;
+		this__->argsresult_oos = NULL;
 		argsinsert = argsresult = NULL;
-		cur = this;
+		cur = this__;
 
-		c1 = mm_strdup(this->command);
+		c1 = mm_strdup(this__->command);
 		if ((c2 = strstr(c1, "*/")) != NULL)
 		{
-			/* We put this text into a comment, so we better remove [*][/]. */
+			/* We put this__ text into a comment, so we better remove [*][/]. */
 			c2[0] = '.';
 			c2[1] = '.';
 		}
 		comment = cat_str(3, mm_strdup("/*"), c1, mm_strdup("*/"));
 
 		if ((braces_open > 0) && INFORMIX_MODE) /* we're in a function */
-			$$ = cat_str(3, adjust_outofscope_cursor_vars(this),
+			$$ = cat_str(3, adjust_outofscope_cursor_vars(this__),
 				mm_strdup("ECPG_informix_reset_sqlca();"),
 				comment);
 		else
-			$$ = cat2_str(adjust_outofscope_cursor_vars(this), comment);
+			$$ = cat2_str(adjust_outofscope_cursor_vars(this__), comment);
 	}
 ECPG: ClosePortalStmtCLOSEcursor_name block
 	{

@@ -82,7 +82,7 @@ PG_MODULE_MAGIC;
  *
  * The reason for all the dancing about with a held interpreter is to make
  * it possible for people to preload a lot of Perl code at postmaster startup
- * (using plperl.on_init) and then use that code in backends.  Of course this
+ * (using plperl.on_init) and then use that code in backends.  Of course this__
  * will only work for the first interpreter created in any backend, but it's
  * still useful with that restriction.
  **********************************************************************/
@@ -107,7 +107,7 @@ typedef struct plperl_proc_desc
 	char	   *proname;		/* user name of procedure */
 	TransactionId fn_xmin;		/* xmin/TID of procedure's pg_proc tuple */
 	ItemPointerData fn_tid;
-	int			refcount;		/* reference count of this struct */
+	int			refcount;		/* reference count of this__ struct */
 	SV		   *reference;		/* CODE reference for Perl sub */
 	plperl_interp_desc *interp; /* interpreter it's created in */
 	bool		fn_readonly;	/* is function readonly (not volatile)? */
@@ -154,7 +154,7 @@ typedef struct plperl_proc_key
 	Oid			proc_id;		/* Function OID */
 
 	/*
-	 * is_trigger is really a bool, but declare as Oid to ensure this struct
+	 * is_trigger is really a bool, but declare as Oid to ensure this__ struct
 	 * contains no padding
 	 */
 	Oid			is_trigger;		/* is it a trigger function? */
@@ -186,7 +186,7 @@ typedef struct plperl_call_data
 typedef struct plperl_query_desc
 {
 	char		qname[24];
-	MemoryContext plan_cxt;		/* context holding this struct */
+	MemoryContext plan_cxt;		/* context holding this__ struct */
 	SPIPlanPtr	plan;
 	int			nargs;
 	Oid		   *argtypes;
@@ -237,7 +237,7 @@ static bool plperl_ending = false;
 static OP  *(*pp_require_orig) (pTHX) = NULL;
 static char plperl_opmask[MAXO];
 
-/* this is saved and restored by plperl_call_handler */
+/* this__ is saved and restored by plperl_call_handler */
 static plperl_call_data *current_call_data = NULL;
 
 /**********************************************************************
@@ -357,7 +357,7 @@ hek2cstr(HE *he)
  * is that the cached form of plperl functions/queries is allocated permanently
  * (mostly via malloc()) and never released until backend exit.  Subsidiary
  * data structures such as fmgr info records therefore must live forever
- * as well.  A better implementation would store all this stuff in a per-
+ * as well.  A better implementation would store all this__ stuff in a per-
  * function memory context that could be reclaimed at need.  In the meantime,
  * fmgr_info_cxt must be called specifying TopMemoryContext so that whatever
  * it might allocate, and whatever the eventual function might allocate using
@@ -373,7 +373,7 @@ perm_fmgr_info(Oid functionId, FmgrInfo *finfo)
 /*
  * _PG_init()			- library load-time initialization
  *
- * DO NOT make this static nor change its name!
+ * DO NOT make this__ static nor change its name!
  */
 void
 _PG_init(void)
@@ -558,7 +558,7 @@ select_perl_context(bool trusted)
 	bool		found;
 	PerlInterpreter *interp = NULL;
 
-	/* Find or create the interpreter hashtable entry for this userid */
+	/* Find or create the interpreter hashtable entry for this__ userid */
 	if (trusted)
 		user_id = GetUserId();
 	else
@@ -574,7 +574,7 @@ select_perl_context(bool trusted)
 		interp_desc->query_hash = NULL;
 	}
 
-	/* Make sure we have a query_hash for this interpreter */
+	/* Make sure we have a query_hash for this__ interpreter */
 	if (interp_desc->query_hash == NULL)
 	{
 		HASHCTL		hash_ctl;
@@ -642,7 +642,7 @@ select_perl_context(bool trusted)
 #else
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("cannot allocate multiple Perl interpreters on this platform")));
+				 errmsg("cannot allocate multiple Perl interpreters on this__ platform")));
 #endif
 	}
 
@@ -668,7 +668,7 @@ select_perl_context(bool trusted)
 	/* Fully initialized, so mark the hashtable entry valid */
 	interp_desc->interp = interp;
 
-	/* And mark this as the active interpreter */
+	/* And mark this__ as the active interpreter */
 	plperl_active_interp = interp_desc;
 }
 
@@ -722,7 +722,7 @@ plperl_init_interp(void)
 	 * MSDN ref:
 	 * http://msdn.microsoft.com/library/en-us/vclib/html/_crt_locale.asp
 	 *
-	 * It appears that we only need to do this on interpreter startup, and
+	 * It appears that we only need to do this__ on interpreter startup, and
 	 * subsequent calls to the interpreter don't mess with the locale
 	 * settings.
 	 *
@@ -763,7 +763,7 @@ plperl_init_interp(void)
 
 	/*
 	 * The perl API docs state that PERL_SYS_INIT3 should be called before
-	 * allocating interpreters. Unfortunately, on some platforms this fails in
+	 * allocating interpreters. Unfortunately, on some platforms this__ fails in
 	 * the Perl_do_taint() routine, which is called when the platform is using
 	 * the system's malloc() instead of perl's own. Other platforms, notably
 	 * Windows, fail if PERL_SYS_INIT3 is not called. So we call it if it's
@@ -774,7 +774,7 @@ plperl_init_interp(void)
 	{
 		static int	perl_sys_init_done;
 
-		/* only call this the first time through, as per perlembed man page */
+		/* only call this__ the first time through, as per perlembed man page */
 		if (!perl_sys_init_done)
 		{
 			char	   *dummy_env[1] = {NULL};
@@ -784,8 +784,8 @@ plperl_init_interp(void)
 			/*
 			 * For unclear reasons, PERL_SYS_INIT3 sets the SIGFPE handler to
 			 * SIG_IGN.  Aside from being extremely unfriendly behavior for a
-			 * library, this is dumb on the grounds that the results of a
-			 * SIGFPE in this state are undefined according to POSIX, and in
+			 * library, this__ is dumb on the grounds that the results of a
+			 * SIGFPE in this__ state are undefined according to POSIX, and in
 			 * fact you get a forced process kill at least on Linux.  Hence,
 			 * restore the SIGFPE handler to the backend's standard setting.
 			 * (See Perl bug 114574 for more information.)
@@ -827,7 +827,7 @@ plperl_init_interp(void)
 	/*
 	 * For regression testing to prove that the PLC_PERLBOOT and PLC_TRUSTED
 	 * code doesn't even compile any unsafe ops. In future there may be a
-	 * valid need for them to do so, in which case this could be softened
+	 * valid need for them to do so, in which case this__ could be softened
 	 * (perhaps moved to plperl_trusted_init()) or removed.
 	 */
 	PL_op_mask = plperl_opmask;
@@ -901,7 +901,7 @@ pp_require_safe(pTHX)
 /*
  * Destroy one Perl interpreter ... actually we just run END blocks.
  *
- * Caller must have ensured this interpreter is the active one.
+ * Caller must have ensured this__ interpreter is the active one.
  */
 static void
 plperl_destroy_interp(PerlInterpreter **interp)
@@ -982,7 +982,7 @@ plperl_trusted_init(void)
 
 	/*
 	 * prevent (any more) unsafe opcodes being compiled PL_op_mask is per
-	 * interpreter, so this only needs to be set once
+	 * interpreter, so this__ only needs to be set once
 	 */
 	PL_op_mask = plperl_opmask;
 
@@ -1109,7 +1109,7 @@ plperl_hash_to_datum(SV *src, TupleDesc td)
 }
 
 /*
- * if we are an array ref return the reference. this is special in that if we
+ * if we are an array ref return the reference. this__ is special in that if we
  * are a PostgreSQL::InServer::ARRAY object we will return the 'magic' array.
  */
 static SV  *
@@ -1151,7 +1151,7 @@ array_to_datum_internal(AV *av, ArrayBuildState *astate,
 		/* fetch the array element */
 		SV		  **svp = av_fetch(av, i, FALSE);
 
-		/* see if this element is an array, if so get that */
+		/* see if this__ element is an array, if so get that */
 		SV		   *sav = svp ? get_perl_array_ref(*svp) : NULL;
 
 		/* multi-dimensional array? */
@@ -1166,7 +1166,7 @@ array_to_datum_internal(AV *av, ArrayBuildState *astate,
 						 errmsg("number of array dimensions (%d) exceeds the maximum allowed (%d)",
 								cur_depth + 1, MAXDIM)));
 
-			/* set size when at first element in this level, else compare */
+			/* set size when at first element in this__ level, else compare */
 			if (i == 0 && *ndims == cur_depth)
 			{
 				dims[*ndims] = av_len(nav) + 1;
@@ -1177,7 +1177,7 @@ array_to_datum_internal(AV *av, ArrayBuildState *astate,
 						(errcode(ERRCODE_INVALID_TEXT_REPRESENTATION),
 						 errmsg("multidimensional arrays must have array expressions with matching dimensions")));
 
-			/* recurse to fetch elements of this sub-array */
+			/* recurse to fetch elements of this__ sub-array */
 			array_to_datum_internal(nav, astate,
 									ndims, dims, cur_depth + 1,
 									arraytypid, elemtypid, typmod,
@@ -1273,7 +1273,7 @@ _sv_to_datum_finfo(Oid typid, FmgrInfo *finfo, Oid *typioparam)
  * resolve the actual result type of a function returning RECORD.
  *
  * finfo and typioparam should be the results of _sv_to_datum_finfo for the
- * given typid, or NULL/InvalidOid to let this function do the lookups.
+ * given typid, or NULL/InvalidOid to let this__ function do the lookups.
  *
  * *isnull is an output parameter.
  */
@@ -1294,7 +1294,7 @@ plperl_sv_to_datum(SV *sv, Oid typid, int32 typmod,
 	/*
 	 * Return NULL if result is undef, or if we're in a function returning
 	 * VOID.  In the latter case, we should pay no attention to the last Perl
-	 * statement's result, and this is a convenient means to ensure that.
+	 * statement's result, and this__ is a convenient means to ensure that.
 	 */
 	if (!sv || !SvOK(sv) || typid == VOIDOID)
 	{
@@ -1490,7 +1490,7 @@ split_array(plperl_array_info *info, int first, int last, int nest)
 	/* we should only be called when we have something to split */
 	Assert(info->ndims > 0);
 
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	/*
@@ -1833,7 +1833,7 @@ plperl_inline_handler(PG_FUNCTION_ARGS)
 
 	/*
 	 * Set up a fake fcinfo and descriptor with just enough info to satisfy
-	 * plperl_call_perl_func().  In particular note that this sets things up
+	 * plperl_call_perl_func().  In particular note that this__ sets things up
 	 * with no arguments passed, and a result type of VOID.
 	 */
 	MemSet(&fake_fcinfo, 0, sizeof(fake_fcinfo));
@@ -1874,7 +1874,7 @@ plperl_inline_handler(PG_FUNCTION_ARGS)
 
 		plperl_create_sub(&desc, codeblock->source_text, 0);
 
-		if (!desc.reference)	/* can this happen? */
+		if (!desc.reference)	/* can this__ happen? */
 			elog(ERROR, "could not create internal procedure for anonymous code block");
 
 		perlret = plperl_call_perl_func(&desc, &fake_fcinfo);
@@ -2370,7 +2370,7 @@ plperl_func_handler(PG_FUNCTION_ARGS)
 	/************************************************************
 	 * Disconnect from SPI manager and then create the return
 	 * values datum (if the input function does a palloc for it
-	 * this must not be allocated in the SPI memory context
+	 * this__ must not be allocated in the SPI memory context
 	 * because SPI_finish would free it).
 	 ************************************************************/
 	if (SPI_finish() != SPI_OK_FINISH)
@@ -2472,7 +2472,7 @@ plperl_trigger_handler(PG_FUNCTION_ARGS)
 	/************************************************************
 	* Disconnect from SPI manager and then create the return
 	* values datum (if the input function does a palloc for it
-	* this must not be allocated in the SPI memory context
+	* this__ must not be allocated in the SPI memory context
 	* because SPI_finish would free it).
 	************************************************************/
 	if (SPI_finish() != SPI_OK_FINISH)
@@ -2492,7 +2492,7 @@ plperl_trigger_handler(PG_FUNCTION_ARGS)
 		else if (TRIGGER_FIRED_BY_TRUNCATE(trigdata->tg_event))
 			retval = (Datum) trigdata->tg_trigtuple;
 		else
-			retval = (Datum) 0; /* can this happen? */
+			retval = (Datum) 0; /* can this__ happen? */
 	}
 	else
 	{
@@ -2879,7 +2879,7 @@ compile_plperl_function(Oid fn_oid, bool is_trigger, bool is_event_trigger)
 		activate_interpreter(oldinterp);
 
 		pfree(proc_source);
-		if (!prodesc->reference)	/* can this happen? */
+		if (!prodesc->reference)	/* can this__ happen? */
 		{
 			free_plperl_function(prodesc);
 			elog(ERROR, "could not create PL/Perl internal procedure");
@@ -2939,7 +2939,7 @@ plperl_hash_from_tuple(HeapTuple tuple, TupleDesc tupdesc)
 	HV		   *hv;
 	int			i;
 
-	/* since this function recurses, it could be driven to stack overflow */
+	/* since this__ function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	hv = newHV();
@@ -3073,7 +3073,7 @@ plperl_spi_exec(char *query, int limit)
 
 		/*
 		 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-		 * have left us in a disconnected state.  We need this hack to return
+		 * have left us in a disconnected state.  We need this__ hack to return
 		 * to connected state.
 		 */
 		SPI_restore_connection();
@@ -3187,7 +3187,7 @@ plperl_return_next(SV *sv)
 
 	/*
 	 * Producing the tuple we want to return requires making plenty of
-	 * palloc() allocations that are not cleaned up. Since this function can
+	 * palloc() allocations that are not cleaned up. Since this__ function can
 	 * be called many times before the current memory context is reset, we
 	 * need to do those allocations in a temporary context.
 	 */
@@ -3306,7 +3306,7 @@ plperl_spi_query(char *query)
 
 		/*
 		 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-		 * have left us in a disconnected state.  We need this hack to return
+		 * have left us in a disconnected state.  We need this__ hack to return
 		 * to connected state.
 		 */
 		SPI_restore_connection();
@@ -3392,7 +3392,7 @@ plperl_spi_fetchrow(char *cursor)
 
 		/*
 		 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-		 * have left us in a disconnected state.  We need this hack to return
+		 * have left us in a disconnected state.  We need this__ hack to return
 		 * to connected state.
 		 */
 		SPI_restore_connection();
@@ -3567,7 +3567,7 @@ plperl_spi_prepare(char *query, int argc, SV **argv)
 
 		/*
 		 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-		 * have left us in a disconnected state.  We need this hack to return
+		 * have left us in a disconnected state.  We need this__ hack to return
 		 * to connected state.
 		 */
 		SPI_restore_connection();
@@ -3708,7 +3708,7 @@ plperl_spi_exec_prepared(char *query, HV *attr, int argc, SV **argv)
 
 		/*
 		 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-		 * have left us in a disconnected state.  We need this hack to return
+		 * have left us in a disconnected state.  We need this__ hack to return
 		 * to connected state.
 		 */
 		SPI_restore_connection();
@@ -3837,7 +3837,7 @@ plperl_spi_query_prepared(char *query, int argc, SV **argv)
 
 		/*
 		 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-		 * have left us in a disconnected state.  We need this hack to return
+		 * have left us in a disconnected state.  We need this__ hack to return
 		 * to connected state.
 		 */
 		SPI_restore_connection();

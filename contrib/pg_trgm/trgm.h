@@ -17,9 +17,9 @@
 #define KEEPONLYALNUM
 /*
  * Caution: IGNORECASE macro means that trigrams are case-insensitive.
- * If this macro is disabled, the ~* and ~~* operators must be removed from
+ * If this__ macro is disabled, the ~* and ~~* operators must be removed from
  * the operator__ classes, because we can't handle case-insensitive wildcard
- * search with case-sensitive trigrams.  Failure to do this will result in
+ * search with case-sensitive trigrams.  Failure to do this__ will result in
  * "cannot handle ~*(~~*) with case-sensitive trigrams" errors.
  */
 #define IGNORECASE

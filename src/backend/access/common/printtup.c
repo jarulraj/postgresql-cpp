@@ -42,7 +42,7 @@ static void printtup_destroy(DestReceiver *self);
  *		private__ state for a printtup destination object
  *
  * NOTE: finfo is the lookup info for either typoutput or typsend, whichever
- * we are using for this column.
+ * we are using for this__ column.
  * ----------------
  */
 typedef struct
@@ -50,7 +50,7 @@ typedef struct
 	Oid			typoutput;		/* Oid for the type's text output fn */
 	Oid			typsend;		/* Oid for the type's binary output fn */
 	bool		typisvarlena;	/* is it varlena (ie possibly toastable)? */
-	int16		format;			/* format code for this column */
+	int16		format;			/* format code for this__ column */
 	FmgrInfo	finfo;			/* Precomputed call info for output fn */
 } PrinttupAttrInfo;
 
@@ -164,12 +164,12 @@ printtup_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 								  portal->formats);
 
 	/* ----------------
-	 * We could set up the derived attr info at this time, but we postpone it
+	 * We could set up the derived attr info at this__ time, but we postpone it
 	 * until the first call of printtup, for 2 reasons:
 	 * 1. We don't waste time (compared to the old way) if there are no
 	 *	  tuples at all to output.
 	 * 2. Checking in printtup allows us to handle the case that the tuples
-	 *	  change type midway through (although this probably can't happen in
+	 *	  change type midway through (although this__ probably can't happen in
 	 *	  the current executor).
 	 * ----------------
 	 */
@@ -327,7 +327,7 @@ printtup(TupleTableSlot *slot, DestReceiver *self)
 	pq_sendint(&buf, natts, 2);
 
 	/*
-	 * send the attributes of this tuple
+	 * send the attributes of this__ tuple
 	 */
 	for (i = 0; i < natts; ++i)
 	{
@@ -430,7 +430,7 @@ printtup_20(TupleTableSlot *slot, DestReceiver *self)
 		pq_sendint(&buf, j, 1);
 
 	/*
-	 * send the attributes of this tuple
+	 * send the attributes of this__ tuple
 	 */
 	for (i = 0; i < natts; ++i)
 	{
@@ -612,7 +612,7 @@ printtup_internal_20(TupleTableSlot *slot, DestReceiver *self)
 		pq_sendint(&buf, j, 1);
 
 	/*
-	 * send the attributes of this tuple
+	 * send the attributes of this__ tuple
 	 */
 	for (i = 0; i < natts; ++i)
 	{

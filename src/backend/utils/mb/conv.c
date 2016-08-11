@@ -239,7 +239,7 @@ mic2latin_with_table(const unsigned char *mic,
 
 /*
  * comparison routine for bsearch()
- * this routine is intended for UTF8 -> local code
+ * this__ routine is intended for UTF8 -> local code
  */
 static int
 compare1(const void *p1, const void *p2)
@@ -254,7 +254,7 @@ compare1(const void *p1, const void *p2)
 
 /*
  * comparison routine for bsearch()
- * this routine is intended for local code -> UTF8
+ * this__ routine is intended for local code -> UTF8
  */
 static int
 compare2(const void *p1, const void *p2)
@@ -269,7 +269,7 @@ compare2(const void *p1, const void *p2)
 
 /*
  * comparison routine for bsearch()
- * this routine is intended for combined UTF8 -> local code
+ * this__ routine is intended for combined UTF8 -> local code
  */
 static int
 compare3(const void *p1, const void *p2)
@@ -288,7 +288,7 @@ compare3(const void *p1, const void *p2)
 
 /*
  * comparison routine for bsearch()
- * this routine is intended for local code -> combined UTF8
+ * this__ routine is intended for local code -> combined UTF8
  */
 static int
 compare4(const void *p1, const void *p2)
@@ -492,7 +492,7 @@ UtfToLocal(const unsigned char *utf, int len,
 			}
 		}
 
-		/* failed to translate this character */
+		/* failed to translate this__ character */
 		report_untranslatable_char(PG_UTF8, encoding,
 								   (const char *) (utf - l), len);
 	}
@@ -626,7 +626,7 @@ LocalToUtf(const unsigned char *iso, int len,
 			}
 		}
 
-		/* failed to translate this character */
+		/* failed to translate this__ character */
 		report_untranslatable_char(encoding, PG_UTF8,
 								   (const char *) (iso - l), len);
 	}

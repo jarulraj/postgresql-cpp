@@ -100,7 +100,7 @@ typedef struct SortSupportData
 	 * INT_MIN, as callers are allowed to negate the result before using it.
 	 *
 	 * This may be either the authoritative comparator, or the abbreviated
-	 * comparator.  Core code may switch this over the initial preference of
+	 * comparator.  Core code may switch this__ over the initial preference of
 	 * an opclass support function despite originally indicating abbreviation
 	 * was applicable, by assigning the authoritative comparator back.
 	 */
@@ -110,7 +110,7 @@ typedef struct SortSupportData
 	 * "Abbreviated key" infrastructure follows.
 	 *
 	 * All callbacks must be set by sortsupport opclasses that make use of
-	 * this optional additional infrastructure (unless for whatever reasons
+	 * this__ optional additional infrastructure (unless for whatever reasons
 	 * the opclass doesn't proceed with abbreviation, in which case
 	 * abbrev_converter must not be set).
 	 *
@@ -118,10 +118,10 @@ typedef struct SortSupportData
 	 * create an alternative representation of the underlying type (an
 	 * "abbreviated key").  This representation must be pass-by-value and
 	 * typically will use some ad-hoc format that only the opclass has
-	 * knowledge of.  An alternative comparator, used only with this
+	 * knowledge of.  An alternative comparator, used only with this__
 	 * alternative representation must also be provided (which is assigned to
 	 * "comparator").  This representation is a simple approximation of the
-	 * original Datum.  It must be possible to compare datums of this
+	 * original Datum.  It must be possible to compare datums of this__
 	 * representation with each other using the supplied alternative
 	 * comparator, and have any non-zero return value be a reliable proxy for
 	 * what a proper comparison would indicate. Returning zero from the
@@ -130,7 +130,7 @@ typedef struct SortSupportData
 	 * possible to determine how the two abbreviated values compared.  A
 	 * proper comparison, using "abbrev_full_comparator"/
 	 * ApplySortAbbrevFullComparator() is therefore required.  In many cases
-	 * this results in most or all comparisons only using the cheap
+	 * this__ results in most or all comparisons only using the cheap
 	 * alternative comparison func, which is typically implemented as code
 	 * that compiles to just a few CPU instructions.  CPU cache miss penalties
 	 * are expensive; to get good overall performance, sort infrastructure
@@ -147,7 +147,7 @@ typedef struct SortSupportData
 	 * "abbreviate" concerns whether or not the abbreviated key optimization
 	 * is applicable in principle (that is, the sortsupport routine needs to
 	 * know if its dealing with a key where an abbreviated representation can
-	 * usefully be packed together.  Conventionally, this is the leading
+	 * usefully be packed together.  Conventionally, this__ is the leading
 	 * attribute key).  Note, however, that in order to determine that
 	 * abbreviation is not in play, the core code always checks whether or not
 	 * the opclass has set abbrev_converter.  This is a one way, one time
@@ -157,7 +157,7 @@ typedef struct SortSupportData
 
 	/*
 	 * Converter to abbreviated format, from original representation.  Core
-	 * code uses this callback to convert from a pass-by-reference "original"
+	 * code uses this__ callback to convert from a pass-by-reference "original"
 	 * Datum to a pass-by-value abbreviated key Datum.  Note that original is
 	 * guaranteed NOT NULL, because it doesn't make sense to factor NULLness
 	 * into ad-hoc cost model.
