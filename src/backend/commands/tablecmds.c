@@ -9630,7 +9630,7 @@ ATExecSetTableSpace(Oid tableOid, Oid newTableSpace, LOCKMODE lockmode)
 					   rel->rd_rel->relpersistence);
 
 	/* copy those extra forks that exist */
-	for (forkNum = MAIN_FORKNUM + 1; forkNum <= MAX_FORKNUM; forkNum++)
+	for (forkNum = MAIN_FORKNUM + 1; forkNum <= MAX_FORKNUM; forkNum = forkNum + 1)
 	{
 		if (smgrexists(rel->rd_smgr, forkNum))
 		{

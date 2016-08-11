@@ -38,3 +38,8 @@ lib*.pc
 /Debug/
 /Release/
 /tmp_install/
+
+# Custom list
+build/
+.cproject
+.project
