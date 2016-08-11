@@ -22,7 +22,10 @@
 
 #include "port/pg_crc32c.h"
 
-static const uint32 pg_crc32c_table[8][256];
+// Peloton
+namespace {
+extern const uint32 pg_crc32c_table[8][256];
+}
 
 /* Accumulate one input byte */
 #ifdef WORDS_BIGENDIAN
