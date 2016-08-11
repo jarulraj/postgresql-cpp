@@ -343,12 +343,12 @@ TParserInit(char *str, int len)
 
 /*
  * As an alternative to a full TParserInit one can create a
- * TParserCopy which basically is a regular TParser without a private
+ * TParserCopy which basically is a regular TParser without a private__
  * copy of the string - instead it uses the one from another TParser.
  * This is useful because at some places TParsers are created
  * recursively and the repeated copying around of the strings can
  * cause major inefficiency if the source string is long.
- * The new parser starts parsing at the original's current position.
+ * The new__ parser starts parsing at the original's current position.
  *
  * Obviously one must not close the original TParser before the copy.
  */
@@ -953,25 +953,25 @@ p_isspecial(TParser *prs)
 			0x1936,				/* LIMBU SMALL LETTER MA */
 			0x1937,				/* LIMBU SMALL LETTER RA */
 			0x1938,				/* LIMBU SMALL LETTER LA */
-			0x19B0,				/* NEW TAI LUE VOWEL SIGN VOWEL SHORTENER */
-			0x19B1,				/* NEW TAI LUE VOWEL SIGN AA */
-			0x19B2,				/* NEW TAI LUE VOWEL SIGN II */
-			0x19B3,				/* NEW TAI LUE VOWEL SIGN U */
-			0x19B4,				/* NEW TAI LUE VOWEL SIGN UU */
-			0x19B5,				/* NEW TAI LUE VOWEL SIGN E */
-			0x19B6,				/* NEW TAI LUE VOWEL SIGN AE */
-			0x19B7,				/* NEW TAI LUE VOWEL SIGN O */
-			0x19B8,				/* NEW TAI LUE VOWEL SIGN OA */
-			0x19B9,				/* NEW TAI LUE VOWEL SIGN UE */
-			0x19BA,				/* NEW TAI LUE VOWEL SIGN AY */
-			0x19BB,				/* NEW TAI LUE VOWEL SIGN AAY */
-			0x19BC,				/* NEW TAI LUE VOWEL SIGN UY */
-			0x19BD,				/* NEW TAI LUE VOWEL SIGN OY */
-			0x19BE,				/* NEW TAI LUE VOWEL SIGN OAY */
-			0x19BF,				/* NEW TAI LUE VOWEL SIGN UEY */
-			0x19C0,				/* NEW TAI LUE VOWEL SIGN IY */
-			0x19C8,				/* NEW TAI LUE TONE MARK-1 */
-			0x19C9,				/* NEW TAI LUE TONE MARK-2 */
+			0x19B0,				/* new__ TAI LUE VOWEL SIGN VOWEL SHORTENER */
+			0x19B1,				/* new__ TAI LUE VOWEL SIGN AA */
+			0x19B2,				/* new__ TAI LUE VOWEL SIGN II */
+			0x19B3,				/* new__ TAI LUE VOWEL SIGN U */
+			0x19B4,				/* new__ TAI LUE VOWEL SIGN UU */
+			0x19B5,				/* new__ TAI LUE VOWEL SIGN E */
+			0x19B6,				/* new__ TAI LUE VOWEL SIGN AE */
+			0x19B7,				/* new__ TAI LUE VOWEL SIGN O */
+			0x19B8,				/* new__ TAI LUE VOWEL SIGN OA */
+			0x19B9,				/* new__ TAI LUE VOWEL SIGN UE */
+			0x19BA,				/* new__ TAI LUE VOWEL SIGN AY */
+			0x19BB,				/* new__ TAI LUE VOWEL SIGN AAY */
+			0x19BC,				/* new__ TAI LUE VOWEL SIGN UY */
+			0x19BD,				/* new__ TAI LUE VOWEL SIGN OY */
+			0x19BE,				/* new__ TAI LUE VOWEL SIGN OAY */
+			0x19BF,				/* new__ TAI LUE VOWEL SIGN UEY */
+			0x19C0,				/* new__ TAI LUE VOWEL SIGN IY */
+			0x19C8,				/* new__ TAI LUE TONE MARK-1 */
+			0x19C9,				/* new__ TAI LUE TONE MARK-2 */
 			0x1A19,				/* BUGINESE VOWEL SIGN E */
 			0x1A1A,				/* BUGINESE VOWEL SIGN O */
 			0x1A1B,				/* BUGINESE VOWEL SIGN AE */
@@ -1832,7 +1832,7 @@ TParserGet(TParser *prs)
 			Assert(item != NULL);
 		}
 
-		/* find action by character class */
+		/* find action by character class__ */
 		while (item->isclass)
 		{
 			prs->c = item->c;
@@ -1933,7 +1933,7 @@ TParserGet(TParser *prs)
 			pfree(ptr);
 		}
 
-		/* set new state if pointed */
+		/* set new__ state if pointed */
 		if (item->tostate != TPS_Null)
 			prs->state->state = item->tostate;
 

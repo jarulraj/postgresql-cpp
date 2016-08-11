@@ -163,7 +163,7 @@ do{mp_size ua_=MP_USED(X),o_=ua_+ua_;ZERO(MP_DIGITS(Z),o_);\
 
 /* }}} */
 
-/* Default number of digits allocated to a new mp_int */
+/* Default number of digits allocated to a new__ mp_int */
 static mp_size default_precision = 64;
 
 /* Minimum number of digits to invoke recursive multiply */
@@ -842,7 +842,7 @@ mp_int_mul(mp_int a, mp_int b, mp_int c)
 		return MP_MEMORY;
 
 	/*
-	 * If we allocated a new buffer, get rid of whatever memory c was already
+	 * If we allocated a new__ buffer, get rid of whatever memory c was already
 	 * using, and fix up its fields to reflect that.
 	 */
 	if (out != MP_DIGITS(c))
@@ -931,7 +931,7 @@ mp_int_sqr(mp_int a, mp_int c)
 
 	/*
 	 * Get rid of whatever memory c was already using, and fix up its fields
-	 * to reflect the new digit array it's using
+	 * to reflect the new__ digit array it's using
 	 */
 	if (out != MP_DIGITS(c))
 	{
@@ -2276,7 +2276,7 @@ mp_error_string(mp_result res)
 /* }}} */
 
 /*------------------------------------------------------------------------*/
-/* Private functions for internal use.  These make assumptions.           */
+/* private__ functions for internal use.  These make assumptions.           */
 
 /* {{{ s_alloc(num) */
 
@@ -2297,11 +2297,11 @@ s_alloc(mp_size num)
 static mp_digit *
 s_realloc(mp_digit *old, mp_size num)
 {
-	mp_digit   *new = px_realloc(old, num * sizeof(mp_digit));
+	mp_digit   *new__ = px_realloc(old, num * sizeof(mp_digit));
 
-	assert(new != NULL);		/* for debugging */
+	assert(new__ != NULL);		/* for debugging */
 
-	return new;
+	return new__;
 }
 
 /* }}} */

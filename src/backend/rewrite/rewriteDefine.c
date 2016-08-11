@@ -93,7 +93,7 @@ InsertRule(char *rulname,
 	values[Anum_pg_rewrite_ev_action - 1] = CStringGetTextDatum(actiontree);
 
 	/*
-	 * Ready to store new pg_rewrite tuple
+	 * Ready to store new__ pg_rewrite tuple
 	 */
 	pg_rewrite_desc = heap_open(RewriteRelationId, RowExclusiveLock);
 
@@ -143,7 +143,7 @@ InsertRule(char *rulname,
 
 	heap_freetuple(tup);
 
-	/* If replacing, get rid of old dependencies and make new ones */
+	/* If replacing, get rid of old dependencies and make new__ ones */
 	if (is_update)
 		deleteDependencyRecordsFor(RewriteRelationId, rewriteObjectId, false);
 
@@ -172,7 +172,7 @@ InsertRule(char *rulname,
 
 	if (event_qual != NULL)
 	{
-		/* Find query containing OLD/NEW rtable entries */
+		/* Find query containing OLD/new__ rtable entries */
 		Query	   *qry = (Query *) linitial(action);
 
 		qry = getInsertSelectQuery(qry, NULL);
@@ -180,7 +180,7 @@ InsertRule(char *rulname,
 							   DEPENDENCY_NORMAL);
 	}
 
-	/* Post creation hook for new rule */
+	/* Post creation hook for new__ rule */
 	InvokeObjectPostCreateHook(RewriteRelationId, rewriteObjectId, 0);
 
 	heap_close(pg_rewrite_desc, RowExclusiveLock);
@@ -281,7 +281,7 @@ DefineQueryRewrite(char *rulename,
 					   RelationGetRelationName(event_relation));
 
 	/*
-	 * No rule actions that modify OLD or NEW
+	 * No rule actions that modify OLD or new__
 	 */
 	foreach(l, action)
 	{
@@ -299,7 +299,7 @@ DefineQueryRewrite(char *rulename,
 		if (query->resultRelation == PRS2_NEW_VARNO)
 			ereport(ERROR,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("rule actions on NEW are not implemented"),
+					 errmsg("rule actions on new__ are not implemented"),
 					 errhint("Use triggers instead.")));
 	}
 
@@ -524,7 +524,7 @@ DefineQueryRewrite(char *rulename,
 		 * Set pg_class 'relhasrules' field TRUE for event relation.
 		 *
 		 * Important side effect: an SI notice is broadcast to force all
-		 * backends (including me!) to update relcache entries with the new
+		 * backends (including me!) to update relcache entries with the new__
 		 * rule.
 		 */
 		SetRelationRuleStatus(event_relid, true);
@@ -764,7 +764,7 @@ checkRuleResultList(List *targetList, TupleDesc resultDesc, bool isSelect,
  *
  * Note: for a view (ON SELECT rule), the checkAsUser field of the OLD
  * RTE entry will be overridden when the view rule is expanded, and the
- * checkAsUser field of the NEW entry is irrelevant because that entry's
+ * checkAsUser field of the new__ entry is irrelevant because that entry's
  * requiredPerms bits will always be zero.  However, for other types of rules
  * it's important to set these fields to match the rule owner.  So we just set
  * them always.
@@ -859,7 +859,7 @@ EnableDisableRule(Relation rel, const char *rulename,
 					   get_rel_name(eventRelationOid));
 
 	/*
-	 * Change ev_enabled if it is different from the desired new state.
+	 * Change ev_enabled if it is different from the desired new__ state.
 	 */
 	if (DatumGetChar(((Form_pg_rewrite) GETSTRUCT(ruletup))->ev_enabled) !=
 		fires_when)
@@ -966,7 +966,7 @@ RenameRewriteRule(RangeVar *relation, const char *oldName,
 	ruleform = (Form_pg_rewrite) GETSTRUCT(ruletup);
 	ruleOid = HeapTupleGetOid(ruletup);
 
-	/* rule with the new name should not already exist */
+	/* rule with the new__ name should not already exist */
 	if (IsDefinedRewriteRule(relid, newName))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),

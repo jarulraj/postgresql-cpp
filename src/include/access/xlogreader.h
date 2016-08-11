@@ -68,7 +68,7 @@ typedef struct
 struct XLogReaderState
 {
 	/* ----------------------------------------
-	 * Public parameters
+	 * public__ parameters
 	 * ----------------------------------------
 	 */
 
@@ -135,7 +135,7 @@ struct XLogReaderState
 	int			max_block_id;	/* highest block_id in use (-1 if none) */
 
 	/* ----------------------------------------
-	 * private/internal state
+	 * private__/internal state
 	 * ----------------------------------------
 	 */
 
@@ -163,7 +163,7 @@ struct XLogReaderState
 	char	   *errormsg_buf;
 };
 
-/* Get a new XLogReader */
+/* Get a new__ XLogReader */
 extern XLogReaderState *XLogReaderAllocate(XLogPageReadCB pagereadfunc,
 				   void *private_data);
 

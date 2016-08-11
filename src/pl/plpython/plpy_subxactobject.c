@@ -1,5 +1,5 @@
 /*
- * the PLySubtransaction class
+ * the PLySubtransaction class__
  *
  * src/pl/plpython/plpy_subxactobject.c
  */

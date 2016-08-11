@@ -4,7 +4,7 @@
  *	Generic trigger procedures for referential integrity constraint
  *	checks.
  *
- *	Note about memory management: the private hashtables kept here live
+ *	Note about memory management: the private__ hashtables kept here live
  *	across query and transaction boundaries, in fact they live as long as
  *	the backend does.  This works because the hashtable structures
  *	themselves are allocated by dynahash.c in its permanent DynaHashCxt,
@@ -162,8 +162,8 @@ typedef struct RI_QueryHashEntry
  */
 typedef struct RI_CompareKey
 {
-	Oid			eq_opr;			/* the equality operator to apply */
-	Oid			typeid;			/* the data type to apply it to */
+	Oid			eq_opr;			/* the equality operator__ to apply */
+	Oid			typeid__;			/* the data type to apply it to */
 } RI_CompareKey;
 
 
@@ -216,14 +216,14 @@ static void ri_BuildQueryKey(RI_QueryKey *key,
 				 int32 constr_queryno);
 static bool ri_KeysEqual(Relation rel, HeapTuple oldtup, HeapTuple newtup,
 			 const RI_ConstraintInfo *riinfo, bool rel_is_pk);
-static bool ri_AttributesEqual(Oid eq_opr, Oid typeid,
+static bool ri_AttributesEqual(Oid eq_opr, Oid typeid__,
 				   Datum oldvalue, Datum newvalue);
 
 static void ri_InitHashTables(void);
 static void InvalidateConstraintCacheCallBack(Datum arg, int cacheid, uint32 hashvalue);
 static SPIPlanPtr ri_FetchPreparedPlan(RI_QueryKey *key);
 static void ri_HashPreparedPlan(RI_QueryKey *key, SPIPlanPtr plan);
-static RI_CompareHashEntry *ri_HashCompareOp(Oid eq_opr, Oid typeid);
+static RI_CompareHashEntry *ri_HashCompareOp(Oid eq_opr, Oid typeid__);
 
 static void ri_CheckTrigger(FunctionCallInfo fcinfo, const char *funcname,
 				int tgkind);
@@ -773,7 +773,7 @@ ri_restrict_del(TriggerData *trigdata, bool is_no_action)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_SELECT);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -875,7 +875,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 									trigdata->tg_relation, true);
 
 	/*
-	 * Get the relation descriptors of the FK and PK tables and the new and
+	 * Get the relation descriptors of the FK and PK tables and the new__ and
 	 * old tuple.
 	 *
 	 * fk_rel is opened in RowShareLock mode since that's what our eventual
@@ -918,7 +918,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 			}
 
 			/*
-			 * No need to check anything if old and new keys are equal
+			 * No need to check anything if old and new__ keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -996,7 +996,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_SELECT);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1152,7 +1152,7 @@ RI_FKey_cascade_del(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_DELETE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1214,7 +1214,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 									trigdata->tg_relation, true);
 
 	/*
-	 * Get the relation descriptors of the FK and PK tables and the new and
+	 * Get the relation descriptors of the FK and PK tables and the new__ and
 	 * old tuple.
 	 *
 	 * fk_rel is opened in RowExclusiveLock mode since that's what our
@@ -1257,7 +1257,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 			}
 
 			/*
-			 * No need to do anything if old and new keys are equal
+			 * No need to do anything if old and new__ keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -1333,7 +1333,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, new_row,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1498,7 +1498,7 @@ RI_FKey_setnull_del(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1601,7 +1601,7 @@ RI_FKey_setnull_upd(PG_FUNCTION_ARGS)
 			}
 
 			/*
-			 * No need to do anything if old and new keys are equal
+			 * No need to do anything if old and new__ keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -1674,7 +1674,7 @@ RI_FKey_setnull_upd(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1840,7 +1840,7 @@ RI_FKey_setdefault_del(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -1956,7 +1956,7 @@ RI_FKey_setdefault_upd(PG_FUNCTION_ARGS)
 			}
 
 			/*
-			 * No need to do anything if old and new keys are equal
+			 * No need to do anything if old and new__ keys are equal
 			 */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 			{
@@ -2031,7 +2031,7 @@ RI_FKey_setdefault_upd(PG_FUNCTION_ARGS)
 			ri_PerformCheck(riinfo, &qkey, qplan,
 							fk_rel, pk_rel,
 							old_row, NULL,
-							true,		/* must detect new rows */
+							true,		/* must detect new__ rows */
 							SPI_OK_UPDATE);
 
 			if (SPI_finish() != SPI_OK_FINISH)
@@ -2108,7 +2108,7 @@ RI_FKey_pk_upd_check_required(Trigger *trigger, Relation pk_rel,
 			if (ri_NullCheck(old_row, riinfo, true) != RI_KEYS_NONE_NULL)
 				return false;
 
-			/* If all old and new key values are equal, no check is needed */
+			/* If all old and new__ key values are equal, no check is needed */
 			if (ri_KeysEqual(pk_rel, old_row, new_row, riinfo, true))
 				return false;
 
@@ -2158,7 +2158,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 		case FKCONSTR_MATCH_SIMPLE:
 
 			/*
-			 * If any new key value is NULL, the row must satisfy the
+			 * If any new__ key value is NULL, the row must satisfy the
 			 * constraint, so no check is needed.
 			 */
 			if (ri_NullCheck(new_row, riinfo, false) != RI_KEYS_NONE_NULL)
@@ -2175,7 +2175,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 			if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(old_row->t_data)))
 				return true;
 
-			/* If all old and new key values are equal, no check is needed */
+			/* If all old and new__ key values are equal, no check is needed */
 			if (ri_KeysEqual(fk_rel, old_row, new_row, riinfo, false))
 				return false;
 
@@ -2185,7 +2185,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 		case FKCONSTR_MATCH_FULL:
 
 			/*
-			 * If all new key values are NULL, the row must satisfy the
+			 * If all new__ key values are NULL, the row must satisfy the
 			 * constraint, so no check is needed.  On the other hand, if only
 			 * some of them are NULL, the row must fail the constraint.  We
 			 * must not throw error here, because the row might get
@@ -2213,7 +2213,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 			if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(old_row->t_data)))
 				return true;
 
-			/* If all old and new key values are equal, no check is needed */
+			/* If all old and new__ key values are equal, no check is needed */
 			if (ri_KeysEqual(fk_rel, old_row, new_row, riinfo, false))
 				return false;
 
@@ -2564,11 +2564,11 @@ quoteRelationName(char *buffer, Relation rel)
  *
  * The idea is to append " sep leftop op rightop" to buf.  The complexity
  * comes from needing to be sure that the parser will select the desired
- * operator.  We always name the operator using OPERATOR(schema.op) syntax
+ * operator__.  We always name the operator__ using operator__(schema.op) syntax
  * (readability isn't a big priority here), so as to avoid search-path
  * uncertainties.  We have to emit casts too, if either input isn't already
- * the input type of the operator; else we are at the mercy of the parser's
- * heuristics for ambiguous-operator resolution.
+ * the input type of the operator__; else we are at the mercy of the parser's
+ * heuristics for ambiguous-operator__ resolution.
  */
 static void
 ri_GenerateQual(StringInfo buf,
@@ -2584,7 +2584,7 @@ ri_GenerateQual(StringInfo buf,
 
 	opertup = SearchSysCache1(OPEROID, ObjectIdGetDatum(opoid));
 	if (!HeapTupleIsValid(opertup))
-		elog(ERROR, "cache lookup failed for operator %u", opoid);
+		elog(ERROR, "cache lookup failed for operator__ %u", opoid);
 	operform = (Form_pg_operator) GETSTRUCT(opertup);
 	Assert(operform->oprkind == 'b');
 	oprname = NameStr(operform->oprname);
@@ -2594,7 +2594,7 @@ ri_GenerateQual(StringInfo buf,
 	appendStringInfo(buf, " %s %s", sep, leftop);
 	if (leftoptype != operform->oprleft)
 		ri_add_cast_to(buf, operform->oprleft);
-	appendStringInfo(buf, " OPERATOR(%s.", quote_identifier(nspname));
+	appendStringInfo(buf, " operator__(%s.", quote_identifier(nspname));
 	appendStringInfoString(buf, oprname);
 	appendStringInfo(buf, ") %s", rightop);
 	if (rightoptype != operform->oprright)
@@ -3423,7 +3423,7 @@ ri_InitHashTables(void)
 /* ----------
  * ri_FetchPreparedPlan -
  *
- *	Lookup for a query key in our private hash table of prepared
+ *	Lookup for a query key in our private__ hash table of prepared
  *	and saved SPI execution plans. Return the plan if found or NULL.
  * ----------
  */
@@ -3464,7 +3464,7 @@ ri_FetchPreparedPlan(RI_QueryKey *key)
 
 	/*
 	 * Otherwise we might as well flush the cached plan now, to free a little
-	 * memory space before we make a new one.
+	 * memory space before we make a new__ one.
 	 */
 	entry->plan = NULL;
 	if (plan)
@@ -3477,7 +3477,7 @@ ri_FetchPreparedPlan(RI_QueryKey *key)
 /* ----------
  * ri_HashPreparedPlan -
  *
- *	Add another plan to our private SPI query plan hashtable.
+ *	Add another plan to our private__ SPI query plan hashtable.
  * ----------
  */
 static void
@@ -3493,7 +3493,7 @@ ri_HashPreparedPlan(RI_QueryKey *key, SPIPlanPtr plan)
 		ri_InitHashTables();
 
 	/*
-	 * Add the new plan.  We might be overwriting an entry previously found
+	 * Add the new__ plan.  We might be overwriting an entry previously found
 	 * invalid by ri_FetchPreparedPlan.
 	 */
 	entry = (RI_QueryHashEntry *) hash_search(ri_query_cache,
@@ -3507,7 +3507,7 @@ ri_HashPreparedPlan(RI_QueryKey *key, SPIPlanPtr plan)
 /* ----------
  * ri_KeysEqual -
  *
- *	Check if all key values in OLD and NEW are equal.
+ *	Check if all key values in OLD and new__ are equal.
  *
  *	Note: at some point we might wish to redefine this as checking for
  *	"IS NOT DISTINCT" rather than "=", that is, allow two nulls to be
@@ -3556,7 +3556,7 @@ ri_KeysEqual(Relation rel, HeapTuple oldtup, HeapTuple newtup,
 			return false;
 
 		/*
-		 * Compare them with the appropriate equality operator.
+		 * Compare them with the appropriate equality operator__.
 		 */
 		if (!ri_AttributesEqual(eq_oprs[i], RIAttType(rel, attnums[i]),
 								oldvalue, newvalue))
@@ -3570,16 +3570,16 @@ ri_KeysEqual(Relation rel, HeapTuple oldtup, HeapTuple newtup,
 /* ----------
  * ri_AttributesEqual -
  *
- *	Call the appropriate equality comparison operator for two values.
+ *	Call the appropriate equality comparison operator__ for two values.
  *
  *	NB: we have already checked that neither value is null.
  * ----------
  */
 static bool
-ri_AttributesEqual(Oid eq_opr, Oid typeid,
+ri_AttributesEqual(Oid eq_opr, Oid typeid__,
 				   Datum oldvalue, Datum newvalue)
 {
-	RI_CompareHashEntry *entry = ri_HashCompareOp(eq_opr, typeid);
+	RI_CompareHashEntry *entry = ri_HashCompareOp(eq_opr, typeid__);
 
 	/* Do we need to cast the values? */
 	if (OidIsValid(entry->cast_func_finfo.fn_oid))
@@ -3595,7 +3595,7 @@ ri_AttributesEqual(Oid eq_opr, Oid typeid,
 	}
 
 	/*
-	 * Apply the comparison operator.  We assume it doesn't care about
+	 * Apply the comparison operator__.  We assume it doesn't care about
 	 * collations.
 	 */
 	return DatumGetBool(FunctionCall2(&entry->eq_opr_finfo,
@@ -3605,12 +3605,12 @@ ri_AttributesEqual(Oid eq_opr, Oid typeid,
 /* ----------
  * ri_HashCompareOp -
  *
- *	See if we know how to compare two values, and create a new hash entry
+ *	See if we know how to compare two values, and create a new__ hash entry
  *	if not.
  * ----------
  */
 static RI_CompareHashEntry *
-ri_HashCompareOp(Oid eq_opr, Oid typeid)
+ri_HashCompareOp(Oid eq_opr, Oid typeid__)
 {
 	RI_CompareKey key;
 	RI_CompareHashEntry *entry;
@@ -3627,7 +3627,7 @@ ri_HashCompareOp(Oid eq_opr, Oid typeid)
 	 * contains no struct padding.
 	 */
 	key.eq_opr = eq_opr;
-	key.typeid = typeid;
+	key.typeid__ = typeid__;
 	entry = (RI_CompareHashEntry *) hash_search(ri_compare_cache,
 												(void *) &key,
 												HASH_ENTER, &found);
@@ -3646,13 +3646,13 @@ ri_HashCompareOp(Oid eq_opr, Oid typeid)
 					castfunc;
 		CoercionPathType pathtype;
 
-		/* We always need to know how to call the equality operator */
+		/* We always need to know how to call the equality operator__ */
 		fmgr_info_cxt(get_opcode(eq_opr), &entry->eq_opr_finfo,
 					  TopMemoryContext);
 
 		/*
 		 * If we chose to use a cast from FK to PK type, we may have to apply
-		 * the cast function to get to the operator's input type.
+		 * the cast function to get to the operator__'s input type.
 		 *
 		 * XXX eventually it would be good to support array-coercion cases
 		 * here and in ri_AttributesEqual().  At the moment there is no point
@@ -3664,11 +3664,11 @@ ri_HashCompareOp(Oid eq_opr, Oid typeid)
 		 */
 		op_input_types(eq_opr, &lefttype, &righttype);
 		Assert(lefttype == righttype);
-		if (typeid == lefttype)
+		if (typeid__ == lefttype)
 			castfunc = InvalidOid;		/* simplest case */
 		else
 		{
-			pathtype = find_coercion_pathway(lefttype, typeid,
+			pathtype = find_coercion_pathway(lefttype, typeid__,
 											 COERCION_IMPLICIT,
 											 &castfunc);
 			if (pathtype != COERCION_PATH_FUNC &&
@@ -3680,9 +3680,9 @@ ri_HashCompareOp(Oid eq_opr, Oid typeid)
 				 * special cases such as RECORD; find_coercion_pathway
 				 * currently doesn't subsume these special cases.
 				 */
-				if (!IsBinaryCoercible(typeid, lefttype))
+				if (!IsBinaryCoercible(typeid__, lefttype))
 					elog(ERROR, "no conversion function from %s to %s",
-						 format_type_be(typeid),
+						 format_type_be(typeid__),
 						 format_type_be(lefttype));
 			}
 		}

@@ -518,7 +518,7 @@ miss(struct vars * v,
 	 * to see what LACON arcs could be traversed after consuming it.
 	 */
 	for (i = 0; i < d->wordsper; i++)
-		d->work[i] = 0;			/* build new stateset bitmap in d->work */
+		d->work[i] = 0;			/* build new__ stateset bitmap in d->work */
 	ispost = 0;
 	noprogress = 1;
 	gotstate = 0;
@@ -536,7 +536,7 @@ miss(struct vars * v,
 					FDEBUG(("%d -> %d\n", i, ca->to));
 				}
 	if (!gotstate)
-		return NULL;			/* character cannot reach any new state */
+		return NULL;			/* character cannot reach any new__ state */
 	dolacons = (cnfa->flags & HASLACONS);
 	sawlacons = 0;
 	/* outer loop handles transitive closure of reachable-by-LACON states */
@@ -579,7 +579,7 @@ miss(struct vars * v,
 			break;				/* NOTE BREAK OUT */
 		}
 	if (i == 0)
-	{							/* nope, need a new cache entry */
+	{							/* nope, need a new__ cache entry */
 		p = getvacant(v, d, cp, start);
 		if (p == NULL)
 			return NULL;
@@ -594,7 +594,7 @@ miss(struct vars * v,
 	}
 
 	/*
-	 * Link new stateset to old, unless a LACON affected the result, in which
+	 * Link new__ stateset to old, unless a LACON affected the result, in which
 	 * case we don't create the link.  That forces future transitions across
 	 * this same arc (same prior stateset and character color) to come through
 	 * miss() again, so that we can recheck the LACON(s), which might or might
@@ -744,7 +744,7 @@ pickss(struct vars * v,
 		i = d->nssused;
 		d->nssused++;
 		ss = &d->ssets[i];
-		FDEBUG(("new c%d\n", i));
+		FDEBUG(("new__ c%d\n", i));
 		/* set up innards */
 		ss->states = &d->statesarea[i * d->wordsper];
 		ss->flags = 0;

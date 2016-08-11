@@ -98,7 +98,7 @@ CreateTemplateTupleDesc(int natts, bool hasoid)
 
 /*
  * CreateTupleDesc
- *		This function allocates a new TupleDesc pointing to a given
+ *		This function allocates a new__ TupleDesc pointing to a given
  *		Form_pg_attribute array.
  *
  * Note: if the TupleDesc is ever freed, the Form_pg_attribute array
@@ -131,7 +131,7 @@ CreateTupleDesc(int natts, bool hasoid, Form_pg_attribute *attrs)
 
 /*
  * CreateTupleDescCopy
- *		This function creates a new TupleDesc by copying from an existing
+ *		This function creates a new__ TupleDesc by copying from an existing
  *		TupleDesc.
  *
  * !!! Constraints and defaults are not copied !!!
@@ -159,7 +159,7 @@ CreateTupleDescCopy(TupleDesc tupdesc)
 
 /*
  * CreateTupleDescCopyConstr
- *		This function creates a new TupleDesc by copying from an existing
+ *		This function creates a new__ TupleDesc by copying from an existing
  *		TupleDesc (including its constraints and defaults).
  */
 TupleDesc
@@ -599,7 +599,7 @@ BuildDescForRelation(List *schema)
 	int			attdim;
 
 	/*
-	 * allocate a new tuple descriptor
+	 * allocate a new__ tuple descriptor
 	 */
 	natts = list_length(schema);
 	desc = CreateTemplateTupleDesc(natts, false);
@@ -620,16 +620,16 @@ BuildDescForRelation(List *schema)
 		attnum++;
 
 		attname = entry->colname;
-		typenameTypeIdAndMod(NULL, entry->typeName, &atttypid, &atttypmod);
+		typenameTypeIdAndMod(NULL, entry->typename__, &atttypid, &atttypmod);
 
 		aclresult = pg_type_aclcheck(atttypid, GetUserId(), ACL_USAGE);
 		if (aclresult != ACLCHECK_OK)
 			aclcheck_error_type(aclresult, atttypid);
 
 		attcollation = GetColumnDefCollation(NULL, entry, atttypid);
-		attdim = list_length(entry->typeName->arrayBounds);
+		attdim = list_length(entry->typename__->arrayBounds);
 
-		if (entry->typeName->setof)
+		if (entry->typename__->setof)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_TABLE_DEFINITION),
 					 errmsg("column \"%s\" cannot be declared SETOF",
@@ -697,7 +697,7 @@ BuildDescFromLists(List *names, List *types, List *typmods, List *collations)
 	Assert(natts == list_length(collations));
 
 	/*
-	 * allocate a new tuple descriptor
+	 * allocate a new__ tuple descriptor
 	 */
 	desc = CreateTemplateTupleDesc(natts, false);
 

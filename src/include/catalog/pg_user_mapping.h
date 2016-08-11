@@ -28,7 +28,7 @@
 
 CATALOG(pg_user_mapping,1418)
 {
-	Oid			umuser;			/* Id of the user, InvalidOid if PUBLIC is
+	Oid			umuser;			/* Id of the user, InvalidOid if public__ is
 								 * wanted */
 	Oid			umserver;		/* server of this mapping */
 

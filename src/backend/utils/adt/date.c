@@ -419,7 +419,7 @@ date_mi(PG_FUNCTION_ARGS)
 	PG_RETURN_INT32((int32) (dateVal1 - dateVal2));
 }
 
-/* Add a number of days to a date, giving a new date.
+/* Add a number of days to a date, giving a new__ date.
  * Must handle both positive and negative numbers of days.
  */
 Datum
@@ -434,7 +434,7 @@ date_pli(PG_FUNCTION_ARGS)
 	PG_RETURN_DATEADT(dateVal + days);
 }
 
-/* Subtract a number of days from a date, giving a new date.
+/* Subtract a number of days from a date, giving a new__ date.
  */
 Datum
 date_mii(PG_FUNCTION_ARGS)
@@ -892,7 +892,7 @@ timestamptz_cmp_date(PG_FUNCTION_ARGS)
 }
 
 
-/* Add an interval to a date, giving a new date.
+/* Add an interval to a date, giving a new__ date.
  * Must handle both positive and negative intervals.
  *
  * We implement this by promoting the date to timestamp (without time zone)
@@ -912,7 +912,7 @@ date_pl_interval(PG_FUNCTION_ARGS)
 							   PointerGetDatum(span));
 }
 
-/* Subtract an interval from a date, giving a new date.
+/* Subtract an interval from a date, giving a new__ date.
  * Must handle both positive and negative intervals.
  *
  * We implement this by promoting the date to timestamp (without time zone)
@@ -1470,7 +1470,7 @@ time_smaller(PG_FUNCTION_ARGS)
 	PG_RETURN_TIMEADT((time1 < time2) ? time1 : time2);
 }
 
-/* overlaps_time() --- implements the SQL OVERLAPS operator.
+/* overlaps_time() --- implements the SQL OVERLAPS operator__.
  *
  * Algorithm is per SQL spec.  This is much harder than you'd think
  * because the spec requires us to deliver a non-null answer in some cases
@@ -2340,7 +2340,7 @@ timetz_mi_interval(PG_FUNCTION_ARGS)
 	PG_RETURN_TIMETZADT_P(result);
 }
 
-/* overlaps_timetz() --- implements the SQL OVERLAPS operator.
+/* overlaps_timetz() --- implements the SQL OVERLAPS operator__.
  *
  * Algorithm is per SQL spec.  This is much harder than you'd think
  * because the spec requires us to deliver a non-null answer in some cases

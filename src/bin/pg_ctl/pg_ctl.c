@@ -151,7 +151,7 @@ static void WINAPI pgwin32_ServiceMain(DWORD, LPTSTR *);
 static void pgwin32_doRunAsService(void);
 static int	CreateRestrictedProcess(char *cmd, PROCESS_INFORMATION *processInfo, bool as_service);
 static bool pgwin32_get_dynamic_tokeninfo(HANDLE token,
-							  TOKEN_INFORMATION_CLASS class,
+							  TOKEN_INFORMATION_CLASS class__,
 							  char **InfoBuffer, char *errbuf, int errsize);
 static int pgwin32_is_service(void);
 #endif
@@ -1701,12 +1701,12 @@ pgwin32_doRunAsService(void)
  * the calling function!
  */
 static bool
-pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class,
+pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class__,
 							  char **InfoBuffer, char *errbuf, int errsize)
 {
 	DWORD		InfoBufferSize;
 
-	if (GetTokenInformation(token, class, NULL, 0, &InfoBufferSize))
+	if (GetTokenInformation(token, class__, NULL, 0, &InfoBufferSize))
 	{
 		snprintf(errbuf, errsize, "could not get token information: got zero size\n");
 		return false;
@@ -1727,7 +1727,7 @@ pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class,
 		return false;
 	}
 
-	if (!GetTokenInformation(token, class, *InfoBuffer,
+	if (!GetTokenInformation(token, class__, *InfoBuffer,
 							 InfoBufferSize, &InfoBufferSize))
 	{
 		snprintf(errbuf, errsize, "could not get token information: error code %lu\n",
@@ -2010,7 +2010,7 @@ CreateRestrictedProcess(char *cmd, PROCESS_INFORMATION *processInfo, bool as_ser
 			if (!inJob)
 			{
 				/*
-				 * Job objects are working, and the new process isn't in one,
+				 * Job objects are working, and the new__ process isn't in one,
 				 * so we can create one safely. If any problems show up when
 				 * setting it, we're going to ignore them.
 				 */
@@ -2268,7 +2268,7 @@ adjust_data_dir(void)
 
 	/* Must be a configuration directory, so find the data directory */
 
-	/* we use a private my_exec_path to avoid interfering with later uses */
+	/* we use a private__ my_exec_path to avoid interfering with later uses */
 	if (exec_path == NULL)
 		my_exec_path = find_other_exec_or_die(argv0, "postgres", PG_BACKEND_VERSIONSTR);
 	else

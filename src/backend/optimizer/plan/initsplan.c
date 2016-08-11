@@ -166,7 +166,7 @@ build_base_rel_tlists(PlannerInfo *root, List *final_tlist)
  *	  The list may also contain PlaceHolderVars.  These don't necessarily
  *	  have a single owning relation; we keep their attr_needed info in
  *	  root->placeholder_list instead.  If create_new_ph is true, it's OK
- *	  to create new PlaceHolderInfos; otherwise, the PlaceHolderInfos must
+ *	  to create new__ PlaceHolderInfos; otherwise, the PlaceHolderInfos must
  *	  already exist, and we should only update their ph_needed.  (This should
  *	  be true before deconstruct_jointree begins, and false after that.)
  */
@@ -1299,7 +1299,7 @@ make_outerjoininfo(PlannerInfo *root,
 
 /*
  * compute_semijoin_info
- *	  Fill semijoin-related fields of a new SpecialJoinInfo
+ *	  Fill semijoin-related fields of a new__ SpecialJoinInfo
  *
  * Note: this relies on only the jointype and syn_righthand fields of the
  * SpecialJoinInfo; the rest may not be set yet.
@@ -1344,9 +1344,9 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
 	 *
 	 * Note that the semi_operators list consists of the joinqual operators
 	 * themselves (but commuted if needed to put the RHS value on the right).
-	 * These could be cross-type operators, in which case the operator
-	 * actually needed for uniqueness is a related single-type operator. We
-	 * assume here that that operator will be available from the btree or hash
+	 * These could be cross-type operators, in which case the operator__
+	 * actually needed for uniqueness is a related single-type operator__. We
+	 * assume here that that operator__ will be available from the btree or hash
 	 * opclass when the time comes ... if not, create_unique_plan() will fail.
 	 */
 	semi_operators = NIL;
@@ -1382,7 +1382,7 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
 					return;
 				continue;
 			}
-			/* Non-operator clause referencing both sides, must punt */
+			/* Non-operator__ clause referencing both sides, must punt */
 			return;
 		}
 
@@ -1486,7 +1486,7 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
  *	  (depending on whether the clause is a join) of each base relation
  *	  mentioned in the clause.  A RestrictInfo node is created and added to
  *	  the appropriate list for each rel.  Alternatively, if the clause uses a
- *	  mergejoinable operator and is not delayed by outer-join rules, enter
+ *	  mergejoinable operator__ and is not delayed by outer-join rules, enter
  *	  the left- and right-side expressions into the query's list of
  *	  EquivalenceClasses.  Alternatively, if the clause needs to be treated
  *	  as belonging to a higher join level, just add it to postponed_qual_list.
@@ -1516,7 +1516,7 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
  * In normal use (when is_deduced is FALSE), at the time this is called,
  * root->join_info_list must contain entries for all and only those special
  * joins that are syntactically below this qual.  But when is_deduced is TRUE,
- * we are adding new deduced clauses after completion of deconstruct_jointree,
+ * we are adding new__ deduced clauses after completion of deconstruct_jointree,
  * so it cannot be assumed that root->join_info_list has anything to do with
  * qual placement.
  */
@@ -1811,7 +1811,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 	 * machinery.  We do *not* attach it directly to any restriction or join
 	 * lists.  The EC code will propagate it to the appropriate places later.
 	 *
-	 * If the clause has a mergejoinable operator and is not
+	 * If the clause has a mergejoinable operator__ and is not
 	 * outerjoin-delayed, yet isn't an equivalence because it is an outer-join
 	 * clause, the EC code may yet be able to do something with it.  We add it
 	 * to appropriate lists for further consideration later.  Specifically:
@@ -1920,7 +1920,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
  * To enforce (2), scan the join_info_list and merge the required-relid sets of
  * any such OJs into the clause's own reference list.  At the time we are
  * called, the join_info_list contains only outer joins below this qual.  We
- * have to repeat the scan until no new relids get added; this ensures that
+ * have to repeat the scan until no new__ relids get added; this ensures that
  * the qual is suitably delayed regardless of the order in which OJs get
  * executed.  As an example, if we have one OJ with LHS=A, RHS=B, and one with
  * LHS=B, RHS=C, it is implied that these can be done in either order; if the
@@ -2098,7 +2098,7 @@ check_redundant_nullability_qual(PlannerInfo *root, Node *clause)
  *	  clause list(s).
  *
  * This is the last step of distribute_qual_to_rels() for ordinary qual
- * clauses.  Clauses that are interesting for equivalence-class processing
+ * clauses.  Clauses that are interesting for equivalence-class__ processing
  * are diverted to the EC machinery, but may ultimately get fed back here.
  */
 void
@@ -2155,7 +2155,7 @@ distribute_restrictinfo_to_rels(PlannerInfo *root,
  * process_implied_equality
  *	  Create a restrictinfo item that says "item1 op item2", and push it
  *	  into the appropriate lists.  (In practice opno is always a btree
- *	  equality operator.)
+ *	  equality operator__.)
  *
  * "qualscope" is the nominal syntactic level to impute to the restrictinfo.
  * This must contain at least all the rels used in the expressions, but it
@@ -2194,7 +2194,7 @@ process_implied_equality(PlannerInfo *root,
 	Expr	   *clause;
 
 	/*
-	 * Build the new clause.  Copy to ensure it shares no substructure with
+	 * Build the new__ clause.  Copy to ensure it shares no substructure with
 	 * original (this is necessary in case there are subselects in there...)
 	 */
 	clause = make_opclause(opno,
@@ -2222,7 +2222,7 @@ process_implied_equality(PlannerInfo *root,
 	}
 
 	/*
-	 * Push the new clause into all the appropriate restrictinfo lists.
+	 * Push the new__ clause into all the appropriate restrictinfo lists.
 	 */
 	distribute_qual_to_rels(root, (Node *) clause,
 							true, below_outer_join, JOIN_INNER,
@@ -2255,7 +2255,7 @@ build_implied_join_equality(Oid opno,
 	Expr	   *clause;
 
 	/*
-	 * Build the new clause.  Copy to ensure it shares no substructure with
+	 * Build the new__ clause.  Copy to ensure it shares no substructure with
 	 * original (this is necessary in case there are subselects in there...)
 	 */
 	clause = make_opclause(opno,
@@ -2297,7 +2297,7 @@ build_implied_join_equality(Oid opno,
  *	  info fields in the restrictinfo.
  *
  *	  Currently, we support mergejoin for binary opclauses where
- *	  the operator is a mergejoinable operator.  The arguments can be
+ *	  the operator__ is a mergejoinable operator__.  The arguments can be
  *	  anything --- as long as there are no volatile functions in them.
  */
 static void
@@ -2322,7 +2322,7 @@ check_mergejoinable(RestrictInfo *restrictinfo)
 		restrictinfo->mergeopfamilies = get_mergejoin_opfamilies(opno);
 
 	/*
-	 * Note: op_mergejoinable is just a hint; if we fail to find the operator
+	 * Note: op_mergejoinable is just a hint; if we fail to find the operator__
 	 * in any btree opfamilies, mergeopfamilies remains NIL and so the clause
 	 * is not treated as mergejoinable.
 	 */
@@ -2334,7 +2334,7 @@ check_mergejoinable(RestrictInfo *restrictinfo)
  *	  info fields in the restrictinfo.
  *
  *	  Currently, we support hashjoin for binary opclauses where
- *	  the operator is a hashjoinable operator.  The arguments can be
+ *	  the operator__ is a hashjoinable operator__.  The arguments can be
  *	  anything --- as long as there are no volatile functions in them.
  */
 static void

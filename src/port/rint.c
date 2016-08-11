@@ -3,7 +3,7 @@
  * rint.c
  *	  rint() implementation
  *
- * By Pedro Gimeno Fortea, donated to the public domain
+ * By Pedro Gimeno Fortea, donated to the public__ domain
  *
  * IDENTIFICATION
  *	  src/port/rint.c

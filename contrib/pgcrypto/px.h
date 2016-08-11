@@ -120,7 +120,7 @@ struct px_digest
 	void		(*update) (PX_MD *h, const uint8 *data, unsigned dlen);
 	void		(*finish) (PX_MD *h, uint8 *dst);
 	void		(*free) (PX_MD *h);
-	/* private */
+	/* private__ */
 	union
 	{
 		unsigned	code;
@@ -145,7 +145,7 @@ struct px_hmac
 	void		(*init) (PX_HMAC *h, const uint8 *key, unsigned klen);
 
 	PX_MD	   *md;
-	/* private */
+	/* private__ */
 	struct
 	{
 		uint8	   *ipad;
@@ -163,7 +163,7 @@ struct px_cipher
 	int			(*encrypt) (PX_Cipher *c, const uint8 *data, unsigned dlen, uint8 *res);
 	int			(*decrypt) (PX_Cipher *c, const uint8 *data, unsigned dlen, uint8 *res);
 	void		(*free) (PX_Cipher *c);
-	/* private */
+	/* private__ */
 	void	   *ptr;
 	int			pstat;			/* mcrypt uses it */
 };

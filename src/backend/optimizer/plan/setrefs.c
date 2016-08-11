@@ -182,7 +182,7 @@ static bool extract_query_dependencies_walker(Node *node,
  * wouldn't match up with the Vars in the outer plan tree.  The SubqueryScan
  * serves a necessary function as a buffer between outer query and subquery
  * variable numbering ... but after we've flattened the rangetable this is
- * no longer a problem, since then there's only one rtindex namespace.
+ * no longer a problem, since then there's only one rtindex namespace__.
  *
  * set_plan_references recursively traverses the whole plan tree.
  *
@@ -1249,7 +1249,7 @@ copyVar(Var *var)
  *		Do generic set_plan_references processing on an expression node
  *
  * This is code that is common to all variants of expression-fixing.
- * We must look up operator opcode info for OpExpr and related nodes,
+ * We must look up operator__ opcode info for OpExpr and related nodes,
  * add OIDs from regclass Const nodes into root->glob->relationOids, and
  * add PlanInvalItems for user-defined functions into root->glob->invalItems.
  * We also fill in column index lists for GROUPING() expressions.
@@ -1377,7 +1377,7 @@ fix_param_node(PlannerInfo *root, Param *p)
  *
  * This consists of incrementing all Vars' varnos by rtoffset,
  * replacing PARAM_MULTIEXPR Params, expanding PlaceHolderVars,
- * looking up operator opcode info for OpExpr and related nodes,
+ * looking up operator__ opcode info for OpExpr and related nodes,
  * and adding OIDs from regclass Const nodes into root->glob->relationOids.
  */
 static Node *
@@ -1931,7 +1931,7 @@ search_indexed_tlist_for_sortgroupref(Node *node,
 
 /*
  * fix_join_expr
- *	   Create a new set of targetlist entries or join qual clauses by
+ *	   Create a new__ set of targetlist entries or join qual clauses by
  *	   changing the varno/varattno values of variables in the clauses
  *	   to reference target list values from the outer and inner join
  *	   relation target lists.  Also perform opcode lookup and add
@@ -1962,7 +1962,7 @@ search_indexed_tlist_for_sortgroupref(Node *node,
  *		whose Vars may appear in the clause without provoking an error
  * 'rtoffset': how much to increment varnoold by
  *
- * Returns the new expression tree.  The original clause structure is
+ * Returns the new__ expression tree.  The original clause structure is
  * not modified.
  */
 static List *
@@ -2242,7 +2242,7 @@ set_returning_clause_references(PlannerInfo *root,
 
 
 /*****************************************************************************
- *					OPERATOR REGPROC LOOKUP
+ *					operator__ REGPROC LOOKUP
  *****************************************************************************/
 
 /*

@@ -12,8 +12,8 @@
  *		 by scanning the old xlog if necessary.
  *	  3. Modify pg_control to reflect a "shutdown" state with a checkpoint
  *		 record at the start of xlog.
- *	  4. Flush the existing xlog files and write a new segment with
- *		 just a checkpoint record in it.  The new segment is positioned
+ *	  4. Flush the existing xlog files and write a new__ segment with
+ *		 just a checkpoint record in it.  The new__ segment is positioned
  *		 just past the end of the old xlog, so that existing LSNs in
  *		 data pages will appear to be "in the past".
  * This is all pretty straightforward except for the intuition part of
@@ -59,7 +59,7 @@
 
 
 static ControlFileData ControlFile;		/* pg_control values */
-static XLogSegNo newXlogSegNo;	/* new XLOG segment # */
+static XLogSegNo newXlogSegNo;	/* new__ XLOG segment # */
 static bool guessed = false;	/* T if we had to guess at any values */
 static const char *progname;
 static uint32 set_xid_epoch = (uint32) -1;
@@ -547,7 +547,7 @@ GuessControlValues(void)
 	ControlFile.catalog_version_no = CATALOG_VERSION_NO;
 
 	/*
-	 * Create a new unique installation identifier, since we can no longer use
+	 * Create a new__ unique installation identifier, since we can no longer use
 	 * any old XLOG records.  See notes in xlog.c about the algorithm.
 	 */
 	gettimeofday(&tv, NULL);
@@ -765,7 +765,7 @@ PrintNewControlValues()
 
 
 /*
- * Write out the new pg_control file.
+ * Write out the new__ pg_control file.
  */
 static void
 RewriteControlFile(void)
@@ -946,7 +946,7 @@ FindEndOfXLOG(void)
 	}
 
 	/*
-	 * Finally, convert to new xlog seg size, and advance by one to ensure we
+	 * Finally, convert to new__ xlog seg size, and advance by one to ensure we
 	 * are in virgin territory.
 	 */
 	xlogbytepos = newXlogSegNo * ControlFile.xlog_seg_size;
@@ -1172,7 +1172,7 @@ usage(void)
 	printf(_(" [-D] DATADIR      data directory\n"));
 	printf(_("  -e XIDEPOCH      set next transaction ID epoch\n"));
 	printf(_("  -f               force update to be done\n"));
-	printf(_("  -l XLOGFILE      force minimum WAL starting location for new transaction log\n"));
+	printf(_("  -l XLOGFILE      force minimum WAL starting location for new__ transaction log\n"));
 	printf(_("  -m MXID,MXID     set next and oldest multitransaction ID\n"));
 	printf(_("  -n               no update, just show what would be done (for testing)\n"));
 	printf(_("  -o OID           set next OID\n"));

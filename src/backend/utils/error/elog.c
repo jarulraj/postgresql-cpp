@@ -3096,7 +3096,7 @@ send_message_to_frontend(ErrorData *edata)
 
 	if (PG_PROTOCOL_MAJOR(FrontendProtocol) >= 3)
 	{
-		/* New style with separate fields */
+		/* new__ style with separate fields */
 		char		tbuf[12];
 		int			ssval;
 		int			i;

@@ -237,7 +237,7 @@ additional_numeric_locale_len(const char *my_str)
 /*
  * Format a numeric value per current LC_NUMERIC locale setting
  *
- * Returns the appropriately formatted string in a new allocated block,
+ * Returns the appropriately formatted string in a new__ allocated block,
  * caller must free.
  *
  * setDecimalLocale() must have been called earlier.
@@ -1552,7 +1552,7 @@ print_aligned_vertical(const printTableContent *cont,
 							target_width = hwidth;
 
 				/*
-				 * Left spacer or new line indicator
+				 * Left spacer or new__ line indicator
 				 */
 				if ((opt_border == 2) ||
 					(hmultiline && (format == &pg_asciiformat_old)))
@@ -1573,7 +1573,7 @@ print_aligned_vertical(const printTableContent *cont,
 					fprintf(fout, "%*s", swidth, " ");
 
 				/*
-				 * New line indicator or separator's space
+				 * new__ line indicator or separator's space
 				 */
 				if (hlineptr[hline + 1].ptr)
 				{
@@ -1984,7 +1984,7 @@ print_asciidoc_text(const printTableContent *cont, FILE *fout)
 
 	if (cont->opt->start_table)
 	{
-		/* print table in new paragraph - enforce preliminary new line */
+		/* print table in new__ paragraph - enforce preliminary new__ line */
 		fputs("\n", fout);
 
 		/* print title */
@@ -2095,7 +2095,7 @@ print_asciidoc_vertical(const printTableContent *cont, FILE *fout)
 
 	if (cont->opt->start_table)
 	{
-		/* print table in new paragraph - enforce preliminary new line */
+		/* print table in new__ paragraph - enforce preliminary new__ line */
 		fputs("\n", fout);
 
 		/* print title */
@@ -2511,7 +2511,7 @@ print_latex_vertical(const printTableContent *cont, FILE *fout)
 	/* print records */
 	for (i = 0, ptr = cont->cells; *ptr; i++, ptr++)
 	{
-		/* new record */
+		/* new__ record */
 		if (i % cont->ncolumns == 0)
 		{
 			if (cancel_pressed)
@@ -2717,7 +2717,7 @@ print_troff_ms_vertical(const printTableContent *cont, FILE *fout)
 	/* print records */
 	for (i = 0, ptr = cont->cells; *ptr; i++, ptr++)
 	{
-		/* new record */
+		/* new__ record */
 		if (i % cont->ncolumns == 0)
 		{
 			if (cancel_pressed)
@@ -2782,7 +2782,7 @@ print_troff_ms_vertical(const printTableContent *cont, FILE *fout)
 
 
 /********************************/
-/* Public functions				*/
+/* public__ functions				*/
 /********************************/
 
 
@@ -3061,7 +3061,7 @@ printTableAddFooter(printTableContent *const content, const char *footer)
  * Change the content of the last-added footer.
  *
  * The current contents of the last-added footer are freed, and replaced by the
- * content given in *footer.  If there was no previous footer, add a new one.
+ * content given in *footer.  If there was no previous footer, add a new__ one.
  *
  * The content is strdup'd, so there is no need to keep the original string
  * around.
@@ -3476,7 +3476,7 @@ strlen_max_width(unsigned char *str, int *target_width, int encoding)
 		int			char_width = PQdsplen((char *) str, encoding);
 
 		/*
-		 * If the display width of the new character causes the string to
+		 * If the display width of the new__ character causes the string to
 		 * exceed its target width, skip it and return.  However, if this is
 		 * the first character of the string (curr_width == 0), we have to
 		 * accept it.

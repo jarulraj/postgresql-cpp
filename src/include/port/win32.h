@@ -213,7 +213,7 @@
 #endif
 
 /*
- * New versions of mingw have gettimeofday() and also declare
+ * new__ versions of mingw have gettimeofday() and also declare
  * struct timezone to support it.
  */
 #ifndef HAVE_GETTIMEOFDAY

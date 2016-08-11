@@ -152,7 +152,7 @@ enable_timeout(TimeoutId id, TimestampTz now, TimestampTz fin_time)
 		remove_timeout_index(i);
 
 	/*
-	 * Find out the index where to insert the new timeout.  We sort by
+	 * Find out the index where to insert the new__ timeout.  We sort by
 	 * fin_time, and for equal fin_time by priority.
 	 */
 	for (i = 0; i < num_active_timeouts; i++)
@@ -219,7 +219,7 @@ schedule_alarm(TimestampTz now)
 		 *
 		 * 1. The signal handler finds nothing to do (because the nearest
 		 * timeout event is still in the future).  It will re-set the timer
-		 * and return.  Then we'll overwrite the timer value with a new one.
+		 * and return.  Then we'll overwrite the timer value with a new__ one.
 		 * This will mean that the timer fires a little later than we
 		 * intended, but only by the amount of time it takes for the signal
 		 * handler to do nothing useful, which shouldn't be much.
@@ -324,7 +324,7 @@ handle_sig_alarm(SIGNAL_ARGS)
 
 
 /*****************************************************************************
- * Public API
+ * public__ API
  *****************************************************************************/
 
 /*
@@ -400,7 +400,7 @@ RegisterTimeout(TimeoutId id, timeout_handler_proc handler)
  *
  * This can be used during error recovery in case query cancel resulted in loss
  * of a SIGALRM event (due to longjmp'ing out of handle_sig_alarm before it
- * could do anything).  But note it's not necessary if any of the public
+ * could do anything).  But note it's not necessary if any of the public__
  * enable_ or disable_timeout functions are called in the same area, since
  * those all do schedule_alarm() internally if needed.
  */

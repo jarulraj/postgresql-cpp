@@ -39,7 +39,7 @@ struct GinVacuumState
  * in number of items (nitems).
  *
  * If none of the items need to be removed, returns NULL. Otherwise returns
- * a new palloc'd array with the remaining items. The number of remaining
+ * a new__ palloc'd array with the remaining items. The number of remaining
  * items is returned in *nremaining.
  */
 ItemPointer
@@ -123,7 +123,7 @@ ginVacuumPostingTreeLeaves(GinVacuumState *gvs, BlockNumber blkno, bool isRoot, 
 	/*
 	 * We should be sure that we don't concurrent with inserts, insert process
 	 * never release root page until end (but it can unlock it and lock
-	 * again). New scan can't start but previously started ones work
+	 * again). new__ scan can't start but previously started ones work
 	 * concurrently.
 	 */
 	if (isRoot)
@@ -487,7 +487,7 @@ ginVacuumEntryPage(GinVacuumState *gvs, Buffer buffer, BlockNumber *roots, uint3
 					 */
 					tmppage = PageGetTempPageCopy(origpage);
 
-					/* set itup pointer to new page */
+					/* set itup pointer to new__ page */
 					itup = (IndexTuple) PageGetItem(tmppage, PageGetItemId(tmppage, i));
 				}
 

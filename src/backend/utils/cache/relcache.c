@@ -358,7 +358,7 @@ ScanPgRelation(Oid targetRelId, bool indexOK, bool force_non_historic)
 /*
  *		AllocateRelationDesc
  *
- *		This is used to allocate memory for a new relation descriptor
+ *		This is used to allocate memory for a new__ relation descriptor
  *		and initialize the rd_rel field from the given pg_class tuple.
  */
 static Relation
@@ -372,7 +372,7 @@ AllocateRelationDesc(Form_pg_class relp)
 	oldcxt = MemoryContextSwitchTo(CacheMemoryContext);
 
 	/*
-	 * allocate and zero space for new relation descriptor
+	 * allocate and zero space for new__ relation descriptor
 	 */
 	relation = (Relation) palloc0(sizeof(RelationData));
 
@@ -633,7 +633,7 @@ RelationBuildTupleDesc(Relation relation)
  *
  * Note: The rule parsetrees are potentially very complex node structures.
  * To allow these trees to be freed when the relcache entry is flushed,
- * we make a private memory context to hold the RuleLock information for
+ * we make a private__ memory context to hold the RuleLock information for
  * each relcache entry that has associated rules.  The context is used
  * just for rule info, not for any other subsidiary data of the relcache
  * entry, because that keeps the update logic in RelationClearRelation()
@@ -656,7 +656,7 @@ RelationBuildRuleLock(Relation relation)
 	int			maxlocks;
 
 	/*
-	 * Make the private context.  Parameters are set on the assumption that
+	 * Make the private__ context.  Parameters are set on the assumption that
 	 * it'll probably not contain much data.
 	 */
 	rulescxt = AllocSetContextCreate(CacheMemoryContext,
@@ -928,7 +928,7 @@ equalRSDesc(RowSecurityDesc *rsdesc1, RowSecurityDesc *rsdesc2)
  *		Build a relation descriptor.  The caller must hold at least
  *		AccessShareLock on the target relid.
  *
- *		The new descriptor is inserted into the hash table if insertIt is true.
+ *		The new__ descriptor is inserted into the hash table if insertIt is true.
  *
  *		Returns NULL if no pg_class row could be found for the given relid
  *		(suggesting we are trying to access a just-deleted relation).
@@ -973,7 +973,7 @@ RelationBuildDesc(Oid targetRelId, bool insertIt)
 
 	/*
 	 * normal relations are not nailed into the cache; nor can a pre-existing
-	 * relation be new.  It could be temp though.  (Actually, it could be new
+	 * relation be new__.  It could be temp though.  (Actually, it could be new__
 	 * too, but it's okay to forget that fact if forced to flush the entry.)
 	 */
 	relation->rd_refcnt = 0;
@@ -1005,7 +1005,7 @@ RelationBuildDesc(Oid targetRelId, bool insertIt)
 				 * BackendId we're using.  We should *not* consider such a
 				 * table to be "ours"; this is why we need the separate
 				 * rd_islocaltemp flag.  The pg_class entry will get flushed
-				 * if/when we clean out the corresponding temp table namespace
+				 * if/when we clean out the corresponding temp table namespace__
 				 * in preparation for using it.
 				 */
 				relation->rd_backend =
@@ -1119,7 +1119,7 @@ RelationInitPhysicalAddr(Relation relation)
 		 * Even if we are using a decoding snapshot that doesn't represent the
 		 * current state of the catalog we need to make sure the filenode
 		 * points to the current file since the older file will be gone (or
-		 * truncated). The new file will still contain older rows so lookups
+		 * truncated). The new__ file will still contain older rows so lookups
 		 * in them will work correctly. This wouldn't work correctly if
 		 * rewrites were allowed to change the schema in a noncompatible way,
 		 * but those are prevented both on catalog tables and on user tables
@@ -1214,7 +1214,7 @@ RelationInitIndexAccessInfo(Relation relation)
 	amsupport = aform->amsupport;
 
 	/*
-	 * Make the private context to hold index access info.  The reason we need
+	 * Make the private__ context to hold index access info.  The reason we need
 	 * a context, and not just a couple of pallocs, is so that we won't leak
 	 * any subsidiary info attached to fmgr lookup records.
 	 *
@@ -1400,7 +1400,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 		MemSet(&ctl, 0, sizeof(ctl));
 		ctl.keysize = sizeof(Oid);
 		ctl.entrysize = sizeof(OpClassCacheEnt);
-		OpClassCache = hash_create("Operator class cache", 64,
+		OpClassCache = hash_create("operator__ class__ cache", 64,
 								   &ctl, HASH_ELEM | HASH_BLOBS);
 
 		/* Also make sure CacheMemoryContext exists */
@@ -1414,7 +1414,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 
 	if (!found)
 	{
-		/* Need to allocate memory for new entry */
+		/* Need to allocate memory for new__ entry */
 		opcentry->valid = false;	/* until known OK */
 		opcentry->numSupport = numSupport;
 
@@ -1432,7 +1432,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 
 	/*
 	 * When testing for cache-flush hazards, we intentionally disable the
-	 * operator class cache and force reloading of the info on each call. This
+	 * operator__ class__ cache and force reloading of the info on each call. This
 	 * is helpful because we want to test the case where a cache flush occurs
 	 * while we are loading the info, and it's very hard to provoke that if
 	 * this happens only once per opclass per backend.
@@ -1445,7 +1445,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 		return opcentry;
 
 	/*
-	 * Need to fill in new entry.
+	 * Need to fill in new__ entry.
 	 *
 	 * To avoid infinite recursion during startup, force heap scans if we're
 	 * looking up info for the opclasses used by the indexes we would like to
@@ -1558,7 +1558,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 	bool		has_not_null;
 
 	/*
-	 * allocate new relation desc, clear all fields of reldesc
+	 * allocate new__ relation desc, clear all fields of reldesc
 	 */
 	relation = (Relation) palloc0(sizeof(RelationData));
 
@@ -1572,7 +1572,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 
 	/*
 	 * all entries built with this routine are nailed-in-cache; none are for
-	 * new or temp relations.
+	 * new__ or temp relations.
 	 */
 	relation->rd_isnailed = true;
 	relation->rd_createSubid = InvalidSubTransactionId;
@@ -1698,7 +1698,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 	}
 
 	/*
-	 * add new reldesc to relcache
+	 * add new__ reldesc to relcache
 	 */
 	RelationCacheInsert(relation, false);
 
@@ -1724,7 +1724,7 @@ formrdesc(const char *relationName, Oid relationReltype,
  *		NB: caller should already have at least AccessShareLock on the
  *		relation ID, else there are nasty race conditions.
  *
- *		NB: relation ref count is incremented, or set to 1 if new entry.
+ *		NB: relation ref count is incremented, or set to 1 if new__ entry.
  *		Caller should eventually decrement count.  (Usually,
  *		that happens by calling RelationClose().)
  */
@@ -2148,8 +2148,8 @@ RelationClearRelation(Relation relation, bool rebuild)
 	{
 		/*
 		 * Our strategy for rebuilding an open relcache entry is to build a
-		 * new entry from scratch, swap its contents with the old entry, and
-		 * finally delete the new entry (along with any infrastructure swapped
+		 * new__ entry from scratch, swap its contents with the old entry, and
+		 * finally delete the new__ entry (along with any infrastructure swapped
 		 * over from the old entry).  This is to avoid trouble in case an
 		 * error causes us to lose control partway through.  The old entry
 		 * will still be marked !rd_isvalid, so we'll try to rebuild it again
@@ -2159,7 +2159,7 @@ RelationClearRelation(Relation relation, bool rebuild)
 		 * subtransaction that ALTERs a table and then gets canceled partway
 		 * through the cache entry rebuild.  The outer transaction should
 		 * still see the not-modified cache entry as valid.)  The worst
-		 * consequence of an error is leaking the necessarily-unreferenced new
+		 * consequence of an error is leaking the necessarily-unreferenced new__
 		 * entry, and this shouldn't happen often enough for that to be a big
 		 * problem.
 		 *
@@ -2285,9 +2285,9 @@ RelationFlushRelation(Relation relation)
 		relation->rd_newRelfilenodeSubid != InvalidSubTransactionId)
 	{
 		/*
-		 * New relcache entries are always rebuilt, not flushed; else we'd
-		 * forget the "new" status of the relation, which is a useful
-		 * optimization to have.  Ditto for the new-relfilenode status.
+		 * new__ relcache entries are always rebuilt, not flushed; else we'd
+		 * forget the "new__" status of the relation, which is a useful
+		 * optimization to have.  Ditto for the new__-relfilenode status.
 		 *
 		 * The rel could have zero refcnt here, so temporarily increment the
 		 * refcnt to ensure it's safe to rebuild it.  We can assume that the
@@ -2367,10 +2367,10 @@ RelationCacheInvalidateEntry(Oid relationId)
  *	 relation cache and re-read relation mapping data.
  *
  *	 This is currently used only to recover from SI message buffer overflow,
- *	 so we do not touch new-in-transaction relations; they cannot be targets
+ *	 so we do not touch new__-in-transaction relations; they cannot be targets
  *	 of cross-backend SI updates (and our own updates now go through a
  *	 separate linked list that isn't limited by the SI message buffer size).
- *	 Likewise, we need not discard new-relfilenode-in-transaction hints,
+ *	 Likewise, we need not discard new__-relfilenode-in-transaction hints,
  *	 since any invalidation of those would be a local event.
  *
  *	 We do this in two phases: the first pass deletes deletable items, and
@@ -2416,7 +2416,7 @@ RelationCacheInvalidate(void)
 		RelationCloseSmgr(relation);
 
 		/*
-		 * Ignore new relations; no other backend will manipulate them before
+		 * Ignore new__ relations; no other backend will manipulate them before
 		 * we commit.  Likewise, before replacing a relation's relfilenode, we
 		 * shall have acquired AccessExclusiveLock and drained any applicable
 		 * pending invalidations.
@@ -2646,7 +2646,7 @@ AtEOXact_cleanup(Relation relation, bool isCommit)
 	 * During commit, reset the flag to zero, since we are now out of the
 	 * creating transaction.  During abort, simply delete the relcache entry
 	 * --- it isn't interesting any longer.  (NOTE: if we have forgotten the
-	 * new-ness of a new relation due to a forced cache flush, the entry will
+	 * new__-ness of a new__ relation due to a forced cache flush, the entry will
 	 * get deleted anyway by shared-cache-inval processing of the aborted
 	 * pg_class insertion.)
 	 */
@@ -2676,7 +2676,7 @@ AtEOXact_cleanup(Relation relation, bool isCommit)
 	}
 
 	/*
-	 * Likewise, reset the hint about the relfilenode being new.
+	 * Likewise, reset the hint about the relfilenode being new__.
 	 */
 	relation->rd_newRelfilenodeSubid = InvalidSubTransactionId;
 
@@ -2782,7 +2782,7 @@ AtEOSubXact_cleanup(Relation relation, bool isCommit,
 	}
 
 	/*
-	 * Likewise, update or drop any new-relfilenode-in-subtransaction hint.
+	 * Likewise, update or drop any new__-relfilenode-in-subtransaction hint.
 	 */
 	if (relation->rd_newRelfilenodeSubid == mySubid)
 	{
@@ -2876,7 +2876,7 @@ RelationBuildLocalRelation(const char *relname,
 	oldcxt = MemoryContextSwitchTo(CacheMemoryContext);
 
 	/*
-	 * allocate a new relation descriptor and fill in basic state fields.
+	 * allocate a new__ relation descriptor and fill in basic state fields.
 	 */
 	rel = (Relation) palloc0(sizeof(RelationData));
 
@@ -2893,8 +2893,8 @@ RelationBuildLocalRelation(const char *relname,
 	rel->rd_newRelfilenodeSubid = InvalidSubTransactionId;
 
 	/*
-	 * create a new tuple descriptor from the one passed in.  We do this
-	 * partly to copy it into the cache context, and partly because the new
+	 * create a new__ tuple descriptor from the one passed in.  We do this
+	 * partly to copy it into the cache context, and partly because the new__
 	 * relation can't have any defaults or constraints yet; they have to be
 	 * added in later steps, because they require additions to multiple system
 	 * catalogs.  We can copy attnotnull constraints here, however.
@@ -3027,7 +3027,7 @@ RelationBuildLocalRelation(const char *relname,
 /*
  * RelationSetNewRelfilenode
  *
- * Assign a new relfilenode (physical file name) to the relation.
+ * Assign a new__ relfilenode (physical file name) to the relation.
  *
  * This allows a full rewrite of the relation to be done with transactional
  * safety (since the filenode assignment can be rolled back).  Note however
@@ -3039,9 +3039,9 @@ RelationBuildLocalRelation(const char *relname,
  *
  * The relation is marked with relfrozenxid = freezeXid (InvalidTransactionId
  * must be passed for indexes and sequences).  This should be a lower bound on
- * the XIDs that will be put into the new relation contents.
+ * the XIDs that will be put into the new__ relation contents.
  *
- * The new filenode's persistence is set to the given value.  This is useful
+ * The new__ filenode's persistence is set to the given value.  This is useful
  * for the cases that are changing the relation's persistence; other callers
  * need to pass the original relpersistence value.
  */
@@ -3062,7 +3062,7 @@ RelationSetNewRelfilenode(Relation relation, char persistence,
 		   TransactionIdIsNormal(freezeXid));
 	Assert(TransactionIdIsNormal(freezeXid) == MultiXactIdIsValid(minmulti));
 
-	/* Allocate a new relfilenode */
+	/* Allocate a new__ relfilenode */
 	newrelfilenode = GetNewRelFileNode(relation->rd_rel->reltablespace, NULL,
 									   persistence);
 
@@ -3079,7 +3079,7 @@ RelationSetNewRelfilenode(Relation relation, char persistence,
 	classform = (Form_pg_class) GETSTRUCT(tuple);
 
 	/*
-	 * Create storage for the main fork of the new relfilenode.
+	 * Create storage for the main fork of the new__ relfilenode.
 	 *
 	 * NOTE: any conflict in relfilenode value will be caught here, if
 	 * GetNewRelFileNode messes up for any reason.
@@ -3133,7 +3133,7 @@ RelationSetNewRelfilenode(Relation relation, char persistence,
 	CommandCounterIncrement();
 
 	/*
-	 * Mark the rel as having been given a new relfilenode in the current
+	 * Mark the rel as having been given a new__ relfilenode in the current
 	 * (sub) transaction.  This is a hint that can be used to optimize later
 	 * operations on the rel in the same transaction.
 	 */
@@ -3495,7 +3495,7 @@ RelationCacheInitializePhase3(void)
 	}
 
 	/*
-	 * Lastly, write out new relcache cache files if needed.  We don't bother
+	 * Lastly, write out new__ relcache cache files if needed.  We don't bother
 	 * to distinguish cases where only one of the two needs an update.
 	 */
 	if (needNewCacheFile)
@@ -3924,7 +3924,7 @@ RelationGetIndexList(Relation relation)
 
 /*
  * insert_ordered_oid
- *		Insert a new Oid into a sorted list of Oids, preserving ordering
+ *		Insert a new__ Oid into a sorted list of Oids, preserving ordering
  *
  * Building the ordered list this way is O(N^2), but with a pretty small
  * constant, so for the number of entries we expect it will probably be
@@ -4353,7 +4353,7 @@ RelationGetIndexAttrBitmap(Relation relation, IndexAttrBitmapKind attrKind)
  *
  * This should be called only for an index that is known to have an
  * associated exclusion constraint.  It returns arrays (palloc'd in caller's
- * context) of the exclusion operator OIDs, their underlying functions'
+ * context) of the exclusion operator__ OIDs, their underlying functions'
  * OIDs, and their strategy numbers in the index's opclasses.  We cache
  * all this information since it requires a fair amount of work to get.
  */
@@ -4423,7 +4423,7 @@ RelationGetExclusionInfo(Relation indexRelation,
 				 RelationGetRelationName(indexRelation));
 		found = true;
 
-		/* Extract the operator OIDS from conexclop */
+		/* Extract the operator__ OIDS from conexclop */
 		val = fastgetattr(htup,
 						  Anum_pg_constraint_conexclop,
 						  conrel->rd_att, &isnull);
@@ -4457,7 +4457,7 @@ RelationGetExclusionInfo(Relation indexRelation,
 											 indexRelation->rd_opfamily[i]);
 		/* shouldn't fail, since it was checked at index creation */
 		if (strats[i] == InvalidStrategy)
-			elog(ERROR, "could not find strategy for operator %u in family %u",
+			elog(ERROR, "could not find strategy for operator__ %u in family %u",
 				 ops[i], indexRelation->rd_opfamily[i]);
 	}
 
@@ -4937,7 +4937,7 @@ load_relcache_init_file(bool shared)
 	/*
 	 * OK, all appears well.
 	 *
-	 * Now insert all the new relcache entries into the cache.
+	 * Now insert all the new__ relcache entries into the cache.
 	 */
 	for (relno = 0; relno < num_rels; relno++)
 	{
@@ -4966,7 +4966,7 @@ read_failed:
 }
 
 /*
- * Write out a new initialization file with the current contents
+ * Write out a new__ initialization file with the current contents
  * of the relcache (either shared rels or local rels, as indicated).
  */
 static void
@@ -5213,7 +5213,7 @@ RelationIdIsInInitFile(Oid relationId)
  * the SI messages that include relcache inval for such relations, and then
  * release RelCacheInitLock.  This serializes the whole affair against
  * write_relcache_init_file, so that we can be sure that any other process
- * that's concurrently trying to create a new init file won't move an
+ * that's concurrently trying to create a new__ init file won't move an
  * already-stale version into place after we unlink.  Also, because we unlink
  * before sending the SI messages, a backend that's currently starting cannot
  * read the now-obsolete init file and then miss the SI messages that will

@@ -67,7 +67,7 @@ if (sqlca.sqlcode < 0) sqlprint();}
   { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "create function My_Table_Check ( ) returns trigger as $test$\
     BEGIN\
 	INSERT INTO Log VALUES(TG_NAME, TG_WHEN);\
-	RETURN NEW;\
+	RETURN new__;\
     END; $test$ language plpgsql", ECPGt_EOIT, ECPGt_EORT);
 #line 26 "func.pgc"
 

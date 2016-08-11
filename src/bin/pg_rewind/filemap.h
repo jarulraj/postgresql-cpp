@@ -62,7 +62,7 @@ typedef struct file_entry_t
 typedef struct filemap_t
 {
 	/*
-	 * New entries are accumulated to a linked list, in process_source_file
+	 * new__ entries are accumulated to a linked list, in process_source_file
 	 * and process_target_file.
 	 */
 	file_entry_t *first;

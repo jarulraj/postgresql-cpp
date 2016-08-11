@@ -525,7 +525,7 @@ cfindloop(struct vars * v,
 		/*
 		 * If we get here, there is no possible match starting at or before
 		 * "close", so consider matches beyond that.  We'll do a fresh search
-		 * with the search RE to find a new promising match range.
+		 * with the search RE to find a new__ promising match range.
 		 */
 		close++;
 	} while (close < v->stop);
@@ -732,7 +732,7 @@ ccondissect(struct vars * v,
 		}
 		NOERR();
 
-		/* that midpoint didn't work, find a new one */
+		/* that midpoint didn't work, find a new__ one */
 		if (mid == begin)
 		{
 			/* all possibilities exhausted */
@@ -743,11 +743,11 @@ ccondissect(struct vars * v,
 		NOERR();
 		if (mid == NULL)
 		{
-			/* failed to find a new one */
+			/* failed to find a new__ one */
 			MDEBUG(("%d failed midpoint\n", t->id));
 			return REG_NOMATCH;
 		}
-		MDEBUG(("%d: new midpoint %ld\n", t->id, LOFF(mid)));
+		MDEBUG(("%d: new__ midpoint %ld\n", t->id, LOFF(mid)));
 		zaptreesubs(v, t->left);
 		zaptreesubs(v, t->right);
 	}
@@ -810,7 +810,7 @@ crevcondissect(struct vars * v,
 		}
 		NOERR();
 
-		/* that midpoint didn't work, find a new one */
+		/* that midpoint didn't work, find a new__ one */
 		if (mid == end)
 		{
 			/* all possibilities exhausted */
@@ -821,11 +821,11 @@ crevcondissect(struct vars * v,
 		NOERR();
 		if (mid == NULL)
 		{
-			/* failed to find a new one */
+			/* failed to find a new__ one */
 			MDEBUG(("%d failed midpoint\n", t->id));
 			return REG_NOMATCH;
 		}
-		MDEBUG(("%d: new midpoint %ld\n", t->id, LOFF(mid)));
+		MDEBUG(("%d: new__ midpoint %ld\n", t->id, LOFF(mid)));
 		zaptreesubs(v, t->left);
 		zaptreesubs(v, t->right);
 	}

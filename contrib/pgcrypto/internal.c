@@ -573,7 +573,7 @@ static const PX_Alias int_aliases[] = {
 	{NULL, NULL}
 };
 
-/* PUBLIC FUNCTIONS */
+/* public__ FUNCTIONS */
 
 int
 px_find_digest(const char *name, PX_MD **res)

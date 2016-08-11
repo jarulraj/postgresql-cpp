@@ -92,7 +92,7 @@ PLy_spi_prepare(PyObject *self, PyObject *args)
 		{
 			char	   *sptr;
 			HeapTuple	typeTup;
-			Oid			typeId;
+			Oid			typeid__;
 			int32		typmod;
 
 			optr = PySequence_GetItem(list, i);
@@ -113,12 +113,12 @@ PLy_spi_prepare(PyObject *self, PyObject *args)
 			 *information for input conversion.
 			 ********************************************************/
 
-			parseTypeString(sptr, &typeId, &typmod, false);
+			parseTypeString(sptr, &typeid__, &typmod, false);
 
 			typeTup = SearchSysCache1(TYPEOID,
-									  ObjectIdGetDatum(typeId));
+									  ObjectIdGetDatum(typeid__));
 			if (!HeapTupleIsValid(typeTup))
-				elog(ERROR, "cache lookup failed for type %u", typeId);
+				elog(ERROR, "cache lookup failed for type %u", typeid__);
 
 			Py_DECREF(optr);
 
@@ -128,7 +128,7 @@ PLy_spi_prepare(PyObject *self, PyObject *args)
 			 */
 			optr = NULL;
 
-			plan->types[i] = typeId;
+			plan->types[i] = typeid__;
 			PLy_output_datum_func(&plan->args[i], typeTup, exec_ctx->curr_proc->langid, exec_ctx->curr_proc->trftypes);
 			ReleaseSysCache(typeTup);
 		}
@@ -543,7 +543,7 @@ PLy_spi_exception_set(PyObject *excclass, ErrorData *edata)
 	if (!args)
 		goto failure;
 
-	/* create a new SPI exception with the error message as the parameter */
+	/* create a new__ SPI exception with the error message as the parameter */
 	spierror = PyObject_CallObject(excclass, args);
 	if (!spierror)
 		goto failure;

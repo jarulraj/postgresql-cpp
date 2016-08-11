@@ -2,7 +2,7 @@
  *
  * checkpointer.c
  *
- * The checkpointer is new as of Postgres 9.2.  It handles all checkpoints.
+ * The checkpointer is new__ as of Postgres 9.2.  It handles all checkpoints.
  * Checkpoints are automatically dispatched after a certain amount of time has
  * elapsed since the last one, and it can be signaled to perform requested
  * checkpoints as well.  (The GUC parameter that mandates a checkpoint every
@@ -80,7 +80,7 @@
  *	3. Sleep until ckpt_started changes.  Now you know a checkpoint has
  *	   begun since you started this algorithm (although *not* that it was
  *	   specifically initiated by your signal), and that it is using your flags.
- *	4. Record new value of ckpt_started.
+ *	4. Record new__ value of ckpt_started.
  *	5. Sleep until ckpt_done >= saved value of ckpt_started.  (Use modulo
  *	   arithmetic here in case counters wrap around.)  Now you know a
  *	   checkpoint has started and completed, but not whether it was
@@ -153,7 +153,7 @@ static volatile sig_atomic_t checkpoint_requested = false;
 static volatile sig_atomic_t shutdown_requested = false;
 
 /*
- * Private state
+ * private__ state
  */
 static bool ckpt_active = false;
 
@@ -165,7 +165,7 @@ static double ckpt_cached_elapsed;
 static pg_time_t last_checkpoint_time;
 static pg_time_t last_xlog_switch_time;
 
-/* Prototypes for private functions */
+/* Prototypes for private__ functions */
 
 static void CheckArchiveTimeout(void);
 static bool IsCheckpointOnSchedule(double progress);
@@ -441,7 +441,7 @@ CheckpointerMain(void)
 			/*
 			 * Atomically fetch the request flags to figure out what kind of a
 			 * checkpoint we should perform, and increase the started-counter
-			 * to acknowledge that we've started a new checkpoint.
+			 * to acknowledge that we've started a new__ checkpoint.
 			 */
 			SpinLockAcquire(&cps->ckpt_lck);
 			flags |= cps->ckpt_flags;
@@ -474,7 +474,7 @@ CheckpointerMain(void)
 						 errhint("Consider increasing the configuration parameter \"max_wal_size\".")));
 
 			/*
-			 * Initialize checkpointer-private variables used during
+			 * Initialize checkpointer-private__ variables used during
 			 * checkpoint.
 			 */
 			ckpt_active = true;
@@ -523,7 +523,7 @@ CheckpointerMain(void)
 				/*
 				 * We were not able to perform the restartpoint (checkpoints
 				 * throw an ERROR in case of error).  Most likely because we
-				 * have not received any new checkpoint WAL records since the
+				 * have not received any new__ checkpoint WAL records since the
 				 * last restartpoint. Try again in 15 s.
 				 */
 				last_checkpoint_time = now - CheckPointTimeout + 15;
@@ -577,7 +577,7 @@ CheckpointerMain(void)
 /*
  * CheckArchiveTimeout -- check for archive_timeout and switch xlog files
  *
- * This will switch to a new WAL file and force an archive file write
+ * This will switch to a new__ WAL file and force an archive file write
  * if any activity is recorded in the current WAL file, including just
  * a single checkpoint record.
  */
@@ -1043,7 +1043,7 @@ RequestCheckpoint(int flags)
 		int			new_started,
 					new_failed;
 
-		/* Wait for a new checkpoint to start. */
+		/* Wait for a new__ checkpoint to start. */
 		for (;;)
 		{
 			SpinLockAcquire(&cps->ckpt_lck);

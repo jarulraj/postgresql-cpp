@@ -39,7 +39,7 @@ static void printtup_destroy(DestReceiver *self);
  */
 
 /* ----------------
- *		Private state for a printtup destination object
+ *		private__ state for a printtup destination object
  *
  * NOTE: finfo is the lookup info for either typoutput or typsend, whichever
  * we are using for this column.
@@ -345,7 +345,7 @@ printtup(TupleTableSlot *slot, DestReceiver *self)
 		 * client without hitting disk; see comments at the related check in
 		 * PageAddItem().  This test is most useful for uncompressed,
 		 * non-external datums, but we're quite likely to see such here when
-		 * testing new C functions.
+		 * testing new__ C functions.
 		 */
 		if (thisState->typisvarlena)
 			VALGRIND_CHECK_MEM_IS_DEFINED(DatumGetPointer(attr),
@@ -405,7 +405,7 @@ printtup_20(TupleTableSlot *slot, DestReceiver *self)
 	oldcontext = MemoryContextSwitchTo(myState->tmpcontext);
 
 	/*
-	 * tell the frontend to expect new tuple data (in ASCII style)
+	 * tell the frontend to expect new__ tuple data (in ASCII style)
 	 */
 	pq_beginmessage(&buf, 'D');
 
@@ -493,7 +493,7 @@ printatt(unsigned attributeId,
 		 Form_pg_attribute attributeP,
 		 char *value)
 {
-	printf("\t%2d: %s%s%s%s\t(typeid = %u, len = %d, typmod = %d, byval = %c)\n",
+	printf("\t%2d: %s%s%s%s\t(typeid__ = %u, len = %d, typmod = %d, byval = %c)\n",
 		   attributeId,
 		   NameStr(attributeP->attname),
 		   value != NULL ? " = \"" : "",
@@ -587,7 +587,7 @@ printtup_internal_20(TupleTableSlot *slot, DestReceiver *self)
 	oldcontext = MemoryContextSwitchTo(myState->tmpcontext);
 
 	/*
-	 * tell the frontend to expect new tuple data (in binary style)
+	 * tell the frontend to expect new__ tuple data (in binary style)
 	 */
 	pq_beginmessage(&buf, 'B');
 

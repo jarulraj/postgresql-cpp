@@ -34,7 +34,7 @@
 #include "utils/timeout.h"
 
 /*
- * The postmaster's list of registered background workers, in private memory.
+ * The postmaster's list of registered background workers, in private__ memory.
  */
 slist_head	BackgroundWorkerList = SLIST_STATIC_INIT(BackgroundWorkerList);
 
@@ -130,7 +130,7 @@ BackgroundWorkerShmemInit(void)
 		/*
 		 * Copy contents of worker list into shared memory.  Record the shared
 		 * memory slot assigned to each worker.  This ensures a 1-to-1
-		 * correspondence between the postmaster's private list and the array
+		 * correspondence between the postmaster's private__ list and the array
 		 * in shared memory.
 		 */
 		slist_foreach(siter, &BackgroundWorkerList)
@@ -166,7 +166,7 @@ BackgroundWorkerShmemInit(void)
 }
 
 /*
- * Search the postmaster's backend-private list of RegisteredBgWorker objects
+ * Search the postmaster's backend-private__ list of RegisteredBgWorker objects
  * for the one that maps to the given slot number.
  */
 static RegisteredBgWorker *
@@ -570,7 +570,7 @@ bgworker_sigusr1_handler(SIGNAL_ARGS)
 }
 
 /*
- * Start a new background worker
+ * Start a new__ background worker
  *
  * This is the main entry point for background worker, to be called from
  * postmaster.
@@ -730,7 +730,7 @@ StartBackgroundWorker(void)
 }
 
 /*
- * Register a new background worker while processing shared_preload_libraries.
+ * Register a new__ background worker while processing shared_preload_libraries.
  *
  * This can only be called in the _PG_init function of a module library
  * that's loaded by shared_preload_libraries; otherwise it has no effect.
@@ -809,7 +809,7 @@ RegisterBackgroundWorker(BackgroundWorker *worker)
 }
 
 /*
- * Register a new background worker from a regular backend.
+ * Register a new__ background worker from a regular backend.
  *
  * Returns true on success and false on failure.  Failure typically indicates
  * that no background worker slots are currently available.
@@ -859,7 +859,7 @@ RegisterDynamicBackgroundWorker(BackgroundWorker *worker,
 
 			/*
 			 * Make sure postmaster doesn't see the slot as in use before it
-			 * sees the new contents.
+			 * sees the new__ contents.
 			 */
 			pg_write_barrier();
 

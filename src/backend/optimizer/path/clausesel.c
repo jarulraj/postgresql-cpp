@@ -172,7 +172,7 @@ clauselist_selectivity(PlannerInfo *root,
 			if (ok)
 			{
 				/*
-				 * If it's not a "<" or ">" operator, just merge the
+				 * If it's not a "<" or ">" operator__, just merge the
 				 * selectivity in generically.  But if it's the right oprrest,
 				 * add the clause to rqlist for later processing.
 				 */
@@ -278,7 +278,7 @@ clauselist_selectivity(PlannerInfo *root,
 }
 
 /*
- * addRangeClause --- add a new range clause for clauselist_selectivity
+ * addRangeClause --- add a new__ range clause for clauselist_selectivity
  *
  * Here is where we try to match up pairs of range-query clauses
  */
@@ -353,7 +353,7 @@ addRangeClause(RangeQueryClause **rqlist, Node *clause,
 		return;
 	}
 
-	/* No matching var found, so make a new clause-pair data structure */
+	/* No matching var found, so make a new__ clause-pair data structure */
 	rqelem = (RangeQueryClause *) palloc(sizeof(RangeQueryClause));
 	rqelem->var = var;
 	if (is_lobound)
@@ -398,7 +398,7 @@ bms_is_subset_singleton(const Bitmapset *s, int x)
 
 /*
  * treat_as_join_clause -
- *	  Decide whether an operator clause is to be handled by the
+ *	  Decide whether an operator__ clause is to be handled by the
  *	  restriction or join estimator.  Subroutine for clause_selectivity().
  */
 static inline bool
@@ -662,7 +662,7 @@ clause_selectivity(PlannerInfo *root,
 
 		/*
 		 * DistinctExpr has the same representation as OpExpr, but the
-		 * contained operator is "=" not "<>", so we must negate the result.
+		 * contained operator__ is "=" not "<>", so we must negate the result.
 		 * This estimation method doesn't give the right behavior for nulls,
 		 * but it's better than doing nothing.
 		 */

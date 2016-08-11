@@ -121,12 +121,12 @@ GinFormTuple(GinState *ginstate,
 		itup = repalloc(itup, newsize);
 
 		/*
-		 * PostgreSQL 9.3 and earlier did not clear this new space, so we
+		 * PostgreSQL 9.3 and earlier did not clear this new__ space, so we
 		 * might find uninitialized padding when reading tuples from disk.
 		 */
 		memset((char *) itup + IndexTupleSize(itup),
 			   0, newsize - IndexTupleSize(itup));
-		/* set new size in tuple header */
+		/* set new__ size in tuple header */
 		itup->t_info &= ~INDEX_SIZE_MASK;
 		itup->t_info |= newsize;
 	}
@@ -483,7 +483,7 @@ entryIsEnoughSpace(GinBtree btree, Buffer buf, OffsetNumber off,
 
 /*
  * Delete tuple on leaf page if tuples existed and we
- * should update it, update old child blkno to new right page
+ * should update it, update old child blkno to new__ right page
  * if child split occurred
  */
 static void
@@ -590,9 +590,9 @@ entryExecPlaceToPage(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 }
 
 /*
- * Split entry page and insert new data.
+ * Split entry page and insert new__ data.
  *
- * Returns new temp pages to *newlpage and *newrpage.
+ * Returns new__ temp pages to *newlpage and *newrpage.
  * The original buffer is left untouched.
  */
 static void
@@ -620,7 +620,7 @@ entrySplitPage(GinBtree btree, Buffer origbuf,
 	entryPreparePage(btree, lpage, off, insertData, updateblkno);
 
 	/*
-	 * First, append all the existing tuples and the new tuple we're inserting
+	 * First, append all the existing tuples and the new__ tuple we're inserting
 	 * one after another in a temporary workspace.
 	 */
 	maxoff = PageGetMaxOffsetNumber(lpage);
@@ -713,7 +713,7 @@ entryPrepareDownlink(GinBtree btree, Buffer lbuf)
 }
 
 /*
- * Fills new root by rightest values from child.
+ * Fills new__ root by rightest values from child.
  * Also called from ginxlog, should not use btree
  */
 void

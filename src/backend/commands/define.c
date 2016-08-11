@@ -24,7 +24,7 @@
  *				input/output, recv/send procedures
  *		"create type":
  *				type
- *		"create operator":
+ *		"create operator__":
  *				operators
  *
  *
@@ -67,7 +67,7 @@ defGetString(DefElem *def)
 		case T_String:
 			return strVal(def->arg);
 		case T_TypeName:
-			return TypeNameToString((TypeName *) def->arg);
+			return TypeNameToString((typename__ *) def->arg);
 		case T_List:
 			return NameListToString((List *) def->arg);
 		case T_A_Star:
@@ -230,7 +230,7 @@ defGetQualifiedName(DefElem *def)
 	switch (nodeTag(def->arg))
 	{
 		case T_TypeName:
-			return ((TypeName *) def->arg)->names;
+			return ((typename__ *) def->arg)->names;
 		case T_List:
 			return (List *) def->arg;
 		case T_String:
@@ -246,12 +246,12 @@ defGetQualifiedName(DefElem *def)
 }
 
 /*
- * Extract a TypeName from a DefElem.
+ * Extract a typename__ from a DefElem.
  *
  * Note: we do not accept a List arg here, because the parser will only
- * return a bare List when the name looks like an operator name.
+ * return a bare List when the name looks like an operator__ name.
  */
-TypeName *
+typename__ *
 defGetTypeName(DefElem *def)
 {
 	if (def->arg == NULL)
@@ -262,9 +262,9 @@ defGetTypeName(DefElem *def)
 	switch (nodeTag(def->arg))
 	{
 		case T_TypeName:
-			return (TypeName *) def->arg;
+			return (typename__ *) def->arg;
 		case T_String:
-			/* Allow quoted typename for backwards compatibility */
+			/* Allow quoted typename__ for backwards compatibility */
 			return makeTypeNameFromNameList(list_make1(def->arg));
 		default:
 			ereport(ERROR,
@@ -302,13 +302,13 @@ defGetTypeLength(DefElem *def)
 				return -1;		/* variable length */
 			break;
 		case T_TypeName:
-			/* cope if grammar chooses to believe "variable" is a typename */
-			if (pg_strcasecmp(TypeNameToString((TypeName *) def->arg),
+			/* cope if grammar chooses to believe "variable" is a typename__ */
+			if (pg_strcasecmp(TypeNameToString((typename__ *) def->arg),
 							  "variable") == 0)
 				return -1;		/* variable length */
 			break;
 		case T_List:
-			/* must be an operator name */
+			/* must be an operator__ name */
 			break;
 		default:
 			elog(ERROR, "unrecognized node type: %d", (int) nodeTag(def->arg));

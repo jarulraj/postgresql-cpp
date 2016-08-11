@@ -101,9 +101,9 @@ static event_trigger_support_data event_trigger_support[] = {
 	{"INDEX", true},
 	{"LANGUAGE", true},
 	{"MATERIALIZED VIEW", true},
-	{"OPERATOR", true},
-	{"OPERATOR CLASS", true},
-	{"OPERATOR FAMILY", true},
+	{"operator__", true},
+	{"operator__ class__", true},
+	{"operator__ FAMILY", true},
 	{"POLICY", true},
 	{"ROLE", false},
 	{"RULE", true},
@@ -365,7 +365,7 @@ error_duplicate_filter_variable(const char *defname)
 }
 
 /*
- * Insert the new pg_event_trigger row and record dependencies.
+ * Insert the new__ pg_event_trigger row and record dependencies.
  */
 static Oid
 insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
@@ -384,7 +384,7 @@ insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
 	/* Open pg_event_trigger. */
 	tgrel = heap_open(EventTriggerRelationId, RowExclusiveLock);
 
-	/* Build the new pg_trigger tuple. */
+	/* Build the new__ pg_trigger tuple. */
 	memset(nulls, false, sizeof(nulls));
 	namestrcpy(&evtnamedata, trigname);
 	values[Anum_pg_event_trigger_evtname - 1] = NameGetDatum(&evtnamedata);
@@ -421,7 +421,7 @@ insert_event_trigger_tuple(char *trigname, char *eventname, Oid evtOwner,
 	/* Depend on extension, if any. */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new event trigger */
+	/* Post creation hook for new__ event trigger */
 	InvokeObjectPostCreateHook(EventTriggerRelationId, trigoid, 0);
 
 	/* Close pg_event_trigger. */
@@ -609,7 +609,7 @@ AlterEventTriggerOwner_internal(Relation rel, HeapTuple tup, Oid newOwnerId)
 		aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_EVENT_TRIGGER,
 					   NameStr(form->evtname));
 
-	/* New owner must be a superuser */
+	/* new__ owner must be a superuser */
 	if (!superuser_arg(newOwnerId))
 		ereport(ERROR,
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
@@ -1123,7 +1123,7 @@ EventTriggerSupportsObjectType(ObjectType obtype)
 }
 
 /*
- * Do event triggers support this object class?
+ * Do event triggers support this object class__?
  */
 bool
 EventTriggerSupportsObjectClass(ObjectClass objclass)
@@ -1202,7 +1202,7 @@ EventTriggerSupportsGrantObjectType(GrantObjectType objtype)
 }
 
 /*
- * Prepare event trigger state for a new complete query to run, if necessary;
+ * Prepare event trigger state for a new__ complete query to run, if necessary;
  * returns whether this was done.  If it was, EventTriggerEndCompleteQuery must
  * be called when the query is done, regardless of whether it succeeds or fails
  * -- so use of a PG_TRY block is mandatory.
@@ -1287,7 +1287,7 @@ trackDroppedObjectsNeeded(void)
  * Support for dropped objects information on event trigger functions.
  *
  * We keep the list of objects dropped by the current command in current
- * state's SQLDropList (comprising SQLDropObject items).  Each time a new
+ * state's SQLDropList (comprising SQLDropObject items).  Each time a new__
  * command is to start, a clean EventTriggerQueryState is created; commands
  * that drop objects do the dependency.c dance to drop objects, which
  * populates the current state's SQLDropList; when the event triggers are
@@ -1838,7 +1838,7 @@ EventTriggerCollectGrant(InternalGrant *istmt)
 
 /*
  * EventTriggerCollectAlterOpFam
- *		Save data about an ALTER OPERATOR FAMILY ADD/DROP command being
+ *		Save data about an ALTER operator__ FAMILY ADD/DROP command being
  *		executed
  */
 void
@@ -1872,7 +1872,7 @@ EventTriggerCollectAlterOpFam(AlterOpFamilyStmt *stmt, Oid opfamoid,
 
 /*
  * EventTriggerCollectCreateOpClass
- *		Save data about a CREATE OPERATOR CLASS command being executed
+ *		Save data about a CREATE operator__ class__ command being executed
  */
 void
 EventTriggerCollectCreateOpClass(CreateOpClassStmt *stmt, Oid opcoid,
@@ -2069,7 +2069,7 @@ pg_event_trigger_ddl_commands(PG_FUNCTION_ARGS)
 
 					/*
 					 * Obtain schema name, if any ("pg_temp" if a temp
-					 * object). If the object class is not in the supported
+					 * object). If the object class__ is not in the supported
 					 * list here, we assume it's a schema-less object type,
 					 * and thus "schema" remains set to NULL.
 					 */
@@ -2096,7 +2096,7 @@ pg_event_trigger_ddl_commands(PG_FUNCTION_ARGS)
 										 RelationGetDescr(catalog), &isnull);
 							if (isnull)
 								elog(ERROR,
-								 "invalid null namespace in object %u/%u/%d",
+								 "invalid null namespace__ in object %u/%u/%d",
 									 addr.classId, addr.objectId, addr.objectSubId);
 							/* XXX not quite get_namespace_name_or_temp */
 							if (isAnyTempNamespace(schema_oid))

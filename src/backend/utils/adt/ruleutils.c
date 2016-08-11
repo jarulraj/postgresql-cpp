@@ -112,7 +112,7 @@ typedef struct
 } deparse_context;
 
 /*
- * Each level of query context around a subtree needs a level of Var namespace.
+ * Each level of query context around a subtree needs a level of Var namespace__.
  * A Var having varlevelsup=N refers to the N'th item (counting from 0) in
  * the current context's namespaces list.
  *
@@ -228,7 +228,7 @@ typedef struct
 	 * entries are unique unless this is for an unnamed JOIN RTE.  (In such an
 	 * RTE, we never actually print this array, but we must compute it anyway
 	 * for possible use in computing column names of upper joins.) The
-	 * parallel array is_new_col marks which of these columns are new since
+	 * parallel array is_new_col marks which of these columns are new__ since
 	 * original parsing.  Entries with is_new_col false must match the
 	 * non-NULL colnames entries one-for-one.
 	 */
@@ -859,7 +859,7 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
 
 		relkind = get_rel_relkind(trigrec->tgrelid);
 
-		/* Build minimal OLD and NEW RTEs for the rel */
+		/* Build minimal OLD and new__ RTEs for the rel */
 		oldrte = makeNode(RangeTblEntry);
 		oldrte->rtekind = RTE_RELATION;
 		oldrte->relid = trigrec->tgrelid;
@@ -874,7 +874,7 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
 		newrte->rtekind = RTE_RELATION;
 		newrte->relid = trigrec->tgrelid;
 		newrte->relkind = relkind;
-		newrte->alias = makeAlias("new", NIL);
+		newrte->alias = makeAlias("new__", NIL);
 		newrte->eref = newrte->alias;
 		newrte->lateral = false;
 		newrte->inh = false;
@@ -887,7 +887,7 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
 		set_rtable_names(&dpns, NIL, NULL);
 		set_simple_column_names(&dpns);
 
-		/* Set up context with one-deep namespace stack */
+		/* Set up context with one-deep namespace__ stack */
 		context.buf = &buf;
 		context.namespaces = list_make1(&dpns);
 		context.windowClause = NIL;
@@ -1003,7 +1003,7 @@ pg_get_indexdef_columns(Oid indexrelid, bool pretty)
  * Internal workhorse to decompile an index definition.
  *
  * This is now used for exclusion constraints as well: if excludeOps is not
- * NULL then it points to an array of exclusion operator OIDs.
+ * NULL then it points to an array of exclusion operator__ OIDs.
  */
 static char *
 pg_get_indexdef_worker(Oid indexrelid, int colno,
@@ -1186,7 +1186,7 @@ pg_get_indexdef_worker(Oid indexrelid, int colno,
 				appendStringInfo(&buf, " COLLATE %s",
 								 generate_collation_name((indcoll)));
 
-			/* Add the operator class name, if not default */
+			/* Add the operator__ class__ name, if not default */
 			get_opclass_name(indclass->values[keyno], keycoltype, &buf);
 
 			/* Add options if relevant */
@@ -1207,7 +1207,7 @@ pg_get_indexdef_worker(Oid indexrelid, int colno,
 				}
 			}
 
-			/* Add the exclusion operator if relevant */
+			/* Add the exclusion operator__ if relevant */
 			if (excludeOps != NULL)
 				appendStringInfo(&buf, " WITH %s",
 								 generate_operator_name(excludeOps[keyno],
@@ -1608,7 +1608,7 @@ pg_get_constraintdef_worker(Oid constraintId, bool fullCommand,
 				int			i;
 				Oid		   *operators;
 
-				/* Extract operator OIDs from the pg_constraint tuple */
+				/* Extract operator__ OIDs from the pg_constraint tuple */
 				val = SysCacheGetAttr(CONSTROID, tup,
 									  Anum_pg_constraint_conexclop,
 									  &isnull);
@@ -2552,7 +2552,7 @@ deparse_context_for(const char *aliasname, Oid relid)
 	set_rtable_names(dpns, NIL, NULL);
 	set_simple_column_names(dpns);
 
-	/* Return a one-deep namespace stack */
+	/* Return a one-deep namespace__ stack */
 	return list_make1(dpns);
 }
 
@@ -2588,7 +2588,7 @@ deparse_context_for_plan_rtable(List *rtable, List *rtable_names)
 	 */
 	set_simple_column_names(dpns);
 
-	/* Return a one-deep namespace stack */
+	/* Return a one-deep namespace__ stack */
 	return list_make1(dpns);
 }
 
@@ -2616,7 +2616,7 @@ deparse_context_for_plan_rtable(List *rtable, List *rtable_names)
  * Once this function has been called, deparse_expression() can be called on
  * subsidiary expression(s) of the specified PlanState node.  To deparse
  * expressions of a different Plan node in the same Plan tree, re-call this
- * function to identify the new parent Plan node.
+ * function to identify the new__ parent Plan node.
  *
  * The result is the same List passed in; this is a notational convenience.
  */
@@ -2626,7 +2626,7 @@ set_deparse_context_planstate(List *dpcontext,
 {
 	deparse_namespace *dpns;
 
-	/* Should always have one-entry namespace list for Plan deparsing */
+	/* Should always have one-entry namespace__ list for Plan deparsing */
 	Assert(list_length(dpcontext) == 1);
 	dpns = (deparse_namespace *) linitial(dpcontext);
 
@@ -2663,7 +2663,7 @@ select_rtable_names_for_explain(List *rtable, Bitmapset *rels_used)
  *
  * We fill in dpns->rtable_names with a list of names that is one-for-one with
  * the already-filled dpns->rtable list.  Each RTE name is unique among those
- * in the new namespace plus any ancestor namespaces listed in
+ * in the new__ namespace__ plus any ancestor namespaces listed in
  * parent_namespaces.
  *
  * If rels_used isn't NULL, only RTE indexes listed in it are given aliases.
@@ -2758,7 +2758,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 
 		/*
 		 * If the selected name isn't unique, append digits to make it so, and
-		 * make a new hash entry for it once we've got a unique name.  For a
+		 * make a new__ hash entry for it once we've got a unique name.  For a
 		 * very long input name, we might have to truncate to stay within
 		 * NAMEDATALEN.
 		 */
@@ -2770,7 +2770,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 												   &found);
 			if (found)
 			{
-				/* Name already in use, must choose a new one */
+				/* Name already in use, must choose a new__ one */
 				int			refnamelen = strlen(refname);
 				char	   *modname = (char *) palloc(refnamelen + 16);
 				NameHashEntry *hentry2;
@@ -2798,7 +2798,7 @@ set_rtable_names(deparse_namespace *dpns, List *parent_namespaces,
 															HASH_ENTER,
 															&found);
 				} while (found);
-				hentry2->counter = 0;	/* init new hash entry */
+				hentry2->counter = 0;	/* init new__ hash entry */
 				refname = modname;
 			}
 			else
@@ -2859,7 +2859,7 @@ set_deparse_for_query(deparse_namespace *dpns, Query *query,
 	/*
 	 * Now assign remaining column aliases for each RTE.  We do this in a
 	 * linear scan of the rtable, so as to process RTEs whether or not they
-	 * are in the jointree (we mustn't miss NEW.*, INSERT target relations,
+	 * are in the jointree (we mustn't miss new__.*, INSERT target relations,
 	 * etc).  JOIN RTEs must be processed after their children, but this is
 	 * okay because they appear later in the rtable list than their children
 	 * (cf Asserts in identify_join_columns()).
@@ -3028,7 +3028,7 @@ set_using_names(deparse_namespace *dpns, Node *jtnode, List *parentUsing)
 		rightcolinfo = deparse_columns_fetch(colinfo->rightrti, dpns);
 
 		/*
-		 * If this join is unnamed, then we cannot substitute new aliases at
+		 * If this join is unnamed, then we cannot substitute new__ aliases at
 		 * this level, so any name requirements pushed down to here must be
 		 * pushed down again to the children.
 		 */
@@ -3223,7 +3223,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * enough already, if we pushed down a name for the last column.)  Note:
 	 * it's possible that there are now more columns than there were when the
 	 * query was parsed, ie colnames could be longer than rte->eref->colnames.
-	 * We must assign unique aliases to the new columns too, else there could
+	 * We must assign unique aliases to the new__ columns too, else there could
 	 * be unresolved conflicts when the view/rule is reloaded.
 	 */
 	expand_colnames_array_to(colinfo, ncolumns);
@@ -3243,7 +3243,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * Scan the columns, select a unique alias for each one, and store it in
 	 * colinfo->colnames and colinfo->new_colnames.  The former array has NULL
 	 * entries for dropped columns, the latter omits them.  Also mark
-	 * new_colnames entries as to whether they are new since parse time; this
+	 * new_colnames entries as to whether they are new__ since parse time; this
 	 * is the case for entries beyond the length of rte->eref->colnames.
 	 */
 	noldcolumns = list_length(rte->eref->colnames);
@@ -3278,7 +3278,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 
 		/* Put names of non-dropped columns in new_colnames[] too */
 		colinfo->new_colnames[j] = colname;
-		/* And mark them as new or not */
+		/* And mark them as new__ or not */
 		colinfo->is_new_col[j] = (i >= noldcolumns);
 		j++;
 
@@ -3290,7 +3290,7 @@ set_relation_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	/*
 	 * Set correct length for new_colnames[] array.  (Note: if columns have
 	 * been added, colinfo->num_cols includes them, which is not really quite
-	 * right but is harmless, since any new columns must be at the end where
+	 * right but is harmless, since any new__ columns must be at the end where
 	 * they won't affect varattnos of pre-existing columns.)
 	 */
 	colinfo->num_new_cols = j;
@@ -3426,7 +3426,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	colinfo->is_new_col = (bool *) palloc0(nnewcolumns * sizeof(bool));
 
 	/*
-	 * Generating the new_colnames array is a bit tricky since any new columns
+	 * Generating the new_colnames array is a bit tricky since any new__ columns
 	 * added since parse time must be inserted in the right places.  This code
 	 * must match the parser, which will order a join's columns as merged
 	 * columns first (in USING-clause order), then non-merged columns from the
@@ -3441,7 +3441,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 	 * meanings for the current child RTE.
 	 */
 
-	/* Handle merged columns; they are first and can't be new */
+	/* Handle merged columns; they are first and can't be new__ */
 	i = j = 0;
 	while (i < noldcolumns &&
 		   colinfo->leftattnos[i] != 0 &&
@@ -3490,7 +3490,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 		else
 		{
 			/*
-			 * Unique-ify the new child column name and assign, unless we're
+			 * Unique-ify the new__ child column name and assign, unless we're
 			 * in an unnamed join, in which case just copy
 			 */
 			if (rte->alias != NULL)
@@ -3539,7 +3539,7 @@ set_join_column_names(deparse_namespace *dpns, RangeTblEntry *rte,
 		else
 		{
 			/*
-			 * Unique-ify the new child column name and assign, unless we're
+			 * Unique-ify the new__ child column name and assign, unless we're
 			 * in an unnamed join, in which case just copy
 			 */
 			if (rte->alias != NULL)
@@ -3825,7 +3825,7 @@ identify_join_columns(JoinExpr *j, RangeTblEntry *jrte,
  * flatten_join_using_qual: extract Vars being joined from a JOIN/USING qual
  *
  * We assume that transformJoinUsingClause won't have produced anything except
- * AND nodes, equality operator nodes, and possibly implicit coercions, and
+ * AND nodes, equality operator__ nodes, and possibly implicit coercions, and
  * that the AND node inputs match left-to-right with the original USING list.
  *
  * Caller must initialize the result lists to NIL.
@@ -3848,12 +3848,12 @@ flatten_join_using_qual(Node *qual, List **leftvars, List **rightvars)
 	}
 	else if (IsA(qual, OpExpr))
 	{
-		/* Otherwise we should have an equality operator */
+		/* Otherwise we should have an equality operator__ */
 		OpExpr	   *op = (OpExpr *) qual;
 		Var		   *var;
 
 		if (list_length(op->args) != 2)
-			elog(ERROR, "unexpected unary operator in JOIN/USING qual");
+			elog(ERROR, "unexpected unary operator__ in JOIN/USING qual");
 		/* Arguments should be Vars with perhaps implicit coercions */
 		var = (Var *) strip_implicit_coercions((Node *) linitial(op->args));
 		if (!IsA(var, Var))
@@ -3882,7 +3882,7 @@ flatten_join_using_qual(Node *qual, List **leftvars, List **rightvars)
 /*
  * get_rtable_name: convenience function to get a previously assigned RTE alias
  *
- * The RTE must belong to the topmost namespace level in "context".
+ * The RTE must belong to the topmost namespace__ level in "context".
  */
 static char *
 get_rtable_name(int rtindex, deparse_context *context)
@@ -4035,7 +4035,7 @@ push_ancestor_plan(deparse_namespace *dpns, ListCell *ancestor_cell,
 	/* Save state for restoration later */
 	*save_dpns = *dpns;
 
-	/* Build a new ancestor list with just this node's ancestors */
+	/* Build a new__ ancestor list with just this node's ancestors */
 	ancestors = NIL;
 	while ((ancestor_cell = lnext(ancestor_cell)) != NULL)
 		ancestors = lappend(ancestors, lfirst(ancestor_cell));
@@ -4170,13 +4170,13 @@ make_ruledef(StringInfo buf, HeapTuple ruletup, TupleDesc rulettc,
 
 		/*
 		 * We need to make a context for recognizing any Vars in the qual
-		 * (which can only be references to OLD and NEW).  Use the rtable of
+		 * (which can only be references to OLD and new__).  Use the rtable of
 		 * the first query in the action list for this purpose.
 		 */
 		query = (Query *) linitial(actions);
 
 		/*
-		 * If the action is INSERT...SELECT, OLD/NEW have been pushed down
+		 * If the action is INSERT...SELECT, OLD/new__ have been pushed down
 		 * into the SELECT, and that's what we need to look at. (Ugly kluge
 		 * ... try to fix this when we redesign querytrees.)
 		 */
@@ -4623,7 +4623,7 @@ get_simple_values_rte(Query *query)
 	ListCell   *lc;
 
 	/*
-	 * We want to return TRUE even if the Query also contains OLD or NEW rule
+	 * We want to return TRUE even if the Query also contains OLD or new__ rule
 	 * RTEs.  So the idea is to scan the rtable and see if there is only one
 	 * inFromCl RTE that is a VALUES RTE.
 	 */
@@ -4648,7 +4648,7 @@ get_simple_values_rte(Query *query)
 	 * parser/analyze.c will never generate a "bare" VALUES RTE --- they only
 	 * appear inside auto-generated sub-queries with very restricted
 	 * structure.  However, DefineView might have modified the tlist by
-	 * injecting new column aliases; so compare tlist resnames against the
+	 * injecting new__ column aliases; so compare tlist resnames against the
 	 * RTE's names to detect that.
 	 */
 	if (result)
@@ -4829,8 +4829,8 @@ get_target_list(List *targetList, deparse_context *context,
 		colno++;
 
 		/*
-		 * Put the new field text into targetbuf so we can decide after we've
-		 * got it whether or not it needs to go on a new line.
+		 * Put the new__ field text into targetbuf so we can decide after we've
+		 * got it whether or not it needs to go on a new__ line.
 		 */
 		resetStringInfo(&targetbuf);
 		context->buf = &targetbuf;
@@ -4882,7 +4882,7 @@ get_target_list(List *targetList, deparse_context *context,
 		{
 			int			leading_nl_pos;
 
-			/* Does the new field start with a new line? */
+			/* Does the new__ field start with a new__ line? */
 			if (targetbuf.len > 0 && targetbuf.data[0] == '\n')
 				leading_nl_pos = 0;
 			else
@@ -4906,8 +4906,8 @@ get_target_list(List *targetList, deparse_context *context,
 					trailing_nl++;
 
 				/*
-				 * Add a newline, plus some indentation, if the new field is
-				 * not the first and either the new field would cause an
+				 * Add a newline, plus some indentation, if the new__ field is
+				 * not the first and either the new__ field would cause an
 				 * overflow or the last field used more than one line.
 				 */
 				if (colno > 1 &&
@@ -4922,7 +4922,7 @@ get_target_list(List *targetList, deparse_context *context,
 				(strchr(targetbuf.data + leading_nl_pos + 1, '\n') != NULL);
 		}
 
-		/* Add the new field */
+		/* Add the new__ field */
 		appendStringInfoString(buf, targetbuf.data);
 	}
 
@@ -4972,7 +4972,7 @@ get_setop_query(Node *setOp, Query *query, deparse_context *context,
 		 * We force parens when nesting two SetOperationStmts, except when the
 		 * lefthand input is another setop of the same kind.  Syntactically,
 		 * we could omit parens in rather more cases, but it seems best to use
-		 * parens to flag cases where the setop operator changes.  If we use
+		 * parens to flag cases where the setop operator__ changes.  If we use
 		 * parens, we also increase the indentation level for the child query.
 		 *
 		 * There are some cases in which parens are needed around a leaf query
@@ -5199,7 +5199,7 @@ get_rule_orderby(List *orderList, List *targetList,
 		sortexpr = get_rule_sortgroupclause(srt->tleSortGroupRef, targetList,
 											force_colno, context);
 		sortcoltype = exprType(sortexpr);
-		/* See whether operator is default < or > for datatype */
+		/* See whether operator__ is default < or > for datatype */
 		typentry = lookup_type_cache(sortcoltype,
 									 TYPECACHE_LT_OPR | TYPECACHE_GT_OPR);
 		if (srt->sortop == typentry->lt_opr)
@@ -5868,7 +5868,7 @@ get_utility_query_def(Query *query, deparse_context *context)
  *
  * If istoplevel is TRUE, the Var is at the top level of a SELECT's
  * targetlist, which means we need special treatment of whole-row Vars.
- * Instead of the normal "tab.*", we'll print "tab.*::typename", which is a
+ * Instead of the normal "tab.*", we'll print "tab.*::typename__", which is a
  * dirty hack to prevent "tab.*" from being expanded into multiple columns.
  * (The parser will strip the useless coercion, so no inefficiency is added in
  * dump and reload.)  We used to print just "tab" in such cases, but that is
@@ -6302,7 +6302,7 @@ get_name_for_var_field(Var *var, int fieldno,
 						/*
 						 * Recurse into the sub-select to see what its Var
 						 * refers to. We have to build an additional level of
-						 * namespace to keep in step with varlevelsup in the
+						 * namespace__ to keep in step with varlevelsup in the
 						 * subselect.
 						 */
 						deparse_namespace mydpns;
@@ -6384,7 +6384,7 @@ get_name_for_var_field(Var *var, int fieldno,
 				ListCell   *lc;
 
 				/*
-				 * Try to find the referenced CTE using the namespace stack.
+				 * Try to find the referenced CTE using the namespace__ stack.
 				 */
 				ctelevelsup = rte->ctelevelsup + netlevelsup;
 				if (ctelevelsup >= list_length(context->namespaces))
@@ -6416,10 +6416,10 @@ get_name_for_var_field(Var *var, int fieldno,
 					{
 						/*
 						 * Recurse into the CTE to see what its Var refers to.
-						 * We have to build an additional level of namespace
+						 * We have to build an additional level of namespace__
 						 * to keep in step with varlevelsup in the CTE.
 						 * Furthermore it could be an outer CTE, so we may
-						 * have to delete some levels of namespace.
+						 * have to delete some levels of namespace__.
 						 */
 						List	   *save_nslist = context->namespaces;
 						List	   *new_nslist;
@@ -6681,7 +6681,7 @@ get_parameter(Param *param, deparse_context *context)
  * get_simple_binary_op_name
  *
  * helper function for isSimpleNode
- * will return single char binary operator name, or NULL if it's not
+ * will return single char binary operator__ name, or NULL if it's not
  */
 static const char *
 get_simple_binary_op_name(OpExpr *expr)
@@ -6690,7 +6690,7 @@ get_simple_binary_op_name(OpExpr *expr)
 
 	if (list_length(args) == 2)
 	{
-		/* binary operator */
+		/* binary operator__ */
 		Node	   *arg1 = (Node *) linitial(args);
 		Node	   *arg2 = (Node *) lsecond(args);
 		const char *op;
@@ -6990,7 +6990,7 @@ removeStringInfoSpaces(StringInfo str)
  * Never embrace if prettyFlags=0, because it's done in the calling node.
  *
  * Any node that does *not* embrace its argument node by sql syntax (with
- * parentheses, non-operator keywords like CASE/WHEN/ON, or comma etc) should
+ * parentheses, non-operator__ keywords like CASE/WHEN/ON, or comma etc) should
  * use get_rule_expr_paren instead of get_rule_expr so parentheses can be
  * added.
  */
@@ -7023,7 +7023,7 @@ get_rule_expr_paren(Node *node, deparse_context *context,
  * when the result type is known with certainty (eg, the arguments of an
  * OR must be boolean).  We display implicit casts for arguments of functions
  * and operators, since this is needed to be certain that the same function
- * or operator will be chosen when the expression is re-parsed.
+ * or operator__ will be chosen when the expression is re-parsed.
  * ----------
  */
 static void
@@ -7516,7 +7516,7 @@ get_rule_expr(Node *node, deparse_context *context,
 						 * that we show just the RHS.  However in an
 						 * expression that's been through the optimizer, the
 						 * WHEN clause could be almost anything (since the
-						 * equality operator could have been expanded into an
+						 * equality operator__ could have been expanded into an
 						 * inline function).  If we don't recognize the form
 						 * of the WHEN clause, just punt and display it as-is.
 						 */
@@ -7667,7 +7667,7 @@ get_rule_expr(Node *node, deparse_context *context,
 				}
 
 				/*
-				 * We assume that the name of the first-column operator will
+				 * We assume that the name of the first-column operator__ will
 				 * do for all the rest too.  This is definitely open to
 				 * failure, eg if some but not all operators were renamed
 				 * since the construct was parsed, but there seems no way to
@@ -8013,7 +8013,7 @@ get_rule_expr(Node *node, deparse_context *context,
 					appendStringInfo(buf, " COLLATE %s",
 								generate_collation_name(iexpr->infercollid));
 
-				/* Add the operator class name, if not default */
+				/* Add the operator__ class__ name, if not default */
 				if (iexpr->inferopclass)
 				{
 					Oid			inferopclass = iexpr->inferopclass;
@@ -8081,7 +8081,7 @@ get_oper_expr(OpExpr *expr, deparse_context *context)
 		appendStringInfoChar(buf, '(');
 	if (list_length(args) == 2)
 	{
-		/* binary operator */
+		/* binary operator__ */
 		Node	   *arg1 = (Node *) linitial(args);
 		Node	   *arg2 = (Node *) lsecond(args);
 
@@ -8094,14 +8094,14 @@ get_oper_expr(OpExpr *expr, deparse_context *context)
 	}
 	else
 	{
-		/* unary operator --- but which side? */
+		/* unary operator__ --- but which side? */
 		Node	   *arg = (Node *) linitial(args);
 		HeapTuple	tp;
 		Form_pg_operator optup;
 
 		tp = SearchSysCache1(OPEROID, ObjectIdGetDatum(opno));
 		if (!HeapTupleIsValid(tp))
-			elog(ERROR, "cache lookup failed for operator %u", opno);
+			elog(ERROR, "cache lookup failed for operator__ %u", opno);
 		optup = (Form_pg_operator) GETSTRUCT(tp);
 		switch (optup->oprkind)
 		{
@@ -8398,7 +8398,7 @@ get_coercion_expr(Node *arg, deparse_context *context,
 		((Const *) arg)->consttype == resulttype &&
 		((Const *) arg)->consttypmod == -1)
 	{
-		/* Show the constant without normal ::typename decoration */
+		/* Show the constant without normal ::typename__ decoration */
 		get_const_expr((Const *) arg, context, -1);
 	}
 	else
@@ -8418,13 +8418,13 @@ get_coercion_expr(Node *arg, deparse_context *context,
  *
  *	Make a string representation of a Const
  *
- * showtype can be -1 to never show "::typename" decoration, or +1 to always
+ * showtype can be -1 to never show "::typename__" decoration, or +1 to always
  * show it, or 0 to show it only if the constant wouldn't be assumed to be
  * the right type by default.
  *
  * If the Const's collation isn't default for its type, show that too.
  * We mustn't do this when showtype is -1 (since that means the caller will
- * print "::typename", and we can't put a COLLATE clause in between).  It's
+ * print "::typename__", and we can't put a COLLATE clause in between).  It's
  * caller's responsibility that collation isn't missed in such cases.
  * ----------
  */
@@ -8467,7 +8467,7 @@ get_const_expr(Const *constval, deparse_context *context, int showtype)
 			 * INT4 can be printed without any decoration, unless it is
 			 * negative; in that case print it as '-nnn'::integer to ensure
 			 * that the output will re-parse as a constant, not as a constant
-			 * plus operator.  In most cases we could get away with printing
+			 * plus operator__.  In most cases we could get away with printing
 			 * (-nnn) instead, because of the way that gram.y handles negative
 			 * literals; but that doesn't work for INT_MIN, and it doesn't
 			 * seem that much prettier anyway.
@@ -8523,7 +8523,7 @@ get_const_expr(Const *constval, deparse_context *context, int showtype)
 		return;
 
 	/*
-	 * For showtype == 0, append ::typename unless the constant will be
+	 * For showtype == 0, append ::typename__ unless the constant will be
 	 * implicitly typed as the right type when it is read in.
 	 *
 	 * XXX this code has to be kept in sync with the behavior of the parser,
@@ -8624,17 +8624,17 @@ get_sublink_expr(SubLink *sublink, deparse_context *context)
 		appendStringInfoChar(buf, '(');
 
 	/*
-	 * Note that we print the name of only the first operator, when there are
+	 * Note that we print the name of only the first operator__, when there are
 	 * multiple combining operators.  This is an approximation that could go
 	 * wrong in various scenarios (operators in different schemas, renamed
 	 * operators, etc) but there is not a whole lot we can do about it, since
-	 * the syntax allows only one operator to be shown.
+	 * the syntax allows only one operator__ to be shown.
 	 */
 	if (sublink->testexpr)
 	{
 		if (IsA(sublink->testexpr, OpExpr))
 		{
-			/* single combining operator */
+			/* single combining operator__ */
 			OpExpr	   *opexpr = (OpExpr *) sublink->testexpr;
 
 			get_rule_expr(linitial(opexpr->args), context, true);
@@ -8752,7 +8752,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 	 * must ignore auto-added RTEs that are marked not inFromCl. (These can
 	 * only appear at the top level of the jointree, so it's sufficient to
 	 * check here.)  This check also ensures we ignore the rule pseudo-RTEs
-	 * for NEW and OLD.
+	 * for new__ and OLD.
 	 */
 	foreach(l, query->jointree->fromlist)
 	{
@@ -8782,8 +8782,8 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 			appendStringInfoString(buf, ", ");
 
 			/*
-			 * Put the new FROM item's text into itembuf so we can decide
-			 * after we've got it whether or not it needs to go on a new line.
+			 * Put the new__ FROM item's text into itembuf so we can decide
+			 * after we've got it whether or not it needs to go on a new__ line.
 			 */
 			initStringInfo(&itembuf);
 			context->buf = &itembuf;
@@ -8796,7 +8796,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 			/* Consider line-wrapping if enabled */
 			if (PRETTY_INDENT(context) && context->wrapColumn >= 0)
 			{
-				/* Does the new item start with a new line? */
+				/* Does the new__ item start with a new__ line? */
 				if (itembuf.len > 0 && itembuf.data[0] == '\n')
 				{
 					/* If so, we shouldn't add anything */
@@ -8815,7 +8815,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 						trailing_nl++;
 
 					/*
-					 * Add a newline, plus some indentation, if the new item
+					 * Add a newline, plus some indentation, if the new__ item
 					 * would cause an overflow.
 					 */
 					if (strlen(trailing_nl) + itembuf.len > context->wrapColumn)
@@ -8825,7 +8825,7 @@ get_from_clause(Query *query, const char *prefix, deparse_context *context)
 				}
 			}
 
-			/* Add the new item */
+			/* Add the new__ item */
 			appendStringInfoString(buf, itembuf.data);
 
 			/* clean up */
@@ -9282,7 +9282,7 @@ get_tablesample_def(TableSampleClause *tablesample, deparse_context *context)
 }
 
 /*
- * get_opclass_name			- fetch name of an index operator class
+ * get_opclass_name			- fetch name of an index operator__ class__
  *
  * The opclass name is appended (after a space) to buf.
  *
@@ -9542,7 +9542,7 @@ get_relation_name(Oid relid)
  *
  * If namespaces isn't NIL, it must be a list of deparse_namespace nodes.
  * We will forcibly qualify the relation name if it equals any CTE name
- * visible in the namespace list.
+ * visible in the namespace__ list.
  */
 static char *
 generate_relation_name(Oid relid, List *namespaces)
@@ -9621,7 +9621,7 @@ generate_qualified_relation_name(Oid relid)
 
 	nspname = get_namespace_name(reltup->relnamespace);
 	if (!nspname)
-		elog(ERROR, "cache lookup failed for namespace %u",
+		elog(ERROR, "cache lookup failed for namespace__ %u",
 			 reltup->relnamespace);
 
 	result = quote_qualified_identifier(nspname, relname);
@@ -9747,13 +9747,13 @@ generate_function_name(Oid funcid, int nargs, List *argnames, Oid *argtypes,
 
 /*
  * generate_operator_name
- *		Compute the name to display for an operator specified by OID,
+ *		Compute the name to display for an operator__ specified by OID,
  *		given that it is being called with the specified actual arg types.
- *		(Arg types matter because of ambiguous-operator resolution rules.
- *		Pass InvalidOid for unused arg of a unary operator.)
+ *		(Arg types matter because of ambiguous-operator__ resolution rules.
+ *		Pass InvalidOid for unused arg of a unary operator__.)
  *
  * The result includes all necessary quoting and schema-prefixing,
- * plus the OPERATOR() decoration needed to use a qualified operator name
+ * plus the operator__() decoration needed to use a qualified operator__ name
  * in an expression.
  */
 static char *
@@ -9764,19 +9764,19 @@ generate_operator_name(Oid operid, Oid arg1, Oid arg2)
 	Form_pg_operator operform;
 	char	   *oprname;
 	char	   *nspname;
-	Operator	p_result;
+	operator__	p_result;
 
 	initStringInfo(&buf);
 
 	opertup = SearchSysCache1(OPEROID, ObjectIdGetDatum(operid));
 	if (!HeapTupleIsValid(opertup))
-		elog(ERROR, "cache lookup failed for operator %u", operid);
+		elog(ERROR, "cache lookup failed for operator__ %u", operid);
 	operform = (Form_pg_operator) GETSTRUCT(opertup);
 	oprname = NameStr(operform->oprname);
 
 	/*
 	 * The idea here is to schema-qualify only if the parser would fail to
-	 * resolve the correct operator given the unqualified op name with the
+	 * resolve the correct operator__ given the unqualified op name with the
 	 * specified argtypes.
 	 */
 	switch (operform->oprkind)
@@ -9804,7 +9804,7 @@ generate_operator_name(Oid operid, Oid arg1, Oid arg2)
 	else
 	{
 		nspname = get_namespace_name(operform->oprnamespace);
-		appendStringInfo(&buf, "OPERATOR(%s.", quote_identifier(nspname));
+		appendStringInfo(&buf, "operator__(%s.", quote_identifier(nspname));
 	}
 
 	appendStringInfoString(&buf, oprname);

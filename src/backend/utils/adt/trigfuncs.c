@@ -23,7 +23,7 @@
  * suppress_redundant_updates_trigger
  *
  * This trigger function will inhibit an update from being done
- * if the OLD and NEW records are identical.
+ * if the OLD and new__ records are identical.
  */
 Datum
 suppress_redundant_updates_trigger(PG_FUNCTION_ARGS)
@@ -68,7 +68,7 @@ suppress_redundant_updates_trigger(PG_FUNCTION_ARGS)
 
 	/*
 	 * We are called before the OID, if any, has been transcribed from the old
-	 * tuple to the new (in heap_update).  To avoid a bogus compare failure,
+	 * tuple to the new__ (in heap_update).  To avoid a bogus compare failure,
 	 * copy the OID now.  But check that someone didn't already put another
 	 * OID value into newtuple.  (That's not actually possible at present, but
 	 * maybe someday.)

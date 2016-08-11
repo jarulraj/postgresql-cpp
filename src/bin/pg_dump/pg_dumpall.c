@@ -1996,7 +1996,7 @@ constructConnStr(const char **keywords, const char **values)
 	int			i;
 	bool		firstkeyword = true;
 
-	/* Construct a new connection string in key='value' format. */
+	/* Construct a new__ connection string in key='value' format. */
 	for (i = 0; keywords[i] != NULL; i++)
 	{
 		if (strcmp(keywords[i], "dbname") == 0 ||

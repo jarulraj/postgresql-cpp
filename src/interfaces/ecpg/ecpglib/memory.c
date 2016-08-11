@@ -18,47 +18,47 @@ ecpg_free(void *ptr)
 char *
 ecpg_alloc(long size, int lineno)
 {
-	char	   *new = (char *) calloc(1L, size);
+	char	   *new__ = (char *) calloc(1L, size);
 
-	if (!new)
+	if (!new__)
 	{
 		ecpg_raise(lineno, ECPG_OUT_OF_MEMORY, ECPG_SQLSTATE_ECPG_OUT_OF_MEMORY, NULL);
 		return NULL;
 	}
 
-	return (new);
+	return (new__);
 }
 
 char *
 ecpg_realloc(void *ptr, long size, int lineno)
 {
-	char	   *new = (char *) realloc(ptr, size);
+	char	   *new__ = (char *) realloc(ptr, size);
 
-	if (!new)
+	if (!new__)
 	{
 		ecpg_raise(lineno, ECPG_OUT_OF_MEMORY, ECPG_SQLSTATE_ECPG_OUT_OF_MEMORY, NULL);
 		return NULL;
 	}
 
-	return (new);
+	return (new__);
 }
 
 char *
 ecpg_strdup(const char *string, int lineno)
 {
-	char	   *new;
+	char	   *new__;
 
 	if (string == NULL)
 		return NULL;
 
-	new = strdup(string);
-	if (!new)
+	new__ = strdup(string);
+	if (!new__)
 	{
 		ecpg_raise(lineno, ECPG_OUT_OF_MEMORY, ECPG_SQLSTATE_ECPG_OUT_OF_MEMORY, NULL);
 		return NULL;
 	}
 
-	return (new);
+	return (new__);
 }
 
 /* keep a list of memory we allocated for the user */

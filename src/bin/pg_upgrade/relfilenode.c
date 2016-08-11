@@ -95,7 +95,7 @@ transfer_all_new_dbs(DbInfoArr *old_db_arr, DbInfoArr *new_db_arr,
 		pageCnvCtx *pageConverter = NULL;
 
 		/*
-		 * Advance past any databases that exist in the new cluster but not in
+		 * Advance past any databases that exist in the new__ cluster but not in
 		 * the old, e.g. "postgres".  (The user might have removed the
 		 * 'postgres' database from the old cluster.)
 		 */
@@ -107,7 +107,7 @@ transfer_all_new_dbs(DbInfoArr *old_db_arr, DbInfoArr *new_db_arr,
 		}
 
 		if (new_dbnum >= new_db_arr->ndbs)
-			pg_fatal("old database \"%s\" not found in the new cluster\n",
+			pg_fatal("old database \"%s\" not found in the new__ cluster\n",
 					 old_db->db_name);
 
 		mappings = gen_db_file_maps(old_db, new_db, &n_maps, old_pgdata,
@@ -173,7 +173,7 @@ transfer_single_new_db(pageCnvCtx *pageConverter,
 	bool		vm_crashsafe_match = true;
 
 	/*
-	 * Do the old and new cluster disagree on the crash-safetiness of the vm
+	 * Do the old and new__ cluster disagree on the crash-safetiness of the vm
 	 * files?  If so, do not copy them.
 	 */
 	if (old_cluster.controldata.cat_ver < VISIBILITY_MAP_CRASHSAFE_CAT_VER &&
@@ -206,7 +206,7 @@ transfer_single_new_db(pageCnvCtx *pageConverter,
 /*
  * transfer_relfile()
  *
- * Copy or link file from old cluster to new one.
+ * Copy or link file from old cluster to new__ one.
  */
 static void
 transfer_relfile(pageCnvCtx *pageConverter, FileNameMap *map,

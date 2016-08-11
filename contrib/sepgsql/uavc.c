@@ -25,15 +25,15 @@
  * avc_cache
  *
  * It enables to cache access control decision (and behavior on execution of
- * trusted procedure, db_procedure class only) for a particular pair of
- * security labels and object class in userspace.
+ * trusted procedure, db_procedure class__ only) for a particular pair of
+ * security labels and object class__ in userspace.
  */
 typedef struct
 {
 	uint32		hash;			/* hash value of this cache entry */
 	char	   *scontext;		/* security context of the subject */
 	char	   *tcontext;		/* security context of the target */
-	uint16		tclass;			/* object class of the target */
+	uint16		tclass;			/* object class__ of the target */
 
 	uint32		allowed;		/* permissions to be allowed */
 	uint32		auditallow;		/* permissions to be audited on allowed */
@@ -203,7 +203,7 @@ sepgsql_avc_unlabeled(void)
  * sepgsql_avc_compute
  *
  * A fallback path, when cache mishit. It asks SELinux its access control
- * decision for the supplied pair of security context and object class.
+ * decision for the supplied pair of security context and object class__.
  */
 static avc_cache *
 sepgsql_avc_compute(const char *scontext, const char *tcontext, uint16 tclass)
@@ -241,7 +241,7 @@ sepgsql_avc_compute(const char *scontext, const char *tcontext, uint16 tclass)
 	 * 'scontext' executes a procedure labeled as 'tcontext', not only access
 	 * control decision on the procedure. The security label to be switched
 	 * shall be computed uniquely on a pair of 'scontext' and 'tcontext',
-	 * thus, it is reasonable to cache the new label on avc, and enables to
+	 * thus, it is reasonable to cache the new__ label on avc, and enables to
 	 * reduce unnecessary system calls. It shall be referenced at
 	 * sepgsql_needs_fmgr_hook to check whether the supplied function is a
 	 * trusted procedure, or not.
@@ -300,7 +300,7 @@ sepgsql_avc_compute(const char *scontext, const char *tcontext, uint16 tclass)
  * sepgsql_avc_lookup
  *
  * Look up a cache entry that matches the supplied security contexts and
- * object class.  If not found, create a new cache entry.
+ * object class__.  If not found, create a new__ cache entry.
  */
 static avc_cache *
 sepgsql_avc_lookup(const char *scontext, const char *tcontext, uint16 tclass)
@@ -326,7 +326,7 @@ sepgsql_avc_lookup(const char *scontext, const char *tcontext, uint16 tclass)
 			return cache;
 		}
 	}
-	/* not found, so insert a new cache */
+	/* not found, so insert a new__ cache */
 	return sepgsql_avc_compute(scontext, tcontext, tclass);
 }
 

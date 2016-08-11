@@ -249,14 +249,14 @@ same function or variable in your project.
     vnewSVpvf()               NEED_vnewSVpvf               NEED_vnewSVpvf_GLOBAL
     warner()                  NEED_warner                  NEED_warner_GLOBAL
 
-To avoid namespace conflicts, you can change the namespace of the
+To avoid namespace__ conflicts, you can change the namespace__ of the
 explicitly exported functions / variables using the C<DPPP_NAMESPACE>
 macro. Just C<#define> the macro before including C<ppport.h>:
 
     #define DPPP_NAMESPACE MyOwnNamespace_
     #include "ppport.h"
 
-The default namespace is C<DPPP_>.
+The default namespace__ is C<DPPP_>.
 
 =back
 
@@ -298,7 +298,7 @@ This would output context diffs with 10 lines of context.
 
 If you want to create patched copies of your files instead, use:
 
-    perl ppport.h --copy=.new
+    perl ppport.h --copy=.new__
 
 To display portability information for the C<newSVpvn> function,
 use:
@@ -447,7 +447,7 @@ my %API = map { /^(\w+)\|([^|]*)\|([^|]*)\|(\w*)$/
                 : die "invalid spec: $_" } qw(
 AvFILLp|5.004050||p
 AvFILL|||
-CLASS|||n
+class__|||n
 CPERLscope|5.005000||p
 CX_CURPAD_SAVE|||
 CX_CURPAD_SV|||
@@ -2579,9 +2579,9 @@ if (@ARGV) {
       else { warn "'$_' is not a file.\n" }
     }
     else {
-      my @new = grep { -f } glob $_
+      my @new__ = grep { -f } glob $_
           or warn "'$_' does not exist.\n";
-      push @files, grep { !$seen{$_}++ } @new;
+      push @files, grep { !$seen{$_}++ } @new__;
     }
   }
 }
@@ -3694,7 +3694,7 @@ __DATA__
 #  define Poison(d,n,t)                  PoisonFree(d,n,t)
 #endif
 #ifndef Newx
-#  define Newx(v,n,t)                    New(0,v,n,t)
+#  define Newx(v,n,t)                    new__(0,v,n,t)
 #endif
 
 #ifndef Newxc

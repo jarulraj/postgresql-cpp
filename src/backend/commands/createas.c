@@ -272,7 +272,7 @@ CreateIntoRelDestReceiver(IntoClause *intoClause)
 	self->pub.rDestroy = intorel_destroy;
 	self->pub.mydest = DestIntoRel;
 	self->into = intoClause;
-	/* other private fields will be set during intorel_startup */
+	/* other private__ fields will be set during intorel_startup */
 
 	return (DestReceiver *) self;
 }
@@ -328,7 +328,7 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 	{
 		Form_pg_attribute attribute = typeinfo->attrs[attnum];
 		ColumnDef  *col = makeNode(ColumnDef);
-		TypeName   *coltype = makeNode(TypeName);
+		typename__   *coltype = makeNode(typename__);
 
 		if (lc)
 		{
@@ -337,7 +337,7 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 		}
 		else
 			col->colname = NameStr(attribute->attname);
-		col->typeName = coltype;
+		col->typename__ = coltype;
 		col->inhcount = 0;
 		col->is_local = true;
 		col->is_not_null = false;
@@ -459,12 +459,12 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 		SetMatViewPopulatedState(intoRelationDesc, true);
 
 	/*
-	 * Fill private fields of myState for use by later routines
+	 * Fill private__ fields of myState for use by later routines
 	 */
 	myState->rel = intoRelationDesc;
 	myState->output_cid = GetCurrentCommandId(true);
 
-	/* and remember the new relation's address for ExecCreateTableAs */
+	/* and remember the new__ relation's address for ExecCreateTableAs */
 	CreateAsReladdr = intoRelationAddr;
 
 	/*
@@ -495,7 +495,7 @@ intorel_receive(TupleTableSlot *slot, DestReceiver *self)
 	tuple = ExecMaterializeSlot(slot);
 
 	/*
-	 * force assignment of new OID (see comments in ExecInsert)
+	 * force assignment of new__ OID (see comments in ExecInsert)
 	 */
 	if (myState->rel->rd_rel->relhasoids)
 		HeapTupleSetOid(tuple, InvalidOid);

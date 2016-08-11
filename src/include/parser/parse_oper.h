@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * parse_oper.h
- *		handle operator things for parser
+ *		handle operator__ things for parser
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -18,28 +18,28 @@
 #include "parser/parse_node.h"
 
 
-typedef HeapTuple Operator;
+typedef HeapTuple operator__;
 
-/* Routines to look up an operator given name and exact input type(s) */
+/* Routines to look up an operator__ given name and exact input type(s) */
 extern Oid LookupOperName(ParseState *pstate, List *opername,
 			   Oid oprleft, Oid oprright,
 			   bool noError, int location);
 extern Oid LookupOperNameTypeNames(ParseState *pstate, List *opername,
-						TypeName *oprleft, TypeName *oprright,
+						typename__ *oprleft, typename__ *oprright,
 						bool noError, int location);
 
 /* Routines to find operators matching a name and given input types */
-/* NB: the selected operator may require coercion of the input types! */
-extern Operator oper(ParseState *pstate, List *op, Oid arg1, Oid arg2,
+/* NB: the selected operator__ may require coercion of the input types! */
+extern operator__ oper(ParseState *pstate, List *op, Oid arg1, Oid arg2,
 	 bool noError, int location);
-extern Operator right_oper(ParseState *pstate, List *op, Oid arg,
+extern operator__ right_oper(ParseState *pstate, List *op, Oid arg,
 		   bool noError, int location);
-extern Operator left_oper(ParseState *pstate, List *op, Oid arg,
+extern operator__ left_oper(ParseState *pstate, List *op, Oid arg,
 		  bool noError, int location);
 
 /* Routines to find operators that DO NOT require coercion --- ie, their */
 /* input types are either exactly as given, or binary-compatible */
-extern Operator compatible_oper(ParseState *pstate, List *op,
+extern operator__ compatible_oper(ParseState *pstate, List *op,
 				Oid arg1, Oid arg2,
 				bool noError, int location);
 
@@ -54,11 +54,11 @@ extern void get_sort_group_operators(Oid argtype,
 /* Convenience routines for common calls on the above */
 extern Oid	compatible_oper_opid(List *op, Oid arg1, Oid arg2, bool noError);
 
-/* Extract operator OID or underlying-function OID from an Operator tuple */
-extern Oid	oprid(Operator op);
-extern Oid	oprfuncid(Operator op);
+/* Extract operator__ OID or underlying-function OID from an operator__ tuple */
+extern Oid	oprid(operator__ op);
+extern Oid	oprfuncid(operator__ op);
 
-/* Build expression tree for an operator invocation */
+/* Build expression tree for an operator__ invocation */
 extern Expr *make_op(ParseState *pstate, List *opname,
 		Node *ltree, Node *rtree, int location);
 extern Expr *make_scalar_array_op(ParseState *pstate, List *opname,

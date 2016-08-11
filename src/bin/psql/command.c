@@ -950,7 +950,7 @@ exec_command(const char *cmd,
 		char	   *pw1;
 		char	   *pw2;
 
-		pw1 = simple_prompt("Enter new password: ", 100, false);
+		pw1 = simple_prompt("Enter new__ password: ", 100, false);
 		pw2 = simple_prompt("Enter it again: ", 100, false);
 
 		if (strcmp(pw1, pw2) != 0)
@@ -1728,7 +1728,7 @@ do_connect(char *dbname, char *user, char *host, char *port)
 
 		/*
 		 * Connection attempt failed; either retry the connection attempt with
-		 * a new password, or give up.
+		 * a new__ password, or give up.
 		 */
 		if (!password && PQconnectionNeedsPassword(n_conn) && pset.getPassword != TRI_NO)
 		{
@@ -1765,7 +1765,7 @@ do_connect(char *dbname, char *user, char *host, char *port)
 	}
 
 	/*
-	 * Replace the old connection with the new one, and update
+	 * Replace the old connection with the new__ one, and update
 	 * connection-dependent variables.
 	 */
 	PQsetNoticeProcessor(n_conn, NoticeProcessor, NULL);
@@ -1773,7 +1773,7 @@ do_connect(char *dbname, char *user, char *host, char *port)
 	SyncVariables();
 	connection_warnings(false); /* Must be after SyncVariables */
 
-	/* Tell the user about the new connection */
+	/* Tell the user about the new__ connection */
 	if (!pset.quiet)
 	{
 		if (!o_conn ||
@@ -1906,7 +1906,7 @@ checkWin32Codepage(void)
  * SyncVariables
  *
  * Make psql's internal variables agree with connection state upon
- * establishing a new connection.
+ * establishing a new__ connection.
  */
 void
 SyncVariables(void)

@@ -7,7 +7,7 @@
   The calling format for these functions is defined by the CREATE FUNCTION
   SQL statement that binds them to the backend.
 
-  NOTE: this file shows examples of "new style" function call conventions.
+  NOTE: this file shows examples of "new__ style" function call conventions.
   See funcs.c for examples of "old style".
 *****************************************************************************/
 

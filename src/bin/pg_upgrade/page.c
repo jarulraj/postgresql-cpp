@@ -27,10 +27,10 @@ static pageCnvCtx *loadConverterPlugin(
  * setupPageConverter()
  *
  *	This function determines the PageLayoutVersion of the old cluster and
- *	the PageLayoutVersion of the new cluster.  If the versions differ, this
+ *	the PageLayoutVersion of the new__ cluster.  If the versions differ, this
  *	function loads a converter plugin and returns a pointer to a pageCnvCtx
  *	object (in *result) that knows how to convert pages from the old format
- *	to the new format.  If the versions are identical, this function just
+ *	to the new__ format.  If the versions are identical, this function just
  *	returns a NULL pageCnvCtx pointer to indicate that page-by-page conversion
  *	is not required.
  */
@@ -53,7 +53,7 @@ setupPageConverter(void)
 	getPageVersion(&newPageVersion, dstName);
 
 	/*
-	 * If the old cluster and new cluster use the same page layouts, then we
+	 * If the old cluster and new__ cluster use the same page layouts, then we
 	 * don't need a page converter.
 	 */
 	if (newPageVersion != oldPageVersion)
@@ -61,11 +61,11 @@ setupPageConverter(void)
 		/*
 		 * The clusters use differing page layouts, see if we can find a
 		 * plugin that knows how to convert from the old page layout to the
-		 * new page layout.
+		 * new__ page layout.
 		 */
 
 		if ((converter = loadConverterPlugin(newPageVersion, oldPageVersion)) == NULL)
-			pg_fatal("could not find plugin to convert from old page layout to new page layout\n");
+			pg_fatal("could not find plugin to convert from old page layout to new__ page layout\n");
 
 		return converter;
 	}
@@ -142,7 +142,7 @@ loadConverterPlugin(uint16 newPageVersion, uint16 oldPageVersion)
 		pageCnvCtx *result = (pageCnvCtx *) pg_malloc(sizeof(*result));
 
 		result->old.PageVersion = oldPageVersion;
-		result->new.PageVersion = newPageVersion;
+		result->new__.PageVersion = newPageVersion;
 
 		result->startup = (pluginStartup) pg_dlsym(plugin, "init");
 		result->convertFile = (pluginConvertFile) pg_dlsym(plugin, "convertFile");

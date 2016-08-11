@@ -758,7 +758,7 @@ descriptor_deallocate_all(struct descriptor * list)
 bool
 ECPGallocate_desc(int line, const char *name)
 {
-	struct descriptor *new;
+	struct descriptor *new__;
 	struct sqlca_t *sqlca = ECPGget_sqlca();
 
 	if (sqlca == NULL)
@@ -769,28 +769,28 @@ ECPGallocate_desc(int line, const char *name)
 	}
 
 	ecpg_init_sqlca(sqlca);
-	new = (struct descriptor *) ecpg_alloc(sizeof(struct descriptor), line);
-	if (!new)
+	new__ = (struct descriptor *) ecpg_alloc(sizeof(struct descriptor), line);
+	if (!new__)
 		return false;
-	new->next = get_descriptors();
-	new->name = ecpg_alloc(strlen(name) + 1, line);
-	if (!new->name)
+	new__->next = get_descriptors();
+	new__->name = ecpg_alloc(strlen(name) + 1, line);
+	if (!new__->name)
 	{
-		ecpg_free(new);
+		ecpg_free(new__);
 		return false;
 	}
-	new->count = -1;
-	new->items = NULL;
-	new->result = PQmakeEmptyPGresult(NULL, 0);
-	if (!new->result)
+	new__->count = -1;
+	new__->items = NULL;
+	new__->result = PQmakeEmptyPGresult(NULL, 0);
+	if (!new__->result)
 	{
-		ecpg_free(new->name);
-		ecpg_free(new);
+		ecpg_free(new__->name);
+		ecpg_free(new__);
 		ecpg_raise(line, ECPG_OUT_OF_MEMORY, ECPG_SQLSTATE_ECPG_OUT_OF_MEMORY, NULL);
 		return false;
 	}
-	strcpy(new->name, name);
-	set_descriptors(new);
+	strcpy(new__->name, name);
+	set_descriptors(new__);
 	return true;
 }
 

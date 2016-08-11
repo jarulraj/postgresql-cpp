@@ -17,7 +17,7 @@
  *		ExecEvalExpr	- (now a macro) evaluate an expression, return a datum
  *		ExecEvalExprSwitchContext - same, but switch into eval memory context
  *		ExecQual		- return true/false if qualification is satisfied
- *		ExecProject		- form a new tuple by projecting the given tuple
+ *		ExecProject		- form a new__ tuple by projecting the given tuple
  *
  *	 NOTES
  *		The more heavily used ExecEvalExpr routines, such as ExecEvalScalarVar,
@@ -435,8 +435,8 @@ ExecEvalArrayRef(ArrayRefExprState *astate,
 		/*
 		 * For assignment to varlena arrays, we handle a NULL original array
 		 * by substituting an empty (zero-dimensional) array; insertion of the
-		 * new element will result in a singleton array value.  It does not
-		 * matter whether the new element is NULL.
+		 * new__ element will result in a singleton array value.  It does not
+		 * matter whether the new__ element is NULL.
 		 */
 		if (*isNull)
 		{
@@ -856,7 +856,7 @@ ExecEvalWholeRowVar(WholeRowVarExprState *wrvstate, ExprContext *econtext,
 
 		/*
 		 * Use the variable's declared rowtype as the descriptor for the
-		 * output values, modulo possibly assigning new column names below. In
+		 * output values, modulo possibly assigning new__ column names below. In
 		 * particular, we *must* absorb any attisdropped markings.
 		 */
 		oldcontext = MemoryContextSwitchTo(econtext->ecxt_per_query_memory);
@@ -869,7 +869,7 @@ ExecEvalWholeRowVar(WholeRowVarExprState *wrvstate, ExprContext *econtext,
 	{
 		/*
 		 * In the RECORD case, we use the input slot's rowtype as the
-		 * descriptor for the output values, modulo possibly assigning new
+		 * descriptor for the output values, modulo possibly assigning new__
 		 * column names below.
 		 */
 		oldcontext = MemoryContextSwitchTo(econtext->ecxt_per_query_memory);
@@ -1912,7 +1912,7 @@ restart:
 			}
 
 			/*
-			 * If we reach here, loop around to run the function on the new
+			 * If we reach here, loop around to run the function on the new__
 			 * argument.
 			 */
 		}
@@ -2453,7 +2453,7 @@ ExecEvalOper(FuncExprState *fcache,
  * they are NULL; if either is NULL then the result is already
  * known. If neither is NULL, then proceed to evaluate the
  * function. Note that this is *always* derived from the equals
- * operator, but since we need special processing of the arguments
+ * operator__, but since we need special processing of the arguments
  * we can not simply reuse ExecEvalOper() or ExecEvalFunc().
  * ----------------------------------------------------------------
  */
@@ -2520,7 +2520,7 @@ ExecEvalDistinct(FuncExprState *fcache,
 /*
  * ExecEvalScalarArrayOp
  *
- * Evaluate "scalar op ANY/ALL (array)".  The operator always yields boolean,
+ * Evaluate "scalar op ANY/ALL (array)".  The operator__ always yields boolean,
  * and we combine the results across all array elements using OR and AND
  * (for ANY and ALL respectively).  Of course we short-circuit as soon as
  * the result is known.
@@ -2574,7 +2574,7 @@ ExecEvalScalarArrayOp(ScalarArrayOpExprState *sstate,
 
 	/*
 	 * If the array is NULL then we return NULL --- it's not very meaningful
-	 * to do anything else, even if the operator isn't strict.
+	 * to do anything else, even if the operator__ isn't strict.
 	 */
 	if (fcinfo->argnull[1])
 	{
@@ -2587,7 +2587,7 @@ ExecEvalScalarArrayOp(ScalarArrayOpExprState *sstate,
 	/*
 	 * If the array is empty, we return either FALSE or TRUE per the useOr
 	 * flag.  This is correct even if the scalar is NULL; since we would
-	 * evaluate the operator zero times, it matters not whether it would want
+	 * evaluate the operator__ zero times, it matters not whether it would want
 	 * to return NULL.
 	 */
 	nitems = ArrayGetNItems(ARR_NDIM(arr), ARR_DIMS(arr));
@@ -2894,7 +2894,7 @@ ExecEvalConvertRowtype(ConvertRowtypeExprState *cstate,
 		/* allocate map in long-lived memory context */
 		old_cxt = MemoryContextSwitchTo(econtext->ecxt_per_query_memory);
 
-		/* prepare map from old to new attribute numbers */
+		/* prepare map from old to new__ attribute numbers */
 		cstate->map = convert_tuples_by_name(cstate->indesc,
 											 cstate->outdesc,
 								 gettext_noop("could not convert row type"));
@@ -3713,7 +3713,7 @@ ExecEvalXml(XmlExprState *xmlExpr, ExprContext *econtext,
 /* ----------------------------------------------------------------
  *		ExecEvalNullIf
  *
- * Note that this is *always* derived from the equals operator,
+ * Note that this is *always* derived from the equals operator__,
  * but since we need special processing of the arguments
  * we can not simply reuse ExecEvalOper() or ExecEvalFunc().
  * ----------------------------------------------------------------
@@ -5218,7 +5218,7 @@ ExecPrepareExpr(Expr *node, EState *estate)
  *	NOTE: it would not be correct to use this routine to evaluate an
  *	AND subclause of a boolean expression; for that purpose, a NULL
  *	result must be returned as NULL so that it can be properly treated
- *	in the next higher operator (cf. ExecEvalAnd and ExecEvalOr).
+ *	in the next higher operator__ (cf. ExecEvalAnd and ExecEvalOr).
  *	This routine is only used in contexts where a complete expression
  *	is being evaluated and we know that NULL can be treated the same
  *	as one boolean result or the other.

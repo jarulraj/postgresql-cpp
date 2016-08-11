@@ -24,7 +24,7 @@
 
 
 /*
- *	PRIVATE FUNCTIONS
+ *	private__ FUNCTIONS
  */
 
 
@@ -257,7 +257,7 @@ bytesToHex(uint8 b[16], char *s)
 }
 
 /*
- *	PUBLIC FUNCTIONS
+ *	public__ FUNCTIONS
  */
 
 /*

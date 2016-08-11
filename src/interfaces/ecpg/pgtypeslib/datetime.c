@@ -596,7 +596,7 @@ PGTYPESdate_defmt_asc(date * d, const char *fmt, char *str)
 				offset = start_pos - str_copy;
 
 				/*
-				 * sort the new token into the numeric tokens, shift them if
+				 * sort the new__ token into the numeric tokens, shift them if
 				 * necessary
 				 */
 				if (offset < token[0][0])

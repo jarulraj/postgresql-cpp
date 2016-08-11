@@ -24,9 +24,9 @@
  * since it would get completely confused if someone inquired about a bogus
  * MultiXactId that pointed to an intermediate slot containing an XID.)
  *
- * XLOG interactions: this module generates an XLOG record whenever a new
+ * XLOG interactions: this module generates an XLOG record whenever a new__
  * OFFSETs or MEMBERs page is initialized to zeroes, as well as an XLOG record
- * whenever a new MultiXactId is defined.  This allows us to completely
+ * whenever a new__ MultiXactId is defined.  This allows us to completely
  * rebuild the data entered since the last checkpoint during XLOG replay.
  * Because this is possible, we need not follow the normal rule of
  * "write WAL before data"; the only correctness guarantee needed is that
@@ -51,7 +51,7 @@
  * minimum across all databases is part of pg_control and is kept in shared
  * memory.  Whenever that minimum is advanced, the SLRUs are truncated.
  *
- * When new multixactid values are to be created, care is taken that the
+ * When new__ multixactid values are to be created, care is taken that the
  * counter does not fall within the wraparound horizon considering the global
  * minimum value.
  *
@@ -268,7 +268,7 @@ typedef struct MultiXactStateData
 	 * that multis that have member xids that are older than the cutoff point
 	 * for xids must also be frozen, even if the multis themselves are newer
 	 * than the multixid cutoff point).  Whenever a full table vacuum happens,
-	 * the freezing point so computed is used as the new pg_class.relminmxid
+	 * the freezing point so computed is used as the new__ pg_class.relminmxid
 	 * value.  The minimum of all those values in a database is stored as
 	 * pg_database.datminmxid.  In turn, the minimum of all of those values is
 	 * stored in pg_control and used as truncation point for pg_multixact.  At
@@ -418,7 +418,7 @@ MultiXactIdCreate(TransactionId xid1, MultiXactStatus status1,
  * same status, just return it as-is.
  *
  * Note that we do NOT actually modify the membership of a pre-existing
- * MultiXactId; instead we create a new one.  This is necessary to avoid
+ * MultiXactId; instead we create a new__ one.  This is necessary to avoid
  * a race condition against code trying to wait for one MultiXactId to finish;
  * see notes in heapam.c.
  *
@@ -525,7 +525,7 @@ MultiXactIdExpand(MultiXactId multi, TransactionId xid, MultiXactStatus status)
 	pfree(members);
 	pfree(newMembers);
 
-	debug_elog3(DEBUG2, "Expand: returning new multi %u", newMulti);
+	debug_elog3(DEBUG2, "Expand: returning new__ multi %u", newMulti);
 
 	return newMulti;
 }
@@ -731,9 +731,9 @@ ReadNextMultiXactId(void)
 
 /*
  * MultiXactIdCreateFromMembers
- *		Make a new MultiXactId from the specified set of members
+ *		Make a new__ MultiXactId from the specified set of members
  *
- * Make XLOG, SLRU and cache entries for a new MultiXactId, recording the
+ * Make XLOG, SLRU and cache entries for a new__ MultiXactId, recording the
  * given TransactionIds as members.  Returns the newly created MultiXactId.
  *
  * NB: the passed members[] array will be sorted in-place.
@@ -775,7 +775,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 			if (ISUPDATE_from_mxstatus(members[i].status))
 			{
 				if (has_update)
-					elog(ERROR, "new multixact has more than one updating member");
+					elog(ERROR, "new__ multixact has more than one updating member");
 				has_update = true;
 			}
 		}
@@ -788,7 +788,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 	 *
 	 * Note: unlike MultiXactIdCreate and MultiXactIdExpand, we do not check
 	 * that we've called MultiXactIdSetOldestMember here.  This is because
-	 * this routine is used in some places to create new MultiXactIds of which
+	 * this routine is used in some places to create new__ MultiXactIds of which
 	 * the current backend is not a member, notably during freezing of multis
 	 * in vacuum.  During vacuum, in particular, it would be unacceptable to
 	 * keep OldestMulti set, in case it runs for long.
@@ -796,7 +796,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 	multi = GetNewMultiXactId(nmembers, &offset);
 
 	/*
-	 * Make an XLOG entry describing the new MXID.
+	 * Make an XLOG entry describing the new__ MXID.
 	 *
 	 * Note: we need not flush this XLOG entry to disk before proceeding. The
 	 * only way for the MXID to be referenced from any data page is for
@@ -830,7 +830,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 	/* Done with critical section */
 	END_CRIT_SECTION();
 
-	/* Store the new MultiXactId in the local cache, too */
+	/* Store the new__ MultiXactId in the local cache, too */
 	mXactCachePut(multi, nmembers, members);
 
 	debug_elog2(DEBUG2, "Create: all done");
@@ -840,7 +840,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 
 /*
  * RecordNewMultiXact
- *		Write info about a new multixact into the offsets and members files
+ *		Write info about a new__ multixact into the offsets and members files
  *
  * This is broken out of MultiXactIdCreateFromMembers so that xlog replay can
  * use it.
@@ -969,7 +969,7 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 	 * space, or we don't know what the safe threshold for member storage is,
 	 * start trying to force autovacuum cycles.
 	 * If we're past multiWarnLimit, start issuing warnings.
-	 * If we're past multiStopLimit, refuse to create new MultiXactIds.
+	 * If we're past multiStopLimit, refuse to create new__ MultiXactIds.
 	 *
 	 * Note these are pretty much the same protections in GetNewTransactionId.
 	 *----------
@@ -1005,14 +1005,14 @@ GetNewMultiXactId(int nmembers, MultiXactOffset *offset)
 			if (oldest_datname)
 				ereport(ERROR,
 						(errcode(ERRCODE_PROGRAM_LIMIT_EXCEEDED),
-						 errmsg("database is not accepting commands that generate new MultiXactIds to avoid wraparound data loss in database \"%s\"",
+						 errmsg("database is not accepting commands that generate new__ MultiXactIds to avoid wraparound data loss in database \"%s\"",
 								oldest_datname),
 				 errhint("Execute a database-wide VACUUM in that database.\n"
 						 "You might also need to commit or roll back old prepared transactions.")));
 			else
 				ereport(ERROR,
 						(errcode(ERRCODE_PROGRAM_LIMIT_EXCEEDED),
-						 errmsg("database is not accepting commands that generate new MultiXactIds to avoid wraparound data loss in database with OID %u",
+						 errmsg("database is not accepting commands that generate new__ MultiXactIds to avoid wraparound data loss in database with OID %u",
 								oldest_datoid),
 				 errhint("Execute a database-wide VACUUM in that database.\n"
 						 "You might also need to commit or roll back old prepared transactions.")));
@@ -1564,7 +1564,7 @@ mXactCacheGetById(MultiXactId multi, MultiXactMember **members)
 
 /*
  * mXactCachePut
- *		Add a new MultiXactId and its composing set into the local cache.
+ *		Add a new__ MultiXactId and its composing set into the local cache.
  */
 static void
 mXactCachePut(MultiXactId multi, int nmembers, MultiXactMember *members)
@@ -1904,7 +1904,7 @@ BootStrapMultiXact(void)
  * If writeXlog is TRUE, also emit an XLOG record saying we did this.
  *
  * The page is not actually written, just set up in shared memory.
- * The slot number of the new page is returned.
+ * The slot number of the new__ page is returned.
  *
  * Control lock must be held at entry, and will be held at exit.
  */
@@ -1948,7 +1948,7 @@ ZeroMultiXactMemberPage(int pageno, bool writeXlog)
  * update pg_control to set the next offset value to be at that position, so
  * that tuples marked as locked by such MultiXacts would be seen as visible
  * without having to consult multixact.  However, trying to create and use a
- * new MultiXactId would result in an error because the page on which the new
+ * new__ MultiXactId would result in an error because the page on which the new__
  * value would reside does not exist.  This routine is in charge of creating
  * such pages.
  */
@@ -1967,7 +1967,7 @@ MaybeExtendOffsetSlru(void)
 
 		/*
 		 * Fortunately for us, SimpleLruWritePage is already prepared to deal
-		 * with creating a new segment file even if the page we're writing is
+		 * with creating a new__ segment file even if the page we're writing is
 		 * not the first in it, so this is enough.
 		 */
 		slotno = ZeroMultiXactOffsetPage(pageno, false);
@@ -2220,7 +2220,7 @@ SetMultiXactIdLimit(MultiXactId oldest_datminmxid, Oid oldest_datoid)
 	 * multi of data loss.
 	 *
 	 * Note: This differs from the magic number used in
-	 * SetTransactionIdLimit() since vacuum itself will never generate new
+	 * SetTransactionIdLimit() since vacuum itself will never generate new__
 	 * multis.  XXX actually it does, if it needs to freeze old multis.
 	 */
 	multiStopLimit = multiWrapLimit - 100;
@@ -2253,7 +2253,7 @@ SetMultiXactIdLimit(MultiXactId oldest_datminmxid, Oid oldest_datoid)
 	if (multiVacLimit < FirstMultiXactId)
 		multiVacLimit += FirstMultiXactId;
 
-	/* Grab lock for just long enough to set the new limit values */
+	/* Grab lock for just long enough to set the new__ limit values */
 	LWLockAcquire(MultiXactGenLock, LW_EXCLUSIVE);
 	MultiXactState->oldestMultiXactId = oldest_datminmxid;
 	MultiXactState->oldestMultiXactDB = oldest_datoid;
@@ -2272,7 +2272,7 @@ SetMultiXactIdLimit(MultiXactId oldest_datminmxid, Oid oldest_datoid)
 	/*
 	 * Computing the actual limits is only possible once the data directory is
 	 * in a consistent state. There's no need to compute the limits while
-	 * still replaying WAL - no decisions about new multis are made even
+	 * still replaying WAL - no decisions about new__ multis are made even
 	 * though multixact creations might be replayed. So we'll only do further
 	 * checks after TrimMultiXact() has been called.
 	 */
@@ -2946,7 +2946,7 @@ TruncateMultiXact(MultiXactId newOldestMulti, Oid newOldestMultiDB)
 	/*
 	 * We can only allow one truncation to happen at once. Otherwise parts of
 	 * members might vanish while we're doing lookups or similar. There's no
-	 * need to have an interlock with creating new multis or such, since those
+	 * need to have an interlock with creating new__ multis or such, since those
 	 * are constrained by the limits (which only grow, never shrink).
 	 */
 	LWLockAcquire(MultiXactTruncationLock, LW_EXCLUSIVE);

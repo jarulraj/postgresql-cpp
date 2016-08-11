@@ -2,7 +2,7 @@
 #define TZFILE_H
 
 /*
- * This file is in the public domain, so clarified as of
+ * This file is in the public__ domain, so clarified as of
  * 1996-06-05 by Arthur David Olson.
  *
  * IDENTIFICATION

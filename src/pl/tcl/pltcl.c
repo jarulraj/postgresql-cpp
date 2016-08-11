@@ -398,7 +398,7 @@ _PG_init(void)
 }
 
 /**********************************************************************
- * pltcl_init_interp() - initialize a new Tcl interpreter
+ * pltcl_init_interp() - initialize a new__ Tcl interpreter
  **********************************************************************/
 static void
 pltcl_init_interp(pltcl_interp_desc *interp_desc, bool pltrusted)
@@ -524,7 +524,7 @@ pltcl_init_load_unknown(Tcl_Interp *interp)
 	/* get fully qualified table name for use in select command */
 	nspname = get_namespace_name(RelationGetNamespace(pmrel));
 	if (!nspname)
-		elog(ERROR, "cache lookup failed for namespace %u",
+		elog(ERROR, "cache lookup failed for namespace__ %u",
 			 RelationGetNamespace(pmrel));
 	pmrelname = quote_qualified_identifier(nspname,
 										   RelationGetRelationName(pmrel));
@@ -930,7 +930,7 @@ pltcl_trigger_handler(PG_FUNCTION_ARGS, bool pltrusted)
 									   tupdesc, &tcl_trigtup);
 
 			/*
-			 * Now the command part of the event for TG_op and data for NEW
+			 * Now the command part of the event for TG_op and data for new__
 			 * and OLD
 			 */
 			if (TRIGGER_FIRED_BY_INSERT(trigdata->tg_event))
@@ -1285,7 +1285,7 @@ compile_pltcl_function(Oid fn_oid, Oid tgreloid,
 	 * If we haven't found it in the hashtable, we analyze
 	 * the functions arguments and returntype and store
 	 * the in-/out-functions in the prodesc block and create
-	 * a new hashtable entry for it.
+	 * a new__ hashtable entry for it.
 	 *
 	 * Then we load the procedure into the Tcl interpreter.
 	 ************************************************************/
@@ -1322,7 +1322,7 @@ compile_pltcl_function(Oid fn_oid, Oid tgreloid,
 					 "__PLTcl_proc_%u_trigger", fn_oid);
 
 		/************************************************************
-		 * Allocate a new procedure description block
+		 * Allocate a new__ procedure description block
 		 ************************************************************/
 		prodesc = (pltcl_proc_desc *) malloc(sizeof(pltcl_proc_desc));
 		if (prodesc == NULL)
@@ -1500,7 +1500,7 @@ compile_pltcl_function(Oid fn_oid, Oid tgreloid,
 		if (is_trigger)
 		{
 			Tcl_DStringAppend(&proc_internal_body,
-							  "array set NEW $__PLTcl_Tup_NEW\n", -1);
+							  "array set new__ $__PLTcl_Tup_NEW\n", -1);
 			Tcl_DStringAppend(&proc_internal_body,
 							  "array set OLD $__PLTcl_Tup_OLD\n", -1);
 
@@ -2151,7 +2151,7 @@ pltcl_SPI_prepare(ClientData cdata, Tcl_Interp *interp,
 		return TCL_ERROR;
 
 	/************************************************************
-	 * Allocate the new querydesc structure
+	 * Allocate the new__ querydesc structure
 	 *
 	 * struct qdesc and subsidiary data all live in plan_cxt.  Note that if the
 	 * function is recompiled for whatever reason, permanent memory leaks

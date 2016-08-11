@@ -2160,9 +2160,9 @@ regression_main(int argc, char *argv[], init_function ifunc, test_function tfunc
 
 		/*
 		 * To reduce chances of interference with parallel installations, use
-		 * a port number starting in the private range (49152-65535)
+		 * a port number starting in the private__ range (49152-65535)
 		 * calculated from the version number.  This aids !HAVE_UNIX_SOCKETS
-		 * systems; elsewhere, the use of a private socket directory already
+		 * systems; elsewhere, the use of a private__ socket directory already
 		 * prevents interference.
 		 */
 		port = 0xC000 | (PG_VERSION_NUM & 0x3FFF);

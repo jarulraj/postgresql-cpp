@@ -94,7 +94,7 @@ complex_send(PG_FUNCTION_ARGS)
 }
 
 /*****************************************************************************
- * New Operators
+ * new__ Operators
  *
  * A practical Complex datatype would provide much more than this, of course.
  *****************************************************************************/
@@ -116,7 +116,7 @@ complex_add(PG_FUNCTION_ARGS)
 
 
 /*****************************************************************************
- * Operator class for defining B-tree index
+ * operator__ class__ for defining B-tree index
  *
  * It's essential that the comparison operators and support function for a
  * B-tree index opclass always agree on the relative ordering of any two

@@ -28,7 +28,7 @@ struct TypeCacheEnumData;
 
 typedef struct TypeCacheEntry
 {
-	/* typeId is the hash lookup key and MUST BE FIRST */
+	/* typeid__ is the hash lookup key and MUST BE FIRST */
 	Oid			type_id;		/* OID of the data type */
 
 	/* some subsidiary information copied from the pg_type row */
@@ -51,14 +51,14 @@ typedef struct TypeCacheEntry
 	Oid			btree_opintype; /* the default btree opclass' opcintype */
 	Oid			hash_opf;		/* the default hash opclass' family */
 	Oid			hash_opintype;	/* the default hash opclass' opcintype */
-	Oid			eq_opr;			/* the equality operator */
-	Oid			lt_opr;			/* the less-than operator */
-	Oid			gt_opr;			/* the greater-than operator */
+	Oid			eq_opr;			/* the equality operator__ */
+	Oid			lt_opr;			/* the less-than operator__ */
+	Oid			gt_opr;			/* the greater-than operator__ */
 	Oid			cmp_proc;		/* the btree comparison function */
 	Oid			hash_proc;		/* the hash calculation function */
 
 	/*
-	 * Pre-set-up fmgr call info for the equality operator, the btree
+	 * Pre-set-up fmgr call info for the equality operator__, the btree
 	 * comparison function, and the hash calculation function.  These are kept
 	 * in the type cache to avoid problems with memory leaks in repeated calls
 	 * to functions such as array_eq, array_cmp, hash_array.  There is not
@@ -93,11 +93,11 @@ typedef struct TypeCacheEntry
 	 */
 	DomainConstraintCache *domainData;
 
-	/* Private data, for internal use of typcache.c only */
+	/* private__ data, for internal use of typcache.c only */
 	int			flags;			/* flags about what we've computed */
 
 	/*
-	 * Private information about an enum type.  NULL if not enum or
+	 * private__ information about an enum type.  NULL if not enum or
 	 * information hasn't been requested.
 	 */
 	struct TypeCacheEnumData *enumData;
@@ -132,7 +132,7 @@ typedef struct DomainConstraintRef
 	List	   *constraints;	/* list of DomainConstraintState nodes */
 	MemoryContext refctx;		/* context holding DomainConstraintRef */
 
-	/* Management data --- treat these fields as private to typcache.c */
+	/* Management data --- treat these fields as private__ to typcache.c */
 	TypeCacheEntry *tcache;		/* owning typcache entry */
 	DomainConstraintCache *dcc; /* current constraints, or NULL if none */
 	MemoryContextCallback callback;		/* used to release refcount when done */

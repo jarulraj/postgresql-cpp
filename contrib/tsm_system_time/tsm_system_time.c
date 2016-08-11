@@ -43,7 +43,7 @@ PG_MODULE_MAGIC;
 PG_FUNCTION_INFO_V1(tsm_system_time_handler);
 
 
-/* Private state */
+/* private__ state */
 typedef struct
 {
 	uint32		seed;			/* random seed */

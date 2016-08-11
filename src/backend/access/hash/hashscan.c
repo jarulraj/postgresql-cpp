@@ -87,7 +87,7 @@ ReleaseResources_hash(void)
 }
 
 /*
- *	_hash_regscan() -- register a new scan.
+ *	_hash_regscan() -- register a new__ scan.
  */
 void
 _hash_regscan(IndexScanDesc scan)

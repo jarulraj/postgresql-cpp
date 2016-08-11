@@ -1,6 +1,6 @@
 /*
  * pgp-pubdec.c
- *	  Decrypt public-key encrypted session key.
+ *	  Decrypt public__-key encrypted session key.
  *
  * Copyright (c) 2005 Marko Kreen
  * All rights reserved.

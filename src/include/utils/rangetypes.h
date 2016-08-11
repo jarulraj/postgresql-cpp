@@ -75,8 +75,8 @@ typedef struct
 #define PG_GETARG_RANGE_COPY(n)		DatumGetRangeTypeCopy(PG_GETARG_DATUM(n))
 #define PG_RETURN_RANGE(x)			return RangeTypeGetDatum(x)
 
-/* Operator strategy numbers used in the GiST and SP-GiST range opclasses */
-/* Numbers are chosen to match up operator names with existing usages */
+/* operator__ strategy numbers used in the GiST and SP-GiST range opclasses */
+/* Numbers are chosen to match up operator__ names with existing usages */
 #define RANGESTRAT_BEFORE				RTLeftStrategyNumber
 #define RANGESTRAT_OVERLEFT				RTOverLeftStrategyNumber
 #define RANGESTRAT_OVERLAPS				RTOverlapStrategyNumber

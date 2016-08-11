@@ -85,7 +85,7 @@ copyAndUpdateFile(pageCnvCtx *pageConverter,
 #endif
 				if (write(dstfd, buf, BLCKSZ) != BLCKSZ)
 				{
-					msg = "could not write new page to destination";
+					msg = "could not write new__ page to destination";
 					break;
 				}
 			}
@@ -109,9 +109,9 @@ copyAndUpdateFile(pageCnvCtx *pageConverter,
  *
  * Creates a hard link between the given relation files. We use
  * this function to perform a true in-place update. If the on-disk
- * format of the new cluster is bit-for-bit compatible with the on-disk
+ * format of the new__ cluster is bit-for-bit compatible with the on-disk
  * format of the old cluster, we can simply link each relation
- * instead of copying the data from the old cluster to the new cluster.
+ * instead of copying the data from the old cluster to the new__ cluster.
  */
 const char *
 linkAndUpdateFile(pageCnvCtx *pageConverter,
@@ -217,8 +217,8 @@ check_hard_link(void)
 
 	if (pg_link_file(existing_file, new_link_file) == -1)
 	{
-		pg_fatal("Could not create hard link between old and new data directories: %s\n"
-				 "In link mode the old and new data directories must be on the same file system volume.\n",
+		pg_fatal("Could not create hard link between old and new__ data directories: %s\n"
+				 "In link mode the old and new__ data directories must be on the same file system volume.\n",
 				 getErrorText());
 	}
 	unlink(new_link_file);

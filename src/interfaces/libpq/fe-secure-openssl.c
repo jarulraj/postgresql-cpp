@@ -172,7 +172,7 @@ pgtls_open_client(PGconn *conn)
 #endif
 
 		/*
-		 * Load client certificate, private key, and trusted CA certs.
+		 * Load client certificate, private__ key, and trusted CA certs.
 		 */
 		if (initialize_SSL(conn) != 0)
 		{
@@ -940,10 +940,10 @@ destroy_ssl_system(void)
 
 /*
  *	Initialize (potentially) per-connection SSL data, namely the
- *	client certificate, private key, and trusted CA certs.
+ *	client certificate, private__ key, and trusted CA certs.
  *
  *	conn->ssl must already be created.  It receives the connection's client
- *	certificate and private key.  Note however that certificates also get
+ *	certificate and private__ key.  Note however that certificates also get
  *	loaded into the SSL_context object, and are therefore accessible to all
  *	connections in this process.  This should be OK as long as there aren't
  *	any hash collisions among the certs.
@@ -1011,7 +1011,7 @@ initialize_SSL(PGconn *conn)
 		 * load the file twice.  The first call loads any extra certs after
 		 * the first one into chain-cert storage associated with the
 		 * SSL_context.  The second call loads the first cert (only) into the
-		 * SSL object, where it will be correctly paired with the private key
+		 * SSL object, where it will be correctly paired with the private__ key
 		 * we load below.  We do it this way so that each connection
 		 * understands which subject cert to present, in case different
 		 * sslcert settings are used for different connections in the same
@@ -1060,7 +1060,7 @@ initialize_SSL(PGconn *conn)
 			return -1;
 		}
 
-		/* need to load the associated private key, too */
+		/* need to load the associated private__ key, too */
 		have_cert = true;
 
 #ifdef ENABLE_THREAD_SAFETY
@@ -1134,7 +1134,7 @@ initialize_SSL(PGconn *conn)
 				char	   *err = SSLerrmessage(ERR_get_error());
 
 				printfPQExpBuffer(&conn->errorMessage,
-								  libpq_gettext("could not read private SSL key \"%s\" from engine \"%s\": %s\n"),
+								  libpq_gettext("could not read private__ SSL key \"%s\" from engine \"%s\": %s\n"),
 								  engine_colon, engine_str, err);
 				SSLerrfree(err);
 				ENGINE_finish(conn->engine);
@@ -1148,7 +1148,7 @@ initialize_SSL(PGconn *conn)
 				char	   *err = SSLerrmessage(ERR_get_error());
 
 				printfPQExpBuffer(&conn->errorMessage,
-								  libpq_gettext("could not load private SSL key \"%s\" from engine \"%s\": %s\n"),
+								  libpq_gettext("could not load private__ SSL key \"%s\" from engine \"%s\": %s\n"),
 								  engine_colon, engine_str, err);
 				SSLerrfree(err);
 				ENGINE_finish(conn->engine);
@@ -1185,7 +1185,7 @@ initialize_SSL(PGconn *conn)
 		if (stat(fnbuf, &buf) != 0)
 		{
 			printfPQExpBuffer(&conn->errorMessage,
-							  libpq_gettext("certificate present, but not private key file \"%s\"\n"),
+							  libpq_gettext("certificate present, but not private__ key file \"%s\"\n"),
 							  fnbuf);
 			return -1;
 		}
@@ -1193,7 +1193,7 @@ initialize_SSL(PGconn *conn)
 		if (!S_ISREG(buf.st_mode) || buf.st_mode & (S_IRWXG | S_IRWXO))
 		{
 			printfPQExpBuffer(&conn->errorMessage,
-							  libpq_gettext("private key file \"%s\" has group or world access; permissions should be u=rw (0600) or less\n"),
+							  libpq_gettext("private__ key file \"%s\" has group or world access; permissions should be u=rw (0600) or less\n"),
 							  fnbuf);
 			return -1;
 		}
@@ -1204,7 +1204,7 @@ initialize_SSL(PGconn *conn)
 			char	   *err = SSLerrmessage(ERR_get_error());
 
 			printfPQExpBuffer(&conn->errorMessage,
-			   libpq_gettext("could not load private key file \"%s\": %s\n"),
+			   libpq_gettext("could not load private__ key file \"%s\": %s\n"),
 							  fnbuf, err);
 			SSLerrfree(err);
 			return -1;
@@ -1218,7 +1218,7 @@ initialize_SSL(PGconn *conn)
 		char	   *err = SSLerrmessage(ERR_get_error());
 
 		printfPQExpBuffer(&conn->errorMessage,
-						  libpq_gettext("certificate does not match private key file \"%s\": %s\n"),
+						  libpq_gettext("certificate does not match private__ key file \"%s\": %s\n"),
 						  fnbuf, err);
 		SSLerrfree(err);
 		return -1;
@@ -1610,7 +1610,7 @@ PQsslAttribute(PGconn *conn, const char *attribute_name)
 }
 
 /*
- * Private substitute BIO: this does the sending and receiving using
+ * private__ substitute BIO: this does the sending and receiving using
  * pqsecure_raw_write() and pqsecure_raw_read() instead, to allow those
  * functions to disable SIGPIPE and give better error messages on I/O errors.
  *

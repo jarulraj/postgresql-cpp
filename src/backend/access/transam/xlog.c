@@ -112,7 +112,7 @@ bool		XLOG_DEBUG = false;
 #define NUM_XLOGINSERT_LOCKS  8
 
 /*
- * Max distance from last checkpoint, before triggering a new xlog-based
+ * Max distance from last checkpoint, before triggering a new__ xlog-based
  * checkpoint.
  */
 int			CheckPointSegments;
@@ -310,7 +310,7 @@ static TimeLineID curFileTLI;
  * ProcLastRecPtr points to the start of the last XLOG record inserted by the
  * current backend.  It is updated for all inserts.  XactLastRecEnd points to
  * end+1 of the last record, and is reset when we end a top-level transaction,
- * or start a new one; so it can be used to tell if the current transaction has
+ * or start a new__ one; so it can be used to tell if the current transaction has
  * created any XLOG records.
  *
  * While in parallel mode, this may not be fully up to date.  When committing,
@@ -370,7 +370,7 @@ static XLogRecPtr RedoStartLSN = InvalidXLogRecPtr;
  * WALWriteLock.  To update it, you need to hold both locks.  The point of
  * this arrangement is that the value can be examined by code that already
  * holds WALWriteLock without needing to grab info_lck as well.  In addition
- * to the shared variable, each backend has a private copy of LogwrtResult,
+ * to the shared variable, each backend has a private__ copy of LogwrtResult,
  * which is updated when convenient.
  *
  * The request bookkeeping is simpler: there is a shared XLogCtl->LogwrtRqst
@@ -389,7 +389,7 @@ static XLogRecPtr RedoStartLSN = InvalidXLogRecPtr;
  * XLogFlush).
  *
  * ControlFileLock: must be held to read/update control file or create
- * new log file.
+ * new__ log file.
  *
  * CheckpointLock: must be held to do a checkpoint or restartpoint (ensures
  * only one checkpointer at a time; currently, with all checkpoints done by
@@ -569,7 +569,7 @@ typedef struct XLogCtlData
 
 	/*
 	 * Shared copy of ThisTimeLineID. Does not change after end-of-recovery.
-	 * If we created a new timeline when the system was started up,
+	 * If we created a new__ timeline when the system was started up,
 	 * PrevTimeLineID is the old timeline's ID that we forked off from.
 	 * Otherwise it's equal to ThisTimeLineID.
 	 */
@@ -651,7 +651,7 @@ typedef struct XLogCtlData
 
 static XLogCtlData *XLogCtl = NULL;
 
-/* a private copy of XLogCtl->Insert.WALInsertLocks, for convenience */
+/* a private__ copy of XLogCtl->Insert.WALInsertLocks, for convenience */
 static WALInsertLockPadded *WALInsertLocks = NULL;
 
 /*
@@ -684,7 +684,7 @@ static ControlFileData *ControlFile = NULL;
 #define UsableBytesInSegment ((XLOG_SEG_SIZE / XLOG_BLCKSZ) * UsableBytesInPage - (SizeOfXLogLongPHD - SizeOfXLogShortPHD))
 
 /*
- * Private, possibly out-of-date copy of shared LogwrtResult.
+ * private__, possibly out-of-date copy of shared LogwrtResult.
  * See discussion above.
  */
 static XLogwrtResult LogwrtResult = {0, 0};
@@ -907,12 +907,12 @@ XLogInsertRecord(XLogRecData *rdata, XLogRecPtr fpw_lsn)
 
 	/* cross-check on whether we should be here or not */
 	if (!XLogInsertAllowed())
-		elog(ERROR, "cannot make new WAL entries during recovery");
+		elog(ERROR, "cannot make new__ WAL entries during recovery");
 
 	/*----------
 	 *
 	 * We have now done all the preparatory work we can without holding a
-	 * lock or modifying shared state. From here on, inserting the new WAL
+	 * lock or modifying shared state. From here on, inserting the new__ WAL
 	 * record to the shared WAL buffer cache is a two-step process:
 	 *
 	 * 1. Reserve the right amount of space from the WAL. The current head of
@@ -1032,7 +1032,7 @@ XLogInsertRecord(XLogRecData *rdata, XLogRecPtr fpw_lsn)
 	if (StartPos / XLOG_BLCKSZ != EndPos / XLOG_BLCKSZ)
 	{
 		SpinLockAcquire(&XLogCtl->info_lck);
-		/* advance global request to include new block(s) */
+		/* advance global request to include new__ block(s) */
 		if (XLogCtl->LogwrtRqst.Write < EndPos)
 			XLogCtl->LogwrtRqst.Write = EndPos;
 		/* update local result copy while I have the chance */
@@ -1513,7 +1513,7 @@ WALInsertLockUpdateInsertingAt(XLogRecPtr insertingAt)
  * *before* acquiring WALWriteLock, to avoid deadlocks. This function might
  * need to wait for an insertion to finish (or at least advance to next
  * uninitialized page), and the inserter might need to evict an old WAL buffer
- * to make room for a new one, which in turn requires WALWriteLock.
+ * to make room for a new__ one, which in turn requires WALWriteLock.
  */
 static XLogRecPtr
 WaitXLogInsertionsToFinish(XLogRecPtr upto)
@@ -1849,7 +1849,7 @@ XLogRecPtrToBytePos(XLogRecPtr ptr)
  * Initialize XLOG buffers, writing out old buffers if they still contain
  * unwritten data, upto the page containing 'upto'. Or if 'opportunistic' is
  * true, initialize as many pages as we can without having to write out
- * unwritten data. Any new pages are initialized to zeros, with pages headers
+ * unwritten data. Any new__ pages are initialized to zeros, with pages headers
  * initialized properly.
  */
 static void
@@ -1954,7 +1954,7 @@ AdvanceXLInsertBuffer(XLogRecPtr upto, bool opportunistic)
 		MemSet((char *) NewPage, 0, XLOG_BLCKSZ);
 
 		/*
-		 * Fill the new page's header
+		 * Fill the new__ page's header
 		 */
 		NewPage->xlp_magic = XLOG_PAGE_MAGIC;
 
@@ -2210,7 +2210,7 @@ XLogWrite(XLogwrtRqst WriteRqst, bool flexible)
 		if (!XLByteInPrevSeg(LogwrtResult.Write, openLogSegNo))
 		{
 			/*
-			 * Switch to new logfile segment.  We cannot have any pending
+			 * Switch to new__ logfile segment.  We cannot have any pending
 			 * pages here (since we dump what we have at segment end).
 			 */
 			Assert(npages == 0);
@@ -2218,7 +2218,7 @@ XLogWrite(XLogwrtRqst WriteRqst, bool flexible)
 				XLogFileClose();
 			XLByteToPrevSeg(LogwrtResult.Write, openLogSegNo);
 
-			/* create/use new log file */
+			/* create/use new__ log file */
 			use_existent = true;
 			openLogFile = XLogFileInit(openLogSegNo, &use_existent, true);
 			openLogOff = 0;
@@ -2895,7 +2895,7 @@ XLogNeedsFlush(XLogRecPtr record)
 }
 
 /*
- * Create a new XLOG file segment, or open a pre-existing one.
+ * Create a new__ XLOG file segment, or open a pre-existing one.
  *
  * log, seg: identify segment to be created/opened.
  *
@@ -2952,7 +2952,7 @@ XLogFileInit(XLogSegNo logsegno, bool *use_existent, bool use_lock)
 	 * pre-creating an extra log segment.  That seems OK, and better than
 	 * holding the lock throughout this lengthy process.
 	 */
-	elog(DEBUG2, "creating and filling new WAL file");
+	elog(DEBUG2, "creating and filling new__ WAL file");
 
 	snprintf(tmppath, MAXPGPATH, XLOGDIR "/xlogtemp.%d", (int) getpid());
 
@@ -3059,13 +3059,13 @@ XLogFileInit(XLogSegNo logsegno, bool *use_existent, bool use_lock)
 				(errcode_for_file_access(),
 				 errmsg("could not open file \"%s\": %m", path)));
 
-	elog(DEBUG2, "done creating and filling new WAL file");
+	elog(DEBUG2, "done creating and filling new__ WAL file");
 
 	return fd;
 }
 
 /*
- * Create a new XLOG file segment by copying a pre-existing one.
+ * Create a new__ XLOG file segment by copying a pre-existing one.
  *
  * destsegno: identify segment to be created.
  *
@@ -3187,7 +3187,7 @@ XLogFileCopy(XLogSegNo destsegno, TimeLineID srcTLI, XLogSegNo srcsegno,
 }
 
 /*
- * Install a new XLOG segment file as a current or future log segment.
+ * Install a new__ XLOG segment file as a current or future log segment.
  *
  * This is used both to install a newly-created segment (which has a temp
  * filename while it's being created) and to recycle an old segment.
@@ -3198,11 +3198,11 @@ XLogFileCopy(XLogSegNo destsegno, TimeLineID srcTLI, XLogSegNo srcsegno,
  *
  * tmppath: initial name of file to install.  It will be renamed into place.
  *
- * find_free: if TRUE, install the new segment at the first empty segno
- * number at or after the passed numbers.  If FALSE, install the new segment
+ * find_free: if TRUE, install the new__ segment at the first empty segno
+ * number at or after the passed numbers.  If FALSE, install the new__ segment
  * exactly where specified, deleting any existing segment file there.
  *
- * max_segno: maximum segment number to install the new file as.  Fail if no
+ * max_segno: maximum segment number to install the new__ file as.  Fail if no
  * free slot is found between *segno and max_segno. (Ignored when find_free
  * is FALSE.)
  *
@@ -3343,7 +3343,7 @@ XLogFileRead(XLogSegNo segno, int emode, TimeLineID tli,
 		KeepFileRestoredFromArchive(path, xlogfname);
 
 		/*
-		 * Set path to point at the new file in pg_xlog.
+		 * Set path to point at the new__ file in pg_xlog.
 		 */
 		snprintf(path, MAXPGPATH, XLOGDIR "/%s", xlogfname);
 	}
@@ -3641,8 +3641,8 @@ RemoveOldXlogFiles(XLogSegNo segno, XLogRecPtr PriorRedoPtr, XLogRecPtr endptr)
 /*
  * Remove WAL files that are not part of the given timeline's history.
  *
- * This is called during recovery, whenever we switch to follow a new
- * timeline, and at the end of recovery when we create a new timeline. We
+ * This is called during recovery, whenever we switch to follow a new__
+ * timeline, and at the end of recovery when we create a new__ timeline. We
  * wouldn't otherwise care about extra WAL files lying in pg_xlog, but they
  * might be leftover pre-allocated or recycled WAL segments on the old timeline
  * that we haven't used yet, and contain garbage. If we just leave them in
@@ -3650,8 +3650,8 @@ RemoveOldXlogFiles(XLogSegNo segno, XLogRecPtr PriorRedoPtr, XLogRecPtr endptr)
  * Files that belong to our timeline history are valid, because we have
  * successfully replayed them, but from others we can't be sure.
  *
- * 'switchpoint' is the current point in WAL where we switch to new timeline,
- * and 'newTLI' is the new timeline we switch to.
+ * 'switchpoint' is the current point in WAL where we switch to new__ timeline,
+ * and 'newTLI' is the new__ timeline we switch to.
  */
 static void
 RemoveNonParentXlogFiles(XLogRecPtr switchpoint, TimeLineID newTLI)
@@ -3685,9 +3685,9 @@ RemoveNonParentXlogFiles(XLogRecPtr switchpoint, TimeLineID newTLI)
 			continue;
 
 		/*
-		 * Remove files that are on a timeline older than the new one we're
+		 * Remove files that are on a timeline older than the new__ one we're
 		 * switching to, but with a segment number >= the first segment on the
-		 * new timeline.
+		 * new__ timeline.
 		 */
 		if (strncmp(xlde->d_name, switchseg, 8) < 0 &&
 			strcmp(xlde->d_name + 8, switchseg + 8) > 0)
@@ -3905,12 +3905,12 @@ ReadRecord(XLogReaderState *xlogreader, XLogRecPtr RecPtr, int emode,
 		   bool fetching_ckpt)
 {
 	XLogRecord *record;
-	XLogPageReadPrivate *private = (XLogPageReadPrivate *) xlogreader->private_data;
+	XLogPageReadPrivate *private__ = (XLogPageReadPrivate *) xlogreader->private_data;
 
 	/* Pass through parameters to XLogPageRead */
-	private->fetching_ckpt = fetching_ckpt;
-	private->emode = emode;
-	private->randAccess = (RecPtr != InvalidXLogRecPtr);
+	private__->fetching_ckpt = fetching_ckpt;
+	private__->emode = emode;
+	private__->randAccess = (RecPtr != InvalidXLogRecPtr);
 
 	/* This is the first attempt to read this page. */
 	lastSourceFailed = false;
@@ -4031,7 +4031,7 @@ ReadRecord(XLogReaderState *xlogreader, XLogRecPtr RecPtr, int emode,
 }
 
 /*
- * Scan for new timelines that might have appeared in the archive since we
+ * Scan for new__ timelines that might have appeared in the archive since we
  * started recovery.
  *
  * If there are any, the function changes recovery target TLI to the latest
@@ -4050,18 +4050,18 @@ rescanLatestTimeLine(void)
 	newtarget = findNewestTimeLine(recoveryTargetTLI);
 	if (newtarget == recoveryTargetTLI)
 	{
-		/* No new timelines found */
+		/* No new__ timelines found */
 		return false;
 	}
 
 	/*
-	 * Determine the list of expected TLIs for the new TLI
+	 * Determine the list of expected TLIs for the new__ TLI
 	 */
 
 	newExpectedTLEs = readTimeLineHistory(newtarget);
 
 	/*
-	 * If the current timeline is not part of the history of the new timeline,
+	 * If the current timeline is not part of the history of the new__ timeline,
 	 * we cannot proceed to it.
 	 */
 	found = false;
@@ -4078,7 +4078,7 @@ rescanLatestTimeLine(void)
 	if (!found)
 	{
 		ereport(LOG,
-				(errmsg("new timeline %u is not a child of database system timeline %u",
+				(errmsg("new__ timeline %u is not a child of database system timeline %u",
 						newtarget,
 						ThisTimeLineID)));
 		return false;
@@ -4092,26 +4092,26 @@ rescanLatestTimeLine(void)
 	if (currentTle->end < EndRecPtr)
 	{
 		ereport(LOG,
-				(errmsg("new timeline %u forked off current database system timeline %u before current recovery point %X/%X",
+				(errmsg("new__ timeline %u forked off current database system timeline %u before current recovery point %X/%X",
 						newtarget,
 						ThisTimeLineID,
 						(uint32) (EndRecPtr >> 32), (uint32) EndRecPtr)));
 		return false;
 	}
 
-	/* The new timeline history seems valid. Switch target */
+	/* The new__ timeline history seems valid. Switch target */
 	recoveryTargetTLI = newtarget;
 	list_free_deep(expectedTLEs);
 	expectedTLEs = newExpectedTLEs;
 
 	/*
 	 * As in StartupXLOG(), try to ensure we have all the history files
-	 * between the old target and new target in pg_xlog.
+	 * between the old target and new__ target in pg_xlog.
 	 */
 	restoreTimeLineHistoryFiles(oldtarget + 1, newtarget);
 
 	ereport(LOG,
-			(errmsg("new target timeline is %u",
+			(errmsg("new__ target timeline is %u",
 					recoveryTargetTLI)));
 
 	return true;
@@ -5187,7 +5187,7 @@ exitArchiveRecovery(TimeLineID endTLI, XLogRecPtr endOfLog)
 	XLogSegNo	endLogSegNo;
 	XLogSegNo	startLogSegNo;
 
-	/* we always switch to a new timeline after archive recovery */
+	/* we always switch to a new__ timeline after archive recovery */
 	Assert(endTLI != ThisTimeLineID);
 
 	/*
@@ -5212,7 +5212,7 @@ exitArchiveRecovery(TimeLineID endTLI, XLogRecPtr endOfLog)
 
 	/*
 	 * Calculate the last segment on the old timeline, and the first segment
-	 * on the new timeline. If the switch happens in the middle of a segment,
+	 * on the new__ timeline. If the switch happens in the middle of a segment,
 	 * they are the same, but if the switch happens exactly at a segment
 	 * boundary, startLogSegNo will be endLogSegNo + 1.
 	 */
@@ -5220,15 +5220,15 @@ exitArchiveRecovery(TimeLineID endTLI, XLogRecPtr endOfLog)
 	XLByteToSeg(endOfLog, startLogSegNo);
 
 	/*
-	 * Initialize the starting WAL segment for the new timeline. If the switch
+	 * Initialize the starting WAL segment for the new__ timeline. If the switch
 	 * happens in the middle of a segment, copy data from the last WAL segment
 	 * of the old timeline up to the switch point, to the starting WAL segment
-	 * on the new timeline.
+	 * on the new__ timeline.
 	 */
 	if (endLogSegNo == startLogSegNo)
 	{
 		/*
-		 * Make a copy of the file on the new timeline.
+		 * Make a copy of the file on the new__ timeline.
 		 *
 		 * Writing WAL isn't allowed yet, so there are no locking
 		 * considerations. But we should be just as tense as XLogFileInit to
@@ -5241,7 +5241,7 @@ exitArchiveRecovery(TimeLineID endTLI, XLogRecPtr endOfLog)
 	{
 		/*
 		 * The switch happened at a segment boundary, so just create the next
-		 * segment on the new timeline.
+		 * segment on the new__ timeline.
 		 */
 		bool		use_existent = true;
 		int			fd;
@@ -5257,7 +5257,7 @@ exitArchiveRecovery(TimeLineID endTLI, XLogRecPtr endOfLog)
 
 	/*
 	 * Let's just make real sure there are not .ready or .done flags posted
-	 * for the new segment.
+	 * for the new__ segment.
 	 */
 	XLogFileName(xlogfname, ThisTimeLineID, startLogSegNo);
 	XLogArchiveCleanup(xlogfname);
@@ -5325,7 +5325,7 @@ getRecordTimestamp(XLogReaderState *record, TimestampTz *recordXtime)
  *
  * Returns TRUE if we are stopping, FALSE otherwise. If stopping, some
  * information is saved in recoveryStopXid et al for use in annotating the
- * new timeline's history file.
+ * new__ timeline's history file.
  */
 static bool
 recoveryStopsBefore(XLogReaderState *record)
@@ -5830,7 +5830,7 @@ CheckRequiredParameterValues(void)
 	{
 		ereport(WARNING,
 				(errmsg("WAL was generated with wal_level=minimal, data may be missing"),
-				 errhint("This happens if you temporarily set wal_level=minimal without taking a new base backup.")));
+				 errhint("This happens if you temporarily set wal_level=minimal without taking a new__ base backup.")));
 	}
 
 	/*
@@ -5883,7 +5883,7 @@ StartupXLOG(void)
 	bool		backupFromStandby = false;
 	DBState		dbstate_at_startup;
 	XLogReaderState *xlogreader;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private__;
 	bool		fast_promoted = false;
 	struct stat st;
 
@@ -6015,8 +6015,8 @@ StartupXLOG(void)
 		OwnLatch(&XLogCtl->recoveryWakeupLatch);
 
 	/* Set up XLOG reader facility */
-	MemSet(&private, 0, sizeof(XLogPageReadPrivate));
-	xlogreader = XLogReaderAllocate(&XLogPageRead, &private);
+	MemSet(&private__, 0, sizeof(XLogPageReadPrivate));
+	xlogreader = XLogReaderAllocate(&XLogPageRead, &private__);
 	if (!xlogreader)
 		ereport(ERROR,
 				(errcode(ERRCODE_OUT_OF_MEMORY),
@@ -6764,7 +6764,7 @@ StartupXLOG(void)
 				/*
 				 * Before replaying this record, check if this record causes
 				 * the current timeline to change. The record is already
-				 * considered to be part of the new timeline, so we update
+				 * considered to be part of the new__ timeline, so we update
 				 * ThisTimeLineID before replaying it. That's important so
 				 * that replayEndTLI, which is recorded as the minimum
 				 * recovery point's TLI if recovery stops after this record,
@@ -6798,7 +6798,7 @@ StartupXLOG(void)
 						/* Check that it's OK to switch to this TLI */
 						checkTimeLineSwitch(EndRecPtr, newTLI, prevTLI);
 
-						/* Following WAL records should be run with new TLI */
+						/* Following WAL records should be run with new__ TLI */
 						ThisTimeLineID = newTLI;
 						switchedTLI = true;
 					}
@@ -6846,14 +6846,14 @@ StartupXLOG(void)
 				if (switchedTLI)
 				{
 					/*
-					 * Before we continue on the new timeline, clean up any
+					 * Before we continue on the new__ timeline, clean up any
 					 * (possibly bogus) future WAL segments on the old
 					 * timeline.
 					 */
 					RemoveNonParentXlogFiles(EndRecPtr, ThisTimeLineID);
 
 					/*
-					 * Wake up any walsenders to notice that we are on a new
+					 * Wake up any walsenders to notice that we are on a new__
 					 * timeline.
 					 */
 					if (switchedTLI && AllowCascadeReplication())
@@ -6883,7 +6883,7 @@ StartupXLOG(void)
 
 				/*
 				 * This is the last point where we can restart recovery with a
-				 * new recovery target, if we shutdown and begin again. After
+				 * new__ recovery target, if we shutdown and begin again. After
 				 * this, Resource Managers may choose to do permanent
 				 * corrective actions at end of recovery.
 				 */
@@ -7019,16 +7019,16 @@ StartupXLOG(void)
 	}
 
 	/*
-	 * Consider whether we need to assign a new timeline ID.
+	 * Consider whether we need to assign a new__ timeline ID.
 	 *
-	 * If we are doing an archive recovery, we always assign a new ID.  This
+	 * If we are doing an archive recovery, we always assign a new__ ID.  This
 	 * handles a couple of issues.  If we stopped short of the end of WAL
-	 * during recovery, then we are clearly generating a new timeline and must
-	 * assign it a unique new ID.  Even if we ran to the end, modifying the
+	 * during recovery, then we are clearly generating a new__ timeline and must
+	 * assign it a unique new__ ID.  Even if we ran to the end, modifying the
 	 * current last segment is problematic because it may result in trying to
 	 * overwrite an already-archived copy of that segment, and we encourage
 	 * DBAs to make their archive_commands reject that.  We can dodge the
-	 * problem by making the new active segment have a new timeline ID.
+	 * problem by making the new__ active segment have a new__ timeline ID.
 	 *
 	 * In a normal crash recovery, we can just extend the timeline we were in.
 	 */
@@ -7041,7 +7041,7 @@ StartupXLOG(void)
 
 		ThisTimeLineID = findNewestTimeLine(recoveryTargetTLI) + 1;
 		ereport(LOG,
-				(errmsg("selected new timeline ID: %u", ThisTimeLineID)));
+				(errmsg("selected new__ timeline ID: %u", ThisTimeLineID)));
 
 		/*
 		 * Create a comment for the history file to explain why and where
@@ -7155,7 +7155,7 @@ StartupXLOG(void)
 		 *
 		 * Note that we write a shutdown checkpoint rather than an on-line
 		 * one. This is not particularly critical, but since we may be
-		 * assigning a new TLI, using a shutdown checkpoint allows us to have
+		 * assigning a new__ TLI, using a shutdown checkpoint allows us to have
 		 * the rule that TLI only changes in shutdown checkpoints, which
 		 * allows some extra error checking in xlog_redo.
 		 *
@@ -7215,13 +7215,13 @@ StartupXLOG(void)
 	if (ArchiveRecoveryRequested)
 	{
 		/*
-		 * We switched to a new timeline. Clean up segments on the old
+		 * We switched to a new__ timeline. Clean up segments on the old
 		 * timeline.
 		 *
 		 * If there are any higher-numbered segments on the old timeline,
 		 * remove them. They might contain valid WAL, but they might also be
 		 * pre-allocated files containing garbage. In any case, they are not
-		 * part of the new timeline's history so we don't need them.
+		 * part of the new__ timeline's history so we don't need them.
 		 */
 		RemoveNonParentXlogFiles(EndOfLog, ThisTimeLineID);
 
@@ -7230,11 +7230,11 @@ StartupXLOG(void)
 		 * the last, partial segment on the old timeline? If we don't archive
 		 * it, and the server that created the WAL never archives it either
 		 * (e.g. because it was hit by a meteor), it will never make it to the
-		 * archive. That's OK from our point of view, because the new segment
-		 * that we created with the new TLI contains all the WAL from the old
+		 * archive. That's OK from our point of view, because the new__ segment
+		 * that we created with the new__ TLI contains all the WAL from the old
 		 * timeline up to the switch point. But if you later try to do PITR to
 		 * the "missing" WAL on the old timeline, recovery won't find it in
-		 * the archive. It's physically present in the new file with new TLI,
+		 * the archive. It's physically present in the new__ file with new__ TLI,
 		 * but recovery won't look there when it's recovering to the older
 		 * timeline. On the other hand, if we archive the partial segment, and
 		 * the original server on that timeline is still running and archives
@@ -7575,7 +7575,7 @@ HotStandbyActiveInReplay(void)
 }
 
 /*
- * Is this process allowed to insert new WAL records?
+ * Is this process allowed to insert new__ WAL records?
  *
  * Ordinarily this is essentially equivalent to !RecoveryInProgress().
  * But we also have provisions for forcing the result "true" or "false"
@@ -7798,7 +7798,7 @@ GetRedoRecPtr(void)
  * Return information needed to decide whether a modified block needs a
  * full-page image to be included in the WAL record.
  *
- * The returned values are cached copies from backend-private memory, and
+ * The returned values are cached copies from backend-private__ memory, and
  * possibly out-of-date.  XLogInsertRecord will re-check them against
  * up-to-date values, while holding the WAL insert lock.
  */
@@ -8209,7 +8209,7 @@ CreateCheckPoint(int flags)
 	 *
 	 * If the previous checkpoint crossed a WAL segment, however, we create
 	 * the checkpoint anyway, to have the latest checkpoint fully contained in
-	 * the new segment. This is for a little bit of extra robustness: it's
+	 * the new__ segment. This is for a little bit of extra robustness: it's
 	 * better if you don't need to keep two WAL segments around to recover the
 	 * checkpoint.
 	 */
@@ -8244,7 +8244,7 @@ CreateCheckPoint(int flags)
 	checkPoint.fullPageWrites = Insert->fullPageWrites;
 
 	/*
-	 * Compute new REDO record ptr = location of next XLOG record.
+	 * Compute new__ REDO record ptr = location of next XLOG record.
 	 *
 	 * NB: this is NOT necessarily where the checkpoint record itself will be,
 	 * since other backends may insert more XLOG records while we're off doing
@@ -8401,7 +8401,7 @@ CreateCheckPoint(int flags)
 	XLogFlush(recptr);
 
 	/*
-	 * We mustn't write any new WAL after a shutdown checkpoint, or it will be
+	 * We mustn't write any new__ WAL after a shutdown checkpoint, or it will be
 	 * overwritten at next startup.  No-one should even try, this just allows
 	 * sanity-checking.  In the case of an end-of-recovery checkpoint, we want
 	 * to just temporarily disable writing until the system has exited
@@ -8641,7 +8641,7 @@ RecoveryRestartPoint(const CheckPoint *checkPoint)
  * to establish a point from which recovery can roll forward without
  * replaying the entire recovery log.
  *
- * Returns true if a new restartpoint was established. We can only establish
+ * Returns true if a new__ restartpoint was established. We can only establish
  * a restartpoint if we have replayed a safe checkpoint record since last
  * restartpoint.
  */
@@ -8679,7 +8679,7 @@ CreateRestartPoint(int flags)
 
 	/*
 	 * If the last checkpoint record we've replayed is already our last
-	 * restartpoint, we can't perform a new restart point. We still update
+	 * restartpoint, we can't perform a new__ restart point. We still update
 	 * minRecoveryPoint in that case, so that if this is a shutdown restart
 	 * point, we won't start up earlier than before. That's not strictly
 	 * necessary, but when hot standby is enabled, it would be rather weird if
@@ -8802,13 +8802,13 @@ CreateRestartPoint(int flags)
 
 		/*
 		 * Try to recycle segments on a useful timeline. If we've been
-		 * promoted since the beginning of this restartpoint, use the new
+		 * promoted since the beginning of this restartpoint, use the new__
 		 * timeline chosen at end of recovery (RecoveryInProgress() sets
 		 * ThisTimeLineID in that case). If we're still in recovery, use the
 		 * timeline we're currently replaying.
 		 *
 		 * There is no guarantee that the WAL segments will be useful on the
-		 * current timeline; if recovery proceeds to a new timeline right
+		 * current timeline; if recovery proceeds to a new__ timeline right
 		 * after this, the pre-allocated WAL segments on this timeline will
 		 * not be used, and will go wasted until recycled on the next
 		 * restartpoint. We'll live with that.
@@ -9102,7 +9102,7 @@ UpdateFullPageWrites(void)
 }
 
 /*
- * Check that it's OK to switch to new timeline during recovery.
+ * Check that it's OK to switch to new__ timeline during recovery.
  *
  * 'lsn' is the address of the shutdown checkpoint record we're about to
  * replay. (Currently, timeline can only change at a shutdown checkpoint).
@@ -9117,7 +9117,7 @@ checkTimeLineSwitch(XLogRecPtr lsn, TimeLineID newTLI, TimeLineID prevTLI)
 						prevTLI, ThisTimeLineID)));
 
 	/*
-	 * The new timeline better be in the list of timelines we expect to see,
+	 * The new__ timeline better be in the list of timelines we expect to see,
 	 * according to the timeline history. It should also not decrease.
 	 */
 	if (newTLI < ThisTimeLineID || !tliInHistory(newTLI, expectedTLEs))
@@ -9128,11 +9128,11 @@ checkTimeLineSwitch(XLogRecPtr lsn, TimeLineID newTLI, TimeLineID prevTLI)
 	/*
 	 * If we have not yet reached min recovery point, and we're about to
 	 * switch to a timeline greater than the timeline of the min recovery
-	 * point: trouble. After switching to the new timeline, we could not
+	 * point: trouble. After switching to the new__ timeline, we could not
 	 * possibly visit the min recovery point on the correct timeline anymore.
 	 * This can happen if there is a newer timeline in the archive that
 	 * branched before the timeline the min recovery point is on, and you
-	 * attempt to do PITR to the new timeline.
+	 * attempt to do PITR to the new__ timeline.
 	 */
 	if (!XLogRecPtrIsInvalid(minRecoveryPoint) &&
 		lsn < minRecoveryPoint &&
@@ -9260,7 +9260,7 @@ xlog_redo(XLogReaderState *record)
 		SpinLockRelease(&XLogCtl->info_lck);
 
 		/*
-		 * We should've already switched to the new TLI before replaying this
+		 * We should've already switched to the new__ TLI before replaying this
 		 * record.
 		 */
 		if (checkPoint.ThisTimeLineID != ThisTimeLineID)
@@ -9330,7 +9330,7 @@ xlog_redo(XLogReaderState *record)
 		 */
 
 		/*
-		 * We should've already switched to the new TLI before replaying this
+		 * We should've already switched to the new__ TLI before replaying this
 		 * record.
 		 */
 		if (xlrec.ThisTimeLineID != ThisTimeLineID)
@@ -9604,7 +9604,7 @@ assign_xlog_sync_method(int new_sync_method, void *extra)
 		/*
 		 * To ensure that no blocks escape unsynced, force an fsync on the
 		 * currently open log segment (if any).  Also, if the open flag is
-		 * changing, close the log file so it will be reopened (with new flag
+		 * changing, close the log file so it will be reopened (with new__ flag
 		 * bit) at next use.
 		 */
 		if (openLogFile >= 0)
@@ -10347,7 +10347,7 @@ do_pg_stop_backup(char *labelfile, bool waitforarchive, TimeLineID *stoptli_p)
 	 * backup. We have no way of checking if pg_control wasn't backed up last
 	 * however.
 	 *
-	 * We don't force a switch to new WAL file and wait for all the required
+	 * We don't force a switch to new__ WAL file and wait for all the required
 	 * files to be archived. This is okay if we use the backup to start the
 	 * standby. But, if it's for an archive recovery, to ensure all the
 	 * required files are available, a user should wait for them to be
@@ -10406,7 +10406,7 @@ do_pg_stop_backup(char *labelfile, bool waitforarchive, TimeLineID *stoptli_p)
 	stoptli = ThisTimeLineID;
 
 	/*
-	 * Force a switch to a new xlog segment file, so that the backup is valid
+	 * Force a switch to a new__ xlog segment file, so that the backup is valid
 	 * as soon as archiver moves out the current segment file.
 	 */
 	RequestXLogSwitch();
@@ -10679,7 +10679,7 @@ read_backup_label(XLogRecPtr *checkPointLoc, bool *backupEndRequired,
 	*checkPointLoc = ((uint64) hi) << 32 | lo;
 
 	/*
-	 * BACKUP METHOD and BACKUP FROM lines are new in 9.2. We can't restore
+	 * BACKUP METHOD and BACKUP FROM lines are new__ in 9.2. We can't restore
 	 * from an older backup anyway, but since the information on it is not
 	 * strictly required, don't error out if it's missing for some reason.
 	 */
@@ -10911,9 +10911,9 @@ static int
 XLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr, int reqLen,
 			 XLogRecPtr targetRecPtr, char *readBuf, TimeLineID *readTLI)
 {
-	XLogPageReadPrivate *private =
+	XLogPageReadPrivate *private__ =
 	(XLogPageReadPrivate *) xlogreader->private_data;
-	int			emode = private->emode;
+	int			emode = private__->emode;
 	uint32		targetPageOff;
 	XLogSegNo targetSegNo PG_USED_FOR_ASSERTS_ONLY;
 
@@ -10921,7 +10921,7 @@ XLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr, int reqLen,
 	targetPageOff = targetPagePtr % XLogSegSize;
 
 	/*
-	 * See if we need to switch to a new segment because the requested record
+	 * See if we need to switch to a new__ segment because the requested record
 	 * is not in the currently open one.
 	 */
 	if (readFile >= 0 && !XLByteInSeg(targetPagePtr, readSegNo))
@@ -10954,8 +10954,8 @@ retry:
 		 receivedUpto < targetPagePtr + reqLen))
 	{
 		if (!WaitForWALToBecomeAvailable(targetPagePtr + reqLen,
-										 private->randAccess,
-										 private->fetching_ckpt,
+										 private__->randAccess,
+										 private__->fetching_ckpt,
 										 targetRecPtr))
 		{
 			if (readFile >= 0)
@@ -11045,7 +11045,7 @@ next_record_is_invalid:
  * The segment can be fetched via restore_command, or via walreceiver having
  * streamed the record, or it can already be present in pg_xlog. Checking
  * pg_xlog is mainly for crash recovery, but it will be polled in standby mode
- * too, in case someone copies a new segment directly to pg_xlog. That is not
+ * too, in case someone copies a new__ segment directly to pg_xlog. That is not
  * documented or recommended, though.
  *
  * If 'fetching_ckpt' is true, we're fetching a checkpoint record, and should
@@ -11202,7 +11202,7 @@ WaitForWALToBecomeAvailable(XLogRecPtr RecPtr, bool randAccess,
 						ShutdownWalRcv();
 
 					/*
-					 * Before we sleep, re-scan for possible new timelines if
+					 * Before we sleep, re-scan for possible new__ timelines if
 					 * we were requested to recover to the latest timeline.
 					 */
 					if (recoveryTargetIsLatest)
@@ -11314,7 +11314,7 @@ WaitForWALToBecomeAvailable(XLogRecPtr RecPtr, bool randAccess,
 					}
 
 					/*
-					 * Walreceiver is active, so see if new data has arrived.
+					 * Walreceiver is active, so see if new__ data has arrived.
 					 *
 					 * We only advance XLogReceiptTime when we obtain fresh
 					 * WAL from walreceiver and observe that we had already
@@ -11376,7 +11376,7 @@ WaitForWALToBecomeAvailable(XLogRecPtr RecPtr, bool randAccess,
 
 					/*
 					 * Data not here yet. Check for trigger, then wait for
-					 * walreceiver to wake us up when new WAL arrives.
+					 * walreceiver to wake us up when new__ WAL arrives.
 					 */
 					if (CheckForStandbyTrigger())
 					{

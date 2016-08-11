@@ -22,7 +22,7 @@
 /*
  *	_hash_doinsert() -- Handle insertion of a single index tuple.
  *
- *		This routine is called by the public interface routines, hashbuild
+ *		This routine is called by the public__ interface routines, hashbuild
  *		and hashinsert.  By here, itup is completely filled in.
  */
 void
@@ -137,13 +137,13 @@ _hash_doinsert(Relation rel, IndexTuple itup)
 		{
 			/*
 			 * we're at the end of the bucket chain and we haven't found a
-			 * page with enough room.  allocate a new overflow page.
+			 * page with enough room.  allocate a new__ overflow page.
 			 */
 
 			/* release our write lock without modifying buffer */
 			_hash_chgbufaccess(rel, buf, HASH_READ, HASH_NOLOCK);
 
-			/* chain to a new overflow page */
+			/* chain to a new__ overflow page */
 			buf = _hash_addovflpage(rel, metabuf, buf);
 			page = BufferGetPage(buf);
 

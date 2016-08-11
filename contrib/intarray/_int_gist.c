@@ -478,7 +478,7 @@ g_int_picksplit(PG_FUNCTION_ARGS)
 	 * this property by doing a merge in the code that actually splits the
 	 * page.
 	 *
-	 * For efficiency, we also place the new index tuple in this loop. This is
+	 * For efficiency, we also place the new__ index tuple in this loop. This is
 	 * handled at the very end, when we have placed all the existing tuples
 	 * and i == maxoff + 1.
 	 */

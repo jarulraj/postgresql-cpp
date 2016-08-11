@@ -316,23 +316,23 @@ static int
 XLogDumpReadPage(XLogReaderState *state, XLogRecPtr targetPagePtr, int reqLen,
 				 XLogRecPtr targetPtr, char *readBuff, TimeLineID *curFileTLI)
 {
-	XLogDumpPrivate *private = state->private_data;
+	XLogDumpPrivate *private__ = state->private_data;
 	int			count = XLOG_BLCKSZ;
 
-	if (private->endptr != InvalidXLogRecPtr)
+	if (private__->endptr != InvalidXLogRecPtr)
 	{
-		if (targetPagePtr + XLOG_BLCKSZ <= private->endptr)
+		if (targetPagePtr + XLOG_BLCKSZ <= private__->endptr)
 			count = XLOG_BLCKSZ;
-		else if (targetPagePtr + reqLen <= private->endptr)
-			count = private->endptr - targetPagePtr;
+		else if (targetPagePtr + reqLen <= private__->endptr)
+			count = private__->endptr - targetPagePtr;
 		else
 		{
-			private->endptr_reached = true;
+			private__->endptr_reached = true;
 			return -1;
 		}
 	}
 
-	XLogDumpXLogRead(private->inpath, private->timeline, targetPagePtr,
+	XLogDumpXLogRead(private__->inpath, private__->timeline, targetPagePtr,
 					 readBuff, count);
 
 	return count;
@@ -359,7 +359,7 @@ XLogDumpCountRecord(XLogDumpConfig *config, XLogDumpStats *stats,
 	/*
 	 * Calculate the amount of FPI data in the record.
 	 *
-	 * XXX: We peek into xlogreader's private decoded backup blocks for the
+	 * XXX: We peek into xlogreader's private__ decoded backup blocks for the
 	 * bimg_len indicating the length of FPI data. It doesn't seem worth it to
 	 * add an accessor macro for this.
 	 */
@@ -675,7 +675,7 @@ main(int argc, char **argv)
 	uint32		xlogid;
 	uint32		xrecoff;
 	XLogReaderState *xlogreader_state;
-	XLogDumpPrivate private;
+	XLogDumpPrivate private__;
 	XLogDumpConfig config;
 	XLogDumpStats stats;
 	XLogRecord *record;
@@ -703,14 +703,14 @@ main(int argc, char **argv)
 
 	progname = get_progname(argv[0]);
 
-	memset(&private, 0, sizeof(XLogDumpPrivate));
+	memset(&private__, 0, sizeof(XLogDumpPrivate));
 	memset(&config, 0, sizeof(XLogDumpConfig));
 	memset(&stats, 0, sizeof(XLogDumpStats));
 
-	private.timeline = 1;
-	private.startptr = InvalidXLogRecPtr;
-	private.endptr = InvalidXLogRecPtr;
-	private.endptr_reached = false;
+	private__.timeline = 1;
+	private__.startptr = InvalidXLogRecPtr;
+	private__.endptr = InvalidXLogRecPtr;
+	private__.endptr_reached = false;
 
 	config.bkp_details = false;
 	config.stop_after_records = -1;
@@ -743,7 +743,7 @@ main(int argc, char **argv)
 							progname, optarg);
 					goto bad_argument;
 				}
-				private.endptr = (uint64) xlogid << 32 | xrecoff;
+				private__.endptr = (uint64) xlogid << 32 | xrecoff;
 				break;
 			case 'f':
 				config.follow = true;
@@ -761,7 +761,7 @@ main(int argc, char **argv)
 				}
 				break;
 			case 'p':
-				private.inpath = pg_strdup(optarg);
+				private__.inpath = pg_strdup(optarg);
 				break;
 			case 'r':
 				{
@@ -798,10 +798,10 @@ main(int argc, char **argv)
 					goto bad_argument;
 				}
 				else
-					private.startptr = (uint64) xlogid << 32 | xrecoff;
+					private__.startptr = (uint64) xlogid << 32 | xrecoff;
 				break;
 			case 't':
-				if (sscanf(optarg, "%d", &private.timeline) != 1)
+				if (sscanf(optarg, "%d", &private__.timeline) != 1)
 				{
 					fprintf(stderr, "%s: could not parse timeline \"%s\"\n",
 							progname, optarg);
@@ -849,14 +849,14 @@ main(int argc, char **argv)
 		goto bad_argument;
 	}
 
-	if (private.inpath != NULL)
+	if (private__.inpath != NULL)
 	{
 		/* validate path points to directory */
-		if (!verify_directory(private.inpath))
+		if (!verify_directory(private__.inpath))
 		{
 			fprintf(stderr,
 					"%s: path \"%s\" cannot be opened: %s",
-					progname, private.inpath, strerror(errno));
+					progname, private__.inpath, strerror(errno));
 			goto bad_argument;
 		}
 	}
@@ -871,39 +871,39 @@ main(int argc, char **argv)
 
 		split_path(argv[optind], &directory, &fname);
 
-		if (private.inpath == NULL && directory != NULL)
+		if (private__.inpath == NULL && directory != NULL)
 		{
-			private.inpath = directory;
+			private__.inpath = directory;
 
-			if (!verify_directory(private.inpath))
+			if (!verify_directory(private__.inpath))
 				fatal_error("cannot open directory \"%s\": %s",
-							private.inpath, strerror(errno));
+							private__.inpath, strerror(errno));
 		}
 
-		fd = fuzzy_open_file(private.inpath, fname);
+		fd = fuzzy_open_file(private__.inpath, fname);
 		if (fd < 0)
 			fatal_error("could not open file \"%s\"", fname);
 		close(fd);
 
 		/* parse position from file */
-		XLogFromFileName(fname, &private.timeline, &segno);
+		XLogFromFileName(fname, &private__.timeline, &segno);
 
-		if (XLogRecPtrIsInvalid(private.startptr))
-			XLogSegNoOffsetToRecPtr(segno, 0, private.startptr);
-		else if (!XLByteInSeg(private.startptr, segno))
+		if (XLogRecPtrIsInvalid(private__.startptr))
+			XLogSegNoOffsetToRecPtr(segno, 0, private__.startptr);
+		else if (!XLByteInSeg(private__.startptr, segno))
 		{
 			fprintf(stderr,
 				  "%s: start log position %X/%X is not inside file \"%s\"\n",
 					progname,
-					(uint32) (private.startptr >> 32),
-					(uint32) private.startptr,
+					(uint32) (private__.startptr >> 32),
+					(uint32) private__.startptr,
 					fname);
 			goto bad_argument;
 		}
 
 		/* no second file specified, set end position */
-		if (!(optind + 1 < argc) && XLogRecPtrIsInvalid(private.endptr))
-			XLogSegNoOffsetToRecPtr(segno + 1, 0, private.endptr);
+		if (!(optind + 1 < argc) && XLogRecPtrIsInvalid(private__.endptr))
+			XLogSegNoOffsetToRecPtr(segno + 1, 0, private__.endptr);
 
 		/* parse ENDSEG if passed */
 		if (optind + 1 < argc)
@@ -913,41 +913,41 @@ main(int argc, char **argv)
 			/* ignore directory, already have that */
 			split_path(argv[optind + 1], &directory, &fname);
 
-			fd = fuzzy_open_file(private.inpath, fname);
+			fd = fuzzy_open_file(private__.inpath, fname);
 			if (fd < 0)
 				fatal_error("could not open file \"%s\"", fname);
 			close(fd);
 
 			/* parse position from file */
-			XLogFromFileName(fname, &private.timeline, &endsegno);
+			XLogFromFileName(fname, &private__.timeline, &endsegno);
 
 			if (endsegno < segno)
 				fatal_error("ENDSEG %s is before STARTSEG %s",
 							argv[optind + 1], argv[optind]);
 
-			if (XLogRecPtrIsInvalid(private.endptr))
-				XLogSegNoOffsetToRecPtr(endsegno + 1, 0, private.endptr);
+			if (XLogRecPtrIsInvalid(private__.endptr))
+				XLogSegNoOffsetToRecPtr(endsegno + 1, 0, private__.endptr);
 
 			/* set segno to endsegno for check of --end */
 			segno = endsegno;
 		}
 
 
-		if (!XLByteInSeg(private.endptr, segno) &&
-			private.endptr != (segno + 1) * XLogSegSize)
+		if (!XLByteInSeg(private__.endptr, segno) &&
+			private__.endptr != (segno + 1) * XLogSegSize)
 		{
 			fprintf(stderr,
 					"%s: end log position %X/%X is not inside file \"%s\"\n",
 					progname,
-					(uint32) (private.endptr >> 32),
-					(uint32) private.endptr,
+					(uint32) (private__.endptr >> 32),
+					(uint32) private__.endptr,
 					argv[argc - 1]);
 			goto bad_argument;
 		}
 	}
 
 	/* we don't know what to print */
-	if (XLogRecPtrIsInvalid(private.startptr))
+	if (XLogRecPtrIsInvalid(private__.startptr))
 	{
 		fprintf(stderr, "%s: no start log position given in range mode.\n", progname);
 		goto bad_argument;
@@ -956,28 +956,28 @@ main(int argc, char **argv)
 	/* done with argument parsing, do the actual work */
 
 	/* we have everything we need, start reading */
-	xlogreader_state = XLogReaderAllocate(XLogDumpReadPage, &private);
+	xlogreader_state = XLogReaderAllocate(XLogDumpReadPage, &private__);
 	if (!xlogreader_state)
 		fatal_error("out of memory");
 
 	/* first find a valid recptr to start from */
-	first_record = XLogFindNextRecord(xlogreader_state, private.startptr);
+	first_record = XLogFindNextRecord(xlogreader_state, private__.startptr);
 
 	if (first_record == InvalidXLogRecPtr)
 		fatal_error("could not find a valid record after %X/%X",
-					(uint32) (private.startptr >> 32),
-					(uint32) private.startptr);
+					(uint32) (private__.startptr >> 32),
+					(uint32) private__.startptr);
 
 	/*
 	 * Display a message that we're skipping data if `from` wasn't a pointer
 	 * to the start of a record and also wasn't a pointer to the beginning of
 	 * a segment (e.g. we were used in file mode).
 	 */
-	if (first_record != private.startptr && (private.startptr % XLogSegSize) != 0)
+	if (first_record != private__.startptr && (private__.startptr % XLogSegSize) != 0)
 		printf("first record is after %X/%X, at %X/%X, skipping over %u bytes\n",
-			   (uint32) (private.startptr >> 32), (uint32) private.startptr,
+			   (uint32) (private__.startptr >> 32), (uint32) private__.startptr,
 			   (uint32) (first_record >> 32), (uint32) first_record,
-			   (uint32) (first_record - private.startptr));
+			   (uint32) (first_record - private__.startptr));
 
 	for (;;)
 	{
@@ -985,7 +985,7 @@ main(int argc, char **argv)
 		record = XLogReadRecord(xlogreader_state, first_record, &errormsg);
 		if (!record)
 		{
-			if (!config.follow || private.endptr_reached)
+			if (!config.follow || private__.endptr_reached)
 				break;
 			else
 			{

@@ -17,7 +17,7 @@
 
 /*
  * List of resource manager entries.  Note that order of entries defines the
- * numerical values of each rmgr's ID, which is stored in WAL records.  New
+ * numerical values of each rmgr's ID, which is stored in WAL records.  new__
  * entries should be added at the end, to avoid changing IDs of existing
  * entries.
  *

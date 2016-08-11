@@ -94,14 +94,14 @@ sv2cstr(SV *sv)
 	 */
 	res = utf_u2e(val, len);
 
-	/* safe now to garbage collect the new SV */
+	/* safe now to garbage collect the new__ SV */
 	SvREFCNT_dec(sv);
 
 	return res;
 }
 
 /*
- * Create a new SV from a string assumed to be in the current database's
+ * Create a new__ SV from a string assumed to be in the current database's
  * encoding.
  */
 static inline SV *

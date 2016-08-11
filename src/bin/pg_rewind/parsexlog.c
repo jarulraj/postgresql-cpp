@@ -65,11 +65,11 @@ extractPageMap(const char *datadir, XLogRecPtr startpoint, TimeLineID tli,
 	XLogRecord *record;
 	XLogReaderState *xlogreader;
 	char	   *errormsg;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private__;
 
-	private.datadir = datadir;
-	private.tli = tli;
-	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private);
+	private__.datadir = datadir;
+	private__.tli = tli;
+	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private__);
 	if (xlogreader == NULL)
 		pg_fatal("out of memory\n");
 
@@ -117,12 +117,12 @@ readOneRecord(const char *datadir, XLogRecPtr ptr, TimeLineID tli)
 	XLogRecord *record;
 	XLogReaderState *xlogreader;
 	char	   *errormsg;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private__;
 	XLogRecPtr	endptr;
 
-	private.datadir = datadir;
-	private.tli = tli;
-	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private);
+	private__.datadir = datadir;
+	private__.tli = tli;
+	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private__);
 	if (xlogreader == NULL)
 		pg_fatal("out of memory\n");
 
@@ -161,7 +161,7 @@ findLastCheckpoint(const char *datadir, XLogRecPtr forkptr, TimeLineID tli,
 	XLogRecPtr	searchptr;
 	XLogReaderState *xlogreader;
 	char	   *errormsg;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private__;
 
 	/*
 	 * The given fork pointer points to the end of the last common record,
@@ -172,9 +172,9 @@ findLastCheckpoint(const char *datadir, XLogRecPtr forkptr, TimeLineID tli,
 	if (forkptr % XLOG_BLCKSZ == 0)
 		forkptr += (forkptr % XLogSegSize == 0) ? SizeOfXLogLongPHD : SizeOfXLogShortPHD;
 
-	private.datadir = datadir;
-	private.tli = tli;
-	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private);
+	private__.datadir = datadir;
+	private__.tli = tli;
+	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private__);
 	if (xlogreader == NULL)
 		pg_fatal("out of memory\n");
 
@@ -234,7 +234,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 				   int reqLen, XLogRecPtr targetRecPtr, char *readBuf,
 				   TimeLineID *pageTLI)
 {
-	XLogPageReadPrivate *private = (XLogPageReadPrivate *) xlogreader->private_data;
+	XLogPageReadPrivate *private__ = (XLogPageReadPrivate *) xlogreader->private_data;
 	uint32		targetPageOff;
 	XLogSegNo targetSegNo PG_USED_FOR_ASSERTS_ONLY;
 
@@ -242,7 +242,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 	targetPageOff = targetPagePtr % XLogSegSize;
 
 	/*
-	 * See if we need to switch to a new segment because the requested record
+	 * See if we need to switch to a new__ segment because the requested record
 	 * is not in the currently open one.
 	 */
 	if (xlogreadfd >= 0 && !XLByteInSeg(targetPagePtr, xlogreadsegno))
@@ -257,9 +257,9 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 	{
 		char		xlogfname[MAXFNAMELEN];
 
-		XLogFileName(xlogfname, private->tli, xlogreadsegno);
+		XLogFileName(xlogfname, private__->tli, xlogreadsegno);
 
-		snprintf(xlogfpath, MAXPGPATH, "%s/" XLOGDIR "/%s", private->datadir, xlogfname);
+		snprintf(xlogfpath, MAXPGPATH, "%s/" XLOGDIR "/%s", private__->datadir, xlogfname);
 
 		xlogreadfd = open(xlogfpath, O_RDONLY | PG_BINARY, 0);
 
@@ -293,7 +293,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 
 	Assert(targetSegNo == xlogreadsegno);
 
-	*pageTLI = private->tli;
+	*pageTLI = private__->tli;
 	return XLOG_BLCKSZ;
 }
 
@@ -313,12 +313,12 @@ extractPageInfo(XLogReaderState *record)
 	if (rmid == RM_DBASE_ID && rminfo == XLOG_DBASE_CREATE)
 	{
 		/*
-		 * New databases can be safely ignored. It won't be present in the
+		 * new__ databases can be safely ignored. It won't be present in the
 		 * source system, so it will be deleted. There's one corner-case,
-		 * though: if a new, different, database is also created in the source
+		 * though: if a new__, different, database is also created in the source
 		 * system, we'll see that the files already exist and not copy them.
-		 * That's OK, though; WAL replay of creating the new database, from
-		 * the source systems's WAL, will re-copy the new database,
+		 * That's OK, though; WAL replay of creating the new__ database, from
+		 * the source systems's WAL, will re-copy the new__ database,
 		 * overwriting the database created in the target system.
 		 */
 	}

@@ -616,7 +616,7 @@ dblink_fetch(PG_FUNCTION_ARGS)
 }
 
 /*
- * Note: this is the new preferred version of dblink
+ * Note: this is the new__ preferred version of dblink
  */
 PG_FUNCTION_INFO_V1(dblink_record);
 Datum
@@ -1154,7 +1154,7 @@ storeRow(volatile storeInfo *sinfo, PGresult *res, bool first)
 
 	if (first)
 	{
-		/* Prepare for new result set */
+		/* Prepare for new__ result set */
 		ReturnSetInfo *rsinfo = (ReturnSetInfo *) sinfo->fcinfo->resultinfo;
 		TupleDesc	tupdesc;
 
@@ -1199,7 +1199,7 @@ storeRow(volatile storeInfo *sinfo, PGresult *res, bool first)
 		/* Prepare attinmeta for later data conversions */
 		sinfo->attinmeta = TupleDescGetAttInMetadata(tupdesc);
 
-		/* Create a new, empty tuplestore */
+		/* Create a new__, empty tuplestore */
 		oldcontext = MemoryContextSwitchTo(rsinfo->econtext->ecxt_per_query_memory);
 		sinfo->tuplestore = tuplestore_begin_heap(true, false, work_mem);
 		rsinfo->setResult = sinfo->tuplestore;
@@ -2929,9 +2929,9 @@ is_valid_dblink_option(const PQconninfoOption *options, const char *option,
 
 /*
  * Copy the remote session's values of GUCs that affect datatype I/O
- * and apply them locally in a new GUC nesting level.  Returns the new
+ * and apply them locally in a new__ GUC nesting level.  Returns the new__
  * nestlevel (which is needed by restoreLocalGucs to undo the settings),
- * or -1 if no new nestlevel was needed.
+ * or -1 if no new__ nestlevel was needed.
  *
  * We use the equivalent of a function SET option to allow the settings to
  * persist only until the caller calls restoreLocalGucs.  If an error is
@@ -2973,7 +2973,7 @@ applyRemoteGucs(PGconn *conn)
 		if (strcmp(remoteVal, localVal) == 0)
 			continue;
 
-		/* Create new GUC nest level if we didn't already */
+		/* Create new__ GUC nest level if we didn't already */
 		if (nestlevel < 0)
 			nestlevel = NewGUCNestLevel();
 
@@ -2992,7 +2992,7 @@ applyRemoteGucs(PGconn *conn)
 static void
 restoreLocalGucs(int nestlevel)
 {
-	/* Do nothing if no new nestlevel was created */
+	/* Do nothing if no new__ nestlevel was created */
 	if (nestlevel > 0)
 		AtEOXact_GUC(true, nestlevel);
 }

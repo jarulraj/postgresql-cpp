@@ -247,7 +247,7 @@ static int	nextTempTableSpace = 0;
 
 /*--------------------
  *
- * Private Routines
+ * private__ Routines
  *
  * Delete		   - delete a file from the Lru ring
  * LruDelete	   - remove a file from the Lru ring and close its FD
@@ -255,7 +255,7 @@ static int	nextTempTableSpace = 0;
  * LruInsert	   - put a file at the front of the Lru ring and open it
  * ReleaseLruFile  - Release an fd by closing the last entry in the Lru ring
  * ReleaseLruFiles - Release fd(s) until we're under the max_safe_fds limit
- * AllocateVfd	   - grab a free (or new) file record (from VfdArray)
+ * AllocateVfd	   - grab a free (or new__) file record (from VfdArray)
  * FreeVfd		   - free a file record
  *
  * The Least Recently Used ring is a doubly linked list that begins and
@@ -427,7 +427,7 @@ fsync_fname(const char *fname, bool isdir)
  * This routine ensures that, after returning, the effect of renaming file
  * persists in case of a crash. A crash while this routine is running will
  * leave you with either the pre-existing or the moved file in place of the
- * new file; no mixed state or truncated files are possible.
+ * new__ file; no mixed state or truncated files are possible.
  *
  * It does so by using fsync on the old filename and the possibly existing
  * target filename before the rename, and the target file and directory after.
@@ -498,7 +498,7 @@ durable_rename(const char *oldfile, const char *newfile, int elevel)
 
 	/*
 	 * To guarantee renaming the file is persistent, fsync the file with its
-	 * new name, and its containing directory.
+	 * new__ name, and its containing directory.
 	 */
 	if (fsync_fname_ext(newfile, false, false, elevel) != 0)
 		return -1;
@@ -556,7 +556,7 @@ durable_link_or_rename(const char *oldfile, const char *newfile, int elevel)
 #endif
 
 	/*
-	 * Make change persistent in case of an OS crash, both the new entry and
+	 * Make change persistent in case of an OS crash, both the new__ entry and
 	 * its parent directory need to be flushed.
 	 */
 	if (fsync_fname_ext(newfile, false, false, elevel) != 0)
@@ -986,7 +986,7 @@ AllocateVfd(void)
 		VfdCache = newVfdCache;
 
 		/*
-		 * Initialize the new entries and link them into the free list.
+		 * Initialize the new__ entries and link them into the free list.
 		 */
 		for (i = SizeVfdCache; i < newCacheSize; i++)
 		{
@@ -998,7 +998,7 @@ AllocateVfd(void)
 		VfdCache[0].nextFree = SizeVfdCache;
 
 		/*
-		 * Record the new size
+		 * Record the new__ size
 		 */
 		SizeVfdCache = newCacheSize;
 	}
@@ -2594,7 +2594,7 @@ looks_like_temp_rel_name(const char *name)
  * Errors are logged but not considered fatal; that's because this is used
  * only during database startup, to deal with the possibility that there are
  * issued-but-unsynced writes pending against the data directory.  We want to
- * ensure that such writes reach disk before anything that's done in the new
+ * ensure that such writes reach disk before anything that's done in the new__
  * run.  However, aborting on error would result in failure to start for
  * harmless cases such as read-only files in the data directory, and that's
  * not good either.

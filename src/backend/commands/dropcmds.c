@@ -206,7 +206,7 @@ schema_does_not_exist_skipping(List *objname, const char **msg, char **name)
  *		Subroutine for RemoveObjects
  *
  * After determining that a specification for a function, cast, aggregate or
- * operator returns that the specified object does not exist, test whether the
+ * operator__ returns that the specified object does not exist, test whether the
  * involved datatypes, and their schemas, exist or not; if they do, return
  * false --- the original object itself is missing instead.  If the datatypes
  * or schemas do not exist, fill the error message format string and the
@@ -222,20 +222,20 @@ type_in_list_does_not_exist_skipping(List *typenames, const char **msg,
 
 	foreach(l, typenames)
 	{
-		TypeName   *typeName = (TypeName *) lfirst(l);
+		typename__   *typename__ = (typename__ *) lfirst(l);
 
-		if (typeName != NULL)
+		if (typename__ != NULL)
 		{
-			Assert(IsA(typeName, TypeName));
+			Assert(IsA(typename__, typename__));
 
-			if (!OidIsValid(LookupTypeNameOid(NULL, typeName, true)))
+			if (!OidIsValid(LookupTypeNameOid(NULL, typename__, true)))
 			{
 				/* type doesn't exist, try to find why */
-				if (schema_does_not_exist_skipping(typeName->names, msg, name))
+				if (schema_does_not_exist_skipping(typename__->names, msg, name))
 					return true;
 
 				*msg = gettext_noop("type \"%s\" does not exist, skipping");
-				*name = TypeNameToString(typeName);
+				*name = TypeNameToString(typename__);
 
 				return true;
 			}
@@ -265,7 +265,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 		case OBJECT_TYPE:
 		case OBJECT_DOMAIN:
 			{
-				TypeName   *typ = linitial(objname);
+				typename__   *typ = linitial(objname);
 
 				if (!schema_does_not_exist_skipping(typ->names, &msg, &name))
 				{
@@ -346,7 +346,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 			if (!schema_does_not_exist_skipping(objname, &msg, &name) &&
 				!type_in_list_does_not_exist_skipping(objargs, &msg, &name))
 			{
-				msg = gettext_noop("operator %s does not exist, skipping");
+				msg = gettext_noop("operator__ %s does not exist, skipping");
 				name = NameListToString(objname);
 			}
 			break;
@@ -361,8 +361,8 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 				{
 					/* XXX quote or no quote? */
 					msg = gettext_noop("cast from type %s to type %s does not exist, skipping");
-					name = TypeNameToString((TypeName *) linitial(objname));
-					args = TypeNameToString((TypeName *) linitial(objargs));
+					name = TypeNameToString((typename__ *) linitial(objname));
+					args = TypeNameToString((typename__ *) linitial(objargs));
 				}
 			}
 			break;
@@ -370,7 +370,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 			if (!type_in_list_does_not_exist_skipping(objname, &msg, &name))
 			{
 				msg = gettext_noop("transform for type %s language \"%s\" does not exist, skipping");
-				name = TypeNameToString((TypeName *) linitial(objname));
+				name = TypeNameToString((typename__ *) linitial(objname));
 				args = strVal(linitial(objargs));
 			}
 			break;
@@ -419,7 +419,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 
 				if (!schema_does_not_exist_skipping(opcname, &msg, &name))
 				{
-					msg = gettext_noop("operator class \"%s\" does not exist for access method \"%s\", skipping");
+					msg = gettext_noop("operator__ class__ \"%s\" does not exist for access method \"%s\", skipping");
 					name = NameListToString(opcname);
 					args = strVal(linitial(objname));
 				}
@@ -431,7 +431,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 
 				if (!schema_does_not_exist_skipping(opfname, &msg, &name))
 				{
-					msg = gettext_noop("operator family \"%s\" does not exist for access method \"%s\", skipping");
+					msg = gettext_noop("operator__ family \"%s\" does not exist for access method \"%s\", skipping");
 					name = NameListToString(opfname);
 					args = strVal(linitial(objname));
 				}

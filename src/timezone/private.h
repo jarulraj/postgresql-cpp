@@ -2,7 +2,7 @@
 #define PRIVATE_H
 
 /*
- * This file is in the public domain, so clarified as of
+ * This file is in the public__ domain, so clarified as of
  * 1996-06-05 by Arthur David Olson.
  *
  * IDENTIFICATION
@@ -46,10 +46,10 @@ extern int	unlink(const char *filename);
 #endif   /* !defined remove */
 
 /*
- * Private function declarations.
+ * private__ function declarations.
  */
 extern char *icalloc(int nelem, int elsize);
-extern char *icatalloc(char *old, const char *new);
+extern char *icatalloc(char *old, const char *new__);
 extern char *icpyalloc(const char *string);
 extern char *imalloc(int n);
 extern void *irealloc(void *pointer, int size);

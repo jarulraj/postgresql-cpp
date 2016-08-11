@@ -63,7 +63,7 @@ PLy_procedure_name(PLyProcedure *proc)
 
 /*
  * PLy_procedure_get: returns a cached PLyProcedure, or creates, stores and
- * returns a new PLyProcedure.
+ * returns a new__ PLyProcedure.
  *
  * fn_oid is the OID of the function requested
  * fn_rel is InvalidOid or the relation this function triggers on
@@ -104,7 +104,7 @@ PLy_procedure_get(Oid fn_oid, Oid fn_rel, bool is_trigger)
 	{
 		if (!found)
 		{
-			/* Haven't found it, create a new procedure */
+			/* Haven't found it, create a new__ procedure */
 			proc = PLy_procedure_create(procTup, fn_oid, is_trigger);
 			if (use_cache)
 				entry->proc = proc;
@@ -134,7 +134,7 @@ PLy_procedure_get(Oid fn_oid, Oid fn_rel, bool is_trigger)
 }
 
 /*
- * Create a new PLyProcedure structure
+ * Create a new__ PLyProcedure structure
  */
 static PLyProcedure *
 PLy_procedure_create(HeapTuple procTup, Oid fn_oid, bool is_trigger)
@@ -371,7 +371,7 @@ PLy_procedure_compile(PLyProcedure *proc, const char *src)
 	proc->globals = PyDict_Copy(PLy_interp_globals);
 
 	/*
-	 * SD is private preserved data between calls. GD is global data shared by
+	 * SD is private__ preserved data between calls. GD is global data shared by
 	 * all functions
 	 */
 	proc->statics = PyDict_New();

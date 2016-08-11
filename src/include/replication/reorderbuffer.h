@@ -65,7 +65,7 @@ enum ReorderBufferChangeType
 };
 
 /*
- * a single 'change', can be an insert (with one tuple), an update (old, new),
+ * a single 'change', can be an insert (with one tuple), an update (old, new__),
  * or a delete (old).
  *
  * The same struct is also used internally for other purposes but that should
@@ -86,7 +86,7 @@ typedef struct ReorderBufferChange
 	 */
 	union
 	{
-		/* Old, new tuples when action == *_INSERT|UPDATE|DELETE */
+		/* Old, new__ tuples when action == *_INSERT|UPDATE|DELETE */
 		struct
 		{
 			/* relation that has been changed */
@@ -101,17 +101,17 @@ typedef struct ReorderBufferChange
 			ReorderBufferTupleBuf *newtuple;
 		}			tp;
 
-		/* New snapshot, set when action == *_INTERNAL_SNAPSHOT */
+		/* new__ snapshot, set when action == *_INTERNAL_SNAPSHOT */
 		Snapshot	snapshot;
 
 		/*
-		 * New command id for existing snapshot in a catalog changing tx. Set
+		 * new__ command id for existing snapshot in a catalog changing tx. Set
 		 * when action == *_INTERNAL_COMMAND_ID.
 		 */
 		CommandId	command_id;
 
 		/*
-		 * New cid mapping for catalog changing transaction, set when action
+		 * new__ cid mapping for catalog changing transaction, set when action
 		 * == *_INTERNAL_TUPLECID.
 		 */
 		struct
@@ -207,7 +207,7 @@ typedef struct ReorderBufferTXN
 	uint64		nentries_mem;
 
 	/*
-	 * List of ReorderBufferChange structs, including new Snapshots and new
+	 * List of ReorderBufferChange structs, including new__ Snapshots and new__
 	 * CommandIds
 	 */
 	dlist_head	changes;
@@ -310,7 +310,7 @@ struct ReorderBuffer
 	void	   *private_data;
 
 	/*
-	 * Private memory context.
+	 * private__ memory context.
 	 */
 	MemoryContext context;
 

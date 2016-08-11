@@ -127,7 +127,7 @@ newstate(struct nfa * nfa)
 
 	/*
 	 * This is a handy place to check for operation cancel during regex
-	 * compilation, since no code path will go very long without making a new
+	 * compilation, since no code path will go very long without making a new__
 	 * state or arc.
 	 */
 	if (CANCEL_REQUESTED(nfa->v->re))
@@ -267,7 +267,7 @@ destroystate(struct nfa * nfa,
 }
 
 /*
- * newarc - set up a new arc within an NFA
+ * newarc - set up a new__ arc within an NFA
  *
  * This function checks to make sure that no duplicate arcs are created.
  * In general we never want duplicates.
@@ -285,7 +285,7 @@ newarc(struct nfa * nfa,
 
 	/*
 	 * This is a handy place to check for operation cancel during regex
-	 * compilation, since no code path will go very long without making a new
+	 * compilation, since no code path will go very long without making a new__
 	 * state or arc.
 	 */
 	if (CANCEL_REQUESTED(nfa->v->re))
@@ -313,7 +313,7 @@ newarc(struct nfa * nfa,
 }
 
 /*
- * createarc - create a new arc within an NFA
+ * createarc - create a new__ arc within an NFA
  *
  * This function must *only* be used after verifying that there is no existing
  * identical arc (same type/color/from/to).
@@ -339,7 +339,7 @@ createarc(struct nfa * nfa,
 	a->from = from;
 
 	/*
-	 * Put the new arc on the beginning, not the end, of the chains; it's
+	 * Put the new__ arc on the beginning, not the end, of the chains; it's
 	 * simpler here, and freearc() is the same cost either way.  See also the
 	 * logic in moveins() and its cohorts, as well as fixempties().
 	 */
@@ -362,7 +362,7 @@ createarc(struct nfa * nfa,
 }
 
 /*
- * allocarc - allocate a new out-arc within a state
+ * allocarc - allocate a new__ out-arc within a state
  */
 static struct arc *				/* NULL for failure */
 allocarc(struct nfa * nfa,
@@ -521,7 +521,7 @@ changearctarget(struct arc * a, struct state * newto)
 
 	a->to = newto;
 
-	/* prepend it to new target's in-chain */
+	/* prepend it to new__ target's in-chain */
 	a->inchain = newto->ins;
 	a->inchainRev = NULL;
 	if (newto->ins)
@@ -564,7 +564,7 @@ findarc(struct state * s,
 }
 
 /*
- * cparc - allocate a new arc within an NFA, copying details from old one
+ * cparc - allocate a new__ arc within an NFA, copying details from old one
  */
 static void
 cparc(struct nfa * nfa,
@@ -725,7 +725,7 @@ sortouts_cmp(const void *a, const void *b)
  *
  * You might think this could be done better by just updating the
  * existing arcs, and you would be right if it weren't for the need
- * for duplicate suppression, which makes it easier to just make new
+ * for duplicate suppression, which makes it easier to just make new__
  * ones to exploit the suppression built into newarc.
  *
  * However, if we have a whole lot of arcs to deal with, retail duplicate
@@ -843,7 +843,7 @@ copyins(struct nfa * nfa,
 	{
 		/*
 		 * With many arcs, use a sort-merge approach.  Note that createarc()
-		 * will put new arcs onto the front of newState's chain, so it does
+		 * will put new__ arcs onto the front of newState's chain, so it does
 		 * not break our walk through the sorted part of the chain.
 		 */
 		struct arc *oa;
@@ -929,7 +929,7 @@ mergeins(struct nfa * nfa,
 		return;
 	}
 
-	/* Sort existing inarcs as well as proposed new ones */
+	/* Sort existing inarcs as well as proposed new__ ones */
 	sortins(nfa, s);
 	if (NISERR())
 		return;					/* might have failed to sort */
@@ -960,7 +960,7 @@ mergeins(struct nfa * nfa,
 	arccount = j + 1;
 
 	/*
-	 * Now merge into s' inchain.  Note that createarc() will put new arcs
+	 * Now merge into s' inchain.  Note that createarc() will put new__ arcs
 	 * onto the front of s's chain, so it does not break our walk through the
 	 * sorted part of the chain.
 	 */
@@ -1025,7 +1025,7 @@ moveouts(struct nfa * nfa,
 	{
 		/*
 		 * With many arcs, use a sort-merge approach.  Note that createarc()
-		 * will put new arcs onto the front of newState's chain, so it does
+		 * will put new__ arcs onto the front of newState's chain, so it does
 		 * not break our walk through the sorted part of the chain.
 		 */
 		struct arc *oa;
@@ -1111,7 +1111,7 @@ copyouts(struct nfa * nfa,
 	{
 		/*
 		 * With many arcs, use a sort-merge approach.  Note that createarc()
-		 * will put new arcs onto the front of newState's chain, so it does
+		 * will put new__ arcs onto the front of newState's chain, so it does
 		 * not break our walk through the sorted part of the chain.
 		 */
 		struct arc *oa;
@@ -1505,7 +1505,7 @@ pullback(struct nfa * nfa,
  * to delete such states.
  *
  * If the from state has multiple back-constraint outarcs, and/or multiple
- * compatible constraint inarcs, we only need to create one new intermediate
+ * compatible constraint inarcs, we only need to create one new__ intermediate
  * state per combination of predecessor and successor states.  *intermediates
  * points to a list of such intermediate states for this from state (chained
  * through their tmp fields).
@@ -1672,7 +1672,7 @@ pushfwd(struct nfa * nfa,
  * to delete such states.
  *
  * If the to state has multiple forward-constraint inarcs, and/or multiple
- * compatible constraint outarcs, we only need to create one new intermediate
+ * compatible constraint outarcs, we only need to create one new__ intermediate
  * state per combination of predecessor and successor states.  *intermediates
  * points to a list of such intermediate states for this to state (chained
  * through their tmp fields).
@@ -1882,7 +1882,7 @@ fixempties(struct nfa * nfa,
 
 	/*
 	 * For each remaining NFA state, find all other states from which it is
-	 * reachable by a chain of one or more EMPTY arcs.  Then generate new arcs
+	 * reachable by a chain of one or more EMPTY arcs.  Then generate new__ arcs
 	 * that eliminate the need for each such chain.
 	 *
 	 * We could replace a chain of EMPTY arcs that leads from a "from" state
@@ -1910,7 +1910,7 @@ fixempties(struct nfa * nfa,
 	 * We can avoid this cost by treating only arcs that existed at the start
 	 * of this phase as candidates to be pushed forward.  To identify those,
 	 * we remember the first inarc each state had to start with.  We rely on
-	 * the fact that newarc() and friends put new arcs on the front of their
+	 * the fact that newarc() and friends put new__ arcs on the front of their
 	 * to-states' inchains, and that this phase never deletes arcs, so that
 	 * the original arcs must be the last arcs in their to-states' inchains.
 	 *
@@ -2042,7 +2042,7 @@ fixempties(struct nfa * nfa,
  * states can be located without searching the whole NFA.
  *
  * Since this is only used in fixempties(), we pass in the inarcsorig[] array
- * maintained by that function.  This lets us skip over all new inarcs, which
+ * maintained by that function.  This lets us skip over all new__ inarcs, which
  * are certainly not EMPTY arcs.
  *
  * The maximum recursion depth here is equal to the length of the longest
@@ -2276,7 +2276,7 @@ findconstraintloop(struct nfa * nfa, struct state * s)
  * cloned states.  No cloned state will have any inarcs that aren't constraint
  * arcs or do not lead from S1 or earlier-cloned states.  It's okay to drop
  * constraint back-arcs since they would not take us to any state we've not
- * already been in; therefore, no new constraint loop is created.  In this way
+ * already been in; therefore, no new__ constraint loop is created.  In this way
  * we generate a modified NFA that can still represent every useful state
  * sequence, but not sequences that represent state loops with no consumption
  * of input data.  Note that the set of cloned states will certainly include
@@ -2295,14 +2295,14 @@ findconstraintloop(struct nfa * nfa, struct state * s)
  * labeled, we can merge together clone states linked by a similarly-labeled
  * constraint: if we can get to the first one we can certainly get to the
  * second, so there's no need to distinguish.  This greatly reduces the number
- * of new states needed, so we preferentially break the given loop at a state
+ * of new__ states needed, so we preferentially break the given loop at a state
  * pair where this is true.
  *
  * Furthermore, it's fairly common to find that a cloned successor state has
  * no outarcs, especially if we're a bit aggressive about removing unnecessary
  * outarcs.  If that happens, then there is simply not any interesting state
  * that can be reached through the predecessor's loop arcs, which means we can
- * break the loop just by removing those loop arcs, with no new states added.
+ * break the loop just by removing those loop arcs, with no new__ states added.
  */
 static void
 breakconstraintloop(struct nfa * nfa, struct state * sinitial)
@@ -2436,8 +2436,8 @@ breakconstraintloop(struct nfa * nfa, struct state * sinitial)
  * states created during the recursion.  That's okay since we have no need to
  * mark those.
  *
- * curdonemap is NULL when recursing to a new sclone state, or sclone's
- * donemap when we are recursing without having created a new state (which we
+ * curdonemap is NULL when recursing to a new__ sclone state, or sclone's
+ * donemap when we are recursing without having created a new__ state (which we
  * do when we decide we can merge a successor state into the current clone
  * state).  outerdonemap is NULL at the top level and otherwise the parent
  * clone state's donemap.
@@ -2506,7 +2506,7 @@ clonesuccessorstates(struct nfa * nfa,
 	donemap[ssource->no] = 1;
 
 	/*
-	 * We proceed by first cloning all of ssource's outarcs, creating new
+	 * We proceed by first cloning all of ssource's outarcs, creating new__
 	 * clone states as needed but not doing more with them than that.  Then in
 	 * a second pass, recurse to process the child clone states.  This allows
 	 * us to have only one child clone state per reachable source state, even
@@ -2620,7 +2620,7 @@ clonesuccessorstates(struct nfa * nfa,
 			else
 			{
 				/*
-				 * We need to create a new successor clone state.
+				 * We need to create a new__ successor clone state.
 				 */
 				struct state *stoclone;
 

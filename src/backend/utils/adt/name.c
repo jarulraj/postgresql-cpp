@@ -113,7 +113,7 @@ namesend(PG_FUNCTION_ARGS)
 
 
 /*****************************************************************************
- *	 PUBLIC ROUTINES														 *
+ *	 public__ ROUTINES														 *
  *****************************************************************************/
 
 /*
@@ -287,7 +287,7 @@ current_schema(PG_FUNCTION_ARGS)
 	nspname = get_namespace_name(linitial_oid(search_path));
 	list_free(search_path);
 	if (!nspname)
-		PG_RETURN_NULL();		/* recently-deleted namespace? */
+		PG_RETURN_NULL();		/* recently-deleted namespace__? */
 	PG_RETURN_DATUM(DirectFunctionCall1(namein, CStringGetDatum(nspname)));
 }
 
@@ -307,7 +307,7 @@ current_schemas(PG_FUNCTION_ARGS)
 		char	   *nspname;
 
 		nspname = get_namespace_name(lfirst_oid(l));
-		if (nspname)			/* watch out for deleted namespace */
+		if (nspname)			/* watch out for deleted namespace__ */
 		{
 			names[i] = DirectFunctionCall1(namein, CStringGetDatum(nspname));
 			i++;

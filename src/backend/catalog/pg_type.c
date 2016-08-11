@@ -53,7 +53,7 @@ Oid			binary_upgrade_next_pg_type_oid = InvalidOid;
  * ----------------------------------------------------------------
  */
 ObjectAddress
-TypeShellMake(const char *typeName, Oid typeNamespace, Oid ownerId)
+TypeShellMake(const char *typename__, Oid typeNamespace, Oid ownerId)
 {
 	Relation	pg_type_desc;
 	TupleDesc	tupDesc;
@@ -65,7 +65,7 @@ TypeShellMake(const char *typeName, Oid typeNamespace, Oid ownerId)
 	NameData	name;
 	ObjectAddress address;
 
-	Assert(PointerIsValid(typeName));
+	Assert(PointerIsValid(typename__));
 
 	/*
 	 * open pg_type
@@ -90,7 +90,7 @@ TypeShellMake(const char *typeName, Oid typeNamespace, Oid ownerId)
 	 * give it typtype = TYPTYPE_PSEUDO as extra insurance that it won't be
 	 * mistaken for a usable type.
 	 */
-	namestrcpy(&name, typeName);
+	namestrcpy(&name, typename__);
 	values[Anum_pg_type_typname - 1] = NameGetDatum(&name);
 	values[Anum_pg_type_typnamespace - 1] = ObjectIdGetDatum(typeNamespace);
 	values[Anum_pg_type_typowner - 1] = ObjectIdGetDatum(ownerId);
@@ -123,7 +123,7 @@ TypeShellMake(const char *typeName, Oid typeNamespace, Oid ownerId)
 	nulls[Anum_pg_type_typacl - 1] = true;
 
 	/*
-	 * create a new type tuple
+	 * create a new__ type tuple
 	 */
 	tup = heap_form_tuple(tupDesc, values, nulls);
 
@@ -169,7 +169,7 @@ TypeShellMake(const char *typeName, Oid typeNamespace, Oid ownerId)
 								 NULL,
 								 false);
 
-	/* Post creation hook for new shell type */
+	/* Post creation hook for new__ shell type */
 	InvokeObjectPostCreateHook(TypeRelationId, typoid, 0);
 
 	ObjectAddressSet(address, TypeRelationId, typoid);
@@ -186,16 +186,16 @@ TypeShellMake(const char *typeName, Oid typeNamespace, Oid ownerId)
 /* ----------------------------------------------------------------
  *		TypeCreate
  *
- *		This does all the necessary work needed to define a new type.
+ *		This does all the necessary work needed to define a new__ type.
  *
- *		Returns the ObjectAddress assigned to the new type.
- *		If newTypeOid is zero (the normal case), a new OID is created;
+ *		Returns the ObjectAddress assigned to the new__ type.
+ *		If newTypeOid is zero (the normal case), a new__ OID is created;
  *		otherwise we use exactly that OID.
  * ----------------------------------------------------------------
  */
 ObjectAddress
 TypeCreate(Oid newTypeOid,
-		   const char *typeName,
+		   const char *typename__,
 		   Oid typeNamespace,
 		   Oid relationOid,		/* only for relation rowtypes */
 		   char relationKind,	/* ditto */
@@ -336,7 +336,7 @@ TypeCreate(Oid newTypeOid,
 	/*
 	 * insert data values
 	 */
-	namestrcpy(&name, typeName);
+	namestrcpy(&name, typename__);
 	values[Anum_pg_type_typname - 1] = NameGetDatum(&name);
 	values[Anum_pg_type_typnamespace - 1] = ObjectIdGetDatum(typeNamespace);
 	values[Anum_pg_type_typowner - 1] = ObjectIdGetDatum(ownerId);
@@ -398,7 +398,7 @@ TypeCreate(Oid newTypeOid,
 	pg_type_desc = heap_open(TypeRelationId, RowExclusiveLock);
 
 	tup = SearchSysCacheCopy2(TYPENAMENSP,
-							  CStringGetDatum(typeName),
+							  CStringGetDatum(typename__),
 							  ObjectIdGetDatum(typeNamespace));
 	if (HeapTupleIsValid(tup))
 	{
@@ -409,17 +409,17 @@ TypeCreate(Oid newTypeOid,
 		if (((Form_pg_type) GETSTRUCT(tup))->typisdefined)
 			ereport(ERROR,
 					(errcode(ERRCODE_DUPLICATE_OBJECT),
-					 errmsg("type \"%s\" already exists", typeName)));
+					 errmsg("type \"%s\" already exists", typename__)));
 
 		/*
 		 * shell type must have been created by same owner
 		 */
 		if (((Form_pg_type) GETSTRUCT(tup))->typowner != ownerId)
-			aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_TYPE, typeName);
+			aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_TYPE, typename__);
 
 		/* trouble if caller wanted to force the OID */
 		if (OidIsValid(newTypeOid))
-			elog(ERROR, "cannot assign new OID to existing shell type");
+			elog(ERROR, "cannot assign new__ OID to existing shell type");
 
 		/*
 		 * Okay to update existing shell type tuple
@@ -489,7 +489,7 @@ TypeCreate(Oid newTypeOid,
 								  NULL),
 								 rebuildDeps);
 
-	/* Post creation hook for new type */
+	/* Post creation hook for new__ type */
 	InvokeObjectPostCreateHook(TypeRelationId, typeObjectId, 0);
 
 	ObjectAddressSet(address, TypeRelationId, typeObjectId);
@@ -548,7 +548,7 @@ GenerateTypeDependencies(Oid typeNamespace,
 	myself.objectSubId = 0;
 
 	/*
-	 * Make dependencies on namespace, owner, extension.
+	 * Make dependencies on namespace__, owner, extension.
 	 *
 	 * For a relation rowtype (that's not a composite type), we should skip
 	 * these because we'll depend on them indirectly through the pg_class
@@ -752,10 +752,10 @@ RenameTypeInternal(Oid typeOid, const char *newTypeName, Oid typeNamespace)
  * the caller is responsible for pfreeing the result
  */
 char *
-makeArrayTypeName(const char *typeName, Oid typeNamespace)
+makeArrayTypeName(const char *typename__, Oid typeNamespace)
 {
 	char	   *arr = (char *) palloc(NAMEDATALEN);
-	int			namelen = strlen(typeName);
+	int			namelen = strlen(typename__);
 	Relation	pg_type_desc;
 	int			i;
 
@@ -769,10 +769,10 @@ makeArrayTypeName(const char *typeName, Oid typeNamespace)
 	{
 		arr[i - 1] = '_';
 		if (i + namelen < NAMEDATALEN)
-			strcpy(arr + i, typeName);
+			strcpy(arr + i, typename__);
 		else
 		{
-			memcpy(arr + i, typeName, NAMEDATALEN - i);
+			memcpy(arr + i, typename__, NAMEDATALEN - i);
 			truncate_identifier(arr, NAMEDATALEN, false);
 		}
 		if (!SearchSysCacheExists2(TYPENAMENSP,
@@ -787,7 +787,7 @@ makeArrayTypeName(const char *typeName, Oid typeNamespace)
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
 				 errmsg("could not form array type name for type \"%s\"",
-						typeName)));
+						typename__)));
 
 	return arr;
 }
@@ -806,7 +806,7 @@ makeArrayTypeName(const char *typeName, Oid typeNamespace)
  * will be rolled back if the type creation fails due to conflicting names.)
  *
  * Note that this must be called *before* calling makeArrayTypeName to
- * determine the new type's own array type name; else the latter will
+ * determine the new__ type's own array type name; else the latter will
  * certainly pick the same name.
  *
  * Returns TRUE if successfully moved the type, FALSE if not.
@@ -818,7 +818,7 @@ makeArrayTypeName(const char *typeName, Oid typeNamespace)
  * must do their own typisdefined test.
  */
 bool
-moveArrayTypeName(Oid typeOid, const char *typeName, Oid typeNamespace)
+moveArrayTypeName(Oid typeOid, const char *typename__, Oid typeNamespace)
 {
 	Oid			elemOid;
 	char	   *newname;
@@ -839,7 +839,7 @@ moveArrayTypeName(Oid typeOid, const char *typeName, Oid typeNamespace)
 	 * produce a name that it might have produced the first time, had the
 	 * conflicting type we are about to create already existed.
 	 */
-	newname = makeArrayTypeName(typeName, typeNamespace);
+	newname = makeArrayTypeName(typename__, typeNamespace);
 
 	/* Apply the rename */
 	RenameTypeInternal(typeOid, newname, typeNamespace);

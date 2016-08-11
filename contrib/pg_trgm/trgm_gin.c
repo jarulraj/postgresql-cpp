@@ -16,8 +16,8 @@ PG_FUNCTION_INFO_V1(gin_extract_query_trgm);
 PG_FUNCTION_INFO_V1(gin_trgm_consistent);
 
 /*
- * This function can only be called if a pre-9.1 version of the GIN operator
- * class definition is present in the catalogs (probably as a consequence
+ * This function can only be called if a pre-9.1 version of the GIN operator__
+ * class__ definition is present in the catalogs (probably as a consequence
  * of upgrade-in-place).  Cope.
  */
 Datum

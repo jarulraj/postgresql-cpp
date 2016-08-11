@@ -152,9 +152,9 @@ pguuid_complain(uuid_rc_t rc)
  * value chanced to produce duplicates.)
  *
  * However: when we're doing V3 or V5 UUID creation, uuid_make needs two
- * uuid_t objects, one holding the namespace UUID and one for the result.
+ * uuid_t objects, one holding the namespace__ UUID and one for the result.
  * It's unspecified whether it's safe to use the same uuid_t for both cases,
- * so let's cache a second uuid_t for use as the namespace holder object.
+ * so let's cache a second uuid_t for use as the namespace__ holder object.
  */
 static uuid_t *
 get_cached_uuid_t(int which)
@@ -312,8 +312,8 @@ uuid_generate_internal(int v, unsigned char *ns, char *ptr, int len)
 				break;
 			}
 
-		case 3:			/* namespace-based MD5 uuids */
-		case 5:			/* namespace-based SHA1 uuids */
+		case 3:			/* namespace__-based MD5 uuids */
+		case 5:			/* namespace__-based SHA1 uuids */
 			{
 				dce_uuid_t	uu;
 #ifdef HAVE_UUID_BSD

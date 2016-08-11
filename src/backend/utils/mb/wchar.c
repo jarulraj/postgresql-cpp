@@ -566,7 +566,7 @@ pg_utf_mblen(const unsigned char *s)
  * "The Single UNIX Specification, Version 2, The Open Group, 1997"
  * <http://www.UNIX-systems.org/online.html>
  *
- * Markus Kuhn -- 2001-09-08 -- public domain
+ * Markus Kuhn -- 2001-09-08 -- public__ domain
  *
  * customised for PostgreSQL
  *

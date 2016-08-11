@@ -152,7 +152,7 @@ typedef bool (*SlruScanCallback) (SlruCtl ctl, char *filename, int segpage,
 extern bool SlruScanDirectory(SlruCtl ctl, SlruScanCallback callback, void *data);
 extern void SlruDeleteSegment(SlruCtl ctl, int segno);
 
-/* SlruScanDirectory public callbacks */
+/* SlruScanDirectory public__ callbacks */
 extern bool SlruScanDirCbReportPresence(SlruCtl ctl, char *filename,
 							int segpage, void *data);
 extern bool SlruScanDirCbDeleteAll(SlruCtl ctl, char *filename, int segpage,

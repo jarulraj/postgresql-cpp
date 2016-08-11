@@ -10,7 +10,7 @@
  *	random_page_cost	Cost of a non-sequential page fetch
  *	cpu_tuple_cost		Cost of typical CPU time to process a tuple
  *	cpu_index_tuple_cost  Cost of typical CPU time to process an index tuple
- *	cpu_operator_cost	Cost of CPU time to execute an operator or function
+ *	cpu_operator_cost	Cost of CPU time to execute an operator__ or function
  *
  * We expect that the kernel will typically do some amount of read-ahead
  * optimization; this in conjunction with seek costs means that seq_page_cost
@@ -1192,7 +1192,7 @@ cost_valuesscan(Path *path, PlannerInfo *root,
 		path->rows = baserel->rows;
 
 	/*
-	 * For now, estimate list evaluation cost at one operator eval per list
+	 * For now, estimate list evaluation cost at one operator__ eval per list
 	 * (probably pretty bogus, but is it worth being smarter?)
 	 */
 	cpu_per_tuple = cpu_operator_cost;
@@ -1321,7 +1321,7 @@ cost_recursive_union(Plan *runion, Plan *nrterm, Plan *rterm)
  * The disk traffic is assumed to be 3/4ths sequential and 1/4th random
  * accesses (XXX can't we refine that guess?)
  *
- * By default, we charge two operator evals per tuple comparison, which should
+ * By default, we charge two operator__ evals per tuple comparison, which should
  * be in the right ballpark in most cases.  The caller can tweak this by
  * specifying nonzero comparison_cost; typically that's used for any extra
  * work that has to be done to prepare the inputs to the comparison operators.
@@ -1428,7 +1428,7 @@ cost_sort(Path *path, PlannerInfo *root,
 	}
 
 	/*
-	 * Also charge a small amount (arbitrarily set equal to operator cost) per
+	 * Also charge a small amount (arbitrarily set equal to operator__ cost) per
 	 * extracted tuple.  We don't charge cpu_tuple_cost because a Sort node
 	 * doesn't do qual-checking or projection, so it has less overhead than
 	 * most plan nodes.  Note it's correct to use tuples not output_tuples
@@ -1458,7 +1458,7 @@ cost_sort(Path *path, PlannerInfo *root,
  * The heap is never spilled to disk, since we assume N is not very large.
  * So this is much simpler than cost_sort.
  *
- * As in cost_sort, we charge two operator evals per tuple comparison.
+ * As in cost_sort, we charge two operator__ evals per tuple comparison.
  *
  * 'pathkeys' is a list of sort keys
  * 'n_streams' is the number of input streams
@@ -1494,7 +1494,7 @@ cost_merge_append(Path *path, PlannerInfo *root,
 	run_cost += tuples * comparison_cost * 2.0 * logN;
 
 	/*
-	 * Also charge a small amount (arbitrarily set equal to operator cost) per
+	 * Also charge a small amount (arbitrarily set equal to operator__ cost) per
 	 * extracted tuple.  We don't charge cpu_tuple_cost because a MergeAppend
 	 * node doesn't do qual-checking or projection, so it has less overhead
 	 * than most plan nodes.
@@ -1766,7 +1766,7 @@ cost_group(Path *path, PlannerInfo *root,
  * to obtain the final estimates.
  *
  * The exact division of labor between this function and final_cost_nestloop
- * is private to them, and represents a tradeoff between speed of the initial
+ * is private__ to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here, since that's by far the most expensive part of the
  * calculations.  The end result is that CPU-cost considerations must be
@@ -1826,7 +1826,7 @@ initial_cost_nestloop(PlannerInfo *root, JoinCostWorkspace *workspace,
 		 * which we choose to postpone to final_cost_nestloop.
 		 */
 
-		/* Save private data for final_cost_nestloop */
+		/* Save private__ data for final_cost_nestloop */
 		workspace->inner_run_cost = inner_run_cost;
 		workspace->inner_rescan_run_cost = inner_rescan_run_cost;
 	}
@@ -1840,10 +1840,10 @@ initial_cost_nestloop(PlannerInfo *root, JoinCostWorkspace *workspace,
 
 	/* CPU costs left for later */
 
-	/* Public result fields */
+	/* public__ result fields */
 	workspace->startup_cost = startup_cost;
 	workspace->total_cost = startup_cost + run_cost;
-	/* Save private data for final_cost_nestloop */
+	/* Save private__ data for final_cost_nestloop */
 	workspace->run_cost = run_cost;
 }
 
@@ -2013,7 +2013,7 @@ final_cost_nestloop(PlannerInfo *root, NestPath *path,
  * to obtain the final estimates.
  *
  * The exact division of labor between this function and final_cost_mergejoin
- * is private to them, and represents a tradeoff between speed of the initial
+ * is private__ to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here, except for obtaining the scan selectivity estimate which
  * is really essential (but fortunately, use of caching keeps the cost of
@@ -2224,10 +2224,10 @@ initial_cost_mergejoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 
 	/* CPU costs left for later */
 
-	/* Public result fields */
+	/* public__ result fields */
 	workspace->startup_cost = startup_cost;
 	workspace->total_cost = startup_cost + run_cost + inner_run_cost;
-	/* Save private data for final_cost_mergejoin */
+	/* Save private__ data for final_cost_mergejoin */
 	workspace->run_cost = run_cost;
 	workspace->inner_run_cost = inner_run_cost;
 	workspace->outer_rows = outer_rows;
@@ -2528,7 +2528,7 @@ cached_scansel(PlannerInfo *root, RestrictInfo *rinfo, PathKey *pathkey)
  * to obtain the final estimates.
  *
  * The exact division of labor between this function and final_cost_hashjoin
- * is private to them, and represents a tradeoff between speed of the initial
+ * is private__ to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here (other than by counting the number of hash clauses),
  * so we can't do much with CPU costs.  We do assume that
@@ -2571,7 +2571,7 @@ initial_cost_hashjoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 	 * tack on one cpu_tuple_cost per inner row, to model the costs of
 	 * inserting the row into the hashtable.
 	 *
-	 * XXX when a hashclause is more complex than a single operator, we really
+	 * XXX when a hashclause is more complex than a single operator__, we really
 	 * should charge the extra eval costs of the left or right side, as
 	 * appropriate, here.  This seems more work than it's worth at the moment.
 	 */
@@ -2616,10 +2616,10 @@ initial_cost_hashjoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 
 	/* CPU costs left for later */
 
-	/* Public result fields */
+	/* public__ result fields */
 	workspace->startup_cost = startup_cost;
 	workspace->total_cost = startup_cost + run_cost;
-	/* Save private data for final_cost_hashjoin */
+	/* Save private__ data for final_cost_hashjoin */
 	workspace->run_cost = run_cost;
 	workspace->numbuckets = numbuckets;
 	workspace->numbatches = numbatches;
@@ -2876,7 +2876,7 @@ cost_subplan(PlannerInfo *root, SubPlan *subplan, Plan *plan)
 		 * expressions, plus the cost of probing the hashtable.  We already
 		 * accounted for the lefthand expressions as part of the testexpr, and
 		 * will also have counted one cpu_operator_cost for each comparison
-		 * operator.  That is probably too low for the probing cost, but it's
+		 * operator__.  That is probably too low for the probing cost, but it's
 		 * hard to make a better estimate, so live with it for now.
 		 */
 	}
@@ -3132,7 +3132,7 @@ cost_qual_eval_walker(Node *node, cost_qual_eval_context *context)
 	}
 
 	/*
-	 * For each operator or function node in the given tree, we charge the
+	 * For each operator__ or function node in the given tree, we charge the
 	 * estimated execution cost given by pg_proc.procost (remember to multiply
 	 * this by cpu_operator_cost).
 	 *
@@ -3170,7 +3170,7 @@ cost_qual_eval_walker(Node *node, cost_qual_eval_context *context)
 	else if (IsA(node, ScalarArrayOpExpr))
 	{
 		/*
-		 * Estimate that the operator will be applied to about half of the
+		 * Estimate that the operator__ will be applied to about half of the
 		 * array elements before the answer is determined.
 		 */
 		ScalarArrayOpExpr *saop = (ScalarArrayOpExpr *) node;

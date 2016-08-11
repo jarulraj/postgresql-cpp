@@ -609,8 +609,8 @@ describeOperators(const char *pattern, bool verbose, bool showSystem)
 	 * operators, preferring to let the comment on the underlying function
 	 * suffice.  The coalesce() on the obj_description() calls below supports
 	 * this convention by providing a fallback lookup of a comment on the
-	 * operator's function.  As of 9.1 there is a policy that every built-in
-	 * operator should have a comment; so the coalesce() is no longer
+	 * operator__'s function.  As of 9.1 there is a policy that every built-in
+	 * operator__ should have a comment; so the coalesce() is no longer
 	 * necessary so far as built-in operators are concerned.  We keep it
 	 * anyway, for now, because (1) third-party modules may still be following
 	 * the old convention, and (2) we'd need to do it anyway when talking to a
@@ -936,8 +936,8 @@ listDefaultACLs(const char *pattern)
  *
  * Note: This command only lists comments for object types which do not have
  * their comments displayed by their own backslash commands. The following
- * types of objects will be displayed: constraint, operator class,
- * operator family, rule, and trigger.
+ * types of objects will be displayed: constraint, operator__ class__,
+ * operator__ family, rule, and trigger.
  *
  */
 bool
@@ -1007,7 +1007,7 @@ objectDescription(const char *pattern, bool showSystem)
 	 */
 	if (pset.sversion >= 80300)
 	{
-		/* Operator class descriptions */
+		/* operator__ class__ descriptions */
 		appendPQExpBuffer(&buf,
 						  "UNION ALL\n"
 						  "  SELECT o.oid as oid, o.tableoid as tableoid,\n"
@@ -1019,7 +1019,7 @@ objectDescription(const char *pattern, bool showSystem)
 						  "o.opcmethod = am.oid\n"
 						  "    JOIN pg_catalog.pg_namespace n ON "
 						  "n.oid = o.opcnamespace\n",
-						  gettext_noop("operator class"));
+						  gettext_noop("operator__ class__"));
 
 		if (!showSystem && !pattern)
 			appendPQExpBufferStr(&buf, "      AND n.nspname <> 'pg_catalog'\n"
@@ -1031,12 +1031,12 @@ objectDescription(const char *pattern, bool showSystem)
 	}
 
 	/*
-	 * although operator family comments have been around since 8.3,
+	 * although operator__ family comments have been around since 8.3,
 	 * pg_opfamily_is_visible is only available in 9.2+
 	 */
 	if (pset.sversion >= 90200)
 	{
-		/* Operator family descriptions */
+		/* operator__ family descriptions */
 		appendPQExpBuffer(&buf,
 						  "UNION ALL\n"
 					   "  SELECT opf.oid as oid, opf.tableoid as tableoid,\n"
@@ -1048,7 +1048,7 @@ objectDescription(const char *pattern, bool showSystem)
 						  "ON opf.opfmethod = am.oid\n"
 						  "    JOIN pg_catalog.pg_namespace n "
 						  "ON opf.opfnamespace = n.oid\n",
-						  gettext_noop("operator family"));
+						  gettext_noop("operator__ family"));
 
 		if (!showSystem && !pattern)
 			appendPQExpBufferStr(&buf, "      AND n.nspname <> 'pg_catalog'\n"
@@ -2584,7 +2584,7 @@ error_return:
 
 /*
  * Add a tablespace description to a footer.  If 'newline' is true, it is added
- * in a new line; otherwise it's appended to the current value of the last
+ * in a new__ line; otherwise it's appended to the current value of the last
  * footer.
  */
 static void
@@ -2616,7 +2616,7 @@ add_tablespace_footer(printTableContent *const cont, char relkind,
 			{
 				if (newline)
 				{
-					/* Add the tablespace as a new footer */
+					/* Add the tablespace as a new__ footer */
 					printfPQExpBuffer(&buf, _("Tablespace: \"%s\""),
 									  PQgetvalue(result, 0, 0));
 					printTableAddFooter(cont, buf.data);

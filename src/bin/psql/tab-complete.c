@@ -99,10 +99,10 @@ typedef struct SchemaQuery
 	const char *viscondition;
 
 	/*
-	 * Namespace --- name of field to join to pg_namespace.oid. For example,
+	 * namespace__ --- name of field to join to pg_namespace.oid. For example,
 	 * "c.relnamespace".
 	 */
-	const char *namespace;
+	const char *namespace__;
 
 	/*
 	 * Result --- the appropriately-quoted name to return, in the case of an
@@ -239,7 +239,7 @@ static const SchemaQuery Query_for_list_of_aggregates = {
 	"p.proisagg",
 	/* viscondition */
 	"pg_catalog.pg_function_is_visible(p.oid)",
-	/* namespace */
+	/* namespace__ */
 	"p.pronamespace",
 	/* result */
 	"pg_catalog.quote_ident(p.proname)",
@@ -256,7 +256,7 @@ static const SchemaQuery Query_for_list_of_datatypes = {
 	"AND t.typname !~ '^_'",
 	/* viscondition */
 	"pg_catalog.pg_type_is_visible(t.oid)",
-	/* namespace */
+	/* namespace__ */
 	"t.typnamespace",
 	/* result */
 	"pg_catalog.format_type(t.oid, NULL)",
@@ -271,7 +271,7 @@ static const SchemaQuery Query_for_list_of_domains = {
 	"t.typtype = 'd'",
 	/* viscondition */
 	"pg_catalog.pg_type_is_visible(t.oid)",
-	/* namespace */
+	/* namespace__ */
 	"t.typnamespace",
 	/* result */
 	"pg_catalog.quote_ident(t.typname)",
@@ -286,7 +286,7 @@ static const SchemaQuery Query_for_list_of_functions = {
 	NULL,
 	/* viscondition */
 	"pg_catalog.pg_function_is_visible(p.oid)",
-	/* namespace */
+	/* namespace__ */
 	"p.pronamespace",
 	/* result */
 	"pg_catalog.quote_ident(p.proname)",
@@ -301,7 +301,7 @@ static const SchemaQuery Query_for_list_of_indexes = {
 	"c.relkind IN ('i')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -316,7 +316,7 @@ static const SchemaQuery Query_for_list_of_sequences = {
 	"c.relkind IN ('S')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -331,7 +331,7 @@ static const SchemaQuery Query_for_list_of_foreign_tables = {
 	"c.relkind IN ('f')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -346,7 +346,7 @@ static const SchemaQuery Query_for_list_of_tables = {
 	"c.relkind IN ('r')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -361,7 +361,7 @@ static const SchemaQuery Query_for_list_of_constraints_with_schema = {
 	"c.conrelid <> 0",
 	/* viscondition */
 	"true",						/* there is no pg_constraint_is_visible */
-	/* namespace */
+	/* namespace__ */
 	"c.connamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.conname)",
@@ -377,7 +377,7 @@ static const SchemaQuery Query_for_list_of_updatables = {
 	"c.relkind IN ('r', 'f', 'v')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -392,7 +392,7 @@ static const SchemaQuery Query_for_list_of_relations = {
 	NULL,
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -407,7 +407,7 @@ static const SchemaQuery Query_for_list_of_tsvmf = {
 	"c.relkind IN ('r', 'S', 'v', 'm', 'f')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -422,7 +422,7 @@ static const SchemaQuery Query_for_list_of_tmf = {
 	"c.relkind IN ('r', 'm', 'f')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -437,7 +437,7 @@ static const SchemaQuery Query_for_list_of_tm = {
 	"c.relkind IN ('r', 'm')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -452,7 +452,7 @@ static const SchemaQuery Query_for_list_of_views = {
 	"c.relkind IN ('v')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -467,7 +467,7 @@ static const SchemaQuery Query_for_list_of_matviews = {
 	"c.relkind IN ('m')",
 	/* viscondition */
 	"pg_catalog.pg_table_is_visible(c.oid)",
-	/* namespace */
+	/* namespace__ */
 	"c.relnamespace",
 	/* result */
 	"pg_catalog.quote_ident(c.relname)",
@@ -576,7 +576,7 @@ static const SchemaQuery Query_for_list_of_matviews = {
 " SELECT pg_catalog.quote_ident(rolname) "\
 "   FROM pg_catalog.pg_roles "\
 "  WHERE substring(pg_catalog.quote_ident(rolname),1,%d)='%s'"\
-" UNION ALL SELECT 'PUBLIC'"
+" UNION ALL SELECT 'public__'"
 
 /* the silly-looking length condition is just to eat up the current word */
 #define Query_for_table_owning_index \
@@ -798,7 +798,7 @@ static const pgsql_thing_t words_after_create[] = {
 	{"LANGUAGE", Query_for_list_of_languages},
 	{"INDEX", NULL, &Query_for_list_of_indexes},
 	{"MATERIALIZED VIEW", NULL, NULL},
-	{"OPERATOR", NULL, NULL},	/* Querying for this is probably not such a
+	{"operator__", NULL, NULL},	/* Querying for this is probably not such a
 								 * good idea. */
 	{"OWNED", NULL, NULL, THING_NO_CREATE},		/* for DROP OWNED BY ... */
 	{"PARSER", Query_for_list_of_ts_parsers, NULL, THING_NO_SHOW},
@@ -994,7 +994,7 @@ psql_completion(const char *text, int start, int end)
 		static const char *const list_ALTER[] =
 		{"AGGREGATE", "COLLATION", "CONVERSION", "DATABASE", "DEFAULT PRIVILEGES", "DOMAIN",
 			"EVENT TRIGGER", "EXTENSION", "FOREIGN DATA WRAPPER", "FOREIGN TABLE", "FUNCTION",
-			"GROUP", "INDEX", "LANGUAGE", "LARGE OBJECT", "MATERIALIZED VIEW", "OPERATOR",
+			"GROUP", "INDEX", "LANGUAGE", "LARGE OBJECT", "MATERIALIZED VIEW", "operator__",
 			"POLICY", "ROLE", "RULE", "SCHEMA", "SERVER", "SEQUENCE", "SYSTEM", "TABLE",
 			"TABLESPACE", "TEXT SEARCH", "TRIGGER", "TYPE",
 		"USER", "USER MAPPING FOR", "VIEW", NULL};
@@ -2114,7 +2114,7 @@ psql_completion(const char *text, int start, int end)
 			"FOREIGN DATA WRAPPER", "FOREIGN TABLE",
 			"SERVER", "INDEX", "LANGUAGE", "POLICY", "RULE", "SCHEMA", "SEQUENCE",
 			"TABLE", "TYPE", "VIEW", "MATERIALIZED VIEW", "COLUMN", "AGGREGATE", "FUNCTION",
-			"OPERATOR", "TRIGGER", "CONSTRAINT", "DOMAIN", "LARGE OBJECT",
+			"operator__", "TRIGGER", "CONSTRAINT", "DOMAIN", "LARGE OBJECT",
 		"TABLESPACE", "TEXT SEARCH", "ROLE", NULL};
 
 		COMPLETE_WITH_LIST(list_COMMENT);
@@ -3164,7 +3164,7 @@ psql_completion(const char *text, int start, int end)
 			COMPLETE_WITH_CONST("FROM");
 	}
 
-	/* Complete "GRANT/REVOKE * ON * TO/FROM" with username, GROUP, or PUBLIC */
+	/* Complete "GRANT/REVOKE * ON * TO/FROM" with username, GROUP, or public__ */
 	else if (pg_strcasecmp(prev5_wd, "GRANT") == 0 &&
 			 pg_strcasecmp(prev3_wd, "ON") == 0)
 	{
@@ -3182,7 +3182,7 @@ psql_completion(const char *text, int start, int end)
 			COMPLETE_WITH_CONST("FROM");
 	}
 
-	/* Complete "GRANT/REVOKE * TO/FROM" with username, GROUP, or PUBLIC */
+	/* Complete "GRANT/REVOKE * TO/FROM" with username, GROUP, or public__ */
 	else if (pg_strcasecmp(prev3_wd, "GRANT") == 0 &&
 			 pg_strcasecmp(prev_wd, "TO") == 0)
 	{
@@ -3678,7 +3678,7 @@ psql_completion(const char *text, int start, int end)
 			 pg_strcasecmp(prev_wd, "FOR") == 0)
 		COMPLETE_WITH_QUERY(Query_for_list_of_roles
 							" UNION SELECT 'CURRENT_USER'"
-							" UNION SELECT 'PUBLIC'"
+							" UNION SELECT 'public__'"
 							" UNION SELECT 'USER'");
 	else if ((pg_strcasecmp(prev4_wd, "ALTER") == 0 ||
 			  pg_strcasecmp(prev4_wd, "DROP") == 0) &&
@@ -4247,7 +4247,7 @@ _complete_from_query(int is_schema_query, const char *text, int state)
 							  "WHERE %s = n.oid AND ",
 							  qualresult,
 							  completion_squery->catname,
-							  completion_squery->namespace);
+							  completion_squery->namespace__);
 			if (completion_squery->selcondition)
 				appendPQExpBuffer(&query_buffer, "%s AND ",
 								  completion_squery->selcondition);

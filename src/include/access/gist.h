@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * gist.h
- *	  The public API for GiST indexes. This API is exposed to
+ *	  The public__ API for GiST indexes. This API is exposed to
  *	  individuals implementing GiST indexes, so backward-incompatible
  *	  changes should be made with care.
  *

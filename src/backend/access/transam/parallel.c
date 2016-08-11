@@ -101,14 +101,14 @@ static FixedParallelState *MyFixedParallelState;
 /* List of active parallel contexts. */
 static dlist_head pcxt_list = DLIST_STATIC_INIT(pcxt_list);
 
-/* Private functions. */
+/* private__ functions. */
 static void HandleParallelMessage(ParallelContext *, int, StringInfo msg);
 static void ParallelErrorContext(void *arg);
 static void ParallelExtensionTrampoline(dsm_segment *seg, shm_toc *toc);
 static void ParallelWorkerMain(Datum main_arg);
 
 /*
- * Establish a new parallel context.  This should be done after entering
+ * Establish a new__ parallel context.  This should be done after entering
  * parallel mode, and (unless there is an error) the context should be
  * destroyed before exiting the current subtransaction.
  */
@@ -134,7 +134,7 @@ CreateParallelContext(parallel_worker_main_type entrypoint, int nworkers)
 	/* We might be running in a short-lived memory context. */
 	oldcontext = MemoryContextSwitchTo(TopTransactionContext);
 
-	/* Initialize a new ParallelContext. */
+	/* Initialize a new__ ParallelContext. */
 	pcxt = palloc0(sizeof(ParallelContext));
 	pcxt->subid = GetCurrentSubTransactionId();
 	pcxt->nworkers = nworkers;
@@ -150,7 +150,7 @@ CreateParallelContext(parallel_worker_main_type entrypoint, int nworkers)
 }
 
 /*
- * Establish a new parallel context that calls a function provided by an
+ * Establish a new__ parallel context that calls a function provided by an
  * extension.  This works around the fact that the library might get mapped
  * at a different address in each backend.
  */
@@ -246,13 +246,13 @@ InitializeParallelDSM(ParallelContext *pcxt)
 	}
 
 	/*
-	 * Create DSM and initialize with new table of contents.  But if the user
+	 * Create DSM and initialize with new__ table of contents.  But if the user
 	 * didn't request any workers, then don't bother creating a dynamic shared
-	 * memory segment; instead, just use backend-private memory.
+	 * memory segment; instead, just use backend-private__ memory.
 	 *
 	 * Also, if we can't create a dynamic shared memory segment because the
 	 * maximum number of segments have already been created, then fall back to
-	 * backend-private memory, and plan not to use any workers.  We hope this
+	 * backend-private__ memory, and plan not to use any workers.  We hope this
 	 * won't happen very often, but it's better to abandon the use of
 	 * parallelism than to fail outright.
 	 */
@@ -539,7 +539,7 @@ DestroyParallelContext(ParallelContext *pcxt)
 	}
 
 	/*
-	 * If this parallel context is actually in backend-private memory rather
+	 * If this parallel context is actually in backend-private__ memory rather
 	 * than shared memory, free that memory instead.
 	 */
 	if (pcxt->private_memory != NULL)

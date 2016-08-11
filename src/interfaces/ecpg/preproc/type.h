@@ -148,7 +148,7 @@ struct typedefs
 struct _defines
 {
 	char	   *old;
-	char	   *new;
+	char	   *new__;
 	int			pertinent;
 	void	   *used;
 	struct _defines *next;

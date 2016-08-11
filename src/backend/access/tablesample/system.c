@@ -38,7 +38,7 @@
 #include "utils/builtins.h"
 
 
-/* Private state */
+/* private__ state */
 typedef struct
 {
 	uint64		cutoff;			/* select blocks with hash less than this */

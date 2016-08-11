@@ -251,7 +251,7 @@ InitArchiveFmt_Tar(ArchiveHandle *AH)
 }
 
 /*
- * - Start a new TOC entry
+ * - Start a new__ TOC entry
  *	 Setup the output file name.
  */
 static void
@@ -317,7 +317,7 @@ _PrintExtraToc(ArchiveHandle *AH, TocEntry *te)
 {
 	lclTocEntry *ctx = (lclTocEntry *) te->formatData;
 
-	if (AH->public.verbose && ctx->filename != NULL)
+	if (AH->public__.verbose && ctx->filename != NULL)
 		ahprintf(AH, "-- File: %s\n", ctx->filename);
 }
 
@@ -737,7 +737,7 @@ _LoadBlobs(ArchiveHandle *AH)
 			{
 				ahlog(AH, 1, "restoring large object with OID %u\n", oid);
 
-				StartRestoreBlob(AH, oid, AH->public.ropt->dropSchema);
+				StartRestoreBlob(AH, oid, AH->public__.ropt->dropSchema);
 
 				while ((cnt = tarRead(buf, 4095, th)) > 0)
 				{
@@ -870,26 +870,26 @@ _CloseArchive(ArchiveHandle *AH)
 		ctx->scriptTH = th;
 
 		ropt = NewRestoreOptions();
-		memcpy(ropt, AH->public.ropt, sizeof(RestoreOptions));
+		memcpy(ropt, AH->public__.ropt, sizeof(RestoreOptions));
 		ropt->filename = NULL;
 		ropt->dropSchema = 1;
 		ropt->compression = 0;
 		ropt->superuser = NULL;
 		ropt->suppressDumpWarnings = true;
 
-		savDopt = AH->public.dopt;
-		savRopt = AH->public.ropt;
+		savDopt = AH->public__.dopt;
+		savRopt = AH->public__.ropt;
 
 		SetArchiveOptions((Archive *) AH, NULL, ropt);
 
-		savVerbose = AH->public.verbose;
-		AH->public.verbose = 0;
+		savVerbose = AH->public__.verbose;
+		AH->public__.verbose = 0;
 
 		RestoreArchive((Archive *) AH);
 
 		SetArchiveOptions((Archive *) AH, savDopt, savRopt);
 
-		AH->public.verbose = savVerbose;
+		AH->public__.verbose = savVerbose;
 
 		tarClose(AH, th);
 

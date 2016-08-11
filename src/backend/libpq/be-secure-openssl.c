@@ -11,15 +11,15 @@
  * IDENTIFICATION
  *	  src/backend/libpq/be-secure-openssl.c
  *
- *	  Since the server static private key ($DataDir/server.key)
+ *	  Since the server static private__ key ($DataDir/server.key)
  *	  will normally be stored unencrypted so that the database
  *	  backend can restart automatically, it is important that
  *	  we select an algorithm that continues to provide confidentiality
- *	  even if the attacker has the server's private key.  Ephemeral
+ *	  even if the attacker has the server's private__ key.  Ephemeral
  *	  DH (EDH) keys provide this and more (Perfect Forward Secrecy
  *	  aka PFS).
  *
- *	  N.B., the static private key should still be protected to
+ *	  N.B., the static private__ key should still be protected to
  *	  the largest extent possible, to minimize the risk of
  *	  impersonations.
  *
@@ -91,7 +91,7 @@ static SSL_CTX *SSL_context = NULL;
 /*
  *	Hardcoded DH parameters, used in ephemeral DH keying.
  *	As discussed above, EDH protects the confidentiality of
- *	sessions even if the static private key is compromised,
+ *	sessions even if the static private__ key is compromised,
  *	so we are *highly* motivated to ensure that we can use
  *	EDH even if the DBA... or an attacker... deletes the
  *	$DataDir/dh*.pem files.
@@ -151,7 +151,7 @@ KWbuHn491xNO25CQWMtem80uKw+pTnisBRF/454n1Jnhub144YRBoN8CAQI=\n\
 
 
 /* ------------------------------------------------------------ */
-/*						 Public interface						*/
+/*						 public__ interface						*/
 /* ------------------------------------------------------------ */
 
 /*
@@ -191,7 +191,7 @@ be_tls_init(void)
 		SSL_CTX_set_mode(SSL_context, SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER);
 
 		/*
-		 * Load and verify server's certificate and private key
+		 * Load and verify server's certificate and private__ key
 		 */
 		if (SSL_CTX_use_certificate_chain_file(SSL_context,
 											   ssl_cert_file) != 1)
@@ -203,11 +203,11 @@ be_tls_init(void)
 		if (stat(ssl_key_file, &buf) != 0)
 			ereport(FATAL,
 					(errcode_for_file_access(),
-					 errmsg("could not access private key file \"%s\": %m",
+					 errmsg("could not access private__ key file \"%s\": %m",
 							ssl_key_file)));
 
 		/*
-		 * Require no public access to key file.
+		 * Require no public__ access to key file.
 		 *
 		 * XXX temporarily suppress check when on Windows, because there may
 		 * not be proper support for Unix-y file permissions.  Need to think
@@ -218,7 +218,7 @@ be_tls_init(void)
 		if (!S_ISREG(buf.st_mode) || buf.st_mode & (S_IRWXG | S_IRWXO))
 			ereport(FATAL,
 					(errcode(ERRCODE_CONFIG_FILE_ERROR),
-				  errmsg("private key file \"%s\" has group or world access",
+				  errmsg("private__ key file \"%s\" has group or world access",
 						 ssl_key_file),
 				   errdetail("Permissions should be u=rw (0600) or less.")));
 #endif
@@ -227,12 +227,12 @@ be_tls_init(void)
 										ssl_key_file,
 										SSL_FILETYPE_PEM) != 1)
 			ereport(FATAL,
-					(errmsg("could not load private key file \"%s\": %s",
+					(errmsg("could not load private__ key file \"%s\": %s",
 							ssl_key_file, SSLerrmessage(ERR_get_error()))));
 
 		if (SSL_CTX_check_private_key(SSL_context) != 1)
 			ereport(FATAL,
-					(errmsg("check of private key failed: %s",
+					(errmsg("check of private__ key failed: %s",
 							SSLerrmessage(ERR_get_error()))));
 	}
 
@@ -637,7 +637,7 @@ be_tls_write(Port *port, void *ptr, size_t len, int *waitfor)
 /* ------------------------------------------------------------ */
 
 /*
- * Private substitute BIO: this does the sending and receiving using send() and
+ * private__ substitute BIO: this does the sending and receiving using send() and
  * recv() instead. This is so that we can enable and disable interrupts
  * just while calling recv(). We cannot have interrupts occurring while
  * the bulk of openssl runs, because it uses malloc() and possibly other

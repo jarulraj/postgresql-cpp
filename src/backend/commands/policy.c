@@ -141,7 +141,7 @@ policy_role_list_to_array(List *roles, int *num_roles)
 	ListCell   *cell;
 	int			i = 0;
 
-	/* Handle no roles being passed in as being for public */
+	/* Handle no roles being passed in as being for public__ */
 	if (roles == NIL)
 	{
 		*num_roles = 1;
@@ -159,7 +159,7 @@ policy_role_list_to_array(List *roles, int *num_roles)
 		RoleSpec   *spec = lfirst(cell);
 
 		/*
-		 * PUBLIC covers all roles, so it only makes sense alone.
+		 * public__ covers all roles, so it only makes sense alone.
 		 */
 		if (spec->roletype == ROLESPEC_PUBLIC)
 		{
@@ -167,8 +167,8 @@ policy_role_list_to_array(List *roles, int *num_roles)
 			{
 				ereport(WARNING,
 						(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-						 errmsg("ignoring specified roles other than PUBLIC"),
-					  errhint("All roles are members of the PUBLIC role.")));
+						 errmsg("ignoring specified roles other than public__"),
+					  errhint("All roles are members of the public__ role.")));
 				*num_roles = 1;
 			}
 			role_oids[0] = ObjectIdGetDatum(ACL_ID_PUBLIC);
@@ -597,7 +597,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		/* We should have only removed the one role */
 		Assert(j == num_roles);
 
-		/* This is the array for the new tuple */
+		/* This is the array for the new__ tuple */
 		role_ids = construct_array(role_oids, num_roles, OIDOID,
 								   sizeof(Oid), true, 'i');
 
@@ -615,7 +615,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		/* Remove all old dependencies. */
 		deleteDependencyRecordsFor(PolicyRelationId, policy_id, false);
 
-		/* Record the new set of dependencies */
+		/* Record the new__ set of dependencies */
 		target.classId = RelationRelationId;
 		target.objectId = relid;
 		target.objectSubId = 0;
@@ -638,13 +638,13 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		/* Remove all the old shared dependencies (roles) */
 		deleteSharedDependencyRecordsFor(PolicyRelationId, policy_id, 0);
 
-		/* Record the new shared dependencies (roles) */
+		/* Record the new__ shared dependencies (roles) */
 		target.classId = AuthIdRelationId;
 		target.objectSubId = 0;
 		for (i = 0; i < num_roles; i++)
 		{
 			target.objectId = DatumGetObjectId(role_oids[i]);
-			/* no need for dependency on the public role */
+			/* no need for dependency on the public__ role */
 			if (target.objectId != ACL_ID_PUBLIC)
 				recordSharedDependencyOn(&myself, &target,
 										 SHARED_DEPENDENCY_POLICY);
@@ -843,7 +843,7 @@ CreatePolicy(CreatePolicyStmt *stmt)
 	for (i = 0; i < nitems; i++)
 	{
 		target.objectId = DatumGetObjectId(role_oids[i]);
-		/* no dependency if public */
+		/* no dependency if public__ */
 		if (target.objectId != ACL_ID_PUBLIC)
 			recordSharedDependencyOn(&myself, &target,
 									 SHARED_DEPENDENCY_POLICY);
@@ -1173,7 +1173,7 @@ AlterPolicy(AlterPolicyStmt *stmt)
 	for (i = 0; i < nitems; i++)
 	{
 		target.objectId = DatumGetObjectId(role_oids[i]);
-		/* no dependency if public */
+		/* no dependency if public__ */
 		if (target.objectId != ACL_ID_PUBLIC)
 			recordSharedDependencyOn(&myself, &target,
 									 SHARED_DEPENDENCY_POLICY);

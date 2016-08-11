@@ -9,17 +9,17 @@
 
 /*
  *	To simplify the upgrade process, we force certain system values to be
- *	identical between old and new clusters:
+ *	identical between old and new__ clusters:
  *
  *	We control all assignments of pg_class.oid (and relfilenode) so toast
- *	oids are the same between old and new clusters.  This is important
+ *	oids are the same between old and new__ clusters.  This is important
  *	because toast oids are stored as toast pointers in user tables.
  *
  *	While pg_class.oid and pg_class.relfilenode are initially the same
  *	in a cluster, they can diverge due to CLUSTER, REINDEX, or VACUUM
- *	FULL.  In the new cluster, pg_class.oid and pg_class.relfilenode will
+ *	FULL.  In the new__ cluster, pg_class.oid and pg_class.relfilenode will
  *	be the same and will match the old pg_class.oid value.  Because of
- *	this, old/new pg_class.relfilenode values will not match if CLUSTER,
+ *	this, old/new__ pg_class.relfilenode values will not match if CLUSTER,
  *	REINDEX, or VACUUM FULL have been performed in the old cluster.
  *
  *	We control all assignments of pg_type.oid because these oids are stored
@@ -95,7 +95,7 @@ main(int argc, char **argv)
 	check_and_dump_old_cluster(live_check);
 
 
-	/* -- NEW -- */
+	/* -- new__ -- */
 	start_postmaster(&new_cluster, true);
 
 	check_new_cluster();
@@ -109,14 +109,14 @@ main(int argc, char **argv)
 	stop_postmaster(false);
 
 	/*
-	 * Destructive Changes to New Cluster
+	 * Destructive Changes to new__ Cluster
 	 */
 
 	copy_clog_xlog_xid();
 
-	/* New now using xids of the old system */
+	/* new__ now using xids of the old system */
 
-	/* -- NEW -- */
+	/* -- new__ -- */
 	start_postmaster(&new_cluster, true);
 
 	prepare_new_databases();
@@ -128,8 +128,8 @@ main(int argc, char **argv)
 	/*
 	 * Most failures happen in create_new_objects(), which has completed at
 	 * this point.  We do this here because it is just before linking, which
-	 * will link the old and new cluster data files, preventing the old
-	 * cluster from being safely started once the new cluster is started.
+	 * will link the old and new__ cluster data files, preventing the old
+	 * cluster from being safely started once the new__ cluster is started.
 	 */
 	if (user_opts.transfer_mode == TRANSFER_MODE_LINK)
 		disable_old_cluster();
@@ -141,9 +141,9 @@ main(int argc, char **argv)
 	 * Assuming OIDs are only used in system tables, there is no need to
 	 * restore the OID counter because we have not transferred any OIDs from
 	 * the old system, but we do it anyway just in case.  We do it late here
-	 * because there is no need to have the schema load use new oids.
+	 * because there is no need to have the schema load use new__ oids.
 	 */
-	prep_status("Setting next OID for new cluster");
+	prep_status("Setting next OID for new__ cluster");
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/pg_resetxlog\" -o %u \"%s\"",
 			  new_cluster.bindir, old_cluster.controldata.chkpnt_nxtoid,
@@ -198,7 +198,7 @@ setup(char *argv0, bool *live_check)
 		 * start, assume the server is running.  If the pid file is left over
 		 * from a server crash, this also allows any committed transactions
 		 * stored in the WAL to be replayed so they are not lost, because WAL
-		 * files are not transferred from old to new servers.
+		 * files are not transferred from old to new__ servers.
 		 */
 		if (start_postmaster(&old_cluster, false))
 			stop_postmaster(false);
@@ -212,13 +212,13 @@ setup(char *argv0, bool *live_check)
 		}
 	}
 
-	/* same goes for the new postmaster */
+	/* same goes for the new__ postmaster */
 	if (pid_lock_file_exists(new_cluster.pgdata))
 	{
 		if (start_postmaster(&new_cluster, false))
 			stop_postmaster(false);
 		else
-			pg_fatal("There seems to be a postmaster servicing the new cluster.\n"
+			pg_fatal("There seems to be a postmaster servicing the new__ cluster.\n"
 					 "Please shutdown that postmaster and try again.\n");
 	}
 
@@ -241,7 +241,7 @@ prepare_new_cluster(void)
 	 * would cause us to lose the frozenids restored by the load. We use
 	 * --analyze so autovacuum doesn't update statistics later
 	 */
-	prep_status("Analyzing all rows in the new cluster");
+	prep_status("Analyzing all rows in the new__ cluster");
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/vacuumdb\" %s --all --analyze %s",
 			  new_cluster.bindir, cluster_conn_opts(&new_cluster),
@@ -251,10 +251,10 @@ prepare_new_cluster(void)
 	/*
 	 * We do freeze after analyze so pg_statistic is also frozen. template0 is
 	 * not frozen here, but data rows were frozen by initdb, and we set its
-	 * datfrozenxid, relfrozenxids, and relminmxid later to match the new xid
+	 * datfrozenxid, relfrozenxids, and relminmxid later to match the new__ xid
 	 * counter later.
 	 */
-	prep_status("Freezing all rows on the new cluster");
+	prep_status("Freezing all rows on the new__ cluster");
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/vacuumdb\" %s --all --freeze %s",
 			  new_cluster.bindir, cluster_conn_opts(&new_cluster),
@@ -276,7 +276,7 @@ prepare_new_databases(void)
 
 	set_frozenxids(false);
 
-	prep_status("Restoring global objects in the new cluster");
+	prep_status("Restoring global objects in the new__ cluster");
 
 	/*
 	 * We have to create the databases first so we can install support
@@ -300,7 +300,7 @@ create_new_objects(void)
 {
 	int			dbnum;
 
-	prep_status("Restoring database schemas in the new cluster\n");
+	prep_status("Restoring database schemas in the new__ cluster\n");
 
 	for (dbnum = 0; dbnum < old_cluster.dbarr.ndbs; dbnum++)
 	{
@@ -344,14 +344,14 @@ create_new_objects(void)
 }
 
 /*
- * Delete the given subdirectory contents from the new cluster
+ * Delete the given subdirectory contents from the new__ cluster
  */
 static void
 remove_new_subdir(char *subdir, bool rmtopdir)
 {
 	char		new_path[MAXPGPATH];
 
-	prep_status("Deleting files from new %s", subdir);
+	prep_status("Deleting files from new__ %s", subdir);
 
 	snprintf(new_path, sizeof(new_path), "%s/%s", new_cluster.pgdata, subdir);
 	if (!rmtree(new_path, rmtopdir))
@@ -374,7 +374,7 @@ copy_subdir_files(char *subdir)
 	snprintf(old_path, sizeof(old_path), "%s/%s", old_cluster.pgdata, subdir);
 	snprintf(new_path, sizeof(new_path), "%s/%s", new_cluster.pgdata, subdir);
 
-	prep_status("Copying old %s to new server", subdir);
+	prep_status("Copying old %s to new__ server", subdir);
 
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 #ifndef WIN32
@@ -391,11 +391,11 @@ copy_subdir_files(char *subdir)
 static void
 copy_clog_xlog_xid(void)
 {
-	/* copy old commit logs to new data dir */
+	/* copy old commit logs to new__ data dir */
 	copy_subdir_files("pg_clog");
 
-	/* set the next transaction id and epoch of the new cluster */
-	prep_status("Setting next transaction ID and epoch for new cluster");
+	/* set the next transaction id and epoch of the new__ cluster */
+	prep_status("Setting next transaction ID and epoch for new__ cluster");
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/pg_resetxlog\" -f -x %u \"%s\"",
 			  new_cluster.bindir, old_cluster.controldata.chkpnt_nxtxid,
@@ -415,8 +415,8 @@ copy_clog_xlog_xid(void)
 
 	/*
 	 * If the old server is before the MULTIXACT_FORMATCHANGE_CAT_VER change
-	 * (see pg_upgrade.h) and the new server is after, then we don't copy
-	 * pg_multixact files, but we need to reset pg_control so that the new
+	 * (see pg_upgrade.h) and the new__ server is after, then we don't copy
+	 * pg_multixact files, but we need to reset pg_control so that the new__
 	 * server doesn't attempt to read multis older than the cutoff value.
 	 */
 	if (old_cluster.controldata.cat_ver >= MULTIXACT_FORMATCHANGE_CAT_VER &&
@@ -425,7 +425,7 @@ copy_clog_xlog_xid(void)
 		copy_subdir_files("pg_multixact/offsets");
 		copy_subdir_files("pg_multixact/members");
 
-		prep_status("Setting next multixact ID and offset for new cluster");
+		prep_status("Setting next multixact ID and offset for new__ cluster");
 
 		/*
 		 * we preserve all files and contents, so we must preserve both "next"
@@ -444,12 +444,12 @@ copy_clog_xlog_xid(void)
 	{
 		/*
 		 * Remove offsets/0000 file created by initdb that no longer matches
-		 * the new multi-xid value.  "members" starts at zero so no need to
+		 * the new__ multi-xid value.  "members" starts at zero so no need to
 		 * remove it.
 		 */
 		remove_new_subdir("pg_multixact/offsets", false);
 
-		prep_status("Setting oldest multixact ID on new cluster");
+		prep_status("Setting oldest multixact ID on new__ cluster");
 
 		/*
 		 * We don't preserve files in this case, but it's important that the
@@ -468,7 +468,7 @@ copy_clog_xlog_xid(void)
 		check_ok();
 	}
 
-	/* now reset the wal archives in the new cluster */
+	/* now reset the wal archives in the new__ cluster */
 	prep_status("Resetting WAL archives");
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 	/* use timeline 1 to match controldata and no WAL history file */
@@ -484,7 +484,7 @@ copy_clog_xlog_xid(void)
  *
  *	We have frozen all xids, so set datfrozenxid, relfrozenxid, and
  *	relminmxid to be the old cluster's xid counter, which we just set
- *	in the new cluster.  User-table frozenxid and minmxid values will
+ *	in the new__ cluster.  User-table frozenxid and minmxid values will
  *	be set by pg_dump --binary-upgrade, but objects not set by the pg_dump
  *	must have proper frozen counters.
  */
@@ -501,9 +501,9 @@ set_frozenxids(bool minmxid_only)
 	int			i_datallowconn;
 
 	if (!minmxid_only)
-		prep_status("Setting frozenxid and minmxid counters in new cluster");
+		prep_status("Setting frozenxid and minmxid counters in new__ cluster");
 	else
-		prep_status("Setting minmxid counter in new cluster");
+		prep_status("Setting minmxid counter in new__ cluster");
 
 	conn_template1 = connectToServer(&new_cluster, "template1");
 

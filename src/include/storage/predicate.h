@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * predicate.h
- *	  POSTGRES public predicate locking definitions.
+ *	  POSTGRES public__ predicate locking definitions.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

@@ -253,7 +253,7 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 	}
 
 	/*
-	 * For INSERT and UPDATE, add withCheckOptions to verify that any new
+	 * For INSERT and UPDATE, add withCheckOptions to verify that any new__
 	 * records added are consistent with the security policies.  This will use
 	 * each policy's WITH CHECK clause, or its USING clause if no explicit
 	 * WITH CHECK clause is defined.
@@ -536,7 +536,7 @@ row_security_policy_cmp(const void *a, const void *b)
  * access to the table, then all access is prohibited --- i.e., an implicit
  * default-deny policy is used.
  *
- * New security quals are added to securityQuals, and hasSubLinks is set to
+ * new__ security quals are added to securityQuals, and hasSubLinks is set to
  * true if any of the quals added contain sublink subqueries.
  */
 static void
@@ -622,16 +622,16 @@ add_security_quals(int rt_index,
 /*
  * add_with_check_options
  *
- * Add WithCheckOptions of the specified kind to check that new records
+ * Add WithCheckOptions of the specified kind to check that new__ records
  * added by an INSERT or UPDATE are consistent with the specified RLS
- * policies.  Normally new data must satisfy the WITH CHECK clauses from the
+ * policies.  Normally new__ data must satisfy the WITH CHECK clauses from the
  * policies.  If a policy has no explicit WITH CHECK clause, its USING clause
  * is used instead.  In the special case of an UPDATE arising from an
  * INSERT ... ON CONFLICT DO UPDATE, existing records are first checked using
  * a WCO_RLS_CONFLICT_CHECK WithCheckOption, which always uses the USING
  * clauses from RLS policies.
  *
- * New WCOs are added to withCheckOptions, and hasSubLinks is set to true if
+ * new__ WCOs are added to withCheckOptions, and hasSubLinks is set to true if
  * any of the check clauses added contain sublink subqueries.
  */
 static void
@@ -672,7 +672,7 @@ add_with_check_options(Relation rel,
 	 * allowed to be added.  This is the same as in add_security_quals.
 	 *
 	 * If there are no permissive_quals then we fall through and return a single
-	 * 'false' WCO, preventing all new rows.
+	 * 'false' WCO, preventing all new__ rows.
 	 */
 	if (permissive_quals != NIL)
 	{
@@ -731,7 +731,7 @@ add_with_check_options(Relation rel,
 	else
 	{
 		/*
-		 * If there were no policy clauses to check new data, add a single
+		 * If there were no policy clauses to check new__ data, add a single
 		 * always-false WCO (a default-deny policy).
 		 */
 		WithCheckOption *wco;

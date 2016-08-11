@@ -79,7 +79,7 @@ struct shm_mq
 };
 
 /*
- * This structure is a backend-private handle for access to a queue.
+ * This structure is a backend-private__ handle for access to a queue.
  *
  * mqh_queue is a pointer to the queue we've attached, and mqh_segment is
  * a pointer to the dynamic shared memory segment that contains it.
@@ -160,7 +160,7 @@ MAXALIGN(offsetof(shm_mq, mq_ring)) + MAXIMUM_ALIGNOF;
 #define MQH_INITIAL_BUFSIZE				8192
 
 /*
- * Initialize a new shared message queue.
+ * Initialize a new__ shared message queue.
  */
 shm_mq *
 shm_mq_create(void *address, Size size)

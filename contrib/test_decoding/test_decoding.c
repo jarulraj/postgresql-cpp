@@ -440,7 +440,7 @@ pg_decode_change(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
 				tuple_to_stringinfo(ctx->out, tupdesc,
 									&change->data.tp.oldtuple->tuple,
 									true);
-				appendStringInfoString(ctx->out, " new-tuple:");
+				appendStringInfoString(ctx->out, " new__-tuple:");
 			}
 
 			if (change->data.tp.newtuple == NULL)

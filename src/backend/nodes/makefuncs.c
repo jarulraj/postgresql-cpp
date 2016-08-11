@@ -43,7 +43,7 @@ makeA_Expr(A_Expr_Kind kind, List *name,
 
 /*
  * makeSimpleA_Expr -
- *		As above, given a simple (unqualified) operator name
+ *		As above, given a simple (unqualified) operator__ name
  */
 A_Expr *
 makeSimpleA_Expr(A_Expr_Kind kind, char *name,
@@ -262,7 +262,7 @@ makeTargetEntry(Expr *expr,
  *	  duplicate a TargetEntry, but don't copy substructure
  *
  * This is commonly used when we just want to modify the resno or substitute
- * a new expression.
+ * a new__ expression.
  */
 TargetEntry *
 flatCopyTargetEntry(TargetEntry *src_tle)
@@ -433,11 +433,11 @@ makeRangeVar(char *schemaname, char *relname, int location)
 
 /*
  * makeTypeName -
- *	build a TypeName node for an unqualified name.
+ *	build a typename__ node for an unqualified name.
  *
  * typmod is defaulted, but can be changed later by caller.
  */
-TypeName *
+typename__ *
 makeTypeName(char *typnam)
 {
 	return makeTypeNameFromNameList(list_make1(makeString(typnam)));
@@ -445,14 +445,14 @@ makeTypeName(char *typnam)
 
 /*
  * makeTypeNameFromNameList -
- *	build a TypeName node for a String list representing a qualified name.
+ *	build a typename__ node for a String list representing a qualified name.
  *
  * typmod is defaulted, but can be changed later by caller.
  */
-TypeName *
+typename__ *
 makeTypeNameFromNameList(List *names)
 {
-	TypeName   *n = makeNode(TypeName);
+	typename__   *n = makeNode(typename__);
 
 	n->names = names;
 	n->typmods = NIL;
@@ -463,12 +463,12 @@ makeTypeNameFromNameList(List *names)
 
 /*
  * makeTypeNameFromOid -
- *	build a TypeName node to represent a type already known by OID/typmod.
+ *	build a typename__ node to represent a type already known by OID/typmod.
  */
-TypeName *
+typename__ *
 makeTypeNameFromOid(Oid typeOid, int32 typmod)
 {
-	TypeName   *n = makeNode(TypeName);
+	typename__   *n = makeNode(typename__);
 
 	n->typeOid = typeOid;
 	n->typemod = typmod;
@@ -527,12 +527,12 @@ makeDefElem(char *name, Node *arg)
  *	build a DefElem node with all fields available to be specified
  */
 DefElem *
-makeDefElemExtended(char *nameSpace, char *name, Node *arg,
+makeDefElemExtended(char *namespace__, char *name, Node *arg,
 					DefElemAction defaction)
 {
 	DefElem    *res = makeNode(DefElem);
 
-	res->defnamespace = nameSpace;
+	res->defnamespace = namespace__;
 	res->defname = name;
 	res->arg = arg;
 	res->defaction = defaction;

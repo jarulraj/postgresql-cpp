@@ -133,7 +133,7 @@ const char *EAN13_range[][2] = {
 	{"899", "899"},				/* GS1 Indonesia */
 	{"900", "919"},				/* GS1 Austria */
 	{"930", "939"},				/* GS1 Australia */
-	{"940", "949"},				/* GS1 New Zealand */
+	{"940", "949"},				/* GS1 new__ Zealand */
 	{"950", "950"},				/* GS1 Head Office */
 	{"955", "955"},				/* GS1 Malaysia */
 	{"958", "958"},				/* GS1 Macau */

@@ -1075,7 +1075,7 @@ ProcessUtilitySlow(Node *parsetree,
 								/*
 								 * Recurse for anything else.  If we need to
 								 * do so, "close" the current complex-command
-								 * set, and start a new one at the bottom;
+								 * set, and start a new__ one at the bottom;
 								 * this is needed to ensure the ordering of
 								 * queued commands is consistent with the way
 								 * they are executed here.
@@ -1126,35 +1126,35 @@ ProcessUtilitySlow(Node *parsetree,
 							 * if requested, for descendants
 							 */
 							address =
-								AlterDomainDefault(stmt->typeName,
+								AlterDomainDefault(stmt->typename__,
 												   stmt->def);
 							break;
 						case 'N':		/* ALTER DOMAIN DROP NOT NULL */
 							address =
-								AlterDomainNotNull(stmt->typeName,
+								AlterDomainNotNull(stmt->typename__,
 												   false);
 							break;
 						case 'O':		/* ALTER DOMAIN SET NOT NULL */
 							address =
-								AlterDomainNotNull(stmt->typeName,
+								AlterDomainNotNull(stmt->typename__,
 												   true);
 							break;
 						case 'C':		/* ADD CONSTRAINT */
 							address =
-								AlterDomainAddConstraint(stmt->typeName,
+								AlterDomainAddConstraint(stmt->typename__,
 														 stmt->def,
 														 &secondaryObject);
 							break;
 						case 'X':		/* DROP CONSTRAINT */
 							address =
-								AlterDomainDropConstraint(stmt->typeName,
+								AlterDomainDropConstraint(stmt->typename__,
 														  stmt->name,
 														  stmt->behavior,
 														  stmt->missing_ok);
 							break;
 						case 'V':		/* VALIDATE CONSTRAINT */
 							address =
-								AlterDomainValidateConstraint(stmt->typeName,
+								AlterDomainValidateConstraint(stmt->typename__,
 															  stmt->name);
 							break;
 						default:		/* oops */
@@ -1816,13 +1816,13 @@ AlterObjectTypeCommandTag(ObjectType objtype)
 			tag = "ALTER LARGE OBJECT";
 			break;
 		case OBJECT_OPCLASS:
-			tag = "ALTER OPERATOR CLASS";
+			tag = "ALTER operator__ class__";
 			break;
 		case OBJECT_OPERATOR:
-			tag = "ALTER OPERATOR";
+			tag = "ALTER operator__";
 			break;
 		case OBJECT_OPFAMILY:
-			tag = "ALTER OPERATOR FAMILY";
+			tag = "ALTER operator__ FAMILY";
 			break;
 		case OBJECT_POLICY:
 			tag = "ALTER POLICY";
@@ -2120,7 +2120,7 @@ CreateCommandTag(Node *parsetree)
 					tag = "DROP AGGREGATE";
 					break;
 				case OBJECT_OPERATOR:
-					tag = "DROP OPERATOR";
+					tag = "DROP operator__";
 					break;
 				case OBJECT_LANGUAGE:
 					tag = "DROP LANGUAGE";
@@ -2144,10 +2144,10 @@ CreateCommandTag(Node *parsetree)
 					tag = "DROP SERVER";
 					break;
 				case OBJECT_OPCLASS:
-					tag = "DROP OPERATOR CLASS";
+					tag = "DROP operator__ class__";
 					break;
 				case OBJECT_OPFAMILY:
-					tag = "DROP OPERATOR FAMILY";
+					tag = "DROP operator__ FAMILY";
 					break;
 				case OBJECT_POLICY:
 					tag = "DROP POLICY";
@@ -2231,7 +2231,7 @@ CreateCommandTag(Node *parsetree)
 					tag = "CREATE AGGREGATE";
 					break;
 				case OBJECT_OPERATOR:
-					tag = "CREATE OPERATOR";
+					tag = "CREATE operator__";
 					break;
 				case OBJECT_TYPE:
 					tag = "CREATE TYPE";
@@ -2483,15 +2483,15 @@ CreateCommandTag(Node *parsetree)
 			break;
 
 		case T_CreateOpClassStmt:
-			tag = "CREATE OPERATOR CLASS";
+			tag = "CREATE operator__ class__";
 			break;
 
 		case T_CreateOpFamilyStmt:
-			tag = "CREATE OPERATOR FAMILY";
+			tag = "CREATE operator__ FAMILY";
 			break;
 
 		case T_AlterOpFamilyStmt:
-			tag = "ALTER OPERATOR FAMILY";
+			tag = "ALTER operator__ FAMILY";
 			break;
 
 		case T_AlterTSDictionaryStmt:

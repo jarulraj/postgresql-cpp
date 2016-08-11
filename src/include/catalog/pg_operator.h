@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * pg_operator.h
- *	  definition of the system "operator" relation (pg_operator)
+ *	  definition of the system "operator__" relation (pg_operator)
  *	  along with the relation's initial contents.
  *
  *
@@ -33,9 +33,9 @@
 
 CATALOG(pg_operator,2617)
 {
-	NameData	oprname;		/* name of operator */
-	Oid			oprnamespace;	/* OID of namespace containing this oper */
-	Oid			oprowner;		/* operator owner */
+	NameData	oprname;		/* name of operator__ */
+	Oid			oprnamespace;	/* OID of namespace__ containing this oper */
+	Oid			oprowner;		/* operator__ owner */
 	char		oprkind;		/* 'l', 'r', or 'b' */
 	bool		oprcanmerge;	/* can be used in merge join? */
 	bool		oprcanhash;		/* can be used in hash join? */
@@ -84,7 +84,7 @@ typedef FormData_pg_operator *Form_pg_operator;
 
 /*
  * Note: every entry in pg_operator.h is expected to have a DESCR() comment.
- * If the operator is a deprecated equivalent of some other entry, be sure
+ * If the operator__ is a deprecated equivalent of some other entry, be sure
  * to comment it as such so that initdb doesn't think it's a preferred name
  * for the underlying function.
  */
@@ -1509,7 +1509,7 @@ DESCR("add");
 DATA(insert OID = 2555 (  "+"	   PGNSP PGUID b f f	23	 1082 1082 1100 0 integer_pl_date - - ));
 DESCR("add");
 
-/* new operators for Y-direction rtree opfamilies */
+/* new__ operators for Y-direction rtree opfamilies */
 DATA(insert OID = 2570 (  "<<|"    PGNSP PGUID b f f 603 603	16	 0	 0 box_below positionsel positionjoinsel ));
 DESCR("is below");
 DATA(insert OID = 2571 (  "&<|"    PGNSP PGUID b f f 603 603	16	 0	 0 box_overbelow positionsel positionjoinsel ));

@@ -24,19 +24,19 @@ mm_alloc(size_t size)
 char *
 mm_strdup(const char *string)
 {
-	char	   *new = strdup(string);
+	char	   *new__ = strdup(string);
 
-	if (new == NULL)
+	if (new__ == NULL)
 		mmfatal(OUT_OF_MEMORY, "out of memory");
 
-	return new;
+	return new__;
 }
 
 /* duplicate memberlist */
 struct ECPGstruct_member *
 ECPGstruct_member_dup(struct ECPGstruct_member * rm)
 {
-	struct ECPGstruct_member *new = NULL;
+	struct ECPGstruct_member *new__ = NULL;
 
 	while (rm)
 	{
@@ -64,12 +64,12 @@ ECPGstruct_member_dup(struct ECPGstruct_member * rm)
 				break;
 		}
 
-		ECPGmake_struct_member(rm->name, type, &new);
+		ECPGmake_struct_member(rm->name, type, &new__);
 
 		rm = rm->next;
 	}
 
-	return (new);
+	return (new__);
 }
 
 /* The NAME argument is copied. The type argument is preserved as a pointer. */
@@ -428,7 +428,7 @@ ECPGdump_a_simple(FILE *o, const char *name, enum ECPGttype type,
 		switch (type)
 		{
 				/*
-				 * we have to use the & operator except for arrays and
+				 * we have to use the & operator__ except for arrays and
 				 * pointers
 				 */
 

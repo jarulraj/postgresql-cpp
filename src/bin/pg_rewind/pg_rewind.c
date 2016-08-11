@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * pg_rewind.c
- *	  Synchronizes an old master server to a new timeline
+ *	  Synchronizes an old master server to a new__ timeline
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
  *

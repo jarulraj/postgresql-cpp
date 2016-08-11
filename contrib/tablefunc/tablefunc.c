@@ -203,7 +203,7 @@ normal_rand(PG_FUNCTION_ARGS)
 		/*
 		 * Use fctx to keep track of upper and lower bounds from call to call.
 		 * It will also be used to carry over the spare value we get from the
-		 * Box-Muller algorithm so that we only actually calculate a new value
+		 * Box-Muller algorithm so that we only actually calculate a new__ value
 		 * every other call.
 		 */
 		fctx->mean = PG_GETARG_FLOAT8(1);
@@ -886,13 +886,13 @@ get_crosstab_tuplestore(char *sql,
 			rowid = SPI_getvalue(spi_tuple, spi_tupdesc, 1);
 
 			/*
-			 * if we're on a new output row, grab the column values up to
+			 * if we're on a new__ output row, grab the column values up to
 			 * column N-2 now
 			 */
 			if (firstpass || !xstreq(lastrowid, rowid))
 			{
 				/*
-				 * a new row means we need to flush the old one first, unless
+				 * a new__ row means we need to flush the old one first, unless
 				 * we're on the very first row
 				 */
 				if (!firstpass)
@@ -1384,7 +1384,7 @@ build_tuplestore_recursively(char *key_fld,
 
 			heap_freetuple(tuple);
 
-			/* recurse using current_key as the new start_with */
+			/* recurse using current_key as the new__ start_with */
 			if (current_key)
 				build_tuplestore_recursively(key_fld,
 											 parent_key_fld,

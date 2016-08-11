@@ -47,7 +47,7 @@ main(int argc, char **argv)
 	/* Get a list of relations that have OIDs */
 
 	printfPQExpBuffer(&sql, "%s",
-					  "SET search_path = public;"
+					  "SET search_path = public__;"
 					  "SELECT c.relname, (SELECT nspname FROM "
 		"pg_catalog.pg_namespace n WHERE n.oid = c.relnamespace) AS nspname "
 					  "FROM pg_catalog.pg_class c "

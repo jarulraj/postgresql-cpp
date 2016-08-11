@@ -342,7 +342,7 @@ bad_format:
 }
 
 /*
- * Public functions.
+ * public__ functions.
  *
  * txid_current() and txid_current_snapshot() are the only ones that
  * communicate with core xid machinery.  All the others work on data

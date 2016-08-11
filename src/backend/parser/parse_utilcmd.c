@@ -107,7 +107,7 @@ static void transformTableConstraint(CreateStmtContext *cxt,
 static void transformTableLikeClause(CreateStmtContext *cxt,
 						 TableLikeClause *table_like_clause);
 static void transformOfType(CreateStmtContext *cxt,
-				TypeName *ofTypename);
+				typename__ *ofTypename);
 static IndexStmt *generateClonedIndexStmt(CreateStmtContext *cxt,
 						Relation source_idx,
 						const AttrNumber *attmap, int attmap_length);
@@ -162,10 +162,10 @@ transformCreateStmt(CreateStmt *stmt, const char *queryString)
 	pstate->p_sourcetext = queryString;
 
 	/*
-	 * Look up the creation namespace.  This also checks permissions on the
-	 * target namespace, locks it against concurrent drops, checks for a
-	 * preexisting relation in that namespace with the same name, and updates
-	 * stmt->relation->relpersistence if the selected namespace is temporary.
+	 * Look up the creation namespace__.  This also checks permissions on the
+	 * target namespace__, locks it against concurrent drops, checks for a
+	 * preexisting relation in that namespace__ with the same name, and updates
+	 * stmt->relation->relpersistence if the selected namespace__ is temporary.
 	 */
 	setup_parser_errposition_callback(&pcbstate, pstate,
 									  stmt->relation->location);
@@ -319,49 +319,49 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 
 	/* Check for SERIAL pseudo-types */
 	is_serial = false;
-	if (column->typeName
-		&& list_length(column->typeName->names) == 1
-		&& !column->typeName->pct_type)
+	if (column->typename__
+		&& list_length(column->typename__->names) == 1
+		&& !column->typename__->pct_type)
 	{
-		char	   *typname = strVal(linitial(column->typeName->names));
+		char	   *typname = strVal(linitial(column->typename__->names));
 
 		if (strcmp(typname, "smallserial") == 0 ||
 			strcmp(typname, "serial2") == 0)
 		{
 			is_serial = true;
-			column->typeName->names = NIL;
-			column->typeName->typeOid = INT2OID;
+			column->typename__->names = NIL;
+			column->typename__->typeOid = INT2OID;
 		}
 		else if (strcmp(typname, "serial") == 0 ||
 				 strcmp(typname, "serial4") == 0)
 		{
 			is_serial = true;
-			column->typeName->names = NIL;
-			column->typeName->typeOid = INT4OID;
+			column->typename__->names = NIL;
+			column->typename__->typeOid = INT4OID;
 		}
 		else if (strcmp(typname, "bigserial") == 0 ||
 				 strcmp(typname, "serial8") == 0)
 		{
 			is_serial = true;
-			column->typeName->names = NIL;
-			column->typeName->typeOid = INT8OID;
+			column->typename__->names = NIL;
+			column->typename__->typeOid = INT8OID;
 		}
 
 		/*
 		 * We have to reject "serial[]" explicitly, because once we've set
-		 * typeid, LookupTypeName won't notice arrayBounds.  We don't need any
+		 * typeid__, LookupTypeName won't notice arrayBounds.  We don't need any
 		 * special coding for serial(typmod) though.
 		 */
-		if (is_serial && column->typeName->arrayBounds != NIL)
+		if (is_serial && column->typename__->arrayBounds != NIL)
 			ereport(ERROR,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 					 errmsg("array of serial is not implemented"),
 					 parser_errposition(cxt->pstate,
-										column->typeName->location)));
+										column->typename__->location)));
 	}
 
 	/* Do necessary work on the column type declaration */
-	if (column->typeName)
+	if (column->typename__)
 		transformColumnType(cxt, column);
 
 	/* Special actions for SERIAL pseudo-types */
@@ -379,7 +379,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 		List	   *attnamelist;
 
 		/*
-		 * Determine namespace and name to use for the sequence.
+		 * Determine namespace__ and name to use for the sequence.
 		 *
 		 * Although we use ChooseRelationName, it's not guaranteed that the
 		 * selected sequence name won't conflict; given sufficiently long
@@ -461,7 +461,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 		snamenode->val.val.str = qstring;
 		snamenode->location = -1;
 		castnode = makeNode(TypeCast);
-		castnode->typeName = SystemTypeName("regclass");
+		castnode->typename__ = SystemTypeName("regclass");
 		castnode->arg = (Node *) snamenode;
 		castnode->location = -1;
 		funccallnode = makeFuncCall(SystemFuncName("nextval"),
@@ -754,13 +754,13 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 
 	/*
 	 * Initialize column number map for map_variable_attnos().  We need this
-	 * since dropped columns in the source table aren't copied, so the new
+	 * since dropped columns in the source table aren't copied, so the new__
 	 * table can have different column numbers.
 	 */
 	attmap = (AttrNumber *) palloc0(sizeof(AttrNumber) * tupleDesc->natts);
 
 	/*
-	 * Insert the copied attributes into the cxt for the new table definition.
+	 * Insert the copied attributes into the cxt for the new__ table definition.
 	 */
 	for (parent_attno = 1; parent_attno <= tupleDesc->natts;
 		 parent_attno++)
@@ -776,14 +776,14 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 			continue;
 
 		/*
-		 * Create a new column, which is marked as NOT inherited.
+		 * Create a new__ column, which is marked as NOT inherited.
 		 *
 		 * For constraints, ONLY the NOT NULL constraint is inherited by the
-		 * new column definition per SQL99.
+		 * new__ column definition per SQL99.
 		 */
 		def = makeNode(ColumnDef);
 		def->colname = pstrdup(attributeName);
-		def->typeName = makeTypeNameFromOid(attribute->atttypid,
+		def->typename__ = makeTypeNameFromOid(attribute->atttypid,
 											attribute->atttypmod);
 		def->inhcount = 0;
 		def->is_local = true;
@@ -884,7 +884,7 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 
 			/*
 			 * We reject whole-row variables because the whole point of LIKE
-			 * is that the new table's rowtype might later diverge from the
+			 * is that the new__ table's rowtype might later diverge from the
 			 * parent's.  So, while translation might be possible right now,
 			 * it wouldn't be possible to guarantee it would work in future.
 			 */
@@ -975,7 +975,7 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 }
 
 static void
-transformOfType(CreateStmtContext *cxt, TypeName *ofTypename)
+transformOfType(CreateStmtContext *cxt, typename__ *ofTypename)
 {
 	HeapTuple	tuple;
 	TupleDesc	tupdesc;
@@ -1000,7 +1000,7 @@ transformOfType(CreateStmtContext *cxt, TypeName *ofTypename)
 
 		n = makeNode(ColumnDef);
 		n->colname = pstrdup(NameStr(attr->attname));
-		n->typeName = makeTypeNameFromOid(attr->atttypid, attr->atttypmod);
+		n->typename__ = makeTypeNameFromOid(attr->atttypid, attr->atttypmod);
 		n->inhcount = 0;
 		n->is_local = true;
 		n->is_not_null = false;
@@ -1124,7 +1124,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 			index->deferrable = conrec->condeferrable;
 			index->initdeferred = conrec->condeferred;
 
-			/* If it's an exclusion constraint, we need the operator names */
+			/* If it's an exclusion constraint, we need the operator__ names */
 			if (idxrec->indisexclusion)
 			{
 				Datum	   *elems;
@@ -1132,7 +1132,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 				int			i;
 
 				Assert(conrec->contype == CONSTRAINT_EXCLUSION);
-				/* Extract operator OIDs from the pg_constraint tuple */
+				/* Extract operator__ OIDs from the pg_constraint tuple */
 				datum = SysCacheGetAttr(CONSTROID, ht_constr,
 										Anum_pg_constraint_conexclop,
 										&isnull);
@@ -1156,7 +1156,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 					opertup = SearchSysCache1(OPEROID,
 											  ObjectIdGetDatum(operid));
 					if (!HeapTupleIsValid(opertup))
-						elog(ERROR, "cache lookup failed for operator %u",
+						elog(ERROR, "cache lookup failed for operator__ %u",
 							 operid);
 					operform = (Form_pg_operator) GETSTRUCT(opertup);
 					oprname = pstrdup(NameStr(operform->oprname));
@@ -1225,7 +1225,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 			indexkey = (Node *) lfirst(indexpr_item);
 			indexpr_item = lnext(indexpr_item);
 
-			/* Adjust Vars to match new table's column numbering */
+			/* Adjust Vars to match new__ table's column numbering */
 			indexkey = map_variable_attnos(indexkey,
 										   1, 0,
 										   attmap, attmap_length,
@@ -1251,7 +1251,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 		/* Add the collation name, if non-default */
 		iparam->collation = get_collation(indcollation->values[keyno], keycoltype);
 
-		/* Add the operator class name, if non-default */
+		/* Add the operator__ class__ name, if non-default */
 		iparam->opclass = get_opclass(indclass->values[keyno], keycoltype);
 
 		iparam->ordering = SORTBY_DEFAULT;
@@ -1301,7 +1301,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 		pred_str = TextDatumGetCString(datum);
 		pred_tree = (Node *) stringToNode(pred_str);
 
-		/* Adjust Vars to match new table's column numbering */
+		/* Adjust Vars to match new__ table's column numbering */
 		pred_tree = map_variable_attnos(pred_tree,
 										1, 0,
 										attmap, attmap_length,
@@ -1359,7 +1359,7 @@ get_collation(Oid collation, Oid actual_datatype)
 }
 
 /*
- * get_opclass			- fetch qualified name of an index operator class
+ * get_opclass			- fetch qualified name of an index operator__ class__
  *
  * If the opclass is the default for the given actual_datatype, then
  * the return value is NIL.
@@ -1721,7 +1721,7 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 
 	/*
 	 * If it's an EXCLUDE constraint, the grammar returns a list of pairs of
-	 * IndexElems and operator names.  We have to break that apart into
+	 * IndexElems and operator__ names.  We have to break that apart into
 	 * separate lists.
 	 */
 	if (constraint->contype == CONSTR_EXCLUSION)
@@ -1773,14 +1773,14 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 		}
 		if (found)
 		{
-			/* found column in the new table; force it to be NOT NULL */
+			/* found column in the new__ table; force it to be NOT NULL */
 			if (constraint->contype == CONSTR_PRIMARY)
 				column->is_not_null = TRUE;
 		}
 		else if (SystemAttributeByName(key, cxt->hasoids) != NULL)
 		{
 			/*
-			 * column will be a system column in the new table, so accept it.
+			 * column will be a system column in the new__ table, so accept it.
 			 * System columns can't ever be null, so no need to worry about
 			 * PRIMARY/NOT NULL constraint.
 			 */
@@ -2093,7 +2093,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	pstate->p_sourcetext = queryString;
 
 	/*
-	 * NOTE: 'OLD' must always have a varno equal to 1 and 'NEW' equal to 2.
+	 * NOTE: 'OLD' must always have a varno equal to 1 and 'new__' equal to 2.
 	 * Set up their RTEs in the main pstate for use in parsing the rule
 	 * qualification.
 	 */
@@ -2101,16 +2101,16 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 										   makeAlias("old", NIL),
 										   false, false);
 	newrte = addRangeTableEntryForRelation(pstate, rel,
-										   makeAlias("new", NIL),
+										   makeAlias("new__", NIL),
 										   false, false);
 	/* Must override addRangeTableEntry's default access-check flags */
 	oldrte->requiredPerms = 0;
 	newrte->requiredPerms = 0;
 
 	/*
-	 * They must be in the namespace too for lookup purposes, but only add the
+	 * They must be in the namespace__ too for lookup purposes, but only add the
 	 * one(s) that are relevant for the current kind of rule.  In an UPDATE
-	 * rule, quals must refer to OLD.field or NEW.field to be unambiguous, but
+	 * rule, quals must refer to OLD.field or new__.field to be unambiguous, but
 	 * there's no need to be so picky for INSERT & DELETE.  We do not add them
 	 * to the joinlist.
 	 */
@@ -2152,7 +2152,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	/*
 	 * 'instead nothing' rules with a qualification need a query rangetable so
 	 * the rewrite handler can add the negated rule qualification to the
-	 * original query. We create a query with the new command type CMD_NOTHING
+	 * original query. We create a query with the new__ command type CMD_NOTHING
 	 * here that is treated specially by the rewrite system.
 	 */
 	if (stmt->actions == NIL)
@@ -2189,7 +2189,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			sub_pstate->p_sourcetext = queryString;
 
 			/*
-			 * Set up OLD/NEW in the rtable for this statement.  The entries
+			 * Set up OLD/new__ in the rtable for this statement.  The entries
 			 * are added only to relnamespace, not varnamespace, because we
 			 * don't want them to be referred to by unqualified field names
 			 * nor "*" in the rule actions.  We decide later whether to put
@@ -2199,7 +2199,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 												   makeAlias("old", NIL),
 												   false, false);
 			newrte = addRangeTableEntryForRelation(sub_pstate, rel,
-												   makeAlias("new", NIL),
+												   makeAlias("new__", NIL),
 												   false, false);
 			oldrte->requiredPerms = 0;
 			newrte->requiredPerms = 0;
@@ -2222,7 +2222,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 						 errmsg("rules with WHERE conditions can only have SELECT, INSERT, UPDATE, or DELETE actions")));
 
 			/*
-			 * If the action is INSERT...SELECT, OLD/NEW have been pushed down
+			 * If the action is INSERT...SELECT, OLD/new__ have been pushed down
 			 * into the SELECT, and that's what we need to look at. (Ugly
 			 * kluge ... try to fix this when we redesign querytrees.)
 			 */
@@ -2240,7 +2240,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 						 errmsg("conditional UNION/INTERSECT/EXCEPT statements are not implemented")));
 
 			/*
-			 * Validate action's use of OLD/NEW, qual too
+			 * Validate action's use of OLD/new__, qual too
 			 */
 			has_old =
 				rangeTableEntry_used((Node *) sub_qry, PRS2_OLD_VARNO, 0) ||
@@ -2259,7 +2259,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 					if (has_new)
 						ereport(ERROR,
 								(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-								 errmsg("ON SELECT rule cannot use NEW")));
+								 errmsg("ON SELECT rule cannot use new__")));
 					break;
 				case CMD_UPDATE:
 					/* both are OK */
@@ -2274,7 +2274,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 					if (has_new)
 						ereport(ERROR,
 								(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-								 errmsg("ON DELETE rule cannot use NEW")));
+								 errmsg("ON DELETE rule cannot use new__")));
 					break;
 				default:
 					elog(ERROR, "unrecognized event type: %d",
@@ -2283,7 +2283,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			}
 
 			/*
-			 * OLD/NEW are not allowed in WITH queries, because they would
+			 * OLD/new__ are not allowed in WITH queries, because they would
 			 * amount to outer references for the WITH, which we disallow.
 			 * However, they were already in the outer rangetable when we
 			 * analyzed the query, so we have to check.
@@ -2293,7 +2293,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			 *
 			 * Note that we aren't digging into the body of the query looking
 			 * for WITHs in nested sub-SELECTs.  A WITH down there can
-			 * legitimately refer to OLD/NEW, because it'd be an
+			 * legitimately refer to OLD/new__, because it'd be an
 			 * indirect-correlated outer reference.
 			 */
 			if (rangeTableEntry_used((Node *) top_subqry->cteList,
@@ -2309,22 +2309,22 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 									 PRS2_NEW_VARNO, 0))
 				ereport(ERROR,
 						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-						 errmsg("cannot refer to NEW within WITH query")));
+						 errmsg("cannot refer to new__ within WITH query")));
 
 			/*
 			 * For efficiency's sake, add OLD to the rule action's jointree
 			 * only if it was actually referenced in the statement or qual.
 			 *
-			 * For INSERT, NEW is not really a relation (only a reference to
+			 * For INSERT, new__ is not really a relation (only a reference to
 			 * the to-be-inserted tuple) and should never be added to the
 			 * jointree.
 			 *
-			 * For UPDATE, we treat NEW as being another kind of reference to
+			 * For UPDATE, we treat new__ as being another kind of reference to
 			 * OLD, because it represents references to *transformed* tuples
-			 * of the existing relation.  It would be wrong to enter NEW
+			 * of the existing relation.  It would be wrong to enter new__
 			 * separately in the jointree, since that would cause a double
 			 * join of the updated relation.  It's also wrong to fail to make
-			 * a jointree entry if only NEW and not OLD is mentioned.
+			 * a jointree entry if only new__ and not OLD is mentioned.
 			 */
 			if (has_old || (has_new && stmt->event == CMD_UPDATE))
 			{
@@ -2702,7 +2702,7 @@ transformConstraintAttrs(CreateStmtContext *cxt, List *constraintList)
 			default:
 				/* Otherwise it's not an attribute */
 				lastprimarycon = con;
-				/* reset flags for new primary node */
+				/* reset flags for new__ primary node */
 				saw_deferrability = false;
 				saw_initially = false;
 				break;
@@ -2720,7 +2720,7 @@ transformColumnType(CreateStmtContext *cxt, ColumnDef *column)
 	 * All we really need to do here is verify that the type is valid,
 	 * including any collation spec that might be present.
 	 */
-	Type		ctype = typenameType(cxt->pstate, column->typeName, NULL);
+	Type		ctype = typenameType(cxt->pstate, column->typename__, NULL);
 
 	if (column->collClause)
 	{

@@ -253,7 +253,7 @@ static HTAB *LockMethodProcLockHash;
 static HTAB *LockMethodLocalHash;
 
 
-/* private state for error cleanup */
+/* private__ state for error cleanup */
 static LOCALLOCK *StrongLockInProgress;
 static LOCALLOCK *awaitedLock;
 static ResourceOwner awaitedOwner;
@@ -742,7 +742,7 @@ LockAcquireExtended(const LOCKTAG *locktag,
 										  HASH_ENTER, &found);
 
 	/*
-	 * if it's a new locallock object, initialize it
+	 * if it's a new__ locallock object, initialize it
 	 */
 	if (!found)
 	{
@@ -1038,7 +1038,7 @@ LockAcquireExtended(const LOCKTAG *locktag,
 }
 
 /*
- * Find or create LOCK and PROCLOCK objects as needed for a new lock
+ * Find or create LOCK and PROCLOCK objects as needed for a new__ lock
  * request.
  *
  * Returns the PROCLOCK object, or NULL if we failed to create the objects
@@ -1069,7 +1069,7 @@ SetupLockInTable(LockMethod lockMethodTable, PGPROC *proc,
 		return NULL;
 
 	/*
-	 * if it's a new lock object, initialize it
+	 * if it's a new__ lock object, initialize it
 	 */
 	if (!found)
 	{
@@ -1081,7 +1081,7 @@ SetupLockInTable(LockMethod lockMethodTable, PGPROC *proc,
 		lock->nGranted = 0;
 		MemSet(lock->requested, 0, sizeof(int) * MAX_LOCKMODES);
 		MemSet(lock->granted, 0, sizeof(int) * MAX_LOCKMODES);
-		LOCK_PRINT("LockAcquire: new", lock, lockmode);
+		LOCK_PRINT("LockAcquire: new__", lock, lockmode);
 	}
 	else
 	{
@@ -1130,7 +1130,7 @@ SetupLockInTable(LockMethod lockMethodTable, PGPROC *proc,
 	}
 
 	/*
-	 * If new, initialize the new entry
+	 * If new__, initialize the new__ entry
 	 */
 	if (!found)
 	{
@@ -1142,7 +1142,7 @@ SetupLockInTable(LockMethod lockMethodTable, PGPROC *proc,
 		SHMQueueInsertBefore(&lock->procLocks, &proclock->lockLink);
 		SHMQueueInsertBefore(&(proc->myProcLocks[partition]),
 							 &proclock->procLink);
-		PROCLOCK_PRINT("LockAcquire: new", proclock);
+		PROCLOCK_PRINT("LockAcquire: new__", proclock);
 	}
 	else
 	{
@@ -1257,7 +1257,7 @@ RemoveLocalLock(LOCALLOCK *locallock)
  * conflict with one another, no matter what purpose they are held for
  * (eg, session and transaction locks do not conflict).
  * So, we must subtract off our own locks when determining whether the
- * requested new lock conflicts with those already held.
+ * requested new__ lock conflicts with those already held.
  */
 int
 LockCheckConflicts(LockMethod lockMethodTable,
@@ -1458,7 +1458,7 @@ CleanUpLock(LOCK *lock, PROCLOCK *proclock,
  * GrantLockLocal -- update the locallock data structures to show
  *		the lock request has been granted.
  *
- * We expect that LockAcquire made sure there is room to add a new
+ * We expect that LockAcquire made sure there is room to add a new__
  * ResourceOwner entry.
  */
 static void
@@ -1730,7 +1730,7 @@ RemoveFromWaitQueue(PGPROC *proc, uint32 hashcode)
  * Side Effects: find any waiting processes that are now wakable,
  *		grant them their requested locks and awaken them.
  *		(We have to grant the lock here to avoid a race between
- *		the waking process and any new process to
+ *		the waking process and any new__ process to
  *		come along and request the lock.)
  */
 bool
@@ -2438,7 +2438,7 @@ FastPathGrantRelationLock(Oid relid, LOCKMODE lockmode)
 
 /*
  * FastPathUnGrantRelationLock
- *		Release fast-path lock, if present.  Update backend-private local
+ *		Release fast-path lock, if present.  Update backend-private__ local
  *		use count, while we're at it.
  */
 static bool
@@ -2717,7 +2717,7 @@ GetLockConflicts(const LOCKTAG *locktag, LOCKMODE lockmode)
 		 * Iterate over relevant PGPROCs.  Anything held by a prepared
 		 * transaction will have been transferred to the primary lock table,
 		 * so we need not worry about those.  This is all a bit fuzzy, because
-		 * new locks could be taken after we've visited a particular
+		 * new__ locks could be taken after we've visited a particular
 		 * partition, but the callers had better be prepared to deal with that
 		 * anyway, since the locks could equally well be taken between the
 		 * time we return the value and the time the caller does something
@@ -3221,10 +3221,10 @@ PostPrepare_Locks(TransactionId xid)
 			 * We cannot simply modify proclock->tag.myProc to reassign
 			 * ownership of the lock, because that's part of the hash key and
 			 * the proclock would then be in the wrong hash chain.  Instead
-			 * use hash_update_hash_key.  (We used to create a new hash entry,
+			 * use hash_update_hash_key.  (We used to create a new__ hash entry,
 			 * but that risks out-of-memory failure if other processes are
 			 * busy making proclocks too.)	We must unlink the proclock from
-			 * our procLink chain and put it into the new proc's chain, too.
+			 * our procLink chain and put it into the new__ proc's chain, too.
 			 *
 			 * Note: the updated proclock hash key will still belong to the
 			 * same hash partition, cf proclock_hash().  So the partition lock
@@ -3233,7 +3233,7 @@ PostPrepare_Locks(TransactionId xid)
 			SHMQueueDelete(&proclock->procLink);
 
 			/*
-			 * Create the new hash key for the proclock.
+			 * Create the new__ hash key for the proclock.
 			 */
 			proclocktag.myLock = lock;
 			proclocktag.myProc = newproc;
@@ -3248,7 +3248,7 @@ PostPrepare_Locks(TransactionId xid)
 									  (void *) &proclocktag))
 				elog(PANIC, "duplicate entry found while reassigning a prepared transaction's locks");
 
-			/* Re-link into the new proc's proclock list */
+			/* Re-link into the new__ proc's proclock list */
 			SHMQueueInsertBefore(&(newproc->myProcLocks[partition]),
 								 &proclock->procLink);
 
@@ -3647,7 +3647,7 @@ DumpAllLocks(void)
  * assume that the lock state represented by the stored 2PC files is legal.
  *
  * When switching from Hot Standby mode to normal operation, the locks will
- * be already held by the startup process. The locks are acquired for the new
+ * be already held by the startup process. The locks are acquired for the new__
  * procs without checking for conflicts, so we don't get a conflict between the
  * startup process and the dummy procs, even though we will momentarily have
  * a situation where two procs are holding the same AccessExclusiveLock,
@@ -3716,7 +3716,7 @@ lock_twophase_recover(TransactionId xid, uint16 info,
 	}
 
 	/*
-	 * if it's a new lock object, initialize it
+	 * if it's a new__ lock object, initialize it
 	 */
 	if (!found)
 	{
@@ -3728,7 +3728,7 @@ lock_twophase_recover(TransactionId xid, uint16 info,
 		lock->nGranted = 0;
 		MemSet(lock->requested, 0, sizeof(int) * MAX_LOCKMODES);
 		MemSet(lock->granted, 0, sizeof(int) * MAX_LOCKMODES);
-		LOCK_PRINT("lock_twophase_recover: new", lock, lockmode);
+		LOCK_PRINT("lock_twophase_recover: new__", lock, lockmode);
 	}
 	else
 	{
@@ -3781,7 +3781,7 @@ lock_twophase_recover(TransactionId xid, uint16 info,
 	}
 
 	/*
-	 * If new, initialize the new entry
+	 * If new__, initialize the new__ entry
 	 */
 	if (!found)
 	{
@@ -3791,7 +3791,7 @@ lock_twophase_recover(TransactionId xid, uint16 info,
 		SHMQueueInsertBefore(&lock->procLocks, &proclock->lockLink);
 		SHMQueueInsertBefore(&(proc->myProcLocks[partition]),
 							 &proclock->procLink);
-		PROCLOCK_PRINT("lock_twophase_recover: new", proclock);
+		PROCLOCK_PRINT("lock_twophase_recover: new__", proclock);
 	}
 	else
 	{
@@ -4008,7 +4008,7 @@ VirtualXactLock(VirtualTransactionId vxid, bool wait)
 	/*
 	 * If a lock table entry must be made, this is the PGPROC on whose behalf
 	 * it must be done.  Note that the transaction might end or the PGPROC
-	 * might be reassigned to a new backend before we get around to examining
+	 * might be reassigned to a new__ backend before we get around to examining
 	 * it, but it doesn't matter.  If we find upon examination that the
 	 * relevant lxid is no longer running here, that's enough to prove that
 	 * it's no longer running anywhere.

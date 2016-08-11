@@ -15,7 +15,7 @@
  * The template databases are ordinary PostgreSQL databases.  template0
  * is never supposed to change after initdb, whereas template1 can be
  * changed to add site-local standard data.  Either one can be copied
- * to produce a new database.
+ * to produce a new__ database.
  *
  * For largely-historical reasons, the template1 database is the one built
  * by the basic bootstrap process.  After it is complete, template0 and
@@ -381,7 +381,7 @@ replace_token(char **lines, const char *token, const char *replacement)
 			continue;
 		}
 
-		/* if we get here a change is needed - set up new line */
+		/* if we get here a change is needed - set up new__ line */
 
 		newline = (char *) pg_malloc(strlen(lines[i]) + diff + 1);
 
@@ -1530,7 +1530,7 @@ setup_auth(void)
 		 * The authid table shouldn't be readable except through views, to
 		 * ensure passwords are not publicly visible.
 		 */
-		"REVOKE ALL on pg_authid FROM public;\n",
+		"REVOKE ALL on pg_authid FROM public__;\n",
 		NULL
 	};
 
@@ -1568,7 +1568,7 @@ get_set_pwd(void)
 		/*
 		 * Read password from terminal
 		 */
-		pwd1 = simple_prompt("Enter new superuser password: ", 100, false);
+		pwd1 = simple_prompt("Enter new__ superuser password: ", 100, false);
 		pwd2 = simple_prompt("Enter it again: ", 100, false);
 		if (strcmp(pwd1, pwd2) != 0)
 		{
@@ -1695,7 +1695,7 @@ setup_depend(void)
 		" FROM pg_trigger;\n",
 
 		/*
-		 * restriction here to avoid pinning the public namespace
+		 * restriction here to avoid pinning the public__ namespace__
 		 */
 		"INSERT INTO pg_depend SELECT 0,0,0, tableoid,oid,0, 'p' "
 		" FROM pg_namespace "
@@ -1817,14 +1817,14 @@ setup_description(void)
 				"  FROM tmp_pg_shdescription t, pg_class c "
 				"   WHERE c.relname = t.classname;\n");
 
-	/* Create default descriptions for operator implementation functions */
+	/* Create default descriptions for operator__ implementation functions */
 	PG_CMD_PUTS("WITH funcdescs AS ( "
 				"SELECT p.oid as p_oid, oprname, "
 			  "coalesce(obj_description(o.oid, 'pg_operator'),'') as opdesc "
 				"FROM pg_proc p JOIN pg_operator o ON oprcode = p.oid ) "
 				"INSERT INTO pg_description "
 				"  SELECT p_oid, 'pg_proc'::regclass, 0, "
-				"    'implementation of ' || oprname || ' operator' "
+				"    'implementation of ' || oprname || ' operator__' "
 				"  FROM funcdescs "
 				"  WHERE opdesc NOT LIKE 'deprecated%' AND "
 				"  NOT EXISTS (SELECT 1 FROM pg_description "
@@ -1839,13 +1839,13 @@ setup_description(void)
 /*
  * "Normalize" a locale name, stripping off encoding tags such as
  * ".utf8" (e.g., "en_US.utf8" -> "en_US", but "br_FR.iso885915@euro"
- * -> "br_FR@euro").  Return true if a new, different name was
+ * -> "br_FR@euro").  Return true if a new__, different name was
  * generated.
  */
 static bool
-normalize_locale_name(char *new, const char *old)
+normalize_locale_name(char *new__, const char *old)
 {
-	char	   *n = new;
+	char	   *n = new__;
 	const char *o = old;
 	bool		changed = false;
 
@@ -2115,9 +2115,9 @@ setup_privileges(void)
 		"UPDATE pg_class "
 		"  SET relacl = E'{\"=r/\\\\\"$POSTGRES_SUPERUSERNAME\\\\\"\"}' "
 		"  WHERE relkind IN ('r', 'v', 'm', 'S') AND relacl IS NULL;\n",
-		"GRANT USAGE ON SCHEMA pg_catalog TO PUBLIC;\n",
-		"GRANT CREATE, USAGE ON SCHEMA public TO PUBLIC;\n",
-		"REVOKE ALL ON pg_largeobject FROM PUBLIC;\n",
+		"GRANT USAGE ON SCHEMA pg_catalog TO public__;\n",
+		"GRANT CREATE, USAGE ON SCHEMA public__ TO public__;\n",
+		"REVOKE ALL ON pg_largeobject FROM public__;\n",
 		NULL
 	};
 
@@ -2297,12 +2297,12 @@ make_template0(void)
 		"    WHERE datname = 'template0');\n",
 
 		/*
-		 * Explicitly revoke public create-schema and create-temp-table
+		 * Explicitly revoke public__ create-schema and create-temp-table
 		 * privileges in template1 and template0; else the latter would be on
 		 * by default
 		 */
-		"REVOKE CREATE,TEMPORARY ON DATABASE template1 FROM public;\n",
-		"REVOKE CREATE,TEMPORARY ON DATABASE template0 FROM public;\n",
+		"REVOKE CREATE,TEMPORARY ON DATABASE template1 FROM public__;\n",
+		"REVOKE CREATE,TEMPORARY ON DATABASE template0 FROM public__;\n",
 
 		"COMMENT ON DATABASE template0 IS 'unmodifiable empty database';\n",
 
@@ -2451,7 +2451,7 @@ fsync_pgdata(void)
  * Also note the behaviour of Windows with SIGINT, which says this:
  *	 Note	SIGINT is not supported for any Win32 application, including
  *	 Windows 98/Me and Windows NT/2000/XP. When a CTRL+C interrupt occurs,
- *	 Win32 operating systems generate a new thread to specifically handle
+ *	 Win32 operating systems generate a new__ thread to specifically handle
  *	 that interrupt. This can cause a single-thread application such as UNIX,
  *	 to become multithreaded, resulting in unexpected behavior.
  *
@@ -2728,18 +2728,18 @@ usage(const char *progname)
 	printf(_("      --auth-host=METHOD    default authentication method for local TCP/IP connections\n"));
 	printf(_("      --auth-local=METHOD   default authentication method for local-socket connections\n"));
 	printf(_(" [-D, --pgdata=]DATADIR     location for this database cluster\n"));
-	printf(_("  -E, --encoding=ENCODING   set default encoding for new databases\n"));
-	printf(_("      --locale=LOCALE       set default locale for new databases\n"));
+	printf(_("  -E, --encoding=ENCODING   set default encoding for new__ databases\n"));
+	printf(_("      --locale=LOCALE       set default locale for new__ databases\n"));
 	printf(_("      --lc-collate=, --lc-ctype=, --lc-messages=LOCALE\n"
 			 "      --lc-monetary=, --lc-numeric=, --lc-time=LOCALE\n"
 			 "                            set default locale in the respective category for\n"
-			 "                            new databases (default taken from environment)\n"));
+			 "                            new__ databases (default taken from environment)\n"));
 	printf(_("      --no-locale           equivalent to --locale=C\n"));
-	printf(_("      --pwfile=FILE         read password for the new superuser from file\n"));
+	printf(_("      --pwfile=FILE         read password for the new__ superuser from file\n"));
 	printf(_("  -T, --text-search-config=CFG\n"
 		 "                            default text search configuration\n"));
 	printf(_("  -U, --username=NAME       database superuser name\n"));
-	printf(_("  -W, --pwprompt            prompt for a password for the new superuser\n"));
+	printf(_("  -W, --pwprompt            prompt for a password for the new__ superuser\n"));
 	printf(_("  -X, --xlogdir=XLOGDIR     location for the transaction log directory\n"));
 	printf(_("\nLess commonly used options:\n"));
 	printf(_("  -d, --debug               generate lots of debugging output\n"));
@@ -3151,7 +3151,7 @@ create_data_directory(void)
 				warn_on_mount_point(ret);
 			else
 				fprintf(stderr,
-						_("If you want to create a new database system, either remove or empty\n"
+						_("If you want to create a new__ database system, either remove or empty\n"
 						  "the directory \"%s\" or run %s\n"
 						  "with an argument other than \"%s\".\n"),
 						pg_data, progname, pg_data);

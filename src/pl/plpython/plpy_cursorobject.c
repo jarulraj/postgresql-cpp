@@ -1,5 +1,5 @@
 /*
- * the PLyCursor class
+ * the PLyCursor class__
  *
  * src/pl/plpython/plpy_cursorobject.c
  */

@@ -122,7 +122,7 @@ assign_param_for_var(PlannerInfo *root, Var *var)
 		}
 	}
 
-	/* Nope, so make a new one */
+	/* Nope, so make a new__ one */
 	var = (Var *) copyObject(var);
 	var->varlevelsup = 0;
 
@@ -221,7 +221,7 @@ assign_param_for_placeholdervar(PlannerInfo *root, PlaceHolderVar *phv)
 		}
 	}
 
-	/* Nope, so make a new one */
+	/* Nope, so make a new__ one */
 	phv = (PlaceHolderVar *) copyObject(phv);
 	if (phv->phlevelsup != 0)
 	{
@@ -312,7 +312,7 @@ replace_outer_agg(PlannerInfo *root, Aggref *agg)
 
 	/*
 	 * It does not seem worthwhile to try to match duplicate outer aggs. Just
-	 * make a new slot every time.
+	 * make a new__ slot every time.
 	 */
 	agg = (Aggref *) copyObject(agg);
 	IncrementVarSublevelsUp((Node *) agg, -((int) agg->agglevelsup), 0);
@@ -354,7 +354,7 @@ replace_outer_grouping(PlannerInfo *root, GroupingFunc *grp)
 
 	/*
 	 * It does not seem worthwhile to try to match duplicate outer aggs. Just
-	 * make a new slot every time.
+	 * make a new__ slot every time.
 	 */
 	grp = (GroupingFunc *) copyObject(grp);
 	IncrementVarSublevelsUp((Node *) grp, -((int) grp->agglevelsup), 0);
@@ -378,7 +378,7 @@ replace_outer_grouping(PlannerInfo *root, GroupingFunc *grp)
 }
 
 /*
- * Generate a new Param node that will not conflict with any other.
+ * Generate a new__ Param node that will not conflict with any other.
  *
  * This is used to create Params representing subplan outputs.
  * We don't need to build a PlannerParamItem for such a Param, but we do
@@ -1080,7 +1080,7 @@ hash_ok_operator(OpExpr *expr)
 {
 	Oid			opid = expr->opno;
 
-	/* quick out if not a binary operator */
+	/* quick out if not a binary operator__ */
 	if (list_length(expr->args) != 2)
 		return false;
 	if (opid == ARRAY_EQ_OP)
@@ -1093,13 +1093,13 @@ hash_ok_operator(OpExpr *expr)
 	}
 	else
 	{
-		/* else must look up the operator properties */
+		/* else must look up the operator__ properties */
 		HeapTuple	tup;
 		Form_pg_operator optup;
 
 		tup = SearchSysCache1(OPEROID, ObjectIdGetDatum(opid));
 		if (!HeapTupleIsValid(tup))
-			elog(ERROR, "cache lookup failed for operator %u", opid);
+			elog(ERROR, "cache lookup failed for operator__ %u", opid);
 		optup = (Form_pg_operator) GETSTRUCT(tup);
 		if (!optup->oprcanhash || !func_strict(optup->oprcode))
 		{
@@ -1245,7 +1245,7 @@ SS_process_ctes(PlannerInfo *root)
  *
  * On success, the returned JoinExpr has larg = NULL and rarg = the jointree
  * item representing the pulled-up subquery.  The caller must set larg to
- * represent the relation(s) on the lefthand side of the new join, and insert
+ * represent the relation(s) on the lefthand side of the new__ join, and insert
  * the JoinExpr into the upper query's jointree at an appropriate place
  * (typically, where the lefthand relation(s) had been).  Note that the
  * passed-in SubLink must also be removed from its original position in the
@@ -1340,7 +1340,7 @@ convert_ANY_sublink_to_join(PlannerInfo *root, SubLink *sublink,
 										   rtindex);
 
 	/*
-	 * Build the new join's qual expression, replacing Params with these Vars.
+	 * Build the new__ join's qual expression, replacing Params with these Vars.
 	 */
 	quals = convert_testexpr(root, sublink->testexpr, subquery_vars);
 
@@ -1645,7 +1645,7 @@ convert_EXISTS_to_ANY(PlannerInfo *root, Query *subselect,
 	AttrNumber	resno;
 
 	/*
-	 * Query must not require a targetlist, since we have to insert a new one.
+	 * Query must not require a targetlist, since we have to insert a new__ one.
 	 * Caller should have dealt with the case already.
 	 */
 	Assert(subselect->targetList == NIL);
@@ -1800,7 +1800,7 @@ convert_EXISTS_to_ANY(PlannerInfo *root, Query *subselect,
 		subselect->jointree->quals = (Node *) make_ands_explicit(newWhere);
 
 	/*
-	 * Build a new targetlist for the child that emits the expressions we
+	 * Build a new__ targetlist for the child that emits the expressions we
 	 * need.  Concurrently, build a testexpr for the parent using Params to
 	 * reference the child outputs.  (Since we generate Params directly here,
 	 * there will be no need to convert the testexpr in build_subplan.)

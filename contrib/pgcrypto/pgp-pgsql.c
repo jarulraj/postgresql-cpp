@@ -43,7 +43,7 @@
 #include "pgp.h"
 
 /*
- * public functions
+ * public__ functions
  */
 PG_FUNCTION_INFO_V1(pgp_sym_encrypt_bytea);
 PG_FUNCTION_INFO_V1(pgp_sym_encrypt_text);
@@ -720,7 +720,7 @@ pgp_sym_decrypt_text(PG_FUNCTION_ARGS)
 }
 
 /*
- * Wrappers for public-key functions
+ * Wrappers for public__-key functions
  */
 
 Datum

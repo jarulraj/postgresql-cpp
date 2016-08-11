@@ -194,7 +194,7 @@ tablespace_list_append(const char *arg)
 
 	if (!is_absolute_path(cell->new_dir))
 	{
-		fprintf(stderr, _("%s: new directory is not an absolute path in tablespace mapping: %s\n"),
+		fprintf(stderr, _("%s: new__ directory is not an absolute path in tablespace mapping: %s\n"),
 				progname, cell->new_dir);
 		exit(1);
 	}
@@ -1086,7 +1086,7 @@ ReceiveTarFile(PGconn *conn, PGresult *res, int rownum)
 					{
 						/*
 						 * No more data in the current file, the next piece of
-						 * data (if any) will be a new file header structure.
+						 * data (if any) will be a new__ file header structure.
 						 */
 						in_tarhdr = true;
 						skip_file = false;
@@ -1197,7 +1197,7 @@ ReceiveAndUnpackTarFile(PGconn *conn, PGresult *res, int rownum)
 			int			filemode;
 
 			/*
-			 * No current file, so this must be the header for a new file
+			 * No current file, so this must be the header for a new__ file
 			 */
 			if (r != 512)
 			{
@@ -1317,13 +1317,13 @@ ReceiveAndUnpackTarFile(PGconn *conn, PGresult *res, int rownum)
 			if (current_len_left == 0)
 			{
 				/*
-				 * Done with this file, next one will be a new tar header
+				 * Done with this file, next one will be a new__ tar header
 				 */
 				fclose(file);
 				file = NULL;
 				continue;
 			}
-		}						/* new file */
+		}						/* new__ file */
 		else
 		{
 			/*
@@ -1612,7 +1612,7 @@ BaseBackup(void)
 	}
 
 	/*
-	 * If WAL streaming was requested, also check that the server is new
+	 * If WAL streaming was requested, also check that the server is new__
 	 * enough for that.
 	 */
 	if (streamwal && !CheckServerVersionForStreaming(conn))

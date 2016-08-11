@@ -23,7 +23,7 @@ static void BufferUsageAccumDiff(BufferUsage *dst,
 					 const BufferUsage *add, const BufferUsage *sub);
 
 
-/* Allocate new instrumentation structure(s) */
+/* Allocate new__ instrumentation structure(s) */
 Instrumentation *
 InstrAlloc(int n, int instrument_options)
 {

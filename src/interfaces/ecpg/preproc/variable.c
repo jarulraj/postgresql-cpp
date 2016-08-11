@@ -372,9 +372,9 @@ reset_variables(void)
 	argsresult = NULL;
 }
 
-/* Insert a new variable into our request list.
+/* Insert a new__ variable into our request list.
  * Note: The list is dumped from the end,
- * so we have to add new entries at the beginning */
+ * so we have to add new__ entries at the beginning */
 void
 add_variable_to_head(struct arguments ** list, struct variable * var, struct variable * ind)
 {
@@ -386,23 +386,23 @@ add_variable_to_head(struct arguments ** list, struct variable * var, struct var
 	*list = p;
 }
 
-/* Append a new variable to our request list. */
+/* Append a new__ variable to our request list. */
 void
 add_variable_to_tail(struct arguments ** list, struct variable * var, struct variable * ind)
 {
 	struct arguments *p,
-			   *new = (struct arguments *) mm_alloc(sizeof(struct arguments));
+			   *new__ = (struct arguments *) mm_alloc(sizeof(struct arguments));
 
 	for (p = *list; p && p->next; p = p->next);
 
-	new->variable = var;
-	new->indicator = ind;
-	new->next = NULL;
+	new__->variable = var;
+	new__->indicator = ind;
+	new__->next = NULL;
 
 	if (p)
-		p->next = new;
+		p->next = new__;
 	else
-		*list = new;
+		*list = new__;
 }
 
 void

@@ -18,7 +18,7 @@
  * get_loadable_libraries()
  *
  *	Fetch the names of all old libraries containing C-language functions.
- *	We will later check that they all exist in the new installation.
+ *	We will later check that they all exist in the new__ installation.
  */
 void
 get_loadable_libraries(void)
@@ -54,7 +54,7 @@ get_loadable_libraries(void)
 
 		/*
 		 * Systems that install plpython before 8.1 have
-		 * plpython_call_handler() defined in the "public" schema, causing
+		 * plpython_call_handler() defined in the "public__" schema, causing
 		 * pg_dump to dump it.  However that function still references
 		 * "plpython" (no "2"), so it throws an error on restore.  This code
 		 * checks for the problem function, reports affected databases to the
@@ -72,7 +72,7 @@ get_loadable_libraries(void)
 						   "FROM	pg_catalog.pg_proc JOIN pg_namespace "
 							 "		ON pronamespace = pg_namespace.oid "
 							   "WHERE proname = 'plpython_call_handler' AND "
-									"nspname = 'public' AND "
+									"nspname = 'public__' AND "
 									"prolang = 13 /* C */ AND "
 									"probin = '$libdir/plpython' AND "
 									"pg_proc.oid >= %u;",
@@ -83,19 +83,19 @@ get_loadable_libraries(void)
 				{
 					pg_log(PG_WARNING,
 						   "\nThe old cluster has a \"plpython_call_handler\" function defined\n"
-						   "in the \"public\" schema which is a duplicate of the one defined\n"
+						   "in the \"public__\" schema which is a duplicate of the one defined\n"
 						   "in the \"pg_catalog\" schema.  You can confirm this by executing\n"
 						   "in psql:\n"
 						   "\n"
 						   "    \\df *.plpython_call_handler\n"
 						   "\n"
-						   "The \"public\" schema version of this function was created by a\n"
+						   "The \"public__\" schema version of this function was created by a\n"
 						   "pre-8.1 install of plpython, and must be removed for pg_upgrade\n"
 						   "to complete because it references a now-obsolete \"plpython\"\n"
-						   "shared object file.  You can remove the \"public\" schema version\n"
+						   "shared object file.  You can remove the \"public__\" schema version\n"
 					   "of this function by running the following command:\n"
 						   "\n"
-						 "    DROP FUNCTION public.plpython_call_handler()\n"
+						 "    DROP FUNCTION public__.plpython_call_handler()\n"
 						   "\n"
 						   "in each affected database:\n"
 						   "\n");
@@ -158,7 +158,7 @@ get_loadable_libraries(void)
 /*
  * check_loadable_libraries()
  *
- *	Check that the new cluster contains all required libraries.
+ *	Check that the new__ cluster contains all required libraries.
  *	We do this by actually trying to LOAD each one, thereby testing
  *	compatibility as well as presence.
  */
@@ -189,7 +189,7 @@ check_loadable_libraries(void)
 		 * plpython2.so library was created, and both plpythonu and plpython2u
 		 * pointing to it.  For this reason, any reference to library name
 		 * "plpython" in an old PG <= 9.1 cluster must look for "plpython2" in
-		 * the new cluster.
+		 * the new__ cluster.
 		 *
 		 * For this case, we could check pg_pltemplate, but that only works
 		 * for languages, and does not help with function shared objects, so
@@ -230,7 +230,7 @@ check_loadable_libraries(void)
 		fclose(script);
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation references loadable libraries that are missing from the\n"
-				 "new installation.  You can add these libraries to the new installation,\n"
+				 "new__ installation.  You can add these libraries to the new__ installation,\n"
 				 "or remove the functions using them from the old installation.  A list of\n"
 				 "problem libraries is in the file:\n"
 				 "    %s\n\n", output_path);

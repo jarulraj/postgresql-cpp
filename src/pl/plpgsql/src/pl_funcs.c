@@ -19,16 +19,16 @@
 
 
 /* ----------
- * Local variables for namespace handling
+ * Local variables for namespace__ handling
  *
- * The namespace structure actually forms a tree, of which only one linear
+ * The namespace__ structure actually forms a tree, of which only one linear
  * list or "chain" (from the youngest item to the root) is accessible from
  * any one plpgsql statement.  During initial parsing of a function, ns_top
  * points to the youngest item accessible from the block currently being
  * parsed.  We store the entire tree, however, since at runtime we will need
  * to access the chain that's relevant to any one statement.
  *
- * Block boundaries in the namespace chain are marked by PLPGSQL_NSTYPE_LABEL
+ * Block boundaries in the namespace__ chain are marked by PLPGSQL_NSTYPE_LABEL
  * items.
  * ----------
  */
@@ -36,7 +36,7 @@ static PLpgSQL_nsitem *ns_top = NULL;
 
 
 /* ----------
- * plpgsql_ns_init			Initialize namespace processing for a new function
+ * plpgsql_ns_init			Initialize namespace__ processing for a new__ function
  * ----------
  */
 void
@@ -47,7 +47,7 @@ plpgsql_ns_init(void)
 
 
 /* ----------
- * plpgsql_ns_push			Create a new namespace level
+ * plpgsql_ns_push			Create a new__ namespace__ level
  * ----------
  */
 void
@@ -74,7 +74,7 @@ plpgsql_ns_pop(void)
 
 
 /* ----------
- * plpgsql_ns_top			Fetch the current namespace chain end
+ * plpgsql_ns_top			Fetch the current namespace__ chain end
  * ----------
  */
 PLpgSQL_nsitem *
@@ -85,7 +85,7 @@ plpgsql_ns_top(void)
 
 
 /* ----------
- * plpgsql_ns_additem		Add an item to the current namespace chain
+ * plpgsql_ns_additem		Add an item to the current namespace__ chain
  * ----------
  */
 void
@@ -107,7 +107,7 @@ plpgsql_ns_additem(int itemtype, int itemno, const char *name)
 
 
 /* ----------
- * plpgsql_ns_lookup		Lookup an identifier in the given namespace chain
+ * plpgsql_ns_lookup		Lookup an identifier in the given namespace__ chain
  *
  * Note that this only searches for variables, not labels.
  *
@@ -131,7 +131,7 @@ plpgsql_ns_lookup(PLpgSQL_nsitem *ns_cur, bool localmode,
 				  const char *name1, const char *name2, const char *name3,
 				  int *names_used)
 {
-	/* Outer loop iterates once per block level in the namespace chain */
+	/* Outer loop iterates once per block level in the namespace__ chain */
 	while (ns_cur != NULL)
 	{
 		PLpgSQL_nsitem *nsitem;
@@ -188,7 +188,7 @@ plpgsql_ns_lookup(PLpgSQL_nsitem *ns_cur, bool localmode,
 
 
 /* ----------
- * plpgsql_ns_lookup_label		Lookup a label in the given namespace chain
+ * plpgsql_ns_lookup_label		Lookup a label in the given namespace__ chain
  * ----------
  */
 PLpgSQL_nsitem *

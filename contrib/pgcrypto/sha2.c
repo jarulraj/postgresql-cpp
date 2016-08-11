@@ -127,7 +127,7 @@
 
 /*** INTERNAL FUNCTION PROTOTYPES *************************************/
 /* NOTE: These should not be accessed directly from outside this
- * library -- they are intended for private internal visibility/use
+ * library -- they are intended for private__ internal visibility/use
  * only.
  */
 static void SHA512_Last(SHA512_CTX *);

@@ -1624,7 +1624,7 @@ _copyCaseTestExpr(const CaseTestExpr *from)
 {
 	CaseTestExpr *newnode = makeNode(CaseTestExpr);
 
-	COPY_SCALAR_FIELD(typeId);
+	COPY_SCALAR_FIELD(typeid__);
 	COPY_SCALAR_FIELD(typeMod);
 	COPY_SCALAR_FIELD(collation);
 
@@ -1796,7 +1796,7 @@ _copyCoerceToDomainValue(const CoerceToDomainValue *from)
 {
 	CoerceToDomainValue *newnode = makeNode(CoerceToDomainValue);
 
-	COPY_SCALAR_FIELD(typeId);
+	COPY_SCALAR_FIELD(typeid__);
 	COPY_SCALAR_FIELD(typeMod);
 	COPY_SCALAR_FIELD(collation);
 	COPY_LOCATION_FIELD(location);
@@ -1812,7 +1812,7 @@ _copySetToDefault(const SetToDefault *from)
 {
 	SetToDefault *newnode = makeNode(SetToDefault);
 
-	COPY_SCALAR_FIELD(typeId);
+	COPY_SCALAR_FIELD(typeid__);
 	COPY_SCALAR_FIELD(typeMod);
 	COPY_SCALAR_FIELD(collation);
 	COPY_LOCATION_FIELD(location);
@@ -2429,10 +2429,10 @@ _copyMultiAssignRef(const MultiAssignRef *from)
 	return newnode;
 }
 
-static TypeName *
-_copyTypeName(const TypeName *from)
+static typename__ *
+_copyTypeName(const typename__ *from)
 {
-	TypeName   *newnode = makeNode(TypeName);
+	typename__   *newnode = makeNode(typename__);
 
 	COPY_NODE_FIELD(names);
 	COPY_SCALAR_FIELD(typeOid);
@@ -2524,7 +2524,7 @@ _copyTypeCast(const TypeCast *from)
 	TypeCast   *newnode = makeNode(TypeCast);
 
 	COPY_NODE_FIELD(arg);
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_LOCATION_FIELD(location);
 
 	return newnode;
@@ -2564,7 +2564,7 @@ _copyColumnDef(const ColumnDef *from)
 	ColumnDef  *newnode = makeNode(ColumnDef);
 
 	COPY_STRING_FIELD(colname);
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_SCALAR_FIELD(inhcount);
 	COPY_SCALAR_FIELD(is_local);
 	COPY_SCALAR_FIELD(is_not_null);
@@ -2647,7 +2647,7 @@ _copyXmlSerialize(const XmlSerialize *from)
 
 	COPY_SCALAR_FIELD(xmloption);
 	COPY_NODE_FIELD(expr);
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_LOCATION_FIELD(location);
 
 	return newnode;
@@ -2828,7 +2828,7 @@ _copyAlterDomainStmt(const AlterDomainStmt *from)
 	AlterDomainStmt *newnode = makeNode(AlterDomainStmt);
 
 	COPY_SCALAR_FIELD(subtype);
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_STRING_FIELD(name);
 	COPY_NODE_FIELD(def);
 	COPY_SCALAR_FIELD(behavior);
@@ -3273,7 +3273,7 @@ _copyCreateEnumStmt(const CreateEnumStmt *from)
 {
 	CreateEnumStmt *newnode = makeNode(CreateEnumStmt);
 
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_NODE_FIELD(vals);
 
 	return newnode;
@@ -3284,7 +3284,7 @@ _copyCreateRangeStmt(const CreateRangeStmt *from)
 {
 	CreateRangeStmt *newnode = makeNode(CreateRangeStmt);
 
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_NODE_FIELD(params);
 
 	return newnode;
@@ -3295,7 +3295,7 @@ _copyAlterEnumStmt(const AlterEnumStmt *from)
 {
 	AlterEnumStmt *newnode = makeNode(AlterEnumStmt);
 
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_STRING_FIELD(newVal);
 	COPY_STRING_FIELD(newValNeighbor);
 	COPY_SCALAR_FIELD(newValIsAfter);
@@ -3335,7 +3335,7 @@ _copyCreateDomainStmt(const CreateDomainStmt *from)
 	CreateDomainStmt *newnode = makeNode(CreateDomainStmt);
 
 	COPY_NODE_FIELD(domainname);
-	COPY_NODE_FIELD(typeName);
+	COPY_NODE_FIELD(typename__);
 	COPY_NODE_FIELD(collClause);
 	COPY_NODE_FIELD(constraints);
 
@@ -4091,24 +4091,24 @@ _copyAlterPolicyStmt(const AlterPolicyStmt *from)
  * list MUST be of type T_List; T_IntList and T_OidList nodes don't
  * need deep copies, so they should be copied via list_copy()
  */
-#define COPY_NODE_CELL(new, old)					\
-	(new) = (ListCell *) palloc(sizeof(ListCell));	\
-	lfirst(new) = copyObject(lfirst(old));
+#define COPY_NODE_CELL(new__, old)					\
+	(new__) = (ListCell *) palloc(sizeof(ListCell));	\
+	lfirst(new__) = copyObject(lfirst(old));
 
 static List *
 _copyList(const List *from)
 {
-	List	   *new;
+	List	   *new__;
 	ListCell   *curr_old;
 	ListCell   *prev_new;
 
 	Assert(list_length(from) >= 1);
 
-	new = makeNode(List);
-	new->length = from->length;
+	new__ = makeNode(List);
+	new__->length = from->length;
 
-	COPY_NODE_CELL(new->head, from->head);
-	prev_new = new->head;
+	COPY_NODE_CELL(new__->head, from->head);
+	prev_new = new__->head;
 	curr_old = lnext(from->head);
 
 	while (curr_old)
@@ -4118,9 +4118,9 @@ _copyList(const List *from)
 		curr_old = curr_old->next;
 	}
 	prev_new->next = NULL;
-	new->tail = prev_new;
+	new__->tail = prev_new;
 
-	return new;
+	return new__;
 }
 
 /* ****************************************************************

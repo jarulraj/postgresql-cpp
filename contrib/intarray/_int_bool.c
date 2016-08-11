@@ -131,7 +131,7 @@ gettoken(WORKSTATE *state, int32 *val)
 }
 
 /*
- * push new one in polish notation reverse view
+ * push new__ one in polish notation reverse view
  */
 static void
 pushquery(WORKSTATE *state, int32 type, int32 val)
@@ -286,7 +286,7 @@ execute(ITEM *curitem, void *checkval, bool calcnot,
 			return false;
 	}
 	else
-	{							/* |-operator */
+	{							/* |-operator__ */
 		if (execute(curitem + curitem->left, checkval, calcnot, chkcond))
 			return true;
 		else
@@ -387,7 +387,7 @@ contains_required_value(ITEM *curitem)
 			return contains_required_value(curitem - 1);
 	}
 	else
-	{							/* |-operator */
+	{							/* |-operator__ */
 		/* Both sides must have required values */
 		if (contains_required_value(curitem + curitem->left))
 			return contains_required_value(curitem - 1);
@@ -622,7 +622,7 @@ infix(INFIX *in, bool first)
 		in->curpol = nrm.curpol;
 		infix(in, false);
 
-		/* print operator & right operand */
+		/* print operator__ & right operand */
 		RESIZEBUF(in, 3 + (nrm.cur - nrm.buf));
 		sprintf(in->cur, " %c %s", op, nrm.buf);
 		in->cur = strchr(in->cur, '\0');

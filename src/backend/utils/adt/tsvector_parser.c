@@ -19,7 +19,7 @@
 
 
 /*
- * Private state of tsvector parser.  Note that tsquery also uses this code to
+ * private__ state of tsvector parser.  Note that tsquery also uses this code to
  * parse its input, hence the boolean flags.  The two flags are both true or
  * both false in current usage, but we keep them separate for clarity.
  * is_tsquery affects *only* the content of error messages.

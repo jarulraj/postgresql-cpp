@@ -65,18 +65,18 @@ static void
 add_include_path(char *path)
 {
 	struct _include_path *ip = include_paths,
-			   *new;
+			   *new__;
 
-	new = mm_alloc(sizeof(struct _include_path));
-	new->path = path;
-	new->next = NULL;
+	new__ = mm_alloc(sizeof(struct _include_path));
+	new__->path = path;
+	new__->next = NULL;
 
 	if (ip == NULL)
-		include_paths = new;
+		include_paths = new__;
 	else
 	{
 		for (; ip->next != NULL; ip = ip->next);
-		ip->next = new;
+		ip->next = new__;
 	}
 }
 
@@ -99,12 +99,12 @@ add_preprocessor_define(char *define)
 		for (tmp = ptr - 1; *tmp == ' '; tmp--);
 		tmp[1] = '\0';
 		defines->old = define_copy;
-		defines->new = ptr + 1;
+		defines->new__ = ptr + 1;
 	}
 	else
 	{
 		defines->old = define_copy;
-		defines->new = mm_strdup("1");
+		defines->new__ = mm_strdup("1");
 	}
 	defines->pertinent = true;
 	defines->used = NULL;
@@ -383,7 +383,7 @@ main(int argc, char *const argv[])
 					defptr = defines;
 					defines = defines->next;
 
-					free(defptr->new);
+					free(defptr->new__);
 					free(defptr->old);
 					free(defptr);
 				}
@@ -396,7 +396,7 @@ main(int argc, char *const argv[])
 					{
 						defptr->next = this->next;
 
-						free(this->new);
+						free(this->new__);
 						free(this->old);
 						free(this);
 					}

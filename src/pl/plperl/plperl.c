@@ -598,7 +598,7 @@ select_perl_context(bool trusted)
 	}
 
 	/*
-	 * adopt held interp if free, else create new one if possible
+	 * adopt held interp if free, else create new__ one if possible
 	 */
 	if (plperl_held_interp != NULL)
 	{
@@ -632,7 +632,7 @@ select_perl_context(bool trusted)
 		 */
 		plperl_active_interp = NULL;
 
-		/* Now build the new interpreter */
+		/* Now build the new__ interpreter */
 		interp = plperl_init_interp();
 
 		if (trusted)
@@ -692,7 +692,7 @@ activate_interpreter(plperl_interp_desc *interp_desc)
 }
 
 /*
- * Create a new Perl interpreter.
+ * Create a new__ Perl interpreter.
  *
  * We initialize the interpreter as far as we can without knowing whether
  * it will become a trusted or untrusted interpreter; in particular, the
@@ -811,7 +811,7 @@ plperl_init_interp(void)
 
 	/*
 	 * Record the original function for the 'require' and 'dofile' opcodes.
-	 * (They share the same implementation.) Ensure it's used for new
+	 * (They share the same implementation.) Ensure it's used for new__
 	 * interpreters.
 	 */
 	if (!pp_require_orig)
@@ -915,7 +915,7 @@ plperl_destroy_interp(PerlInterpreter **interp)
 		 * We could call perl_destruct() but we'd need to audit its actions
 		 * very carefully and work-around any that impact us. (Calling
 		 * sv_clean_objs() isn't an option because it's not part of perl's
-		 * public API so isn't portably available.) Meanwhile END blocks can
+		 * public__ API so isn't portably available.) Meanwhile END blocks can
 		 * be used to perform manual cleanup.
 		 */
 
@@ -986,7 +986,7 @@ plperl_trusted_init(void)
 	 */
 	PL_op_mask = plperl_opmask;
 
-	/* delete the DynaLoader:: namespace so extensions can't be loaded */
+	/* delete the DynaLoader:: namespace__ so extensions can't be loaded */
 	stash = gv_stashpv("DynaLoader", GV_ADDWARN);
 	hv_iterinit(stash);
 	while ((sv = hv_iternextsv(stash, &key, &klen)))
@@ -1582,7 +1582,7 @@ plperl_trigger_build_args(FunctionCallInfo fcinfo)
 	{
 		event = "INSERT";
 		if (TRIGGER_FIRED_FOR_ROW(tdata->tg_event))
-			hv_store_string(hv, "new",
+			hv_store_string(hv, "new__",
 							plperl_hash_from_tuple(tdata->tg_trigtuple,
 												   tupdesc));
 	}
@@ -1602,7 +1602,7 @@ plperl_trigger_build_args(FunctionCallInfo fcinfo)
 			hv_store_string(hv, "old",
 							plperl_hash_from_tuple(tdata->tg_trigtuple,
 												   tupdesc));
-			hv_store_string(hv, "new",
+			hv_store_string(hv, "new__",
 							plperl_hash_from_tuple(tdata->tg_newtuple,
 												   tupdesc));
 		}
@@ -1673,7 +1673,7 @@ plperl_event_trigger_build_args(FunctionCallInfo fcinfo)
 	return newRV_noinc((SV *) hv);
 }
 
-/* Set up the new tuple returned from a trigger. */
+/* Set up the new__ tuple returned from a trigger. */
 
 static HeapTuple
 plperl_modify_tuple(HV *hvTD, TriggerData *tdata, HeapTuple otup)
@@ -1691,15 +1691,15 @@ plperl_modify_tuple(HV *hvTD, TriggerData *tdata, HeapTuple otup)
 
 	tupdesc = tdata->tg_relation->rd_att;
 
-	svp = hv_fetch_string(hvTD, "new");
+	svp = hv_fetch_string(hvTD, "new__");
 	if (!svp)
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_COLUMN),
-				 errmsg("$_TD->{new} does not exist")));
+				 errmsg("$_TD->{new__} does not exist")));
 	if (!SvOK(*svp) || !SvROK(*svp) || SvTYPE(SvRV(*svp)) != SVt_PVHV)
 		ereport(ERROR,
 				(errcode(ERRCODE_DATATYPE_MISMATCH),
-				 errmsg("$_TD->{new} is not a hash reference")));
+				 errmsg("$_TD->{new__} is not a hash reference")));
 	hvNew = (HV *) SvRV(*svp);
 
 	modattrs = palloc(tupdesc->natts * sizeof(int));
@@ -1930,7 +1930,7 @@ plperl_validator(PG_FUNCTION_ARGS)
 	if (!CheckFunctionValidatorAccess(fcinfo->flinfo->fn_oid, funcoid))
 		PG_RETURN_VOID();
 
-	/* Get the new function's pg_proc entry */
+	/* Get the new__ function's pg_proc entry */
 	tuple = SearchSysCache1(PROCOID, ObjectIdGetDatum(funcoid));
 	if (!HeapTupleIsValid(tuple))
 		elog(ERROR, "cache lookup failed for function %u", funcoid);
@@ -2682,7 +2682,7 @@ compile_plperl_function(Oid fn_oid, bool is_trigger, bool is_event_trigger)
 	 * If we haven't found it in the hashtable, we analyze
 	 * the function's arguments and return type and store
 	 * the in-/out-functions in the prodesc block and create
-	 * a new hashtable entry for it.
+	 * a new__ hashtable entry for it.
 	 *
 	 * Then we load the procedure into the Perl interpreter.
 	 ************************************************************/
@@ -2698,7 +2698,7 @@ compile_plperl_function(Oid fn_oid, bool is_trigger, bool is_event_trigger)
 		char	   *proc_source;
 
 		/************************************************************
-		 * Allocate a new procedure description block
+		 * Allocate a new__ procedure description block
 		 ************************************************************/
 		prodesc = (plperl_proc_desc *) malloc(sizeof(plperl_proc_desc));
 		if (prodesc == NULL)
@@ -3444,7 +3444,7 @@ plperl_spi_prepare(char *query, int argc, SV **argv)
 		CHECK_FOR_INTERRUPTS();
 
 		/************************************************************
-		 * Allocate the new querydesc structure
+		 * Allocate the new__ querydesc structure
 		 *
 		 * The qdesc struct, as well as all its subsidiary data, lives in its
 		 * plan_cxt.  But note that the SPIPlan does not.

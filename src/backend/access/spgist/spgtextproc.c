@@ -25,8 +25,8 @@
  * this was problematic because one can't tell whether a string ending at
  * the current level can be pushed down into such a child node.  For
  * backwards compatibility, we still support such node labels for reading;
- * but no new entries will ever be pushed down into a zero-labeled child.
- * No new entries ever get pushed into a -2-labeled child, either.
+ * but no new__ entries will ever be pushed down into a zero-labeled child.
+ * No new__ entries ever get pushed into a -2-labeled child, either.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -480,7 +480,7 @@ spg_text_inner_consistent(PG_FUNCTION_ARGS)
 			int			r;
 
 			/*
-			 * If it's a collation-aware operator, but the collation is C, we
+			 * If it's a collation-aware operator__, but the collation is C, we
 			 * can treat it as non-collation-aware.  With non-C collation we
 			 * need to traverse whole tree :-( so there's no point in making
 			 * any check here.  (Note also that our reconstructed value may

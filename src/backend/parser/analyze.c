@@ -361,7 +361,7 @@ transformDeleteStmt(ParseState *pstate, DeleteStmt *stmt)
 										 true,
 										 ACL_DELETE);
 
-	/* grab the namespace item made by setTargetTable */
+	/* grab the namespace__ item made by setTargetTable */
 	nsitem = (ParseNamespaceItem *) llast(pstate->p_namespace);
 
 	/* there's no DISTINCT in DELETE */
@@ -460,10 +460,10 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 									  selectStmt->withClause != NULL));
 
 	/*
-	 * If a non-nil rangetable/namespace was passed in, and we are doing
-	 * INSERT/SELECT, arrange to pass the rangetable/namespace down to the
+	 * If a non-nil rangetable/namespace__ was passed in, and we are doing
+	 * INSERT/SELECT, arrange to pass the rangetable/namespace__ down to the
 	 * SELECT.  This can only happen if we are inside a CREATE RULE, and in
-	 * that case we want the rule's OLD and NEW rtable entries to appear as
+	 * that case we want the rule's OLD and new__ rtable entries to appear as
 	 * part of the SELECT's rtable, not as outer references for it.  (Kluge!)
 	 * The SELECT's joinlist is not affected however.  We must do this before
 	 * adding the target table to the INSERT's rtable.
@@ -485,7 +485,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 	 * Must get write lock on INSERT target table before scanning SELECT, else
 	 * we will grab the wrong kind of initial lock if the target table is also
 	 * mentioned in the SELECT part.  Note that the target table is not added
-	 * to the joinlist or namespace.
+	 * to the joinlist or namespace__.
 	 */
 	targetPerms = ACL_INSERT;
 	if (isOnConflictUpdate)
@@ -514,7 +514,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 		/*
 		 * We make the sub-pstate a child of the outer pstate so that it can
 		 * see any Param definitions supplied from above.  Since the outer
-		 * pstate's rtable and namespace are presently empty, there are no
+		 * pstate's rtable and namespace__ are presently empty, there are no
 		 * side-effects of exposing names the sub-SELECT shouldn't be able to
 		 * see.
 		 */
@@ -553,7 +553,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 											false,
 											false);
 		rtr = makeNode(RangeTblRef);
-		/* assume new rte is at end */
+		/* assume new__ rte is at end */
 		rtr->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtr->rtindex, pstate->p_rtable));
 		pstate->p_joinlist = lappend(pstate->p_joinlist, rtr);
@@ -672,8 +672,8 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 
 		/*
 		 * Ordinarily there can't be any current-level Vars in the expression
-		 * lists, because the namespace was empty ... but if we're inside
-		 * CREATE RULE, then NEW/OLD references might appear.  In that case we
+		 * lists, because the namespace__ was empty ... but if we're inside
+		 * CREATE RULE, then new__/OLD references might appear.  In that case we
 		 * have to mark the VALUES RTE as LATERAL.
 		 */
 		if (list_length(pstate->p_rtable) != 1 &&
@@ -686,7 +686,7 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 		rte = addRangeTableEntryForValues(pstate, exprsLists, collations,
 										  NULL, lateral, true);
 		rtr = makeNode(RangeTblRef);
-		/* assume new rte is at end */
+		/* assume new__ rte is at end */
 		rtr->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtr->rtindex, pstate->p_rtable));
 		pstate->p_joinlist = lappend(pstate->p_joinlist, rtr);
@@ -759,8 +759,8 @@ transformInsertStmt(ParseState *pstate, InsertStmt *stmt)
 
 	/*
 	 * If we have a RETURNING clause, we need to add the target relation to
-	 * the query namespace before processing it, so that Var references in
-	 * RETURNING will work.  Also, remove any namespace entries added in a
+	 * the query namespace__ before processing it, so that Var references in
+	 * RETURNING will work.  Also, remove any namespace__ entries added in a
 	 * sub-SELECT or VALUES list.
 	 */
 	if (stmt->returningList)
@@ -968,7 +968,7 @@ transformOnConflictClause(ParseState *pstate,
 		exclRelTlist = lappend(exclRelTlist, te);
 
 		/*
-		 * Add EXCLUDED and the target RTE to the namespace, so that they can
+		 * Add EXCLUDED and the target RTE to the namespace__, so that they can
 		 * be used in the UPDATE statement.
 		 */
 		addRTEtoQuery(pstate, exclRte, false, true, true);
@@ -1337,8 +1337,8 @@ transformValuesClause(ParseState *pstate, SelectStmt *stmt)
 
 	/*
 	 * Ordinarily there can't be any current-level Vars in the expression
-	 * lists, because the namespace was empty ... but if we're inside CREATE
-	 * RULE, then NEW/OLD references might appear.  In that case we have to
+	 * lists, because the namespace__ was empty ... but if we're inside CREATE
+	 * RULE, then new__/OLD references might appear.  In that case we have to
 	 * mark the VALUES RTE as LATERAL.
 	 */
 	if (pstate->p_rtable != NIL &&
@@ -1352,7 +1352,7 @@ transformValuesClause(ParseState *pstate, SelectStmt *stmt)
 									  NULL, lateral, true);
 	addRTEtoQuery(pstate, rte, true, true, true);
 
-	/* assume new rte is at end */
+	/* assume new__ rte is at end */
 	rtindex = list_length(pstate->p_rtable);
 	Assert(rte == rt_fetch(rtindex, pstate->p_rtable));
 
@@ -1559,7 +1559,7 @@ transformSetOperationStmt(ParseState *pstate, SelectStmt *stmt)
 
 	/*
 	 * As a first step towards supporting sort clauses that are expressions
-	 * using the output columns, generate a namespace entry that makes the
+	 * using the output columns, generate a namespace__ entry that makes the
 	 * output columns visible.  A Join RTE node is handy for this, since we
 	 * can easily control the Vars generated upon matches.
 	 *
@@ -1579,7 +1579,7 @@ transformSetOperationStmt(ParseState *pstate, SelectStmt *stmt)
 	sv_namespace = pstate->p_namespace;
 	pstate->p_namespace = NIL;
 
-	/* add jrte to column namespace only */
+	/* add jrte to column namespace__ only */
 	addRTEtoQuery(pstate, jrte, false, false, true);
 
 	/*
@@ -1597,7 +1597,7 @@ transformSetOperationStmt(ParseState *pstate, SelectStmt *stmt)
 										  false /* no unknowns expected */ ,
 										  false /* allow SQL92 rules */ );
 
-	/* restore namespace, remove jrte from rtable */
+	/* restore namespace__, remove jrte from rtable */
 	pstate->p_namespace = sv_namespace;
 	pstate->p_rtable = list_truncate(pstate->p_rtable, sv_rtable_length);
 
@@ -1715,14 +1715,14 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 		 *
 		 * Note: previously transformed sub-queries don't affect the parsing
 		 * of this sub-query, because they are not in the toplevel pstate's
-		 * namespace list.
+		 * namespace__ list.
 		 */
 		selectQuery = parse_sub_analyze((Node *) stmt, pstate, NULL, false);
 
 		/*
 		 * Check for bogus references to Vars on the current query level (but
 		 * upper-level references are okay). Normally this can't happen
-		 * because the namespace will be empty, but it could happen if we are
+		 * because the namespace__ will be empty, but it could happen if we are
 		 * inside a rule.
 		 */
 		if (pstate->p_namespace)
@@ -1765,7 +1765,7 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 		 * Return a RangeTblRef to replace the SelectStmt in the set-op tree.
 		 */
 		rtr = makeNode(RangeTblRef);
-		/* assume new rte is at end */
+		/* assume new__ rte is at end */
 		rtr->rtindex = list_length(pstate->p_rtable);
 		Assert(rte == rt_fetch(rtr->rtindex, pstate->p_rtable));
 		return (Node *) rtr;
@@ -1969,7 +1969,7 @@ transformSetOperationTree(ParseState *pstate, SelectStmt *stmt,
 				SetToDefault *rescolnode = makeNode(SetToDefault);
 				TargetEntry *restle;
 
-				rescolnode->typeId = rescoltype;
+				rescolnode->typeid__ = rescoltype;
 				rescolnode->typeMod = rescoltypmod;
 				rescolnode->collation = rescolcoll;
 				rescolnode->location = bestlocation;
@@ -2068,7 +2068,7 @@ transformUpdateStmt(ParseState *pstate, UpdateStmt *stmt)
 										 true,
 										 ACL_UPDATE);
 
-	/* grab the namespace item made by setTargetTable */
+	/* grab the namespace__ item made by setTargetTable */
 	nsitem = (ParseNamespaceItem *) llast(pstate->p_namespace);
 
 	/* subqueries in FROM cannot access the result relation */
@@ -2705,7 +2705,7 @@ applyLockingClause(Query *qry, Index rtindex,
 		return;
 	}
 
-	/* Make a new RowMarkClause */
+	/* Make a new__ RowMarkClause */
 	rc = makeNode(RowMarkClause);
 	rc->rti = rtindex;
 	rc->strength = strength;

@@ -35,7 +35,7 @@
  * bit meanings are defined there
  */
 
-#define ACL_ID_PUBLIC	0		/* placeholder for id in a PUBLIC acl item */
+#define ACL_ID_PUBLIC	0		/* placeholder for id in a public__ acl item */
 
 /*
  * AclItem

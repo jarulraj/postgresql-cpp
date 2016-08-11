@@ -164,7 +164,7 @@ GetForeignServerByName(const char *srvname, bool missing_ok)
  * GetUserMapping - look up the user mapping.
  *
  * If no mapping is found for the supplied user, we also look for
- * PUBLIC mappings (userid == InvalidOid).
+ * public__ mappings (userid == InvalidOid).
  */
 UserMapping *
 GetUserMapping(Oid userid, Oid serverid)
@@ -180,7 +180,7 @@ GetUserMapping(Oid userid, Oid serverid)
 
 	if (!HeapTupleIsValid(tp))
 	{
-		/* Not found for the specific user -- try PUBLIC */
+		/* Not found for the specific user -- try public__ */
 		tp = SearchSysCache2(USERMAPPINGUSERSERVER,
 							 ObjectIdGetDatum(InvalidOid),
 							 ObjectIdGetDatum(serverid));

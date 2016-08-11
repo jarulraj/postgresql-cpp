@@ -267,7 +267,7 @@ ExplainQuery(ExplainStmt *stmt, const char *queryString,
 }
 
 /*
- * Create a new ExplainState struct initialized with default options.
+ * Create a new__ ExplainState struct initialized with default options.
  */
 ExplainState *
 NewExplainState(void)
@@ -2070,7 +2070,7 @@ show_sortorder_options(StringInfo buf, Node *sortexpr,
 		appendStringInfo(buf, " COLLATE %s", quote_identifier(collname));
 	}
 
-	/* Print direction if not ASC, or USING if non-default sort operator */
+	/* Print direction if not ASC, or USING if non-default sort operator__ */
 	if (sortOperator == typentry->gt_opr)
 	{
 		appendStringInfoString(buf, " DESC");
@@ -2081,9 +2081,9 @@ show_sortorder_options(StringInfo buf, Node *sortexpr,
 		char	   *opname = get_opname(sortOperator);
 
 		if (opname == NULL)
-			elog(ERROR, "cache lookup failed for operator %u", sortOperator);
+			elog(ERROR, "cache lookup failed for operator__ %u", sortOperator);
 		appendStringInfo(buf, " USING %s", opname);
-		/* Determine whether operator would be considered ASC or DESC */
+		/* Determine whether operator__ would be considered ASC or DESC */
 		(void) get_equality_op_for_ordering_op(sortOperator, &reverse);
 	}
 
@@ -2408,7 +2408,7 @@ static void
 ExplainTargetRel(Plan *plan, Index rti, ExplainState *es)
 {
 	char	   *objectname = NULL;
-	char	   *namespace = NULL;
+	char	   *namespace__ = NULL;
 	const char *objecttag = NULL;
 	RangeTblEntry *rte;
 	char	   *refname;
@@ -2433,7 +2433,7 @@ ExplainTargetRel(Plan *plan, Index rti, ExplainState *es)
 			Assert(rte->rtekind == RTE_RELATION);
 			objectname = get_rel_name(rte->relid);
 			if (es->verbose)
-				namespace = get_namespace_name(get_rel_namespace(rte->relid));
+				namespace__ = get_namespace_name(get_rel_namespace(rte->relid));
 			objecttag = "Relation Name";
 			break;
 		case T_FunctionScan:
@@ -2460,7 +2460,7 @@ ExplainTargetRel(Plan *plan, Index rti, ExplainState *es)
 
 						objectname = get_func_name(funcid);
 						if (es->verbose)
-							namespace =
+							namespace__ =
 								get_namespace_name(get_func_namespace(funcid));
 					}
 				}
@@ -2491,8 +2491,8 @@ ExplainTargetRel(Plan *plan, Index rti, ExplainState *es)
 	if (es->format == EXPLAIN_FORMAT_TEXT)
 	{
 		appendStringInfoString(es->str, " on");
-		if (namespace != NULL)
-			appendStringInfo(es->str, " %s.%s", quote_identifier(namespace),
+		if (namespace__ != NULL)
+			appendStringInfo(es->str, " %s.%s", quote_identifier(namespace__),
 							 quote_identifier(objectname));
 		else if (objectname != NULL)
 			appendStringInfo(es->str, " %s", quote_identifier(objectname));
@@ -2503,8 +2503,8 @@ ExplainTargetRel(Plan *plan, Index rti, ExplainState *es)
 	{
 		if (objecttag != NULL && objectname != NULL)
 			ExplainPropertyText(objecttag, objectname, es);
-		if (namespace != NULL)
-			ExplainPropertyText("Schema", namespace, es);
+		if (namespace__ != NULL)
+			ExplainPropertyText("Schema", namespace__, es);
 		ExplainPropertyText("Alias", refname, es);
 	}
 }

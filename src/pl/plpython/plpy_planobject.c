@@ -1,5 +1,5 @@
 /*
- * the PLyPlan class
+ * the PLyPlan class__
  *
  * src/pl/plpython/plpy_planobject.c
  */

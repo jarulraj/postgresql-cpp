@@ -546,7 +546,7 @@ _equalCaseWhen(const CaseWhen *a, const CaseWhen *b)
 static bool
 _equalCaseTestExpr(const CaseTestExpr *a, const CaseTestExpr *b)
 {
-	COMPARE_SCALAR_FIELD(typeId);
+	COMPARE_SCALAR_FIELD(typeid__);
 	COMPARE_SCALAR_FIELD(typeMod);
 	COMPARE_SCALAR_FIELD(collation);
 
@@ -668,7 +668,7 @@ _equalCoerceToDomain(const CoerceToDomain *a, const CoerceToDomain *b)
 static bool
 _equalCoerceToDomainValue(const CoerceToDomainValue *a, const CoerceToDomainValue *b)
 {
-	COMPARE_SCALAR_FIELD(typeId);
+	COMPARE_SCALAR_FIELD(typeid__);
 	COMPARE_SCALAR_FIELD(typeMod);
 	COMPARE_SCALAR_FIELD(collation);
 	COMPARE_LOCATION_FIELD(location);
@@ -679,7 +679,7 @@ _equalCoerceToDomainValue(const CoerceToDomainValue *a, const CoerceToDomainValu
 static bool
 _equalSetToDefault(const SetToDefault *a, const SetToDefault *b)
 {
-	COMPARE_SCALAR_FIELD(typeId);
+	COMPARE_SCALAR_FIELD(typeid__);
 	COMPARE_SCALAR_FIELD(typeMod);
 	COMPARE_SCALAR_FIELD(collation);
 	COMPARE_LOCATION_FIELD(location);
@@ -1021,7 +1021,7 @@ static bool
 _equalAlterDomainStmt(const AlterDomainStmt *a, const AlterDomainStmt *b)
 {
 	COMPARE_SCALAR_FIELD(subtype);
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_STRING_FIELD(name);
 	COMPARE_NODE_FIELD(def);
 	COMPARE_SCALAR_FIELD(behavior);
@@ -1390,7 +1390,7 @@ _equalCompositeTypeStmt(const CompositeTypeStmt *a, const CompositeTypeStmt *b)
 static bool
 _equalCreateEnumStmt(const CreateEnumStmt *a, const CreateEnumStmt *b)
 {
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_NODE_FIELD(vals);
 
 	return true;
@@ -1399,7 +1399,7 @@ _equalCreateEnumStmt(const CreateEnumStmt *a, const CreateEnumStmt *b)
 static bool
 _equalCreateRangeStmt(const CreateRangeStmt *a, const CreateRangeStmt *b)
 {
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_NODE_FIELD(params);
 
 	return true;
@@ -1408,7 +1408,7 @@ _equalCreateRangeStmt(const CreateRangeStmt *a, const CreateRangeStmt *b)
 static bool
 _equalAlterEnumStmt(const AlterEnumStmt *a, const AlterEnumStmt *b)
 {
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_STRING_FIELD(newVal);
 	COMPARE_STRING_FIELD(newValNeighbor);
 	COMPARE_SCALAR_FIELD(newValIsAfter);
@@ -1442,7 +1442,7 @@ static bool
 _equalCreateDomainStmt(const CreateDomainStmt *a, const CreateDomainStmt *b)
 {
 	COMPARE_NODE_FIELD(domainname);
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_NODE_FIELD(collClause);
 	COMPARE_NODE_FIELD(constraints);
 
@@ -2187,7 +2187,7 @@ _equalMultiAssignRef(const MultiAssignRef *a, const MultiAssignRef *b)
 }
 
 static bool
-_equalTypeName(const TypeName *a, const TypeName *b)
+_equalTypeName(const typename__ *a, const typename__ *b)
 {
 	COMPARE_NODE_FIELD(names);
 	COMPARE_SCALAR_FIELD(typeOid);
@@ -2205,7 +2205,7 @@ static bool
 _equalTypeCast(const TypeCast *a, const TypeCast *b)
 {
 	COMPARE_NODE_FIELD(arg);
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_LOCATION_FIELD(location);
 
 	return true;
@@ -2301,7 +2301,7 @@ static bool
 _equalColumnDef(const ColumnDef *a, const ColumnDef *b)
 {
 	COMPARE_STRING_FIELD(colname);
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_SCALAR_FIELD(inhcount);
 	COMPARE_SCALAR_FIELD(is_local);
 	COMPARE_SCALAR_FIELD(is_not_null);
@@ -2547,7 +2547,7 @@ _equalXmlSerialize(const XmlSerialize *a, const XmlSerialize *b)
 {
 	COMPARE_SCALAR_FIELD(xmloption);
 	COMPARE_NODE_FIELD(expr);
-	COMPARE_NODE_FIELD(typeName);
+	COMPARE_NODE_FIELD(typename__);
 	COMPARE_LOCATION_FIELD(location);
 
 	return true;

@@ -184,7 +184,7 @@ struct PGP_PubKey
 	uint8		time[4];
 	uint8		algo;
 
-	/* public part */
+	/* public__ part */
 	union
 	{
 		struct

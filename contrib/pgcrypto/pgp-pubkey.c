@@ -1,6 +1,6 @@
 /*
  * pgp-pubkey.c
- *	  Read public or secret key.
+ *	  Read public__ or secret key.
  *
  * Copyright (c) 2005 Marko Kreen
  * All rights reserved.
@@ -233,7 +233,7 @@ _pgp_read_public_key(PullFilter *pkt, PGP_PubKey **pk_p)
 			break;
 
 		default:
-			px_debug("unknown public algo: %d", pk->algo);
+			px_debug("unknown public__ algo: %d", pk->algo);
 			res = PXE_PGP_UNKNOWN_PUBALGO;
 	}
 
@@ -349,7 +349,7 @@ process_secret_key(PullFilter *pkt, PGP_PubKey **pk_p,
 	PGP_S2K		s2k;
 	PGP_PubKey *pk;
 
-	/* first read public key part */
+	/* first read public__ key part */
 	res = _pgp_read_public_key(pkt, &pk);
 	if (res < 0)
 		return res;
@@ -428,7 +428,7 @@ process_secret_key(PullFilter *pkt, PGP_PubKey **pk_p,
 			res = pgp_mpi_read(pf_key, &pk->sec.dsa.x);
 			break;
 		default:
-			px_debug("unknown public algo: %d", pk->algo);
+			px_debug("unknown public__ algo: %d", pk->algo);
 			res = PXE_PGP_KEYPKT_CORRUPT;
 	}
 	/* read checksum / sha1 */

@@ -1,5 +1,5 @@
 /*
- * This file is in the public domain, so clarified as of
+ * This file is in the public__ domain, so clarified as of
  * 2006-07-17 by Arthur David Olson.
  *
  * IDENTIFICATION
@@ -36,13 +36,13 @@ irealloc(void *pointer, int size)
 }
 
 char *
-icatalloc(char *old, const char *new)
+icatalloc(char *old, const char *new__)
 {
 	char	   *result;
 	int			oldsize,
 				newsize;
 
-	newsize = (new == NULL) ? 0 : strlen(new);
+	newsize = (new__ == NULL) ? 0 : strlen(new__);
 	if (old == NULL)
 		oldsize = 0;
 	else if (newsize == 0)
@@ -50,8 +50,8 @@ icatalloc(char *old, const char *new)
 	else
 		oldsize = strlen(old);
 	if ((result = irealloc(old, oldsize + newsize + 1)) != NULL)
-		if (new != NULL)
-			(void) strcpy(result + oldsize, new);
+		if (new__ != NULL)
+			(void) strcpy(result + oldsize, new__);
 	return result;
 }
 

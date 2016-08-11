@@ -47,7 +47,7 @@ extern Node *coerce_type(ParseState *pstate, Node *node,
 			Oid inputTypeId, Oid targetTypeId, int32 targetTypeMod,
 			CoercionContext ccontext, CoercionForm cformat, int location);
 extern Node *coerce_to_domain(Node *arg, Oid baseTypeId, int32 baseTypeMod,
-				 Oid typeId,
+				 Oid typeid__,
 				 CoercionForm cformat, int location,
 				 bool hideInputCoercion,
 				 bool lengthCoercionDone);
@@ -84,7 +84,7 @@ extern CoercionPathType find_coercion_pathway(Oid targetTypeId,
 					  Oid sourceTypeId,
 					  CoercionContext ccontext,
 					  Oid *funcid);
-extern CoercionPathType find_typmod_coercion_function(Oid typeId,
+extern CoercionPathType find_typmod_coercion_function(Oid typeid__,
 							  Oid *funcid);
 
 #endif   /* PARSE_COERCE_H */

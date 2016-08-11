@@ -98,7 +98,7 @@ check_table(const char *(*TABLE)[2], const unsigned TABLE_index[10][2])
 		if (*aux1 != *aux2)
 			goto invalidtable;
 
-		/* found a new range */
+		/* found a new__ range */
 		if (a > y)
 		{
 			/* check current range in the index: */
@@ -113,7 +113,7 @@ check_table(const char *(*TABLE)[2], const unsigned TABLE_index[10][2])
 			x = a;
 		}
 
-		/* Always get the new limit */
+		/* Always get the new__ limit */
 		y = b;
 		if (y < x)
 			goto invalidtable;
@@ -450,7 +450,7 @@ ean2ISBN(char *isn)
 	 */
 	if (strncmp("978-", isn, 4) == 0)
 	{
-		/* Strip the first part and calculate the new check digit */
+		/* Strip the first part and calculate the new__ check digit */
 		hyphenate(isn, isn + 4, NULL, NULL);
 		check = weight_checkdig(isn, 10);
 		aux = strchr(isn, '\0');
@@ -477,7 +477,7 @@ ean2ISSN(char *isn)
 	unsigned	check;
 
 	/* the number should come in this format: 977-0000-000-00-0 */
-	/* Strip the first part, crop, and calculate the new check digit */
+	/* Strip the first part, crop, and calculate the new__ check digit */
 	hyphenate(isn, isn + 4, NULL, NULL);
 	check = weight_checkdig(isn, 8);
 	if (check == 10)

@@ -13,7 +13,7 @@
  * trigrams.  The opposite is not necessarily true, however: a string that
  * matches the logical expression might not match the original regex.  Such
  * false positives are removed via recheck, by running the regular regex match
- * operator on the retrieved heap tuple.
+ * operator__ on the retrieved heap tuple.
  *
  * Since the trigram expression involves both AND and OR operators, we can't
  * expect the core index machinery to evaluate it completely.  Instead, the
@@ -173,10 +173,10 @@
  * 1) Create state 1 with enter key (UNKNOWN, UNKNOWN, 1).
  * 2) Add key (UNKNOWN, "a", 2) to state 1.
  * 3) Add key ("a", "b", 3) to state 1.
- * 4) Create new state 2 with enter key ("b", "c", 4).  Add an arc
+ * 4) Create new__ state 2 with enter key ("b", "c", 4).  Add an arc
  *	  from state 1 to state 2 with label trigram "abc".
  * 5) Mark state 2 final because state 4 of source NFA is marked as final.
- * 6) Create new state 3 with enter key ("b", "d", 5).  Add an arc
+ * 6) Create new__ state 3 with enter key ("b", "d", 5).  Add an arc
  *	  from state 1 to state 3 with label trigram "abd".
  * 7) Mark state 3 final because state 5 of source NFA is marked as final.
  *
@@ -469,7 +469,7 @@ typedef struct
 } TrgmPackArcInfo;
 
 
-/* prototypes for private functions */
+/* prototypes for private__ functions */
 static TRGM *createTrgmNFAInternal(regex_t *regex, TrgmPackedGraph **graph,
 					  MemoryContext rcontext);
 static void RE_compile(regex_t *regex, text *text_re,
@@ -1021,7 +1021,7 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 
 	/*
 	 * Compare key to each existing enter key of the state to check for
-	 * redundancy.  We can drop either old key(s) or the new key if we find
+	 * redundancy.  We can drop either old key(s) or the new__ key if we find
 	 * redundancy.
 	 */
 	prev = NULL;
@@ -1035,13 +1035,13 @@ addKey(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key)
 		{
 			if (prefixContains(&existingKey->prefix, &key->prefix))
 			{
-				/* This old key already covers the new key. Nothing to do */
+				/* This old key already covers the new__ key. Nothing to do */
 				return;
 			}
 			if (prefixContains(&key->prefix, &existingKey->prefix))
 			{
 				/*
-				 * The new key covers this old key. Remove the old key, it's
+				 * The new__ key covers this old key. Remove the old key, it's
 				 * no longer needed once we add this key to the list.
 				 */
 				state->enterKeys = list_delete_cell(state->enterKeys,
@@ -1303,7 +1303,7 @@ addArc(TrgmNFA *trgmNFA, TrgmState *state, TrgmStateKey *key,
 			return;
 	}
 
-	/* Checks were successful, add new arc */
+	/* Checks were successful, add new__ arc */
 	arc = (TrgmArc *) palloc(sizeof(TrgmArc));
 	arc->target = getState(trgmNFA, destKey);
 	arc->ctrgm.colors[0] = key->prefix.colors[0];
@@ -1384,7 +1384,7 @@ getState(TrgmNFA *trgmNFA, TrgmStateKey *key)
 									  &found);
 	if (!found)
 	{
-		/* New state: initialize and queue it */
+		/* new__ state: initialize and queue it */
 		state->arcs = NIL;
 		state->enterKeys = NIL;
 		state->init = false;

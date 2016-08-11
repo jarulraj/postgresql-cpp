@@ -18,12 +18,12 @@
 #include "nodes/nodes.h"
 
 
-extern ObjectAddress TypeShellMake(const char *typeName,
+extern ObjectAddress TypeShellMake(const char *typename__,
 			  Oid typeNamespace,
 			  Oid ownerId);
 
 extern ObjectAddress TypeCreate(Oid newTypeOid,
-		   const char *typeName,
+		   const char *typename__,
 		   Oid typeNamespace,
 		   Oid relationOid,
 		   char relationKind,
@@ -76,9 +76,9 @@ extern void GenerateTypeDependencies(Oid typeNamespace,
 extern void RenameTypeInternal(Oid typeOid, const char *newTypeName,
 				   Oid typeNamespace);
 
-extern char *makeArrayTypeName(const char *typeName, Oid typeNamespace);
+extern char *makeArrayTypeName(const char *typename__, Oid typeNamespace);
 
-extern bool moveArrayTypeName(Oid typeOid, const char *typeName,
+extern bool moveArrayTypeName(Oid typeOid, const char *typename__,
 				  Oid typeNamespace);
 
 #endif   /* PG_TYPE_FN_H */

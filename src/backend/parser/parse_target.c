@@ -438,7 +438,7 @@ transformAssignedExpr(ParseState *pstate,
 	{
 		SetToDefault *def = (SetToDefault *) expr;
 
-		def->typeId = attrtype;
+		def->typeid__ = attrtype;
 		def->typeMod = attrtypmod;
 		def->collation = attrcollation;
 		if (indirection)
@@ -461,9 +461,9 @@ transformAssignedExpr(ParseState *pstate,
 
 	/*
 	 * If there is indirection on the target column, prepare an array or
-	 * subfield assignment expression.  This will generate a new column value
+	 * subfield assignment expression.  This will generate a new__ column value
 	 * that the source value has been inserted into, which can then be placed
-	 * in the new tuple constructed by INSERT or UPDATE.
+	 * in the new__ tuple constructed by INSERT or UPDATE.
 	 */
 	if (indirection)
 	{
@@ -632,7 +632,7 @@ transformAssignmentIndirection(ParseState *pstate,
 		/* Set up a substitution.  We reuse CaseTestExpr for this. */
 		CaseTestExpr *ctest = makeNode(CaseTestExpr);
 
-		ctest->typeId = targetTypeId;
+		ctest->typeid__ = targetTypeId;
 		ctest->typeMod = targetTypMod;
 		ctest->collation = targetCollation;
 		basenode = (Node *) ctest;
@@ -1154,7 +1154,7 @@ ExpandColumnRefStar(ParseState *pstate, ColumnRef *cref,
  *
  * tlist entries are generated for each relation visible for unqualified
  * column name access.  We do not consider qualified-name-only entries because
- * that would include input tables of aliasless JOINs, NEW/OLD pseudo-entries,
+ * that would include input tables of aliasless JOINs, new__/OLD pseudo-entries,
  * etc.
  *
  * The referenced relations/columns are marked as requiring SELECT access.
@@ -1672,9 +1672,9 @@ FigureColnameInternal(Node *node, char **name)
 											 name);
 			if (strength <= 1)
 			{
-				if (((TypeCast *) node)->typeName != NULL)
+				if (((TypeCast *) node)->typename__ != NULL)
 				{
-					*name = strVal(llast(((TypeCast *) node)->typeName->names));
+					*name = strVal(llast(((TypeCast *) node)->typename__->names));
 					return 1;
 				}
 			}
@@ -1719,7 +1719,7 @@ FigureColnameInternal(Node *node, char **name)
 						}
 					}
 					break;
-					/* As with other operator-like nodes, these have no names */
+					/* As with other operator__-like nodes, these have no names */
 				case MULTIEXPR_SUBLINK:
 				case ALL_SUBLINK:
 				case ANY_SUBLINK:

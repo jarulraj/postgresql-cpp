@@ -1321,7 +1321,7 @@ _outCaseTestExpr(StringInfo str, const CaseTestExpr *node)
 {
 	WRITE_NODE_TYPE("CASETESTEXPR");
 
-	WRITE_OID_FIELD(typeId);
+	WRITE_OID_FIELD(typeid__);
 	WRITE_INT_FIELD(typeMod);
 	WRITE_OID_FIELD(collation);
 }
@@ -1443,7 +1443,7 @@ _outCoerceToDomainValue(StringInfo str, const CoerceToDomainValue *node)
 {
 	WRITE_NODE_TYPE("COERCETODOMAINVALUE");
 
-	WRITE_OID_FIELD(typeId);
+	WRITE_OID_FIELD(typeid__);
 	WRITE_INT_FIELD(typeMod);
 	WRITE_OID_FIELD(collation);
 	WRITE_LOCATION_FIELD(location);
@@ -1454,7 +1454,7 @@ _outSetToDefault(StringInfo str, const SetToDefault *node)
 {
 	WRITE_NODE_TYPE("SETTODEFAULT");
 
-	WRITE_OID_FIELD(typeId);
+	WRITE_OID_FIELD(typeid__);
 	WRITE_INT_FIELD(typeMod);
 	WRITE_OID_FIELD(collation);
 	WRITE_LOCATION_FIELD(location);
@@ -2250,7 +2250,7 @@ _outXmlSerialize(StringInfo str, const XmlSerialize *node)
 
 	WRITE_ENUM_FIELD(xmloption, XmlOptionType);
 	WRITE_NODE_FIELD(expr);
-	WRITE_NODE_FIELD(typeName);
+	WRITE_NODE_FIELD(typename__);
 	WRITE_LOCATION_FIELD(location);
 }
 
@@ -2260,7 +2260,7 @@ _outColumnDef(StringInfo str, const ColumnDef *node)
 	WRITE_NODE_TYPE("COLUMNDEF");
 
 	WRITE_STRING_FIELD(colname);
-	WRITE_NODE_FIELD(typeName);
+	WRITE_NODE_FIELD(typename__);
 	WRITE_INT_FIELD(inhcount);
 	WRITE_BOOL_FIELD(is_local);
 	WRITE_BOOL_FIELD(is_not_null);
@@ -2276,9 +2276,9 @@ _outColumnDef(StringInfo str, const ColumnDef *node)
 }
 
 static void
-_outTypeName(StringInfo str, const TypeName *node)
+_outTypeName(StringInfo str, const typename__ *node)
 {
-	WRITE_NODE_TYPE("TYPENAME");
+	WRITE_NODE_TYPE("typename__");
 
 	WRITE_NODE_FIELD(names);
 	WRITE_OID_FIELD(typeOid);
@@ -2296,7 +2296,7 @@ _outTypeCast(StringInfo str, const TypeCast *node)
 	WRITE_NODE_TYPE("TYPECAST");
 
 	WRITE_NODE_FIELD(arg);
-	WRITE_NODE_FIELD(typeName);
+	WRITE_NODE_FIELD(typename__);
 	WRITE_LOCATION_FIELD(location);
 }
 

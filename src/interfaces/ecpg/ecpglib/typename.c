@@ -1,4 +1,4 @@
-/* src/interfaces/ecpg/ecpglib/typename.c */
+/* src/interfaces/ecpg/ecpglib/typename__.c */
 
 #define POSTGRES_ECPG_INTERNAL
 #include "postgres_fe.h"

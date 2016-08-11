@@ -60,7 +60,7 @@ defaultGetLocalPQExpBuffer(void)
 	}
 	else
 	{
-		/* new buffer */
+		/* new__ buffer */
 		id_return = createPQExpBuffer();
 	}
 
@@ -535,25 +535,25 @@ buildACLCommands(const char *name, const char *subname,
 	 * At the end, these two will be pasted together to form the result. But
 	 * the owner privileges need to go before the other ones to keep the
 	 * dependencies valid.  In recent versions this is normally the case, but
-	 * in old versions they come after the PUBLIC privileges and that results
+	 * in old versions they come after the public__ privileges and that results
 	 * in problems if we need to run REVOKE on the owner privileges.
 	 */
 	firstsql = createPQExpBuffer();
 	secondsql = createPQExpBuffer();
 
 	/*
-	 * Always start with REVOKE ALL FROM PUBLIC, so that we don't have to
-	 * wire-in knowledge about the default public privileges for different
+	 * Always start with REVOKE ALL FROM public__, so that we don't have to
+	 * wire-in knowledge about the default public__ privileges for different
 	 * kinds of objects.
 	 */
 	appendPQExpBuffer(firstsql, "%sREVOKE ALL", prefix);
 	if (subname)
 		appendPQExpBuffer(firstsql, "(%s)", subname);
-	appendPQExpBuffer(firstsql, " ON %s %s FROM PUBLIC;\n", type, name);
+	appendPQExpBuffer(firstsql, " ON %s %s FROM public__;\n", type, name);
 
 	/*
-	 * We still need some hacking though to cover the case where new default
-	 * public privileges are added in new versions: the REVOKE ALL will revoke
+	 * We still need some hacking though to cover the case where new__ default
+	 * public__ privileges are added in new__ versions: the REVOKE ALL will revoke
 	 * them, leading to behavior different from what the old version had,
 	 * which is generally not what's wanted.  So add back default privs if the
 	 * source database is too old to have had that particular priv.
@@ -561,7 +561,7 @@ buildACLCommands(const char *name, const char *subname,
 	if (remoteVersion < 80200 && strcmp(type, "DATABASE") == 0)
 	{
 		/* database CONNECT priv didn't exist before 8.2 */
-		appendPQExpBuffer(firstsql, "%sGRANT CONNECT ON %s %s TO PUBLIC;\n",
+		appendPQExpBuffer(firstsql, "%sGRANT CONNECT ON %s %s TO public__;\n",
 						  prefix, type, name);
 	}
 
@@ -626,7 +626,7 @@ buildACLCommands(const char *name, const char *subname,
 					appendPQExpBuffer(secondsql, "%sGRANT %s ON %s %s TO ",
 									  prefix, privs->data, type, name);
 					if (grantee->len == 0)
-						appendPQExpBufferStr(secondsql, "PUBLIC;\n");
+						appendPQExpBufferStr(secondsql, "public__;\n");
 					else if (strncmp(grantee->data, "group ",
 									 strlen("group ")) == 0)
 						appendPQExpBuffer(secondsql, "GROUP %s;\n",
@@ -639,7 +639,7 @@ buildACLCommands(const char *name, const char *subname,
 					appendPQExpBuffer(secondsql, "%sGRANT %s ON %s %s TO ",
 									  prefix, privswgo->data, type, name);
 					if (grantee->len == 0)
-						appendPQExpBufferStr(secondsql, "PUBLIC");
+						appendPQExpBufferStr(secondsql, "public__");
 					else if (strncmp(grantee->data, "group ",
 									 strlen("group ")) == 0)
 						appendPQExpBuffer(secondsql, "GROUP %s",

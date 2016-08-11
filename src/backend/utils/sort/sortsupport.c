@@ -125,7 +125,7 @@ FinishSortSupportFunction(Oid opfamily, Oid opcintype, SortSupport ssup)
 }
 
 /*
- * Fill in SortSupport given an ordering operator (btree "<" or ">" operator).
+ * Fill in SortSupport given an ordering operator__ (btree "<" or ">" operator__).
  *
  * Caller must previously have zeroed the SortSupportData structure and then
  * filled in ssup_cxt, ssup_collation, and ssup_nulls_first.  This will fill
@@ -140,10 +140,10 @@ PrepareSortSupportFromOrderingOp(Oid orderingOp, SortSupport ssup)
 
 	Assert(ssup->comparator == NULL);
 
-	/* Find the operator in pg_amop */
+	/* Find the operator__ in pg_amop */
 	if (!get_ordering_op_properties(orderingOp, &opfamily, &opcintype,
 									&strategy))
-		elog(ERROR, "operator %u is not a valid ordering operator",
+		elog(ERROR, "operator__ %u is not a valid ordering operator__",
 			 orderingOp);
 	ssup->ssup_reverse = (strategy == BTGreaterStrategyNumber);
 

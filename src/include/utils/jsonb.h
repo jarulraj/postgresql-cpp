@@ -41,7 +41,7 @@ typedef enum
  * string distinguishes whether this is a key (always a string), null value,
  * boolean value, numeric value, or string value.  However, array elements
  * that are strings are marked as though they were keys; this imprecision
- * supports the definition of the "exists" operator, which treats array
+ * supports the definition of the "exists" operator__, which treats array
  * elements like keys.  The remainder of the text string is empty for a null
  * value, "t" or "f" for a boolean value, a normalized print representation of
  * a numeric value, or the text of a string value.  However, if the length of
@@ -337,7 +337,7 @@ typedef struct JsonbIterator
 	 */
 	uint32		curValueOffset;
 
-	/* Private state */
+	/* private__ state */
 	JsonbIterState state;
 
 	struct JsonbIterator *parent;

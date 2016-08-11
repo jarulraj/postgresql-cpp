@@ -74,7 +74,7 @@
 
 	Adding system caches:
 
-	Add your new cache to the list in include/utils/syscache.h.
+	Add your new__ cache to the list in include/utils/syscache.h.
 	Keep the list sorted alphabetically.
 
 	Add your entry to the cacheinfo[] array below. All cache lists are
@@ -936,7 +936,7 @@ InitCatalogCache(void)
  * This is *not* essential; normally we allow syscaches to be initialized
  * on first use.  However, it is useful as a mechanism to preload the
  * relcache with entries for the most-commonly-used system catalogs.
- * Therefore, we invoke this routine when we need to write a new relcache
+ * Therefore, we invoke this routine when we need to write a new__ relcache
  * init file.
  */
 void
@@ -1215,7 +1215,7 @@ SearchSysCacheList(int cacheId, int nkeys,
  * Certain relations that do not have system caches send snapshot invalidation
  * messages in lieu of catcache messages.  This is for the benefit of
  * GetCatalogSnapshot(), which can then reuse its existing MVCC snapshot
- * for scanning one of those catalogs, rather than taking a new one, if no
+ * for scanning one of those catalogs, rather than taking a new__ one, if no
  * invalidation has been received.
  *
  * Relations that have syscaches need not (and must not) be listed here.  The

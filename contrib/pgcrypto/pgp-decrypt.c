@@ -513,7 +513,7 @@ mdcbuf_refill(struct MDCBufData * st, PullFilter *src)
 		memmove(st->buf, st->pos, st->avail);
 	st->pos = st->buf;
 
-	/* read new data */
+	/* read new__ data */
 	need = st->buflen + 22 - st->avail - st->mdc_avail;
 	res = pullf_read(src, need, &data);
 	if (res < 0)
@@ -1123,7 +1123,7 @@ pgp_decrypt(PGP_Context *ctx, MBuf *msrc, MBuf *mdst)
 				if (got_key)
 
 					/*
-					 * Theoretically, there could be several keys, both public
+					 * Theoretically, there could be several keys, both public__
 					 * and symmetric, all of which encrypt same session key.
 					 * Decrypt should try with each one, before failing.
 					 */

@@ -144,7 +144,7 @@ extern bool defGetBoolean(DefElem *def);
 extern int32 defGetInt32(DefElem *def);
 extern int64 defGetInt64(DefElem *def);
 extern List *defGetQualifiedName(DefElem *def);
-extern TypeName *defGetTypeName(DefElem *def);
+extern typename__ *defGetTypeName(DefElem *def);
 extern int	defGetTypeLength(DefElem *def);
 extern DefElem *defWithOids(bool value);
 

@@ -2,7 +2,7 @@
  *
  * pg_backup.h
  *
- *	Public interface to the pg_dump archiver routines.
+ *	public__ interface to the pg_dump archiver routines.
  *
  *	See the headers to pg_restore for more details.
  *
@@ -189,7 +189,7 @@ typedef struct Archive
 	bool		exit_on_error;	/* whether to exit on SQL errors... */
 	int			n_errors;		/* number of errors (if no die) */
 
-	/* The rest is private */
+	/* The rest is private__ */
 } Archive;
 
 
@@ -238,7 +238,7 @@ extern PGconn *GetConnection(Archive *AHX);
 extern void ArchiveEntry(Archive *AHX,
 			 CatalogId catalogId, DumpId dumpId,
 			 const char *tag,
-			 const char *namespace, const char *tablespace,
+			 const char *namespace__, const char *tablespace,
 			 const char *owner, bool withOids,
 			 const char *desc, teSection section,
 			 const char *defn,
@@ -263,7 +263,7 @@ extern void RestoreArchive(Archive *AH);
 /* Open an existing archive */
 extern Archive *OpenArchive(const char *FileSpec, const ArchiveFormat fmt);
 
-/* Create a new archive */
+/* Create a new__ archive */
 extern Archive *CreateArchive(const char *FileSpec, const ArchiveFormat fmt,
 			  const int compression, ArchiveMode mode,
 			  SetupWorkerPtr setupDumpWorker);

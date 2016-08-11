@@ -65,23 +65,23 @@ static Datum
 get_ts_parser_func(DefElem *defel, int attnum)
 {
 	List	   *funcName = defGetQualifiedName(defel);
-	Oid			typeId[3];
+	Oid			typeid__[3];
 	Oid			retTypeId;
 	int			nargs;
 	Oid			procOid;
 
 	retTypeId = INTERNALOID;	/* correct for most */
-	typeId[0] = INTERNALOID;
+	typeid__[0] = INTERNALOID;
 	switch (attnum)
 	{
 		case Anum_pg_ts_parser_prsstart:
 			nargs = 2;
-			typeId[1] = INT4OID;
+			typeid__[1] = INT4OID;
 			break;
 		case Anum_pg_ts_parser_prstoken:
 			nargs = 3;
-			typeId[1] = INTERNALOID;
-			typeId[2] = INTERNALOID;
+			typeid__[1] = INTERNALOID;
+			typeid__[2] = INTERNALOID;
 			break;
 		case Anum_pg_ts_parser_prsend:
 			nargs = 1;
@@ -89,8 +89,8 @@ get_ts_parser_func(DefElem *defel, int attnum)
 			break;
 		case Anum_pg_ts_parser_prsheadline:
 			nargs = 3;
-			typeId[1] = INTERNALOID;
-			typeId[2] = TSQUERYOID;
+			typeid__[1] = INTERNALOID;
+			typeid__[2] = TSQUERYOID;
 			break;
 		case Anum_pg_ts_parser_prslextype:
 			nargs = 1;
@@ -108,21 +108,21 @@ get_ts_parser_func(DefElem *defel, int attnum)
 			nargs = 0;			/* keep compiler quiet */
 	}
 
-	procOid = LookupFuncName(funcName, nargs, typeId, false);
+	procOid = LookupFuncName(funcName, nargs, typeid__, false);
 	if (get_func_rettype(procOid) != retTypeId)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
 				 errmsg("function %s should return type %s",
-						func_signature_string(funcName, nargs, NIL, typeId),
+						func_signature_string(funcName, nargs, NIL, typeid__),
 						format_type_be(retTypeId))));
 
 	return ObjectIdGetDatum(procOid);
 }
 
 /*
- * make pg_depend entries for a new pg_ts_parser entry
+ * make pg_depend entries for a new__ pg_ts_parser entry
  *
- * Return value is the address of said new entry.
+ * Return value is the address of said new__ entry.
  */
 static ObjectAddress
 makeParserDependencies(HeapTuple tuple)
@@ -135,7 +135,7 @@ makeParserDependencies(HeapTuple tuple)
 	myself.objectId = HeapTupleGetOid(tuple);
 	myself.objectSubId = 0;
 
-	/* dependency on namespace */
+	/* dependency on namespace__ */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = prs->prsnamespace;
 	referenced.objectSubId = 0;
@@ -191,10 +191,10 @@ DefineTSParser(List *names, List *parameters)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 				 errmsg("must be superuser to create text search parsers")));
 
-	/* Convert list of names to a name and namespace */
+	/* Convert list of names to a name and namespace__ */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &prsname);
 
-	/* initialize tuple fields with name/namespace */
+	/* initialize tuple fields with name/namespace__ */
 	memset(values, 0, sizeof(values));
 	memset(nulls, false, sizeof(nulls));
 
@@ -277,7 +277,7 @@ DefineTSParser(List *names, List *parameters)
 
 	address = makeParserDependencies(tup);
 
-	/* Post creation hook for new text search parser */
+	/* Post creation hook for new__ text search parser */
 	InvokeObjectPostCreateHook(TSParserRelationId, prsOid, 0);
 
 	heap_freetuple(tup);
@@ -313,9 +313,9 @@ RemoveTSParserById(Oid prsId)
 /* ---------------------- TS Dictionary commands -----------------------*/
 
 /*
- * make pg_depend entries for a new pg_ts_dict entry
+ * make pg_depend entries for a new__ pg_ts_dict entry
  *
- * Return value is address of the new entry
+ * Return value is address of the new__ entry
  */
 static ObjectAddress
 makeDictionaryDependencies(HeapTuple tuple)
@@ -328,7 +328,7 @@ makeDictionaryDependencies(HeapTuple tuple)
 	myself.objectId = HeapTupleGetOid(tuple);
 	myself.objectSubId = 0;
 
-	/* dependency on namespace */
+	/* dependency on namespace__ */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = dict->dictnamespace;
 	referenced.objectSubId = 0;
@@ -424,10 +424,10 @@ DefineTSDictionary(List *names, List *parameters)
 	char	   *dictname;
 	ObjectAddress address;
 
-	/* Convert list of names to a name and namespace */
+	/* Convert list of names to a name and namespace__ */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &dictname);
 
-	/* Check we have creation rights in target namespace */
+	/* Check we have creation rights in target namespace__ */
 	aclresult = pg_namespace_aclcheck(namespaceoid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -488,7 +488,7 @@ DefineTSDictionary(List *names, List *parameters)
 
 	address = makeDictionaryDependencies(tup);
 
-	/* Post creation hook for new text search dictionary */
+	/* Post creation hook for new__ text search dictionary */
 	InvokeObjectPostCreateHook(TSDictionaryRelationId, dictOid, 0);
 
 	heap_freetuple(tup);
@@ -591,7 +591,7 @@ AlterTSDictionary(AlterTSDictionaryStmt *stmt)
 		}
 
 		/*
-		 * and add new value if it's got one
+		 * and add new__ value if it's got one
 		 */
 		if (defel->arg)
 			dictoptions = lappend(dictoptions, defel);
@@ -653,16 +653,16 @@ static Datum
 get_ts_template_func(DefElem *defel, int attnum)
 {
 	List	   *funcName = defGetQualifiedName(defel);
-	Oid			typeId[4];
+	Oid			typeid__[4];
 	Oid			retTypeId;
 	int			nargs;
 	Oid			procOid;
 
 	retTypeId = INTERNALOID;
-	typeId[0] = INTERNALOID;
-	typeId[1] = INTERNALOID;
-	typeId[2] = INTERNALOID;
-	typeId[3] = INTERNALOID;
+	typeid__[0] = INTERNALOID;
+	typeid__[1] = INTERNALOID;
+	typeid__[2] = INTERNALOID;
+	typeid__[3] = INTERNALOID;
 	switch (attnum)
 	{
 		case Anum_pg_ts_template_tmplinit:
@@ -678,19 +678,19 @@ get_ts_template_func(DefElem *defel, int attnum)
 			nargs = 0;			/* keep compiler quiet */
 	}
 
-	procOid = LookupFuncName(funcName, nargs, typeId, false);
+	procOid = LookupFuncName(funcName, nargs, typeid__, false);
 	if (get_func_rettype(procOid) != retTypeId)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
 				 errmsg("function %s should return type %s",
-						func_signature_string(funcName, nargs, NIL, typeId),
+						func_signature_string(funcName, nargs, NIL, typeid__),
 						format_type_be(retTypeId))));
 
 	return ObjectIdGetDatum(procOid);
 }
 
 /*
- * make pg_depend entries for a new pg_ts_template entry
+ * make pg_depend entries for a new__ pg_ts_template entry
  */
 static ObjectAddress
 makeTSTemplateDependencies(HeapTuple tuple)
@@ -703,7 +703,7 @@ makeTSTemplateDependencies(HeapTuple tuple)
 	myself.objectId = HeapTupleGetOid(tuple);
 	myself.objectSubId = 0;
 
-	/* dependency on namespace */
+	/* dependency on namespace__ */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = tmpl->tmplnamespace;
 	referenced.objectSubId = 0;
@@ -751,7 +751,7 @@ DefineTSTemplate(List *names, List *parameters)
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 			   errmsg("must be superuser to create text search templates")));
 
-	/* Convert list of names to a name and namespace */
+	/* Convert list of names to a name and namespace__ */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &tmplname);
 
 	for (i = 0; i < Natts_pg_ts_template; i++)
@@ -812,7 +812,7 @@ DefineTSTemplate(List *names, List *parameters)
 
 	address = makeTSTemplateDependencies(tup);
 
-	/* Post creation hook for new text search template */
+	/* Post creation hook for new__ text search template */
 	InvokeObjectPostCreateHook(TSTemplateRelationId, tmplOid, 0);
 
 	heap_freetuple(tup);
@@ -872,7 +872,7 @@ GetTSConfigTuple(List *names)
 }
 
 /*
- * make pg_depend entries for a new or updated pg_ts_config entry
+ * make pg_depend entries for a new__ or updated pg_ts_config entry
  *
  * Pass opened pg_ts_config_map relation if there might be any config map
  * entries for the config.
@@ -904,7 +904,7 @@ makeConfigurationDependencies(HeapTuple tuple, bool removeOld,
 	 */
 	addrs = new_object_addresses();
 
-	/* dependency on namespace */
+	/* dependency on namespace__ */
 	referenced.classId = NamespaceRelationId;
 	referenced.objectId = cfg->cfgnamespace;
 	referenced.objectSubId = 0;
@@ -982,10 +982,10 @@ DefineTSConfiguration(List *names, List *parameters, ObjectAddress *copied)
 	ListCell   *pl;
 	ObjectAddress address;
 
-	/* Convert list of names to a name and namespace */
+	/* Convert list of names to a name and namespace__ */
 	namespaceoid = QualifiedNameGetCreationNamespace(names, &cfgname);
 
-	/* Check we have creation rights in target namespace */
+	/* Check we have creation rights in target namespace__ */
 	aclresult = pg_namespace_aclcheck(namespaceoid, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -1118,7 +1118,7 @@ DefineTSConfiguration(List *names, List *parameters, ObjectAddress *copied)
 
 	address = makeConfigurationDependencies(tup, false, mapRel);
 
-	/* Post creation hook for new text search configuration */
+	/* Post creation hook for new__ text search configuration */
 	InvokeObjectPostCreateHook(TSConfigRelationId, cfgOid, 0);
 
 	heap_freetuple(tup);
@@ -1420,7 +1420,7 @@ MakeConfigurationMapping(AlterTSConfigurationStmt *stmt,
 	else
 	{
 		/*
-		 * Insertion of new entries
+		 * Insertion of new__ entries
 		 */
 		for (i = 0; i < ntoken; i++)
 		{

@@ -14,7 +14,7 @@
  *	  src/backend/utils/mmgr/aset.c
  *
  * NOTE:
- *	This is a new (Feb. 05, 1999) implementation of the allocation set
+ *	This is a new__ (Feb. 05, 1999) implementation of the allocation set
  *	routines. AllocSet...() does not use OrderedSet...() any more.
  *	Instead it manages allocations in a block pool by itself, combining
  *	many small allocations in a few bigger blocks. AllocSetFree() normally
@@ -54,7 +54,7 @@
  *	Thus, if someone makes the common error of writing past what they've
  *	requested, the problem is likely to go unnoticed ... until the day when
  *	there *isn't* any wasted space, perhaps because of different memory
- *	alignment on a new platform, or some other effect.  To catch this sort
+ *	alignment on a new__ platform, or some other effect.  To catch this sort
  *	of problem, the MEMORY_CONTEXT_CHECKING option stores 0x7E just beyond
  *	the requested space whenever the request is less than the actual chunk
  *	size, and verifies that the byte is undamaged when the chunk is freed.
@@ -417,13 +417,13 @@ randomize_mem(char *ptr, size_t size)
 
 
 /*
- * Public routines
+ * public__ routines
  */
 
 
 /*
  * AllocSetContextCreate
- *		Create a new AllocSet context.
+ *		Create a new__ AllocSet context.
  *
  * parent: parent context, or NULL if top-level context
  * name: name of context (for debugging --- string will be copied)
@@ -526,9 +526,9 @@ AllocSetContextCreate(MemoryContext parent,
  *		Context-type-specific initialization routine.
  *
  * This is called by MemoryContextCreate() after setting up the
- * generic MemoryContext fields and before linking the new context
+ * generic MemoryContext fields and before linking the new__ context
  * into the context tree.  We must do whatever is needed to make the
- * new context minimally valid for deletion.  We must *not* risk
+ * new__ context minimally valid for deletion.  We must *not* risk
  * failure --- thus, for example, allocating more memory is not cool.
  * (AllocSetContextCreate can allocate memory when it gets control
  * back, however.)
@@ -571,7 +571,7 @@ AllocSetReset(MemoryContext context)
 
 	block = set->blocks;
 
-	/* New blocks list is either empty or just the keeper block */
+	/* new__ blocks list is either empty or just the keeper block */
 	set->blocks = set->keeper;
 
 	while (block != NULL)
@@ -696,7 +696,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 #endif
 
 		/*
-		 * Stick the new block underneath the active allocation block, so that
+		 * Stick the new__ block underneath the active allocation block, so that
 		 * we don't lose the use of the space remaining therein.
 		 */
 		if (set->blocks != NULL)
@@ -713,7 +713,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 		AllocAllocInfo(set, chunk);
 
 		/*
-		 * Chunk header public fields remain DEFINED.  The requested
+		 * Chunk header public__ fields remain DEFINED.  The requested
 		 * allocation itself can be NOACCESS or UNDEFINED; our caller will
 		 * soon make it UNDEFINED.  Make extra space at the end of the chunk,
 		 * if any, NOACCESS.
@@ -766,7 +766,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 
 	/*
 	 * If there is enough room in the active allocation block, we will put the
-	 * chunk into that block.  Else must start a new one.
+	 * chunk into that block.  Else must start a new__ one.
 	 */
 	if ((block = set->blocks) != NULL)
 	{
@@ -819,13 +819,13 @@ AllocSetAlloc(MemoryContext context, Size size)
 				set->freelist[a_fidx] = chunk;
 			}
 
-			/* Mark that we need to create a new block */
+			/* Mark that we need to create a new__ block */
 			block = NULL;
 		}
 	}
 
 	/*
-	 * Time to create a new regular (multi-chunk) block?
+	 * Time to create a new__ regular (multi-chunk) block?
 	 */
 	if (block == NULL)
 	{
@@ -995,9 +995,9 @@ AllocSetFree(MemoryContext context, void *pointer)
 
 /*
  * AllocSetRealloc
- *		Returns new pointer to allocated memory of given size or NULL if
+ *		Returns new__ pointer to allocated memory of given size or NULL if
  *		request could not be completed; this memory is added to the set.
- *		Memory associated with given pointer is copied into the new memory,
+ *		Memory associated with given pointer is copied into the new__ memory,
  *		and the old memory is freed.
  *
  * Without MEMORY_CONTEXT_CHECKING, we don't know the old request size.  This
@@ -1024,7 +1024,7 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 
 	/*
 	 * Chunk sizes are aligned to power of 2 in AllocSetAlloc(). Maybe the
-	 * allocated area already is >= the new size.  (In particular, we always
+	 * allocated area already is >= the new__ size.  (In particular, we always
 	 * fall out here if the requested size is a decrease.)
 	 */
 	if (oldsize >= size)
@@ -1062,7 +1062,7 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 		/*
 		 * We don't have the information to determine whether we're growing
 		 * the old request or shrinking it, so we conservatively mark the
-		 * entire new allocation DEFINED.
+		 * entire new__ allocation DEFINED.
 		 */
 		VALGRIND_MAKE_MEM_NOACCESS(pointer, oldsize);
 		VALGRIND_MAKE_MEM_DEFINED(pointer, size);
@@ -1153,7 +1153,7 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 	{
 		/*
 		 * Small-chunk case.  We just do this by brute force, ie, allocate a
-		 * new chunk and copy the data.  Since we know the existing data isn't
+		 * new__ chunk and copy the data.  Since we know the existing data isn't
 		 * huge, this won't involve any great memcpy expense, so it's not
 		 * worth being smarter.  (At one time we tried to avoid memcpy when it
 		 * was possible to enlarge the chunk in-place, but that turns out to
@@ -1164,7 +1164,7 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 		 */
 		AllocPointer newPointer;
 
-		/* allocate new chunk */
+		/* allocate new__ chunk */
 		newPointer = AllocSetAlloc((MemoryContext) set, size);
 
 		/* leave immediately if request was not completed */
@@ -1174,7 +1174,7 @@ AllocSetRealloc(MemoryContext context, void *pointer, Size size)
 		/*
 		 * AllocSetAlloc() just made the region NOACCESS.  Change it to
 		 * UNDEFINED for the moment; memcpy() will then transfer definedness
-		 * from the old allocation to the new.  If we know the old allocation,
+		 * from the old allocation to the new__.  If we know the old allocation,
 		 * copy just that much.  Otherwise, make the entire old chunk defined
 		 * to avoid errors as we copy the currently-NOACCESS trailing bytes.
 		 */
@@ -1216,7 +1216,7 @@ static bool
 AllocSetIsEmpty(MemoryContext context)
 {
 	/*
-	 * For now, we say "empty" only if the context is new or just reset. We
+	 * For now, we say "empty" only if the context is new__ or just reset. We
 	 * could examine the freelists to determine if all space has been freed,
 	 * but it's not really worth the trouble for present uses of this
 	 * functionality.

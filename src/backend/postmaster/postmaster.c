@@ -199,7 +199,7 @@ char	   *ListenAddresses;
  * number of backend slots available to non-superusers is
  * (MaxBackends - ReservedBackends).  Note what this really means is
  * "if there are <= ReservedBackends connections available, only superusers
- * can make new connections" --- pre-existing superuser connections don't
+ * can make new__ connections" --- pre-existing superuser connections don't
  * count against the limit.
  */
 int			ReservedBackends;
@@ -298,7 +298,7 @@ static bool FatalError = false; /* T if recovering from backend crash */
  * quit.  (We track these in the BackendList so that we can know when they
  * are all gone; this is important because they're still connected to shared
  * memory, and would interfere with an attempt to destroy the shmem segment,
- * possibly leading to SHMALL failure when we try to make a new one.)
+ * possibly leading to SHMALL failure when we try to make a new__ one.)
  * In PM_WAIT_DEAD_END state we are waiting for all the dead_end children
  * to drain out of the system, and therefore stop accepting connection
  * requests at all until the last existing child has quit (which hopefully
@@ -339,7 +339,7 @@ static time_t AbortStartTime = 0;
 
 static bool ReachedNormalRunning = false;		/* T if we've reached PM_RUN */
 
-bool		ClientAuthInProgress = false;		/* T during new-client
+bool		ClientAuthInProgress = false;		/* T during new__-client
 												 * authentication */
 
 bool		redirection_done = false;	/* stderr redirected for syslogger? */
@@ -1185,7 +1185,7 @@ PostmasterMain(int argc, char *argv[])
 	 * promotion. However there is a race condition: if pg_ctl promote
 	 * is executed and creates the files during a promotion,
 	 * the files can stay around even after the server is brought up
-	 * to new master. Then, if new standby starts by using the backup
+	 * to new__ master. Then, if new__ standby starts by using the backup
 	 * taken from that master, the files can exist at the server
 	 * startup and should be removed in order to avoid an unexpected
 	 * promotion.
@@ -1312,7 +1312,7 @@ CloseServerPorts(int status, Datum arg)
 	 * First, explicitly close all the socket FDs.  We used to just let this
 	 * happen implicitly at postmaster exit, but it's better to close them
 	 * before we remove the postmaster.pid lockfile; otherwise there's a race
-	 * condition if a new postmaster wants to re-use the TCP port number.
+	 * condition if a new__ postmaster wants to re-use the TCP port number.
 	 */
 	for (i = 0; i < MAXLISTEN; i++)
 	{
@@ -1622,7 +1622,7 @@ ServerLoop(void)
 		 * do nontrivial work.
 		 *
 		 * If we are in PM_WAIT_DEAD_END state, then we don't want to accept
-		 * any new connections, so we don't call select(), and just sleep.
+		 * any new__ connections, so we don't call select(), and just sleep.
 		 */
 		memcpy((char *) &rmask, (char *) &readmask, sizeof(fd_set));
 
@@ -1663,7 +1663,7 @@ ServerLoop(void)
 		}
 
 		/*
-		 * New connection pending on any of our sockets? If so, fork a child
+		 * new__ connection pending on any of our sockets? If so, fork a child
 		 * process to deal with it.
 		 */
 		if (selres > 0)
@@ -1694,7 +1694,7 @@ ServerLoop(void)
 			}
 		}
 
-		/* If we have lost the log collector, try to start a new one */
+		/* If we have lost the log collector, try to start a new__ one */
 		if (SysLoggerPID == 0 && Logging_collector)
 			SysLoggerPID = SysLogger_Start();
 
@@ -1713,15 +1713,15 @@ ServerLoop(void)
 		}
 
 		/*
-		 * Likewise, if we have lost the walwriter process, try to start a new
+		 * Likewise, if we have lost the walwriter process, try to start a new__
 		 * one.  But this is needed only in normal operation (else we cannot
-		 * be writing any new WAL).
+		 * be writing any new__ WAL).
 		 */
 		if (WalWriterPID == 0 && pmState == PM_RUN)
 			WalWriterPID = StartWalWriter();
 
 		/*
-		 * If we have lost the autovacuum launcher, try to start a new one. We
+		 * If we have lost the autovacuum launcher, try to start a new__ one. We
 		 * don't want autovacuum to run in binary upgrade mode because
 		 * autovacuum might update relfrozenxid for empty tables before the
 		 * physical files are put in place.
@@ -1735,11 +1735,11 @@ ServerLoop(void)
 				start_autovac_launcher = false; /* signal processed */
 		}
 
-		/* If we have lost the stats collector, try to start a new one */
+		/* If we have lost the stats collector, try to start a new__ one */
 		if (PgStatPID == 0 && pmState == PM_RUN)
 			PgStatPID = pgstat_start();
 
-		/* If we have lost the archiver, try to start a new one. */
+		/* If we have lost the archiver, try to start a new__ one. */
 		if (PgArchPID == 0 && PgArchStartupAllowed())
 			PgArchPID = pgarch_start();
 
@@ -1796,10 +1796,10 @@ ServerLoop(void)
 		 * Once a minute, verify that postmaster.pid hasn't been removed or
 		 * overwritten.  If it has, we force a shutdown.  This avoids having
 		 * postmasters and child processes hanging around after their database
-		 * is gone, and maybe causing problems if a new database cluster is
+		 * is gone, and maybe causing problems if a new__ database cluster is
 		 * created in the same place.  It also provides some protection
 		 * against a DBA foolishly removing postmaster.pid and manually
-		 * starting a new postmaster.  Data corruption is likely to ensue from
+		 * starting a new__ postmaster.  Data corruption is likely to ensue from
 		 * that anyway, but we can minimize the damage by aborting ASAP.
 		 */
 		if (now - last_lockfile_recheck_time >= 1 * SECS_PER_MINUTE)
@@ -2187,7 +2187,7 @@ retry1:
 
 /*
  * The client has sent a cancel request packet, not a normal
- * start-a-new-connection packet.  Perform the necessary processing.
+ * start-a-new__-connection packet.  Perform the necessary processing.
  * Nothing is sent back to the client.
  */
 static void
@@ -2287,7 +2287,7 @@ canAcceptConnections(void)
 	 * We allow more connections than we can have backends here because some
 	 * might still be authenticating; they might fail auth, or some existing
 	 * backend might exit before the auth cycle is completed. The exact
-	 * MaxBackends limit is enforced when a new backend tries to join the
+	 * MaxBackends limit is enforced when a new__ backend tries to join the
 	 * shared-inval backend array.
 	 *
 	 * The limit here must match the sizes of the per-child-process arrays;
@@ -2791,7 +2791,7 @@ reaper(SIGNAL_ARGS)
 		}
 
 		/*
-		 * Was it the bgwriter?  Normal exit can be ignored; we'll start a new
+		 * Was it the bgwriter?  Normal exit can be ignored; we'll start a new__
 		 * one at the next iteration of the postmaster's main loop, if
 		 * necessary.  Any other exit condition is treated as a crash.
 		 */
@@ -2862,7 +2862,7 @@ reaper(SIGNAL_ARGS)
 
 		/*
 		 * Was it the wal writer?  Normal exit can be ignored; we'll start a
-		 * new one at the next iteration of the postmaster's main loop, if
+		 * new__ one at the next iteration of the postmaster's main loop, if
 		 * necessary.  Any other exit condition is treated as a crash.
 		 */
 		if (pid == WalWriterPID)
@@ -2890,7 +2890,7 @@ reaper(SIGNAL_ARGS)
 
 		/*
 		 * Was it the autovacuum launcher?	Normal exit can be ignored; we'll
-		 * start a new one at the next iteration of the postmaster's main
+		 * start a new__ one at the next iteration of the postmaster's main
 		 * loop, if necessary.  Any other exit condition is treated as a
 		 * crash.
 		 */
@@ -2904,7 +2904,7 @@ reaper(SIGNAL_ARGS)
 		}
 
 		/*
-		 * Was it the archiver?  If so, just try to start a new one; no need
+		 * Was it the archiver?  If so, just try to start a new__ one; no need
 		 * to force reset of the rest of the system.  (If fail, we'll try
 		 * again in future cycles of the main loop.).  Unless we were waiting
 		 * for it to shut down; don't restart it in that case, and
@@ -2922,7 +2922,7 @@ reaper(SIGNAL_ARGS)
 		}
 
 		/*
-		 * Was it the statistics collector?  If so, just try to start a new
+		 * Was it the statistics collector?  If so, just try to start a new__
 		 * one; no need to force reset of the rest of the system.  (If fail,
 		 * we'll try again in future cycles of the main loop.)
 		 */
@@ -2937,11 +2937,11 @@ reaper(SIGNAL_ARGS)
 			continue;
 		}
 
-		/* Was it the system logger?  If so, try to start a new one */
+		/* Was it the system logger?  If so, try to start a new__ one */
 		if (pid == SysLoggerPID)
 		{
 			SysLoggerPID = 0;
-			/* for safety's sake, launch new logger *first* */
+			/* for safety's sake, launch new__ logger *first* */
 			SysLoggerPID = SysLogger_Start();
 			if (!EXIT_STATUS_0(exitstatus))
 				LogChildExit(LOG, _("system logger process"),
@@ -3559,7 +3559,7 @@ PostmasterStateMachine(void)
 			{
 				/*
 				 * Start waiting for dead_end children to die.  This state
-				 * change causes ServerLoop to stop creating new ones.
+				 * change causes ServerLoop to stop creating new__ ones.
 				 */
 				pmState = PM_WAIT_DEAD_END;
 
@@ -3633,7 +3633,7 @@ PostmasterStateMachine(void)
 		 * (ie, no dead_end children remain), and the archiver and stats
 		 * collector are gone too.
 		 *
-		 * The reason we wait for those two is to protect them against a new
+		 * The reason we wait for those two is to protect them against a new__
 		 * postmaster starting conflicting subprocesses; this isn't an
 		 * ironclad protection, but it at least helps in the
 		 * shutdown-and-immediately-restart scenario.  Note that they have
@@ -3924,14 +3924,14 @@ BackendStartup(Port *port)
 		free(bn);
 		errno = save_errno;
 		ereport(LOG,
-				(errmsg("could not fork new process for connection: %m")));
+				(errmsg("could not fork new__ process for connection: %m")));
 		report_fork_failure_to_client(port, save_errno);
 		return STATUS_ERROR;
 	}
 
 	/* in parent, successful fork */
 	ereport(DEBUG2,
-			(errmsg_internal("forked new backend, pid=%d socket=%d",
+			(errmsg_internal("forked new__ backend, pid=%d socket=%d",
 							 (int) pid, (int) port->sock)));
 
 	/*
@@ -3966,7 +3966,7 @@ report_fork_failure_to_client(Port *port, int errnum)
 
 	/* Format the error message packet (always V2 protocol) */
 	snprintf(buffer, sizeof(buffer), "E%s%s\n",
-			 _("could not fork new process for connection: "),
+			 _("could not fork new__ process for connection: "),
 			 strerror(errnum));
 
 	/* Set port to non-blocking.  Don't do send() if this fails */
@@ -4146,7 +4146,7 @@ BackendInitialize(Port *port)
 	 * postgres: wal sender process <user> <host> <activity>
 	 *
 	 * To achieve that, we pass "wal sender process" as username and username
-	 * as dbname to init_ps_display(). XXX: should add a new variant of
+	 * as dbname to init_ps_display(). XXX: should add a new__ variant of
 	 * init_ps_display() to avoid abusing the parameters like this.
 	 */
 	if (am_walsender)
@@ -4184,7 +4184,7 @@ BackendRun(Port *port)
 	/*
 	 * Don't want backend to be able to see the postmaster random number
 	 * generator state.  We have to clobber the static random_seed *and* start
-	 * a new random sequence in the random() library function.
+	 * a new__ random sequence in the random() library function.
 	 */
 	random_seed = 0;
 	random_start_time.tv_usec = 0;
@@ -4269,7 +4269,7 @@ postmaster_forkexec(int argc, char *argv[])
  *
  * Some operating systems (WIN32) don't have fork() so we have to simulate
  * it by storing parameters that need to be passed to the child and
- * then create a new child process.
+ * then create a new__ child process.
  *
  * returns the pid of the fork/exec'd process, or -1 on failure
  */
@@ -4385,8 +4385,8 @@ internal_forkexec(int argc, char *argv[], Port *port)
  * - starts backend using CreateProcess(), in suspended state
  * - writes out backend variables to the parameter file
  *	- during this, duplicates handles and sockets required for
- *	  inheritance into the new process
- * - resumes execution of the new process once the backend parameter
+ *	  inheritance into the new__ process
+ * - resumes execution of the new__ process once the backend parameter
  *	 file is complete.
  */
 static pid_t
@@ -5255,7 +5255,7 @@ StartChildProcess(AuxProcType type)
  *		Start an autovac worker process.
  *
  * This function is here because it enters the resulting PID into the
- * postmaster's private backends list.
+ * postmaster's private__ backends list.
  *
  * NB -- this code very roughly matches BackendStartup.
  */
@@ -5464,7 +5464,7 @@ bgworker_forkexec(int shmem_slot)
 #endif
 
 /*
- * Start a new bgworker.
+ * Start a new__ bgworker.
  * Starting time conditions must have been checked already.
  *
  * This code is heavily based on autovacuum.c, q.v.

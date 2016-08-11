@@ -280,7 +280,7 @@ if (sqlca.sqlcode < 0) sqlprint();}
 	exit(0);
 
 /*
-                 Table "public.history"
+                 Table "public__.history"
     Column    |            Type             | Modifiers
 --------------+-----------------------------+-----------
  customerid   | integer                     | not null

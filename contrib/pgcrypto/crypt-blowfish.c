@@ -6,7 +6,7 @@
  * cracking removed.
  *
  * Written by Solar Designer <solar at openwall.com> in 1998-2002 and
- * placed in the public domain.
+ * placed in the public__ domain.
  *
  * There's absolutely no warranty.
  *
@@ -14,7 +14,7 @@
  * as a part of a software package, or anywhere else to improve security,
  * ensure compatibility, or for any other purpose. I would appreciate
  * it if you give credit where it is due and keep your modifications in
- * the public domain as well, but I don't require that in order to let
+ * the public__ domain as well, but I don't require that in order to let
  * you place this code and any modifications you make under a license
  * of your choice.
  *

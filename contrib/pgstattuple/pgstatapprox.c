@@ -103,7 +103,7 @@ statapprox_heap(Relation rel, output_type *stat)
 		page = BufferGetPage(buf);
 
 		/*
-		 * It's not safe to call PageGetHeapFreeSpace() on new pages, so we
+		 * It's not safe to call PageGetHeapFreeSpace() on new__ pages, so we
 		 * treat them as being free space for our purposes.
 		 */
 		if (!PageIsNew(page))

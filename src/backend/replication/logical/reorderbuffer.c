@@ -37,7 +37,7 @@
  *	  chunks.
  *
  *	  This module also has to deal with reassembling toast records from the
- *	  individual chunks stored in WAL. When a new (or initial) version of a
+ *	  individual chunks stored in WAL. When a new__ (or initial) version of a
  *	  tuple is stored in WAL it will always be preceded by the toast chunks
  *	  emitted for the columns stored out of line. Within a single toplevel
  *	  transaction there will be no other data carrying records between a row's
@@ -220,7 +220,7 @@ static void ReorderBufferToastAppendChunk(ReorderBuffer *rb, ReorderBufferTXN *t
 
 
 /*
- * Allocate a new ReorderBuffer
+ * Allocate a new__ ReorderBuffer
  */
 ReorderBuffer *
 ReorderBufferAllocate(void)
@@ -578,7 +578,7 @@ ReorderBufferTXNByXid(ReorderBuffer *rb, TransactionId xid, bool create,
 		txn = ent->txn;
 	else if (create)
 	{
-		/* initialize the new entry, if creation was requested */
+		/* initialize the new__ entry, if creation was requested */
 		Assert(ent != NULL);
 
 		ent->txn = ReorderBufferGetTXN(rb);
@@ -1522,7 +1522,7 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
 					}
 
 
-					/* and continue with the new one */
+					/* and continue with the new__ one */
 					SetupHistoricSnapshot(snapshot_now, txn->tuplecid_hash);
 					break;
 
@@ -1547,7 +1547,7 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
 
 						/*
 						 * Every time the CommandId is incremented, we could
-						 * see new catalog contents, so execute all
+						 * see new__ catalog contents, so execute all
 						 * invalidations.
 						 */
 						ReorderBufferExecuteInvalidations(rb, txn);
@@ -1787,7 +1787,7 @@ ReorderBufferProcessXid(ReorderBuffer *rb, TransactionId xid, XLogRecPtr lsn)
 }
 
 /*
- * Add a new snapshot to this transaction that may only used after lsn 'lsn'
+ * Add a new__ snapshot to this transaction that may only used after lsn 'lsn'
  * because the previous snapshot doesn't describe the catalog correctly for
  * following rows.
  */
@@ -1845,7 +1845,7 @@ ReorderBufferAddNewCommandId(ReorderBuffer *rb, TransactionId xid,
 
 
 /*
- * Add new (relfilenode, tid) -> (cmin, cmax) mappings.
+ * Add new__ (relfilenode, tid) -> (cmin, cmax) mappings.
  */
 void
 ReorderBufferAddNewTupleCids(ReorderBuffer *rb, TransactionId xid,
@@ -2388,7 +2388,7 @@ ReorderBufferRestoreChange(ReorderBuffer *rb, ReorderBufferTXN *txn,
 					   sizeof(HeapTupleData));
 				data += sizeof(HeapTupleData);
 
-				/* reset t_data pointer into the new tuplebuf */
+				/* reset t_data pointer into the new__ tuplebuf */
 				change->data.tp.oldtuple->tuple.t_data =
 					ReorderBufferTupleBufData(change->data.tp.oldtuple);
 
@@ -2413,7 +2413,7 @@ ReorderBufferRestoreChange(ReorderBuffer *rb, ReorderBufferTXN *txn,
 					   sizeof(HeapTupleData));
 				data += sizeof(HeapTupleData);
 
-				/* reset t_data pointer into the new tuplebuf */
+				/* reset t_data pointer into the new__ tuplebuf */
 				change->data.tp.newtuple->tuple.t_data =
 					ReorderBufferTupleBufData(change->data.tp.newtuple);
 
@@ -3168,7 +3168,7 @@ restart:
 
 	/*
 	 * failed to find a mapping, check whether the table was rewritten and
-	 * apply mapping if so, but only do that once - there can be no new
+	 * apply mapping if so, but only do that once - there can be no new__
 	 * mappings while we are in here since we have to hold a lock on the
 	 * relation.
 	 */

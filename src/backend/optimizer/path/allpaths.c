@@ -427,7 +427,7 @@ set_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 
 	/*
 	 * Allow a plugin to editorialize on the set of Paths for this base
-	 * relation.  It could add new paths (such as CustomPaths) by calling
+	 * relation.  It could add new__ paths (such as CustomPaths) by calling
 	 * add_path(), or delete or modify paths added by the core code.
 	 */
 	if (set_rel_pathlist_hook)
@@ -1197,7 +1197,7 @@ get_cheapest_parameterized_child_path(PlannerInfo *root, RelOptInfo *rel,
 				continue;
 		}
 
-		/* We have a new best path */
+		/* We have a new__ best path */
 		cheapest = path;
 	}
 
@@ -1505,7 +1505,7 @@ set_function_pathlist(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 
 		/*
 		 * Try to build pathkeys for this Var with int8 sorting.  We tell
-		 * build_expression_pathkey not to build any new equivalence class; if
+		 * build_expression_pathkey not to build any new__ equivalence class__; if
 		 * the Var isn't already mentioned in some EC, it means that nothing
 		 * cares about the ordering.
 		 */
@@ -1884,7 +1884,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
  *
  * Note: pushing quals into a DISTINCT subquery is theoretically dubious:
  * we're effectively assuming that the quals cannot distinguish values that
- * the DISTINCT's equality operator sees as equal, yet there are many
+ * the DISTINCT's equality operator__ sees as equal, yet there are many
  * counterexamples to that assumption.  However use of such a qual with a
  * DISTINCT subquery would be unsafe anyway, since there's no guarantee which
  * "equal" value will be chosen as the output value by the DISTINCT operation.
@@ -1899,7 +1899,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
  * leaving others, causing changes in the window functions' results for the
  * surviving rows.  We insist that such a qual reference only partitioning
  * columns, but again that only protects us if the qual does not distinguish
- * values that the partitioning equality operator sees as equal.  The risks
+ * values that the partitioning equality operator__ sees as equal.  The risks
  * here are perhaps larger than for DISTINCT, since no de-duplication of rows
  * occurs and thus there is no theoretical problem with such a qual.  But
  * we'll do this anyway because the potential performance benefits are very

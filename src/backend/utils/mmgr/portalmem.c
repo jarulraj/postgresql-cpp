@@ -90,7 +90,7 @@ static MemoryContext PortalMemory = NULL;
 
 
 /* ----------------------------------------------------------------
- *				   public portal interface functions
+ *				   public__ portal interface functions
  * ----------------------------------------------------------------
  */
 
@@ -185,7 +185,7 @@ PortalListGetPrimaryStmt(List *stmts)
 
 /*
  * CreatePortal
- *		Returns a new portal given a name.
+ *		Returns a new__ portal given a name.
  *
  * allowDup: if true, automatically drop any pre-existing portal of the
  * same name (if false, an error is raised).
@@ -214,7 +214,7 @@ CreatePortal(const char *name, bool allowDup, bool dupSilent)
 		PortalDrop(portal, false);
 	}
 
-	/* make new portal structure */
+	/* make new__ portal structure */
 	portal = (Portal) MemoryContextAllocZero(PortalMemory, sizeof *portal);
 
 	/* initialize portal heap context; typically it won't store much */
@@ -248,7 +248,7 @@ CreatePortal(const char *name, bool allowDup, bool dupSilent)
 
 /*
  * CreateNewPortal
- *		Create a new portal, assigning it a random nonconflicting name.
+ *		Create a new__ portal, assigning it a random nonconflicting name.
  */
 Portal
 CreateNewPortal(void)

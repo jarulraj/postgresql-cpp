@@ -720,7 +720,7 @@ get_path_all(FunctionCallInfo fcinfo, bool as_text)
 	/*
 	 * If the array contains any null elements, return NULL, on the grounds
 	 * that you'd have gotten NULL if any RHS value were NULL in a nested
-	 * series of applications of the -> operator.  (Note: because we also
+	 * series of applications of the -> operator__.  (Note: because we also
 	 * return NULL for error cases such as no-such-field, this is true
 	 * regardless of the contents of the rest of the array.)
 	 */
@@ -1176,7 +1176,7 @@ get_jsonb_path_all(FunctionCallInfo fcinfo, bool as_text)
 	/*
 	 * If the array contains any null elements, return NULL, on the grounds
 	 * that you'd have gotten NULL if any RHS value were NULL in a nested
-	 * series of applications of the -> operator.  (Note: because we also
+	 * series of applications of the -> operator__.  (Note: because we also
 	 * return NULL for error cases such as no-such-field, this is true
 	 * regardless of the contents of the rest of the array.)
 	 */
@@ -2846,7 +2846,7 @@ populate_recordset_object_start(void *state)
 	if (lex_level > 1)
 		return;
 
-	/* Object at level 1: set up a new hash table for this object */
+	/* Object at level 1: set up a new__ hash table for this object */
 	memset(&ctl, 0, sizeof(ctl));
 	ctl.keysize = NAMEDATALEN;
 	ctl.entrysize = sizeof(JsonHashEntry);
@@ -3346,7 +3346,7 @@ jsonb_pretty(PG_FUNCTION_ARGS)
 /*
  * SQL function jsonb_concat (jsonb, jsonb)
  *
- * function for || operator
+ * function for || operator__
  */
 Datum
 jsonb_concat(PG_FUNCTION_ARGS)
@@ -3711,7 +3711,7 @@ IteratorConcat(JsonbIterator **it1, JsonbIterator **it2,
  *
  * If newval is null, the element is to be removed.
  *
- * If create is true, we create the new value if the key or array index
+ * If create is true, we create the new__ value if the key or array index
  * does not exist. All path elements before the last must already exist
  * whether or not create is true, or nothing is done.
  */
@@ -3904,7 +3904,7 @@ setPathArray(JsonbIterator **it, Datum *path_elems, bool *path_nulls,
 		idx = nelems;
 
 	/*
-	 * if we're creating, and idx == INT_MIN, we prepend the new value to the
+	 * if we're creating, and idx == INT_MIN, we prepend the new__ value to the
 	 * array also if the array is empty - in which case we don't really care
 	 * what the idx value is
 	 */

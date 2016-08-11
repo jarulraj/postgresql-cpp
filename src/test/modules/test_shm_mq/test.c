@@ -260,5 +260,5 @@ verify_message(Size origlen, char *origdata, Size newlen, char *newdata)
 		if (origdata[i] != newdata[i])
 			ereport(ERROR,
 					(errmsg("message corrupted"),
-					 errdetail("The new and original messages differ at byte %zu of %zu.", i, origlen)));
+					 errdetail("The new__ and original messages differ at byte %zu of %zu.", i, origlen)));
 }

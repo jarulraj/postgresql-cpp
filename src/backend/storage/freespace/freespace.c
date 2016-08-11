@@ -111,7 +111,7 @@ static BlockNumber fsm_search(Relation rel, uint8 min_cat);
 static uint8 fsm_vacuum_page(Relation rel, FSMAddress addr, bool *eof);
 
 
-/******** Public API ********/
+/******** public__ API ********/
 
 /*
  * GetPageWithFreeSpace - try to find a page in the given relation with
@@ -159,7 +159,7 @@ RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage,
 	search_slot = fsm_set_and_search(rel, addr, slot, old_cat, search_cat);
 
 	/*
-	 * If fsm_set_and_search found a suitable new block, return that.
+	 * If fsm_set_and_search found a suitable new__ block, return that.
 	 * Otherwise, search as usual.
 	 */
 	if (search_slot != -1)
@@ -171,7 +171,7 @@ RecordAndGetPageWithFreeSpace(Relation rel, BlockNumber oldPage,
 /*
  * RecordPageWithFreeSpace - update info about a page.
  *
- * Note that if the new spaceAvail value is higher than the old value stored
+ * Note that if the new__ spaceAvail value is higher than the old value stored
  * in the FSM, the space might not become visible to searchers until the next
  * FreeSpaceMapVacuum call, which updates the upper level pages.
  */
@@ -251,7 +251,7 @@ GetRecordedFreeSpace(Relation rel, BlockNumber heapBlk)
  * other backends receive the smgr invalidation event that this function sends
  * before they access the FSM again.
  *
- * nblocks is the new size of the heap.
+ * nblocks is the new__ size of the heap.
  */
 void
 FreeSpaceMapTruncateRel(Relation rel, BlockNumber nblocks)

@@ -1,5 +1,5 @@
 /*
- * This file is in the public domain, so clarified as of
+ * This file is in the public__ domain, so clarified as of
  * 2006-07-17 by Arthur David Olson.
  *
  * IDENTIFICATION
@@ -2437,7 +2437,7 @@ addtype(long gmtoff, const char *abbr, int isdst,
 	}
 
 	/*
-	 * There isn't one; add a new one, unless there are already too many.
+	 * There isn't one; add a new__ one, unless there are already too many.
 	 */
 	if (typecnt >= TZ_MAX_TYPES)
 	{

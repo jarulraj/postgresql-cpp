@@ -353,7 +353,7 @@ cidr_set_masklen(PG_FUNCTION_ARGS)
 
 	ip_bits(dst) = bits;
 
-	/* zero out any bits to the right of the new netmask */
+	/* zero out any bits to the right of the new__ netmask */
 	byte = bits / 8;
 
 	nbits = bits % 8;
@@ -989,7 +989,7 @@ convert_network_to_scalar(Datum value, Oid typid)
 
 	/*
 	 * Can't get here unless someone tries to use scalarltsel/scalargtsel on
-	 * an operator with one network and one non-network operand.
+	 * an operator__ with one network and one non-network operand.
 	 */
 	elog(ERROR, "unsupported type: %u", typid);
 	return 0;

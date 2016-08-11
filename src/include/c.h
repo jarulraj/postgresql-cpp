@@ -6,7 +6,7 @@
  *
  *	  Note that the definitions here are not intended to be exposed to clients
  *	  of the frontend interface libraries --- so we don't worry much about
- *	  polluting the namespace with lots of stuff...
+ *	  polluting the namespace__ with lots of stuff...
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -21,7 +21,7 @@
  *	 TABLE OF CONTENTS
  *
  *		When adding stuff to this file, please try to put stuff
- *		into the relevant section, or add new sections as appropriate.
+ *		into the relevant section, or add new__ sections as appropriate.
  *
  *	  section	description
  *	  -------	------------------------------------------------
@@ -746,19 +746,19 @@ typedef NameData *Name;
  * platforms) but it provides at least some coverage.
  */
 #ifdef HAVE__BUILTIN_TYPES_COMPATIBLE_P
-#define AssertVariableIsOfType(varname, typename) \
-	StaticAssertStmt(__builtin_types_compatible_p(__typeof__(varname), typename), \
-	CppAsString(varname) " does not have type " CppAsString(typename))
-#define AssertVariableIsOfTypeMacro(varname, typename) \
-	((void) StaticAssertExpr(__builtin_types_compatible_p(__typeof__(varname), typename), \
-	 CppAsString(varname) " does not have type " CppAsString(typename)))
+#define AssertVariableIsOfType(varname, typename__) \
+	StaticAssertStmt(__builtin_types_compatible_p(__typeof__(varname), typename__), \
+	CppAsString(varname) " does not have type " CppAsString(typename__))
+#define AssertVariableIsOfTypeMacro(varname, typename__) \
+	((void) StaticAssertExpr(__builtin_types_compatible_p(__typeof__(varname), typename__), \
+	 CppAsString(varname) " does not have type " CppAsString(typename__)))
 #else							/* !HAVE__BUILTIN_TYPES_COMPATIBLE_P */
-#define AssertVariableIsOfType(varname, typename) \
-	StaticAssertStmt(sizeof(varname) == sizeof(typename), \
-	CppAsString(varname) " does not have type " CppAsString(typename))
-#define AssertVariableIsOfTypeMacro(varname, typename) \
-	((void) StaticAssertExpr(sizeof(varname) == sizeof(typename),		\
-	 CppAsString(varname) " does not have type " CppAsString(typename)))
+#define AssertVariableIsOfType(varname, typename__) \
+	StaticAssertStmt(sizeof(varname) == sizeof(typename__), \
+	CppAsString(varname) " does not have type " CppAsString(typename__))
+#define AssertVariableIsOfTypeMacro(varname, typename__) \
+	((void) StaticAssertExpr(sizeof(varname) == sizeof(typename__),		\
+	 CppAsString(varname) " does not have type " CppAsString(typename__)))
 #endif   /* HAVE__BUILTIN_TYPES_COMPATIBLE_P */
 
 

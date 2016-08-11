@@ -683,7 +683,7 @@ static const struct
 	{
 		"Central Pacific Standard Time", "Central Pacific Daylight Time",
 		"Pacific/Noumea"
-	},							/* (GMT+11:00) Magadan, Solomon Is., New
+	},							/* (GMT+11:00) Magadan, Solomon Is., new__
 								 * Caledonia */
 	{
 		"Central Standard Time", "Central Daylight Time",
@@ -693,7 +693,7 @@ static const struct
 		"Central Standard Time (Mexico)", "Central Daylight Time (Mexico)",
 		"America/Mexico_City"
 	},							/* (GMT-06:00) Guadalajara, Mexico City,
-								 * Monterrey - New */
+								 * Monterrey - new__ */
 	{
 		"China Standard Time", "China Daylight Time",
 		"Asia/Hong_Kong"
@@ -768,7 +768,7 @@ static const struct
 	{
 		"India Standard Time", "India Daylight Time",
 		"Asia/Calcutta"
-	},							/* (GMT+05:30) Chennai, Kolkata, Mumbai, New
+	},							/* (GMT+05:30) Chennai, Kolkata, Mumbai, new__
 								 * Delhi */
 	{
 		"Iran Standard Time", "Iran Daylight Time",
@@ -827,7 +827,7 @@ static const struct
 		"Mountain Standard Time (Mexico)", "Mountain Daylight Time (Mexico)",
 		"America/Chihuahua"
 	},							/* (GMT-07:00) Chihuahua, La Paz, Mazatlan -
-								 * New */
+								 * new__ */
 	{
 		"Myanmar Standard Time", "Myanmar Daylight Time",
 		"Asia/Rangoon"
@@ -845,7 +845,7 @@ static const struct
 		"Asia/Katmandu"
 	},							/* (GMT+05:45) Kathmandu */
 	{
-		"New Zealand Standard Time", "New Zealand Daylight Time",
+		"new__ Zealand Standard Time", "new__ Zealand Daylight Time",
 		"Pacific/Auckland"
 	},							/* (GMT+12:00) Auckland, Wellington */
 	{

@@ -545,7 +545,7 @@ Datum
 ltreeparentsel(PG_FUNCTION_ARGS)
 {
 	PlannerInfo *root = (PlannerInfo *) PG_GETARG_POINTER(0);
-	Oid			operator = PG_GETARG_OID(1);
+	Oid			operator__ = PG_GETARG_OID(1);
 	List	   *args = (List *) PG_GETARG_POINTER(2);
 	int			varRelid = PG_GETARG_INT32(3);
 	VariableStatData vardata;
@@ -562,8 +562,8 @@ ltreeparentsel(PG_FUNCTION_ARGS)
 		PG_RETURN_FLOAT8(DEFAULT_PARENT_SEL);
 
 	/*
-	 * If the something is a NULL constant, assume operator is strict and
-	 * return zero, ie, operator will never return TRUE.
+	 * If the something is a NULL constant, assume operator__ is strict and
+	 * return zero, ie, operator__ will never return TRUE.
 	 */
 	if (IsA(other, Const) &&
 		((Const *) other)->constisnull)
@@ -582,7 +582,7 @@ ltreeparentsel(PG_FUNCTION_ARGS)
 		double		nullfrac;
 		int			hist_size;
 
-		fmgr_info(get_opcode(operator), &contproc);
+		fmgr_info(get_opcode(operator__), &contproc);
 
 		/*
 		 * Is the constant "<@" to any of the column's most common values?

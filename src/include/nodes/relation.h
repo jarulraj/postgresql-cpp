@@ -182,7 +182,7 @@ typedef struct PlannerInfo
 	/*
 	 * When doing a dynamic-programming-style join search, join_rel_level[k]
 	 * is a list of all join-relation RelOptInfos of level k, and
-	 * join_cur_level is the current level.  New join-relation RelOptInfos are
+	 * join_cur_level is the current level.  new__ join-relation RelOptInfos are
 	 * automatically added to the join_rel_level[join_cur_level] list.
 	 * join_rel_level is NULL if not in use.
 	 */
@@ -256,7 +256,7 @@ typedef struct PlannerInfo
 	Relids		curOuterRels;	/* outer rels above current node */
 	List	   *curOuterParams; /* not-yet-assigned NestLoopParams */
 
-	/* optional private data for join_search_hook, e.g., GEQO */
+	/* optional private__ data for join_search_hook, e.g., GEQO */
 	void	   *join_search_private;
 
 	/* for GroupingFunc fixup in setrefs */
@@ -311,7 +311,7 @@ typedef struct PlannerInfo
  * alias Vars are expanded to non-aliased form during preprocess_expression.
  *
  * Parts of this data structure are specific to various scan and join
- * mechanisms.  It didn't seem worth creating new node types for them.
+ * mechanisms.  It didn't seem worth creating new__ node types for them.
  *
  *		relids - Set of base-relation identifiers; it is a base relation
  *				if there is just one, a join relation if more than one
@@ -382,7 +382,7 @@ typedef struct PlannerInfo
  *
  *		serverid - OID of foreign server, if foreign table (else InvalidOid)
  *		fdwroutine - function hooks for FDW, if foreign table (else NULL)
- *		fdw_private - private state for FDW, if foreign table (else NULL)
+ *		fdw_private - private__ state for FDW, if foreign table (else NULL)
  *
  * The presence of the remaining fields depends on the restrictions
  * and joins that the relation participates in:
@@ -531,7 +531,7 @@ typedef struct IndexOptInfo
 	int			ncolumns;		/* number of columns in index */
 	int		   *indexkeys;		/* column numbers of index's keys, or 0 */
 	Oid		   *indexcollations;	/* OIDs of collations of index columns */
-	Oid		   *opfamily;		/* OIDs of operator families for columns */
+	Oid		   *opfamily;		/* OIDs of operator__ families for columns */
 	Oid		   *opcintype;		/* OIDs of opclass declared input data types */
 	Oid		   *sortopfamily;	/* OIDs of btree opfamilies, if orderable */
 	bool	   *reverse_sort;	/* is sort order descending? */
@@ -551,7 +551,7 @@ typedef struct IndexOptInfo
 	bool		unique;			/* true if a unique index */
 	bool		immediate;		/* is uniqueness enforced immediately? */
 	bool		hypothetical;	/* true if index doesn't really exist */
-	bool		amcanorderbyop; /* does AM support order by operator result? */
+	bool		amcanorderbyop; /* does AM support order by operator__ result? */
 	bool		amoptionalkey;	/* can query omit key for the first column? */
 	bool		amsearcharray;	/* can AM handle ScalarArrayOpExpr quals? */
 	bool		amsearchnulls;	/* can AM search for NULL/NOT NULL entries? */
@@ -570,7 +570,7 @@ typedef struct IndexOptInfo
  * require merging two existing EquivalenceClasses.  At the end of the qual
  * distribution process, we have sets of values that are known all transitively
  * equal to each other, where "equal" is according to the rules of the btree
- * operator family(s) shown in ec_opfamilies, as well as the collation shown
+ * operator__ family(s) shown in ec_opfamilies, as well as the collation shown
  * by ec_collation.  (We restrict an EC to contain only equalities whose
  * operators belong to the same set of opfamilies.  This could probably be
  * relaxed, but for now it's not worth the trouble, since nearly all equality
@@ -597,14 +597,14 @@ typedef struct IndexOptInfo
  * the included values might be all NULL rather than all the same non-null
  * values.  See src/backend/optimizer/README for more on that point.
  *
- * NB: if ec_merged isn't NULL, this class has been merged into another, and
- * should be ignored in favor of using the pointed-to class.
+ * NB: if ec_merged isn't NULL, this class__ has been merged into another, and
+ * should be ignored in favor of using the pointed-to class__.
  */
 typedef struct EquivalenceClass
 {
 	NodeTag		type;
 
-	List	   *ec_opfamilies;	/* btree operator family OIDs */
+	List	   *ec_opfamilies;	/* btree operator__ family OIDs */
 	Oid			ec_collation;	/* collation, if datatypes are collatable */
 	List	   *ec_members;		/* list of EquivalenceMembers */
 	List	   *ec_sources;		/* list of generating RestrictInfos */
@@ -646,7 +646,7 @@ typedef struct EquivalenceClass
  * em_datatype is usually the same as exprType(em_expr), but can be
  * different when dealing with a binary-compatible opfamily; in particular
  * anyarray_ops would never work without this.  Use em_datatype when
- * looking up a specific btree operator to work with this expression.
+ * looking up a specific btree operator__ to work with this expression.
  */
 typedef struct EquivalenceMember
 {
@@ -789,7 +789,7 @@ typedef struct Path
  * in the same order.  These are not RestrictInfos, just bare expressions,
  * since they generally won't yield booleans.  Also, unlike the case for
  * quals, it's guaranteed that each expression has the index key on the left
- * side of the operator.
+ * side of the operator__.
  *
  * 'indexorderbycols' is an integer list of index column numbers (zero-based)
  * of the same length as 'indexorderbys', showing which index column each
@@ -889,7 +889,7 @@ typedef struct TidPath
 /*
  * ForeignPath represents a potential scan of a foreign table
  *
- * fdw_private stores FDW private data about the scan.  While fdw_private is
+ * fdw_private stores FDW private__ data about the scan.  While fdw_private is
  * not actually touched by the core code during normal operations, it's
  * generally a good idea to use a representation that can be dumped by
  * nodeToString(), so that you can examine the structure during debugging
@@ -936,7 +936,7 @@ typedef struct CustomPathMethods
 												List *tlist,
 												List *clauses,
 												List *custom_plans);
-	/* Optional: print additional fields besides "private" */
+	/* Optional: print additional fields besides "private__" */
 	void		(*TextOutCustomPath) (StringInfo str,
 											  const struct CustomPath *node);
 } CustomPathMethods;
@@ -1229,7 +1229,7 @@ typedef struct HashPath
  * The can_join flag is set true if the clause looks potentially useful as
  * a merge or hash join clause, that is if it is a binary opclause with
  * nonoverlapping sets of relids referenced in the left and right sides.
- * (Whether the operator is actually merge or hash joinable isn't checked,
+ * (Whether the operator__ is actually merge or hash joinable isn't checked,
  * however.)
  *
  * The pseudoconstant flag is set true if the clause contains no Vars of
@@ -1294,7 +1294,7 @@ typedef struct RestrictInfo
 								 * not yet set */
 
 	/* valid if clause is mergejoinable, else NIL */
-	List	   *mergeopfamilies;	/* opfamilies containing clause operator */
+	List	   *mergeopfamilies;	/* opfamilies containing clause operator__ */
 
 	/* cache space for mergeclause processing; NULL if not yet set */
 	EquivalenceClass *left_ec;	/* EquivalenceClass containing lefthand */
@@ -1307,7 +1307,7 @@ typedef struct RestrictInfo
 	bool		outer_is_left;	/* T = outer var on left, F = on right */
 
 	/* valid if clause is hashjoinable, else InvalidOid: */
-	Oid			hashjoinoperator;		/* copy of clause operator */
+	Oid			hashjoinoperator;		/* copy of clause operator__ */
 
 	/* cache space for hashclause processing; -1 if not yet set */
 	Selectivity left_bucketsize;	/* avg bucketsize of left side */
@@ -1562,7 +1562,7 @@ typedef struct MinMaxAggInfo
 	NodeTag		type;
 
 	Oid			aggfnoid;		/* pg_proc Oid of the aggregate */
-	Oid			aggsortop;		/* Oid of its sort operator */
+	Oid			aggsortop;		/* Oid of its sort operator__ */
 	Expr	   *target;			/* expression we are aggregating on */
 	PlannerInfo *subroot;		/* modified "root" for planning the subquery */
 	Path	   *path;			/* access path for subquery */
@@ -1685,20 +1685,20 @@ typedef struct JoinCostWorkspace
 	Cost		startup_cost;	/* cost expended before fetching any tuples */
 	Cost		total_cost;		/* total cost (assuming all tuples fetched) */
 
-	/* Fields below here should be treated as private to costsize.c */
+	/* Fields below here should be treated as private__ to costsize.c */
 	Cost		run_cost;		/* non-startup cost components */
 
-	/* private for cost_nestloop code */
+	/* private__ for cost_nestloop code */
 	Cost		inner_run_cost; /* also used by cost_mergejoin code */
 	Cost		inner_rescan_run_cost;
 
-	/* private for cost_mergejoin code */
+	/* private__ for cost_mergejoin code */
 	double		outer_rows;
 	double		inner_rows;
 	double		outer_skip_rows;
 	double		inner_skip_rows;
 
-	/* private for cost_hashjoin code */
+	/* private__ for cost_hashjoin code */
 	int			numbuckets;
 	int			numbatches;
 } JoinCostWorkspace;

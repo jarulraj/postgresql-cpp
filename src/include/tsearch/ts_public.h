@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * ts_public.h
- *	  Public interface to various tsearch modules, such as
+ *	  public__ interface to various tsearch modules, such as
  *	  parsers and dictionaries.
  *
  * Copyright (c) 1998-2015, PostgreSQL Global Development Group

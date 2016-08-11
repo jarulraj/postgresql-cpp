@@ -35,7 +35,7 @@
 #define _(x) dgettext(TEXTDOMAIN, x)
 
 /* ----------
- * Compiler's namespace item types
+ * Compiler's namespace__ item types
  * ----------
  */
 enum
@@ -221,7 +221,7 @@ typedef struct PLpgSQL_expr
 	/* function containing this expr (not set until we first parse query) */
 	struct PLpgSQL_function *func;
 
-	/* namespace chain visible to this expr */
+	/* namespace__ chain visible to this expr */
 	struct PLpgSQL_nsitem *ns;
 
 	/* fields for "simple expression" fast-path execution: */
@@ -328,7 +328,7 @@ typedef struct
 
 
 typedef struct PLpgSQL_nsitem
-{								/* Item in the compilers namespace tree */
+{								/* Item in the compilers namespace__ tree */
 	int			itemtype;
 	int			itemno;
 	struct PLpgSQL_nsitem *prev;
@@ -957,7 +957,7 @@ extern PLpgSQL_rec *plpgsql_build_record(const char *refname, int lineno,
 extern int plpgsql_recognize_err_condition(const char *condname,
 								bool allow_sqlstate);
 extern PLpgSQL_condition *plpgsql_parse_err_condition(char *condname);
-extern void plpgsql_adddatum(PLpgSQL_datum *new);
+extern void plpgsql_adddatum(PLpgSQL_datum *new__);
 extern int	plpgsql_add_initdatums(int **varnos);
 extern void plpgsql_HashTableInit(void);
 
@@ -985,10 +985,10 @@ extern Oid exec_get_datum_type(PLpgSQL_execstate *estate,
 					PLpgSQL_datum *datum);
 extern void exec_get_datum_type_info(PLpgSQL_execstate *estate,
 						 PLpgSQL_datum *datum,
-						 Oid *typeid, int32 *typmod, Oid *collation);
+						 Oid *typeid__, int32 *typmod, Oid *collation);
 
 /* ----------
- * Functions for namespace handling in pl_funcs.c
+ * Functions for namespace__ handling in pl_funcs.c
  * ----------
  */
 extern void plpgsql_ns_init(void);

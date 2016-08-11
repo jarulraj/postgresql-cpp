@@ -172,9 +172,9 @@ typedef struct Query
  ****************************************************************************/
 
 /*
- * TypeName - specifies a type in definitions
+ * typename__ - specifies a type in definitions
  *
- * For TypeName structures generated internally, it is often easier to
+ * For typename__ structures generated internally, it is often easier to
  * specify the type by OID than by name.  If "names" is NIL then the
  * actual type OID is given by typeOid, otherwise typeOid is unused.
  * Similarly, if "typmods" is NIL then the actual typmod is expected to
@@ -184,7 +184,7 @@ typedef struct Query
  * the type of that field.  Otherwise (the normal case), names is a type
  * name possibly qualified with schema and database name.
  */
-typedef struct TypeName
+typedef struct typename__
 {
 	NodeTag		type;
 	List	   *names;			/* qualified name (list of Value strings) */
@@ -195,7 +195,7 @@ typedef struct TypeName
 	int32		typemod;		/* prespecified type modifier */
 	List	   *arrayBounds;	/* array bounds */
 	int			location;		/* token location, or -1 if unknown */
-} TypeName;
+} typename__;
 
 /*
  * ColumnRef - specifies a reference to a column, or possibly a whole tuple
@@ -232,7 +232,7 @@ typedef struct ParamRef
  */
 typedef enum A_Expr_Kind
 {
-	AEXPR_OP,					/* normal operator */
+	AEXPR_OP,					/* normal operator__ */
 	AEXPR_OP_ANY,				/* scalar op ANY (array) */
 	AEXPR_OP_ALL,				/* scalar op ALL (array) */
 	AEXPR_DISTINCT,				/* IS DISTINCT FROM - name must be "=" */
@@ -253,7 +253,7 @@ typedef struct A_Expr
 {
 	NodeTag		type;
 	A_Expr_Kind kind;			/* see above */
-	List	   *name;			/* possibly-qualified name of operator */
+	List	   *name;			/* possibly-qualified name of operator__ */
 	Node	   *lexpr;			/* left argument, or NULL if none */
 	Node	   *rexpr;			/* right argument, or NULL if none */
 	int			location;		/* token location, or -1 if unknown */
@@ -276,7 +276,7 @@ typedef struct TypeCast
 {
 	NodeTag		type;
 	Node	   *arg;			/* the expression being casted */
-	TypeName   *typeName;		/* the target type */
+	typename__   *typename__;		/* the target type */
 	int			location;		/* token location, or -1 if unknown */
 } TypeCast;
 
@@ -299,7 +299,7 @@ typedef enum RoleSpecType
 	ROLESPEC_CSTRING,			/* role name is stored as a C string */
 	ROLESPEC_CURRENT_USER,		/* role spec is CURRENT_USER */
 	ROLESPEC_SESSION_USER,		/* role spec is SESSION_USER */
-	ROLESPEC_PUBLIC				/* role name is "public" */
+	ROLESPEC_PUBLIC				/* role name is "public__" */
 } RoleSpecType;
 
 typedef struct RoleSpec
@@ -446,7 +446,7 @@ typedef struct SortBy
 	SortByDir	sortby_dir;		/* ASC/DESC/USING/default */
 	SortByNulls sortby_nulls;	/* NULLS FIRST/LAST */
 	List	   *useOp;			/* name of op to use, if SORTBY_USING */
-	int			location;		/* operator location, or -1 if none/unknown */
+	int			location;		/* operator__ location, or -1 if none/unknown */
 } SortBy;
 
 /*
@@ -581,7 +581,7 @@ typedef struct ColumnDef
 {
 	NodeTag		type;
 	char	   *colname;		/* name of column */
-	TypeName   *typeName;		/* type of column */
+	typename__   *typename__;		/* type of column */
 	int			inhcount;		/* number of times column is inherited */
 	bool		is_local;		/* column has local (non-inherited) def'n */
 	bool		is_not_null;	/* NOT NULL constraint specified? */
@@ -641,7 +641,7 @@ typedef struct IndexElem
  * In some contexts the name can be qualified.  Also, certain SQL commands
  * allow a SET/ADD/DROP action to be attached to option settings, so it's
  * convenient to carry a field for that too.  (Note: currently, it is our
- * practice that the grammar allows namespace and action only in statements
+ * practice that the grammar allows namespace__ and action only in statements
  * where they are relevant; C code can just ignore those fields in other
  * statements.)
  */
@@ -658,7 +658,7 @@ typedef struct DefElem
 	NodeTag		type;
 	char	   *defnamespace;	/* NULL if unqualified name */
 	char	   *defname;
-	Node	   *arg;			/* a (Value *) or a (TypeName *) */
+	Node	   *arg;			/* a (Value *) or a (typename__ *) */
 	DefElemAction defaction;	/* unspecified action, or SET/ADD/DROP */
 } DefElem;
 
@@ -687,7 +687,7 @@ typedef struct XmlSerialize
 	NodeTag		type;
 	XmlOptionType xmloption;	/* DOCUMENT or CONTENT */
 	Node	   *expr;
-	TypeName   *typeName;
+	typename__   *typename__;
 	int			location;		/* token location, or -1 if unknown */
 } XmlSerialize;
 
@@ -744,9 +744,9 @@ typedef struct XmlSerialize
  *
  *	  inFromCl marks those range variables that are listed in the FROM clause.
  *	  It's false for RTEs that are added to a query behind the scenes, such
- *	  as the NEW and OLD variables for a rule, or the subqueries of a UNION.
+ *	  as the new__ and OLD variables for a rule, or the subqueries of a UNION.
  *	  This flag is not used anymore during parsing, since the parser now uses
- *	  a separate "namespace" data structure to control visibility, but it is
+ *	  a separate "namespace__" data structure to control visibility, but it is
  *	  needed by ruleutils.c to determine whether RTEs should be shown in
  *	  decompiled queries.
  *
@@ -913,7 +913,7 @@ typedef struct TableSampleClause
 
 /*
  * WithCheckOption -
- *		representation of WITH CHECK OPTION checks to be applied to new tuples
+ *		representation of WITH CHECK OPTION checks to be applied to new__ tuples
  *		when inserting/updating an auto-updatable view, or RLS WITH CHECK
  *		policies to be applied when inserting/updating a relation with RLS.
  */
@@ -951,8 +951,8 @@ typedef struct WithCheckOption
  *
  * tleSortGroupRef must match ressortgroupref of exactly one entry of the
  *		query's targetlist; that is the expression to be sorted or grouped by.
- * eqop is the OID of the equality operator.
- * sortop is the OID of the ordering operator (a "<" or ">" operator),
+ * eqop is the OID of the equality operator__.
+ * sortop is the OID of the ordering operator__ (a "<" or ">" operator__),
  *		or InvalidOid if not available.
  * nulls_first means about what you'd expect.  If sortop is InvalidOid
  *		then nulls_first is meaningless and should be set to false.
@@ -969,13 +969,13 @@ typedef struct WithCheckOption
  * of the referenced targetlist expression to find out what it is.
  *
  * In a grouping item, eqop must be valid.  If the eqop is a btree equality
- * operator, then sortop should be set to a compatible ordering operator.
+ * operator__, then sortop should be set to a compatible ordering operator__.
  * We prefer to set eqop/sortop/nulls_first to match any ORDER BY item that
  * the query presents for the same tlist item.  If there is none, we just
  * use the default ordering op for the datatype.
  *
  * If the tlist item's type has a hash opclass but no btree opclass, then
- * we will set eqop to the hash equality operator, sortop to InvalidOid,
+ * we will set eqop to the hash equality operator__, sortop to InvalidOid,
  * and nulls_first to false.  A grouping item of this kind can only be
  * implemented by hashing, and of course it'll never match an ORDER BY item.
  *
@@ -997,8 +997,8 @@ typedef struct SortGroupClause
 {
 	NodeTag		type;
 	Index		tleSortGroupRef;	/* reference into targetlist */
-	Oid			eqop;			/* the equality operator ('=' op) */
-	Oid			sortop;			/* the ordering operator ('<' op), or 0 */
+	Oid			eqop;			/* the equality operator__ ('=' op) */
+	Oid			sortop;			/* the ordering operator__ ('<' op), or 0 */
 	bool		nulls_first;	/* do NULLs come before normal values? */
 	bool		hashable;		/* can eqop be implemented by hashing? */
 } SortGroupClause;
@@ -1535,7 +1535,7 @@ typedef struct AlterTableCmd	/* one subcommand of an ALTER TABLE */
 	char	   *name;			/* column, constraint, or trigger to act on,
 								 * or tablespace */
 	Node	   *newowner;		/* RoleSpec */
-	Node	   *def;			/* definition of new column, index,
+	Node	   *def;			/* definition of new__ column, index,
 								 * constraint, or parent table */
 	DropBehavior behavior;		/* RESTRICT or CASCADE for DROP cases */
 	bool		missing_ok;		/* skip error if missing? */
@@ -1560,7 +1560,7 @@ typedef struct AlterDomainStmt
 								 *	X = drop constraint
 								 *------------
 								 */
-	List	   *typeName;		/* domain to work on */
+	List	   *typename__;		/* domain to work on */
 	char	   *name;			/* column or constraint name to act on */
 	Node	   *def;			/* definition of default or constraint */
 	DropBehavior behavior;		/* RESTRICT or CASCADE for DROP cases */
@@ -1591,7 +1591,7 @@ typedef enum GrantObjectType
 	ACL_OBJECT_FUNCTION,		/* function */
 	ACL_OBJECT_LANGUAGE,		/* procedural language */
 	ACL_OBJECT_LARGEOBJECT,		/* largeobject */
-	ACL_OBJECT_NAMESPACE,		/* namespace */
+	ACL_OBJECT_NAMESPACE,		/* namespace__ */
 	ACL_OBJECT_TABLESPACE,		/* tablespace */
 	ACL_OBJECT_TYPE				/* type */
 } GrantObjectType;
@@ -1620,7 +1620,7 @@ typedef struct FuncWithArgs
 {
 	NodeTag		type;
 	List	   *funcname;		/* qualified name of function */
-	List	   *funcargs;		/* list of Typename nodes */
+	List	   *funcargs;		/* list of typename__ nodes */
 } FuncWithArgs;
 
 /*
@@ -1743,7 +1743,7 @@ typedef struct CreateStmt
 	List	   *tableElts;		/* column definitions (list of ColumnDef) */
 	List	   *inhRelations;	/* relations to inherit from (list of
 								 * inhRelation) */
-	TypeName   *ofTypename;		/* OF typename */
+	typename__   *ofTypename;		/* OF typename__ */
 	List	   *constraints;	/* constraints (list of Constraint nodes) */
 	List	   *options;		/* options from WITH clause */
 	OnCommitAction oncommit;	/* what do we do at COMMIT? */
@@ -1771,7 +1771,7 @@ typedef struct CreateStmt
  *
  * If skip_validation is true then we skip checking that the existing rows
  * in the table satisfy the constraint, and just install the catalog entries
- * for the constraint.  A new FK constraint is marked as valid iff
+ * for the constraint.  A new__ FK constraint is marked as valid iff
  * initially_valid is true.  (Usually skip_validation and initially_valid
  * are inverses, but we can set both true if the table is known empty.)
  *
@@ -1831,7 +1831,7 @@ typedef struct Constraint
 	List	   *keys;			/* String nodes naming referenced column(s) */
 
 	/* Fields used for EXCLUSION constraints: */
-	List	   *exclusions;		/* list of (IndexElem, operator name) pairs */
+	List	   *exclusions;		/* list of (IndexElem, operator__ name) pairs */
 
 	/* Fields used for index constraints (UNIQUE, PRIMARY KEY, EXCLUSION): */
 	List	   *options;		/* options from WITH clause */
@@ -1853,7 +1853,7 @@ typedef struct Constraint
 
 	/* Fields used for constraints that allow a NOT VALID specification */
 	bool		skip_validation;	/* skip validation of existing rows? */
-	bool		initially_valid;	/* mark the new constraint as valid? */
+	bool		initially_valid;	/* mark the new__ constraint as valid? */
 } Constraint;
 
 /* ----------------------
@@ -2200,16 +2200,16 @@ typedef struct AlterSeqStmt
 } AlterSeqStmt;
 
 /* ----------------------
- *		Create {Aggregate|Operator|Type} Statement
+ *		Create {Aggregate|operator__|Type} Statement
  * ----------------------
  */
 typedef struct DefineStmt
 {
 	NodeTag		type;
-	ObjectType	kind;			/* aggregate, operator, type */
+	ObjectType	kind;			/* aggregate, operator__, type */
 	bool		oldstyle;		/* hack to signal old CREATE AGG syntax */
 	List	   *defnames;		/* qualified name (list of Value strings) */
-	List	   *args;			/* a list of TypeName (if needed) */
+	List	   *args;			/* a list of typename__ (if needed) */
 	List	   *definition;		/* a list of DefElem */
 } DefineStmt;
 
@@ -2221,13 +2221,13 @@ typedef struct CreateDomainStmt
 {
 	NodeTag		type;
 	List	   *domainname;		/* qualified name (list of Value strings) */
-	TypeName   *typeName;		/* the base type */
+	typename__   *typename__;		/* the base type */
 	CollateClause *collClause;	/* untransformed COLLATE spec, if any */
 	List	   *constraints;	/* constraints (list of Constraint nodes) */
 } CreateDomainStmt;
 
 /* ----------------------
- *		Create Operator Class Statement
+ *		Create operator__ class__ Statement
  * ----------------------
  */
 typedef struct CreateOpClassStmt
@@ -2236,7 +2236,7 @@ typedef struct CreateOpClassStmt
 	List	   *opclassname;	/* qualified name (list of Value strings) */
 	List	   *opfamilyname;	/* qualified name (ditto); NIL if omitted */
 	char	   *amname;			/* name of index AM opclass is for */
-	TypeName   *datatype;		/* datatype of indexed column */
+	typename__   *datatype;		/* datatype of indexed column */
 	List	   *items;			/* List of CreateOpClassItem nodes */
 	bool		isDefault;		/* Should be marked as default for type? */
 } CreateOpClassStmt;
@@ -2249,18 +2249,18 @@ typedef struct CreateOpClassItem
 {
 	NodeTag		type;
 	int			itemtype;		/* see codes above */
-	/* fields used for an operator or function item: */
-	List	   *name;			/* operator or function name */
+	/* fields used for an operator__ or function item: */
+	List	   *name;			/* operator__ or function name */
 	List	   *args;			/* argument types */
 	int			number;			/* strategy num or support proc num */
 	List	   *order_family;	/* only used for ordering operators */
 	List	   *class_args;		/* only used for functions */
 	/* fields used for a storagetype item: */
-	TypeName   *storedtype;		/* datatype stored in index */
+	typename__   *storedtype;		/* datatype stored in index */
 } CreateOpClassItem;
 
 /* ----------------------
- *		Create Operator Family Statement
+ *		Create operator__ Family Statement
  * ----------------------
  */
 typedef struct CreateOpFamilyStmt
@@ -2271,7 +2271,7 @@ typedef struct CreateOpFamilyStmt
 } CreateOpFamilyStmt;
 
 /* ----------------------
- *		Alter Operator Family Statement
+ *		Alter operator__ Family Statement
  * ----------------------
  */
 typedef struct AlterOpFamilyStmt
@@ -2335,7 +2335,7 @@ typedef struct SecLabelStmt
 	List	   *objname;		/* Qualified name of the object */
 	List	   *objargs;		/* Arguments if needed (eg, for functions) */
 	char	   *provider;		/* Label provider (or NULL) */
-	char	   *label;			/* New security label to be assigned */
+	char	   *label;			/* new__ security label to be assigned */
 } SecLabelStmt;
 
 /* ----------------------
@@ -2414,14 +2414,14 @@ typedef struct FetchStmt
 typedef struct IndexStmt
 {
 	NodeTag		type;
-	char	   *idxname;		/* name of new index, or NULL for default */
+	char	   *idxname;		/* name of new__ index, or NULL for default */
 	RangeVar   *relation;		/* relation to build index on */
 	char	   *accessMethod;	/* name of access method (eg. btree) */
 	char	   *tableSpace;		/* tablespace, or NULL for default */
 	List	   *indexParams;	/* columns to index: a list of IndexElem */
 	List	   *options;		/* WITH clause options: a list of DefElem */
 	Node	   *whereClause;	/* qualification (partial-index predicate) */
-	List	   *excludeOpNames; /* exclusion operator names, or NIL if none */
+	List	   *excludeOpNames; /* exclusion operator__ names, or NIL if none */
 	char	   *idxcomment;		/* comment to apply to index, or NULL */
 	Oid			indexOid;		/* OID of an existing index, if any */
 	Oid			oldNode;		/* relfilenode of existing storage, if any */
@@ -2445,7 +2445,7 @@ typedef struct CreateFunctionStmt
 	bool		replace;		/* T => replace if already exists */
 	List	   *funcname;		/* qualified name of function to create */
 	List	   *parameters;		/* a list of FunctionParameter */
-	TypeName   *returnType;		/* the return type */
+	typename__   *returnType;		/* the return type */
 	List	   *options;		/* a list of DefElem */
 	List	   *withClause;		/* a list of DefElem */
 } CreateFunctionStmt;
@@ -2464,7 +2464,7 @@ typedef struct FunctionParameter
 {
 	NodeTag		type;
 	char	   *name;			/* parameter name, or NULL if not given */
-	TypeName   *argType;		/* TypeName for parameter type */
+	typename__   *argType;		/* typename__ for parameter type */
 	FunctionParameterMode mode; /* IN/OUT/etc */
 	Node	   *defexpr;		/* raw default expr, or NULL if not given */
 } FunctionParameter;
@@ -2510,7 +2510,7 @@ typedef struct RenameStmt
 	List	   *objarg;			/* argument types, if applicable */
 	char	   *subname;		/* name of contained object (column, rule,
 								 * trigger, etc) */
-	char	   *newname;		/* the new name */
+	char	   *newname;		/* the new__ name */
 	DropBehavior behavior;		/* RESTRICT or CASCADE behavior */
 	bool		missing_ok;		/* skip error if missing? */
 } RenameStmt;
@@ -2526,7 +2526,7 @@ typedef struct AlterObjectSchemaStmt
 	RangeVar   *relation;		/* in case it's a table */
 	List	   *object;			/* in case it's some other object */
 	List	   *objarg;			/* argument types, if applicable */
-	char	   *newschema;		/* the new schema */
+	char	   *newschema;		/* the new__ schema */
 	bool		missing_ok;		/* skip error if missing? */
 } AlterObjectSchemaStmt;
 
@@ -2541,7 +2541,7 @@ typedef struct AlterOwnerStmt
 	RangeVar   *relation;		/* in case it's a table */
 	List	   *object;			/* in case it's some other object */
 	List	   *objarg;			/* argument types, if applicable */
-	Node	   *newowner;		/* the new owner */
+	Node	   *newowner;		/* the new__ owner */
 } AlterOwnerStmt;
 
 
@@ -2636,7 +2636,7 @@ typedef struct CompositeTypeStmt
 typedef struct CreateEnumStmt
 {
 	NodeTag		type;
-	List	   *typeName;		/* qualified name (list of Value strings) */
+	List	   *typename__;		/* qualified name (list of Value strings) */
 	List	   *vals;			/* enum values (list of Value strings) */
 } CreateEnumStmt;
 
@@ -2647,7 +2647,7 @@ typedef struct CreateEnumStmt
 typedef struct CreateRangeStmt
 {
 	NodeTag		type;
-	List	   *typeName;		/* qualified name (list of Value strings) */
+	List	   *typename__;		/* qualified name (list of Value strings) */
 	List	   *params;			/* range parameters (list of DefElem) */
 } CreateRangeStmt;
 
@@ -2658,10 +2658,10 @@ typedef struct CreateRangeStmt
 typedef struct AlterEnumStmt
 {
 	NodeTag		type;
-	List	   *typeName;		/* qualified name (list of Value strings) */
-	char	   *newVal;			/* new enum value's name */
+	List	   *typename__;		/* qualified name (list of Value strings) */
+	char	   *newVal;			/* new__ enum value's name */
 	char	   *newValNeighbor; /* neighboring enum value, if specified */
-	bool		newValIsAfter;	/* place new enum value after neighbor? */
+	bool		newValIsAfter;	/* place new__ enum value after neighbor? */
 	bool		skipIfExists;	/* no error if label already exists */
 } AlterEnumStmt;
 
@@ -2935,8 +2935,8 @@ typedef struct CreateConversionStmt
 typedef struct CreateCastStmt
 {
 	NodeTag		type;
-	TypeName   *sourcetype;
-	TypeName   *targettype;
+	typename__   *sourcetype;
+	typename__   *targettype;
 	FuncWithArgs *func;
 	CoercionContext context;
 	bool		inout;
@@ -2950,7 +2950,7 @@ typedef struct CreateTransformStmt
 {
 	NodeTag		type;
 	bool		replace;
-	TypeName   *type_name;
+	typename__   *type_name;
 	char	   *lang;
 	FuncWithArgs *fromsql;
 	FuncWithArgs *tosql;
@@ -2964,7 +2964,7 @@ typedef struct PrepareStmt
 {
 	NodeTag		type;
 	char	   *name;			/* Name of plan, arbitrary */
-	List	   *argtypes;		/* Types of parameters (List of TypeName) */
+	List	   *argtypes;		/* Types of parameters (List of typename__) */
 	Node	   *query;			/* The query itself (as a raw parsetree) */
 } PrepareStmt;
 

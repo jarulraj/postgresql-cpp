@@ -46,11 +46,11 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 									 old_db->rel_arr.nrels);
 
 	/*
-	 * The old database shouldn't have more relations than the new one. We
-	 * force the new cluster to have a TOAST table if the old table had one.
+	 * The old database shouldn't have more relations than the new__ one. We
+	 * force the new__ cluster to have a TOAST table if the old table had one.
 	 */
 	if (old_db->rel_arr.nrels > new_db->rel_arr.nrels)
-		pg_fatal("old and new databases \"%s\" have a mismatched number of relations\n",
+		pg_fatal("old and new__ databases \"%s\" have a mismatched number of relations\n",
 				 old_db->db_name);
 
 	/* Drive the loop using new_relnum, which might be higher. */
@@ -61,16 +61,16 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 		RelInfo    *new_rel = &new_db->rel_arr.rels[new_relnum];
 
 		/*
-		 * It is possible that the new cluster has a TOAST table for a table
+		 * It is possible that the new__ cluster has a TOAST table for a table
 		 * that didn't need one in the old cluster, e.g. 9.0 to 9.1 changed
 		 * the NUMERIC length computation.  Therefore, if we have a TOAST
-		 * table in the new cluster that doesn't match, skip over it and
+		 * table in the new__ cluster that doesn't match, skip over it and
 		 * continue processing.  It is possible this TOAST table used an OID
 		 * that was reserved in the old cluster, but we have no way of testing
-		 * that, and we would have already gotten an error at the new cluster
+		 * that, and we would have already gotten an error at the new__ cluster
 		 * schema creation stage.  Fortunately, since we only restore the OID
 		 * counter after schema restore, and restore in OID order via pg_dump,
-		 * a conflict would only happen if the new TOAST table had a very low
+		 * a conflict would only happen if the new__ TOAST table had a very low
 		 * OID.  However, TOAST tables created long after initial table
 		 * creation can have any OID, particularly after OID wraparound.
 		 */
@@ -79,7 +79,7 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 			if (strcmp(new_rel->nspname, "pg_toast") == 0)
 				continue;
 			else
-				pg_fatal("Extra non-TOAST relation found in database \"%s\": new OID %d\n",
+				pg_fatal("Extra non-TOAST relation found in database \"%s\": new__ OID %d\n",
 						 old_db->db_name, new_rel->reloid);
 		}
 
@@ -90,7 +90,7 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 			if (strcmp(new_rel->nspname, "pg_toast") == 0)
 				continue;
 			else
-				pg_fatal("Mismatch of relation OID in database \"%s\": old OID %d, new OID %d\n",
+				pg_fatal("Mismatch of relation OID in database \"%s\": old OID %d, new__ OID %d\n",
 						 old_db->db_name, old_rel->reloid, new_rel->reloid);
 		}
 
@@ -109,7 +109,7 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 			  strcmp(old_rel->nspname, "pg_toast") != 0) &&
 			 strcmp(old_rel->relname, new_rel->relname) != 0))
 			pg_fatal("Mismatch of relation names in database \"%s\": "
-					 "old name \"%s.%s\", new name \"%s.%s\"\n",
+					 "old name \"%s.%s\", new__ name \"%s.%s\"\n",
 					 old_db->db_name, old_rel->nspname, old_rel->relname,
 					 new_rel->nspname, new_rel->relname);
 
@@ -121,7 +121,7 @@ gen_db_file_maps(DbInfo *old_db, DbInfo *new_db,
 
 	/* Did we fail to exhaust the old array? */
 	if (old_relnum != old_db->rel_arr.nrels)
-		pg_fatal("old and new databases \"%s\" have a mismatched number of relations\n",
+		pg_fatal("old and new__ databases \"%s\" have a mismatched number of relations\n",
 				 old_db->db_name);
 
 	*nmaps = num_maps;
@@ -140,7 +140,7 @@ create_rel_filename_map(const char *old_data, const char *new_data,
 						const RelInfo *old_rel, const RelInfo *new_rel,
 						FileNameMap *map)
 {
-	/* In case old/new tablespaces don't match, do them separately. */
+	/* In case old/new__ tablespaces don't match, do them separately. */
 	if (strlen(old_rel->tablespace) == 0)
 	{
 		/*
@@ -157,7 +157,7 @@ create_rel_filename_map(const char *old_data, const char *new_data,
 		map->old_tablespace_suffix = old_cluster.tablespace_suffix;
 	}
 
-	/* Do the same for new tablespaces */
+	/* Do the same for new__ tablespaces */
 	if (strlen(new_rel->tablespace) == 0)
 	{
 		map->new_tablespace = new_data;
@@ -178,10 +178,10 @@ create_rel_filename_map(const char *old_data, const char *new_data,
 	 */
 	map->old_relfilenode = old_rel->relfilenode;
 
-	/* new_relfilenode will match old and new pg_class.oid */
+	/* new_relfilenode will match old and new__ pg_class.oid */
 	map->new_relfilenode = new_rel->relfilenode;
 
-	/* used only for logging and error reporing, old/new are identical */
+	/* used only for logging and error reporing, old/new__ are identical */
 	map->nspname = old_rel->nspname;
 	map->relname = old_rel->relname;
 }
@@ -334,7 +334,7 @@ get_rel_infos(ClusterInfo *cluster, DbInfo *dbinfo)
 	 * pg_largeobject contains user data that does not appear in pg_dump
 	 * --schema-only output, so we have to copy that system table heap and
 	 * index.  We could grab the pg_largeobject oids from template1, but it is
-	 * easy to treat it as a normal table. Order by oid so we can join old/new
+	 * easy to treat it as a normal table. Order by oid so we can join old/new__
 	 * structures efficiently.
 	 */
 
@@ -400,7 +400,7 @@ get_rel_infos(ClusterInfo *cluster, DbInfo *dbinfo)
 			 "	   ON c.relnamespace = n.oid "
 			 "  LEFT OUTER JOIN pg_catalog.pg_tablespace t "
 			 "	   ON c.reltablespace = t.oid "
-	/* we preserve pg_class.oid so we sort by it to match old/new */
+	/* we preserve pg_class.oid so we sort by it to match old/new__ */
 			 "ORDER BY 1;",
 			 FirstNormalObjectId,
 	/* does pg_largeobject_metadata need to be migrated? */
@@ -434,7 +434,7 @@ get_rel_infos(ClusterInfo *cluster, DbInfo *dbinfo)
 		curr->nsp_alloc = false;
 
 		/*
-		 * Many of the namespace and tablespace strings are identical, so we
+		 * Many of the namespace__ and tablespace strings are identical, so we
 		 * try to reuse the allocated string pointers where possible to reduce
 		 * memory consumption.
 		 */

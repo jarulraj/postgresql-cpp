@@ -103,7 +103,7 @@ citext_hash(PG_FUNCTION_ARGS)
 
 /*
  *		==================
- *		OPERATOR FUNCTIONS
+ *		operator__ FUNCTIONS
  *		==================
  */
 

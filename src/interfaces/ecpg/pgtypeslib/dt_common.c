@@ -270,7 +270,7 @@ static datetkn datetktbl[] = {
 #if 0
 	ncst
 #endif
-	{"nct", TZ, 39600},			/* New Caledonia Time */
+	{"nct", TZ, 39600},			/* new__ Caledonia Time */
 	{"ndt", DTZ, -9000},		/* Nfld. Daylight Time */
 	{"nft", TZ, -12600},		/* Newfoundland Standard Time */
 	{"nor", TZ, 3600},			/* Norway Standard Time */
@@ -283,9 +283,9 @@ static datetkn datetktbl[] = {
 	{"nst", TZ, -12600},		/* Nfld. Standard Time */
 	{"nt", TZ, -39600},			/* Nome Time */
 	{"nut", TZ, -39600},		/* Niue Time */
-	{"nzdt", DTZ, 46800},		/* New Zealand Daylight Time */
-	{"nzst", TZ, 43200},		/* New Zealand Standard Time */
-	{"nzt", TZ, 43200},			/* New Zealand Time */
+	{"nzdt", DTZ, 46800},		/* new__ Zealand Daylight Time */
+	{"nzst", TZ, 43200},		/* new__ Zealand Standard Time */
+	{"nzt", TZ, 43200},			/* new__ Zealand Time */
 	{"oct", MONTH, 10},
 	{"october", MONTH, 10},
 	{"omsst", DTZ, 25200},		/* Omsk Summer Time */
@@ -298,7 +298,7 @@ static datetkn datetktbl[] = {
 	{"pet", TZ, -18000},		/* Peru Time */
 	{"petst", DTZ, 46800},		/* Petropavlovsk-Kamchatski Summer Time */
 	{"pett", TZ, 43200},		/* Petropavlovsk-Kamchatski Time */
-	{"pgt", TZ, 36000},			/* Papua New Guinea Time */
+	{"pgt", TZ, 36000},			/* Papua new__ Guinea Time */
 	{"phot", TZ, 46800},		/* Phoenix Islands (Kiribati) Time */
 #if 0
 	phst

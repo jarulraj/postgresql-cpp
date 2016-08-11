@@ -334,7 +334,7 @@ gai_strerror(int errcode)
 #endif
 #ifdef EAI_SERVICE
 		case EAI_SERVICE:
-			return "Class type not found";
+			return "class__ type not found";
 #endif
 #ifdef EAI_SOCKTYPE
 		case EAI_SOCKTYPE:

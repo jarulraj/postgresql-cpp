@@ -69,7 +69,7 @@ IsTidEqualClause(OpExpr *node, int varno)
 			   *other;
 	Var		   *var;
 
-	/* Operator must be tideq */
+	/* operator__ must be tideq */
 	if (node->opno != TIDEqualOperator)
 		return false;
 	if (list_length(node->args) != 2)
@@ -119,7 +119,7 @@ IsTidEqualAnyClause(ScalarArrayOpExpr *node, int varno)
 	Node	   *arg1,
 			   *arg2;
 
-	/* Operator must be tideq */
+	/* operator__ must be tideq */
 	if (node->opno != TIDEqualOperator)
 		return false;
 	if (!node->useOr)

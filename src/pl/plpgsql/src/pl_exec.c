@@ -216,7 +216,7 @@ static void exec_assign_value(PLpgSQL_execstate *estate,
 				  Oid valtype, int32 valtypmod);
 static void exec_eval_datum(PLpgSQL_execstate *estate,
 				PLpgSQL_datum *datum,
-				Oid *typeid,
+				Oid *typeid__,
 				int32 *typetypmod,
 				Datum *value,
 				bool *isnull);
@@ -285,10 +285,10 @@ static char *format_preparedparamsdata(PLpgSQL_execstate *estate,
  *
  * This is also used to execute inline code blocks (DO blocks).  The only
  * difference that this code is aware of is that for a DO block, we want
- * to use a private simple_eval_estate, which is created and passed in by
+ * to use a private__ simple_eval_estate, which is created and passed in by
  * the caller.  For regular functions, pass NULL, which implies using
- * shared_simple_eval_estate.  (When using a private simple_eval_estate,
- * we must also use a private cast hashtable, but that's taken care of
+ * shared_simple_eval_estate.  (When using a private__ simple_eval_estate,
+ * we must also use a private__ cast hashtable, but that's taken care of
  * within plpgsql_estate_setup.)
  * ----------
  */
@@ -616,12 +616,12 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 		estate.datums[i] = copy_plpgsql_datum(func->datums[i]);
 
 	/*
-	 * Put the OLD and NEW tuples into record variables
+	 * Put the OLD and new__ tuples into record variables
 	 *
 	 * We make the tupdescs available in both records even though only one may
 	 * have a value.  This allows parsing of record references to succeed in
 	 * functions that are used for multiple trigger types.  For example, we
-	 * might have a test like "if (TG_OP = 'INSERT' and NEW.foo = 'xyz')",
+	 * might have a test like "if (TG_OP = 'INSERT' and new__.foo = 'xyz')",
 	 * which should parse regardless of the current trigger type.
 	 */
 	rec_new = (PLpgSQL_rec *) (estate.datums[func->new_varno]);
@@ -636,7 +636,7 @@ plpgsql_exec_trigger(PLpgSQL_function *func,
 	if (!TRIGGER_FIRED_FOR_ROW(trigdata->tg_event))
 	{
 		/*
-		 * Per-statement triggers don't use OLD/NEW variables
+		 * Per-statement triggers don't use OLD/new__ variables
 		 */
 		rec_new->tup = NULL;
 		rec_old->tup = NULL;
@@ -1033,30 +1033,30 @@ copy_plpgsql_datum(PLpgSQL_datum *datum)
 	{
 		case PLPGSQL_DTYPE_VAR:
 			{
-				PLpgSQL_var *new = palloc(sizeof(PLpgSQL_var));
+				PLpgSQL_var *new__ = palloc(sizeof(PLpgSQL_var));
 
-				memcpy(new, datum, sizeof(PLpgSQL_var));
+				memcpy(new__, datum, sizeof(PLpgSQL_var));
 				/* Ensure the value is null (possibly not needed?) */
-				new->value = 0;
-				new->isnull = true;
-				new->freeval = false;
+				new__->value = 0;
+				new__->isnull = true;
+				new__->freeval = false;
 
-				result = (PLpgSQL_datum *) new;
+				result = (PLpgSQL_datum *) new__;
 			}
 			break;
 
 		case PLPGSQL_DTYPE_REC:
 			{
-				PLpgSQL_rec *new = palloc(sizeof(PLpgSQL_rec));
+				PLpgSQL_rec *new__ = palloc(sizeof(PLpgSQL_rec));
 
-				memcpy(new, datum, sizeof(PLpgSQL_rec));
+				memcpy(new__, datum, sizeof(PLpgSQL_rec));
 				/* Ensure the value is null (possibly not needed?) */
-				new->tup = NULL;
-				new->tupdesc = NULL;
-				new->freetup = false;
-				new->freetupdesc = false;
+				new__->tup = NULL;
+				new__->tupdesc = NULL;
+				new__->freetup = false;
+				new__->freetupdesc = false;
 
-				result = (PLpgSQL_datum *) new;
+				result = (PLpgSQL_datum *) new__;
 			}
 			break;
 
@@ -1225,7 +1225,7 @@ exec_stmt_block(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)
 		PG_TRY();
 		{
 			/*
-			 * We need to run the block's statements with a new eval_econtext
+			 * We need to run the block's statements with a new__ eval_econtext
 			 * that belongs to the current subtransaction; if we try to use
 			 * the outer econtext then ExprContext shutdown callbacks will be
 			 * called at the wrong times.
@@ -3263,13 +3263,13 @@ exec_stmt_assert(PLpgSQL_execstate *estate, PLpgSQL_stmt_assert *stmt)
 		if (stmt->message != NULL)
 		{
 			Datum		val;
-			Oid			typeid;
+			Oid			typeid__;
 			int32		typmod;
 
 			val = exec_eval_expr(estate, stmt->message,
-								 &isnull, &typeid, &typmod);
+								 &isnull, &typeid__, &typmod);
 			if (!isnull)
-				message = convert_value_to_string(estate, val, typeid);
+				message = convert_value_to_string(estate, val, typeid__);
 			/* we mustn't do exec_eval_cleanup here */
 		}
 
@@ -3345,12 +3345,12 @@ plpgsql_estate_setup(PLpgSQL_execstate *estate,
 	if (simple_eval_estate)
 	{
 		estate->simple_eval_estate = simple_eval_estate;
-		/* Private cast hash just lives in function's main context */
+		/* private__ cast hash just lives in function's main context */
 		memset(&ctl, 0, sizeof(ctl));
 		ctl.keysize = sizeof(plpgsql_CastHashKey);
 		ctl.entrysize = sizeof(plpgsql_CastHashEntry);
 		ctl.hcxt = CurrentMemoryContext;
-		estate->cast_hash = hash_create("PLpgSQL private cast cache",
+		estate->cast_hash = hash_create("PLpgSQL private__ cast cache",
 										16,		/* start small and extend */
 										&ctl,
 									  HASH_ELEM | HASH_BLOBS | HASH_CONTEXT);
@@ -4307,7 +4307,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 									var->refname)));
 
 				/*
-				 * If type is by-reference, copy the new value (which is
+				 * If type is by-reference, copy the new__ value (which is
 				 * probably in the eval_econtext) into the procedure's memory
 				 * context.  But if it's a read/write reference to an expanded
 				 * object, no physical copy needs to happen; at most we need
@@ -4341,7 +4341,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				}
 
 				/*
-				 * Now free the old value, unless it's the same as the new
+				 * Now free the old value, unless it's the same as the new__
 				 * value (ie, we're doing "foo := foo").  Note that for
 				 * expanded objects, this test is necessary and cannot
 				 * reliably be made any earlier; we have to be looking at the
@@ -4462,7 +4462,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				replaces[fno] = true;
 
 				/*
-				 * Now insert the new value, being careful to cast it to the
+				 * Now insert the new__ value, being careful to cast it to the
 				 * right type.
 				 */
 				atttype = rec->tupdesc->attrs[fno]->atttypid;
@@ -4477,7 +4477,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				nulls[fno] = isNull;
 
 				/*
-				 * Now call heap_modify_tuple() to create a new tuple that
+				 * Now call heap_modify_tuple() to create a new__ tuple that
 				 * replaces the old one in the record.
 				 */
 				newtup = heap_modify_tuple(rec->tup, rec->tupdesc,
@@ -4674,7 +4674,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 				MemoryContextSwitchTo(oldcontext);
 
 				/*
-				 * Assign the new array to the base variable.  It's never NULL
+				 * Assign the new__ array to the base variable.  It's never NULL
 				 * at this point.  Note that if the target is a domain,
 				 * coercing the base array type back up to the domain will
 				 * happen within exec_assign_value.
@@ -4711,7 +4711,7 @@ exec_assign_value(PLpgSQL_execstate *estate,
 static void
 exec_eval_datum(PLpgSQL_execstate *estate,
 				PLpgSQL_datum *datum,
-				Oid *typeid,
+				Oid *typeid__,
 				int32 *typetypmod,
 				Datum *value,
 				bool *isnull)
@@ -4724,7 +4724,7 @@ exec_eval_datum(PLpgSQL_execstate *estate,
 			{
 				PLpgSQL_var *var = (PLpgSQL_var *) datum;
 
-				*typeid = var->datatype->typoid;
+				*typeid__ = var->datatype->typoid;
 				*typetypmod = var->datatype->atttypmod;
 				*value = var->value;
 				*isnull = var->isnull;
@@ -4744,7 +4744,7 @@ exec_eval_datum(PLpgSQL_execstate *estate,
 				tup = make_tuple_from_row(estate, row, row->rowtupdesc);
 				if (tup == NULL)	/* should not happen */
 					elog(ERROR, "row not compatible with its own tupdesc");
-				*typeid = row->rowtupdesc->tdtypeid;
+				*typeid__ = row->rowtupdesc->tdtypeid;
 				*typetypmod = row->rowtupdesc->tdtypmod;
 				*value = HeapTupleGetDatum(tup);
 				*isnull = false;
@@ -4767,7 +4767,7 @@ exec_eval_datum(PLpgSQL_execstate *estate,
 				BlessTupleDesc(rec->tupdesc);
 
 				oldcontext = MemoryContextSwitchTo(estate->eval_econtext->ecxt_per_tuple_memory);
-				*typeid = rec->tupdesc->tdtypeid;
+				*typeid__ = rec->tupdesc->tdtypeid;
 				*typetypmod = rec->tupdesc->tdtypmod;
 				*value = heap_copy_tuple_as_datum(rec->tup, rec->tupdesc);
 				*isnull = false;
@@ -4794,7 +4794,7 @@ exec_eval_datum(PLpgSQL_execstate *estate,
 							(errcode(ERRCODE_UNDEFINED_COLUMN),
 							 errmsg("record \"%s\" has no field \"%s\"",
 									rec->refname, recfield->fieldname)));
-				*typeid = SPI_gettypeid(rec->tupdesc, fno);
+				*typeid__ = SPI_gettypeid(rec->tupdesc, fno);
 				if (fno > 0)
 					*typetypmod = rec->tupdesc->attrs[fno - 1]->atttypmod;
 				else
@@ -4814,13 +4814,13 @@ exec_eval_datum(PLpgSQL_execstate *estate,
  * This is the same logic as in exec_eval_datum, except that it can handle
  * some cases where exec_eval_datum has to fail; specifically, we may have
  * a tupdesc but no row value for a record variable.  (This currently can
- * happen only for a trigger's NEW/OLD records.)
+ * happen only for a trigger's new__/OLD records.)
  */
 Oid
 exec_get_datum_type(PLpgSQL_execstate *estate,
 					PLpgSQL_datum *datum)
 {
-	Oid			typeid;
+	Oid			typeid__;
 
 	switch (datum->dtype)
 	{
@@ -4828,7 +4828,7 @@ exec_get_datum_type(PLpgSQL_execstate *estate,
 			{
 				PLpgSQL_var *var = (PLpgSQL_var *) datum;
 
-				typeid = var->datatype->typoid;
+				typeid__ = var->datatype->typoid;
 				break;
 			}
 
@@ -4840,7 +4840,7 @@ exec_get_datum_type(PLpgSQL_execstate *estate,
 					elog(ERROR, "row variable has no tupdesc");
 				/* Make sure we have a valid type/typmod setting */
 				BlessTupleDesc(row->rowtupdesc);
-				typeid = row->rowtupdesc->tdtypeid;
+				typeid__ = row->rowtupdesc->tdtypeid;
 				break;
 			}
 
@@ -4856,7 +4856,7 @@ exec_get_datum_type(PLpgSQL_execstate *estate,
 						   errdetail("The tuple structure of a not-yet-assigned record is indeterminate.")));
 				/* Make sure we have a valid type/typmod setting */
 				BlessTupleDesc(rec->tupdesc);
-				typeid = rec->tupdesc->tdtypeid;
+				typeid__ = rec->tupdesc->tdtypeid;
 				break;
 			}
 
@@ -4879,17 +4879,17 @@ exec_get_datum_type(PLpgSQL_execstate *estate,
 							(errcode(ERRCODE_UNDEFINED_COLUMN),
 							 errmsg("record \"%s\" has no field \"%s\"",
 									rec->refname, recfield->fieldname)));
-				typeid = SPI_gettypeid(rec->tupdesc, fno);
+				typeid__ = SPI_gettypeid(rec->tupdesc, fno);
 				break;
 			}
 
 		default:
 			elog(ERROR, "unrecognized dtype: %d", datum->dtype);
-			typeid = InvalidOid;	/* keep compiler quiet */
+			typeid__ = InvalidOid;	/* keep compiler quiet */
 			break;
 	}
 
-	return typeid;
+	return typeid__;
 }
 
 /*
@@ -4901,7 +4901,7 @@ exec_get_datum_type(PLpgSQL_execstate *estate,
 void
 exec_get_datum_type_info(PLpgSQL_execstate *estate,
 						 PLpgSQL_datum *datum,
-						 Oid *typeid, int32 *typmod, Oid *collation)
+						 Oid *typeid__, int32 *typmod, Oid *collation)
 {
 	switch (datum->dtype)
 	{
@@ -4909,7 +4909,7 @@ exec_get_datum_type_info(PLpgSQL_execstate *estate,
 			{
 				PLpgSQL_var *var = (PLpgSQL_var *) datum;
 
-				*typeid = var->datatype->typoid;
+				*typeid__ = var->datatype->typoid;
 				*typmod = var->datatype->atttypmod;
 				*collation = var->datatype->collation;
 				break;
@@ -4923,7 +4923,7 @@ exec_get_datum_type_info(PLpgSQL_execstate *estate,
 					elog(ERROR, "row variable has no tupdesc");
 				/* Make sure we have a valid type/typmod setting */
 				BlessTupleDesc(row->rowtupdesc);
-				*typeid = row->rowtupdesc->tdtypeid;
+				*typeid__ = row->rowtupdesc->tdtypeid;
 				/* do NOT return the mutable typmod of a RECORD variable */
 				*typmod = -1;
 				/* composite types are never collatable */
@@ -4943,7 +4943,7 @@ exec_get_datum_type_info(PLpgSQL_execstate *estate,
 						   errdetail("The tuple structure of a not-yet-assigned record is indeterminate.")));
 				/* Make sure we have a valid type/typmod setting */
 				BlessTupleDesc(rec->tupdesc);
-				*typeid = rec->tupdesc->tdtypeid;
+				*typeid__ = rec->tupdesc->tdtypeid;
 				/* do NOT return the mutable typmod of a RECORD variable */
 				*typmod = -1;
 				/* composite types are never collatable */
@@ -4970,7 +4970,7 @@ exec_get_datum_type_info(PLpgSQL_execstate *estate,
 							(errcode(ERRCODE_UNDEFINED_COLUMN),
 							 errmsg("record \"%s\" has no field \"%s\"",
 									rec->refname, recfield->fieldname)));
-				*typeid = SPI_gettypeid(rec->tupdesc, fno);
+				*typeid__ = SPI_gettypeid(rec->tupdesc, fno);
 				if (fno > 0)
 					*typmod = rec->tupdesc->attrs[fno - 1]->atttypmod;
 				else
@@ -4984,7 +4984,7 @@ exec_get_datum_type_info(PLpgSQL_execstate *estate,
 
 		default:
 			elog(ERROR, "unrecognized dtype: %d", datum->dtype);
-			*typeid = InvalidOid;		/* keep compiler quiet */
+			*typeid__ = InvalidOid;		/* keep compiler quiet */
 			*typmod = -1;
 			*collation = InvalidOid;
 			break;
@@ -5351,7 +5351,7 @@ loop_exit:
  * can't handle recursion cases.  So, if we see the tree is already busy
  * with an evaluation in the current xact, we just return FALSE and let the
  * caller run the expression the hard way.  (Other alternatives such as
- * creating a new tree for a recursive call either introduce memory leaks,
+ * creating a new__ tree for a recursive call either introduce memory leaks,
  * or add enough bookkeeping to be doubtful wins anyway.)  Another case that
  * is covered by the expr_simple_in_use test is where a previous execution
  * of the tree was aborted by an error: the tree may contain bogus state
@@ -5718,7 +5718,7 @@ exec_move_row(PLpgSQL_execstate *estate,
 			rec->freetupdesc = false;
 		}
 
-		/* ... and install the new */
+		/* ... and install the new__ */
 		if (HeapTupleIsValid(tup))
 		{
 			rec->tup = tup;
@@ -6082,7 +6082,7 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 		 * very cheap to insert the source value for that.
 		 */
 		placeholder = makeNode(CaseTestExpr);
-		placeholder->typeId = srctype;
+		placeholder->typeid__ = srctype;
 		placeholder->typeMod = srctypmod;
 		placeholder->collation = get_typcollation(srctype);
 
@@ -6170,13 +6170,13 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 	/*
 	 * Prepare the expression for execution, if it's not been done already in
 	 * the current transaction; also, if it's marked busy in the current
-	 * transaction, abandon that expression tree and build a new one, so as to
+	 * transaction, abandon that expression tree and build a new__ one, so as to
 	 * avoid potential problems with recursive cast expressions and failed
 	 * executions.  (We will leak some memory intra-transaction if that
 	 * happens a lot, but we don't expect it to.)  It's okay to update the
-	 * hash table with the new tree because all plpgsql functions within a
+	 * hash table with the new__ tree because all plpgsql functions within a
 	 * given transaction share the same simple_eval_estate.  (Well, regular
-	 * functions do; DO blocks have private simple_eval_estates, and private
+	 * functions do; DO blocks have private__ simple_eval_estates, and private__
 	 * cast hash tables to go with them.)
 	 */
 	curlxid = MyProc->lxid;
@@ -6743,7 +6743,7 @@ exec_set_found(PLpgSQL_execstate *estate, bool state)
 /*
  * plpgsql_create_econtext --- create an eval_econtext for the current function
  *
- * We may need to create a new shared_simple_eval_estate too, if there's not
+ * We may need to create a new__ shared_simple_eval_estate too, if there's not
  * one already for the current transaction.  The EState will be cleaned up at
  * transaction end.
  */
@@ -6893,7 +6893,7 @@ free_var(PLpgSQL_var *var)
 }
 
 /*
- * free old value of a text variable and assign new value from C string
+ * free old value of a text variable and assign new__ value from C string
  */
 static void
 assign_text_var(PLpgSQL_var *var, const char *str)

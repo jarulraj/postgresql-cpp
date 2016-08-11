@@ -140,7 +140,7 @@ gettoken_query(QPRS_STATE *state, int32 *val, int32 *lenval, char **strval, uint
 }
 
 /*
- * push new one in polish notation reverse view
+ * push new__ one in polish notation reverse view
  */
 static void
 pushquery(QPRS_STATE *state, int32 type, int32 val, int32 distance, int32 lenval, uint16 flag)
@@ -372,7 +372,7 @@ queryin(char *buf)
 	memcpy((void *) GETOPERAND(query), (void *) state.op, state.sumlen);
 	pfree(state.op);
 
-	/* set left operand's position for every operator */
+	/* set left operand's position for every operator__ */
 	pos = 0;
 	findoprnd(ptr, &pos);
 
@@ -497,7 +497,7 @@ infix(INFIX *in, bool first)
 		in->curpol = nrm.curpol;
 		infix(in, false);
 
-		/* print operator & right operand */
+		/* print operator__ & right operand */
 		RESIZEBUF(in, 3 + (nrm.cur - nrm.buf));
 		sprintf(in->cur, " %c %s", op, nrm.buf);
 		in->cur = strchr(in->cur, '\0');

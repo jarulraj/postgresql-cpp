@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * spgist_private.h
- *	  Private declarations for SP-GiST access method.
+ *	  private__ declarations for SP-GiST access method.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -103,7 +103,7 @@ typedef struct SpGistMetaPageData
 	((SpGistMetaPageData *) PageGetContents(p))
 
 /*
- * Private state of index AM.  SpGistState is common to both insert and
+ * private__ state of index AM.  SpGistState is common to both insert and
  * search code; SpGistScanOpaque is for searches only.
  */
 
@@ -130,7 +130,7 @@ typedef struct SpGistState
 } SpGistState;
 
 /*
- * Private state of an index scan
+ * private__ state of an index scan
  */
 typedef struct SpGistScanOpaqueData
 {
@@ -396,7 +396,7 @@ typedef struct spgxlogAddLeaf
 	OffsetNumber offnumParent;	/* where the parent downlink is, if any */
 	uint16		nodeI;
 
-	/* new leaf tuple follows (unaligned!) */
+	/* new__ leaf tuple follows (unaligned!) */
 } spgxlogAddLeaf;
 
 /*
@@ -435,9 +435,9 @@ typedef struct spgxlogMoveLeafs
 
 /*
  * Backup Blk 0: original page
- * Backup Blk 1: where new tuple goes, if not same place
+ * Backup Blk 1: where new__ tuple goes, if not same place
  * Backup Blk 2: where parent downlink is, if updated and different from
- *				 the old and new
+ *				 the old and new__
  */
 typedef struct spgxlogAddNode
 {
@@ -448,11 +448,11 @@ typedef struct spgxlogAddNode
 	OffsetNumber offnum;
 
 	/*
-	 * Offset of the new tuple, on the new page (on backup block 1). Invalid,
+	 * Offset of the new__ tuple, on the new__ page (on backup block 1). Invalid,
 	 * if we overwrote the old tuple in the original page).
 	 */
 	OffsetNumber offnumNew;
-	bool		newPage;		/* init new page? */
+	bool		newPage;		/* init new__ page? */
 
 	/*----
 	 * Where is the parent downlink? parentBlk indicates which page it's on,
@@ -460,7 +460,7 @@ typedef struct spgxlogAddNode
 	 * parentBlk are:
 	 *
 	 * 0: parent == original page
-	 * 1: parent == new page
+	 * 1: parent == new__ page
 	 * 2: parent == different page (blk ref 2)
 	 * -1: parent not updated
 	 *----
@@ -493,7 +493,7 @@ typedef struct spgxlogSplitTuple
 								 * prefix? */
 
 	/*
-	 * new prefix inner tuple follows, then new postfix inner tuple (both are
+	 * new__ prefix inner tuple follows, then new__ postfix inner tuple (both are
 	 * unaligned!)
 	 */
 } spgxlogSplitTuple;
@@ -514,7 +514,7 @@ typedef struct spgxlogPickSplit
 	bool		initSrc;		/* re-init the Src page? */
 	bool		initDest;		/* re-init the Dest page? */
 
-	/* where to put new inner tuple */
+	/* where to put new__ inner tuple */
 	OffsetNumber offnumInner;
 	bool		initInner;		/* re-init the Inner page? */
 
@@ -532,7 +532,7 @@ typedef struct spgxlogPickSplit
 	 *		array of deleted tuple numbers, length nDelete
 	 *		array of inserted tuple numbers, length nInsert
 	 *		array of page selector bytes for inserted tuples, length nInsert
-	 *		new inner tuple (unaligned!)
+	 *		new__ inner tuple (unaligned!)
 	 *		list of leaf tuples, length nInsert (unaligned!)
 	 *----------
 	 */

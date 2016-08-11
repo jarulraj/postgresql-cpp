@@ -137,7 +137,7 @@ GetConnection(void)
 
 	do
 	{
-		/* Get a new password if appropriate */
+		/* Get a new__ password if appropriate */
 		if (need_password)
 		{
 			if (dbpassword)

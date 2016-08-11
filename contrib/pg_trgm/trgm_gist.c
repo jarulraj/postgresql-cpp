@@ -16,7 +16,7 @@ typedef struct
 	text	   *query;
 	/* extracted trigrams for query */
 	TRGM	   *trigrams;
-	/* if a regex operator, the extracted graph */
+	/* if a regex operator__, the extracted graph */
 	TrgmPackedGraph *graph;
 
 	/*

@@ -26,7 +26,7 @@
 
 /* common code for bpchartypmodin and varchartypmodin */
 static int32
-anychar_typmodin(ArrayType *ta, const char *typename)
+anychar_typmodin(ArrayType *ta, const char *typename__)
 {
 	int32		typmod;
 	int32	   *tl;
@@ -46,12 +46,12 @@ anychar_typmodin(ArrayType *ta, const char *typename)
 	if (*tl < 1)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-				 errmsg("length for type %s must be at least 1", typename)));
+				 errmsg("length for type %s must be at least 1", typename__)));
 	if (*tl > MaxAttrSize)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
 				 errmsg("length for type %s cannot exceed %d",
-						typename, MaxAttrSize)));
+						typename__, MaxAttrSize)));
 
 	/*
 	 * For largely historical reasons, the typmod is VARHDRSZ plus the number
@@ -545,7 +545,7 @@ varcharsend(PG_FUNCTION_ARGS)
 
 /*
  * varchar_transform()
- * Flatten calls to varchar's length coercion function that set the new maximum
+ * Flatten calls to varchar's length coercion function that set the new__ maximum
  * length >= the previous maximum length.  We can ignore the isExplicit
  * argument, since that only affects truncation cases.
  */

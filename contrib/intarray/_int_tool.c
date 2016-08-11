@@ -215,7 +215,7 @@ isort(int32 *a, int len)
 	return r;
 }
 
-/* Create a new int array with room for "num" elements */
+/* Create a new__ int array with room for "num" elements */
 ArrayType *
 new_intArrayType(int num)
 {

@@ -19,17 +19,17 @@
 
 typedef HeapTuple Type;
 
-extern Type LookupTypeName(ParseState *pstate, const TypeName *typeName,
+extern Type LookupTypeName(ParseState *pstate, const typename__ *typename__,
 			   int32 *typmod_p, bool missing_ok);
-extern Oid LookupTypeNameOid(ParseState *pstate, const TypeName *typeName,
+extern Oid LookupTypeNameOid(ParseState *pstate, const typename__ *typename__,
 				  bool missing_ok);
-extern Type typenameType(ParseState *pstate, const TypeName *typeName,
+extern Type typenameType(ParseState *pstate, const typename__ *typename__,
 			 int32 *typmod_p);
-extern Oid	typenameTypeId(ParseState *pstate, const TypeName *typeName);
-extern void typenameTypeIdAndMod(ParseState *pstate, const TypeName *typeName,
+extern Oid	typenameTypeId(ParseState *pstate, const typename__ *typename__);
+extern void typenameTypeIdAndMod(ParseState *pstate, const typename__ *typename__,
 					 Oid *typeid_p, int32 *typmod_p);
 
-extern char *TypeNameToString(const TypeName *typeName);
+extern char *TypeNameToString(const typename__ *typename__);
 extern char *TypeNameListToString(List *typenames);
 
 extern Oid	LookupCollation(ParseState *pstate, List *collnames, int location);
@@ -47,9 +47,9 @@ extern Datum stringTypeDatum(Type tp, char *string, int32 atttypmod);
 
 extern Oid	typeidTypeRelid(Oid type_id);
 
-extern TypeName *typeStringToTypeName(const char *str);
+extern typename__ *typeStringToTypeName(const char *str);
 extern void parseTypeString(const char *str, Oid *typeid_p, int32 *typmod_p, bool missing_ok);
 
-#define ISCOMPLEX(typeid) (typeidTypeRelid(typeid) != InvalidOid)
+#define ISCOMPLEX(typeid__) (typeidTypeRelid(typeid__) != InvalidOid)
 
 #endif   /* PARSE_TYPE_H */

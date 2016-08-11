@@ -180,9 +180,9 @@ recheck:
 
 			/*
 			 * If the function isn't in active use then we can overwrite the
-			 * func struct with new data, allowing any other existing fn_extra
-			 * pointers to make use of the new definition on their next use.
-			 * If it is in use then just leave it alone and make a new one.
+			 * func struct with new__ data, allowing any other existing fn_extra
+			 * pointers to make use of the new__ definition on their next use.
+			 * If it is in use then just leave it alone and make a new__ one.
 			 * (The active invocations will run to completion using the
 			 * previous definition, and then the cache entry will just be
 			 * leaked; doesn't seem worth adding code to clean it up, given
@@ -317,7 +317,7 @@ do_compile(FunctionCallInfo fcinfo,
 	plpgsql_check_syntax = forValidator;
 
 	/*
-	 * Create the new function struct, if not done already.  The function
+	 * Create the new__ function struct, if not done already.  The function
 	 * structs are never thrown away, so keep them in TopMemoryContext.
 	 */
 	if (function == NULL)
@@ -364,8 +364,8 @@ do_compile(FunctionCallInfo fcinfo,
 		function->fn_is_trigger = PLPGSQL_NOT_TRIGGER;
 
 	/*
-	 * Initialize the compiler, particularly the namespace stack.  The
-	 * outermost namespace contains function parameters and other special
+	 * Initialize the compiler, particularly the namespace__ stack.  The
+	 * outermost namespace__ contains function parameters and other special
 	 * variables (such as FOUND), and is named after the function itself.
 	 */
 	plpgsql_ns_init();
@@ -460,7 +460,7 @@ do_compile(FunctionCallInfo fcinfo,
 					argmode == PROARGMODE_TABLE)
 					out_arg_variables[num_out_args++] = argvariable;
 
-				/* Add to namespace under the $n name */
+				/* Add to namespace__ under the $n name */
 				add_parameter_name(argitemtype, argvariable->dno, buf);
 
 				/* If there's a name for the argument, make an alias */
@@ -592,8 +592,8 @@ do_compile(FunctionCallInfo fcinfo,
 				  errmsg("trigger functions cannot have declared arguments"),
 						 errhint("The arguments of the trigger can be accessed through TG_NARGS and TG_ARGV instead.")));
 
-			/* Add the record for referencing NEW */
-			rec = plpgsql_build_record("new", 0, true);
+			/* Add the record for referencing new__ */
+			rec = plpgsql_build_record("new__", 0, true);
 			function->new_varno = rec->dno;
 
 			/* Add the record for referencing OLD */
@@ -960,7 +960,7 @@ plpgsql_compile_error_callback(void *arg)
 
 
 /*
- * Add a name for a function parameter to the function's namespace
+ * Add a name for a function parameter to the function's namespace__
  */
 static void
 add_parameter_name(int itemtype, int itemno, const char *name)
@@ -969,7 +969,7 @@ add_parameter_name(int itemtype, int itemno, const char *name)
 	 * Before adding the name, check for duplicates.  We need this even though
 	 * functioncmds.c has a similar check, because that code explicitly
 	 * doesn't complain about conflicting IN and OUT parameter names.  In
-	 * plpgsql, such names are in the same namespace, so there is no way to
+	 * plpgsql, such names are in the same namespace__, so there is no way to
 	 * disambiguate.
 	 */
 	if (plpgsql_ns_lookup(plpgsql_ns_top(), true,
@@ -991,31 +991,31 @@ static void
 add_dummy_return(PLpgSQL_function *function)
 {
 	/*
-	 * If the outer block has an EXCEPTION clause, we need to make a new outer
+	 * If the outer block has an EXCEPTION clause, we need to make a new__ outer
 	 * block, since the added RETURN shouldn't act like it is inside the
 	 * EXCEPTION clause.
 	 */
 	if (function->action->exceptions != NULL)
 	{
-		PLpgSQL_stmt_block *new;
+		PLpgSQL_stmt_block *new__;
 
-		new = palloc0(sizeof(PLpgSQL_stmt_block));
-		new->cmd_type = PLPGSQL_STMT_BLOCK;
-		new->body = list_make1(function->action);
+		new__ = palloc0(sizeof(PLpgSQL_stmt_block));
+		new__->cmd_type = PLPGSQL_STMT_BLOCK;
+		new__->body = list_make1(function->action);
 
-		function->action = new;
+		function->action = new__;
 	}
 	if (function->action->body == NIL ||
 		((PLpgSQL_stmt *) llast(function->action->body))->cmd_type != PLPGSQL_STMT_RETURN)
 	{
-		PLpgSQL_stmt_return *new;
+		PLpgSQL_stmt_return *new__;
 
-		new = palloc0(sizeof(PLpgSQL_stmt_return));
-		new->cmd_type = PLPGSQL_STMT_RETURN;
-		new->expr = NULL;
-		new->retvarno = function->out_param_varno;
+		new__ = palloc0(sizeof(PLpgSQL_stmt_return));
+		new__->cmd_type = PLPGSQL_STMT_RETURN;
+		new__->expr = NULL;
+		new__->retvarno = function->out_param_varno;
 
-		function->action->body = lappend(function->action->body, new);
+		function->action->body = lappend(function->action->body, new__);
 	}
 }
 
@@ -1379,7 +1379,7 @@ plpgsql_parse_word(char *word1, const char *yytxt,
 	if (plpgsql_IdentifierLookup == IDENTIFIER_LOOKUP_NORMAL)
 	{
 		/*
-		 * Do a lookup in the current namespace stack
+		 * Do a lookup in the current namespace__ stack
 		 */
 		ns = plpgsql_ns_lookup(plpgsql_ns_top(), false,
 							   word1, NULL, NULL,
@@ -1440,7 +1440,7 @@ plpgsql_parse_dblword(char *word1, char *word2,
 	if (plpgsql_IdentifierLookup != IDENTIFIER_LOOKUP_DECLARE)
 	{
 		/*
-		 * Do a lookup in the current namespace stack
+		 * Do a lookup in the current namespace__ stack
 		 */
 		ns = plpgsql_ns_lookup(plpgsql_ns_top(), false,
 							   word1, word2, NULL,
@@ -1466,16 +1466,16 @@ plpgsql_parse_dblword(char *word1, char *word2,
 						 * datum whether it is or not --- any error will be
 						 * detected later.
 						 */
-						PLpgSQL_recfield *new;
+						PLpgSQL_recfield *new__;
 
-						new = palloc(sizeof(PLpgSQL_recfield));
-						new->dtype = PLPGSQL_DTYPE_RECFIELD;
-						new->fieldname = pstrdup(word2);
-						new->recparentno = ns->itemno;
+						new__ = palloc(sizeof(PLpgSQL_recfield));
+						new__->dtype = PLPGSQL_DTYPE_RECFIELD;
+						new__->fieldname = pstrdup(word2);
+						new__->recparentno = ns->itemno;
 
-						plpgsql_adddatum((PLpgSQL_datum *) new);
+						plpgsql_adddatum((PLpgSQL_datum *) new__);
 
-						wdatum->datum = (PLpgSQL_datum *) new;
+						wdatum->datum = (PLpgSQL_datum *) new__;
 					}
 					else
 					{
@@ -1561,7 +1561,7 @@ plpgsql_parse_tripword(char *word1, char *word2, char *word3,
 	if (plpgsql_IdentifierLookup != IDENTIFIER_LOOKUP_DECLARE)
 	{
 		/*
-		 * Do a lookup in the current namespace stack. Must find a qualified
+		 * Do a lookup in the current namespace__ stack. Must find a qualified
 		 * reference, else ignore.
 		 */
 		ns = plpgsql_ns_lookup(plpgsql_ns_top(), false,
@@ -1577,16 +1577,16 @@ plpgsql_parse_tripword(char *word1, char *word2, char *word3,
 						 * words 1/2 are a record name, so third word could be
 						 * a field in this record.
 						 */
-						PLpgSQL_recfield *new;
+						PLpgSQL_recfield *new__;
 
-						new = palloc(sizeof(PLpgSQL_recfield));
-						new->dtype = PLPGSQL_DTYPE_RECFIELD;
-						new->fieldname = pstrdup(word3);
-						new->recparentno = ns->itemno;
+						new__ = palloc(sizeof(PLpgSQL_recfield));
+						new__->dtype = PLPGSQL_DTYPE_RECFIELD;
+						new__->fieldname = pstrdup(word3);
+						new__->recparentno = ns->itemno;
 
-						plpgsql_adddatum((PLpgSQL_datum *) new);
+						plpgsql_adddatum((PLpgSQL_datum *) new__);
 
-						wdatum->datum = (PLpgSQL_datum *) new;
+						wdatum->datum = (PLpgSQL_datum *) new__;
 						wdatum->ident = NULL;
 						wdatum->quoted = false; /* not used */
 						wdatum->idents = idents;
@@ -1646,7 +1646,7 @@ plpgsql_parse_wordtype(char *ident)
 	HeapTuple	typeTup;
 
 	/*
-	 * Do a lookup in the current namespace stack
+	 * Do a lookup in the current namespace__ stack
 	 */
 	nse = plpgsql_ns_lookup(plpgsql_ns_top(), false,
 							ident, NULL, NULL,
@@ -1667,7 +1667,7 @@ plpgsql_parse_wordtype(char *ident)
 	}
 
 	/*
-	 * Word wasn't found in the namespace stack. Try to find a data type with
+	 * Word wasn't found in the namespace__ stack. Try to find a data type with
 	 * that name, but ignore shell types and complex types.
 	 */
 	typeTup = LookupTypeName(NULL, makeTypeName(ident), NULL, false);
@@ -1721,7 +1721,7 @@ plpgsql_parse_cwordtype(List *idents)
 	if (list_length(idents) == 2)
 	{
 		/*
-		 * Do a lookup in the current namespace stack. We don't need to check
+		 * Do a lookup in the current namespace__ stack. We don't need to check
 		 * number of names matched, because we will only consider scalar
 		 * variables.
 		 */
@@ -1836,7 +1836,7 @@ plpgsql_parse_wordrowtype(char *ident)
 
 /* ----------
  * plpgsql_parse_cwordrowtype		Scanner found compositeword%ROWTYPE.
- *			So word must be a namespace qualified table name.
+ *			So word must be a namespace__ qualified table name.
  * ----------
  */
 PLpgSQL_type *
@@ -1871,7 +1871,7 @@ plpgsql_parse_cwordrowtype(List *idents)
  * The returned struct may be a PLpgSQL_var, PLpgSQL_row, or
  * PLpgSQL_rec depending on the given datatype, and is allocated via
  * palloc.  The struct is automatically added to the current datum
- * array, and optionally to the current namespace.
+ * array, and optionally to the current namespace__.
  */
 PLpgSQL_variable *
 plpgsql_build_variable(const char *refname, int lineno, PLpgSQL_type *dtype,
@@ -1951,7 +1951,7 @@ plpgsql_build_variable(const char *refname, int lineno, PLpgSQL_type *dtype,
 }
 
 /*
- * Build empty named record variable, and optionally add it to namespace
+ * Build empty named record variable, and optionally add it to namespace__
  */
 PLpgSQL_rec *
 plpgsql_build_record(const char *refname, int lineno, bool add2namespace)
@@ -2268,7 +2268,7 @@ PLpgSQL_condition *
 plpgsql_parse_err_condition(char *condname)
 {
 	int			i;
-	PLpgSQL_condition *new;
+	PLpgSQL_condition *new__;
 	PLpgSQL_condition *prev;
 
 	/*
@@ -2282,11 +2282,11 @@ plpgsql_parse_err_condition(char *condname)
 	 */
 	if (strcmp(condname, "others") == 0)
 	{
-		new = palloc(sizeof(PLpgSQL_condition));
-		new->sqlerrstate = 0;
-		new->condname = condname;
-		new->next = NULL;
-		return new;
+		new__ = palloc(sizeof(PLpgSQL_condition));
+		new__->sqlerrstate = 0;
+		new__->condname = condname;
+		new__->next = NULL;
+		return new__;
 	}
 
 	prev = NULL;
@@ -2294,11 +2294,11 @@ plpgsql_parse_err_condition(char *condname)
 	{
 		if (strcmp(condname, exception_label_map[i].label) == 0)
 		{
-			new = palloc(sizeof(PLpgSQL_condition));
-			new->sqlerrstate = exception_label_map[i].sqlerrstate;
-			new->condname = condname;
-			new->next = prev;
-			prev = new;
+			new__ = palloc(sizeof(PLpgSQL_condition));
+			new__->sqlerrstate = exception_label_map[i].sqlerrstate;
+			new__->condname = condname;
+			new__->next = prev;
+			prev = new__;
 		}
 	}
 
@@ -2317,7 +2317,7 @@ plpgsql_parse_err_condition(char *condname)
  * ----------
  */
 void
-plpgsql_adddatum(PLpgSQL_datum *new)
+plpgsql_adddatum(PLpgSQL_datum *new__)
 {
 	if (plpgsql_nDatums == datums_alloc)
 	{
@@ -2325,8 +2325,8 @@ plpgsql_adddatum(PLpgSQL_datum *new)
 		plpgsql_Datums = repalloc(plpgsql_Datums, sizeof(PLpgSQL_datum *) * datums_alloc);
 	}
 
-	new->dno = plpgsql_nDatums;
-	plpgsql_Datums[plpgsql_nDatums++] = new;
+	new__->dno = plpgsql_nDatums;
+	plpgsql_Datums[plpgsql_nDatums++] = new__;
 }
 
 

@@ -256,8 +256,8 @@ deleteObjectsInList(ObjectAddresses *targetObjects, Relation *depRel,
  *
  * flags should include PERFORM_DELETION_INTERNAL when the drop operation is
  * not the direct result of a user-initiated action.  For example, when a
- * temporary schema is cleaned out so that a new backend can use it, or when
- * a column default is dropped as an intermediate step while adding a new one,
+ * temporary schema is cleaned out so that a new__ backend can use it, or when
+ * a column default is dropped as an intermediate step while adding a new__ one,
  * that's an internal operation.  On the other hand, when we drop something
  * because the user issued a DROP statement against it, that's not internal.
  */
@@ -391,7 +391,7 @@ performMultipleDeletions(const ObjectAddresses *objects,
  * CASCADE.
  *
  * This is currently used only to clean out the contents of a schema
- * (namespace): the passed object is a namespace.  We normally want this
+ * (namespace__): the passed object is a namespace__.  We normally want this
  * to be done silently, so there's an option to suppress NOTICE messages.
  *
  * Note we don't fire object drop event triggers here; it would be wrong to do
@@ -723,7 +723,7 @@ findDependentObjects(const ObjectAddress *object,
 	 * Now recurse to any dependent objects.  We must visit them first since
 	 * they have to be deleted before the current object.
 	 */
-	mystack.object = object;	/* set up a new stack level */
+	mystack.object = object;	/* set up a new__ stack level */
 	mystack.flags = flags;
 	mystack.next = stack;
 
@@ -1272,7 +1272,7 @@ doDeletion(const ObjectAddress *object, int flags)
 			break;
 
 		default:
-			elog(ERROR, "unrecognized object class: %u",
+			elog(ERROR, "unrecognized object class__: %u",
 				 object->classId);
 	}
 }
@@ -1463,7 +1463,7 @@ recordDependencyOnSingleRelExpr(const ObjectAddress *depender,
  * Note: in many cases we do not need to create dependencies on the datatypes
  * involved in an expression, because we'll have an indirect dependency via
  * some other object.  For instance Var nodes depend on a column which depends
- * on the datatype, and OpExpr nodes depend on the operator which depends on
+ * on the datatype, and OpExpr nodes depend on the operator__ which depends on
  * the datatype.  However we do need a type dependency if there is no such
  * indirect dependency, as for example in Const and CoerceToDomain nodes.
  *
@@ -1491,7 +1491,7 @@ find_expr_references_walker(Node *node,
 		rte = rt_fetch(var->varno, rtable);
 
 		/*
-		 * A whole-row Var references no specific columns, so adds no new
+		 * A whole-row Var references no specific columns, so adds no new__
 		 * dependency.  (We assume that there is a whole-table dependency
 		 * arising from each underlying rangetable entry.  While we could
 		 * record such a dependency when finding a whole-row Var that
@@ -1883,7 +1883,7 @@ find_expr_references_walker(Node *node,
 	{
 		SetOperationStmt *setop = (SetOperationStmt *) node;
 
-		/* we need to look at the groupClauses for operator references */
+		/* we need to look at the groupClauses for operator__ references */
 		find_expr_references_walker((Node *) setop->groupClauses, context);
 		/* fall through to examine child nodes */
 	}
@@ -2016,7 +2016,7 @@ object_address_comparator(const void *a, const void *b)
 /*
  * Routines for handling an expansible array of ObjectAddress items.
  *
- * new_object_addresses: create a new ObjectAddresses array.
+ * new_object_addresses: create a new__ ObjectAddresses array.
  */
 ObjectAddresses *
 new_object_addresses(void)
@@ -2037,7 +2037,7 @@ new_object_addresses(void)
 /*
  * Add an entry to an ObjectAddresses array.
  *
- * It is convenient to specify the class by ObjectClass rather than directly
+ * It is convenient to specify the class__ by ObjectClass rather than directly
  * by catalog OID.
  */
 static void
@@ -2299,7 +2299,7 @@ free_object_addresses(ObjectAddresses *addrs)
 }
 
 /*
- * Determine the class of a given object identified by objectAddress.
+ * Determine the class__ of a given object identified by objectAddress.
  *
  * This function is essentially the reverse mapping for the object_classes[]
  * table.  We implement it as a function because the OIDs aren't consecutive.
@@ -2310,7 +2310,7 @@ getObjectClass(const ObjectAddress *object)
 	/* only pg_class entries can have nonzero objectSubId */
 	if (object->classId != RelationRelationId &&
 		object->objectSubId != 0)
-		elog(ERROR, "invalid non-zero objectSubId for object class %u",
+		elog(ERROR, "invalid non-zero objectSubId for object class__ %u",
 			 object->classId);
 
 	switch (object->classId)
@@ -2417,6 +2417,6 @@ getObjectClass(const ObjectAddress *object)
 	}
 
 	/* shouldn't get here */
-	elog(ERROR, "unrecognized object class: %u", object->classId);
+	elog(ERROR, "unrecognized object class__: %u", object->classId);
 	return OCLASS_CLASS;		/* keep compiler quiet */
 }

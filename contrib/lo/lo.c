@@ -31,7 +31,7 @@ lo_manage(PG_FUNCTION_ARGS)
 	TupleDesc	tupdesc;		/* Tuple Descriptor				*/
 	HeapTuple	rettuple;		/* Tuple to be returned			*/
 	bool		isdelete;		/* are we deleting?				*/
-	HeapTuple	newtuple;		/* The new value for tuple		*/
+	HeapTuple	newtuple;		/* The new__ value for tuple		*/
 	HeapTuple	trigtuple;		/* The original value of tuple	*/
 
 	if (!CALLED_AS_TRIGGER(fcinfo))		/* internal error */

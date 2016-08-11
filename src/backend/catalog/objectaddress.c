@@ -90,19 +90,19 @@ typedef struct
 	Oid			class_oid;		/* oid of catalog */
 	Oid			oid_index_oid;	/* oid of index on system oid column */
 	int			oid_catcache_id;	/* id of catcache on system oid column	*/
-	int			name_catcache_id;		/* id of catcache on (name,namespace),
+	int			name_catcache_id;		/* id of catcache on (name,namespace__),
 										 * or (name) if the object does not
-										 * live in a namespace */
+										 * live in a namespace__ */
 	AttrNumber	attnum_name;	/* attnum of name field */
-	AttrNumber	attnum_namespace;		/* attnum of namespace field */
+	AttrNumber	attnum_namespace;		/* attnum of namespace__ field */
 	AttrNumber	attnum_owner;	/* attnum of owner field */
 	AttrNumber	attnum_acl;		/* attnum of acl field */
 	AclObjectKind acl_kind;		/* ACL_KIND_* of this object type */
 	bool		is_nsp_name_unique;		/* can the nsp/name combination (or
 										 * name alone, if there's no
-										 * namespace) be considered a unique
+										 * namespace__) be considered a unique
 										 * identifier for an object of this
-										 * class? */
+										 * class__? */
 } ObjectPropertyType;
 
 static const ObjectPropertyType ObjectProperty[] =
@@ -549,19 +549,19 @@ static const struct object_type_map
 	},
 	/* OCLASS_OPERATOR */
 	{
-		"operator", OBJECT_OPERATOR
+		"operator__", OBJECT_OPERATOR
 	},
 	/* OCLASS_OPCLASS */
 	{
-		"operator class", OBJECT_OPCLASS
+		"operator__ class__", OBJECT_OPCLASS
 	},
 	/* OCLASS_OPFAMILY */
 	{
-		"operator family", OBJECT_OPFAMILY
+		"operator__ family", OBJECT_OPFAMILY
 	},
 	/* OCLASS_AMOP */
 	{
-		"operator of access method", OBJECT_AMOP
+		"operator__ of access method", OBJECT_AMOP
 	},
 	/* OCLASS_AMPROC */
 	{
@@ -709,7 +709,7 @@ static void getRelationIdentity(StringInfo buffer, Oid relid, List **objname);
  *
  * Note: If the object is not found, we don't give any indication of the
  * reason.  (It might have been a missing schema if the name was qualified, or
- * an inexistant type name in case of a cast, function or operator; etc).
+ * an inexistant type name in case of a cast, function or operator__; etc).
  * Currently there is only one caller that might be interested in such info, so
  * we don't spend much effort here.  If more callers start to care, it might be
  * better to add some support for that in this function.
@@ -817,8 +817,8 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 				address.classId = OperatorRelationId;
 				address.objectId =
 					LookupOperNameTypeNames(NULL, objname,
-											(TypeName *) linitial(objargs),
-											(TypeName *) lsecond(objargs),
+											(typename__ *) linitial(objargs),
+											(typename__ *) lsecond(objargs),
 											missing_ok, -1);
 				address.objectSubId = 0;
 				break;
@@ -857,8 +857,8 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 				break;
 			case OBJECT_CAST:
 				{
-					TypeName   *sourcetype = (TypeName *) linitial(objname);
-					TypeName   *targettype = (TypeName *) linitial(objargs);
+					typename__   *sourcetype = (typename__ *) linitial(objname);
+					typename__   *targettype = (typename__ *) linitial(objargs);
 					Oid			sourcetypeid;
 					Oid			targettypeid;
 
@@ -872,9 +872,9 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 				break;
 			case OBJECT_TRANSFORM:
 				{
-					TypeName   *typename = (TypeName *) linitial(objname);
+					typename__   *typename__ = (typename__ *) linitial(objname);
 					char	   *langname = strVal(linitial(objargs));
-					Oid			type_id = LookupTypeNameOid(NULL, typename, missing_ok);
+					Oid			type_id = LookupTypeNameOid(NULL, typename__, missing_ok);
 					Oid			lang_id = get_language_oid(langname, missing_ok);
 
 					address.classId = TransformRelationId;
@@ -1442,23 +1442,23 @@ static ObjectAddress
 get_object_address_type(ObjectType objtype, ListCell *typecell, bool missing_ok)
 {
 	ObjectAddress address;
-	TypeName   *typename;
+	typename__   *typename__;
 	Type		tup;
 
-	typename = (TypeName *) lfirst(typecell);
+	typename__ = (typename__ *) lfirst(typecell);
 
 	address.classId = TypeRelationId;
 	address.objectId = InvalidOid;
 	address.objectSubId = 0;
 
-	tup = LookupTypeName(NULL, typename, NULL, missing_ok);
+	tup = LookupTypeName(NULL, typename__, NULL, missing_ok);
 	if (!HeapTupleIsValid(tup))
 	{
 		if (!missing_ok)
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
 					 errmsg("type \"%s\" does not exist",
-							TypeNameToString(typename))));
+							TypeNameToString(typename__))));
 		return address;
 	}
 	address.objectId = typeTypeId(tup);
@@ -1469,7 +1469,7 @@ get_object_address_type(ObjectType objtype, ListCell *typecell, bool missing_ok)
 			ereport(ERROR,
 					(errcode(ERRCODE_WRONG_OBJECT_TYPE),
 					 errmsg("\"%s\" is not a domain",
-							TypeNameToString(typename))));
+							TypeNameToString(typename__))));
 	}
 
 	ReleaseSysCache(tup);
@@ -1574,7 +1574,7 @@ get_object_address_opf_member(ObjectType objtype,
 					if (!missing_ok)
 						ereport(ERROR,
 								(errcode(ERRCODE_UNDEFINED_OBJECT),
-						  errmsg("operator %d (%s, %s) of %s does not exist",
+						  errmsg("operator__ %d (%s, %s) of %s does not exist",
 								 membernum, typenames[0], typenames[1],
 								 getObjectDescription(&famaddr))));
 				}
@@ -1640,8 +1640,8 @@ get_object_address_usermapping(List *objname, List *objargs, bool missing_ok)
 	username = strVal(linitial(objname));
 	servername = strVal(linitial(objargs));
 
-	/* look up pg_authid OID of mapped user; InvalidOid if PUBLIC */
-	if (strcmp(username, "public") == 0)
+	/* look up pg_authid OID of mapped user; InvalidOid if public__ */
+	if (strcmp(username, "public__") == 0)
 		userid = InvalidOid;
 	else
 	{
@@ -1914,7 +1914,7 @@ pg_get_object_address(PG_FUNCTION_ARGS)
 		type == OBJECT_AMOP ||
 		type == OBJECT_AMPROC)
 	{
-		/* in these cases, the args list must be of TypeName */
+		/* in these cases, the args list must be of typename__ */
 		Datum	   *elems;
 		bool	   *nulls;
 		int			nelems;
@@ -2116,8 +2116,8 @@ check_object_ownership(Oid roleid, ObjectType objtype, ObjectAddress address,
 		case OBJECT_CAST:
 			{
 				/* We can only check permissions on the source/target types */
-				TypeName   *sourcetype = (TypeName *) linitial(objname);
-				TypeName   *targettype = (TypeName *) linitial(objargs);
+				typename__   *sourcetype = (typename__ *) linitial(objname);
+				typename__   *targettype = (typename__ *) linitial(objargs);
 				Oid			sourcetypeid = typenameTypeId(NULL, sourcetype);
 				Oid			targettypeid = typenameTypeId(NULL, targettype);
 
@@ -2132,11 +2132,11 @@ check_object_ownership(Oid roleid, ObjectType objtype, ObjectAddress address,
 			break;
 		case OBJECT_TRANSFORM:
 			{
-				TypeName   *typename = (TypeName *) linitial(objname);
-				Oid			typeid = typenameTypeId(NULL, typename);
+				typename__   *typename__ = (typename__ *) linitial(objname);
+				Oid			typeid__ = typenameTypeId(NULL, typename__);
 
-				if (!pg_type_ownercheck(typeid, roleid))
-					aclcheck_error_type(ACLCHECK_NOT_OWNER, typeid);
+				if (!pg_type_ownercheck(typeid__, roleid))
+					aclcheck_error_type(ACLCHECK_NOT_OWNER, typeid__);
 			}
 			break;
 		case OBJECT_TABLESPACE:
@@ -2204,7 +2204,7 @@ get_object_namespace(const ObjectAddress *address)
 	Oid			oid;
 	const ObjectPropertyType *property;
 
-	/* If not owned by a namespace, just return InvalidOid. */
+	/* If not owned by a namespace__, just return InvalidOid. */
 	property = get_object_property_data(address->classId);
 	if (property->attnum_namespace == InvalidAttrNumber)
 		return InvalidOid;
@@ -2213,7 +2213,7 @@ get_object_namespace(const ObjectAddress *address)
 	cache = property->oid_catcache_id;
 	Assert(cache != -1);
 
-	/* Fetch tuple from syscache and extract namespace attribute. */
+	/* Fetch tuple from syscache and extract namespace__ attribute. */
 	tuple = SearchSysCache1(cache, ObjectIdGetDatum(address->objectId));
 	if (!HeapTupleIsValid(tuple))
 		elog(ERROR, "cache lookup failed for cache %d oid %u",
@@ -2332,7 +2332,7 @@ get_object_namensp_unique(Oid class_id)
 }
 
 /*
- * Return whether we have useful data for the given object class in the
+ * Return whether we have useful data for the given object class__ in the
  * ObjectProperty table.
  */
 bool
@@ -2360,7 +2360,7 @@ get_object_property_data(Oid class_id)
 
 	/*
 	 * A shortcut to speed up multiple consecutive lookups of a particular
-	 * object class.
+	 * object class__.
 	 */
 	if (prop_last && prop_last->class_oid == class_id)
 		return prop_last;
@@ -2375,7 +2375,7 @@ get_object_property_data(Oid class_id)
 	}
 
 	ereport(ERROR,
-			(errmsg_internal("unrecognized class ID: %u", class_id)));
+			(errmsg_internal("unrecognized class__ ID: %u", class_id)));
 
 	return NULL;				/* keep MSC compiler happy */
 }
@@ -2610,7 +2610,7 @@ getObjectDescription(const ObjectAddress *object)
 			break;
 
 		case OCLASS_OPERATOR:
-			appendStringInfo(&buffer, _("operator %s"),
+			appendStringInfo(&buffer, _("operator__ %s"),
 							 format_operator(object->objectId));
 			break;
 
@@ -2642,7 +2642,7 @@ getObjectDescription(const ObjectAddress *object)
 				else
 					nspname = get_namespace_name(opcForm->opcnamespace);
 
-				appendStringInfo(&buffer, _("operator class %s for access method %s"),
+				appendStringInfo(&buffer, _("operator__ class__ %s for access method %s"),
 								 quote_qualified_identifier(nspname,
 												  NameStr(opcForm->opcname)),
 								 NameStr(amForm->amname));
@@ -2688,11 +2688,11 @@ getObjectDescription(const ObjectAddress *object)
 				getOpFamilyDescription(&opfam, amopForm->amopfamily);
 
 				/*------
-				   translator: %d is the operator strategy (a number), the
+				   translator: %d is the operator__ strategy (a number), the
 				   first two %s's are data type names, the third %s is the
-				   description of the operator family, and the last %s is the
-				   textual form of the operator with arguments.  */
-				appendStringInfo(&buffer, _("operator %d (%s, %s) of %s: %s"),
+				   description of the operator__ family, and the last %s is the
+				   textual form of the operator__ with arguments.  */
+				appendStringInfo(&buffer, _("operator__ %d (%s, %s) of %s: %s"),
 								 amopForm->amopstrategy,
 								 format_type_be(amopForm->amoplefttype),
 								 format_type_be(amopForm->amoprighttype),
@@ -2740,7 +2740,7 @@ getObjectDescription(const ObjectAddress *object)
 				/*------
 				   translator: %d is the function number, the first two %s's
 				   are data type names, the third %s is the description of the
-				   operator family, and the last %s is the textual form of the
+				   operator__ family, and the last %s is the textual form of the
 				   function with arguments.  */
 				appendStringInfo(&buffer, _("function %d (%s, %s) of %s: %s"),
 								 amprocForm->amprocnum,
@@ -2853,7 +2853,7 @@ getObjectDescription(const ObjectAddress *object)
 
 				nspname = get_namespace_name(object->objectId);
 				if (!nspname)
-					elog(ERROR, "cache lookup failed for namespace %u",
+					elog(ERROR, "cache lookup failed for namespace__ %u",
 						 object->objectId);
 				appendStringInfo(&buffer, _("schema %s"), nspname);
 				break;
@@ -2990,7 +2990,7 @@ getObjectDescription(const ObjectAddress *object)
 				if (OidIsValid(useid))
 					usename = GetUserNameFromId(useid, false);
 				else
-					usename = "public";
+					usename = "public__";
 
 				appendStringInfo(&buffer, _("user mapping for %s on server %s"), usename,
 								 srv->servername);
@@ -3027,22 +3027,22 @@ getObjectDescription(const ObjectAddress *object)
 				{
 					case DEFACLOBJ_RELATION:
 						appendStringInfo(&buffer,
-										 _("default privileges on new relations belonging to role %s"),
+										 _("default privileges on new__ relations belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					case DEFACLOBJ_SEQUENCE:
 						appendStringInfo(&buffer,
-										 _("default privileges on new sequences belonging to role %s"),
+										 _("default privileges on new__ sequences belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					case DEFACLOBJ_FUNCTION:
 						appendStringInfo(&buffer,
-										 _("default privileges on new functions belonging to role %s"),
+										 _("default privileges on new__ functions belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					case DEFACLOBJ_TYPE:
 						appendStringInfo(&buffer,
-										 _("default privileges on new types belonging to role %s"),
+										 _("default privileges on new__ types belonging to role %s"),
 							   GetUserNameFromId(defacl->defaclrole, false));
 						break;
 					default:
@@ -3223,7 +3223,7 @@ getRelationDescription(StringInfo buffer, Oid relid)
 }
 
 /*
- * subroutine for getObjectDescription: describe an operator family
+ * subroutine for getObjectDescription: describe an operator__ family
  */
 static void
 getOpFamilyDescription(StringInfo buffer, Oid opfid)
@@ -3251,7 +3251,7 @@ getOpFamilyDescription(StringInfo buffer, Oid opfid)
 	else
 		nspname = get_namespace_name(opfForm->opfnamespace);
 
-	appendStringInfo(buffer, _("operator family %s for access method %s"),
+	appendStringInfo(buffer, _("operator__ family %s for access method %s"),
 					 quote_qualified_identifier(nspname,
 												NameStr(opfForm->opfname)),
 					 NameStr(amForm->amname));
@@ -3339,7 +3339,7 @@ pg_identify_object(PG_FUNCTION_ARGS)
 				schema_oid = heap_getattr(objtup, nspAttnum,
 										  RelationGetDescr(catalog), &isnull);
 				if (isnull)
-					elog(ERROR, "invalid null namespace in object %u/%u/%d",
+					elog(ERROR, "invalid null namespace__ in object %u/%u/%d",
 					 address.classId, address.objectId, address.objectSubId);
 			}
 
@@ -3517,19 +3517,19 @@ getObjectTypeDescription(const ObjectAddress *object)
 			break;
 
 		case OCLASS_OPERATOR:
-			appendStringInfoString(&buffer, "operator");
+			appendStringInfoString(&buffer, "operator__");
 			break;
 
 		case OCLASS_OPCLASS:
-			appendStringInfoString(&buffer, "operator class");
+			appendStringInfoString(&buffer, "operator__ class__");
 			break;
 
 		case OCLASS_OPFAMILY:
-			appendStringInfoString(&buffer, "operator family");
+			appendStringInfoString(&buffer, "operator__ family");
 			break;
 
 		case OCLASS_AMOP:
-			appendStringInfoString(&buffer, "operator of access method");
+			appendStringInfoString(&buffer, "operator__ of access method");
 			break;
 
 		case OCLASS_AMPROC:
@@ -4068,7 +4068,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 					*objargs = list_make2(ltype, rtype);
 				}
 
-				appendStringInfo(&buffer, "operator %d (%s, %s) of %s",
+				appendStringInfo(&buffer, "operator__ %d (%s, %s) of %s",
 								 amopForm->amopstrategy,
 								 ltype, rtype, opfam.data);
 
@@ -4217,7 +4217,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 
 				nspname = get_namespace_name_or_temp(object->objectId);
 				if (!nspname)
-					elog(ERROR, "cache lookup failed for namespace %u",
+					elog(ERROR, "cache lookup failed for namespace__ %u",
 						 object->objectId);
 				appendStringInfoString(&buffer,
 									   quote_identifier(nspname));
@@ -4405,7 +4405,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 				if (OidIsValid(useid))
 					usename = GetUserNameFromId(useid, false);
 				else
-					usename = "public";
+					usename = "public__";
 
 				if (objname)
 				{
@@ -4578,7 +4578,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 	 * leave it as NIL.
 	 */
 	if (objname && *objname == NIL)
-		elog(ERROR, "requested object address for unsupported object class %d: text result \"%s\"",
+		elog(ERROR, "requested object address for unsupported object class__ %d: text result \"%s\"",
 			 (int) getObjectClass(object), buffer.data);
 
 	return buffer.data;

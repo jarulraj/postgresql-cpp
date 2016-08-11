@@ -581,7 +581,7 @@ float8send(PG_FUNCTION_ARGS)
 }
 
 
-/* ========== PUBLIC ROUTINES ========== */
+/* ========== public__ ROUTINES ========== */
 
 
 /*
@@ -1828,7 +1828,7 @@ float8_accum(PG_FUNCTION_ARGS)
 	/*
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to reduce palloc overhead. Otherwise we construct a
-	 * new array with the updated transition data and return it.
+	 * new__ array with the updated transition data and return it.
 	 */
 	if (AggCheckCallContext(fcinfo, NULL))
 	{
@@ -1881,7 +1881,7 @@ float4_accum(PG_FUNCTION_ARGS)
 	/*
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to reduce palloc overhead. Otherwise we construct a
-	 * new array with the updated transition data and return it.
+	 * new__ array with the updated transition data and return it.
 	 */
 	if (AggCheckCallContext(fcinfo, NULL))
 	{
@@ -2098,7 +2098,7 @@ float8_regr_accum(PG_FUNCTION_ARGS)
 	/*
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to reduce palloc overhead. Otherwise we construct a
-	 * new array with the updated transition data and return it.
+	 * new__ array with the updated transition data and return it.
 	 */
 	if (AggCheckCallContext(fcinfo, NULL))
 	{
@@ -2800,7 +2800,7 @@ width_bucket_float8(PG_FUNCTION_ARGS)
 	PG_RETURN_INT32(result);
 }
 
-/* ========== PRIVATE ROUTINES ========== */
+/* ========== private__ ROUTINES ========== */
 
 #ifndef HAVE_CBRT
 

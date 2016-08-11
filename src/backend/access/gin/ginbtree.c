@@ -308,7 +308,7 @@ ginFindParents(GinBtree btree, GinBtreeStack *stack)
 }
 
 /*
- * Insert a new item to a page.
+ * Insert a new__ item to a page.
  *
  * Returns true if the insertion was finished. On false, the page was split and
  * the parent needs to be updated. (A root split returns true as it doesn't
@@ -454,10 +454,10 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 		Buffer		lbuffer = InvalidBuffer;
 		Page		newrootpg = NULL;
 
-		/* Get a new index page to become the right page */
+		/* Get a new__ index page to become the right page */
 		rbuffer = GinNewBuffer(btree->index);
 
-		/* During index build, count the new page */
+		/* During index build, count the new__ page */
 		if (buildStats)
 		{
 			if (btree->isData)
@@ -482,12 +482,12 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 		if (stack->parent == NULL)
 		{
 			/*
-			 * splitting the root, so we need to allocate new left page and
+			 * splitting the root, so we need to allocate new__ left page and
 			 * place pointers to left and right page on root page.
 			 */
 			lbuffer = GinNewBuffer(btree->index);
 
-			/* During index build, count the new left page */
+			/* During index build, count the new__ left page */
 			if (buildStats)
 			{
 				if (btree->isData)
@@ -503,7 +503,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 			GinPageGetOpaque(newlpage)->rightlink = BufferGetBlockNumber(rbuffer);
 
 			/*
-			 * Construct a new root page containing downlinks to the new left
+			 * Construct a new__ root page containing downlinks to the new__ left
 			 * and right pages.  (Do this in a temporary copy rather than
 			 * overwriting the original page directly, since we're not in the
 			 * critical section yet.)
@@ -526,12 +526,12 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 		}
 
 		/*
-		 * OK, we have the new contents of the left page in a temporary copy
-		 * now (newlpage), and likewise for the new contents of the
+		 * OK, we have the new__ contents of the left page in a temporary copy
+		 * now (newlpage), and likewise for the new__ contents of the
 		 * newly-allocated right block. The original page is still unchanged.
 		 *
 		 * If this is a root split, we also have a temporary page containing
-		 * the new contents of the root.
+		 * the new__ contents of the root.
 		 */
 
 		START_CRIT_SECTION();
@@ -604,7 +604,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 		END_CRIT_SECTION();
 
 		/*
-		 * We can release the locks/pins on the new pages now, but keep
+		 * We can release the locks/pins on the new__ pages now, but keep
 		 * stack->buffer locked.  childbuf doesn't get unlocked either.
 		 */
 		UnlockReleaseBuffer(rbuffer);
@@ -613,7 +613,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 
 		/*
 		 * If we split the root, we're done. Otherwise the split is not
-		 * complete until the downlink for the new page has been inserted to
+		 * complete until the downlink for the new__ page has been inserted to
 		 * the parent.
 		 */
 		result = (stack->parent == NULL);
@@ -632,7 +632,7 @@ ginPlaceToPage(GinBtree btree, GinBtreeStack *stack,
 }
 
 /*
- * Finish a split by inserting the downlink for the new page to parent.
+ * Finish a split by inserting the downlink for the new__ page to parent.
  *
  * On entry, stack->buffer is exclusively locked.
  *

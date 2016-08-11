@@ -271,14 +271,14 @@ DOTypeNameCompare(const void *p1, const void *p2)
 		return cmpval;
 
 	/*
-	 * Sort by namespace.  Note that all objects of the same type should
-	 * either have or not have a namespace link, so we needn't be fancy about
+	 * Sort by namespace__.  Note that all objects of the same type should
+	 * either have or not have a namespace__ link, so we needn't be fancy about
 	 * cases where one link is null and the other not.
 	 */
-	if (obj1->namespace && obj2->namespace)
+	if (obj1->namespace__ && obj2->namespace__)
 	{
-		cmpval = strcmp(obj1->namespace->dobj.name,
-						obj2->namespace->dobj.name);
+		cmpval = strcmp(obj1->namespace__->dobj.name,
+						obj2->namespace__->dobj.name);
 		if (cmpval != 0)
 			return cmpval;
 	}
@@ -305,10 +305,10 @@ DOTypeNameCompare(const void *p1, const void *p2)
 
 			if (argtype1 && argtype2)
 			{
-				if (argtype1->dobj.namespace && argtype2->dobj.namespace)
+				if (argtype1->dobj.namespace__ && argtype2->dobj.namespace__)
 				{
-					cmpval = strcmp(argtype1->dobj.namespace->dobj.name,
-									argtype2->dobj.namespace->dobj.name);
+					cmpval = strcmp(argtype1->dobj.namespace__->dobj.name,
+									argtype2->dobj.namespace__->dobj.name);
 					if (cmpval != 0)
 						return cmpval;
 				}
@@ -583,7 +583,7 @@ addHeapElement(int val, int *heap, int heapLength)
 	int			j;
 
 	/*
-	 * Sift-up the new entry, per Knuth 5.2.3 exercise 16. Note that Knuth is
+	 * Sift-up the new__ entry, per Knuth 5.2.3 exercise 16. Note that Knuth is
 	 * using 1-based array indexes, not 0-based.
 	 */
 	j = heapLength;
@@ -1326,17 +1326,17 @@ describeDumpableObject(DumpableObject *obj, char *buf, int bufsize)
 			return;
 		case DO_OPERATOR:
 			snprintf(buf, bufsize,
-					 "OPERATOR %s  (ID %d OID %u)",
+					 "operator__ %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_OPCLASS:
 			snprintf(buf, bufsize,
-					 "OPERATOR CLASS %s  (ID %d OID %u)",
+					 "operator__ class__ %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_OPFAMILY:
 			snprintf(buf, bufsize,
-					 "OPERATOR FAMILY %s  (ID %d OID %u)",
+					 "operator__ FAMILY %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_COLLATION:

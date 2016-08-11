@@ -130,7 +130,7 @@ typedef struct DictSnowball
 
 	/*
 	 * snowball saves alloced memory between calls, so we should run it in our
-	 * private memory context. Note, init function is executed in long lived
+	 * private__ memory context. Note, init function is executed in long lived
 	 * context, so we just remember CurrentMemoryContext
 	 */
 	MemoryContext dictCtx;

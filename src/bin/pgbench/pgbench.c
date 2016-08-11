@@ -384,7 +384,7 @@ usage(void)
 		   "  --unlogged-tables        create tables as unlogged tables\n"
 		   "\nBenchmarking options:\n"
 		   "  -c, --client=NUM         number of concurrent database clients (default: 1)\n"
-		   "  -C, --connect            establish new connection for each transaction\n"
+		   "  -C, --connect            establish new__ connection for each transaction\n"
 		   "  -D, --define=VARNAME=VALUE\n"
 	  "                           define variable for use by custom script\n"
 		 "  -f, --file=FILENAME      read transaction script from FILENAME\n"
@@ -773,7 +773,7 @@ putVariable(CState *st, const char *context, char *name, char *value)
 		Variable   *newvars;
 
 		/*
-		 * Check for the name only when declaring a new variable to avoid
+		 * Check for the name only when declaring a new__ variable to avoid
 		 * overhead.
 		 */
 		if (!isLegalVariableName(name))
@@ -937,11 +937,11 @@ evaluateExpr(CState *st, PgBenchExpr *expr, int64 *retval)
 				int64		lval;
 				int64		rval;
 
-				if (!evaluateExpr(st, expr->u.operator.lexpr, &lval))
+				if (!evaluateExpr(st, expr->u.operator__.lexpr, &lval))
 					return false;
-				if (!evaluateExpr(st, expr->u.operator.rexpr, &rval))
+				if (!evaluateExpr(st, expr->u.operator__.rexpr, &rval))
 					return false;
-				switch (expr->u.operator.operator)
+				switch (expr->u.operator__.operator__)
 				{
 					case '+':
 						*retval = lval + rval;
@@ -1006,7 +1006,7 @@ evaluateExpr(CState *st, PgBenchExpr *expr, int64 *retval)
 						return true;
 				}
 
-				fprintf(stderr, "bad operator\n");
+				fprintf(stderr, "bad operator__\n");
 				return false;
 			}
 
@@ -2034,7 +2034,7 @@ init(bool is_no_vacuum)
 		snprintf(buffer, sizeof(buffer), "drop table if exists %s", ddl->table);
 		executeStatement(con, buffer);
 
-		/* Construct new create table statement. */
+		/* Construct new__ create table statement. */
 		opts[0] = '\0';
 		if (ddl->declare_fillfactor)
 			snprintf(opts + strlen(opts), sizeof(opts) - strlen(opts),

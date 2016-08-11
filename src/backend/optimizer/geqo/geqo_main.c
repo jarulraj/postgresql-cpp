@@ -66,7 +66,7 @@ static int	gimme_number_generations(int pool_size);
 RelOptInfo *
 geqo(PlannerInfo *root, int number_of_rels, List *initial_rels)
 {
-	GeqoPrivateData private;
+	GeqoPrivateData private__;
 	int			generation;
 	Chromosome *momma;
 	Chromosome *daddy;
@@ -93,11 +93,11 @@ geqo(PlannerInfo *root, int number_of_rels, List *initial_rels)
 	int			mutations = 0;
 #endif
 
-/* set up private information */
-	root->join_search_private = (void *) &private;
-	private.initial_rels = initial_rels;
+/* set up private__ information */
+	root->join_search_private = (void *) &private__;
+	private__.initial_rels = initial_rels;
 
-/* initialize private number generator */
+/* initialize private__ number generator */
 	geqo_set_seed(root, Geqo_seed);
 
 /* set GA parameters */
@@ -293,7 +293,7 @@ geqo(PlannerInfo *root, int number_of_rels, List *initial_rels)
 
 	free_pool(root, pool);
 
-	/* ... clear root pointer to our private storage */
+	/* ... clear root pointer to our private__ storage */
 	root->join_search_private = NULL;
 
 	return best_rel;

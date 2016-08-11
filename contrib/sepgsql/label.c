@@ -106,7 +106,7 @@ sepgsql_get_client_label(void)
  * sepgsql_set_client_label
  *
  * This routine tries to switch the current security label of the client, and
- * checks related permissions.  The supplied new label shall be added to the
+ * checks related permissions.  The supplied new__ label shall be added to the
  * client_label_pending list, then saved at transaction-commit time to ensure
  * transaction-awareness.
  */
@@ -319,7 +319,7 @@ sepgsql_needs_fmgr_hook(Oid functionId)
  */
 static void
 sepgsql_fmgr_hook(FmgrHookEventType event,
-				  FmgrInfo *flinfo, Datum *private)
+				  FmgrInfo *flinfo, Datum *private__)
 {
 	struct
 	{
@@ -331,7 +331,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 	switch (event)
 	{
 		case FHET_START:
-			stack = (void *) DatumGetPointer(*private);
+			stack = (void *) DatumGetPointer(*private__);
 			if (!stack)
 			{
 				MemoryContext oldcxt;
@@ -345,7 +345,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 				MemoryContextSwitchTo(oldcxt);
 
 				/*
-				 * process:transition permission between old and new label,
+				 * process:transition permission between old and new__ label,
 				 * when user tries to switch security label of the client on
 				 * execution of trusted procedure.
 				 *
@@ -372,7 +372,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 												  SEPG_PROCESS__TRANSITION,
 												  NULL, true);
 				}
-				*private = PointerGetDatum(stack);
+				*private__ = PointerGetDatum(stack);
 			}
 			Assert(!stack->old_label);
 			if (stack->new_label)
@@ -386,7 +386,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 
 		case FHET_END:
 		case FHET_ABORT:
-			stack = (void *) DatumGetPointer(*private);
+			stack = (void *) DatumGetPointer(*private__);
 
 			if (next_fmgr_hook)
 				(*next_fmgr_hook) (event, flinfo, &stack->next_private);
@@ -919,7 +919,7 @@ sepgsql_restorecon(PG_FUNCTION_ARGS)
 
 	/*
 	 * Open selabel_lookup(3) stuff. It provides a set of mapping between an
-	 * initial security label and object class/name due to the system setting.
+	 * initial security label and object class__/name due to the system setting.
 	 */
 	if (PG_ARGISNULL(0))
 	{

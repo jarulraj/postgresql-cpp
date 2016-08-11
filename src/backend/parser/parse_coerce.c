@@ -88,7 +88,7 @@ coerce_to_target_type(ParseState *pstate, Node *expr, Oid exprtype,
 
 	/*
 	 * If the input has a CollateExpr at the top, strip it off, perform the
-	 * coercion, and put a new one back on.  This is annoying since it
+	 * coercion, and put a new__ one back on.  This is annoying since it
 	 * duplicates logic in coerce_type, but if we don't do this then it's too
 	 * hard to tell whether coerce_type actually changed anything, and we
 	 * *must* know that to avoid possibly calling hide_coercion_node on
@@ -497,7 +497,7 @@ coerce_type(ParseState *pstate, Node *node,
 		|| typeIsOfTypedTable(inputTypeId, targetTypeId))
 	{
 		/*
-		 * Input class type is a subclass of target, so generate an
+		 * Input class__ type is a subclass of target, so generate an
 		 * appropriate runtime conversion (removing unneeded columns and
 		 * possibly rearranging the ones that are wanted).
 		 */
@@ -603,7 +603,7 @@ can_coerce_type(int nargs, Oid *input_typeids, Oid *target_typeids,
 			continue;
 
 		/*
-		 * If input is a class type that inherits from target, accept
+		 * If input is a class__ type that inherits from target, accept
 		 */
 		if (typeInheritsFrom(inputTypeId, targetTypeId)
 			|| typeIsOfTypedTable(inputTypeId, targetTypeId))
@@ -635,7 +635,7 @@ can_coerce_type(int nargs, Oid *input_typeids, Oid *target_typeids,
  *		has not bothered to look this up)
  * 'baseTypeMod': base type typmod of domain, if known (pass -1 if caller
  *		has not bothered to look this up)
- * 'typeId': target type to coerce to
+ * 'typeid__': target type to coerce to
  * 'cformat': coercion format
  * 'location': coercion request location
  * 'hideInputCoercion': if true, hide the input coercion under this one.
@@ -645,7 +645,7 @@ can_coerce_type(int nargs, Oid *input_typeids, Oid *target_typeids,
  * If the target type isn't a domain, the given 'arg' is returned as-is.
  */
 Node *
-coerce_to_domain(Node *arg, Oid baseTypeId, int32 baseTypeMod, Oid typeId,
+coerce_to_domain(Node *arg, Oid baseTypeId, int32 baseTypeMod, Oid typeid__,
 				 CoercionForm cformat, int location,
 				 bool hideInputCoercion,
 				 bool lengthCoercionDone)
@@ -654,10 +654,10 @@ coerce_to_domain(Node *arg, Oid baseTypeId, int32 baseTypeMod, Oid typeId,
 
 	/* Get the base type if it hasn't been supplied */
 	if (baseTypeId == InvalidOid)
-		baseTypeId = getBaseTypeAndTypmod(typeId, &baseTypeMod);
+		baseTypeId = getBaseTypeAndTypmod(typeid__, &baseTypeMod);
 
 	/* If it isn't a domain, return the node as it was passed in */
-	if (baseTypeId == typeId)
+	if (baseTypeId == typeid__)
 		return arg;
 
 	/* Suppress display of nested coercion steps */
@@ -693,7 +693,7 @@ coerce_to_domain(Node *arg, Oid baseTypeId, int32 baseTypeMod, Oid typeId,
 	 */
 	result = makeNode(CoerceToDomain);
 	result->arg = (Expr *) arg;
-	result->resulttype = typeId;
+	result->resulttype = typeid__;
 	result->resulttypmod = -1;	/* currently, always -1 for domains */
 	/* resultcollid will be set by parse_collate.c */
 	result->coercionformat = cformat;
@@ -1231,7 +1231,7 @@ select_common_type(ParseState *pstate, List *exprs, const char *context,
 		Node	   *nexpr = (Node *) lfirst(lc);
 		Oid			ntype = getBaseType(exprType(nexpr));
 
-		/* move on to next one if no new information... */
+		/* move on to next one if no new__ information... */
 		if (ntype != UNKNOWNOID && ntype != ptype)
 		{
 			TYPCATEGORY ncategory;
@@ -1268,7 +1268,7 @@ select_common_type(ParseState *pstate, List *exprs, const char *context,
 					 !can_coerce_type(1, &ntype, &ptype, COERCION_IMPLICIT))
 			{
 				/*
-				 * take new type if can coerce to it implicitly but not the
+				 * take new__ type if can coerce to it implicitly but not the
 				 * other way; but if we have a preferred type, stay on it.
 				 */
 				pexpr = nexpr;
@@ -1622,7 +1622,7 @@ enforce_generic_type_consistency(Oid *actual_arg_types,
 				continue;
 			}
 			if (allow_poly && decl_type == actual_type)
-				continue;		/* no new information here */
+				continue;		/* no new__ information here */
 			if (OidIsValid(elem_typeid) && actual_type != elem_typeid)
 				ereport(ERROR,
 						(errcode(ERRCODE_DATATYPE_MISMATCH),
@@ -1641,7 +1641,7 @@ enforce_generic_type_consistency(Oid *actual_arg_types,
 				continue;
 			}
 			if (allow_poly && decl_type == actual_type)
-				continue;		/* no new information here */
+				continue;		/* no new__ information here */
 			actual_type = getBaseType(actual_type);		/* flatten domains */
 			if (OidIsValid(array_typeid) && actual_type != array_typeid)
 				ereport(ERROR,
@@ -1661,7 +1661,7 @@ enforce_generic_type_consistency(Oid *actual_arg_types,
 				continue;
 			}
 			if (allow_poly && decl_type == actual_type)
-				continue;		/* no new information here */
+				continue;		/* no new__ information here */
 			actual_type = getBaseType(actual_type);		/* flatten domains */
 			if (OidIsValid(range_typeid) && actual_type != range_typeid)
 				ereport(ERROR,
@@ -2295,7 +2295,7 @@ find_coercion_pathway(Oid targetTypeId, Oid sourceTypeId,
  *	COERCION_PATH_ARRAYCOERCE: apply the function using ArrayCoerceExpr
  */
 CoercionPathType
-find_typmod_coercion_function(Oid typeId,
+find_typmod_coercion_function(Oid typeid__,
 							  Oid *funcid)
 {
 	CoercionPathType result;
@@ -2306,22 +2306,22 @@ find_typmod_coercion_function(Oid typeId,
 	*funcid = InvalidOid;
 	result = COERCION_PATH_FUNC;
 
-	targetType = typeidType(typeId);
+	targetType = typeidType(typeid__);
 	typeForm = (Form_pg_type) GETSTRUCT(targetType);
 
 	/* Check for a varlena array type */
 	if (typeForm->typelem != InvalidOid && typeForm->typlen == -1)
 	{
 		/* Yes, switch our attention to the element type */
-		typeId = typeForm->typelem;
+		typeid__ = typeForm->typelem;
 		result = COERCION_PATH_ARRAYCOERCE;
 	}
 	ReleaseSysCache(targetType);
 
 	/* Look in pg_cast */
 	tuple = SearchSysCache2(CASTSOURCETARGET,
-							ObjectIdGetDatum(typeId),
-							ObjectIdGetDatum(typeId));
+							ObjectIdGetDatum(typeid__),
+							ObjectIdGetDatum(typeid__));
 
 	if (HeapTupleIsValid(tuple))
 	{

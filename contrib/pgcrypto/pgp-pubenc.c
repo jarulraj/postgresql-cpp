@@ -1,6 +1,6 @@
 /*
  * pgp-pubenc.c
- *	  Encrypt session key with public key.
+ *	  Encrypt session key with public__ key.
  *
  * Copyright (c) 2005 Marko Kreen
  * All rights reserved.

@@ -109,9 +109,9 @@ tlist_member_match_var(Var *var, List *targetlist)
  *
  * 'tlist' is the current target list
  *
- * Returns the "flattened" new target list.
+ * Returns the "flattened" new__ target list.
  *
- * The result is entirely new structure sharing no nodes with the original.
+ * The result is entirely new__ structure sharing no nodes with the original.
  * Copying the Var nodes is probably overkill, but be safe for now.
  */
 List *
@@ -212,7 +212,7 @@ count_nonjunk_tlist_entries(List *tlist)
  * tlist_same_exprs
  *		Check whether two target lists contain the same expressions
  *
- * Note: this function is used to decide whether it's safe to jam a new tlist
+ * Note: this function is used to decide whether it's safe to jam a new__ tlist
  * into a non-projection-capable plan node.  Obviously we can't do that unless
  * the node's tlist shows it already returns the column values we want.
  * However, we can ignore the TargetEntry attributes resname, ressortgroupref,
@@ -417,7 +417,7 @@ get_sortgroupref_clause(Index sortref, List *clauses)
 }
 
 /*
- * extract_grouping_ops - make an array of the equality operator OIDs
+ * extract_grouping_ops - make an array of the equality operator__ OIDs
  *		for a SortGroupClause list
  */
 Oid *

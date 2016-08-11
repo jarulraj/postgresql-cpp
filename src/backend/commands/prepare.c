@@ -97,7 +97,7 @@ PrepareQuery(PrepareStmt *stmt, const char *queryString)
 
 		foreach(l, stmt->argtypes)
 		{
-			TypeName   *tn = lfirst(l);
+			typename__   *tn = lfirst(l);
 			Oid			toid = typenameTypeId(pstate, tn);
 
 			argtypes[i++] = toid;
@@ -221,7 +221,7 @@ ExecuteQuery(ExecuteStmt *stmt, IntoClause *intoClause,
 								 queryString, estate);
 	}
 
-	/* Create a new portal to run the query in */
+	/* Create a new__ portal to run the query in */
 	portal = CreateNewPortal();
 	/* Don't display the portal in pg_cursors, it is for internal use only */
 	portal->visible = false;

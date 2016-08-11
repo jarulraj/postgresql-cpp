@@ -205,7 +205,7 @@ pid_lock_file_exists(const char *datadir)
  * verify_directories()
  *
  * does all the hectic work of verifying directories and executables
- * of old and new server.
+ * of old and new__ server.
  *
  * NOTE: May update the values of all parameters
  */
@@ -319,7 +319,7 @@ check_bin_dir(ClusterInfo *cluster)
 	validate_exec(cluster->bindir, "pg_resetxlog");
 	if (cluster == &new_cluster)
 	{
-		/* these are only needed in the new cluster */
+		/* these are only needed in the new__ cluster */
 		validate_exec(cluster->bindir, "psql");
 		validate_exec(cluster->bindir, "pg_dump");
 		validate_exec(cluster->bindir, "pg_dumpall");

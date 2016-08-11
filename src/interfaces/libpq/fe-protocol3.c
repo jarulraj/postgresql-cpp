@@ -141,7 +141,7 @@ pqParseInput3(PGconn *conn)
 		 * with the unexpected message somehow.
 		 *
 		 * ParameterStatus ('S') messages are a special case: in IDLE state we
-		 * must process 'em (this case could happen if a new value was adopted
+		 * must process 'em (this case could happen if a new__ value was adopted
 		 * from config file due to SIGHUP), but otherwise we hold off until
 		 * BUSY state.
 		 */
@@ -220,7 +220,7 @@ pqParseInput3(PGconn *conn)
 						return;
 					conn->asyncStatus = PGASYNC_READY;
 					break;
-				case 'Z':		/* backend is ready for new query */
+				case 'Z':		/* backend is ready for new__ query */
 					if (getReadyForQuery(conn))
 						return;
 					conn->asyncStatus = PGASYNC_IDLE;
@@ -299,7 +299,7 @@ pqParseInput3(PGconn *conn)
 					else
 					{
 						/*
-						 * A new 'T' message is treated as the start of
+						 * A new__ 'T' message is treated as the start of
 						 * another PGresult.  (It is not clear that this is
 						 * really possible with the current backend.) We stop
 						 * parsing until the application accepts the current
@@ -463,7 +463,7 @@ handleSyncLoss(PGconn *conn, char id, int msgLength)
 
 /*
  * parseInput subroutine to read a 'T' (row descriptions) message.
- * We'll build a new PGresult structure (unless called for a Describe
+ * We'll build a new__ PGresult structure (unless called for a Describe
  * command for a prepared statement) containing the attribute data.
  * Returns: 0 if processed message successfully, EOF to suspend parsing
  * (the latter case is not actually used currently).
@@ -480,7 +480,7 @@ getRowDescriptions(PGconn *conn, int msgLength)
 	/*
 	 * When doing Describe for a prepared statement, there'll already be a
 	 * PGresult created by getParamDescriptions, and we should fill data into
-	 * that.  Otherwise, create a new, empty PGresult.
+	 * that.  Otherwise, create a new__, empty PGresult.
 	 */
 	if (conn->queryclass == PGQUERY_DESCRIBE)
 	{
@@ -596,7 +596,7 @@ getRowDescriptions(PGconn *conn, int msgLength)
 	}
 
 	/*
-	 * We could perform additional setup for the new result set here, but for
+	 * We could perform additional setup for the new__ result set here, but for
 	 * now there's nothing else to do.
 	 */
 
@@ -639,7 +639,7 @@ advance_and_error:
 
 /*
  * parseInput subroutine to read a 't' (ParameterDescription) message.
- * We'll build a new PGresult structure containing the parameter data.
+ * We'll build a new__ PGresult structure containing the parameter data.
  * Returns: 0 if completed message, EOF if not enough data yet.
  *
  * Note that if we run out of data, we have to release the partially
@@ -2005,7 +2005,7 @@ pqFunctionCall3(PGconn *conn, Oid fnid,
 				if (pqGetErrorNotice3(conn, false))
 					continue;
 				break;
-			case 'Z':			/* backend is ready for new query */
+			case 'Z':			/* backend is ready for new__ query */
 				if (getReadyForQuery(conn))
 					continue;
 				/* consume the message and exit */

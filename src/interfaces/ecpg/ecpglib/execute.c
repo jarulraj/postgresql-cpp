@@ -1361,7 +1361,7 @@ ecpg_build_params(struct statement * stmt)
 			/* let's see if this was an old style placeholder */
 			if (stmt->command[position] == '?')
 			{
-				/* yes, replace with new style */
+				/* yes, replace with new__ style */
 				int			buffersize = sizeof(int) * CHAR_BIT * 10 / 3;		/* a rough guess of the
 																				 * size we need */
 
@@ -1550,7 +1550,7 @@ ecpg_process_output(struct statement * stmt, bool clear_result)
 					for (i = ntuples - 1; i >= 0; i--)
 					{
 						/*
-						 * Build a new sqlda structure. Note that only
+						 * Build a new__ sqlda structure. Note that only
 						 * fetching 1 record is supported
 						 */
 						sqlda_new = ecpg_build_compat_sqlda(stmt->lineno, stmt->results, i, stmt->compat);
@@ -1566,13 +1566,13 @@ ecpg_process_output(struct statement * stmt, bool clear_result)
 							}
 							*_sqlda = NULL;
 
-							ecpg_log("ecpg_process_output on line %d: out of memory allocating a new sqlda\n", stmt->lineno);
+							ecpg_log("ecpg_process_output on line %d: out of memory allocating a new__ sqlda\n", stmt->lineno);
 							status = false;
 							break;
 						}
 						else
 						{
-							ecpg_log("ecpg_process_output on line %d: new sqlda was built\n", stmt->lineno);
+							ecpg_log("ecpg_process_output on line %d: new__ sqlda was built\n", stmt->lineno);
 
 							*_sqlda = sqlda_new;
 
@@ -1606,7 +1606,7 @@ ecpg_process_output(struct statement * stmt, bool clear_result)
 					for (i = ntuples - 1; i >= 0; i--)
 					{
 						/*
-						 * Build a new sqlda structure. Note that only
+						 * Build a new__ sqlda structure. Note that only
 						 * fetching 1 record is supported
 						 */
 						sqlda_new = ecpg_build_native_sqlda(stmt->lineno, stmt->results, i, stmt->compat);
@@ -1622,13 +1622,13 @@ ecpg_process_output(struct statement * stmt, bool clear_result)
 							}
 							*_sqlda = NULL;
 
-							ecpg_log("ecpg_process_output on line %d: out of memory allocating a new sqlda\n", stmt->lineno);
+							ecpg_log("ecpg_process_output on line %d: out of memory allocating a new__ sqlda\n", stmt->lineno);
 							status = false;
 							break;
 						}
 						else
 						{
-							ecpg_log("ecpg_process_output on line %d: new sqlda was built\n", stmt->lineno);
+							ecpg_log("ecpg_process_output on line %d: new__ sqlda was built\n", stmt->lineno);
 
 							*_sqlda = sqlda_new;
 

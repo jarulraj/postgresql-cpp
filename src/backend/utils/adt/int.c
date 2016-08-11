@@ -271,7 +271,7 @@ int2vectoreq(PG_FUNCTION_ARGS)
 
 
 /*****************************************************************************
- *	 PUBLIC ROUTINES														 *
+ *	 public__ ROUTINES														 *
  *****************************************************************************/
 
 /*
@@ -373,7 +373,7 @@ bool_int4(PG_FUNCTION_ARGS)
 
 /*
  *		============================
- *		COMPARISON OPERATOR ROUTINES
+ *		COMPARISON operator__ ROUTINES
  *		============================
  */
 

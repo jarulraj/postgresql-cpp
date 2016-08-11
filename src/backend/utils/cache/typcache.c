@@ -25,7 +25,7 @@
  * We have some provisions for updating cache entries if the stored data
  * becomes obsolete.  Information dependent on opclasses is cleared if we
  * detect updates to pg_opclass.  We also support clearing the tuple
- * descriptor and operator/function parts of a rowtype's cache entry,
+ * descriptor and operator__/function parts of a rowtype's cache entry,
  * since those may need to change as a consequence of ALTER TABLE.
  * Domain constraint changes are also tracked properly.
  *
@@ -73,7 +73,7 @@ static HTAB *TypeCacheHash = NULL;
 /* List of type cache entries for domain types */
 static TypeCacheEntry *firstDomainTypeEntry = NULL;
 
-/* Private flag bits in the TypeCacheEntry.flags field */
+/* private__ flag bits in the TypeCacheEntry.flags field */
 #define TCFLAGS_CHECKED_BTREE_OPCLASS		0x0001
 #define TCFLAGS_CHECKED_HASH_OPCLASS		0x0002
 #define TCFLAGS_CHECKED_EQ_OPR				0x0004
@@ -109,7 +109,7 @@ struct DomainConstraintCache
 	long		dccRefCount;	/* number of references to this struct */
 };
 
-/* Private information to support comparisons of enum values */
+/* private__ information to support comparisons of enum values */
 typedef struct
 {
 	Oid			enum_oid;		/* OID of one enum value */
@@ -300,7 +300,7 @@ lookup_type_cache(Oid type_id, int flags)
 	}
 
 	/*
-	 * If we need to look up equality operator, and there's no btree opclass,
+	 * If we need to look up equality operator__, and there's no btree opclass,
 	 * force lookup of hash opclass.
 	 */
 	if ((flags & (TYPECACHE_EQ_OPR | TYPECACHE_EQ_OPR_FINFO)) &&
@@ -355,7 +355,7 @@ lookup_type_cache(Oid type_id, int flags)
 										 HTEqualStrategyNumber);
 
 		/*
-		 * If the proposed equality operator is array_eq or record_eq, check
+		 * If the proposed equality operator__ is array_eq or record_eq, check
 		 * to see if the element type or column types support equality. If
 		 * not, array_eq or record_eq would fail at runtime, so we don't want
 		 * to report that the type has equality.
@@ -374,9 +374,9 @@ lookup_type_cache(Oid type_id, int flags)
 		typentry->eq_opr = eq_opr;
 
 		/*
-		 * Reset info about hash function whenever we pick up new info about
-		 * equality operator.  This is so we can ensure that the hash function
-		 * matches the operator.
+		 * Reset info about hash function whenever we pick up new__ info about
+		 * equality operator__.  This is so we can ensure that the hash function
+		 * matches the operator__.
 		 */
 		typentry->flags &= ~(TCFLAGS_CHECKED_HASH_PROC);
 		typentry->flags |= TCFLAGS_CHECKED_EQ_OPR;
@@ -492,11 +492,11 @@ lookup_type_cache(Oid type_id, int flags)
 	 * Set up fmgr lookup info as requested
 	 *
 	 * Note: we tell fmgr the finfo structures live in CacheMemoryContext,
-	 * which is not quite right (they're really in the hash table's private
+	 * which is not quite right (they're really in the hash table's private__
 	 * memory context) but this will do for our purposes.
 	 *
 	 * Note: the code above avoids invalidating the finfo structs unless the
-	 * referenced operator/function OID actually changes.  This is to prevent
+	 * referenced operator__/function OID actually changes.  This is to prevent
 	 * unnecessary leakage of any subsidiary data attached to an finfo, since
 	 * that would cause session-lifespan memory leaks.
 	 */
@@ -649,7 +649,7 @@ load_rangetype_info(TypeCacheEntry *typentry)
  *
  * Note: we assume we're called in a relatively short-lived context, so it's
  * okay to leak data into the current context while scanning pg_constraint.
- * We build the new DomainConstraintCache data in a context underneath
+ * We build the new__ DomainConstraintCache data in a context underneath
  * CurrentMemoryContext, and reparent it under CacheMemoryContext when
  * complete.
  */
@@ -990,7 +990,7 @@ InitDomainConstraintRef(Oid type_id, DomainConstraintRef *ref,
  * UpdateDomainConstraintRef --- recheck validity of domain constraint info
  *
  * If the domain's constraint set changed, ref->constraints is updated to
- * point at a new list of cached constraints.
+ * point at a new__ list of cached constraints.
  *
  * In the normal case where nothing happened to the domain, this is cheap
  * enough that it's reasonable (and expected) to check before *each* use
@@ -1006,7 +1006,7 @@ UpdateDomainConstraintRef(DomainConstraintRef *ref)
 		typentry->typtype == TYPTYPE_DOMAIN)
 		load_domaintype_info(typentry);
 
-	/* Transfer to ref object if there's new info, adjusting refcounts */
+	/* Transfer to ref object if there's new__ info, adjusting refcounts */
 	if (ref->dcc != typentry->domainData)
 	{
 		/* Paranoia --- be sure link is nulled before trying to release */
@@ -1231,7 +1231,7 @@ lookup_rowtype_tupdesc_internal(Oid type_id, int32 typmod, bool noError)
 /*
  * lookup_rowtype_tupdesc
  *
- * Given a typeid/typmod that should describe a known composite type,
+ * Given a typeid__/typmod that should describe a known composite type,
  * return the tuple descriptor for the type.  Will ereport on failure.
  *
  * Note: on success, we increment the refcount of the returned TupleDesc,
@@ -1319,7 +1319,7 @@ assign_record_type_typmod(TupleDesc tupDesc)
 			CreateCacheMemoryContext();
 	}
 
-	/* Find or create a hashtable entry for this hash class */
+	/* Find or create a hashtable entry for this hash class__ */
 	MemSet(hashkey, 0, sizeof(hashkey));
 	for (i = 0; i < tupDesc->natts; i++)
 	{
@@ -1332,7 +1332,7 @@ assign_record_type_typmod(TupleDesc tupDesc)
 												HASH_ENTER, &found);
 	if (!found)
 	{
-		/* New entry ... hash_search initialized only the hash key */
+		/* new__ entry ... hash_search initialized only the hash key */
 		recentry->tupdescs = NIL;
 	}
 
@@ -1449,7 +1449,7 @@ TypeCacheRelCallback(Datum arg, Oid relid)
  * invalid.
  *
  * Note that we don't bother watching for updates on pg_amop or pg_amproc.
- * This should be safe because ALTER OPERATOR FAMILY ADD/DROP OPERATOR/FUNCTION
+ * This should be safe because ALTER operator__ FAMILY ADD/DROP operator__/FUNCTION
  * is not allowed to be used to add/drop the primary operators and functions
  * of an opclass, only cross-type members of a family; and the latter sorts
  * of members are not going to get cached here.

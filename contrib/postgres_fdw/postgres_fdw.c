@@ -82,7 +82,7 @@ typedef struct PgFdwRelationInfo
 } PgFdwRelationInfo;
 
 /*
- * Indexes of FDW-private information stored in fdw_private lists.
+ * Indexes of FDW-private__ information stored in fdw_private lists.
  *
  * We store various information in ForeignScan.fdw_private to pass it from
  * planner to executor.  Currently we store:
@@ -874,10 +874,10 @@ postgresGetForeignPlan(PlannerInfo *root,
 
 	/*
 	 * Create the ForeignScan node from target list, local filtering
-	 * expressions, remote parameter expressions, and FDW private information.
+	 * expressions, remote parameter expressions, and FDW private__ information.
 	 *
 	 * Note that the remote parameter expressions are stored in the fdw_exprs
-	 * field of the finished plan node; we can't keep them in private state
+	 * field of the finished plan node; we can't keep them in private__ state
 	 * because then they wouldn't be subject to later planner processing.
 	 */
 	return make_foreignscan(tlist,
@@ -916,7 +916,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 		return;
 
 	/*
-	 * We'll save private state in node->fdw_state.
+	 * We'll save private__ state in node->fdw_state.
 	 */
 	fsstate = (PgFdwScanState *) palloc0(sizeof(PgFdwScanState));
 	node->fdw_state = (void *) fsstate;
@@ -936,7 +936,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 
 	/*
 	 * Get connection to the foreign server.  Connection manager will
-	 * establish new connection if necessary.
+	 * establish new__ connection if necessary.
 	 */
 	fsstate->conn = GetConnection(server, user, false);
 
@@ -944,7 +944,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 	fsstate->cursor_number = GetCursorNumber(fsstate->conn);
 	fsstate->cursor_exists = false;
 
-	/* Get private info created by planner functions. */
+	/* Get private__ info created by planner functions. */
 	fsstate->query = strVal(list_nth(fsplan->fdw_private,
 									 FdwScanPrivateSelectSql));
 	fsstate->retrieved_attrs = (List *) list_nth(fsplan->fdw_private,
@@ -1940,7 +1940,7 @@ ec_member_matches_foreign(PlannerInfo *root, RelOptInfo *rel,
 	if (list_member(state->already_used, expr))
 		return false;
 
-	/* This is the new target to process. */
+	/* This is the new__ target to process. */
 	state->current = expr;
 	return true;
 }
@@ -2639,7 +2639,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 
 	/*
 	 * Get connection to the foreign server.  Connection manager will
-	 * establish new connection if necessary.
+	 * establish new__ connection if necessary.
 	 */
 	server = GetForeignServer(serverOid);
 	mapping = GetUserMapping(GetUserId(), server->serverid);
@@ -2778,7 +2778,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 			do
 			{
 				char	   *attname;
-				char	   *typename;
+				char	   *typename__;
 				char	   *attnotnull;
 				char	   *attdefault;
 				char	   *collname;
@@ -2789,7 +2789,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 					continue;
 
 				attname = PQgetvalue(res, i, 1);
-				typename = PQgetvalue(res, i, 2);
+				typename__ = PQgetvalue(res, i, 2);
 				attnotnull = PQgetvalue(res, i, 3);
 				attdefault = PQgetisnull(res, i, 4) ? (char *) NULL :
 					PQgetvalue(res, i, 4);
@@ -2806,7 +2806,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 				/* Print column name and type */
 				appendStringInfo(&buf, "  %s %s",
 								 quote_identifier(attname),
-								 typename);
+								 typename__);
 
 				/*
 				 * Add column_name option so that renaming the foreign table's

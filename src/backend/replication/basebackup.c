@@ -443,7 +443,7 @@ perform_base_backup(basebackup_options *opt, DIR *tblspcdir)
 
 			/*
 			 * Mark file as archived, otherwise files can get archived again
-			 * after promotion of a new node. This is in line with
+			 * after promotion of a new__ node. This is in line with
 			 * walreceiver.c always doing an XLogArchiveForceDone() after a
 			 * complete segment.
 			 */
@@ -1304,7 +1304,7 @@ throttle(size_t increment)
 	 */
 	throttling_counter %= throttling_sample;
 
-	/* Once the (possible) sleep has ended, new period starts. */
+	/* Once the (possible) sleep has ended, new__ period starts. */
 	if (wait_result & WL_TIMEOUT)
 		throttled_last += elapsed + sleep;
 	else if (sleep > 0)

@@ -89,7 +89,7 @@ check_primary_key(PG_FUNCTION_ARGS)
 		/* internal error */
 		elog(ERROR, "check_primary_key: cannot process DELETE events");
 
-	/* If UPDATion the must check new Tuple, not old one */
+	/* If UPDATion the must check new__ Tuple, not old one */
 	else
 		tuple = trigdata->tg_newtuple;
 
@@ -155,7 +155,7 @@ check_primary_key(PG_FUNCTION_ARGS)
 			return PointerGetDatum(tuple);
 		}
 
-		if (plan->nplans <= 0)	/* Get typeId of column */
+		if (plan->nplans <= 0)	/* Get typeid__ of column */
 			argtypes[i] = SPI_gettypeid(tupdesc, fnumber);
 	}
 
@@ -383,7 +383,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 		}
 
 		/*
-		 * If UPDATE then get column value from new tuple being inserted and
+		 * If UPDATE then get column value from new__ tuple being inserted and
 		 * compare is this the same as old one. For the moment we use string
 		 * presentation of values...
 		 */
@@ -401,7 +401,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 				isequal = false;
 		}
 
-		if (plan->nplans <= 0)	/* Get typeId of column */
+		if (plan->nplans <= 0)	/* Get typeid__ of column */
 			argtypes[i] = SPI_gettypeid(tupdesc, fnumber);
 	}
 	args_temp = args;
@@ -450,7 +450,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 
 			/*
 			 * Max : Cascade with UPDATE query i create update query that
-			 * updates new key values in referenced tables
+			 * updates new__ key values in referenced tables
 			 */
 
 
@@ -482,7 +482,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 #endif
 
 						/*
-						 * is_char_type =1 i set ' ' for define a new value
+						 * is_char_type =1 i set ' ' for define a new__ value
 						 */
 						snprintf(sql + strlen(sql), sizeof(sql) - strlen(sql),
 								 " %s = %s%s%s %s ",

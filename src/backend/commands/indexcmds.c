@@ -79,7 +79,7 @@ static void RangeVarCallbackForReindexIndex(const RangeVar *relation,
  * CheckIndexCompatible
  *		Determine whether an existing index definition is compatible with a
  *		prospective index definition, such that the existing index storage
- *		could become the storage of the new index, avoiding a rebuild.
+ *		could become the storage of the new__ index, avoiding a rebuild.
  *
  * 'heapRelation': the relation the index would apply to.
  * 'accessMethodName': name of the AM to use.
@@ -91,17 +91,17 @@ static void RangeVarCallbackForReindexIndex(const RangeVar *relation,
  * This is tailored to the needs of ALTER TABLE ALTER TYPE, which recreates
  * any indexes that depended on a changing column from their pg_get_indexdef
  * or pg_get_constraintdef definitions.  We omit some of the sanity checks of
- * DefineIndex.  We assume that the old and new indexes have the same number
+ * DefineIndex.  We assume that the old and new__ indexes have the same number
  * of columns and that if one has an expression column or predicate, both do.
  * Errors arising from the attribute list still apply.
  *
  * Most column type changes that can skip a table rewrite do not invalidate
- * indexes.  We ackowledge this when all operator classes, collations and
+ * indexes.  We ackowledge this when all operator__ classes, collations and
  * exclusion operators match.  Though we could further permit intra-opfamily
  * changes for btree and hash indexes, that adds subtle complexity with no
  * concrete benefit for core types.
 
- * When a comparison or exclusion operator has a polymorphic input type, the
+ * When a comparison or exclusion operator__ has a polymorphic input type, the
  * actual input types must also match.  This defends against the possibility
  * that operators could vary behavior in response to get_fn_expr_argtype().
  * At present, this hazard is theoretical: check_exclusion_constraint() and
@@ -164,8 +164,8 @@ CheckIndexCompatible(Oid oldId,
 	ReleaseSysCache(tuple);
 
 	/*
-	 * Compute the operator classes, collations, and exclusion operators for
-	 * the new index, so we can test whether it's compatible with the existing
+	 * Compute the operator__ classes, collations, and exclusion operators for
+	 * the new__ index, so we can test whether it's compatible with the existing
 	 * one.  Note that ComputeIndexAttrs might fail here, but that's OK:
 	 * DefineIndex would have called this function with the same arguments
 	 * later on, and it would have failed then anyway.
@@ -207,7 +207,7 @@ CheckIndexCompatible(Oid oldId,
 		return false;
 	}
 
-	/* Any change in operator class or collation breaks compatibility. */
+	/* Any change in operator__ class__ or collation breaks compatibility. */
 	old_natts = indexForm->indnatts;
 	Assert(old_natts == numberOfAttributes);
 
@@ -241,7 +241,7 @@ CheckIndexCompatible(Oid oldId,
 		}
 	}
 
-	/* Any change in exclusion operator selections breaks compatibility. */
+	/* Any change in exclusion operator__ selections breaks compatibility. */
 	if (ret && indexInfo->ii_ExclusionOps != NULL)
 	{
 		Oid		   *old_operators,
@@ -277,15 +277,15 @@ CheckIndexCompatible(Oid oldId,
 
 /*
  * DefineIndex
- *		Creates a new index.
+ *		Creates a new__ index.
  *
  * 'relationId': the OID of the heap relation on which the index is to be
  *		created
- * 'stmt': IndexStmt describing the properties of the new index.
+ * 'stmt': IndexStmt describing the properties of the new__ index.
  * 'indexRelationId': normally InvalidOid, but during bootstrap can be
  *		nonzero to specify a preselected OID for the index.
  * 'is_alter_table': this is due to an ALTER rather than a CREATE operation.
- * 'check_rights': check for CREATE rights in the namespace.  (This should
+ * 'check_rights': check for CREATE rights in the namespace__.  (This should
  *		be true except when ALTER is deleting/recreating an index.)
  * 'skip_build': make the catalog entries but leave the index file empty;
  *		it will be filled later.
@@ -391,7 +391,7 @@ DefineIndex(Oid relationId,
 				 errmsg("cannot create indexes on temporary tables of other sessions")));
 
 	/*
-	 * Verify we (still) have CREATE rights in the rel's namespace.
+	 * Verify we (still) have CREATE rights in the rel's namespace__.
 	 * (Presumably we did when the rel was created, but maybe not anymore.)
 	 * Skip check if caller doesn't want it.  Also skip check if
 	 * bootstrapping, since permissions machinery may not be working yet.
@@ -643,7 +643,7 @@ DefineIndex(Oid relationId,
 	/*
 	 * For a concurrent build, it's important to make the catalog entries
 	 * visible to other transactions before we start to build the index. That
-	 * will prevent them from making incompatible HOT updates.  The new index
+	 * will prevent them from making incompatible HOT updates.  The new__ index
 	 * will be marked not indisready and not indisvalid, so that no one else
 	 * tries to either insert into it or use it for queries.
 	 *
@@ -675,7 +675,7 @@ DefineIndex(Oid relationId,
 	 * with the old list of indexes.  Use ShareLock to consider running
 	 * transactions that hold locks that permit writing to the table.  Note we
 	 * do not need to worry about xacts that open the table for writing after
-	 * this point; they will see the new index when they open it.
+	 * this point; they will see the new__ index when they open it.
 	 *
 	 * Note: the reason we use actual lock acquisition here, rather than just
 	 * checking the ProcArray and sleeping, is that deadlock is possible if
@@ -687,15 +687,15 @@ DefineIndex(Oid relationId,
 
 	/*
 	 * At this moment we are sure that there are no transactions with the
-	 * table open for write that don't have this new index in their list of
-	 * indexes.  We have waited out all the existing transactions and any new
-	 * transaction will have the new index in its list, but the index is still
+	 * table open for write that don't have this new__ index in their list of
+	 * indexes.  We have waited out all the existing transactions and any new__
+	 * transaction will have the new__ index in its list, but the index is still
 	 * marked as "not-ready-for-inserts".  The index is consulted while
-	 * deciding HOT-safety though.  This arrangement ensures that no new HOT
-	 * chains can be created where the new tuple and the old tuple in the
+	 * deciding HOT-safety though.  This arrangement ensures that no new__ HOT
+	 * chains can be created where the new__ tuple and the old tuple in the
 	 * chain have different index keys.
 	 *
-	 * We now take a new snapshot, and build the index using all tuples that
+	 * We now take a new__ snapshot, and build the index using all tuples that
 	 * are visible in this snapshot.  We can be sure that any HOT updates to
 	 * these tuples will be compatible with the index, since any updates made
 	 * by transactions that didn't know about the index are now committed or
@@ -727,8 +727,8 @@ DefineIndex(Oid relationId,
 
 	/*
 	 * Update the pg_index row to mark the index as ready for inserts. Once we
-	 * commit this transaction, any new transactions that open the table must
-	 * insert new entries into the index for insertions and non-HOT updates.
+	 * commit this transaction, any new__ transactions that open the table must
+	 * insert new__ entries into the index for insertions and non-HOT updates.
 	 */
 	index_set_state_flags(indexRelationId, INDEX_CREATE_SET_READY);
 
@@ -866,7 +866,7 @@ DefineIndex(Oid relationId,
 	 * The pg_index update will cause backends (including this one) to update
 	 * relcache entries for the index itself, but we should also send a
 	 * relcache inval on the parent table to force replanning of cached plans.
-	 * Otherwise existing sessions might fail to use the new index where it
+	 * Otherwise existing sessions might fail to use the new__ index where it
 	 * would be useful.  (Note that our earlier commits did not create reasons
 	 * to replan; so relcache flush on the index itself was sufficient.)
 	 */
@@ -959,7 +959,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 	ListCell   *lc;
 	int			attn;
 
-	/* Allocate space for exclusion operator info, if needed */
+	/* Allocate space for exclusion operator__ info, if needed */
 	if (exclusionOpNames)
 	{
 		int			ncols = list_length(attList);
@@ -1106,7 +1106,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 										  accessMethodId);
 
 		/*
-		 * Identify the exclusion operator, if any.
+		 * Identify the exclusion operator__, if any.
 		 */
 		if (nextExclOp)
 		{
@@ -1116,7 +1116,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 			int			strat;
 
 			/*
-			 * Find the operator --- it must accept the column datatype
+			 * Find the operator__ --- it must accept the column datatype
 			 * without runtime coercion (but binary compatibility is OK)
 			 */
 			opid = compatible_oper_opid(opname, atttype, atttype, false);
@@ -1129,12 +1129,12 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 			if (get_commutator(opid) != opid)
 				ereport(ERROR,
 						(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-						 errmsg("operator %s is not commutative",
+						 errmsg("operator__ %s is not commutative",
 								format_operator(opid)),
 						 errdetail("Only commutative operators can be used in exclusion constraints.")));
 
 			/*
-			 * Operator must be a member of the right opfamily, too
+			 * operator__ must be a member of the right opfamily, too
 			 */
 			opfamily = get_opclass_family(classOidP[attn]);
 			strat = get_op_opfamily_strategy(opid, opfamily);
@@ -1157,10 +1157,10 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 
 				ereport(ERROR,
 						(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-						 errmsg("operator %s is not a member of operator family \"%s\"",
+						 errmsg("operator__ %s is not a member of operator__ family \"%s\"",
 								format_operator(opid),
 								NameStr(opfform->opfname)),
-						 errdetail("The exclusion operator must be related to the index operator class for the constraint.")));
+						 errdetail("The exclusion operator__ must be related to the index operator__ class__ for the constraint.")));
 			}
 
 			indexInfo->ii_ExclusionOps[attn] = opid;
@@ -1209,7 +1209,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 }
 
 /*
- * Resolve possibly-defaulted operator class specification
+ * Resolve possibly-defaulted operator__ class__ specification
  */
 static Oid
 GetIndexOpClass(List *opclass, Oid attrType,
@@ -1251,14 +1251,14 @@ GetIndexOpClass(List *opclass, Oid attrType,
 
 	if (opclass == NIL)
 	{
-		/* no operator class specified, so find the default */
+		/* no operator__ class__ specified, so find the default */
 		opClassId = GetDefaultOpClass(attrType, accessMethodId);
 		if (!OidIsValid(opClassId))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("data type %s has no default operator class for access method \"%s\"",
+					 errmsg("data type %s has no default operator__ class__ for access method \"%s\"",
 							format_type_be(attrType), accessMethodName),
-					 errhint("You must specify an operator class for the index or define a default operator class for the data type.")));
+					 errhint("You must specify an operator__ class__ for the index or define a default operator__ class__ for the data type.")));
 		return opClassId;
 	}
 
@@ -1287,7 +1287,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 		if (!OidIsValid(opClassId))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("operator class \"%s\" does not exist for access method \"%s\"",
+					 errmsg("operator__ class__ \"%s\" does not exist for access method \"%s\"",
 							opcname, accessMethodName)));
 		tuple = SearchSysCache1(CLAOID, ObjectIdGetDatum(opClassId));
 	}
@@ -1295,11 +1295,11 @@ GetIndexOpClass(List *opclass, Oid attrType,
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator class \"%s\" does not exist for access method \"%s\"",
+				 errmsg("operator__ class__ \"%s\" does not exist for access method \"%s\"",
 						NameListToString(opclass), accessMethodName)));
 
 	/*
-	 * Verify that the index operator class accepts this datatype.  Note we
+	 * Verify that the index operator__ class__ accepts this datatype.  Note we
 	 * will accept binary compatibility.
 	 */
 	opClassId = HeapTupleGetOid(tuple);
@@ -1308,7 +1308,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 	if (!IsBinaryCoercible(attrType, opInputType))
 		ereport(ERROR,
 				(errcode(ERRCODE_DATATYPE_MISMATCH),
-				 errmsg("operator class \"%s\" does not accept data type %s",
+				 errmsg("operator__ class__ \"%s\" does not accept data type %s",
 					  NameListToString(opclass), format_type_be(attrType))));
 
 	ReleaseSysCache(tuple);
@@ -1320,7 +1320,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
  * GetDefaultOpClass
  *
  * Given the OIDs of a datatype and an access method, find the default
- * operator class, if any.  Returns InvalidOid if there is none.
+ * operator__ class__, if any.  Returns InvalidOid if there is none.
  */
 Oid
 GetDefaultOpClass(Oid type_id, Oid am_id)
@@ -1398,7 +1398,7 @@ GetDefaultOpClass(Oid type_id, Oid am_id)
 	if (nexact > 1)
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-		errmsg("there are multiple default operator classes for data type %s",
+		errmsg("there are multiple default operator__ classes for data type %s",
 			   format_type_be(type_id))));
 
 	if (nexact == 1 ||
@@ -1493,19 +1493,19 @@ makeObjectName(const char *name1, const char *name2, const char *label)
 }
 
 /*
- * Select a nonconflicting name for a new relation.  This is ordinarily
+ * Select a nonconflicting name for a new__ relation.  This is ordinarily
  * used to choose index names (which is why it's here) but it can also
  * be used for sequences, or any autogenerated relation kind.
  *
  * name1, name2, and label are used the same way as for makeObjectName(),
  * except that the label can't be NULL; digits will be appended to the label
- * if needed to create a name that is unique within the specified namespace.
+ * if needed to create a name that is unique within the specified namespace__.
  *
  * Note: it is theoretically possible to get a collision anyway, if someone
  * else chooses the same name concurrently.  This is fairly unlikely to be
  * a problem in practice, especially if one is holding an exclusive lock on
  * the relation identified by name1.  However, if choosing multiple names
- * within a single command, you'd better create the new object and do
+ * within a single command, you'd better create the new__ object and do
  * CommandCounterIncrement before choosing the next one!
  *
  * Returns a palloc'd string.
@@ -1528,7 +1528,7 @@ ChooseRelationName(const char *name1, const char *name2,
 		if (!OidIsValid(get_relname_relid(relname, namespaceid)))
 			break;
 
-		/* found a conflict, so try a new name component */
+		/* found a conflict, so try a new__ name component */
 		pfree(relname);
 		snprintf(modlabel, sizeof(modlabel), "%s%d", label, ++pass);
 	}
@@ -1582,7 +1582,7 @@ ChooseIndexName(const char *tabname, Oid namespaceId,
 }
 
 /*
- * Generate "name2" for a new index given the list of column names for it
+ * Generate "name2" for a new__ index given the list of column names for it
  * (as produced by ChooseIndexColumnNames).  This will be passed to
  * ChooseRelationName along with the parent table name and a suitable label.
  *
@@ -1909,7 +1909,7 @@ ReindexMultipleTables(const char *objectName, ReindexObjectType objectKind,
 			!IsSystemClass(relid, classtuple))
 			continue;
 
-		/* Save the list of relation OIDs in private context */
+		/* Save the list of relation OIDs in private__ context */
 		old = MemoryContextSwitchTo(private_context);
 
 		/*

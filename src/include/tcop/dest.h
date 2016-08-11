@@ -122,7 +122,7 @@ struct _DestReceiver
 	void		(*rDestroy) (DestReceiver *self);
 	/* CommandDest code for this receiver */
 	CommandDest mydest;
-	/* Private fields might appear beyond this point... */
+	/* private__ fields might appear beyond this point... */
 };
 
 extern DestReceiver *None_Receiver;		/* permanent receiver for DestNone */

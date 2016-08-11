@@ -76,8 +76,8 @@ typedef struct
 	 * UNMODIFIED	no changes
 	 * DELETE		the segment is to be removed. 'seg' and 'items' are
 	 *				ignored
-	 * INSERT		this is a completely new segment
-	 * REPLACE		this replaces an existing segment with new content
+	 * INSERT		this is a completely new__ segment
+	 * REPLACE		this replaces an existing segment with new__ content
 	 * ADDITEMS		like REPLACE, but no items have been removed, and we track
 	 *				in detail what items have been added to this segment, in
 	 *				'modifieditems'
@@ -464,7 +464,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	rbound = *GinDataPageGetRightBound(page);
 
 	/*
-	 * Count how many of the new items belong to this page.
+	 * Count how many of the new__ items belong to this page.
 	 */
 	if (!GinPageRightMost(page))
 	{
@@ -488,7 +488,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	leaf = disassembleLeaf(page);
 
 	/*
-	 * Are we appending to the end of the page? IOW, are all the new items
+	 * Are we appending to the end of the page? IOW, are all the new__ items
 	 * larger than any of the existing items.
 	 */
 	if (!dlist_is_empty(&leaf->segments))
@@ -513,7 +513,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	/*
 	 * If we're appending to the end of the page, we will append as many items
 	 * as we can fit (after splitting), and stop when the pages becomes full.
-	 * Otherwise we have to limit the number of new items to insert, because
+	 * Otherwise we have to limit the number of new__ items to insert, because
 	 * once we start packing we can't just stop when we run out of space,
 	 * because we must make sure that all the old items still fit.
 	 */
@@ -525,21 +525,21 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	{
 		/*
 		 * Even when appending, trying to append more items than will fit is
-		 * not completely free, because we will merge the new items and old
-		 * items into an array below. In the best case, every new item fits in
+		 * not completely free, because we will merge the new__ items and old
+		 * items into an array below. In the best case, every new__ item fits in
 		 * a single byte, and we can use all the free space on the old page as
-		 * well as the new page. For simplicity, ignore segment overhead etc.
+		 * well as the new__ page. For simplicity, ignore segment overhead etc.
 		 */
 		maxitems = Min(maxitems, freespace + GinDataPageMaxDataSize);
 	}
 	else
 	{
 		/*
-		 * Calculate a conservative estimate of how many new items we can fit
+		 * Calculate a conservative estimate of how many new__ items we can fit
 		 * on the two pages after splitting.
 		 *
 		 * We can use any remaining free space on the old page to store full
-		 * segments, as well as the new page. Each full-sized segment can hold
+		 * segments, as well as the new__ page. Each full-sized segment can hold
 		 * at least MinTuplesPerSegment items
 		 */
 		int			nnewsegments;
@@ -549,7 +549,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 		maxitems = Min(maxitems, nnewsegments * MinTuplesPerSegment);
 	}
 
-	/* Add the new items to the segment list */
+	/* Add the new__ items to the segment list */
 	if (!addItemsToLeaf(leaf, newItems, maxitems))
 	{
 		/* all items were duplicates, we have nothing to do */
@@ -564,7 +564,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	needsplit = leafRepackItems(leaf, &remaining);
 
 	/*
-	 * Did all the new items fit?
+	 * Did all the new__ items fit?
 	 *
 	 * If we're appending, it's OK if they didn't. But as a sanity check,
 	 * verify that all the old items fit.
@@ -574,14 +574,14 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 		if (!append || ItemPointerCompare(&maxOldItem, &remaining) >= 0)
 			elog(ERROR, "could not split GIN page; all old items didn't fit");
 
-		/* Count how many of the new items did fit. */
+		/* Count how many of the new__ items did fit. */
 		for (i = 0; i < maxitems; i++)
 		{
 			if (ginCompareItemPointers(&newItems[i], &remaining) >= 0)
 				break;
 		}
 		if (i == 0)
-			elog(ERROR, "could not split GIN page; no new items fit");
+			elog(ERROR, "could not split GIN page; no new__ items fit");
 		maxitems = i;
 	}
 
@@ -601,11 +601,11 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 		*ptp_workspace = leaf;
 
 		if (append)
-			elog(DEBUG2, "appended %d new items to block %u; %d bytes (%d to go)",
+			elog(DEBUG2, "appended %d new__ items to block %u; %d bytes (%d to go)",
 				 maxitems, BufferGetBlockNumber(buf), (int) leaf->lsize,
 				 items->nitem - items->curitem - maxitems);
 		else
-			elog(DEBUG2, "inserted %d new items to block %u; %d bytes (%d to go)",
+			elog(DEBUG2, "inserted %d new__ items to block %u; %d bytes (%d to go)",
 				 maxitems, BufferGetBlockNumber(buf), (int) leaf->lsize,
 				 items->nitem - items->curitem - maxitems);
 	}
@@ -616,7 +616,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 		 *
 		 * leafRepackItems already divided the segments between the left and
 		 * the right page. It filled the left page as full as possible, and
-		 * put the rest to the right page. When building a new index, that's
+		 * put the rest to the right page. When building a new__ index, that's
 		 * good, because the table is scanned from beginning to end and there
 		 * won't be any more insertions to the left page during the build.
 		 * This packs the index as tight as possible. But otherwise, split
@@ -801,7 +801,7 @@ ginVacuumPostingTreeLeaf(Relation indexrel, Buffer buffer, GinVacuumState *gvs)
 	 * now represented as one huge segment that contains all the items. It
 	 * might make sense to split that, to speed up random access, but we don't
 	 * bother. You'll have to REINDEX anyway if you want the full gain of the
-	 * new tighter index format.
+	 * new__ tighter index format.
 	 */
 	if (removedsomething)
 	{
@@ -1020,7 +1020,7 @@ dataPlaceToPageLeafRecompress(Buffer buf, disassembledLeaf *leaf)
  *
  * This is different from the non-split cases in that this does not modify
  * the original page directly, but writes to temporary in-memory copies of
- * the new left and right pages.
+ * the new__ left and right pages.
  */
 static void
 dataPlaceToPageLeafSplit(disassembledLeaf *leaf,
@@ -1035,7 +1035,7 @@ dataPlaceToPageLeafSplit(disassembledLeaf *leaf,
 	dlist_node *firstright;
 	leafSegmentInfo *seginfo;
 
-	/* Initialize temporary pages to hold the new left and right pages */
+	/* Initialize temporary pages to hold the new__ left and right pages */
 	GinInitPage(lpage, GIN_DATA | GIN_LEAF | GIN_COMPRESSED, BLCKSZ);
 	GinInitPage(rpage, GIN_DATA | GIN_LEAF | GIN_COMPRESSED, BLCKSZ);
 
@@ -1146,7 +1146,7 @@ dataExecPlaceToPageInternal(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	pitem = GinDataPageGetPostingItem(page, off);
 	PostingItemSetBlockNumber(pitem, updateblkno);
 
-	/* Add new item */
+	/* Add new__ item */
 	pitem = (PostingItem *) insertdata;
 	GinDataPageAddPostingItem(page, pitem, off);
 
@@ -1232,9 +1232,9 @@ dataExecPlaceToPage(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 }
 
 /*
- * Split internal page and insert new data.
+ * Split internal page and insert new__ data.
  *
- * Returns new temp pages to *newlpage and *newrpage.
+ * Returns new__ temp pages to *newlpage and *newrpage.
  * The original buffer is left untouched.
  */
 static void
@@ -1262,8 +1262,8 @@ dataSplitPageInternal(GinBtree btree, Buffer origbuf,
 	GinInitPage(rpage, GinPageGetOpaque(oldpage)->flags, pageSize);
 
 	/*
-	 * First construct a new list of PostingItems, which includes all the old
-	 * items, and the new item.
+	 * First construct a new__ list of PostingItems, which includes all the old
+	 * items, and the new__ item.
 	 */
 	memcpy(allitems, GinDataPageGetPostingItem(oldpage, FirstOffsetNumber),
 		   (off - 1) * sizeof(PostingItem));
@@ -1277,7 +1277,7 @@ dataSplitPageInternal(GinBtree btree, Buffer origbuf,
 	PostingItemSetBlockNumber(&allitems[off], updateblkno);
 
 	/*
-	 * When creating a new index, fit as many tuples as possible on the left
+	 * When creating a new__ index, fit as many tuples as possible on the left
 	 * page, on the assumption that the table is scanned from beginning to
 	 * end. This packs the index as tight as possible.
 	 */
@@ -1331,7 +1331,7 @@ dataPrepareDownlink(GinBtree btree, Buffer lbuf)
 }
 
 /*
- * Fills new root by right bound values from child.
+ * Fills new__ root by right bound values from child.
  * Also called from ginxlog, should not use btree
  */
 void
@@ -1419,10 +1419,10 @@ disassembleLeaf(Page page)
 /*
  * Distribute newItems to the segments.
  *
- * Any segments that acquire new items are decoded, and the new items are
+ * Any segments that acquire new__ items are decoded, and the new__ items are
  * merged with the old items.
  *
- * Returns true if any new items were added. False means they were all
+ * Returns true if any new__ items were added. False means they were all
  * duplicates of existing items on the page.
  */
 static bool
@@ -1435,8 +1435,8 @@ addItemsToLeaf(disassembledLeaf *leaf, ItemPointer newItems, int nNewItems)
 	leafSegmentInfo *newseg;
 
 	/*
-	 * If the page is completely empty, just construct one new segment to hold
-	 * all the new items.
+	 * If the page is completely empty, just construct one new__ segment to hold
+	 * all the new__ items.
 	 */
 	if (dlist_is_empty(&leaf->segments))
 	{
@@ -1457,7 +1457,7 @@ addItemsToLeaf(disassembledLeaf *leaf, ItemPointer newItems, int nNewItems)
 		int			ntmpitems;
 
 		/*
-		 * How many of the new items fall into this segment?
+		 * How many of the new__ items fall into this segment?
 		 */
 		if (!dlist_has_next(&leaf->segments, iter.cur))
 			nthis = newleft;
@@ -1483,14 +1483,14 @@ addItemsToLeaf(disassembledLeaf *leaf, ItemPointer newItems, int nNewItems)
 		if (nthis == 0)
 			continue;
 
-		/* Merge the new items with the existing items. */
+		/* Merge the new__ items with the existing items. */
 		if (!cur->items)
 			cur->items = ginPostingListDecode(cur->seg, &cur->nitems);
 
 		/*
 		 * Fast path for the important special case that we're appending to
 		 * the end of the page: don't let the last segment on the page grow
-		 * larger than the target, create a new segment before that happens.
+		 * larger than the target, create a new__ segment before that happens.
 		 */
 		if (!dlist_has_next(&leaf->segments, iter.cur) &&
 			ginCompareItemPointers(&cur->items[cur->nitems - 1], &nextnew[0]) < 0 &&
@@ -1601,8 +1601,8 @@ leafRepackItems(disassembledLeaf *leaf, ItemPointer remaining)
 				{
 					/*
 					 * Too large. Compress again to the target size, and
-					 * create a new segment to represent the remaining items.
-					 * The new segment is inserted after this one, so it will
+					 * create a new__ segment to represent the remaining items.
+					 * The new__ segment is inserted after this one, so it will
 					 * be processed in the next iteration of this loop.
 					 */
 					if (seginfo->seg)
@@ -1751,8 +1751,8 @@ leafRepackItems(disassembledLeaf *leaf, ItemPointer remaining)
 /*** Functions that are exported to the rest of the GIN code ***/
 
 /*
- * Creates new posting tree containing the given TIDs. Returns the page
- * number of the root of the new posting tree.
+ * Creates new__ posting tree containing the given TIDs. Returns the page
+ * number of the root of the new__ posting tree.
  *
  * items[] must be in sorted order with no duplicates.
  */
@@ -1768,7 +1768,7 @@ createPostingTree(Relation index, ItemPointerData *items, uint32 nitems,
 	int			nrootitems;
 	int			rootsize;
 
-	/* Construct the new root page in memory first. */
+	/* Construct the new__ root page in memory first. */
 	tmppage = (Page) palloc(BLCKSZ);
 	GinInitPage(tmppage, GIN_DATA | GIN_LEAF | GIN_COMPRESSED, BLCKSZ);
 	GinPageGetOpaque(tmppage)->rightlink = InvalidBlockNumber;
@@ -1803,7 +1803,7 @@ createPostingTree(Relation index, ItemPointerData *items, uint32 nitems,
 	GinDataPageSetDataSize(tmppage, rootsize);
 
 	/*
-	 * All set. Get a new physical page, and copy the in-memory page to it.
+	 * All set. Get a new__ physical page, and copy the in-memory page to it.
 	 */
 	buffer = GinNewBuffer(index);
 	page = BufferGetPage(buffer);
@@ -1908,7 +1908,7 @@ ginInsertItemPointers(Relation index, BlockNumber rootBlkno,
 }
 
 /*
- * Starts a new scan on a posting tree.
+ * Starts a new__ scan on a posting tree.
  */
 GinBtreeStack *
 ginScanBeginPostingTree(GinBtree btree, Relation index, BlockNumber rootBlkno)

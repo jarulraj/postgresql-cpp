@@ -81,7 +81,7 @@ recurse_dir(const char *datadir, const char *parentpath,
 			if (errno == ENOENT)
 			{
 				/*
-				 * File doesn't exist anymore. This is ok, if the new master
+				 * File doesn't exist anymore. This is ok, if the new__ master
 				 * is running and the file was just removed. If it was a data
 				 * file, there should be a WAL record of the removal. If it
 				 * was something else, it couldn't have been anyway.
@@ -260,7 +260,7 @@ execute_pagemap(datapagemap_t *pagemap, const char *path)
 	{
 		offset = blkno * BLCKSZ;
 		copy_file_range(path, offset, offset + BLCKSZ, false);
-		/* Ok, this block has now been copied from new data dir to old */
+		/* Ok, this block has now been copied from new__ data dir to old */
 	}
 	pg_free(iter);
 }

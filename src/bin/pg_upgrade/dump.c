@@ -22,7 +22,7 @@ generate_old_dump(void)
 
 	prep_status("Creating dump of global objects");
 
-	/* run new pg_dumpall binary for globals */
+	/* run new__ pg_dumpall binary for globals */
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/pg_dumpall\" %s --globals-only --quote-all-identifiers "
 			  "--binary-upgrade %s -f %s",

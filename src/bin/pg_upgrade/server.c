@@ -212,8 +212,8 @@ start_postmaster(ClusterInfo *cluster, bool throw_error)
 	 * so autovacuum will not touch them.
 	 *
 	 * Turn off durability requirements to improve object creation speed, and
-	 * we only modify the new cluster, so only use it there.  If there is a
-	 * crash, the new cluster has to be recreated anyway.  fsync=off is a big
+	 * we only modify the new__ cluster, so only use it there.  If there is a
+	 * crash, the new__ cluster has to be recreated anyway.  fsync=off is a big
 	 * win on ext4.
 	 */
 	snprintf(cmd, sizeof(cmd),

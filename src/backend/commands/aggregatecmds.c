@@ -67,9 +67,9 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	bool		finalfuncExtraArgs = false;
 	bool		mfinalfuncExtraArgs = false;
 	List	   *sortoperatorName = NIL;
-	TypeName   *baseType = NULL;
-	TypeName   *transType = NULL;
-	TypeName   *mtransType = NULL;
+	typename__   *baseType = NULL;
+	typename__   *transType = NULL;
+	typename__   *mtransType = NULL;
 	int32		transSpace = 0;
 	int32		mtransSpace = 0;
 	char	   *initval = NULL;
@@ -88,10 +88,10 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	char		mtransTypeType = 0;
 	ListCell   *pl;
 
-	/* Convert list of names to a name and namespace */
+	/* Convert list of names to a name and namespace__ */
 	aggNamespace = QualifiedNameGetCreationNamespace(name, &aggName);
 
-	/* Check we have creation rights in target namespace */
+	/* Check we have creation rights in target namespace__ */
 	aclresult = pg_namespace_aclcheck(aggNamespace, GetUserId(), ACL_CREATE);
 	if (aclresult != ACLCHECK_OK)
 		aclcheck_error(aclresult, ACL_KIND_NAMESPACE,
@@ -263,7 +263,7 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	else
 	{
 		/*
-		 * New style: args is a list of FunctionParameters (possibly zero of
+		 * new__ style: args is a list of FunctionParameters (possibly zero of
 		 * 'em).  We share functioncmds.c's code for processing them.
 		 */
 		Oid			requiredResultType;
@@ -297,7 +297,7 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	 * transtype can't be a pseudo-type, since we need to be able to store
 	 * values of the transtype.  However, we can allow polymorphic transtype
 	 * in some cases (AggregateCreate will check).  Also, we allow "internal"
-	 * for functions that want to pass pointers to private data structures;
+	 * for functions that want to pass pointers to private__ data structures;
 	 * but allow that only to superusers, since you could crash the system (or
 	 * worse) by connecting up incompatible internal-using functions in an
 	 * aggregate.
@@ -371,7 +371,7 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	 * Most of the argument-checking is done inside of AggregateCreate
 	 */
 	return AggregateCreate(aggName,		/* aggregate name */
-						   aggNamespace,		/* namespace */
+						   aggNamespace,		/* namespace__ */
 						   aggKind,
 						   numArgs,
 						   numDirectArgs,
@@ -388,7 +388,7 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 						   mfinalfuncName,		/* final function name */
 						   finalfuncExtraArgs,
 						   mfinalfuncExtraArgs,
-						   sortoperatorName,	/* sort operator name */
+						   sortoperatorName,	/* sort operator__ name */
 						   transTypeId, /* transition data type */
 						   transSpace,	/* transition space */
 						   mtransTypeId,		/* transition data type */

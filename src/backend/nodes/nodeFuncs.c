@@ -195,7 +195,7 @@ exprType(const Node *expr)
 			type = ((const CaseExpr *) expr)->casetype;
 			break;
 		case T_CaseTestExpr:
-			type = ((const CaseTestExpr *) expr)->typeId;
+			type = ((const CaseTestExpr *) expr)->typeid__;
 			break;
 		case T_ArrayExpr:
 			type = ((const ArrayExpr *) expr)->array_typeid;
@@ -230,10 +230,10 @@ exprType(const Node *expr)
 			type = ((const CoerceToDomain *) expr)->resulttype;
 			break;
 		case T_CoerceToDomainValue:
-			type = ((const CoerceToDomainValue *) expr)->typeId;
+			type = ((const CoerceToDomainValue *) expr)->typeid__;
 			break;
 		case T_SetToDefault:
-			type = ((const SetToDefault *) expr)->typeId;
+			type = ((const SetToDefault *) expr)->typeid__;
 			break;
 		case T_CurrentOfExpr:
 			type = BOOLOID;
@@ -583,7 +583,7 @@ relabel_to_typmod(Node *expr, int32 typmod)
 	while (expr && IsA(expr, RelabelType))
 		expr = (Node *) ((RelabelType *) expr)->arg;
 
-	/* Apply new typmod, preserving the previous exposed type and collation */
+	/* Apply new__ typmod, preserving the previous exposed type and collation */
 	return (Node *) makeRelabelType((Expr *) expr, type, typmod, coll,
 									COERCE_EXPLICIT_CAST);
 }
@@ -1166,10 +1166,10 @@ exprSetInputCollation(Node *expr, Oid inputcollation)
  * For expressions larger than a single token, the intent here is to
  * return the location of the expression's leftmost token, not necessarily
  * the topmost Node's location field.  For example, an OpExpr's location
- * field will point at the operator name, but if it is not a prefix operator
+ * field will point at the operator__ name, but if it is not a prefix operator__
  * then we should return the location of the left-hand operand instead.
  * The reason is that we want to reference the entire expression not just
- * that operator, and pointing to its start seems to be the most natural way.
+ * that operator__, and pointing to its start seems to be the most natural way.
  *
  * The location is not perfect --- for example, since the grammar doesn't
  * explicitly represent parentheses in the parsetree, given something that
@@ -1246,7 +1246,7 @@ exprLocation(const Node *expr)
 			{
 				const OpExpr *opexpr = (const OpExpr *) expr;
 
-				/* consider both operator name and leftmost arg */
+				/* consider both operator__ name and leftmost arg */
 				loc = leftmostLoc(opexpr->location,
 								  exprLocation((Node *) opexpr->args));
 			}
@@ -1255,7 +1255,7 @@ exprLocation(const Node *expr)
 			{
 				const ScalarArrayOpExpr *saopexpr = (const ScalarArrayOpExpr *) expr;
 
-				/* consider both operator name and leftmost arg */
+				/* consider both operator__ name and leftmost arg */
 				loc = leftmostLoc(saopexpr->location,
 								  exprLocation((Node *) saopexpr->args));
 			}
@@ -1277,7 +1277,7 @@ exprLocation(const Node *expr)
 			{
 				const SubLink *sublink = (const SubLink *) expr;
 
-				/* check the testexpr, if any, and the operator/keyword */
+				/* check the testexpr, if any, and the operator__/keyword */
 				loc = leftmostLoc(exprLocation(sublink->testexpr),
 								  sublink->location);
 			}
@@ -1426,8 +1426,8 @@ exprLocation(const Node *expr)
 			{
 				const A_Expr *aexpr = (const A_Expr *) expr;
 
-				/* use leftmost of operator or left operand (if any) */
-				/* we assume right operand can't be to left of operator */
+				/* use leftmost of operator__ or left operand (if any) */
+				/* we assume right operand can't be to left of operator__ */
 				loc = leftmostLoc(aexpr->location,
 								  exprLocation(aexpr->lexpr));
 			}
@@ -1467,11 +1467,11 @@ exprLocation(const Node *expr)
 				const TypeCast *tc = (const TypeCast *) expr;
 
 				/*
-				 * This could represent CAST(), ::, or TypeName 'literal', so
+				 * This could represent CAST(), ::, or typename__ 'literal', so
 				 * any of the components might be leftmost.
 				 */
 				loc = exprLocation(tc->arg);
-				loc = leftmostLoc(loc, tc->typeName->location);
+				loc = leftmostLoc(loc, tc->typename__->location);
 				loc = leftmostLoc(loc, tc->location);
 			}
 			break;
@@ -1480,7 +1480,7 @@ exprLocation(const Node *expr)
 			loc = exprLocation(((const CollateClause *) expr)->arg);
 			break;
 		case T_SortBy:
-			/* just use argument's location (ignore operator, if any) */
+			/* just use argument's location (ignore operator__, if any) */
 			loc = exprLocation(((const SortBy *) expr)->node);
 			break;
 		case T_WindowDef:
@@ -1490,7 +1490,7 @@ exprLocation(const Node *expr)
 			loc = ((const RangeTableSample *) expr)->location;
 			break;
 		case T_TypeName:
-			loc = ((const TypeName *) expr)->location;
+			loc = ((const typename__ *) expr)->location;
 			break;
 		case T_ColumnDef:
 			loc = ((const ColumnDef *) expr)->location;
@@ -1499,7 +1499,7 @@ exprLocation(const Node *expr)
 			loc = ((const Constraint *) expr)->location;
 			break;
 		case T_FunctionParameter:
-			/* just use typename's location */
+			/* just use typename__'s location */
 			loc = exprLocation((Node *) ((const FunctionParameter *) expr)->argType);
 			break;
 		case T_XmlSerialize:
@@ -2132,7 +2132,7 @@ range_table_walker(List *rtable,
 /*
  * expression_tree_mutator() is designed to support routines that make a
  * modified copy of an expression tree, with some nodes being added,
- * removed, or replaced by new subtrees.  The original tree is (normally)
+ * removed, or replaced by new__ subtrees.  The original tree is (normally)
  * not changed.  Each recursion level is responsible for returning a copy of
  * (or appropriately modified substitute for) the subtree it is handed.
  * A mutator routine should look like this:
@@ -2179,7 +2179,7 @@ range_table_walker(List *rtable,
  * expression_tree_mutator itself is called on a Query node, it does nothing
  * and returns the unmodified Query node.  The net effect is that unless the
  * mutator does something special at a Query node, sub-selects will not be
- * visited or modified; the original sub-select will be linked to by the new
+ * visited or modified; the original sub-select will be linked to by the new__
  * SubLink node.  Mutators that want to descend into sub-selects will usually
  * do so by recognizing Query nodes and calling query_tree_mutator (below).
  *
@@ -3213,7 +3213,7 @@ raw_expression_tree_walker(Node *node,
 					return true;
 				if (walker(expr->rexpr, context))
 					return true;
-				/* operator name is deemed uninteresting */
+				/* operator__ name is deemed uninteresting */
 			}
 			break;
 		case T_BoolExpr:
@@ -3284,7 +3284,7 @@ raw_expression_tree_walker(Node *node,
 
 				if (walker(tc->arg, context))
 					return true;
-				if (walker(tc->typeName, context))
+				if (walker(tc->typename__, context))
 					return true;
 			}
 			break;
@@ -3343,7 +3343,7 @@ raw_expression_tree_walker(Node *node,
 			break;
 		case T_TypeName:
 			{
-				TypeName   *tn = (TypeName *) node;
+				typename__   *tn = (typename__ *) node;
 
 				if (walker(tn->typmods, context))
 					return true;
@@ -3356,7 +3356,7 @@ raw_expression_tree_walker(Node *node,
 			{
 				ColumnDef  *coldef = (ColumnDef *) node;
 
-				if (walker(coldef->typeName, context))
+				if (walker(coldef->typename__, context))
 					return true;
 				if (walker(coldef->raw_default, context))
 					return true;
@@ -3375,7 +3375,7 @@ raw_expression_tree_walker(Node *node,
 
 				if (walker(xs->expr, context))
 					return true;
-				if (walker(xs->typeName, context))
+				if (walker(xs->typename__, context))
 					return true;
 			}
 			break;

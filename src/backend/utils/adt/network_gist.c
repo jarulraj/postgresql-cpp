@@ -52,7 +52,7 @@
 #include "utils/inet.h"
 
 /*
- * Operator strategy numbers used in the GiST inet_ops opclass
+ * operator__ strategy numbers used in the GiST inet_ops opclass
  */
 #define INETSTRAT_OVERLAPS		RTOverlapStrategyNumber
 #define INETSTRAT_EQ			RTEqualStrategyNumber
@@ -203,7 +203,7 @@ inet_gist_consistent(PG_FUNCTION_ARGS)
 	 * Compare available common prefix bits to the query, but not beyond
 	 * either the query's netmask or the minimum netmask among the represented
 	 * values.  If these bits don't match the query, we have our answer (and
-	 * may or may not need to descend, depending on the operator).  If they do
+	 * may or may not need to descend, depending on the operator__).  If they do
 	 * match, and we are not at a leaf, we descend in all cases.
 	 *
 	 * Note this is the final check for operators that only consider the
@@ -618,9 +618,9 @@ inet_gist_fetch(PG_FUNCTION_ARGS)
  * The GiST page split penalty function
  *
  * Charge a large penalty if address family doesn't match, or a somewhat
- * smaller one if the new value would degrade the union's minbits
+ * smaller one if the new__ value would degrade the union's minbits
  * (minimum netmask width).  Otherwise, penalty is inverse of the
- * new number of common address bits.
+ * new__ number of common address bits.
  */
 Datum
 inet_gist_penalty(PG_FUNCTION_ARGS)
@@ -629,16 +629,16 @@ inet_gist_penalty(PG_FUNCTION_ARGS)
 	GISTENTRY  *newent = (GISTENTRY *) PG_GETARG_POINTER(1);
 	float	   *penalty = (float *) PG_GETARG_POINTER(2);
 	GistInetKey *orig = DatumGetInetKeyP(origent->key),
-			   *new = DatumGetInetKeyP(newent->key);
+			   *new__ = DatumGetInetKeyP(newent->key);
 	int			commonbits;
 
-	if (gk_ip_family(orig) == gk_ip_family(new))
+	if (gk_ip_family(orig) == gk_ip_family(new__))
 	{
-		if (gk_ip_minbits(orig) <= gk_ip_minbits(new))
+		if (gk_ip_minbits(orig) <= gk_ip_minbits(new__))
 		{
-			commonbits = bitncommon(gk_ip_addr(orig), gk_ip_addr(new),
+			commonbits = bitncommon(gk_ip_addr(orig), gk_ip_addr(new__),
 									Min(gk_ip_commonbits(orig),
-										gk_ip_commonbits(new)));
+										gk_ip_commonbits(new__)));
 			if (commonbits > 0)
 				*penalty = 1.0f / commonbits;
 			else

@@ -478,7 +478,7 @@ box_send(PG_FUNCTION_ARGS)
 }
 
 
-/*		box_construct	-		fill in a new box.
+/*		box_construct	-		fill in a new__ box.
  */
 static BOX *
 box_construct(double x1, double x2, double y1, double y2)
@@ -704,7 +704,7 @@ box_contain(PG_FUNCTION_ARGS)
  * box_below_eq and box_above_eq are obsolete versions that (probably
  * erroneously) accept the equal-boundaries case.  Since these are not
  * in sync with the box_left and box_right code, they are deprecated and
- * not supported in the PG 8.1 rtree operator class extension.
+ * not supported in the PG 8.1 rtree operator__ class__ extension.
  */
 Datum
 box_below_eq(PG_FUNCTION_ARGS)
@@ -3041,7 +3041,7 @@ close_pb(PG_FUNCTION_ARGS)
  * XXX THIS CODE IS WRONG
  * The code is actually calculating the point on the line segment
  *	which is backwards from the routine naming convention.
- * Copied code to new routine close_ls() but haven't fixed this one yet.
+ * Copied code to new__ routine close_ls() but haven't fixed this one yet.
  * - thomas 1998-01-31
  */
 Datum
@@ -3421,7 +3421,7 @@ inter_lb(PG_FUNCTION_ARGS)
 }
 
 /*------------------------------------------------------------------
- * The following routines define a data type and operator class for
+ * The following routines define a data type and operator__ class__ for
  * POLYGONS .... Part of which (the polygon's bounding box) is built on
  * top of the BOX data type.
  *
@@ -4444,7 +4444,7 @@ path_poly(PG_FUNCTION_ARGS)
 				 errmsg("open path cannot be converted to polygon")));
 
 	/*
-	 * Never overflows: the old size fit in MaxAllocSize, and the new size is
+	 * Never overflows: the old size fit in MaxAllocSize, and the new__ size is
 	 * just a small constant larger.
 	 */
 	size = offsetof(POLYGON, p) +sizeof(poly->p[0]) * path->npts;
@@ -4553,7 +4553,7 @@ poly_path(PG_FUNCTION_ARGS)
 	int			i;
 
 	/*
-	 * Never overflows: the old size fit in MaxAllocSize, and the new size is
+	 * Never overflows: the old size fit in MaxAllocSize, and the new__ size is
 	 * smaller by a small constant.
 	 */
 	size = offsetof(PATH, p) +sizeof(path->p[0]) * poly->npts;
@@ -4959,7 +4959,7 @@ circle_copy(CIRCLE *circle)
 
 
 /* circle_add_pt()
- * Translation operator.
+ * Translation operator__.
  */
 Datum
 circle_add_pt(PG_FUNCTION_ARGS)
@@ -5317,7 +5317,7 @@ poly_circle(PG_FUNCTION_ARGS)
 
 /***********************************************************************
  **
- **		Private routines for multiple types.
+ **		private__ routines for multiple types.
  **
  ***********************************************************************/
 
@@ -5423,7 +5423,7 @@ lseg_crossing(double x, double y, double prev_x, double prev_y)
 		y_sign = FPgt(y, 0) ? 1 : -1;
 
 		if (FPzero(prev_y))
-			/* previous point was on X axis, so new point is either off or on */
+			/* previous point was on X axis, so new__ point is either off or on */
 			return FPlt(prev_x, 0) ? 0 : y_sign;
 		else if (FPgt(y_sign * prev_y, 0))
 			/* both above or below X axis */

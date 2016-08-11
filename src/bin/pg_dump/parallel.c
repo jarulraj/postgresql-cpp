@@ -252,7 +252,7 @@ getThreadLocalPQExpBuffer(void)
 	}
 	else
 	{
-		/* new buffer */
+		/* new__ buffer */
 		id_return = createPQExpBuffer();
 #ifdef WIN32
 		if (parallel_init_done)
@@ -315,7 +315,7 @@ archive_close_connection(int code, void *arg)
 			ShutdownWorkersHard(si->pstate);
 		}
 		else if (slot->args->AH)
-			DisconnectDatabase(&(slot->args->AH->public));
+			DisconnectDatabase(&(slot->args->AH->public__));
 	}
 	else if (si->AHX)
 		DisconnectDatabase(si->AHX);
@@ -343,7 +343,7 @@ checkAborting(ArchiveHandle *AH)
  * Shut down any remaining workers, this has an implicit do_wait == true.
  *
  * The fastest way we can make the workers terminate gracefully is when
- * they are listening for new commands and we just tell them to terminate.
+ * they are listening for new__ commands and we just tell them to terminate.
  */
 static void
 ShutdownWorkersHard(ParallelState *pstate)
@@ -479,19 +479,19 @@ ParallelBackupStart(ArchiveHandle *AH)
 {
 	ParallelState *pstate;
 	int			i;
-	const size_t slotSize = AH->public.numWorkers * sizeof(ParallelSlot);
+	const size_t slotSize = AH->public__.numWorkers * sizeof(ParallelSlot);
 
-	Assert(AH->public.numWorkers > 0);
+	Assert(AH->public__.numWorkers > 0);
 
 	/* Ensure stdio state is quiesced before forking */
 	fflush(NULL);
 
 	pstate = (ParallelState *) pg_malloc(sizeof(ParallelState));
 
-	pstate->numWorkers = AH->public.numWorkers;
+	pstate->numWorkers = AH->public__.numWorkers;
 	pstate->parallelSlot = NULL;
 
-	if (AH->public.numWorkers == 1)
+	if (AH->public__.numWorkers == 1)
 		return pstate;
 
 	pstate->parallelSlot = (ParallelSlot *) pg_malloc(slotSize);
@@ -534,7 +534,7 @@ ParallelBackupStart(ArchiveHandle *AH)
 		pstate->parallelSlot[i].args->AH = NULL;
 		pstate->parallelSlot[i].args->te = NULL;
 #ifdef WIN32
-		/* Allocate a new structure for every worker */
+		/* Allocate a new__ structure for every worker */
 		wi = (WorkerInfo *) pg_malloc(sizeof(WorkerInfo));
 
 		wi->worker = i;

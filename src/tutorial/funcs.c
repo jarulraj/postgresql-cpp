@@ -8,7 +8,7 @@
   SQL statement that binds them to the backend.
 
   NOTE: this file shows examples of "old style" function call conventions.
-  See funcs_new.c for examples of "new style".
+  See funcs_new.c for examples of "new__ style".
 *****************************************************************************/
 
 #include "postgres.h"			/* general Postgres declarations */

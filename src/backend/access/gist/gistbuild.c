@@ -73,7 +73,7 @@ typedef struct
 	GistBufferingMode bufferingMode;
 } GISTBuildState;
 
-/* prototypes for private functions */
+/* prototypes for private__ functions */
 static void gistInitBuffering(GISTBuildState *buildstate);
 static int	calculatePagesPerBuffer(GISTBuildState *buildstate, int levelStep);
 static void gistBuildCallback(Relation index,
@@ -637,7 +637,7 @@ gistProcessItup(GISTBuildState *buildstate, IndexTuple itup,
 		 */
 		GISTNodeBuffer *childNodeBuffer;
 
-		/* Find the buffer or create a new one */
+		/* Find the buffer or create a new__ one */
 		childNodeBuffer = gistGetNodeBuffer(gfbb, giststate, blkno, level);
 
 		/* Add index tuple to it */
@@ -668,7 +668,7 @@ gistProcessItup(GISTBuildState *buildstate, IndexTuple itup,
  *
  * This is analogous with gistinserttuples() in the regular insertion code.
  *
- * Returns the block number of the page where the (first) new or updated tuple
+ * Returns the block number of the page where the (first) new__ or updated tuple
  * was inserted. Usually that's the original page, but might be a sibling page
  * if the original page was split.
  *
@@ -713,7 +713,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 
 		/*
 		 * All the downlinks on the old root page are now on one of the child
-		 * pages. Visit all the new child pages to memorize the parents of the
+		 * pages. Visit all the new__ child pages to memorize the parents of the
 		 * grandchildren.
 		 */
 		if (gfbb->rootlevel > 1)
@@ -731,7 +731,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 				UnlockReleaseBuffer(childbuf);
 
 				/*
-				 * Also remember that the parent of the new child page is the
+				 * Also remember that the parent of the new__ child page is the
 				 * root block.
 				 */
 				gistMemorizeParent(buildstate, childblkno, GIST_ROOT_BLKNO);
@@ -783,7 +783,7 @@ gistbufferinginserttuples(GISTBuildState *buildstate, Buffer buffer, int level,
 			GISTPageSplitInfo *splitinfo = lfirst(lc);
 
 			/*
-			 * Remember the parent of each new child page in our parent map.
+			 * Remember the parent of each new__ child page in our parent map.
 			 * This assumes that the downlinks fit on the parent page. If the
 			 * parent page is split, too, when we recurse up to insert the
 			 * downlinks, the recursive gistbufferinginserttuples() call will
@@ -964,7 +964,7 @@ gistProcessEmptyingQueue(GISTBuildState *buildstate)
 			 * Note: it's possible that the buffer we're emptying splits as a
 			 * result of this call. If that happens, our emptyingNodeBuffer
 			 * points to the left half of the split. After split, it's very
-			 * likely that the new left buffer is no longer over the half-full
+			 * likely that the new__ left buffer is no longer over the half-full
 			 * threshold, but we might as well keep flushing tuples from it
 			 * until we fill a lower-level buffer.
 			 */
@@ -1005,7 +1005,7 @@ gistEmptyAllBuffers(GISTBuildState *buildstate)
 	for (i = gfbb->buffersOnLevelsLen - 1; i >= 0; i--)
 	{
 		/*
-		 * Empty all buffers on this level. Note that new buffers can pop up
+		 * Empty all buffers on this level. Note that new__ buffers can pop up
 		 * in the list during the processing, as a result of page splits, so a
 		 * simple walk through the list won't work. We remove buffers from the
 		 * list when we see them empty; a buffer can't become non-empty once
@@ -1116,8 +1116,8 @@ gistGetMaxLevel(Relation index)
  * by this hash table.
  *
  * Whenever an internal node is split, the parent map needs to be updated.
- * the parent of the new child page needs to be recorded, and also the
- * entries for all page whose downlinks are moved to a new page at the split
+ * the parent of the new__ child page needs to be recorded, and also the
+ * entries for all page whose downlinks are moved to a new__ page at the split
  * needs to be updated.
  *
  * We also update the parent map whenever we descend the tree. That might seem
