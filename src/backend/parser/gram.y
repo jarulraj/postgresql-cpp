@@ -135,9 +135,9 @@ static void base_yyerror(YYLTYPE *yylloc, core_yyscan_t yyscanner,
 						 const char *msg);
 static Node *makeColumnRef(char *colname, List *indirection,
 						   int location, core_yyscan_t yyscanner);
-static Node *makeTypeCast(Node *arg, TypeName *typename, int location);
+static Node *makeTypeCast(Node *arg, TypeName *typename__, int location);
 static Node *makeStringConst(char *str, int location);
-static Node *makeStringConstCast(char *str, int location, TypeName *typename);
+static Node *makeStringConstCast(char *str, int location, TypeName *typename__);
 static Node *makeIntConst(int val, int location);
 static Node *makeFloatConst(char *str, int location);
 static Node *makeBitStringConst(char *str, int location);
@@ -2032,7 +2032,7 @@ alter_table_cmd:
 					$$ = (Node *)n;
 				}
 			/*
-			 * ALTER TABLE <name> ALTER [COLUMN] <colname> [SET DATA] TYPE <typename>
+			 * ALTER TABLE <name> ALTER [COLUMN] <colname> [SET DATA] TYPE <typename__>
 			 *		[ USING <expression> ]
 			 */
 			| ALTER opt_column ColId opt_set_data TYPE_P Typename opt_collate_clause alter_using
@@ -2043,7 +2043,7 @@ alter_table_cmd:
 					n->name = $3;
 					n->def = (Node *) def;
 					/* We only use these fields of the ColumnDef node */
-					def->typeName = $6;
+					def->typename__ = $6;
 					def->collClause = (CollateClause *) $7;
 					def->raw_default = $8;
 					def->location = @3;
@@ -2504,7 +2504,7 @@ alter_type_cmd:
 					n->missing_ok = FALSE;
 					$$ = (Node *)n;
 				}
-			/* ALTER TYPE <name> ALTER ATTRIBUTE <attname> [SET DATA] TYPE <typename> [RESTRICT|CASCADE] */
+			/* ALTER TYPE <name> ALTER ATTRIBUTE <attname> [SET DATA] TYPE <typename__> [RESTRICT|CASCADE] */
 			| ALTER ATTRIBUTE ColId opt_set_data TYPE_P Typename opt_collate_clause opt_drop_behavior
 				{
 					AlterTableCmd *n = makeNode(AlterTableCmd);
@@ -2514,7 +2514,7 @@ alter_type_cmd:
 					n->def = (Node *) def;
 					n->behavior = $8;
 					/* We only use these fields of the ColumnDef node */
-					def->typeName = $6;
+					def->typename__ = $6;
 					def->collClause = (CollateClause *) $7;
 					def->raw_default = NULL;
 					def->location = @3;
@@ -2938,7 +2938,7 @@ columnDef:	ColId Typename create_generic_options ColQualList
 				{
 					ColumnDef *n = makeNode(ColumnDef);
 					n->colname = $1;
-					n->typeName = $2;
+					n->typename__ = $2;
 					n->inhcount = 0;
 					n->is_local = true;
 					n->is_not_null = false;
@@ -2959,7 +2959,7 @@ columnOptions:	ColId WITH OPTIONS ColQualList
 				{
 					ColumnDef *n = makeNode(ColumnDef);
 					n->colname = $1;
-					n->typeName = NULL;
+					n->typename__ = NULL;
 					n->inhcount = 0;
 					n->is_local = true;
 					n->is_not_null = false;
@@ -5082,14 +5082,14 @@ DefineStmt:
 			| CREATE TYPE_P any_name AS ENUM_P '(' opt_enum_val_list ')'
 				{
 					CreateEnumStmt *n = makeNode(CreateEnumStmt);
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->vals = $7;
 					$$ = (Node *)n;
 				}
 			| CREATE TYPE_P any_name AS RANGE definition
 				{
 					CreateRangeStmt *n = makeNode(CreateRangeStmt);
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->params	= $6;
 					$$ = (Node *)n;
 				}
@@ -5213,7 +5213,7 @@ AlterEnumStmt:
 		ALTER TYPE_P any_name ADD_P VALUE_P opt_if_not_exists Sconst
 			{
 				AlterEnumStmt *n = makeNode(AlterEnumStmt);
-				n->typeName = $3;
+				n->typename__ = $3;
 				n->newVal = $7;
 				n->newValNeighbor = NULL;
 				n->newValIsAfter = true;
@@ -5223,7 +5223,7 @@ AlterEnumStmt:
 		 | ALTER TYPE_P any_name ADD_P VALUE_P opt_if_not_exists Sconst BEFORE Sconst
 			{
 				AlterEnumStmt *n = makeNode(AlterEnumStmt);
-				n->typeName = $3;
+				n->typename__ = $3;
 				n->newVal = $7;
 				n->newValNeighbor = $9;
 				n->newValIsAfter = false;
@@ -5233,7 +5233,7 @@ AlterEnumStmt:
 		 | ALTER TYPE_P any_name ADD_P VALUE_P opt_if_not_exists Sconst AFTER Sconst
 			{
 				AlterEnumStmt *n = makeNode(AlterEnumStmt);
-				n->typeName = $3;
+				n->typename__ = $3;
 				n->newVal = $7;
 				n->newValNeighbor = $9;
 				n->newValIsAfter = true;
@@ -8936,7 +8936,7 @@ CreateDomainStmt:
 				{
 					CreateDomainStmt *n = makeNode(CreateDomainStmt);
 					n->domainname = $3;
-					n->typeName = $5;
+					n->typename__ = $5;
 					SplitColQualList($6, &n->constraints, &n->collClause,
 									 yyscanner);
 					$$ = (Node *)n;
@@ -8949,7 +8949,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'T';
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->def = $4;
 					$$ = (Node *)n;
 				}
@@ -8958,7 +8958,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'N';
-					n->typeName = $3;
+					n->typename__ = $3;
 					$$ = (Node *)n;
 				}
 			/* ALTER DOMAIN <domain> SET NOT NULL */
@@ -8966,7 +8966,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'O';
-					n->typeName = $3;
+					n->typename__ = $3;
 					$$ = (Node *)n;
 				}
 			/* ALTER DOMAIN <domain> ADD CONSTRAINT ... */
@@ -8974,7 +8974,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'C';
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->def = $5;
 					$$ = (Node *)n;
 				}
@@ -8983,7 +8983,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'X';
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->name = $6;
 					n->behavior = $7;
 					n->missing_ok = false;
@@ -8994,7 +8994,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'X';
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->name = $8;
 					n->behavior = $9;
 					n->missing_ok = true;
@@ -9005,7 +9005,7 @@ AlterDomainStmt:
 				{
 					AlterDomainStmt *n = makeNode(AlterDomainStmt);
 					n->subtype = 'V';
-					n->typeName = $3;
+					n->typename__ = $3;
 					n->name = $6;
 					$$ = (Node *)n;
 				}
@@ -10922,7 +10922,7 @@ TableFuncElement:	ColId Typename opt_collate_clause
 				{
 					ColumnDef *n = makeNode(ColumnDef);
 					n->colname = $1;
-					n->typeName = $2;
+					n->typename__ = $2;
 					n->inhcount = 0;
 					n->is_local = true;
 					n->is_not_null = false;
@@ -12484,7 +12484,7 @@ func_expr_common_subexpr:
 					XmlSerialize *n = makeNode(XmlSerialize);
 					n->xmloption = $3;
 					n->expr = $4;
-					n->typeName = $6;
+					n->typename__ = $6;
 					n->location = @1;
 					$$ = (Node *)n;
 				}
@@ -13866,7 +13866,7 @@ unreserved_keyword:
  * can't be treated as "generic" type or function names.
  *
  * The type names appearing here are not usable as function names
- * because they can be followed by '(' in typename productions, which
+ * because they can be followed by '(' in typename__ productions, which
  * looks too much like a function call for an LR(1) parser.
  */
 col_name_keyword:
@@ -14108,11 +14108,11 @@ makeColumnRef(char *colname, List *indirection,
 }
 
 static Node *
-makeTypeCast(Node *arg, TypeName *typename, int location)
+makeTypeCast(Node *arg, TypeName *typename__, int location)
 {
 	TypeCast *n = makeNode(TypeCast);
 	n->arg = arg;
-	n->typeName = typename;
+	n->typename__ = typename__;
 	n->location = location;
 	return (Node *) n;
 }
@@ -14130,11 +14130,11 @@ makeStringConst(char *str, int location)
 }
 
 static Node *
-makeStringConstCast(char *str, int location, TypeName *typename)
+makeStringConstCast(char *str, int location, TypeName *typename__)
 {
 	Node *s = makeStringConst(str, location);
 
-	return makeTypeCast(s, typename, -1);
+	return makeTypeCast(s, typename__, -1);
 }
 
 static Node *

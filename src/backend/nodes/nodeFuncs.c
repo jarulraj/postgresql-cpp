@@ -1490,7 +1490,7 @@ exprLocation(const Node *expr)
 			loc = ((const RangeTableSample *) expr)->location;
 			break;
 		case T_TypeName:
-			loc = ((const typename__ *) expr)->location;
+			loc = ((const TypeName *) expr)->location;
 			break;
 		case T_ColumnDef:
 			loc = ((const ColumnDef *) expr)->location;
@@ -3343,7 +3343,7 @@ raw_expression_tree_walker(Node *node,
 			break;
 		case T_TypeName:
 			{
-				typename__   *tn = (typename__ *) node;
+				TypeName   *tn = (TypeName *) node;
 
 				if (walker(tn->typmods, context))
 					return true;

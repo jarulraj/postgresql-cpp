@@ -328,7 +328,7 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 	{
 		Form_pg_attribute attribute = typeinfo->attrs[attnum];
 		ColumnDef  *col = makeNode(ColumnDef);
-		typename__   *coltype = makeNode(typename__);
+		TypeName   *coltype = makeNode(TypeName);
 
 		if (lc)
 		{

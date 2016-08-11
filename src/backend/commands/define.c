@@ -67,7 +67,7 @@ defGetString(DefElem *def)
 		case T_String:
 			return strVal(def->arg);
 		case T_TypeName:
-			return TypeNameToString((typename__ *) def->arg);
+			return TypeNameToString((TypeName *) def->arg);
 		case T_List:
 			return NameListToString((List *) def->arg);
 		case T_A_Star:
@@ -230,7 +230,7 @@ defGetQualifiedName(DefElem *def)
 	switch (nodeTag(def->arg))
 	{
 		case T_TypeName:
-			return ((typename__ *) def->arg)->names;
+			return ((TypeName *) def->arg)->names;
 		case T_List:
 			return (List *) def->arg;
 		case T_String:
@@ -251,7 +251,7 @@ defGetQualifiedName(DefElem *def)
  * Note: we do not accept a List arg here, because the parser will only
  * return a bare List when the name looks like an operator__ name.
  */
-typename__ *
+TypeName *
 defGetTypeName(DefElem *def)
 {
 	if (def->arg == NULL)
@@ -262,7 +262,7 @@ defGetTypeName(DefElem *def)
 	switch (nodeTag(def->arg))
 	{
 		case T_TypeName:
-			return (typename__ *) def->arg;
+			return (TypeName *) def->arg;
 		case T_String:
 			/* Allow quoted typename__ for backwards compatibility */
 			return makeTypeNameFromNameList(list_make1(def->arg));
@@ -303,7 +303,7 @@ defGetTypeLength(DefElem *def)
 			break;
 		case T_TypeName:
 			/* cope if grammar chooses to believe "variable" is a typename__ */
-			if (pg_strcasecmp(TypeNameToString((typename__ *) def->arg),
+			if (pg_strcasecmp(TypeNameToString((TypeName *) def->arg),
 							  "variable") == 0)
 				return -1;		/* variable length */
 			break;

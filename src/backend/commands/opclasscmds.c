@@ -475,8 +475,8 @@ DefineOpClass(CreateOpClassStmt *stmt)
 									item->number, maxOpNumber)));
 				if (item->args != NIL)
 				{
-					typename__   *typeName1 = (typename__ *) linitial(item->args);
-					typename__   *typeName2 = (typename__ *) lsecond(item->args);
+					TypeName   *typeName1 = (TypeName *) linitial(item->args);
+					TypeName   *typeName2 = (TypeName *) lsecond(item->args);
 
 					operOid = LookupOperNameTypeNames(NULL, item->name,
 													  typeName1, typeName2,
@@ -861,8 +861,8 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 									item->number, maxOpNumber)));
 				if (item->args != NIL)
 				{
-					typename__   *typeName1 = (typename__ *) linitial(item->args);
-					typename__   *typeName2 = (typename__ *) lsecond(item->args);
+					TypeName   *typeName1 = (TypeName *) linitial(item->args);
+					TypeName   *typeName2 = (TypeName *) lsecond(item->args);
 
 					operOid = LookupOperNameTypeNames(NULL, item->name,
 													  typeName1, typeName2,
@@ -1041,16 +1041,16 @@ AlterOpFamilyDrop(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 static void
 processTypesSpec(List *args, Oid *lefttype, Oid *righttype)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 
 	Assert(args != NIL);
 
-	typename__ = (typename__ *) linitial(args);
+	typename__ = (TypeName *) linitial(args);
 	*lefttype = typenameTypeId(NULL, typename__);
 
 	if (list_length(args) > 1)
 	{
-		typename__ = (typename__ *) lsecond(args);
+		typename__ = (TypeName *) lsecond(args);
 		*righttype = typenameTypeId(NULL, typename__);
 	}
 	else

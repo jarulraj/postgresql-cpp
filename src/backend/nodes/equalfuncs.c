@@ -2187,7 +2187,7 @@ _equalMultiAssignRef(const MultiAssignRef *a, const MultiAssignRef *b)
 }
 
 static bool
-_equalTypeName(const typename__ *a, const typename__ *b)
+_equalTypeName(const TypeName *a, const TypeName *b)
 {
 	COMPARE_NODE_FIELD(names);
 	COMPARE_SCALAR_FIELD(typeOid);

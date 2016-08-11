@@ -36,6 +36,6 @@ extern List *raw_parser(const char *str);
 
 /* Utility functions exported by gram.y (perhaps these should be elsewhere) */
 extern List *SystemFuncName(char *name);
-extern typename__ *SystemTypeName(char *name);
+extern TypeName *SystemTypeName(char *name);
 
 #endif   /* PARSER_H */

@@ -27,7 +27,7 @@
 #include "utils/syscache.h"
 
 
-static int32 typenameTypeMod(ParseState *pstate, const typename__ *typename__,
+static int32 typenameTypeMod(ParseState *pstate, const TypeName *typename__,
 				Type typ);
 
 
@@ -54,7 +54,7 @@ static int32 typenameTypeMod(ParseState *pstate, const typename__ *typename__,
  * pstate is only used for error location info, and may be NULL.
  */
 Type
-LookupTypeName(ParseState *pstate, const typename__ *typename__,
+LookupTypeName(ParseState *pstate, const TypeName *typename__,
 			   int32 *typmod_p, bool missing_ok)
 {
 	Oid			typoid;
@@ -133,7 +133,7 @@ LookupTypeName(ParseState *pstate, const typename__ *typename__,
 			typoid = get_atttype(relid, attnum);
 
 			/* this construct should never have an array indicator */
-			Assert(typename__->arrayBounds == NIL);
+			Assert(TypeName->arrayBounds == NIL);
 
 			/* emit nuisance notice (intentionally not errposition'd) */
 			ereport(NOTICE,
@@ -212,7 +212,7 @@ LookupTypeName(ParseState *pstate, const typename__ *typename__,
  * pstate is only used for error location info, and may be NULL.
  */
 Oid
-LookupTypeNameOid(ParseState *pstate, const typename__ *typename__, bool missing_ok)
+LookupTypeNameOid(ParseState *pstate, const TypeName *typename__, bool missing_ok)
 {
 	Oid			typoid;
 	Type		tup;
@@ -244,7 +244,7 @@ LookupTypeNameOid(ParseState *pstate, const typename__ *typename__, bool missing
  * Callers of this can therefore assume the result is a fully valid type.
  */
 Type
-typenameType(ParseState *pstate, const typename__ *typename__, int32 *typmod_p)
+typenameType(ParseState *pstate, const TypeName *typename__, int32 *typmod_p)
 {
 	Type		tup;
 
@@ -271,7 +271,7 @@ typenameType(ParseState *pstate, const typename__ *typename__, int32 *typmod_p)
  * not the syscache entry.
  */
 Oid
-typenameTypeId(ParseState *pstate, const typename__ *typename__)
+typenameTypeId(ParseState *pstate, const TypeName *typename__)
 {
 	Oid			typoid;
 	Type		tup;
@@ -290,7 +290,7 @@ typenameTypeId(ParseState *pstate, const typename__ *typename__)
  * and typmod, not the syscache entry.
  */
 void
-typenameTypeIdAndMod(ParseState *pstate, const typename__ *typename__,
+typenameTypeIdAndMod(ParseState *pstate, const TypeName *typename__,
 					 Oid *typeid_p, int32 *typmod_p)
 {
 	Type		tup;
@@ -312,7 +312,7 @@ typenameTypeIdAndMod(ParseState *pstate, const typename__ *typename__,
  * pstate is only used for error location info, and may be NULL.
  */
 static int32
-typenameTypeMod(ParseState *pstate, const typename__ *typename__, Type typ)
+typenameTypeMod(ParseState *pstate, const TypeName *typename__, Type typ)
 {
 	int32		result;
 	Oid			typmodin;
@@ -417,7 +417,7 @@ typenameTypeMod(ParseState *pstate, const typename__ *typename__, Type typ)
  * it is mostly used for reporting lookup errors.
  */
 static void
-appendTypeNameToBuffer(const typename__ *typename__, StringInfo string)
+appendTypeNameToBuffer(const TypeName *typename__, StringInfo string)
 {
 	if (typename__->names != NIL)
 	{
@@ -456,7 +456,7 @@ appendTypeNameToBuffer(const typename__ *typename__, StringInfo string)
  * it is mostly used for reporting lookup errors.
  */
 char *
-TypeNameToString(const typename__ *typename__)
+TypeNameToString(const TypeName *typename__)
 {
 	StringInfoData string;
 
@@ -478,9 +478,9 @@ TypeNameListToString(List *typenames)
 	initStringInfo(&string);
 	foreach(l, typenames)
 	{
-		typename__   *typename__ = (typename__ *) lfirst(l);
+		TypeName   *typename__ = (TypeName *) lfirst(l);
 
-		Assert(IsA(typename__, typename__));
+		Assert(IsA(TypeName, TypeName));
 		if (l != list_head(typenames))
 			appendStringInfoChar(&string, ',');
 		appendTypeNameToBuffer(typename__, &string);
@@ -684,7 +684,7 @@ pts_error_callback(void *arg)
  * the string and return the result as a typename__.
  * If the string cannot be parsed as a type, an error is raised.
  */
-typename__ *
+TypeName *
 typeStringToTypeName(const char *str)
 {
 	StringInfoData buf;
@@ -692,7 +692,7 @@ typeStringToTypeName(const char *str)
 	SelectStmt *stmt;
 	ResTarget  *restarget;
 	TypeCast   *typecast;
-	typename__   *typename__;
+	TypeName   *typename__;
 	ErrorContextCallback ptserrcontext;
 
 	/* make sure we give useful error for empty input */
@@ -755,7 +755,7 @@ typeStringToTypeName(const char *str)
 
 	typename__ = typecast->typename__;
 	if (typename__ == NULL ||
-		!IsA(typename__, typename__))
+		!IsA(typename__, TypeName))
 		goto fail;
 	if (typename__->setof)
 		goto fail;
@@ -781,7 +781,7 @@ fail:
 void
 parseTypeString(const char *str, Oid *typeid_p, int32 *typmod_p, bool missing_ok)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Type		tup;
 
 	typename__ = typeStringToTypeName(str);

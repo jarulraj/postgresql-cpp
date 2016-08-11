@@ -2429,10 +2429,10 @@ _copyMultiAssignRef(const MultiAssignRef *from)
 	return newnode;
 }
 
-static typename__ *
-_copyTypeName(const typename__ *from)
+static TypeName *
+_copyTypeName(const TypeName *from)
 {
-	typename__   *newnode = makeNode(typename__);
+	TypeName   *newnode = makeNode(TypeName);
 
 	COPY_NODE_FIELD(names);
 	COPY_SCALAR_FIELD(typeOid);

@@ -413,7 +413,7 @@ static void ATPrepAddInherit(Relation child_rel);
 static ObjectAddress ATExecAddInherit(Relation child_rel, RangeVar *parent, LOCKMODE lockmode);
 static ObjectAddress ATExecDropInherit(Relation rel, RangeVar *parent, LOCKMODE lockmode);
 static void drop_parent_dependency(Oid relid, Oid refclassid, Oid refobjid);
-static ObjectAddress ATExecAddOf(Relation rel, const typename__ *ofTypename, LOCKMODE lockmode);
+static ObjectAddress ATExecAddOf(Relation rel, const TypeName *ofTypename, LOCKMODE lockmode);
 static void ATExecDropOf(Relation rel, LOCKMODE lockmode);
 static void ATExecReplicaIdentity(Relation rel, ReplicaIdentityStmt *stmt, LOCKMODE lockmode);
 static void ATExecGenericOptions(Relation rel, List *options);
@@ -3662,7 +3662,7 @@ ATExecCmd(List **wqueue, AlteredTableInfo *tab, Relation rel,
 			address = ATExecDropInherit(rel, (RangeVar *) cmd->def, lockmode);
 			break;
 		case AT_AddOf:
-			address = ATExecAddOf(rel, (typename__ *) cmd->def, lockmode);
+			address = ATExecAddOf(rel, (TypeName *) cmd->def, lockmode);
 			break;
 		case AT_DropOf:
 			ATExecDropOf(rel, lockmode);
@@ -7820,7 +7820,7 @@ ATPrepAlterColumnType(List **wqueue,
 {
 	char	   *colName = cmd->name;
 	ColumnDef  *def = (ColumnDef *) cmd->def;
-	typename__   *typename__ = def->typename__;
+	TypeName   *typename__ = def->typename__;
 	Node	   *transform = def->cooked_default;
 	HeapTuple	tuple;
 	Form_pg_attribute attTup;
@@ -8023,7 +8023,7 @@ ATExecAlterColumnType(AlteredTableInfo *tab, Relation rel,
 {
 	char	   *colName = cmd->name;
 	ColumnDef  *def = (ColumnDef *) cmd->def;
-	typename__   *typename__ = def->typename__;
+	TypeName   *typename__ = def->typename__;
 	HeapTuple	heapTup;
 	Form_pg_attribute attTup;
 	AttrNumber	attnum;
@@ -10655,7 +10655,7 @@ drop_parent_dependency(Oid relid, Oid refclassid, Oid refobjid)
  * The address of the type is returned.
  */
 static ObjectAddress
-ATExecAddOf(Relation rel, const typename__ *ofTypename, LOCKMODE lockmode)
+ATExecAddOf(Relation rel, const TypeName *ofTypename, LOCKMODE lockmode)
 {
 	Oid			relid = RelationGetRelid(rel);
 	Type		typetuple;

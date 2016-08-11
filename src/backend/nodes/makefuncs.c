@@ -437,7 +437,7 @@ makeRangeVar(char *schemaname, char *relname, int location)
  *
  * typmod is defaulted, but can be changed later by caller.
  */
-typename__ *
+TypeName *
 makeTypeName(char *typnam)
 {
 	return makeTypeNameFromNameList(list_make1(makeString(typnam)));
@@ -449,10 +449,10 @@ makeTypeName(char *typnam)
  *
  * typmod is defaulted, but can be changed later by caller.
  */
-typename__ *
+TypeName *
 makeTypeNameFromNameList(List *names)
 {
-	typename__   *n = makeNode(typename__);
+	TypeName   *n = makeNode(TypeName);
 
 	n->names = names;
 	n->typmods = NIL;
@@ -465,10 +465,10 @@ makeTypeNameFromNameList(List *names)
  * makeTypeNameFromOid -
  *	build a typename__ node to represent a type already known by OID/typmod.
  */
-typename__ *
+TypeName *
 makeTypeNameFromOid(Oid typeOid, int32 typmod)
 {
-	typename__   *n = makeNode(typename__);
+	TypeName   *n = makeNode(TypeName);
 
 	n->typeOid = typeOid;
 	n->typemod = typmod;

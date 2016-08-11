@@ -817,8 +817,8 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 				address.classId = OperatorRelationId;
 				address.objectId =
 					LookupOperNameTypeNames(NULL, objname,
-											(typename__ *) linitial(objargs),
-											(typename__ *) lsecond(objargs),
+											(TypeName *) linitial(objargs),
+											(TypeName *) lsecond(objargs),
 											missing_ok, -1);
 				address.objectSubId = 0;
 				break;
@@ -857,8 +857,8 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 				break;
 			case OBJECT_CAST:
 				{
-					typename__   *sourcetype = (typename__ *) linitial(objname);
-					typename__   *targettype = (typename__ *) linitial(objargs);
+					TypeName   *sourcetype = (TypeName *) linitial(objname);
+					TypeName   *targettype = (TypeName *) linitial(objargs);
 					Oid			sourcetypeid;
 					Oid			targettypeid;
 
@@ -872,7 +872,7 @@ get_object_address(ObjectType objtype, List *objname, List *objargs,
 				break;
 			case OBJECT_TRANSFORM:
 				{
-					typename__   *typename__ = (typename__ *) linitial(objname);
+					TypeName   *typename__ = (TypeName *) linitial(objname);
 					char	   *langname = strVal(linitial(objargs));
 					Oid			type_id = LookupTypeNameOid(NULL, typename__, missing_ok);
 					Oid			lang_id = get_language_oid(langname, missing_ok);
@@ -1442,10 +1442,10 @@ static ObjectAddress
 get_object_address_type(ObjectType objtype, ListCell *typecell, bool missing_ok)
 {
 	ObjectAddress address;
-	typename__   *typename__;
+	TypeName   *typename__;
 	Type		tup;
 
-	typename__ = (typename__ *) lfirst(typecell);
+	typename__ = (TypeName *) lfirst(typecell);
 
 	address.classId = TypeRelationId;
 	address.objectId = InvalidOid;
@@ -2116,8 +2116,8 @@ check_object_ownership(Oid roleid, ObjectType objtype, ObjectAddress address,
 		case OBJECT_CAST:
 			{
 				/* We can only check permissions on the source/target types */
-				typename__   *sourcetype = (typename__ *) linitial(objname);
-				typename__   *targettype = (typename__ *) linitial(objargs);
+				TypeName   *sourcetype = (TypeName *) linitial(objname);
+				TypeName   *targettype = (TypeName *) linitial(objargs);
 				Oid			sourcetypeid = typenameTypeId(NULL, sourcetype);
 				Oid			targettypeid = typenameTypeId(NULL, targettype);
 
@@ -2132,7 +2132,7 @@ check_object_ownership(Oid roleid, ObjectType objtype, ObjectAddress address,
 			break;
 		case OBJECT_TRANSFORM:
 			{
-				typename__   *typename__ = (typename__ *) linitial(objname);
+				TypeName   *typename__ = (TypeName *) linitial(objname);
 				Oid			typeid__ = typenameTypeId(NULL, typename__);
 
 				if (!pg_type_ownercheck(typeid__, roleid))

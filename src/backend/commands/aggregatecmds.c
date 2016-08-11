@@ -67,9 +67,9 @@ DefineAggregate(List *name, List *args, bool oldstyle, List *parameters,
 	bool		finalfuncExtraArgs = false;
 	bool		mfinalfuncExtraArgs = false;
 	List	   *sortoperatorName = NIL;
-	typename__   *baseType = NULL;
-	typename__   *transType = NULL;
-	typename__   *mtransType = NULL;
+	TypeName   *baseType = NULL;
+	TypeName   *transType = NULL;
+	TypeName   *mtransType = NULL;
 	int32		transSpace = 0;
 	int32		mtransSpace = 0;
 	char	   *initval = NULL;

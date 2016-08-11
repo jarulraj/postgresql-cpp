@@ -1222,7 +1222,7 @@ ObjectAddress
 AlterEnum(AlterEnumStmt *stmt, bool isTopLevel)
 {
 	Oid			enum_type_oid;
-	typename__   *typename__;
+	TypeName   *typename__;
 	HeapTuple	tup;
 	ObjectAddress address;
 
@@ -2127,7 +2127,7 @@ DefineCompositeType(RangeVar *typevar, List *coldeflist)
 ObjectAddress
 AlterDomainDefault(List *names, Node *defaultRaw)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			domainoid;
 	HeapTuple	tup;
 	ParseState *pstate;
@@ -2268,7 +2268,7 @@ AlterDomainDefault(List *names, Node *defaultRaw)
 ObjectAddress
 AlterDomainNotNull(List *names, bool notNull)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			domainoid;
 	Relation	typrel;
 	HeapTuple	tup;
@@ -2386,7 +2386,7 @@ ObjectAddress
 AlterDomainDropConstraint(List *names, const char *constrName,
 						  DropBehavior behavior, bool missing_ok)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			domainoid;
 	HeapTuple	tup;
 	Relation	rel;
@@ -2476,7 +2476,7 @@ ObjectAddress
 AlterDomainAddConstraint(List *names, Node *newConstraint,
 						 ObjectAddress *constrAddr)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			domainoid;
 	Relation	typrel;
 	HeapTuple	tup;
@@ -2584,7 +2584,7 @@ AlterDomainAddConstraint(List *names, Node *newConstraint,
 ObjectAddress
 AlterDomainValidateConstraint(List *names, char *constrName)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			domainoid;
 	Relation	typrel;
 	Relation	conrel;
@@ -3112,7 +3112,7 @@ RenameType(RenameStmt *stmt)
 {
 	List	   *names = stmt->object;
 	const char *newTypeName = stmt->newname;
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			typeOid;
 	Relation	rel;
 	HeapTuple	tup;
@@ -3188,7 +3188,7 @@ RenameType(RenameStmt *stmt)
 ObjectAddress
 AlterTypeOwner(List *names, Oid newOwnerId, ObjectType objecttype)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			typeOid;
 	Relation	rel;
 	HeapTuple	tup;
@@ -3395,7 +3395,7 @@ ObjectAddress
 AlterTypeNamespace(List *names, const char *newschema, ObjectType objecttype,
 				   Oid *oldschema)
 {
-	typename__   *typename__;
+	TypeName   *typename__;
 	Oid			typeOid;
 	Oid			nspOid;
 	Oid			oldNspOid;

@@ -6564,7 +6564,7 @@ flatten_set_variable_args(const char *name, List *args)
 	{
 		Node	   *arg = (Node *) lfirst(l);
 		char	   *val;
-		typename__   *typename__ = NULL;
+		TypeName   *typename__ = NULL;
 		A_Const    *con;
 
 		if (l != list_head(args))

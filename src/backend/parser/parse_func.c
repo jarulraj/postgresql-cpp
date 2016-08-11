@@ -1949,7 +1949,7 @@ LookupFuncNameTypeNames(List *funcname, List *argtypes, bool noError)
 	args_item = list_head(argtypes);
 	for (i = 0; i < argcount; i++)
 	{
-		typename__   *t = (typename__ *) lfirst(args_item);
+		TypeName   *t = (TypeName *) lfirst(args_item);
 
 		argoids[i] = LookupTypeNameOid(NULL, t, noError);
 		args_item = lnext(args_item);
@@ -1989,7 +1989,7 @@ LookupAggNameTypeNames(List *aggname, List *argtypes, bool noError)
 	i = 0;
 	foreach(lc, argtypes)
 	{
-		typename__   *t = (typename__ *) lfirst(lc);
+		TypeName   *t = (TypeName *) lfirst(lc);
 
 		argoids[i] = LookupTypeNameOid(NULL, t, noError);
 		i++;

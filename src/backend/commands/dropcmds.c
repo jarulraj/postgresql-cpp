@@ -222,11 +222,11 @@ type_in_list_does_not_exist_skipping(List *typenames, const char **msg,
 
 	foreach(l, typenames)
 	{
-		typename__   *typename__ = (typename__ *) lfirst(l);
+		TypeName   *typename__ = (TypeName *) lfirst(l);
 
 		if (typename__ != NULL)
 		{
-			Assert(IsA(typename__, typename__));
+			Assert(IsA(TypeName, TypeName));
 
 			if (!OidIsValid(LookupTypeNameOid(NULL, typename__, true)))
 			{
@@ -265,7 +265,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 		case OBJECT_TYPE:
 		case OBJECT_DOMAIN:
 			{
-				typename__   *typ = linitial(objname);
+				TypeName   *typ = linitial(objname);
 
 				if (!schema_does_not_exist_skipping(typ->names, &msg, &name))
 				{
@@ -361,8 +361,8 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 				{
 					/* XXX quote or no quote? */
 					msg = gettext_noop("cast from type %s to type %s does not exist, skipping");
-					name = TypeNameToString((typename__ *) linitial(objname));
-					args = TypeNameToString((typename__ *) linitial(objargs));
+					name = TypeNameToString((TypeName *) linitial(objname));
+					args = TypeNameToString((TypeName *) linitial(objargs));
 				}
 			}
 			break;
@@ -370,7 +370,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 			if (!type_in_list_does_not_exist_skipping(objname, &msg, &name))
 			{
 				msg = gettext_noop("transform for type %s language \"%s\" does not exist, skipping");
-				name = TypeNameToString((typename__ *) linitial(objname));
+				name = TypeNameToString((TypeName *) linitial(objname));
 				args = strVal(linitial(objargs));
 			}
 			break;

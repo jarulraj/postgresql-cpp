@@ -2276,7 +2276,7 @@ _outColumnDef(StringInfo str, const ColumnDef *node)
 }
 
 static void
-_outTypeName(StringInfo str, const typename__ *node)
+_outTypeName(StringInfo str, const TypeName *node)
 {
 	WRITE_NODE_TYPE("typename__");
 

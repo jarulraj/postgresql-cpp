@@ -25,7 +25,7 @@ extern Oid LookupOperName(ParseState *pstate, List *opername,
 			   Oid oprleft, Oid oprright,
 			   bool noError, int location);
 extern Oid LookupOperNameTypeNames(ParseState *pstate, List *opername,
-						typename__ *oprleft, typename__ *oprright,
+						TypeName *oprleft, TypeName *oprright,
 						bool noError, int location);
 
 /* Routines to find operators matching a name and given input types */

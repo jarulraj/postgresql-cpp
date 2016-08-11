@@ -184,7 +184,7 @@ typedef struct Query
  * the type of that field.  Otherwise (the normal case), names is a type
  * name possibly qualified with schema and database name.
  */
-typedef struct typename__
+typedef struct TypeName
 {
 	NodeTag		type;
 	List	   *names;			/* qualified name (list of Value strings) */
@@ -195,7 +195,7 @@ typedef struct typename__
 	int32		typemod;		/* prespecified type modifier */
 	List	   *arrayBounds;	/* array bounds */
 	int			location;		/* token location, or -1 if unknown */
-} typename__;
+} TypeName;
 
 /*
  * ColumnRef - specifies a reference to a column, or possibly a whole tuple
@@ -276,7 +276,7 @@ typedef struct TypeCast
 {
 	NodeTag		type;
 	Node	   *arg;			/* the expression being casted */
-	typename__   *typename__;		/* the target type */
+	TypeName   *typename__;		/* the target type */
 	int			location;		/* token location, or -1 if unknown */
 } TypeCast;
 
@@ -581,7 +581,7 @@ typedef struct ColumnDef
 {
 	NodeTag		type;
 	char	   *colname;		/* name of column */
-	typename__   *typename__;		/* type of column */
+	TypeName   *typename__;		/* type of column */
 	int			inhcount;		/* number of times column is inherited */
 	bool		is_local;		/* column has local (non-inherited) def'n */
 	bool		is_not_null;	/* NOT NULL constraint specified? */
@@ -687,7 +687,7 @@ typedef struct XmlSerialize
 	NodeTag		type;
 	XmlOptionType xmloption;	/* DOCUMENT or CONTENT */
 	Node	   *expr;
-	typename__   *typename__;
+	TypeName   *typename__;
 	int			location;		/* token location, or -1 if unknown */
 } XmlSerialize;
 
@@ -1743,7 +1743,7 @@ typedef struct CreateStmt
 	List	   *tableElts;		/* column definitions (list of ColumnDef) */
 	List	   *inhRelations;	/* relations to inherit from (list of
 								 * inhRelation) */
-	typename__   *ofTypename;		/* OF typename__ */
+	TypeName   *ofTypename;		/* OF typename__ */
 	List	   *constraints;	/* constraints (list of Constraint nodes) */
 	List	   *options;		/* options from WITH clause */
 	OnCommitAction oncommit;	/* what do we do at COMMIT? */
@@ -2221,7 +2221,7 @@ typedef struct CreateDomainStmt
 {
 	NodeTag		type;
 	List	   *domainname;		/* qualified name (list of Value strings) */
-	typename__   *typename__;		/* the base type */
+	TypeName   *typename__;		/* the base type */
 	CollateClause *collClause;	/* untransformed COLLATE spec, if any */
 	List	   *constraints;	/* constraints (list of Constraint nodes) */
 } CreateDomainStmt;
@@ -2236,7 +2236,7 @@ typedef struct CreateOpClassStmt
 	List	   *opclassname;	/* qualified name (list of Value strings) */
 	List	   *opfamilyname;	/* qualified name (ditto); NIL if omitted */
 	char	   *amname;			/* name of index AM opclass is for */
-	typename__   *datatype;		/* datatype of indexed column */
+	TypeName   *datatype;		/* datatype of indexed column */
 	List	   *items;			/* List of CreateOpClassItem nodes */
 	bool		isDefault;		/* Should be marked as default for type? */
 } CreateOpClassStmt;
@@ -2256,7 +2256,7 @@ typedef struct CreateOpClassItem
 	List	   *order_family;	/* only used for ordering operators */
 	List	   *class_args;		/* only used for functions */
 	/* fields used for a storagetype item: */
-	typename__   *storedtype;		/* datatype stored in index */
+	TypeName   *storedtype;		/* datatype stored in index */
 } CreateOpClassItem;
 
 /* ----------------------
@@ -2445,7 +2445,7 @@ typedef struct CreateFunctionStmt
 	bool		replace;		/* T => replace if already exists */
 	List	   *funcname;		/* qualified name of function to create */
 	List	   *parameters;		/* a list of FunctionParameter */
-	typename__   *returnType;		/* the return type */
+	TypeName   *returnType;		/* the return type */
 	List	   *options;		/* a list of DefElem */
 	List	   *withClause;		/* a list of DefElem */
 } CreateFunctionStmt;
@@ -2464,7 +2464,7 @@ typedef struct FunctionParameter
 {
 	NodeTag		type;
 	char	   *name;			/* parameter name, or NULL if not given */
-	typename__   *argType;		/* typename__ for parameter type */
+	TypeName   *argType;		/* typename__ for parameter type */
 	FunctionParameterMode mode; /* IN/OUT/etc */
 	Node	   *defexpr;		/* raw default expr, or NULL if not given */
 } FunctionParameter;
@@ -2935,8 +2935,8 @@ typedef struct CreateConversionStmt
 typedef struct CreateCastStmt
 {
 	NodeTag		type;
-	typename__   *sourcetype;
-	typename__   *targettype;
+	TypeName   *sourcetype;
+	TypeName   *targettype;
 	FuncWithArgs *func;
 	CoercionContext context;
 	bool		inout;
@@ -2950,7 +2950,7 @@ typedef struct CreateTransformStmt
 {
 	NodeTag		type;
 	bool		replace;
-	typename__   *type_name;
+	TypeName   *type_name;
 	char	   *lang;
 	FuncWithArgs *fromsql;
 	FuncWithArgs *tosql;

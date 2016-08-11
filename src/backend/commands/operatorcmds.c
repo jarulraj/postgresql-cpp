@@ -69,8 +69,8 @@ DefineOperator(List *names, List *parameters)
 	bool		canMerge = false;		/* operator__ merges */
 	bool		canHash = false;	/* operator__ hashes */
 	List	   *functionName = NIL;		/* function for operator__ */
-	typename__   *typeName1 = NULL;		/* first type name */
-	typename__   *typeName2 = NULL;		/* second type name */
+	TypeName   *typeName1 = NULL;		/* first type name */
+	TypeName   *typeName2 = NULL;		/* second type name */
 	Oid			typeId1 = InvalidOid;	/* types converted to OID */
 	Oid			typeId2 = InvalidOid;
 	Oid			rettype;

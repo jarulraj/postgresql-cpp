@@ -80,7 +80,7 @@
  * condition.)
  */
 static void
-compute_return_type(typename__ *returnType, Oid languageOid,
+compute_return_type(TypeName *returnType, Oid languageOid,
 					Oid *prorettype_p, bool *returnsSet_p)
 {
 	Oid			rettype;
@@ -221,7 +221,7 @@ interpret_function_parameter_list(List *parameters,
 	foreach(x, parameters)
 	{
 		FunctionParameter *fp = (FunctionParameter *) lfirst(x);
-		typename__   *t = fp->argType;
+		TypeName   *t = fp->argType;
 		bool		isinput = false;
 		Oid			toid;
 		Type		typtup;

@@ -156,7 +156,7 @@ extern void core_yyset_column(int column_no, yyscan_t yyscanner);
  *  <xusend> end of a quoted string with Unicode escapes, UESCAPE can follow
  *  <xeu> Unicode surrogate pair in extended quoted string
  *
- * Remember to add an <<EOF>> case whenever you add a new exclusive state!
+ * Remember to add an <<EOF>> case whenever you add a new__ exclusive state!
  * The default one is probably not the right thing.
  */
 
@@ -1160,7 +1160,7 @@ addlit(char *ytext, int yleng, core_yyscan_t yyscanner)
 		yyextra->literalbuf = (char *) repalloc(yyextra->literalbuf,
 												yyextra->literalalloc);
 	}
-	/* append new data */
+	/* append new__ data */
 	memcpy(yyextra->literalbuf + yyextra->literallen, ytext, yleng);
 	yyextra->literallen += yleng;
 }
@@ -1176,7 +1176,7 @@ addlitchar(unsigned char ychar, core_yyscan_t yyscanner)
 		yyextra->literalbuf = (char *) repalloc(yyextra->literalbuf,
 												yyextra->literalalloc);
 	}
-	/* append new data */
+	/* append new__ data */
 	yyextra->literalbuf[yyextra->literallen] = ychar;
 	yyextra->literallen += 1;
 }
@@ -1189,12 +1189,12 @@ static char *
 litbufdup(core_yyscan_t yyscanner)
 {
 	int			llen = yyextra->literallen;
-	char	   *new;
+	char	   *new__;
 
-	new = palloc(llen + 1);
-	memcpy(new, yyextra->literalbuf, llen);
-	new[llen] = '\0';
-	return new;
+	new__ = palloc(llen + 1);
+	memcpy(new__, yyextra->literalbuf, llen);
+	new__[llen] = '\0';
+	return new__;
 }
 
 static int
@@ -1301,7 +1301,7 @@ check_uescapechar(unsigned char escape)
 static char *
 litbuf_udeescape(unsigned char escape, core_yyscan_t yyscanner)
 {
-	char *new;
+	char *new__;
 	char *litbuf, *in, *out;
 	pg_wchar pair_first = 0;
 
@@ -1313,10 +1313,10 @@ litbuf_udeescape(unsigned char escape, core_yyscan_t yyscanner)
 	 * This relies on the subtle assumption that a UTF-8 expansion
 	 * cannot be longer than its escaped representation.
 	 */
-	new = palloc(yyextra->literallen + 1);
+	new__ = palloc(yyextra->literallen + 1);
 
 	in = litbuf;
-	out = new;
+	out = new__;
 	while (*in)
 	{
 		if (in[0] == escape)
@@ -1433,8 +1433,8 @@ litbuf_udeescape(unsigned char escape, core_yyscan_t yyscanner)
 	 * codes; but it's probably not worth the trouble, since this isn't
 	 * likely to be a performance-critical path.
 	 */
-	pg_verifymbstr(new, out - new, false);
-	return new;
+	pg_verifymbstr(new__, out - new__, false);
+	return new__;
 }
 
 static unsigned char

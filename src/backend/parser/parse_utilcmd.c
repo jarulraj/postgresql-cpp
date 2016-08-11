@@ -107,7 +107,7 @@ static void transformTableConstraint(CreateStmtContext *cxt,
 static void transformTableLikeClause(CreateStmtContext *cxt,
 						 TableLikeClause *table_like_clause);
 static void transformOfType(CreateStmtContext *cxt,
-				typename__ *ofTypename);
+				TypeName *ofTypename);
 static IndexStmt *generateClonedIndexStmt(CreateStmtContext *cxt,
 						Relation source_idx,
 						const AttrNumber *attmap, int attmap_length);
@@ -975,7 +975,7 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 }
 
 static void
-transformOfType(CreateStmtContext *cxt, typename__ *ofTypename)
+transformOfType(CreateStmtContext *cxt, TypeName *ofTypename)
 {
 	HeapTuple	tuple;
 	TupleDesc	tupdesc;

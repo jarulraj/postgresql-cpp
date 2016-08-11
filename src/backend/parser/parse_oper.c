@@ -140,7 +140,7 @@ LookupOperName(ParseState *pstate, List *opername, Oid oprleft, Oid oprright,
  */
 Oid
 LookupOperNameTypeNames(ParseState *pstate, List *opername,
-						typename__ *oprleft, typename__ *oprright,
+						TypeName *oprleft, TypeName *oprright,
 						bool noError, int location)
 {
 	Oid			leftoid,

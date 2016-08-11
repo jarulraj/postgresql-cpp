@@ -5430,7 +5430,7 @@ xact_redo_commit(xl_xact_parsed_commit *parsed,
 			SMgrRelation srel = smgropen(parsed->xnodes[i], InvalidBackendId);
 			ForkNumber	fork;
 
-			for (fork = 0; fork <= MAX_FORKNUM; fork++)
+			for (fork = 0; fork <= MAX_FORKNUM; fork = fork + 1)
 				XLogDropRelation(parsed->xnodes[i], fork);
 			smgrdounlink(srel, true);
 			smgrclose(srel);
@@ -5533,7 +5533,7 @@ xact_redo_abort(xl_xact_parsed_abort *parsed, TransactionId xid)
 		SMgrRelation srel = smgropen(parsed->xnodes[i], InvalidBackendId);
 		ForkNumber	fork;
 
-		for (fork = 0; fork <= MAX_FORKNUM; fork++)
+		for (fork = 0; fork <= MAX_FORKNUM; fork = fork + 1)
 			XLogDropRelation(parsed->xnodes[i], fork);
 		smgrdounlink(srel, true);
 		smgrclose(srel);
