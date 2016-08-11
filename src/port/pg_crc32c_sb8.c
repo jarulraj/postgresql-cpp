@@ -109,6 +109,8 @@ pg_comp_crc32c_sb8(pg_crc32c crc, const void *data, size_t len)
  * order (IOW, the tables are stored in little-endian order even on big-endian
  * systems).
  */
+// Peloton
+namespace {
 static const uint32 pg_crc32c_table[8][256] = {
 #ifndef WORDS_BIGENDIAN
 	{
@@ -1169,4 +1171,5 @@ static const uint32 pg_crc32c_table[8][256] = {
 		0xCCB751C4, 0xEBCA6D8D, 0x824D2956, 0xA530151F
 	}
 #endif   /* WORDS_BIGENDIAN */
+};
 };
