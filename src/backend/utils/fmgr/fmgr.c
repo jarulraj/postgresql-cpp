@@ -58,6 +58,36 @@ typedef int32 (*func_ptr) ();
 typedef char *(*func_ptr) ();
 #endif
 
+// Peloton porting: define function pointer for different number of parameters
+typedef char *(*func_ptr0)();
+typedef char *(*func_ptr1)(Datum, bool *);
+typedef char *(*func_ptr2)(Datum, Datum);
+typedef char *(*func_ptr3)(Datum, Datum, Datum);
+typedef char *(*func_ptr4)(Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr5)(Datum, Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr6)(Datum, Datum, Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr7)(Datum, Datum, Datum, Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr8)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                           Datum);
+typedef char *(*func_ptr9)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                           Datum, Datum);
+typedef char *(*func_ptr10)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum);
+typedef char *(*func_ptr11)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr12)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr13)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr14)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum, Datum, Datum, Datum, Datum);
+typedef char *(*func_ptr15)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum);
+typedef char *(*func_ptr16)(Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+                            Datum, Datum, Datum, Datum, Datum, Datum, Datum,
+Datum, Datum);
+
 /*
  * For an oldstyle function, fn_extra points to a record like this:
  */
