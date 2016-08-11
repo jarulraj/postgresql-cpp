@@ -16,20 +16,12 @@ include $(top_builddir)/src/Makefile.global
 SUBDIRS = \
 	initdb \
 	pg_archivecleanup \
-	pg_basebackup \
 	pg_config \
 	pg_controldata \
-	pg_ctl \
-	pg_dump \
 	pg_resetxlog \
-	pg_rewind \
 	pg_test_fsync \
 	pg_test_timing \
-	pg_upgrade \
-	pg_xlogdump \
-	pgbench \
-	psql \
-	scripts
+	pg_xlogdump
 
 ifeq ($(PORTNAME), win32)
 SUBDIRS += pgevent

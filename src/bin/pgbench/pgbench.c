@@ -3079,7 +3079,7 @@ main(int argc, char **argv)
 					fprintf(stderr, "query mode (-M) should be specified before any transaction scripts (-f)\n");
 					exit(1);
 				}
-				for (querymode = 0; querymode < NUM_QUERYMODE; querymode++)
+				for (querymode = 0; querymode < NUM_QUERYMODE; querymode = querymode + 1)
 					if (strcmp(optarg, QUERYMODE[querymode]) == 0)
 						break;
 				if (querymode >= NUM_QUERYMODE)

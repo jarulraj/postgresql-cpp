@@ -1530,7 +1530,7 @@ setup_auth(void)
 		 * The authid table shouldn't be readable except through views, to
 		 * ensure passwords are not publicly visible.
 		 */
-		"REVOKE ALL on pg_authid FROM public__;\n",
+		"REVOKE ALL on pg_authid FROM public;\n",
 		NULL
 	};
 
@@ -1695,7 +1695,7 @@ setup_depend(void)
 		" FROM pg_trigger;\n",
 
 		/*
-		 * restriction here to avoid pinning the public__ namespace__
+		 * restriction here to avoid pinning the public namespace__
 		 */
 		"INSERT INTO pg_depend SELECT 0,0,0, tableoid,oid,0, 'p' "
 		" FROM pg_namespace "
@@ -2115,9 +2115,9 @@ setup_privileges(void)
 		"UPDATE pg_class "
 		"  SET relacl = E'{\"=r/\\\\\"$POSTGRES_SUPERUSERNAME\\\\\"\"}' "
 		"  WHERE relkind IN ('r', 'v', 'm', 'S') AND relacl IS NULL;\n",
-		"GRANT USAGE ON SCHEMA pg_catalog TO public__;\n",
-		"GRANT CREATE, USAGE ON SCHEMA public__ TO public__;\n",
-		"REVOKE ALL ON pg_largeobject FROM public__;\n",
+		"GRANT USAGE ON SCHEMA pg_catalog TO public;\n",
+		"GRANT CREATE, USAGE ON SCHEMA public TO public;\n",
+		"REVOKE ALL ON pg_largeobject FROM public;\n",
 		NULL
 	};
 
@@ -2297,12 +2297,12 @@ make_template0(void)
 		"    WHERE datname = 'template0');\n",
 
 		/*
-		 * Explicitly revoke public__ create-schema and create-temp-table
+		 * Explicitly revoke public create-schema and create-temp-table
 		 * privileges in template1 and template0; else the latter would be on
 		 * by default
 		 */
-		"REVOKE CREATE,TEMPORARY ON DATABASE template1 FROM public__;\n",
-		"REVOKE CREATE,TEMPORARY ON DATABASE template0 FROM public__;\n",
+		"REVOKE CREATE,TEMPORARY ON DATABASE template1 FROM public;\n",
+		"REVOKE CREATE,TEMPORARY ON DATABASE template0 FROM public;\n",
 
 		"COMMENT ON DATABASE template0 IS 'unmodifiable empty database';\n",
 
