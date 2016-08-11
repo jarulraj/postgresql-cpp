@@ -190,7 +190,7 @@ static BlockNumber _mdnblocks(SMgrRelation reln, ForkNumber forknum,
 
 
 /*
- *	mdinit() -- Initialize private__ state for magnetic disk storage manager.
+ *	mdinit() -- Initialize private state for magnetic disk storage manager.
  */
 void
 mdinit(void)

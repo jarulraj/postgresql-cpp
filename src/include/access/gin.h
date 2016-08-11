@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------------
  * gin.h
- *	  public__ header file for Generalized Inverted Index access method.
+ *	  public header file for Generalized Inverted Index access method.
  *
  *	Copyright (c) 2006-2015, PostgreSQL Global Development Group
  *

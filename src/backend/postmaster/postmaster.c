@@ -5255,7 +5255,7 @@ StartChildProcess(AuxProcType type)
  *		Start an autovac worker process.
  *
  * This function is here because it enters the resulting PID into the
- * postmaster's private__ backends list.
+ * postmaster's private backends list.
  *
  * NB -- this__ code very roughly matches BackendStartup.
  */

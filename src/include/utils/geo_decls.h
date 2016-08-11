@@ -178,7 +178,7 @@ typedef struct
  * in geo_ops.h
  */
 
-/* public__ point routines */
+/* public point routines */
 extern Datum point_in(PG_FUNCTION_ARGS);
 extern Datum point_out(PG_FUNCTION_ARGS);
 extern Datum point_recv(PG_FUNCTION_ARGS);
@@ -199,12 +199,12 @@ extern Datum point_sub(PG_FUNCTION_ARGS);
 extern Datum point_mul(PG_FUNCTION_ARGS);
 extern Datum point_div(PG_FUNCTION_ARGS);
 
-/* private__ routines */
+/* private routines */
 extern double point_dt(Point *pt1, Point *pt2);
 extern double point_sl(Point *pt1, Point *pt2);
 extern double pg_hypot(double x, double y);
 
-/* public__ lseg routines */
+/* public lseg routines */
 extern Datum lseg_in(PG_FUNCTION_ARGS);
 extern Datum lseg_out(PG_FUNCTION_ARGS);
 extern Datum lseg_recv(PG_FUNCTION_ARGS);
@@ -250,7 +250,7 @@ extern Datum inter_sl(PG_FUNCTION_ARGS);
 extern Datum inter_sb(PG_FUNCTION_ARGS);
 extern Datum inter_lb(PG_FUNCTION_ARGS);
 
-/* public__ line routines */
+/* public line routines */
 extern Datum line_in(PG_FUNCTION_ARGS);
 extern Datum line_out(PG_FUNCTION_ARGS);
 extern Datum line_recv(PG_FUNCTION_ARGS);
@@ -265,7 +265,7 @@ extern Datum line_vertical(PG_FUNCTION_ARGS);
 extern Datum line_horizontal(PG_FUNCTION_ARGS);
 extern Datum line_eq(PG_FUNCTION_ARGS);
 
-/* public__ box routines */
+/* public box routines */
 extern Datum box_in(PG_FUNCTION_ARGS);
 extern Datum box_out(PG_FUNCTION_ARGS);
 extern Datum box_recv(PG_FUNCTION_ARGS);
@@ -305,7 +305,7 @@ extern Datum box_div(PG_FUNCTION_ARGS);
 extern Datum point_box(PG_FUNCTION_ARGS);
 extern Datum boxes_bound_box(PG_FUNCTION_ARGS);
 
-/* public__ path routines */
+/* public path routines */
 extern Datum path_area(PG_FUNCTION_ARGS);
 extern Datum path_in(PG_FUNCTION_ARGS);
 extern Datum path_out(PG_FUNCTION_ARGS);
@@ -335,7 +335,7 @@ extern Datum path_div_pt(PG_FUNCTION_ARGS);
 extern Datum path_center(PG_FUNCTION_ARGS);
 extern Datum path_poly(PG_FUNCTION_ARGS);
 
-/* public__ polygon routines */
+/* public polygon routines */
 extern Datum poly_in(PG_FUNCTION_ARGS);
 extern Datum poly_out(PG_FUNCTION_ARGS);
 extern Datum poly_recv(PG_FUNCTION_ARGS);
@@ -361,7 +361,7 @@ extern Datum poly_box(PG_FUNCTION_ARGS);
 extern Datum poly_path(PG_FUNCTION_ARGS);
 extern Datum box_poly(PG_FUNCTION_ARGS);
 
-/* public__ circle routines */
+/* public circle routines */
 extern Datum circle_in(PG_FUNCTION_ARGS);
 extern Datum circle_out(PG_FUNCTION_ARGS);
 extern Datum circle_recv(PG_FUNCTION_ARGS);

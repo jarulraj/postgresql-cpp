@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * smgr.c
- *	  public__ interface routines to storage manager switch.
+ *	  public interface routines to storage manager switch.
  *
  *	  All file system operations in POSTGRES dispatch through these
  *	  routines.

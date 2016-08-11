@@ -1006,7 +1006,7 @@ aclupdate(const Acl *old_acl, const AclItem *mod_aip,
 
 	/*
 	 * Remove abandoned privileges (cascading revoke).  Currently we can only
-	 * handle this__ when the grantee is not public__.
+	 * handle this__ when the grantee is not public.
 	 */
 	if ((old_goptions & ~new_goptions) != 0)
 	{
@@ -1146,7 +1146,7 @@ check_circularity(const Acl *old_acl, const AclItem *mod_aip,
 	check_acl(old_acl);
 
 	/*
-	 * For now, grant options can only be granted to roles, not public__.
+	 * For now, grant options can only be granted to roles, not public.
 	 * Otherwise we'd have to work a bit harder here.
 	 */
 	Assert(mod_aip->ai_grantee != ACL_ID_PUBLIC);
@@ -1337,7 +1337,7 @@ aclmask(const Acl *acl, Oid roleid, Oid ownerId,
 	aidat = ACL_DAT(acl);
 
 	/*
-	 * Check privileges granted directly to roleid or to public__
+	 * Check privileges granted directly to roleid or to public
 	 */
 	for (i = 0; i < num; i++)
 	{
@@ -1425,7 +1425,7 @@ aclmask_direct(const Acl *acl, Oid roleid, Oid ownerId,
 	aidat = ACL_DAT(acl);
 
 	/*
-	 * Check privileges granted directly to roleid (and not to public__)
+	 * Check privileges granted directly to roleid (and not to public)
 	 */
 	for (i = 0; i < num; i++)
 	{
@@ -1482,7 +1482,7 @@ aclmembers(const Acl *acl, Oid **roleids)
 
 		if (ai->ai_grantee != ACL_ID_PUBLIC)
 			list[j++] = ai->ai_grantee;
-		/* grantor is currently never public__, but let's check anyway */
+		/* grantor is currently never public, but let's check anyway */
 		if (ai->ai_grantor != ACL_ID_PUBLIC)
 			list[j++] = ai->ai_grantor;
 	}
@@ -1652,7 +1652,7 @@ convert_any_priv_string(text *priv_type_text,
 	char	   *chunk;
 	char	   *next_chunk;
 
-	/* We rely on priv_type being a private__, modifiable string */
+	/* We rely on priv_type being a private, modifiable string */
 	for (chunk = priv_type; chunk; chunk = next_chunk)
 	{
 		int			chunk_len;
@@ -5138,7 +5138,7 @@ get_role_oid_or_public(const char *rolname)
  * Given a RoleSpec node, return the OID it corresponds to.  If missing_ok is
  * true, return InvalidOid if the role does not exist.
  *
- * public__ is always disallowed here.  Routines wanting to handle the public__
+ * public is always disallowed here.  Routines wanting to handle the public
  * case must check the case separately.
  */
 Oid

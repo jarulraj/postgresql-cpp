@@ -299,7 +299,7 @@ static void pgstat_recv_deadlock(PgStat_MsgDeadlock *msg, int len);
 static void pgstat_recv_tempfile(PgStat_MsgTempFile *msg, int len);
 
 /* ------------------------------------------------------------
- * public__ functions called from postmaster follow
+ * public functions called from postmaster follow
  * ------------------------------------------------------------
  */
 
@@ -725,7 +725,7 @@ allow_immediate_pgstat_restart(void)
 }
 
 /* ------------------------------------------------------------
- * public__ functions used by backends follow
+ * public functions used by backends follow
  *------------------------------------------------------------
  */
 

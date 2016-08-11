@@ -75,7 +75,7 @@ bool		am_syslogger = false;
 extern bool redirection_done;
 
 /*
- * private__ state
+ * private state
  */
 static pg_time_t next_rotation_time;
 static bool pipe_eof_seen = false;

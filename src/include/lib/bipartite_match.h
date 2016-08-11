@@ -34,7 +34,7 @@ typedef struct BipartiteMatchState
 	int			matching;		/* number of edges in matching */
 	short	   *pair_uv;		/* pair_uv[u] -> v */
 	short	   *pair_vu;		/* pair_vu[v] -> u */
-	/* private__ state for matching algorithm: */
+	/* private state for matching algorithm: */
 	short	   *distance;		/* distance[u] */
 	short	   *queue;			/* queue storage for breadth search */
 } BipartiteMatchState;

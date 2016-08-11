@@ -215,7 +215,7 @@ static long hash_accesses,
 #endif
 
 /*
- * private__ function prototypes
+ * private function prototypes
  */
 static void *DynaHashAlloc(Size size);
 static HASHSEGMENT seg_alloc(HTAB *hashp);
@@ -300,7 +300,7 @@ hash_create(const char *tabname, long nelem, HASHCTL *info, int flags)
 	}
 	else
 	{
-		/* Create the hash table's private__ memory context */
+		/* Create the hash table's private memory context */
 		if (flags & HASH_CONTEXT)
 			CurrentDynaHashCxt = info->hcxt;
 		else

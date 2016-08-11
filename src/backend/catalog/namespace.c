@@ -101,7 +101,7 @@
  * the system namespace is the only one searched or inserted into.
  * initdb is also careful to set search_path to "pg_catalog" for its
  * post-bootstrap standalone backend runs.  Otherwise the default search
- * path is determined by GUC.  The factory default path contains the public__
+ * path is determined by GUC.  The factory default path contains the public
  * namespace (if it exists), preceded by the user's personal namespace
  * (if one exists).
  *

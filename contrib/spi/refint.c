@@ -155,7 +155,7 @@ check_primary_key(PG_FUNCTION_ARGS)
 			return PointerGetDatum(tuple);
 		}
 
-		if (plan->nplans <= 0)	/* Get typeid__ of column */
+		if (plan->nplans <= 0)	/* Get typeid of column */
 			argtypes[i] = SPI_gettypeid(tupdesc, fnumber);
 	}
 
@@ -401,7 +401,7 @@ check_foreign_key(PG_FUNCTION_ARGS)
 				isequal = false;
 		}
 
-		if (plan->nplans <= 0)	/* Get typeid__ of column */
+		if (plan->nplans <= 0)	/* Get typeid of column */
 			argtypes[i] = SPI_gettypeid(tupdesc, fnumber);
 	}
 	args_temp = args;

@@ -244,7 +244,7 @@ cfb_process(PGP_CFB *ctx, const uint8 *data, int len, uint8 *dst,
 }
 
 /*
- * public__ interface
+ * public interface
  */
 
 int

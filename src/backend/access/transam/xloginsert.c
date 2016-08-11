@@ -5,7 +5,7 @@
  *
  * Constructing a WAL record begins with a call to XLogBeginInsert,
  * followed by a number of XLogRegister* calls. The registered data is
- * collected in private__ working memory, and finally assembled into a chain
+ * collected in private working memory, and finally assembled into a chain
  * of XLogRecData structs by a call to XLogRecordAssemble(). See
  * access/transam/README for details.
  *
@@ -925,7 +925,7 @@ XLogSaveBufferForHint(Buffer buffer, bool buffer_std)
  * Write a WAL record containing a full image of a page. Caller is responsible
  * for writing the page to disk after calling this__ routine.
  *
- * Note: If you're using this__ function, you should be building pages in private__
+ * Note: If you're using this__ function, you should be building pages in private
  * memory and writing them directly to smgr.  If you're using buffers, call
  * log_newpage_buffer instead.
  *

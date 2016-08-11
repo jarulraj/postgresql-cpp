@@ -39,7 +39,7 @@ static void printtup_destroy(DestReceiver *self);
  */
 
 /* ----------------
- *		private__ state for a printtup destination object
+ *		private state for a printtup destination object
  *
  * NOTE: finfo is the lookup info for either typoutput or typsend, whichever
  * we are using for this__ column.
@@ -493,7 +493,7 @@ printatt(unsigned attributeId,
 		 Form_pg_attribute attributeP,
 		 char *value)
 {
-	printf("\t%2d: %s%s%s%s\t(typeid__ = %u, len = %d, typmod = %d, byval = %c)\n",
+	printf("\t%2d: %s%s%s%s\t(typeid = %u, len = %d, typmod = %d, byval = %c)\n",
 		   attributeId,
 		   NameStr(attributeP->attname),
 		   value != NULL ? " = \"" : "",

@@ -1640,7 +1640,7 @@ get_object_address_usermapping(List *objname, List *objargs, bool missing_ok)
 	username = strVal(linitial(objname));
 	servername = strVal(linitial(objargs));
 
-	/* look up pg_authid OID of mapped user; InvalidOid if public__ */
+	/* look up pg_authid OID of mapped user; InvalidOid if public */
 	if (strcmp(username, "public") == 0)
 		userid = InvalidOid;
 	else

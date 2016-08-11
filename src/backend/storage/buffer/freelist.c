@@ -64,7 +64,7 @@ typedef struct
 static BufferStrategyControl *StrategyControl = NULL;
 
 /*
- * private__ (non-shared) state for managing a ring of shared buffers to re-use.
+ * private (non-shared) state for managing a ring of shared buffers to re-use.
  * This is currently the only kind of BufferAccessStrategy object, but someday
  * we might have more kinds.
  */
@@ -505,7 +505,7 @@ StrategyInitialize(bool init)
 
 
 /* ----------------------------------------------------------------
- *				Backend-private__ buffer ring management
+ *				Backend-private buffer ring management
  * ----------------------------------------------------------------
  */
 

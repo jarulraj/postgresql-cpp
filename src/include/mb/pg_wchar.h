@@ -60,7 +60,7 @@ typedef unsigned int pg_wchar;
  *
  * 3) "private" single byte charsets such as SISHENG.  Each MULE
  *	  character consists of 3 bytes: LCPRV1 + LC12 + C1, where LCPRV1
- *	  is a private__-charset flag, LC12 is an identifier for the charset,
+ *	  is a private-charset flag, LC12 is an identifier for the charset,
  *	  and C1 is the character code (in the range 0xa0 to 0xff).
  *	  LCPRV1 is either 0x9a (if LC12 is in the range 0xa0 to 0xdf)
  *	  or 0x9b (if LC12 is in the range 0xe0 to 0xef).
@@ -72,7 +72,7 @@ typedef unsigned int pg_wchar;
  *
  * 5) "private" multibyte charsets such as CNS 11643-1992 Plane 3.
  *	  Each MULE character consists of 4 bytes: LCPRV2 + LC22 + C1 + C2,
- *	  where LCPRV2 is a private__-charset flag, LC22 is an identifier for
+ *	  where LCPRV2 is a private-charset flag, LC22 is an identifier for
  *	  the charset, and C1 and C2 form the character code (each in the range
  *	  0xa0 to 0xff).  LCPRV2 is either 0x9c (if LC22 is in the range 0xf0
  *	  to 0xf4) or 0x9d (if LC22 is in the range 0xf5 to 0xfe).
@@ -83,8 +83,8 @@ typedef unsigned int pg_wchar;
  *
  * See the "XEmacs Internals Manual", available at http://www.xemacs.org,
  * for more details.  Note that for historical reasons, Postgres'
- * private__-charset flag values do not match what XEmacs says they should be,
- * so this__ isn't really exactly MULE (not that private__ charsets would be
+ * private-charset flag values do not match what XEmacs says they should be,
+ * so this__ isn't really exactly MULE (not that private charsets would be
  * interoperable anyway).
  *
  * Note that XEmacs's implementation is different from what emacs does.
@@ -166,7 +166,7 @@ typedef unsigned int pg_wchar;
 	((unsigned char)(c) >= 0xf5 && (unsigned char)(c) <= 0xfe)
 
 /*
- * Charset IDs for private__ single byte encodings (0xa0-0xef)
+ * Charset IDs for private single byte encodings (0xa0-0xef)
  */
 #define LC_SISHENG			0xa0/* Chinese SiSheng characters for
 								 * PinYin/ZhuYin (not supported) */
@@ -186,7 +186,7 @@ typedef unsigned int pg_wchar;
 #define LC_ARABIC_2_COLUMN	0xa8	/* Arabic 1-column (not supported) */
 
 /*
- * Charset IDs for private__ multibyte encodings (0xf0-0xff)
+ * Charset IDs for private multibyte encodings (0xf0-0xff)
  */
 #define LC_INDIAN_1_COLUMN	0xf0/* Indian charset for 1-column width glyphs
 								 * (not supported) */

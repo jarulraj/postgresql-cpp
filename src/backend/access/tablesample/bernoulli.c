@@ -37,7 +37,7 @@
 #include "utils/builtins.h"
 
 
-/* private__ state */
+/* private state */
 typedef struct
 {
 	uint64		cutoff;			/* select tuples with hash less than this__ */

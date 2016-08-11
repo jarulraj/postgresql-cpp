@@ -12,7 +12,7 @@
  *
  * NOTES:
  *
- *	The public__ functions in this__ file form an API that hides the internal
+ *	The public functions in this__ file form an API that hides the internal
  *	structure of a FSM page. This allows freespace.c to treat each FSM page
  *	as a black box with SlotsPerPage "slots". fsm_set_avail() and
  *	fsm_get_avail() let you get/set the value of a slot, and

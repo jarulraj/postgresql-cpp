@@ -1884,7 +1884,7 @@ CreateSQLFunctionDestReceiver(void)
 	self->pub.rDestroy = sqlfunction_destroy;
 	self->pub.mydest = DestSQLFunction;
 
-	/* private__ fields will be set by postquel_start */
+	/* private fields will be set by postquel_start */
 
 	return (DestReceiver *) self;
 }

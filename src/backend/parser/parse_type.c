@@ -642,7 +642,7 @@ stringTypeDatum(Type tp, char *string, int32 atttypmod)
 	return OidInputFunctionCall(typinput, string, typioparam, atttypmod);
 }
 
-/* given a typeid__, return the type's typrelid (associated relation, if any) */
+/* given a typeid, return the type's typrelid (associated relation, if any) */
 Oid
 typeidTypeRelid(Oid type_id)
 {

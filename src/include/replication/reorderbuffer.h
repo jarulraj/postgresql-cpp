@@ -310,7 +310,7 @@ struct ReorderBuffer
 	void	   *private_data;
 
 	/*
-	 * private__ memory context.
+	 * private memory context.
 	 */
 	MemoryContext context;
 

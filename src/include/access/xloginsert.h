@@ -38,7 +38,7 @@
 #define REGBUF_KEEP_DATA	0x10/* include data even if a full-page image is
 								 * taken */
 
-/* prototypes for public__ functions in xloginsert.c: */
+/* prototypes for public functions in xloginsert.c: */
 extern void XLogBeginInsert(void);
 extern void XLogIncludeOrigin(void);
 extern XLogRecPtr XLogInsert(RmgrId rmid, uint8 info);

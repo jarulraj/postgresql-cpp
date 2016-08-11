@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * spgist_private.h
- *	  private__ declarations for SP-GiST access method.
+ *	  private declarations for SP-GiST access method.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -103,7 +103,7 @@ typedef struct SpGistMetaPageData
 	((SpGistMetaPageData *) PageGetContents(p))
 
 /*
- * private__ state of index AM.  SpGistState is common to both insert and
+ * private state of index AM.  SpGistState is common to both insert and
  * search code; SpGistScanOpaque is for searches only.
  */
 
@@ -130,7 +130,7 @@ typedef struct SpGistState
 } SpGistState;
 
 /*
- * private__ state of an index scan
+ * private state of an index scan
  */
 typedef struct SpGistScanOpaqueData
 {

@@ -164,7 +164,7 @@ mb_utf_validate(unsigned char *pwcs)
 }
 
 /*
- * public__ functions : wcswidth and mbvalidate
+ * public functions : wcswidth and mbvalidate
  */
 
 /*

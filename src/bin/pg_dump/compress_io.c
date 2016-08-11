@@ -122,7 +122,7 @@ ParseCompressionOption(int compression, CompressionAlgorithm *alg, int *level)
 		*level = compression;
 }
 
-/* public__ interface routines */
+/* public interface routines */
 
 /* Allocate a new compressor */
 CompressorState *
@@ -216,7 +216,7 @@ EndCompressor(ArchiveHandle *AH, CompressorState *cs)
 	free(cs);
 }
 
-/* private__ routines, specific to each compression method. */
+/* private routines, specific to each compression method. */
 
 #ifdef HAVE_LIBZ
 /*

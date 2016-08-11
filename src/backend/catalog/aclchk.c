@@ -171,9 +171,9 @@ merge_acl_with_grant(Acl *old_acl, bool is_grant,
 		aclitem.ai_grantee = lfirst_oid(j);
 
 		/*
-		 * Grant options can only be granted to individual roles, not public__.
+		 * Grant options can only be granted to individual roles, not public.
 		 * The reason is that if a user would re-grant a privilege that he
-		 * held through public__, and later the user is removed, the situation
+		 * held through public, and later the user is removed, the situation
 		 * is impossible to clean up.
 		 */
 		if (is_grant && grant_option && aclitem.ai_grantee == ACL_ID_PUBLIC)

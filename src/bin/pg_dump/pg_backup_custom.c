@@ -140,7 +140,7 @@ InitArchiveFmt_Custom(ArchiveHandle *AH)
 	AH->WorkerJobDumpPtr = NULL;
 	AH->WorkerJobRestorePtr = _WorkerJobRestoreCustom;
 
-	/* Set up a private__ area. */
+	/* Set up a private area. */
 	ctx = (lclContext *) pg_malloc0(sizeof(lclContext));
 	AH->formatData = (void *) ctx;
 
@@ -277,7 +277,7 @@ _PrintExtraToc(ArchiveHandle *AH, TocEntry *te)
 {
 	lclTocEntry *ctx = (lclTocEntry *) te->formatData;
 
-	if (AH->public__.verbose)
+	if (AH->public.verbose)
 		ahprintf(AH, "-- Data Pos: " INT64_FORMAT "\n",
 				 (int64) ctx->dataPos);
 }
@@ -500,7 +500,7 @@ _PrintTocData(ArchiveHandle *AH, TocEntry *te)
 			break;
 
 		case BLK_BLOBS:
-			_LoadBlobs(AH, AH->public__.ropt->dropSchema);
+			_LoadBlobs(AH, AH->public.ropt->dropSchema);
 			break;
 
 		default:				/* Always have a default */
@@ -829,7 +829,7 @@ _WorkerJobRestoreCustom(ArchiveHandle *AH, TocEntry *te)
 	status = parallel_restore(&pargs);
 
 	snprintf(buf, buflen, "OK RESTORE %d %d %d", te->dumpId, status,
-			 status == WORKER_IGNORED_ERRORS ? AH->public__.n_errors : 0);
+			 status == WORKER_IGNORED_ERRORS ? AH->public.n_errors : 0);
 
 	return buf;
 }
@@ -876,7 +876,7 @@ _MasterEndParallelItem(ArchiveHandle *AH, TocEntry *te, const char *str, T_Actio
 	Assert(nBytes == strlen(str));
 	Assert(dumpId == te->dumpId);
 
-	AH->public__.n_errors += n_errors;
+	AH->public.n_errors += n_errors;
 
 	return status;
 }

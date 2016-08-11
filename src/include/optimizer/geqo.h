@@ -68,7 +68,7 @@ extern double Geqo_seed;		/* 0 .. 1 */
 
 
 /*
- * private__ state for a GEQO run --- accessible via root->join_search_private
+ * private state for a GEQO run --- accessible via root->join_search_private
  */
 typedef struct
 {

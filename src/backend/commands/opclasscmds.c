@@ -375,7 +375,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 
 	/*
 	 * The question of appropriate permissions for CREATE operator__ class__ is
-	 * interesting.  Creating an opclass is tantamount to granting public__
+	 * interesting.  Creating an opclass is tantamount to granting public
 	 * execute access on the functions involved, since the index machinery
 	 * generally does not check access permission before using the functions.
 	 * A minimum expectation therefore is that the caller have execute

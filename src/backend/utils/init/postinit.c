@@ -402,7 +402,7 @@ InitCommunication(void)
 	{
 		/*
 		 * We're running a postgres bootstrap process or a standalone backend.
-		 * Create private__ "shmem" and semaphores.
+		 * Create private "shmem" and semaphores.
 		 */
 		CreateSharedMemoryAndSemaphores(true, 0);
 	}

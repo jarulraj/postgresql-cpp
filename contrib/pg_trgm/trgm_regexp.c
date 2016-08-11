@@ -469,7 +469,7 @@ typedef struct
 } TrgmPackArcInfo;
 
 
-/* prototypes for private__ functions */
+/* prototypes for private functions */
 static TRGM *createTrgmNFAInternal(regex_t *regex, TrgmPackedGraph **graph,
 					  MemoryContext rcontext);
 static void RE_compile(regex_t *regex, text *text_re,

@@ -315,7 +315,7 @@ archive_close_connection(int code, void *arg)
 			ShutdownWorkersHard(si->pstate);
 		}
 		else if (slot->args->AH)
-			DisconnectDatabase(&(slot->args->AH->public__));
+			DisconnectDatabase(&(slot->args->AH->public));
 	}
 	else if (si->AHX)
 		DisconnectDatabase(si->AHX);
@@ -479,19 +479,19 @@ ParallelBackupStart(ArchiveHandle *AH)
 {
 	ParallelState *pstate;
 	int			i;
-	const size_t slotSize = AH->public__.numWorkers * sizeof(ParallelSlot);
+	const size_t slotSize = AH->public.numWorkers * sizeof(ParallelSlot);
 
-	Assert(AH->public__.numWorkers > 0);
+	Assert(AH->public.numWorkers > 0);
 
 	/* Ensure stdio state is quiesced before forking */
 	fflush(NULL);
 
 	pstate = (ParallelState *) pg_malloc(sizeof(ParallelState));
 
-	pstate->numWorkers = AH->public__.numWorkers;
+	pstate->numWorkers = AH->public.numWorkers;
 	pstate->parallelSlot = NULL;
 
-	if (AH->public__.numWorkers == 1)
+	if (AH->public.numWorkers == 1)
 		return pstate;
 
 	pstate->parallelSlot = (ParallelSlot *) pg_malloc(slotSize);

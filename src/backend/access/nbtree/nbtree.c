@@ -5,7 +5,7 @@
  *	  Postgres.
  *
  * NOTES
- *	  This file contains only the public__ interface routines.
+ *	  This file contains only the public interface routines.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -401,7 +401,7 @@ btbeginscan(PG_FUNCTION_ARGS)
 	/* get the scan */
 	scan = RelationGetIndexScan(rel, nkeys, norderbys);
 
-	/* allocate private__ workspace */
+	/* allocate private workspace */
 	so = (BTScanOpaque) palloc(sizeof(BTScanOpaqueData));
 	BTScanPosInvalidate(so->currPos);
 	BTScanPosInvalidate(so->markPos);

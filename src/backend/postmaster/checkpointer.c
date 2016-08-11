@@ -153,7 +153,7 @@ static volatile sig_atomic_t checkpoint_requested = false;
 static volatile sig_atomic_t shutdown_requested = false;
 
 /*
- * private__ state
+ * private state
  */
 static bool ckpt_active = false;
 
@@ -165,7 +165,7 @@ static double ckpt_cached_elapsed;
 static pg_time_t last_checkpoint_time;
 static pg_time_t last_xlog_switch_time;
 
-/* Prototypes for private__ functions */
+/* Prototypes for private functions */
 
 static void CheckArchiveTimeout(void);
 static bool IsCheckpointOnSchedule(double progress);
@@ -474,7 +474,7 @@ CheckpointerMain(void)
 						 errhint("Consider increasing the configuration parameter \"max_wal_size\".")));
 
 			/*
-			 * Initialize checkpointer-private__ variables used during
+			 * Initialize checkpointer-private variables used during
 			 * checkpoint.
 			 */
 			ckpt_active = true;

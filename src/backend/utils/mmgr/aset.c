@@ -417,7 +417,7 @@ randomize_mem(char *ptr, size_t size)
 
 
 /*
- * public__ routines
+ * public routines
  */
 
 
@@ -713,7 +713,7 @@ AllocSetAlloc(MemoryContext context, Size size)
 		AllocAllocInfo(set, chunk);
 
 		/*
-		 * Chunk header public__ fields remain DEFINED.  The requested
+		 * Chunk header public fields remain DEFINED.  The requested
 		 * allocation itself can be NOACCESS or UNDEFINED; our caller will
 		 * soon make it UNDEFINED.  Make extra space at the end of the chunk,
 		 * if any, NOACCESS.

@@ -190,7 +190,7 @@ format_type_internal(Oid type_oid, int32 typemod,
 			{
 				/*
 				 * bit with typmod -1 is not the same as BIT, which means
-				 * BIT(1) per SQL spec.  Report it as the quoted typename__ so
+				 * BIT(1) per SQL spec.  Report it as the quoted typename so
 				 * that parser will not assign a bogus typmod.
 				 */
 			}

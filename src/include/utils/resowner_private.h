@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * resowner_private.h
- *	  POSTGRES resource owner private__ definitions.
+ *	  POSTGRES resource owner private definitions.
  *
  * See utils/resowner/README for more info.
  *

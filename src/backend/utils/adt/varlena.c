@@ -602,7 +602,7 @@ unknownsend(PG_FUNCTION_ARGS)
 }
 
 
-/* ========== public__ ROUTINES ========== */
+/* ========== public ROUTINES ========== */
 
 /*
  * textlen -

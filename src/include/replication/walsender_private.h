@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * walsender_private.h
- *	  private__ definitions from replication/walsender.c.
+ *	  private definitions from replication/walsender.c.
  *
  * Portions Copyright (c) 2010-2015, PostgreSQL Global Development Group
  *

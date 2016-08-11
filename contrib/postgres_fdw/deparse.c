@@ -1411,7 +1411,7 @@ deparseConst(Const *node, deparse_expr_cxt *context)
 	}
 
 	/*
-	 * Append ::typename__ unless the constant will be implicitly typed as the
+	 * Append ::typename unless the constant will be implicitly typed as the
 	 * right type when it is read in.
 	 *
 	 * XXX this__ code has to be kept in sync with the behavior of the parser,
@@ -1491,7 +1491,7 @@ deparseArrayRef(ArrayRef *node, deparse_expr_cxt *context)
 	/*
 	 * Deparse referenced array expression first.  If that expression includes
 	 * a cast, we have to parenthesize to prevent the array subscript from
-	 * being taken as typename__ decoration.  We can avoid that in the typical
+	 * being taken as typename decoration.  We can avoid that in the typical
 	 * case of subscripting a Var, but otherwise do it.
 	 */
 	if (IsA(node->refexpr, Var))

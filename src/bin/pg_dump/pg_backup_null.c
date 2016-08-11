@@ -149,7 +149,7 @@ _StartBlob(ArchiveHandle *AH, TocEntry *te, Oid oid)
 		exit_horribly(NULL, "invalid OID for large object\n");
 
 	/* With an old archive we must do drop and create logic here */
-	if (old_blob_style && AH->public__.ropt->dropSchema)
+	if (old_blob_style && AH->public.ropt->dropSchema)
 		DropBlobIfExists(AH, oid);
 
 	if (old_blob_style)

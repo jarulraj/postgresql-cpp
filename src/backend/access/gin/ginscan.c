@@ -35,7 +35,7 @@ ginbeginscan(PG_FUNCTION_ARGS)
 
 	scan = RelationGetIndexScan(rel, nkeys, norderbys);
 
-	/* allocate private__ workspace */
+	/* allocate private workspace */
 	so = (GinScanOpaque) palloc(sizeof(GinScanOpaqueData));
 	so->keys = NULL;
 	so->nkeys = 0;

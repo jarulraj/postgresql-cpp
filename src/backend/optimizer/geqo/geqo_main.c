@@ -93,11 +93,11 @@ geqo(PlannerInfo *root, int number_of_rels, List *initial_rels)
 	int			mutations = 0;
 #endif
 
-/* set up private__ information */
+/* set up private information */
 	root->join_search_private = (void *) &private__;
 	private__.initial_rels = initial_rels;
 
-/* initialize private__ number generator */
+/* initialize private number generator */
 	geqo_set_seed(root, Geqo_seed);
 
 /* set GA parameters */
@@ -293,7 +293,7 @@ geqo(PlannerInfo *root, int number_of_rels, List *initial_rels)
 
 	free_pool(root, pool);
 
-	/* ... clear root pointer to our private__ storage */
+	/* ... clear root pointer to our private storage */
 	root->join_search_private = NULL;
 
 	return best_rel;

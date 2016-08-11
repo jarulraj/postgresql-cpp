@@ -88,7 +88,7 @@ static void _bt_vacuum_one_page(Relation rel, Buffer buffer, Relation heapRel);
 /*
  *	_bt_doinsert() -- Handle insertion of a single index tuple in the tree.
  *
- *		This routine is called by the public__ interface routine, btinsert.
+ *		This routine is called by the public interface routine, btinsert.
  *		By here, itup is filled in, including the TID.
  *
  *		If checkUnique is UNIQUE_CHECK_NO or UNIQUE_CHECK_PARTIAL, this__
@@ -1004,7 +1004,7 @@ _bt_split(Relation rel, Buffer buf, Buffer cbuf, OffsetNumber firstright,
 	 */
 	PageSetLSN(leftpage, PageGetLSN(origpage));
 
-	/* init btree private__ data */
+	/* init btree private data */
 	oopaque = (BTPageOpaque) PageGetSpecialPointer(origpage);
 	lopaque = (BTPageOpaque) PageGetSpecialPointer(leftpage);
 	ropaque = (BTPageOpaque) PageGetSpecialPointer(rightpage);

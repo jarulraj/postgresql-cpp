@@ -57,7 +57,7 @@ expand_array(Datum arraydatum, MemoryContext parentcontext,
 	ArrayMetaState fakecache;
 
 	/*
-	 * Allocate private__ context for expanded object.  We start by assuming
+	 * Allocate private context for expanded object.  We start by assuming
 	 * that the array won't be very large; but if it does grow a lot, don't
 	 * constrain aset.c's large-context behavior.
 	 */
@@ -121,9 +121,9 @@ expand_array(Datum arraydatum, MemoryContext parentcontext,
 	}
 
 	/*
-	 * Detoast and copy source array into private__ context, as a flat array.
+	 * Detoast and copy source array into private context, as a flat array.
 	 *
-	 * Note that this__ coding risks leaking some memory in the private__ context
+	 * Note that this__ coding risks leaking some memory in the private context
 	 * if we have to fetch data from a TOAST table; however, experimentation
 	 * says that the leak is minimal.  Doing it this__ way saves a copy step,
 	 * which seems worthwhile, especially if the array is large enough to need

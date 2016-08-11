@@ -143,7 +143,7 @@ int			dynamic_shared_memory_type;
  *	   a new handle the caller wants created.
  *	 request_size: For DSM_OP_CREATE, the requested size.  For DSM_OP_RESIZE,
  *	   the new size.  Otherwise, 0.
- *	 impl_private: private__, implementation-specific data.  Will be a pointer
+ *	 impl_private: private, implementation-specific data.  Will be a pointer
  *	   to NULL for the first operation on a shared memory segment within this__
  *	   backend; thereafter, it will point to the value to which it was set
  *	   on the previous call.

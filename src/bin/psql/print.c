@@ -2782,7 +2782,7 @@ print_troff_ms_vertical(const printTableContent *cont, FILE *fout)
 
 
 /********************************/
-/* public__ functions				*/
+/* public functions				*/
 /********************************/
 
 

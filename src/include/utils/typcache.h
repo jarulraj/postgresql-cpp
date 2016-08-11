@@ -28,7 +28,7 @@ struct TypeCacheEnumData;
 
 typedef struct TypeCacheEntry
 {
-	/* typeid__ is the hash lookup key and MUST BE FIRST */
+	/* typeid is the hash lookup key and MUST BE FIRST */
 	Oid			type_id;		/* OID of the data type */
 
 	/* some subsidiary information copied from the pg_type row */
@@ -93,11 +93,11 @@ typedef struct TypeCacheEntry
 	 */
 	DomainConstraintCache *domainData;
 
-	/* private__ data, for internal use of typcache.c only */
+	/* private data, for internal use of typcache.c only */
 	int			flags;			/* flags about what we've computed */
 
 	/*
-	 * private__ information about an enum type.  NULL if not enum or
+	 * private information about an enum type.  NULL if not enum or
 	 * information hasn't been requested.
 	 */
 	struct TypeCacheEnumData *enumData;
@@ -132,7 +132,7 @@ typedef struct DomainConstraintRef
 	List	   *constraints;	/* list of DomainConstraintState nodes */
 	MemoryContext refctx;		/* context holding DomainConstraintRef */
 
-	/* Management data --- treat these fields as private__ to typcache.c */
+	/* Management data --- treat these fields as private to typcache.c */
 	TypeCacheEntry *tcache;		/* owning typcache entry */
 	DomainConstraintCache *dcc; /* current constraints, or NULL if none */
 	MemoryContextCallback callback;		/* used to release refcount when done */

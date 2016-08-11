@@ -194,7 +194,7 @@ CreateTuplestoreDestReceiver(void)
 	self->pub.rDestroy = tstoreDestroyReceiver;
 	self->pub.mydest = DestTuplestore;
 
-	/* private__ fields will be set by SetTuplestoreDestReceiverParams */
+	/* private fields will be set by SetTuplestoreDestReceiverParams */
 
 	return (DestReceiver *) self;
 }

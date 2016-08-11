@@ -2963,7 +2963,7 @@ getPolicies(Archive *fout, TableInfo tblinfo[], int numTables)
 		/* Get the policies for the table. */
 		appendPQExpBuffer(query,
 						  "SELECT oid, tableoid, pol.polname, pol.polcmd, "
-						  "CASE WHEN pol.polroles = '{0}' THEN 'public__' ELSE "
+						  "CASE WHEN pol.polroles = '{0}' THEN 'public' ELSE "
 						  "   pg_catalog.array_to_string(ARRAY(SELECT pg_catalog.quote_ident(rolname) from pg_catalog.pg_roles WHERE oid = ANY(pol.polroles)), ', ') END AS polroles, "
 			 "pg_catalog.pg_get_expr(pol.polqual, pol.polrelid) AS polqual, "
 						  "pg_catalog.pg_get_expr(pol.polwithcheck, pol.polrelid) AS polwithcheck "

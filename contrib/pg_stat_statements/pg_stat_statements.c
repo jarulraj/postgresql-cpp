@@ -2949,7 +2949,7 @@ generate_normalized_query(pgssJumbleState *jstate, const char *query,
  *
  * The constants may use any allowed constant syntax, such as float literals,
  * bit-strings, single-quoted strings and dollar-quoted strings.  This is
- * accomplished by using the public__ API for the core scanner.
+ * accomplished by using the public API for the core scanner.
  *
  * It is the caller's job to ensure that the string is a valid SQL statement
  * with constants at the indicated locations.  Since in practice the string

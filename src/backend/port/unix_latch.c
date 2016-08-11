@@ -63,7 +63,7 @@ static volatile sig_atomic_t waiting = false;
 static int	selfpipe_readfd = -1;
 static int	selfpipe_writefd = -1;
 
-/* private__ function prototypes */
+/* private function prototypes */
 static void sendSelfPipeByte(void);
 static void drainSelfPipe(void);
 

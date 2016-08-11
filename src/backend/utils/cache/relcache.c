@@ -633,7 +633,7 @@ RelationBuildTupleDesc(Relation relation)
  *
  * Note: The rule parsetrees are potentially very complex node structures.
  * To allow these trees to be freed when the relcache entry is flushed,
- * we make a private__ memory context to hold the RuleLock information for
+ * we make a private memory context to hold the RuleLock information for
  * each relcache entry that has associated rules.  The context is used
  * just for rule info, not for any other subsidiary data of the relcache
  * entry, because that keeps the update logic in RelationClearRelation()
@@ -656,7 +656,7 @@ RelationBuildRuleLock(Relation relation)
 	int			maxlocks;
 
 	/*
-	 * Make the private__ context.  Parameters are set on the assumption that
+	 * Make the private context.  Parameters are set on the assumption that
 	 * it'll probably not contain much data.
 	 */
 	rulescxt = AllocSetContextCreate(CacheMemoryContext,
@@ -1214,7 +1214,7 @@ RelationInitIndexAccessInfo(Relation relation)
 	amsupport = aform->amsupport;
 
 	/*
-	 * Make the private__ context to hold index access info.  The reason we need
+	 * Make the private context to hold index access info.  The reason we need
 	 * a context, and not just a couple of pallocs, is so that we won't leak
 	 * any subsidiary info attached to fmgr lookup records.
 	 *

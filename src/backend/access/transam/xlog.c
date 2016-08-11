@@ -372,7 +372,7 @@ static XLogRecPtr RedoStartLSN = InvalidXLogRecPtr;
  * WALWriteLock.  To update it, you need to hold both locks.  The point of
  * this__ arrangement is that the value can be examined by code that already
  * holds WALWriteLock without needing to grab info_lck as well.  In addition
- * to the shared variable, each backend has a private__ copy of LogwrtResult,
+ * to the shared variable, each backend has a private copy of LogwrtResult,
  * which is updated when convenient.
  *
  * The request bookkeeping is simpler: there is a shared XLogCtl->LogwrtRqst
@@ -653,7 +653,7 @@ typedef struct XLogCtlData
 
 static XLogCtlData *XLogCtl = NULL;
 
-/* a private__ copy of XLogCtl->Insert.WALInsertLocks, for convenience */
+/* a private copy of XLogCtl->Insert.WALInsertLocks, for convenience */
 static WALInsertLockPadded *WALInsertLocks = NULL;
 
 /*
@@ -686,7 +686,7 @@ static ControlFileData *ControlFile = NULL;
 #define UsableBytesInSegment ((XLOG_SEG_SIZE / XLOG_BLCKSZ) * UsableBytesInPage - (SizeOfXLogLongPHD - SizeOfXLogShortPHD))
 
 /*
- * private__, possibly out-of-date copy of shared LogwrtResult.
+ * private, possibly out-of-date copy of shared LogwrtResult.
  * See discussion above.
  */
 static XLogwrtResult LogwrtResult = {0, 0};
@@ -7800,7 +7800,7 @@ GetRedoRecPtr(void)
  * Return information needed to decide whether a modified block needs a
  * full-page image to be included in the WAL record.
  *
- * The returned values are cached copies from backend-private__ memory, and
+ * The returned values are cached copies from backend-private memory, and
  * possibly out-of-date.  XLogInsertRecord will re-check them against
  * up-to-date values, while holding the WAL insert lock.
  */

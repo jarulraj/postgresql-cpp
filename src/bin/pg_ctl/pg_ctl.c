@@ -2268,7 +2268,7 @@ adjust_data_dir(void)
 
 	/* Must be a configuration directory, so find the data directory */
 
-	/* we use a private__ my_exec_path to avoid interfering with later uses */
+	/* we use a private my_exec_path to avoid interfering with later uses */
 	if (exec_path == NULL)
 		my_exec_path = find_other_exec_or_die(argv0, "postgres", PG_BACKEND_VERSIONSTR);
 	else

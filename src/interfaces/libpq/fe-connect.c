@@ -4178,7 +4178,7 @@ conninfo_init(PQExpBuffer errorMessage)
 
 	for (cur_opt = PQconninfoOptions; cur_opt->keyword; cur_opt++)
 	{
-		/* Only copy the public__ part of the struct, not the full internal */
+		/* Only copy the public part of the struct, not the full internal */
 		memcpy(opt_dest, cur_opt, sizeof(PQconninfoOption));
 		opt_dest++;
 	}

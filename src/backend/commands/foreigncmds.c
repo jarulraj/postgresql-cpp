@@ -1340,7 +1340,7 @@ RemoveUserMapping(DropUserMappingStmt *stmt)
 		if (!OidIsValid(useId))
 		{
 			/*
-			 * IF EXISTS specified, role not found and not public__. Notice this__
+			 * IF EXISTS specified, role not found and not public. Notice this__
 			 * and leave.
 			 */
 			elog(NOTICE, "role \"%s\" does not exist, skipping",

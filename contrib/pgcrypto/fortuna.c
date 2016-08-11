@@ -358,7 +358,7 @@ rekey(FState *st)
 }
 
 /*
- * Hide public__ constants. (counter, pools > 0)
+ * Hide public constants. (counter, pools > 0)
  *
  * This can also be viewed as spreading the startup
  * entropy over all of the components.
@@ -430,7 +430,7 @@ extract_data(FState *st, unsigned count, uint8 *dst)
 }
 
 /*
- * public__ interface
+ * public interface
  */
 
 static FState main_state;

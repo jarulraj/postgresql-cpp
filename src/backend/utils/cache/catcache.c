@@ -442,7 +442,7 @@ CatCacheRemoveCList(CatCache *cache, CatCList *cl)
  *	did when the event was created.  So now we just compare hash values and
  *	accept the small risk of unnecessary invalidations due to false matches.
  *
- *	This routine is only quasi-public__: it should only be used by inval.c.
+ *	This routine is only quasi-public: it should only be used by inval.c.
  */
 void
 CatalogCacheIdInvalidate(int cacheId, uint32 hashValue)
@@ -514,7 +514,7 @@ CatalogCacheIdInvalidate(int cacheId, uint32 hashValue)
 }
 
 /* ----------------------------------------------------------------
- *					   public__ functions
+ *					   public functions
  * ----------------------------------------------------------------
  */
 

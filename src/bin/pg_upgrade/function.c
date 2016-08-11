@@ -72,7 +72,7 @@ get_loadable_libraries(void)
 						   "FROM	pg_catalog.pg_proc JOIN pg_namespace "
 							 "		ON pronamespace = pg_namespace.oid "
 							   "WHERE proname = 'plpython_call_handler' AND "
-									"nspname = 'public__' AND "
+									"nspname = 'public' AND "
 									"prolang = 13 /* C */ AND "
 									"probin = '$libdir/plpython' AND "
 									"pg_proc.oid >= %u;",
@@ -95,7 +95,7 @@ get_loadable_libraries(void)
 						   "shared object file.  You can remove the \"public\" schema version\n"
 					   "of this__ function by running the following command:\n"
 						   "\n"
-						 "    DROP FUNCTION public__.plpython_call_handler()\n"
+						 "    DROP FUNCTION public.plpython_call_handler()\n"
 						   "\n"
 						   "in each affected database:\n"
 						   "\n");

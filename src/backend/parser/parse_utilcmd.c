@@ -349,7 +349,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 
 		/*
 		 * We have to reject "serial[]" explicitly, because once we've set
-		 * typeid__, LookupTypeName won't notice arrayBounds.  We don't need any
+		 * typeid, LookupTypeName won't notice arrayBounds.  We don't need any
 		 * special coding for serial(typmod) though.
 		 */
 		if (is_serial && column->typename__->arrayBounds != NIL)

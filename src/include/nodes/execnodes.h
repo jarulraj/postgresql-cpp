@@ -310,7 +310,7 @@ typedef struct JunkFilter
  *		TrigWhenExprs			array of trigger WHEN expr states
  *		TrigInstrument			optional runtime measurements for triggers
  *		FdwRoutine				FDW callback functions, if foreign table
- *		FdwState				available to save private__ state of FDW
+ *		FdwState				available to save private state of FDW
  *		WithCheckOptions		list of WithCheckOption's to be checked
  *		WithCheckOptionExprs	list of WithCheckOption expr states
  *		ConstraintExprs			array of constraint-checking expr states
@@ -1488,7 +1488,7 @@ typedef struct SubqueryScanState
  *		simple				true if we have 1 function and no ordinality
  *		ordinal				current ordinal column value
  *		nfuncs				number of functions being executed
- *		funcstates			per-function execution states (private__ in
+ *		funcstates			per-function execution states (private in
  *							nodeFunctionscan.c)
  *		argcontext			memory context to evaluate function arguments in
  * ----------------
@@ -1685,7 +1685,7 @@ typedef struct NestLoopState
  *		InnerEContext	   workspace for computing inner tuple's join values
  * ----------------
  */
-/* private__ in nodeMergejoin.c: */
+/* private in nodeMergejoin.c: */
 typedef struct MergeJoinClauseData *MergeJoinClause;
 
 typedef struct MergeJoinState
@@ -1798,7 +1798,7 @@ typedef struct SortState
 	bool		sort_Done;		/* sort completed yet? */
 	bool		bounded_Done;	/* value of bounded we did the sort with */
 	int64		bound_Done;		/* value of bound we did the sort with */
-	void	   *tuplesortstate; /* private__ state of tuplesort.c */
+	void	   *tuplesortstate; /* private state of tuplesort.c */
 } SortState;
 
 /* ---------------------
@@ -1824,7 +1824,7 @@ typedef struct GroupState
  *	expressions and run the aggregate transition functions.
  * -------------------------
  */
-/* these structs are private__ in nodeAgg.c: */
+/* these structs are private in nodeAgg.c: */
 typedef struct AggStatePerAggData *AggStatePerAgg;
 typedef struct AggStatePerGroupData *AggStatePerGroup;
 typedef struct AggStatePerPhaseData *AggStatePerPhase;
@@ -1870,7 +1870,7 @@ typedef struct AggState
  *	WindowAggState information
  * ----------------
  */
-/* these structs are private__ in nodeWindowAgg.c: */
+/* these structs are private in nodeWindowAgg.c: */
 typedef struct WindowStatePerFuncData *WindowStatePerFunc;
 typedef struct WindowStatePerAggData *WindowStatePerAgg;
 
@@ -1970,7 +1970,7 @@ typedef struct HashState
  *		form of Agg.
  * ----------------
  */
-/* this__ struct is private__ in nodeSetOp.c: */
+/* this__ struct is private in nodeSetOp.c: */
 typedef struct SetOpStatePerGroupData *SetOpStatePerGroup;
 
 typedef struct SetOpState

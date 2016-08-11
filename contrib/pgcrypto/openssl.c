@@ -258,7 +258,7 @@ digest_free(PX_MD *h)
 
 static int	px_openssl_initialized = 0;
 
-/* public__ functions */
+/* public functions */
 
 int
 px_find_digest(const char *name, PX_MD **res)
@@ -942,7 +942,7 @@ static const struct ossl_cipher_lookup ossl_cipher_types[] = {
 	{NULL}
 };
 
-/* public__ functions */
+/* public functions */
 
 int
 px_find_cipher(const char *name, PX_Cipher **res)

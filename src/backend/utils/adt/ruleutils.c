@@ -5868,7 +5868,7 @@ get_utility_query_def(Query *query, deparse_context *context)
  *
  * If istoplevel is TRUE, the Var is at the top level of a SELECT's
  * targetlist, which means we need special treatment of whole-row Vars.
- * Instead of the normal "tab.*", we'll print "tab.*::typename__", which is a
+ * Instead of the normal "tab.*", we'll print "tab.*::typename", which is a
  * dirty hack to prevent "tab.*" from being expanded into multiple columns.
  * (The parser will strip the useless coercion, so no inefficiency is added in
  * dump and reload.)  We used to print just "tab" in such cases, but that is
@@ -8398,7 +8398,7 @@ get_coercion_expr(Node *arg, deparse_context *context,
 		((Const *) arg)->consttype == resulttype &&
 		((Const *) arg)->consttypmod == -1)
 	{
-		/* Show the constant without normal ::typename__ decoration */
+		/* Show the constant without normal ::typename decoration */
 		get_const_expr((Const *) arg, context, -1);
 	}
 	else
@@ -8418,13 +8418,13 @@ get_coercion_expr(Node *arg, deparse_context *context,
  *
  *	Make a string representation of a Const
  *
- * showtype can be -1 to never show "::typename__" decoration, or +1 to always
+ * showtype can be -1 to never show "::typename" decoration, or +1 to always
  * show it, or 0 to show it only if the constant wouldn't be assumed to be
  * the right type by default.
  *
  * If the Const's collation isn't default for its type, show that too.
  * We mustn't do this__ when showtype is -1 (since that means the caller will
- * print "::typename__", and we can't put a COLLATE clause in between).  It's
+ * print "::typename", and we can't put a COLLATE clause in between).  It's
  * caller's responsibility that collation isn't missed in such cases.
  * ----------
  */
@@ -8523,7 +8523,7 @@ get_const_expr(Const *constval, deparse_context *context, int showtype)
 		return;
 
 	/*
-	 * For showtype == 0, append ::typename__ unless the constant will be
+	 * For showtype == 0, append ::typename unless the constant will be
 	 * implicitly typed as the right type when it is read in.
 	 *
 	 * XXX this__ code has to be kept in sync with the behavior of the parser,

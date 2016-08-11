@@ -1123,7 +1123,7 @@ pgp_decrypt(PGP_Context *ctx, MBuf *msrc, MBuf *mdst)
 				if (got_key)
 
 					/*
-					 * Theoretically, there could be several keys, both public__
+					 * Theoretically, there could be several keys, both public
 					 * and symmetric, all of which encrypt same session key.
 					 * Decrypt should try with each one, before failing.
 					 */

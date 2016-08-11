@@ -1766,7 +1766,7 @@ cost_group(Path *path, PlannerInfo *root,
  * to obtain the final estimates.
  *
  * The exact division of labor between this__ function and final_cost_nestloop
- * is private__ to them, and represents a tradeoff between speed of the initial
+ * is private to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here, since that's by far the most expensive part of the
  * calculations.  The end result is that CPU-cost considerations must be
@@ -1826,7 +1826,7 @@ initial_cost_nestloop(PlannerInfo *root, JoinCostWorkspace *workspace,
 		 * which we choose to postpone to final_cost_nestloop.
 		 */
 
-		/* Save private__ data for final_cost_nestloop */
+		/* Save private data for final_cost_nestloop */
 		workspace->inner_run_cost = inner_run_cost;
 		workspace->inner_rescan_run_cost = inner_rescan_run_cost;
 	}
@@ -1840,10 +1840,10 @@ initial_cost_nestloop(PlannerInfo *root, JoinCostWorkspace *workspace,
 
 	/* CPU costs left for later */
 
-	/* public__ result fields */
+	/* public result fields */
 	workspace->startup_cost = startup_cost;
 	workspace->total_cost = startup_cost + run_cost;
-	/* Save private__ data for final_cost_nestloop */
+	/* Save private data for final_cost_nestloop */
 	workspace->run_cost = run_cost;
 }
 
@@ -2013,7 +2013,7 @@ final_cost_nestloop(PlannerInfo *root, NestPath *path,
  * to obtain the final estimates.
  *
  * The exact division of labor between this__ function and final_cost_mergejoin
- * is private__ to them, and represents a tradeoff between speed of the initial
+ * is private to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here, except for obtaining the scan selectivity estimate which
  * is really essential (but fortunately, use of caching keeps the cost of
@@ -2224,10 +2224,10 @@ initial_cost_mergejoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 
 	/* CPU costs left for later */
 
-	/* public__ result fields */
+	/* public result fields */
 	workspace->startup_cost = startup_cost;
 	workspace->total_cost = startup_cost + run_cost + inner_run_cost;
-	/* Save private__ data for final_cost_mergejoin */
+	/* Save private data for final_cost_mergejoin */
 	workspace->run_cost = run_cost;
 	workspace->inner_run_cost = inner_run_cost;
 	workspace->outer_rows = outer_rows;
@@ -2528,7 +2528,7 @@ cached_scansel(PlannerInfo *root, RestrictInfo *rinfo, PathKey *pathkey)
  * to obtain the final estimates.
  *
  * The exact division of labor between this__ function and final_cost_hashjoin
- * is private__ to them, and represents a tradeoff between speed of the initial
+ * is private to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here (other than by counting the number of hash clauses),
  * so we can't do much with CPU costs.  We do assume that
@@ -2616,10 +2616,10 @@ initial_cost_hashjoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 
 	/* CPU costs left for later */
 
-	/* public__ result fields */
+	/* public result fields */
 	workspace->startup_cost = startup_cost;
 	workspace->total_cost = startup_cost + run_cost;
-	/* Save private__ data for final_cost_hashjoin */
+	/* Save private data for final_cost_hashjoin */
 	workspace->run_cost = run_cost;
 	workspace->numbuckets = numbuckets;
 	workspace->numbatches = numbatches;

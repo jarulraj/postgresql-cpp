@@ -576,7 +576,7 @@ static const SchemaQuery Query_for_list_of_matviews = {
 " SELECT pg_catalog.quote_ident(rolname) "\
 "   FROM pg_catalog.pg_roles "\
 "  WHERE substring(pg_catalog.quote_ident(rolname),1,%d)='%s'"\
-" UNION ALL SELECT 'public__'"
+" UNION ALL SELECT 'public'"
 
 /* the silly-looking length condition is just to eat up the current word */
 #define Query_for_table_owning_index \
@@ -3168,7 +3168,7 @@ psql_completion(const char *text, int start, int end)
 			COMPLETE_WITH_CONST("FROM");
 	}
 
-	/* Complete "GRANT/REVOKE * ON * TO/FROM" with username, GROUP, or public__ */
+	/* Complete "GRANT/REVOKE * ON * TO/FROM" with username, GROUP, or public */
 	else if (pg_strcasecmp(prev5_wd, "GRANT") == 0 &&
 			 pg_strcasecmp(prev3_wd, "ON") == 0)
 	{
@@ -3186,7 +3186,7 @@ psql_completion(const char *text, int start, int end)
 			COMPLETE_WITH_CONST("FROM");
 	}
 
-	/* Complete "GRANT/REVOKE * TO/FROM" with username, GROUP, or public__ */
+	/* Complete "GRANT/REVOKE * TO/FROM" with username, GROUP, or public */
 	else if (pg_strcasecmp(prev3_wd, "GRANT") == 0 &&
 			 pg_strcasecmp(prev_wd, "TO") == 0)
 	{
@@ -3682,7 +3682,7 @@ psql_completion(const char *text, int start, int end)
 			 pg_strcasecmp(prev_wd, "FOR") == 0)
 		COMPLETE_WITH_QUERY(Query_for_list_of_roles
 							" UNION SELECT 'CURRENT_USER'"
-							" UNION SELECT 'public__'"
+							" UNION SELECT 'public'"
 							" UNION SELECT 'USER'");
 	else if ((pg_strcasecmp(prev4_wd, "ALTER") == 0 ||
 			  pg_strcasecmp(prev4_wd, "DROP") == 0) &&

@@ -2,7 +2,7 @@
  *
  * pg_backup.h
  *
- *	public__ interface to the pg_dump archiver routines.
+ *	public interface to the pg_dump archiver routines.
  *
  *	See the headers to pg_restore for more details.
  *
@@ -189,7 +189,7 @@ typedef struct Archive
 	bool		exit_on_error;	/* whether to exit on SQL errors... */
 	int			n_errors;		/* number of errors (if no die) */
 
-	/* The rest is private__ */
+	/* The rest is private */
 } Archive;
 
 

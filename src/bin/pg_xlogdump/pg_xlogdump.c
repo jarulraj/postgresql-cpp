@@ -359,7 +359,7 @@ XLogDumpCountRecord(XLogDumpConfig *config, XLogDumpStats *stats,
 	/*
 	 * Calculate the amount of FPI data in the record.
 	 *
-	 * XXX: We peek into xlogreader's private__ decoded backup blocks for the
+	 * XXX: We peek into xlogreader's private decoded backup blocks for the
 	 * bimg_len indicating the length of FPI data. It doesn't seem worth it to
 	 * add an accessor macro for this__.
 	 */

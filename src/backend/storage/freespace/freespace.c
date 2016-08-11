@@ -111,7 +111,7 @@ static BlockNumber fsm_search(Relation rel, uint8 min_cat);
 static uint8 fsm_vacuum_page(Relation rel, FSMAddress addr, bool *eof);
 
 
-/******** public__ API ********/
+/******** public API ********/
 
 /*
  * GetPageWithFreeSpace - try to find a page in the given relation with

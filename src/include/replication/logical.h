@@ -57,12 +57,12 @@ typedef struct LogicalDecodingContext
 	StringInfo	out;
 
 	/*
-	 * private__ data pointer of the output plugin.
+	 * private data pointer of the output plugin.
 	 */
 	void	   *output_plugin_private;
 
 	/*
-	 * private__ data pointer for the data writer.
+	 * private data pointer for the data writer.
 	 */
 	void	   *output_writer_private;
 

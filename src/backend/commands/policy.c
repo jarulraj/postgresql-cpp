@@ -141,7 +141,7 @@ policy_role_list_to_array(List *roles, int *num_roles)
 	ListCell   *cell;
 	int			i = 0;
 
-	/* Handle no roles being passed in as being for public__ */
+	/* Handle no roles being passed in as being for public */
 	if (roles == NIL)
 	{
 		*num_roles = 1;
@@ -159,7 +159,7 @@ policy_role_list_to_array(List *roles, int *num_roles)
 		RoleSpec   *spec = lfirst(cell);
 
 		/*
-		 * public__ covers all roles, so it only makes sense alone.
+		 * public covers all roles, so it only makes sense alone.
 		 */
 		if (spec->roletype == ROLESPEC_PUBLIC)
 		{
@@ -167,8 +167,8 @@ policy_role_list_to_array(List *roles, int *num_roles)
 			{
 				ereport(WARNING,
 						(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-						 errmsg("ignoring specified roles other than public__"),
-					  errhint("All roles are members of the public__ role.")));
+						 errmsg("ignoring specified roles other than public"),
+					  errhint("All roles are members of the public role.")));
 				*num_roles = 1;
 			}
 			role_oids[0] = ObjectIdGetDatum(ACL_ID_PUBLIC);
@@ -644,7 +644,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 		for (i = 0; i < num_roles; i++)
 		{
 			target.objectId = DatumGetObjectId(role_oids[i]);
-			/* no need for dependency on the public__ role */
+			/* no need for dependency on the public role */
 			if (target.objectId != ACL_ID_PUBLIC)
 				recordSharedDependencyOn(&myself, &target,
 										 SHARED_DEPENDENCY_POLICY);
@@ -843,7 +843,7 @@ CreatePolicy(CreatePolicyStmt *stmt)
 	for (i = 0; i < nitems; i++)
 	{
 		target.objectId = DatumGetObjectId(role_oids[i]);
-		/* no dependency if public__ */
+		/* no dependency if public */
 		if (target.objectId != ACL_ID_PUBLIC)
 			recordSharedDependencyOn(&myself, &target,
 									 SHARED_DEPENDENCY_POLICY);
@@ -1173,7 +1173,7 @@ AlterPolicy(AlterPolicyStmt *stmt)
 	for (i = 0; i < nitems; i++)
 	{
 		target.objectId = DatumGetObjectId(role_oids[i]);
-		/* no dependency if public__ */
+		/* no dependency if public */
 		if (target.objectId != ACL_ID_PUBLIC)
 			recordSharedDependencyOn(&myself, &target,
 									 SHARED_DEPENDENCY_POLICY);

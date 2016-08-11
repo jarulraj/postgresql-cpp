@@ -136,14 +136,14 @@
 /*
  * This struct contains the current state of the snapshot building
  * machinery. Besides a forward declaration in the header, it is not exposed
- * to the public__, so we can easily change its contents.
+ * to the public, so we can easily change its contents.
  */
 struct SnapBuild
 {
 	/* how far are we along building our first full snapshot */
 	SnapBuildState state;
 
-	/* private__ memory context used to allocate memory for this__ module. */
+	/* private memory context used to allocate memory for this__ module. */
 	MemoryContext context;
 
 	/* all transactions < than this__ have committed/aborted */

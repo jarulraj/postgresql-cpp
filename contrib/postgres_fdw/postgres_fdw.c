@@ -82,7 +82,7 @@ typedef struct PgFdwRelationInfo
 } PgFdwRelationInfo;
 
 /*
- * Indexes of FDW-private__ information stored in fdw_private lists.
+ * Indexes of FDW-private information stored in fdw_private lists.
  *
  * We store various information in ForeignScan.fdw_private to pass it from
  * planner to executor.  Currently we store:
@@ -874,10 +874,10 @@ postgresGetForeignPlan(PlannerInfo *root,
 
 	/*
 	 * Create the ForeignScan node from target list, local filtering
-	 * expressions, remote parameter expressions, and FDW private__ information.
+	 * expressions, remote parameter expressions, and FDW private information.
 	 *
 	 * Note that the remote parameter expressions are stored in the fdw_exprs
-	 * field of the finished plan node; we can't keep them in private__ state
+	 * field of the finished plan node; we can't keep them in private state
 	 * because then they wouldn't be subject to later planner processing.
 	 */
 	return make_foreignscan(tlist,
@@ -916,7 +916,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 		return;
 
 	/*
-	 * We'll save private__ state in node->fdw_state.
+	 * We'll save private state in node->fdw_state.
 	 */
 	fsstate = (PgFdwScanState *) palloc0(sizeof(PgFdwScanState));
 	node->fdw_state = (void *) fsstate;
@@ -944,7 +944,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 	fsstate->cursor_number = GetCursorNumber(fsstate->conn);
 	fsstate->cursor_exists = false;
 
-	/* Get private__ info created by planner functions. */
+	/* Get private info created by planner functions. */
 	fsstate->query = strVal(list_nth(fsplan->fdw_private,
 									 FdwScanPrivateSelectSql));
 	fsstate->retrieved_attrs = (List *) list_nth(fsplan->fdw_private,

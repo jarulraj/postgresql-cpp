@@ -1909,7 +1909,7 @@ ReindexMultipleTables(const char *objectName, ReindexObjectType objectKind,
 			!IsSystemClass(relid, classtuple))
 			continue;
 
-		/* Save the list of relation OIDs in private__ context */
+		/* Save the list of relation OIDs in private context */
 		old = MemoryContextSwitchTo(private_context);
 
 		/*

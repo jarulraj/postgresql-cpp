@@ -581,7 +581,7 @@ float8send(PG_FUNCTION_ARGS)
 }
 
 
-/* ========== public__ ROUTINES ========== */
+/* ========== public ROUTINES ========== */
 
 
 /*
@@ -2800,7 +2800,7 @@ width_bucket_float8(PG_FUNCTION_ARGS)
 	PG_RETURN_INT32(result);
 }
 
-/* ========== private__ ROUTINES ========== */
+/* ========== private ROUTINES ========== */
 
 #ifndef HAVE_CBRT
 

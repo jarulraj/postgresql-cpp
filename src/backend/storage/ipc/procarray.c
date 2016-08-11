@@ -3048,7 +3048,7 @@ ExpireOldKnownAssignedTransactionIds(TransactionId xid)
 
 
 /*
- * private__ module functions to manipulate KnownAssignedXids
+ * private module functions to manipulate KnownAssignedXids
  *
  * There are 5 main uses of the KnownAssignedXids data structure:
  *

@@ -401,7 +401,7 @@ transientrel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 	transientrel = heap_open(myState->transientoid, NoLock);
 
 	/*
-	 * Fill private__ fields of myState for use by later routines
+	 * Fill private fields of myState for use by later routines
 	 */
 	myState->transientrel = transientrel;
 	myState->output_cid = GetCurrentCommandId(true);

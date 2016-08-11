@@ -5317,7 +5317,7 @@ poly_circle(PG_FUNCTION_ARGS)
 
 /***********************************************************************
  **
- **		private__ routines for multiple types.
+ **		private routines for multiple types.
  **
  ***********************************************************************/
 

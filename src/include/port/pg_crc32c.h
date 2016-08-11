@@ -9,7 +9,7 @@
  * up CRC calculations (e.g. Intel SSE 4.2), on other platforms we use the
  * Slicing-by-8 algorithm which uses lookup tables.
  *
- * The public__ interface consists of four macros:
+ * The public interface consists of four macros:
  *
  * INIT_CRC32C(crc)
  *		Initialize a CRC accumulator

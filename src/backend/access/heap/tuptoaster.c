@@ -86,7 +86,7 @@ static void toast_close_indexes(Relation *toastidxs, int num_indexes,
 /* ----------
  * heap_tuple_fetch_attr -
  *
- *	public__ entry point to get back a toasted value from
+ *	public entry point to get back a toasted value from
  *	external source (possibly still in compressed format).
  *
  * This will return a datum that contains all the data internally, ie, not
@@ -159,7 +159,7 @@ heap_tuple_fetch_attr(struct varlena * attr)
 /* ----------
  * heap_tuple_untoast_attr -
  *
- *	public__ entry point to get back a toasted value from compression
+ *	public entry point to get back a toasted value from compression
  *	or external storage.  The result is always non-extended varlena form.
  *
  * Note some callers assume that if the input is an EXTERNAL or COMPRESSED
@@ -248,7 +248,7 @@ heap_tuple_untoast_attr(struct varlena * attr)
 /* ----------
  * heap_tuple_untoast_attr_slice -
  *
- *		public__ entry point to get back part of a toasted value
+ *		public entry point to get back part of a toasted value
  *		from compression or external storage.
  * ----------
  */

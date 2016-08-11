@@ -475,7 +475,7 @@ PredicateLockingNeededForRelation(Relation relation)
 }
 
 /*
- * When a public__ interface method is called for a read, this__ is the test to
+ * When a public interface method is called for a read, this__ is the test to
  * see if we should do a quick return.
  *
  * Note: this__ function has side-effects! If this__ transaction has been flagged

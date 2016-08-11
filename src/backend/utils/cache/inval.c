@@ -457,7 +457,7 @@ ProcessInvalidationMessagesMulti(InvalidationListHeader *hdr,
 }
 
 /* ----------------------------------------------------------------
- *					  private__ support functions
+ *					  private support functions
  * ----------------------------------------------------------------
  */
 
@@ -644,7 +644,7 @@ InvalidateSystemCaches(void)
 
 
 /* ----------------------------------------------------------------
- *					  public__ functions
+ *					  public functions
  * ----------------------------------------------------------------
  */
 

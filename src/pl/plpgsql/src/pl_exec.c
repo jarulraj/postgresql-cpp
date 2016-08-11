@@ -285,10 +285,10 @@ static char *format_preparedparamsdata(PLpgSQL_execstate *estate,
  *
  * This is also used to execute inline code blocks (DO blocks).  The only
  * difference that this__ code is aware of is that for a DO block, we want
- * to use a private__ simple_eval_estate, which is created and passed in by
+ * to use a private simple_eval_estate, which is created and passed in by
  * the caller.  For regular functions, pass NULL, which implies using
- * shared_simple_eval_estate.  (When using a private__ simple_eval_estate,
- * we must also use a private__ cast hashtable, but that's taken care of
+ * shared_simple_eval_estate.  (When using a private simple_eval_estate,
+ * we must also use a private cast hashtable, but that's taken care of
  * within plpgsql_estate_setup.)
  * ----------
  */
@@ -3345,12 +3345,12 @@ plpgsql_estate_setup(PLpgSQL_execstate *estate,
 	if (simple_eval_estate)
 	{
 		estate->simple_eval_estate = simple_eval_estate;
-		/* private__ cast hash just lives in function's main context */
+		/* private cast hash just lives in function's main context */
 		memset(&ctl, 0, sizeof(ctl));
 		ctl.keysize = sizeof(plpgsql_CastHashKey);
 		ctl.entrysize = sizeof(plpgsql_CastHashEntry);
 		ctl.hcxt = CurrentMemoryContext;
-		estate->cast_hash = hash_create("PLpgSQL private__ cast cache",
+		estate->cast_hash = hash_create("PLpgSQL private cast cache",
 										16,		/* start small and extend */
 										&ctl,
 									  HASH_ELEM | HASH_BLOBS | HASH_CONTEXT);
@@ -6176,7 +6176,7 @@ get_cast_hashentry(PLpgSQL_execstate *estate,
 	 * happens a lot, but we don't expect it to.)  It's okay to update the
 	 * hash table with the new tree because all plpgsql functions within a
 	 * given transaction share the same simple_eval_estate.  (Well, regular
-	 * functions do; DO blocks have private__ simple_eval_estates, and private__
+	 * functions do; DO blocks have private simple_eval_estates, and private
 	 * cast hash tables to go with them.)
 	 */
 	curlxid = MyProc->lxid;

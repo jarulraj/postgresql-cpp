@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * smgr.h
- *	  storage manager switch public__ interface declarations.
+ *	  storage manager switch public interface declarations.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -56,10 +56,10 @@ typedef struct SMgrRelationData
 	BlockNumber smgr_fsm_nblocks;		/* last known size of fsm fork */
 	BlockNumber smgr_vm_nblocks;	/* last known size of vm fork */
 
-	/* additional public__ fields may someday exist here */
+	/* additional public fields may someday exist here */
 
 	/*
-	 * Fields below here are intended to be private__ to smgr.c and its
+	 * Fields below here are intended to be private to smgr.c and its
 	 * submodules.  Do not touch them from elsewhere.
 	 */
 	int			smgr_which;		/* storage manager selector */

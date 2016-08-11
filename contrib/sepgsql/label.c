@@ -319,7 +319,7 @@ sepgsql_needs_fmgr_hook(Oid functionId)
  */
 static void
 sepgsql_fmgr_hook(FmgrHookEventType event,
-				  FmgrInfo *flinfo, Datum *private__)
+				  FmgrInfo *flinfo, Datum *private)
 {
 	struct
 	{
@@ -331,7 +331,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 	switch (event)
 	{
 		case FHET_START:
-			stack = (void *) DatumGetPointer(*private__);
+			stack = (void *) DatumGetPointer(*private);
 			if (!stack)
 			{
 				MemoryContext oldcxt;
@@ -372,7 +372,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 												  SEPG_PROCESS__TRANSITION,
 												  NULL, true);
 				}
-				*private__ = PointerGetDatum(stack);
+				*private = PointerGetDatum(stack);
 			}
 			Assert(!stack->old_label);
 			if (stack->new_label)
@@ -386,7 +386,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 
 		case FHET_END:
 		case FHET_ABORT:
-			stack = (void *) DatumGetPointer(*private__);
+			stack = (void *) DatumGetPointer(*private);
 
 			if (next_fmgr_hook)
 				(*next_fmgr_hook) (event, flinfo, &stack->next_private);

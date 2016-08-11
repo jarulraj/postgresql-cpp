@@ -208,7 +208,7 @@ typedef int (*SortTupleComparator) (const SortTuple *a, const SortTuple *b,
 												Tuplesortstate *state);
 
 /*
- * private__ state of a Tuplesort operation.
+ * private state of a Tuplesort operation.
  */
 struct Tuplesortstate
 {

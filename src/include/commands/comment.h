@@ -21,7 +21,7 @@
 /*------------------------------------------------------------------
  * Function Prototypes --
  *
- * The following prototypes define the public__ functions of the comment
+ * The following prototypes define the public functions of the comment
  * related routines.  CommentObject() implements the SQL "COMMENT ON"
  * command.  DeleteComments() deletes all comments for an object.
  * CreateComments creates (or deletes, if comment is NULL) a comment

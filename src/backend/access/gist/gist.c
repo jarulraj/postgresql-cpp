@@ -95,7 +95,7 @@ gistbuildempty(PG_FUNCTION_ARGS)
 /*
  *	gistinsert -- wrapper for GiST tuple insertion.
  *
- *	  This is the public__ interface routine for tuple insertion in GiSTs.
+ *	  This is the public interface routine for tuple insertion in GiSTs.
  *	  It doesn't do any work; just locks the relation and passes the buck.
  */
 Datum

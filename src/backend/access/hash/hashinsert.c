@@ -22,7 +22,7 @@
 /*
  *	_hash_doinsert() -- Handle insertion of a single index tuple.
  *
- *		This routine is called by the public__ interface routines, hashbuild
+ *		This routine is called by the public interface routines, hashbuild
  *		and hashinsert.  By here, itup is completely filled in.
  */
 void

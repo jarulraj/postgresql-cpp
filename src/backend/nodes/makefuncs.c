@@ -433,7 +433,7 @@ makeRangeVar(char *schemaname, char *relname, int location)
 
 /*
  * makeTypeName -
- *	build a typename__ node for an unqualified name.
+ *	build a typename node for an unqualified name.
  *
  * typmod is defaulted, but can be changed later by caller.
  */
@@ -445,7 +445,7 @@ makeTypeName(char *typnam)
 
 /*
  * makeTypeNameFromNameList -
- *	build a typename__ node for a String list representing a qualified name.
+ *	build a typename node for a String list representing a qualified name.
  *
  * typmod is defaulted, but can be changed later by caller.
  */
@@ -463,7 +463,7 @@ makeTypeNameFromNameList(List *names)
 
 /*
  * makeTypeNameFromOid -
- *	build a typename__ node to represent a type already known by OID/typmod.
+ *	build a typename node to represent a type already known by OID/typmod.
  */
 TypeName *
 makeTypeNameFromOid(Oid typeOid, int32 typmod)

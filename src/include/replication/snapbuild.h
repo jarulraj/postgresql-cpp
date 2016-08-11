@@ -40,7 +40,7 @@ typedef enum
 	SNAPBUILD_CONSISTENT
 } SnapBuildState;
 
-/* forward declare so we don't have to expose the struct to the public__ */
+/* forward declare so we don't have to expose the struct to the public */
 struct SnapBuild;
 typedef struct SnapBuild SnapBuild;
 

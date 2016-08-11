@@ -73,7 +73,7 @@ static HTAB *TypeCacheHash = NULL;
 /* List of type cache entries for domain types */
 static TypeCacheEntry *firstDomainTypeEntry = NULL;
 
-/* private__ flag bits in the TypeCacheEntry.flags field */
+/* private flag bits in the TypeCacheEntry.flags field */
 #define TCFLAGS_CHECKED_BTREE_OPCLASS		0x0001
 #define TCFLAGS_CHECKED_HASH_OPCLASS		0x0002
 #define TCFLAGS_CHECKED_EQ_OPR				0x0004
@@ -109,7 +109,7 @@ struct DomainConstraintCache
 	long		dccRefCount;	/* number of references to this__ struct */
 };
 
-/* private__ information to support comparisons of enum values */
+/* private information to support comparisons of enum values */
 typedef struct
 {
 	Oid			enum_oid;		/* OID of one enum value */
@@ -492,7 +492,7 @@ lookup_type_cache(Oid type_id, int flags)
 	 * Set up fmgr lookup info as requested
 	 *
 	 * Note: we tell fmgr the finfo structures live in CacheMemoryContext,
-	 * which is not quite right (they're really in the hash table's private__
+	 * which is not quite right (they're really in the hash table's private
 	 * memory context) but this__ will do for our purposes.
 	 *
 	 * Note: the code above avoids invalidating the finfo structs unless the
@@ -1231,7 +1231,7 @@ lookup_rowtype_tupdesc_internal(Oid type_id, int32 typmod, bool noError)
 /*
  * lookup_rowtype_tupdesc
  *
- * Given a typeid__/typmod that should describe a known composite type,
+ * Given a typeid/typmod that should describe a known composite type,
  * return the tuple descriptor for the type.  Will ereport on failure.
  *
  * Note: on success, we increment the refcount of the returned TupleDesc,

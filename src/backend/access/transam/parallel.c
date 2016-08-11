@@ -101,7 +101,7 @@ static FixedParallelState *MyFixedParallelState;
 /* List of active parallel contexts. */
 static dlist_head pcxt_list = DLIST_STATIC_INIT(pcxt_list);
 
-/* private__ functions. */
+/* private functions. */
 static void HandleParallelMessage(ParallelContext *, int, StringInfo msg);
 static void ParallelErrorContext(void *arg);
 static void ParallelExtensionTrampoline(dsm_segment *seg, shm_toc *toc);
@@ -248,11 +248,11 @@ InitializeParallelDSM(ParallelContext *pcxt)
 	/*
 	 * Create DSM and initialize with new table of contents.  But if the user
 	 * didn't request any workers, then don't bother creating a dynamic shared
-	 * memory segment; instead, just use backend-private__ memory.
+	 * memory segment; instead, just use backend-private memory.
 	 *
 	 * Also, if we can't create a dynamic shared memory segment because the
 	 * maximum number of segments have already been created, then fall back to
-	 * backend-private__ memory, and plan not to use any workers.  We hope this__
+	 * backend-private memory, and plan not to use any workers.  We hope this__
 	 * won't happen very often, but it's better to abandon the use of
 	 * parallelism than to fail outright.
 	 */
@@ -539,7 +539,7 @@ DestroyParallelContext(ParallelContext *pcxt)
 	}
 
 	/*
-	 * If this__ parallel context is actually in backend-private__ memory rather
+	 * If this__ parallel context is actually in backend-private memory rather
 	 * than shared memory, free that memory instead.
 	 */
 	if (pcxt->private_memory != NULL)

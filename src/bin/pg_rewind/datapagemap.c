@@ -21,7 +21,7 @@ struct datapagemap_iterator
 };
 
 /*****
- * public__ functions
+ * public functions
  */
 
 /*

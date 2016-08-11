@@ -915,7 +915,7 @@ plperl_destroy_interp(PerlInterpreter **interp)
 		 * We could call perl_destruct() but we'd need to audit its actions
 		 * very carefully and work-around any that impact us. (Calling
 		 * sv_clean_objs() isn't an option because it's not part of perl's
-		 * public__ API so isn't portably available.) Meanwhile END blocks can
+		 * public API so isn't portably available.) Meanwhile END blocks can
 		 * be used to perform manual cleanup.
 		 */
 

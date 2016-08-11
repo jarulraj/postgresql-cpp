@@ -99,7 +99,7 @@ int			PostAuthDelay = 0;
 
 
 /* ----------------
- *		private__ variables
+ *		private variables
  * ----------------
  */
 

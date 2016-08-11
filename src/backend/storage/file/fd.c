@@ -247,7 +247,7 @@ static int	nextTempTableSpace = 0;
 
 /*--------------------
  *
- * private__ Routines
+ * private Routines
  *
  * Delete		   - delete a file from the Lru ring
  * LruDelete	   - remove a file from the Lru ring and close its FD

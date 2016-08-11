@@ -29,7 +29,7 @@
 #include "parser/gram.h"
 
 /*
- * The YY_EXTRA data that a flex scanner allows us to pass around.  private__
+ * The YY_EXTRA data that a flex scanner allows us to pass around.  private
  * state needed for raw parsing/lexing goes here.
  */
 typedef struct base_yy_extra_type

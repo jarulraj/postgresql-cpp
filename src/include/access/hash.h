@@ -73,7 +73,7 @@ typedef HashPageOpaqueData *HashPageOpaque;
 #define HASHO_PAGE_ID		0xFF80
 
 /*
- *	HashScanOpaqueData is private__ state for a hash index scan.
+ *	HashScanOpaqueData is private state for a hash index scan.
  */
 typedef struct HashScanOpaqueData
 {
@@ -241,7 +241,7 @@ typedef HashMetaPageData *HashMetaPage;
 #define HASHPROC		1
 
 
-/* public__ routines */
+/* public routines */
 
 extern Datum hashbuild(PG_FUNCTION_ARGS);
 extern Datum hashbuildempty(PG_FUNCTION_ARGS);
@@ -282,7 +282,7 @@ extern Datum hashvarlena(PG_FUNCTION_ARGS);
 extern Datum hash_any(register const unsigned char *k, register int keylen);
 extern Datum hash_uint32(uint32 k);
 
-/* private__ routines */
+/* private routines */
 
 /* hashinsert.c */
 extern void _hash_doinsert(Relation rel, IndexTuple itup);

@@ -2276,7 +2276,7 @@ mp_error_string(mp_result res)
 /* }}} */
 
 /*------------------------------------------------------------------------*/
-/* private__ functions for internal use.  These make assumptions.           */
+/* private functions for internal use.  These make assumptions.           */
 
 /* {{{ s_alloc(num) */
 

@@ -1,5 +1,5 @@
 /*
- * Written by Solar Designer and placed in the public__ domain.
+ * Written by Solar Designer and placed in the public domain.
  * See crypt_blowfish.c for more information.
  *
  * contrib/pgcrypto/crypt-gensalt.c

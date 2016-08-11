@@ -371,7 +371,7 @@ PLy_procedure_compile(PLyProcedure *proc, const char *src)
 	proc->globals = PyDict_Copy(PLy_interp_globals);
 
 	/*
-	 * SD is private__ preserved data between calls. GD is global data shared by
+	 * SD is private preserved data between calls. GD is global data shared by
 	 * all functions
 	 */
 	proc->statics = PyDict_New();

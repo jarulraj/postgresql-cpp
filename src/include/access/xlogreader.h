@@ -68,7 +68,7 @@ typedef struct
 struct XLogReaderState
 {
 	/* ----------------------------------------
-	 * public__ parameters
+	 * public parameters
 	 * ----------------------------------------
 	 */
 
@@ -135,7 +135,7 @@ struct XLogReaderState
 	int			max_block_id;	/* highest block_id in use (-1 if none) */
 
 	/* ----------------------------------------
-	 * private__/internal state
+	 * private/internal state
 	 * ----------------------------------------
 	 */
 

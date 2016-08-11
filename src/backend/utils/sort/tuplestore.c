@@ -98,7 +98,7 @@ typedef struct
 } TSReadPointer;
 
 /*
- * private__ state of a Tuplestore operation.
+ * private state of a Tuplestore operation.
  */
 struct Tuplestorestate
 {

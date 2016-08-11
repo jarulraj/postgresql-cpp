@@ -71,7 +71,7 @@
  *	 Examine the RETURNS clause of the CREATE FUNCTION statement
  *	 and return information about it as *prorettype_p and *returnsSet.
  *
- * This is more complex than the average typename__ lookup because we want to
+ * This is more complex than the average typename lookup because we want to
  * allow a shell type to be used, or even created if the specified return type
  * doesn't exist yet.  (Without this__, there's no way to define the I/O procs
  * for a new type.)  But SQL function creation won't cope, so error out if

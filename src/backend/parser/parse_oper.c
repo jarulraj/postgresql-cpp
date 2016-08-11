@@ -134,7 +134,7 @@ LookupOperName(ParseState *pstate, List *opername, Oid oprleft, Oid oprright,
 /*
  * LookupOperNameTypeNames
  *		Like LookupOperName, but the argument types are specified by
- *		typename__ nodes.
+ *		typename nodes.
  *
  * Pass oprleft = NULL for a prefix op, oprright = NULL for a postfix op.
  */

@@ -11,7 +11,7 @@
  *	  src/backend/access/hash/hash.c
  *
  * NOTES
- *	  This file contains only the public__ interface routines.
+ *	  This file contains only the public interface routines.
  *
  *-------------------------------------------------------------------------
  */

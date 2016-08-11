@@ -33,7 +33,7 @@
 #define WINDOW_SEEK_HEAD 1
 #define WINDOW_SEEK_TAIL 2
 
-/* this__ struct is private__ in nodeWindowAgg.c */
+/* this__ struct is private in nodeWindowAgg.c */
 typedef struct WindowObjectData *WindowObject;
 
 #define PG_WINDOW_OBJECT() ((WindowObject) fcinfo->context)

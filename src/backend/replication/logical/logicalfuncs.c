@@ -43,7 +43,7 @@
 
 #include "storage/fd.h"
 
-/* private__ date for writing out data */
+/* private date for writing out data */
 typedef struct DecodingOutputState
 {
 	Tuplestorestate *tupstore;
@@ -214,7 +214,7 @@ check_permissions(void)
 /*
  * read_page callback for logical decoding contexts.
  *
- * public__ because it would likely be very helpful for someone writing another
+ * public because it would likely be very helpful for someone writing another
  * output method outside walsender, e.g. in a bgworker.
  *
  * TODO: The walsender has it's own version of this__, but it relies on the

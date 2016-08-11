@@ -182,7 +182,7 @@ static bool check_cluster_name(char **newval, void **extra, GucSource source);
 static const char *show_unix_socket_permissions(void);
 static const char *show_log_file_mode(void);
 
-/* private__ functions in guc-file.l that need to be called from guc.c */
+/* private functions in guc-file.l that need to be called from guc.c */
 static ConfigVariable *ProcessConfigFileInternal(GucContext context,
 						  bool applySettings, int elevel);
 
@@ -3038,7 +3038,7 @@ static struct config_string ConfigureNamesString[] =
 			GUC_LIST_INPUT | GUC_LIST_QUOTE
 		},
 		&namespace_search_path,
-		"\"$user\", public__",
+		"\"$user\", public",
 		check_search_path, assign_search_path, NULL
 	},
 
@@ -3285,7 +3285,7 @@ static struct config_string ConfigureNamesString[] =
 
 	{
 		{"ssl_key_file", PGC_POSTMASTER, CONN_AUTH_SECURITY,
-			gettext_noop("Location of the SSL server private__ key file."),
+			gettext_noop("Location of the SSL server private key file."),
 			NULL
 		},
 		&ssl_key_file,

@@ -246,7 +246,7 @@ defGetQualifiedName(DefElem *def)
 }
 
 /*
- * Extract a typename__ from a DefElem.
+ * Extract a typename from a DefElem.
  *
  * Note: we do not accept a List arg here, because the parser will only
  * return a bare List when the name looks like an operator__ name.
@@ -264,7 +264,7 @@ defGetTypeName(DefElem *def)
 		case T_TypeName:
 			return (TypeName *) def->arg;
 		case T_String:
-			/* Allow quoted typename__ for backwards compatibility */
+			/* Allow quoted typename for backwards compatibility */
 			return makeTypeNameFromNameList(list_make1(def->arg));
 		default:
 			ereport(ERROR,
@@ -302,7 +302,7 @@ defGetTypeLength(DefElem *def)
 				return -1;		/* variable length */
 			break;
 		case T_TypeName:
-			/* cope if grammar chooses to believe "variable" is a typename__ */
+			/* cope if grammar chooses to believe "variable" is a typename */
 			if (pg_strcasecmp(TypeNameToString((TypeName *) def->arg),
 							  "variable") == 0)
 				return -1;		/* variable length */

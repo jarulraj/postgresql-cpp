@@ -100,7 +100,7 @@ static void pgarch_archiveDone(char *xlog);
 
 
 /* ------------------------------------------------------------
- * public__ functions called from postmaster follow
+ * public functions called from postmaster follow
  * ------------------------------------------------------------
  */
 

@@ -2,7 +2,7 @@
  *
  * pg_backup_archiver.h
  *
- *	private__ interface to the pg_dump archiver routines.
+ *	private interface to the pg_dump archiver routines.
  *	It is NOT intended that these routines be called by any
  *	dumper directly.
  *
@@ -209,7 +209,7 @@ typedef enum
 
 struct _archiveHandle
 {
-	Archive		public__;			/* public__ part of archive */
+	Archive		public;			/* public part of archive */
 	char		vmaj;			/* Version of file */
 	char		vmin;
 	char		vrev;
@@ -393,10 +393,10 @@ TocEntry   *getTocEntryByDumpId(ArchiveHandle *AH, DumpId id);
 extern bool checkSeek(FILE *fp);
 
 #define appendStringLiteralAHX(buf,str,AH) \
-	appendStringLiteral(buf, str, (AH)->public__.encoding, (AH)->public__.std_strings)
+	appendStringLiteral(buf, str, (AH)->public.encoding, (AH)->public.std_strings)
 
 #define appendByteaLiteralAHX(buf,str,len,AH) \
-	appendByteaLiteral(buf, str, len, (AH)->public__.std_strings)
+	appendByteaLiteral(buf, str, len, (AH)->public.std_strings)
 
 /*
  * Mandatory routines for each supported format

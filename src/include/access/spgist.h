@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * spgist.h
- *	  public__ header file for SP-GiST access method.
+ *	  public header file for SP-GiST access method.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

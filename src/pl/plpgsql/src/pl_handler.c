@@ -318,7 +318,7 @@ plpgsql_inline_handler(PG_FUNCTION_ARGS)
 	flinfo.fn_oid = InvalidOid;
 	flinfo.fn_mcxt = CurrentMemoryContext;
 
-	/* Create a private__ EState for simple-expression execution */
+	/* Create a private EState for simple-expression execution */
 	simple_eval_estate = CreateExecutorState();
 
 	/* And run the function */
@@ -333,9 +333,9 @@ plpgsql_inline_handler(PG_FUNCTION_ARGS)
 		 * accumulated by the failed DO block, principally cached plans for
 		 * statements (which can be flushed with plpgsql_free_function_memory)
 		 * and execution trees for simple expressions, which are in the
-		 * private__ EState.
+		 * private EState.
 		 *
-		 * Before releasing the private__ EState, we must clean up any
+		 * Before releasing the private EState, we must clean up any
 		 * simple_econtext_stack entries pointing into it, which we can do by
 		 * invoking the subxact callback.  (It will be called again later if
 		 * some outer control level does a subtransaction abort, but no harm
@@ -346,7 +346,7 @@ plpgsql_inline_handler(PG_FUNCTION_ARGS)
 						   GetCurrentSubTransactionId(),
 						   0, NULL);
 
-		/* Clean up the private__ EState */
+		/* Clean up the private EState */
 		FreeExecutorState(simple_eval_estate);
 
 		/* Function should now have no remaining use-counts ... */
@@ -361,7 +361,7 @@ plpgsql_inline_handler(PG_FUNCTION_ARGS)
 	}
 	PG_END_TRY();
 
-	/* Clean up the private__ EState */
+	/* Clean up the private EState */
 	FreeExecutorState(simple_eval_estate);
 
 	/* Function should now have no remaining use-counts ... */

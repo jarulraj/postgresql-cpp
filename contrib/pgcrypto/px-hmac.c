@@ -137,7 +137,7 @@ hmac_free(PX_HMAC *h)
 }
 
 
-/* public__ FUNCTIONS */
+/* public FUNCTIONS */
 
 int
 px_find_hmac(const char *name, PX_HMAC **res)

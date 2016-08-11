@@ -73,7 +73,7 @@ DATA(insert OID = 99 ( "pg_toast" PGUID _null_ ));
 DESCR("reserved schema for TOAST tables");
 #define PG_TOAST_NAMESPACE 99
 DATA(insert OID = 2200 ( "public" PGUID _null_ ));
-DESCR("standard public__ schema");
+DESCR("standard public schema");
 #define PG_PUBLIC_NAMESPACE 2200
 
 

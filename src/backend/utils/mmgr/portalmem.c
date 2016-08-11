@@ -90,7 +90,7 @@ static MemoryContext PortalMemory = NULL;
 
 
 /* ----------------------------------------------------------------
- *				   public__ portal interface functions
+ *				   public portal interface functions
  * ----------------------------------------------------------------
  */
 

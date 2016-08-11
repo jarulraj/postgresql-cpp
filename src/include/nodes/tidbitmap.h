@@ -26,12 +26,12 @@
 
 
 /*
- * Actual bitmap representation is private__ to tidbitmap.c.  Callers can
+ * Actual bitmap representation is private to tidbitmap.c.  Callers can
  * do IsA(x, TIDBitmap) on it, but nothing else.
  */
 typedef struct TIDBitmap TIDBitmap;
 
-/* Likewise, TBMIterator is private__ */
+/* Likewise, TBMIterator is private */
 typedef struct TBMIterator TBMIterator;
 
 /* Result structure for tbm_iterate */

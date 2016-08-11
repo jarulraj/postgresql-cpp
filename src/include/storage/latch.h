@@ -82,7 +82,7 @@
 
 /*
  * Latch structure should be treated as opaque and only accessed through
- * the public__ functions. It is defined here to allow embedding Latches as
+ * the public functions. It is defined here to allow embedding Latches as
  * part of bigger structs.
  */
 typedef struct Latch

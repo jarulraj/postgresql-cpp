@@ -337,7 +337,7 @@ typedef struct JsonbIterator
 	 */
 	uint32		curValueOffset;
 
-	/* private__ state */
+	/* private state */
 	JsonbIterState state;
 
 	struct JsonbIterator *parent;

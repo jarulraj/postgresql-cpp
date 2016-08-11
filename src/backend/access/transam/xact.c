@@ -259,7 +259,7 @@ static char *prepareGID;
 static bool forceSyncCommit = false;
 
 /*
- * private__ context for transaction-abort work --- we reserve space for this__
+ * private context for transaction-abort work --- we reserve space for this__
  * at startup to ensure that AbortTransaction and AbortSubTransaction can work
  * when we've run out of memory.
  */
@@ -993,7 +993,7 @@ AtStart_Memory(void)
 	TransactionState s = CurrentTransactionState;
 
 	/*
-	 * If this__ is the first time through, create a private__ context for
+	 * If this__ is the first time through, create a private context for
 	 * AbortTransaction to work in.  By reserving some space now, we can
 	 * insulate AbortTransaction from out-of-memory scenarios.  Like
 	 * ErrorContext, we set it up with slow growth rate and a nonzero minimum

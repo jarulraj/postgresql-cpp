@@ -43,7 +43,7 @@
 
 PG_MODULE_MAGIC;
 
-/* private__ stuff */
+/* private stuff */
 
 typedef int (*PFN) (const char *name, void **res);
 static void *find_provider(text *name, PFN pf, char *desc, int silent);

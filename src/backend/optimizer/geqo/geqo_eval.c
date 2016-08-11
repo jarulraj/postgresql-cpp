@@ -64,7 +64,7 @@ geqo_eval(PlannerInfo *root, Gene *tour, int num_gene)
 	struct HTAB *savehash;
 
 	/*
-	 * Create a private__ memory context that will hold all temp storage
+	 * Create a private memory context that will hold all temp storage
 	 * allocated inside gimme_tree().
 	 *
 	 * Since geqo_eval() will be called many times, we can't afford to let all

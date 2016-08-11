@@ -1354,7 +1354,7 @@ func_get_detail(List *funcname,
 
 				if (sourceType == UNKNOWNOID && IsA(arg1, Const))
 				{
-					/* always treat typename__('literal') as coercion */
+					/* always treat typename('literal') as coercion */
 					iscoercion = true;
 				}
 				else
@@ -1927,7 +1927,7 @@ LookupFuncName(List *funcname, int nargs, const Oid *argtypes, bool noError)
 /*
  * LookupFuncNameTypeNames
  *		Like LookupFuncName, but the argument types are specified by a
- *		list of typename__ nodes.
+ *		list of typename nodes.
  */
 Oid
 LookupFuncNameTypeNames(List *funcname, List *argtypes, bool noError)
@@ -1960,7 +1960,7 @@ LookupFuncNameTypeNames(List *funcname, List *argtypes, bool noError)
 
 /*
  * LookupAggNameTypeNames
- *		Find an aggregate function given a name and list of typename__ nodes.
+ *		Find an aggregate function given a name and list of typename nodes.
  *
  * This is almost like LookupFuncNameTypeNames, but the error messages refer
  * to aggregates rather than plain functions, and we verify that the found

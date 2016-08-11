@@ -324,7 +324,7 @@ handle_sig_alarm(SIGNAL_ARGS)
 
 
 /*****************************************************************************
- * public__ API
+ * public API
  *****************************************************************************/
 
 /*
@@ -400,7 +400,7 @@ RegisterTimeout(TimeoutId id, timeout_handler_proc handler)
  *
  * This can be used during error recovery in case query cancel resulted in loss
  * of a SIGALRM event (due to longjmp'ing out of handle_sig_alarm before it
- * could do anything).  But note it's not necessary if any of the public__
+ * could do anything).  But note it's not necessary if any of the public
  * enable_ or disable_timeout functions are called in the same area, since
  * those all do schedule_alarm() internally if needed.
  */

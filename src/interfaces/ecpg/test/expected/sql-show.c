@@ -68,7 +68,7 @@ if (sqlca.sqlcode < 0) sqlprint();}
 
   printf("Var: Search path: %s\n", var);
 
-  { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "set search_path to 'public__'", ECPGt_EOIT, ECPGt_EORT);
+  { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "set search_path to 'public'", ECPGt_EOIT, ECPGt_EORT);
 #line 22 "show.pgc"
 
 if (sqlca.sqlwarn[0] == 'W') sqlprint();
