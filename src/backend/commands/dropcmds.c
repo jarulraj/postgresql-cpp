@@ -346,7 +346,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 			if (!schema_does_not_exist_skipping(objname, &msg, &name) &&
 				!type_in_list_does_not_exist_skipping(objargs, &msg, &name))
 			{
-				msg = gettext_noop("operator__ %s does not exist, skipping");
+				msg = gettext_noop("operator %s does not exist, skipping");
 				name = NameListToString(objname);
 			}
 			break;
@@ -419,7 +419,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 
 				if (!schema_does_not_exist_skipping(opcname, &msg, &name))
 				{
-					msg = gettext_noop("operator__ class__ \"%s\" does not exist for access method \"%s\", skipping");
+					msg = gettext_noop("operator class__ \"%s\" does not exist for access method \"%s\", skipping");
 					name = NameListToString(opcname);
 					args = strVal(linitial(objname));
 				}
@@ -431,7 +431,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 
 				if (!schema_does_not_exist_skipping(opfname, &msg, &name))
 				{
-					msg = gettext_noop("operator__ family \"%s\" does not exist for access method \"%s\", skipping");
+					msg = gettext_noop("operator family \"%s\" does not exist for access method \"%s\", skipping");
 					name = NameListToString(opfname);
 					args = strVal(linitial(objname));
 				}

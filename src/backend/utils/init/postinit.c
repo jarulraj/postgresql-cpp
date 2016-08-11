@@ -733,7 +733,7 @@ InitPostgres(const char *in_dbname, Oid dboid, const char *username,
 		if (am_walsender)
 			ereport(FATAL,
 					(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
-					 errmsg("new__ replication connections are not allowed during database shutdown")));
+					 errmsg("new replication connections are not allowed during database shutdown")));
 		else
 			ereport(FATAL,
 					(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),

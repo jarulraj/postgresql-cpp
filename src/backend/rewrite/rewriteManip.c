@@ -942,7 +942,7 @@ getInsertSelectQuery(Query *parsetree, Query ***subquery_ptr)
 		strcmp(rt_fetch(PRS2_OLD_VARNO, parsetree->rtable)->eref->aliasname,
 			   "old") == 0 &&
 		strcmp(rt_fetch(PRS2_NEW_VARNO, parsetree->rtable)->eref->aliasname,
-			   "new__") == 0)
+			   "new") == 0)
 		return parsetree;
 	Assert(parsetree->jointree && IsA(parsetree->jointree, FromExpr));
 	if (list_length(parsetree->jointree->fromlist) != 1)
@@ -958,7 +958,7 @@ getInsertSelectQuery(Query *parsetree, Query ***subquery_ptr)
 		strcmp(rt_fetch(PRS2_OLD_VARNO, selectquery->rtable)->eref->aliasname,
 			   "old") == 0 &&
 		strcmp(rt_fetch(PRS2_NEW_VARNO, selectquery->rtable)->eref->aliasname,
-			   "new__") == 0)
+			   "new") == 0)
 	{
 		if (subquery_ptr)
 			*subquery_ptr = &(selectrte->subquery);
@@ -1431,7 +1431,7 @@ ReplaceVarsFromTargetList_callback(Var *var,
 		if (contains_multiexpr_param(newnode, NULL))
 			ereport(ERROR,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("new__ variables in ON UPDATE rules cannot reference columns that are part of a multiple assignment in the subject UPDATE command")));
+					 errmsg("new variables in ON UPDATE rules cannot reference columns that are part of a multiple assignment in the subject UPDATE command")));
 
 		return newnode;
 	}

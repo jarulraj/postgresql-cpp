@@ -1400,7 +1400,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 		MemSet(&ctl, 0, sizeof(ctl));
 		ctl.keysize = sizeof(Oid);
 		ctl.entrysize = sizeof(OpClassCacheEnt);
-		OpClassCache = hash_create("operator__ class__ cache", 64,
+		OpClassCache = hash_create("operator class__ cache", 64,
 								   &ctl, HASH_ELEM | HASH_BLOBS);
 
 		/* Also make sure CacheMemoryContext exists */
@@ -2286,7 +2286,7 @@ RelationFlushRelation(Relation relation)
 	{
 		/*
 		 * new__ relcache entries are always rebuilt, not flushed; else we'd
-		 * forget the "new__" status of the relation, which is a useful
+		 * forget the "new" status of the relation, which is a useful
 		 * optimization to have.  Ditto for the new__-relfilenode status.
 		 *
 		 * The rel could have zero refcnt here, so temporarily increment the

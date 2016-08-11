@@ -1193,7 +1193,7 @@ initialize_SSL(PGconn *conn)
 		if (!S_ISREG(buf.st_mode) || buf.st_mode & (S_IRWXG | S_IRWXO))
 		{
 			printfPQExpBuffer(&conn->errorMessage,
-							  libpq_gettext("private__ key file \"%s\" has group or world access; permissions should be u=rw (0600) or less\n"),
+							  libpq_gettext("private key file \"%s\" has group or world access; permissions should be u=rw (0600) or less\n"),
 							  fnbuf);
 			return -1;
 		}

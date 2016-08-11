@@ -1129,7 +1129,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 			if (get_commutator(opid) != opid)
 				ereport(ERROR,
 						(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-						 errmsg("operator__ %s is not commutative",
+						 errmsg("operator %s is not commutative",
 								format_operator(opid)),
 						 errdetail("Only commutative operators can be used in exclusion constraints.")));
 
@@ -1157,7 +1157,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 
 				ereport(ERROR,
 						(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-						 errmsg("operator__ %s is not a member of operator__ family \"%s\"",
+						 errmsg("operator %s is not a member of operator__ family \"%s\"",
 								format_operator(opid),
 								NameStr(opfform->opfname)),
 						 errdetail("The exclusion operator__ must be related to the index operator__ class__ for the constraint.")));
@@ -1287,7 +1287,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 		if (!OidIsValid(opClassId))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("operator__ class__ \"%s\" does not exist for access method \"%s\"",
+					 errmsg("operator class__ \"%s\" does not exist for access method \"%s\"",
 							opcname, accessMethodName)));
 		tuple = SearchSysCache1(CLAOID, ObjectIdGetDatum(opClassId));
 	}
@@ -1295,7 +1295,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator__ class__ \"%s\" does not exist for access method \"%s\"",
+				 errmsg("operator class__ \"%s\" does not exist for access method \"%s\"",
 						NameListToString(opclass), accessMethodName)));
 
 	/*
@@ -1308,7 +1308,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 	if (!IsBinaryCoercible(attrType, opInputType))
 		ereport(ERROR,
 				(errcode(ERRCODE_DATATYPE_MISMATCH),
-				 errmsg("operator__ class__ \"%s\" does not accept data type %s",
+				 errmsg("operator class__ \"%s\" does not accept data type %s",
 					  NameListToString(opclass), format_type_be(attrType))));
 
 	ReleaseSysCache(tuple);

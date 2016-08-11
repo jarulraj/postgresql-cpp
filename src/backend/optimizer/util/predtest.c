@@ -1249,7 +1249,7 @@ list_member_strip(List *list, Expr *datum)
 
 
 /*
- * Define "operator__ implication tables" for btree operators ("strategies"),
+ * Define "operator implication tables" for btree operators ("strategies"),
  * and similar tables for refutation.
  *
  * The strategy numbers defined by btree indexes (see access/stratnum.h) are:

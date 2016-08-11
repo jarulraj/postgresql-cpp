@@ -4551,7 +4551,7 @@ pg_oper_ownercheck(Oid oper_oid, Oid roleid)
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ with OID %u does not exist", oper_oid)));
+				 errmsg("operator with OID %u does not exist", oper_oid)));
 
 	ownerId = ((Form_pg_operator) GETSTRUCT(tuple))->oprowner;
 
@@ -4728,7 +4728,7 @@ pg_opclass_ownercheck(Oid opc_oid, Oid roleid)
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator__ class__ with OID %u does not exist",
+				 errmsg("operator class__ with OID %u does not exist",
 						opc_oid)));
 
 	ownerId = ((Form_pg_opclass) GETSTRUCT(tuple))->opcowner;
@@ -4755,7 +4755,7 @@ pg_opfamily_ownercheck(Oid opf_oid, Oid roleid)
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator__ family with OID %u does not exist",
+				 errmsg("operator family with OID %u does not exist",
 						opf_oid)));
 
 	ownerId = ((Form_pg_opfamily) GETSTRUCT(tuple))->opfowner;

@@ -22,7 +22,7 @@
  *	  those routines will soon call these routines using the function
  *	  manager,
  *	  just like the poorly named "NewXXX" routines do.  The
- *	  "new__" routines are all going to die soon, once and for all!
+ *	  "new" routines are all going to die soon, once and for all!
  *		-cim 1/13/91
  *
  *-------------------------------------------------------------------------

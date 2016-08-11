@@ -2787,7 +2787,7 @@ byteaSetBit(PG_FUNCTION_ARGS)
 	if (newBit != 0 && newBit != 1)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-				 errmsg("new__ bit must be 0 or 1")));
+				 errmsg("new bit must be 0 or 1")));
 
 	/*
 	 * Make a copy of the original varlena.

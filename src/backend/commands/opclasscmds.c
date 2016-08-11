@@ -122,7 +122,7 @@ OpFamilyCacheLookup(Oid amID, List *opfamilyname, bool missing_ok)
 			elog(ERROR, "cache lookup failed for access method %u", amID);
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator__ family \"%s\" does not exist for access method \"%s\"",
+				 errmsg("operator family \"%s\" does not exist for access method \"%s\"",
 						NameListToString(opfamilyname),
 						NameStr(((Form_pg_am) GETSTRUCT(amtup))->amname))));
 	}
@@ -201,7 +201,7 @@ OpClassCacheLookup(Oid amID, List *opclassname, bool missing_ok)
 			elog(ERROR, "cache lookup failed for access method %u", amID);
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator__ class__ \"%s\" does not exist for access method \"%s\"",
+				 errmsg("operator class__ \"%s\" does not exist for access method \"%s\"",
 						NameListToString(opclassname),
 						NameStr(((Form_pg_am) GETSTRUCT(amtup))->amname))));
 	}
@@ -260,7 +260,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 							  ObjectIdGetDatum(namespaceoid)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-				 errmsg("operator__ family \"%s\" for access method \"%s\" already exists",
+				 errmsg("operator family \"%s\" for access method \"%s\" already exists",
 						opfname, amname)));
 
 	/*
@@ -594,7 +594,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 							  ObjectIdGetDatum(namespaceoid)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-				 errmsg("operator__ class__ \"%s\" for access method \"%s\" already exists",
+				 errmsg("operator class__ \"%s\" for access method \"%s\" already exists",
 						opcname, stmt->amname)));
 
 	/*
@@ -625,7 +625,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 						 errmsg("could not make operator__ class__ \"%s\" be default for type %s",
 								opcname,
 								TypeNameToString(stmt->datatype)),
-				   errdetail("operator__ class__ \"%s\" already is the default.",
+				   errdetail("operator class__ \"%s\" already is the default.",
 							 NameStr(opclass->opcname))));
 		}
 
@@ -872,7 +872,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 				{
 					ereport(ERROR,
 							(errcode(ERRCODE_SYNTAX_ERROR),
-							 errmsg("operator__ argument types must be specified in ALTER operator__ FAMILY")));
+							 errmsg("operator argument types must be specified in ALTER operator__ FAMILY")));
 					operOid = InvalidOid;		/* keep compiler quiet */
 				}
 
@@ -1262,7 +1262,7 @@ addFamilyMember(List **list, OpFamilyMember *member, bool isProc)
 			else
 				ereport(ERROR,
 						(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-						 errmsg("operator__ number %d for (%s,%s) appears more than once",
+						 errmsg("operator number %d for (%s,%s) appears more than once",
 								member->number,
 								format_type_be(member->lefttype),
 								format_type_be(member->righttype))));
@@ -1311,7 +1311,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 								  Int16GetDatum(op->number)))
 			ereport(ERROR,
 					(errcode(ERRCODE_DUPLICATE_OBJECT),
-					 errmsg("operator__ %d(%s,%s) already exists in operator__ family \"%s\"",
+					 errmsg("operator %d(%s,%s) already exists in operator__ family \"%s\"",
 							op->number,
 							format_type_be(op->lefttype),
 							format_type_be(op->righttype),
@@ -1517,7 +1517,7 @@ dropOperators(List *opfamilyname, Oid amoid, Oid opfamilyoid,
 		if (!OidIsValid(amopid))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("operator__ %d(%s,%s) does not exist in operator__ family \"%s\"",
+					 errmsg("operator %d(%s,%s) does not exist in operator__ family \"%s\"",
 							op->number,
 							format_type_be(op->lefttype),
 							format_type_be(op->righttype),
@@ -1702,7 +1702,7 @@ IsThereOpClassInNamespace(const char *opcname, Oid opcmethod,
 							  ObjectIdGetDatum(opcnamespace)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-				 errmsg("operator__ class__ \"%s\" for access method \"%s\" already exists in schema \"%s\"",
+				 errmsg("operator class__ \"%s\" for access method \"%s\" already exists in schema \"%s\"",
 						opcname,
 						get_am_name(opcmethod),
 						get_namespace_name(opcnamespace))));
@@ -1725,7 +1725,7 @@ IsThereOpFamilyInNamespace(const char *opfname, Oid opfmethod,
 							  ObjectIdGetDatum(opfnamespace)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-				 errmsg("operator__ family \"%s\" for access method \"%s\" already exists in schema \"%s\"",
+				 errmsg("operator family \"%s\" for access method \"%s\" already exists in schema \"%s\"",
 						opfname,
 						get_am_name(opfmethod),
 						get_namespace_name(opfnamespace))));

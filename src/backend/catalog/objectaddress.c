@@ -549,19 +549,19 @@ static const struct object_type_map
 	},
 	/* OCLASS_OPERATOR */
 	{
-		"operator__", OBJECT_OPERATOR
+		"operator", OBJECT_OPERATOR
 	},
 	/* OCLASS_OPCLASS */
 	{
-		"operator__ class__", OBJECT_OPCLASS
+		"operator class__", OBJECT_OPCLASS
 	},
 	/* OCLASS_OPFAMILY */
 	{
-		"operator__ family", OBJECT_OPFAMILY
+		"operator family", OBJECT_OPFAMILY
 	},
 	/* OCLASS_AMOP */
 	{
-		"operator__ of access method", OBJECT_AMOP
+		"operator of access method", OBJECT_AMOP
 	},
 	/* OCLASS_AMPROC */
 	{
@@ -1574,7 +1574,7 @@ get_object_address_opf_member(ObjectType objtype,
 					if (!missing_ok)
 						ereport(ERROR,
 								(errcode(ERRCODE_UNDEFINED_OBJECT),
-						  errmsg("operator__ %d (%s, %s) of %s does not exist",
+						  errmsg("operator %d (%s, %s) of %s does not exist",
 								 membernum, typenames[0], typenames[1],
 								 getObjectDescription(&famaddr))));
 				}
@@ -1641,7 +1641,7 @@ get_object_address_usermapping(List *objname, List *objargs, bool missing_ok)
 	servername = strVal(linitial(objargs));
 
 	/* look up pg_authid OID of mapped user; InvalidOid if public__ */
-	if (strcmp(username, "public__") == 0)
+	if (strcmp(username, "public") == 0)
 		userid = InvalidOid;
 	else
 	{
@@ -2610,7 +2610,7 @@ getObjectDescription(const ObjectAddress *object)
 			break;
 
 		case OCLASS_OPERATOR:
-			appendStringInfo(&buffer, _("operator__ %s"),
+			appendStringInfo(&buffer, _("operator %s"),
 							 format_operator(object->objectId));
 			break;
 
@@ -2642,7 +2642,7 @@ getObjectDescription(const ObjectAddress *object)
 				else
 					nspname = get_namespace_name(opcForm->opcnamespace);
 
-				appendStringInfo(&buffer, _("operator__ class__ %s for access method %s"),
+				appendStringInfo(&buffer, _("operator class__ %s for access method %s"),
 								 quote_qualified_identifier(nspname,
 												  NameStr(opcForm->opcname)),
 								 NameStr(amForm->amname));
@@ -2692,7 +2692,7 @@ getObjectDescription(const ObjectAddress *object)
 				   first two %s's are data type names, the third %s is the
 				   description of the operator__ family, and the last %s is the
 				   textual form of the operator__ with arguments.  */
-				appendStringInfo(&buffer, _("operator__ %d (%s, %s) of %s: %s"),
+				appendStringInfo(&buffer, _("operator %d (%s, %s) of %s: %s"),
 								 amopForm->amopstrategy,
 								 format_type_be(amopForm->amoplefttype),
 								 format_type_be(amopForm->amoprighttype),
@@ -2990,7 +2990,7 @@ getObjectDescription(const ObjectAddress *object)
 				if (OidIsValid(useid))
 					usename = GetUserNameFromId(useid, false);
 				else
-					usename = "public__";
+					usename = "public";
 
 				appendStringInfo(&buffer, _("user mapping for %s on server %s"), usename,
 								 srv->servername);
@@ -3251,7 +3251,7 @@ getOpFamilyDescription(StringInfo buffer, Oid opfid)
 	else
 		nspname = get_namespace_name(opfForm->opfnamespace);
 
-	appendStringInfo(buffer, _("operator__ family %s for access method %s"),
+	appendStringInfo(buffer, _("operator family %s for access method %s"),
 					 quote_qualified_identifier(nspname,
 												NameStr(opfForm->opfname)),
 					 NameStr(amForm->amname));
@@ -3517,19 +3517,19 @@ getObjectTypeDescription(const ObjectAddress *object)
 			break;
 
 		case OCLASS_OPERATOR:
-			appendStringInfoString(&buffer, "operator__");
+			appendStringInfoString(&buffer, "operator");
 			break;
 
 		case OCLASS_OPCLASS:
-			appendStringInfoString(&buffer, "operator__ class__");
+			appendStringInfoString(&buffer, "operator class__");
 			break;
 
 		case OCLASS_OPFAMILY:
-			appendStringInfoString(&buffer, "operator__ family");
+			appendStringInfoString(&buffer, "operator family");
 			break;
 
 		case OCLASS_AMOP:
-			appendStringInfoString(&buffer, "operator__ of access method");
+			appendStringInfoString(&buffer, "operator of access method");
 			break;
 
 		case OCLASS_AMPROC:
@@ -4068,7 +4068,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 					*objargs = list_make2(ltype, rtype);
 				}
 
-				appendStringInfo(&buffer, "operator__ %d (%s, %s) of %s",
+				appendStringInfo(&buffer, "operator %d (%s, %s) of %s",
 								 amopForm->amopstrategy,
 								 ltype, rtype, opfam.data);
 
@@ -4405,7 +4405,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 				if (OidIsValid(useid))
 					usename = GetUserNameFromId(useid, false);
 				else
-					usename = "public__";
+					usename = "public";
 
 				if (objname)
 				{

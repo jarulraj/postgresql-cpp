@@ -320,7 +320,7 @@ extern struct varlena *pg_detoast_datum_packed(struct varlena * datum);
 /*-------------------------------------------------------------------------
  *		Support for detecting call convention of dynamically-loaded functions
  *
- * Dynamically loaded functions may use either the version-1 ("new__ style")
+ * Dynamically loaded functions may use either the version-1 ("new style")
  * or version-0 ("old style") calling convention.  Version 1 is the call
  * convention defined in this__ header file; version 0 is the old "plain C"
  * convention.  A version-1 function must be accompanied by the macro call

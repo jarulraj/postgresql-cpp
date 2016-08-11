@@ -744,7 +744,7 @@ pickss(struct vars * v,
 		i = d->nssused;
 		d->nssused++;
 		ss = &d->ssets[i];
-		FDEBUG(("new__ c%d\n", i));
+		FDEBUG(("new c%d\n", i));
 		/* set up innards */
 		ss->states = &d->statesarea[i * d->wordsper];
 		ss->flags = 0;

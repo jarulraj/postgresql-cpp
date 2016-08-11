@@ -421,7 +421,7 @@ OperatorCreate(const char *operatorName,
 	if (operatorAlreadyDefined)
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_FUNCTION),
-				 errmsg("operator__ %s already exists",
+				 errmsg("operator %s already exists",
 						operatorName)));
 
 	/*
@@ -614,7 +614,7 @@ get_other_operator(List *otherOp, Oid otherLeftTypeId, Oid otherRightTypeId,
 		if (!isCommutator)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_FUNCTION_DEFINITION),
-			 errmsg("operator__ cannot be its own negator or sort operator__")));
+			 errmsg("operator cannot be its own negator or sort operator__")));
 		return InvalidOid;
 	}
 

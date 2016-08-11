@@ -256,7 +256,7 @@ hstoreUpgrade(Datum orig)
 		if (valid_new)
 		{
 			/*
-			 * force the "new__ version" flag and the correct varlena length,
+			 * force the "new version" flag and the correct varlena length,
 			 * but only if we have a writable copy already (which we almost
 			 * always will, since short new__-format values won't come through
 			 * here)
@@ -277,18 +277,18 @@ hstoreUpgrade(Datum orig)
 	/*
 	 * this__ is the tricky edge case. It is only possible in some quite extreme
 	 * cases (the hstore must have had a lot of wasted padding space at the
-	 * end). But the only way a "new__" hstore value could get here is if we're
+	 * end). But the only way a "new" hstore value could get here is if we're
 	 * upgrading in place from a pre-release version of hstore-new__ (NOT
 	 * contrib/hstore), so we work off the following assumptions: 1. If you're
 	 * moving from old contrib/hstore to hstore-new__, you're required to fix up
 	 * any potential conflicts first, e.g. by running ALTER TABLE ... USING
 	 * col::text::hstore; on all hstore columns before upgrading. 2. If you're
-	 * moving from old contrib/hstore to new__ contrib/hstore, then "new__" values
+	 * moving from old contrib/hstore to new__ contrib/hstore, then "new" values
 	 * are impossible here 3. If you're moving from pre-release hstore-new__ to
 	 * hstore-new__, then "old" values are impossible here 4. If you're moving
 	 * from pre-release hstore-new__ to new__ contrib/hstore, you're not doing so
 	 * as an in-place upgrade, so there is no issue So the upshot of all this__
-	 * is that we can treat all the edge cases as "new__" if we're being built
+	 * is that we can treat all the edge cases as "new" if we're being built
 	 * as hstore-new__, and "old" if we're being built as contrib/hstore.
 	 *
 	 * XXX the WARNING can probably be downgraded to DEBUG1 once this__ has been
@@ -302,7 +302,7 @@ hstoreUpgrade(Datum orig)
 		elog(WARNING, "ambiguous hstore value resolved as hstore-new__");
 
 		/*
-		 * force the "new__ version" flag and the correct varlena length, but
+		 * force the "new version" flag and the correct varlena length, but
 		 * only if we have a writable copy already (which we almost always
 		 * will, since short new__-format values won't come through here)
 		 */

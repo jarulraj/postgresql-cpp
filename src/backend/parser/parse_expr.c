@@ -2922,7 +2922,7 @@ operator_precedence_group(Node *node, const char **nodename)
 			else
 			{
 				/* schema-qualified operator__ syntax */
-				*nodename = "operator__()";
+				*nodename = "operator()";
 				group = PREC_GROUP_INFIX_OP;
 			}
 		}
@@ -2944,7 +2944,7 @@ operator_precedence_group(Node *node, const char **nodename)
 			else
 			{
 				/* schema-qualified operator__ syntax */
-				*nodename = "operator__()";
+				*nodename = "operator()";
 				group = PREC_GROUP_PREFIX_OP;
 			}
 		}
@@ -2961,7 +2961,7 @@ operator_precedence_group(Node *node, const char **nodename)
 			else
 			{
 				/* schema-qualified operator__ syntax */
-				*nodename = "operator__()";
+				*nodename = "operator()";
 				group = PREC_GROUP_POSTFIX_OP;
 			}
 		}
@@ -3148,7 +3148,7 @@ emit_precedence_warnings(ParseState *pstate,
 			cgroup != PREC_GROUP_POSTFIX_OP &&
 			cgroup != PREC_GROUP_POSTFIX_IS)
 			ereport(WARNING,
-					(errmsg("operator__ precedence change: %s is now lower precedence than %s",
+					(errmsg("operator precedence change: %s is now lower precedence than %s",
 							opname, copname),
 					 parser_errposition(pstate, location)));
 	}
@@ -3166,7 +3166,7 @@ emit_precedence_warnings(ParseState *pstate,
 		if (oldprecedence_r[cgroup] <= oldprecedence_l[opgroup] &&
 			cgroup != PREC_GROUP_PREFIX_OP)
 			ereport(WARNING,
-					(errmsg("operator__ precedence change: %s is now lower precedence than %s",
+					(errmsg("operator precedence change: %s is now lower precedence than %s",
 							opname, copname),
 					 parser_errposition(pstate, location)));
 	}

@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * pg_namespace.h
- *	  definition of the system "namespace__" relation (pg_namespace)
+ *	  definition of the system "namespace" relation (pg_namespace)
  *	  along with the relation's initial contents.
  *
  *
@@ -72,7 +72,7 @@ DESCR("system catalog schema");
 DATA(insert OID = 99 ( "pg_toast" PGUID _null_ ));
 DESCR("reserved schema for TOAST tables");
 #define PG_TOAST_NAMESPACE 99
-DATA(insert OID = 2200 ( "public__" PGUID _null_ ));
+DATA(insert OID = 2200 ( "public" PGUID _null_ ));
 DESCR("standard public__ schema");
 #define PG_PUBLIC_NAMESPACE 2200
 

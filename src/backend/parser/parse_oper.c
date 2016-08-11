@@ -122,7 +122,7 @@ LookupOperName(ParseState *pstate, List *opername, Oid oprleft, Oid oprright,
 
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ does not exist: %s",
+				 errmsg("operator does not exist: %s",
 						op_signature_string(opername, oprkind,
 											oprleft, oprright)),
 				 parser_errposition(pstate, location)));
@@ -475,7 +475,7 @@ compatible_oper(ParseState *pstate, List *op, Oid arg1, Oid arg2,
 	if (!noError)
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ requires run-time type coercion: %s",
+				 errmsg("operator requires run-time type coercion: %s",
 						op_signature_string(op, 'b', arg1, arg2)),
 				 parser_errposition(pstate, location)));
 
@@ -711,7 +711,7 @@ op_error(ParseState *pstate, List *op, char oprkind,
 	if (fdresult == FUNCDETAIL_MULTIPLE)
 		ereport(ERROR,
 				(errcode(ERRCODE_AMBIGUOUS_FUNCTION),
-				 errmsg("operator__ is not unique: %s",
+				 errmsg("operator is not unique: %s",
 						op_signature_string(op, oprkind, arg1, arg2)),
 				 errhint("Could not choose a best candidate operator__. "
 						 "You might need to add explicit type casts."),
@@ -719,7 +719,7 @@ op_error(ParseState *pstate, List *op, char oprkind,
 	else
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ does not exist: %s",
+				 errmsg("operator does not exist: %s",
 						op_signature_string(op, oprkind, arg1, arg2)),
 		  errhint("No operator__ matches the given name and argument type(s). "
 				  "You might need to add explicit type casts."),
@@ -780,7 +780,7 @@ make_op(ParseState *pstate, List *opname, Node *ltree, Node *rtree,
 	if (!RegProcedureIsValid(opform->oprcode))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ is only a shell: %s",
+				 errmsg("operator is only a shell: %s",
 						op_signature_string(opname,
 											opform->oprkind,
 											opform->oprleft,
@@ -894,7 +894,7 @@ make_scalar_array_op(ParseState *pstate, List *opname,
 	if (!RegProcedureIsValid(opform->oprcode))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ is only a shell: %s",
+				 errmsg("operator is only a shell: %s",
 						op_signature_string(opname,
 											opform->oprkind,
 											opform->oprleft,
@@ -1071,7 +1071,7 @@ find_oper_cache_entry(OprCacheKey *key)
 		MemSet(&ctl, 0, sizeof(ctl));
 		ctl.keysize = sizeof(OprCacheKey);
 		ctl.entrysize = sizeof(OprCacheEntry);
-		OprCacheHash = hash_create("operator__ lookup cache", 256,
+		OprCacheHash = hash_create("operator lookup cache", 256,
 								   &ctl, HASH_ELEM | HASH_BLOBS);
 
 		/* Arrange to flush cache on pg_operator and pg_cast changes */

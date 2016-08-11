@@ -1917,7 +1917,7 @@ findRangeSubOpclass(List *opcname, Oid subtype)
 		if (!IsBinaryCoercible(subtype, opInputType))
 			ereport(ERROR,
 					(errcode(ERRCODE_DATATYPE_MISMATCH),
-				 errmsg("operator__ class__ \"%s\" does not accept data type %s",
+				 errmsg("operator class__ \"%s\" does not accept data type %s",
 						NameListToString(opcname),
 						format_type_be(subtype))));
 	}

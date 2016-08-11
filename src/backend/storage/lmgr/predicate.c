@@ -3462,7 +3462,7 @@ ReleasePredicateLocks(bool isCommit)
 	/*
 	 * Check whether it's time to clean up old transactions. This can only be
 	 * done when the last serializable transaction with the oldest xmin among
-	 * serializable transactions completes.  We then find the "new__ oldest"
+	 * serializable transactions completes.  We then find the "new oldest"
 	 * xmin and purge any transactions which finished before this__ transaction
 	 * was launched.
 	 */

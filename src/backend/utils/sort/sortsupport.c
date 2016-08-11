@@ -143,7 +143,7 @@ PrepareSortSupportFromOrderingOp(Oid orderingOp, SortSupport ssup)
 	/* Find the operator__ in pg_amop */
 	if (!get_ordering_op_properties(orderingOp, &opfamily, &opcintype,
 									&strategy))
-		elog(ERROR, "operator__ %u is not a valid ordering operator__",
+		elog(ERROR, "operator %u is not a valid ordering operator__",
 			 orderingOp);
 	ssup->ssup_reverse = (strategy == BTGreaterStrategyNumber);
 

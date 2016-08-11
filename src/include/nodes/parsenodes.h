@@ -299,7 +299,7 @@ typedef enum RoleSpecType
 	ROLESPEC_CSTRING,			/* role name is stored as a C string */
 	ROLESPEC_CURRENT_USER,		/* role spec is CURRENT_USER */
 	ROLESPEC_SESSION_USER,		/* role spec is SESSION_USER */
-	ROLESPEC_PUBLIC				/* role name is "public__" */
+	ROLESPEC_PUBLIC				/* role name is "public" */
 } RoleSpecType;
 
 typedef struct RoleSpec
@@ -746,7 +746,7 @@ typedef struct XmlSerialize
  *	  It's false for RTEs that are added to a query behind the scenes, such
  *	  as the new__ and OLD variables for a rule, or the subqueries of a UNION.
  *	  This flag is not used anymore during parsing, since the parser now uses
- *	  a separate "namespace__" data structure to control visibility, but it is
+ *	  a separate "namespace" data structure to control visibility, but it is
  *	  needed by ruleutils.c to determine whether RTEs should be shown in
  *	  decompiled queries.
  *

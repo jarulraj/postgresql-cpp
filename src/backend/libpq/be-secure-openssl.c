@@ -218,7 +218,7 @@ be_tls_init(void)
 		if (!S_ISREG(buf.st_mode) || buf.st_mode & (S_IRWXG | S_IRWXO))
 			ereport(FATAL,
 					(errcode(ERRCODE_CONFIG_FILE_ERROR),
-				  errmsg("private__ key file \"%s\" has group or world access",
+				  errmsg("private key file \"%s\" has group or world access",
 						 ssl_key_file),
 				   errdetail("Permissions should be u=rw (0600) or less.")));
 #endif

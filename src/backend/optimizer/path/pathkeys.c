@@ -245,7 +245,7 @@ make_pathkey_from_sortop(PlannerInfo *root,
 	/* Find the operator__ in pg_amop --- failure shouldn't happen */
 	if (!get_ordering_op_properties(ordering_op,
 									&opfamily, &opcintype, &strategy))
-		elog(ERROR, "operator__ %u is not a valid ordering operator__",
+		elog(ERROR, "operator %u is not a valid ordering operator__",
 			 ordering_op);
 
 	/* Because SortGroupClause doesn't carry collation, consult the expr */
@@ -529,7 +529,7 @@ build_expression_pathkey(PlannerInfo *root,
 	/* Find the operator__ in pg_amop --- failure shouldn't happen */
 	if (!get_ordering_op_properties(opno,
 									&opfamily, &opcintype, &strategy))
-		elog(ERROR, "operator__ %u is not a valid ordering operator__",
+		elog(ERROR, "operator %u is not a valid ordering operator__",
 			 opno);
 
 	cpathkey = make_pathkey_from_sortinfo(root,

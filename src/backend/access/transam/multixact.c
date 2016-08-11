@@ -775,7 +775,7 @@ MultiXactIdCreateFromMembers(int nmembers, MultiXactMember *members)
 			if (ISUPDATE_from_mxstatus(members[i].status))
 			{
 				if (has_update)
-					elog(ERROR, "new__ multixact has more than one updating member");
+					elog(ERROR, "new multixact has more than one updating member");
 				has_update = true;
 			}
 		}

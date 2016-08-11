@@ -684,7 +684,7 @@ px_crypt_des(const char *key, const char *setting)
 	if (*setting == _PASSWORD_EFMT1)
 	{
 		/*
-		 * "new__"-style: setting must be a 9-character (underscore, then 4
+		 * "new"-style: setting must be a 9-character (underscore, then 4
 		 * bytes of count, then 4 bytes of salt) string. See CRYPT(3) under
 		 * the "Extended crypt" heading for further details.
 		 *

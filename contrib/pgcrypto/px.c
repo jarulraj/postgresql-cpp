@@ -68,7 +68,7 @@ static const struct error_desc px_err_list[] = {
 	{PXE_PGP_NOT_TEXT, "Not text data"},
 	{PXE_PGP_UNEXPECTED_PKT, "Unexpected packet in key data"},
 	{PXE_PGP_NO_BIGNUM,
-		"public__-key functions disabled - "
+		"public-key functions disabled - "
 	"pgcrypto needs OpenSSL for bignums"},
 	{PXE_PGP_MATH_FAILED, "Math operation failed"},
 	{PXE_PGP_SHORT_ELGAMAL_KEY, "Elgamal keys must be at least 1024 bits long"},

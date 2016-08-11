@@ -163,7 +163,7 @@ createdb(const CreatedbStmt *stmt)
 						 errmsg("conflicting or redundant options")));
 			downer = defel;
 		}
-		else if (strcmp(defel->defname, "template__") == 0)
+		else if (strcmp(defel->defname, "template") == 0)
 		{
 			if (dtemplate)
 				ereport(ERROR,
@@ -318,7 +318,7 @@ createdb(const CreatedbStmt *stmt)
 					 &src_collate, &src_ctype))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_DATABASE),
-				 errmsg("template__ database \"%s\" does not exist",
+				 errmsg("template database \"%s\" does not exist",
 						dbtemplate)));
 
 	/*
@@ -377,7 +377,7 @@ createdb(const CreatedbStmt *stmt)
 		if (encoding != src_encoding)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("new__ encoding (%s) is incompatible with the encoding of the template__ database (%s)",
+					 errmsg("new encoding (%s) is incompatible with the encoding of the template__ database (%s)",
 							pg_encoding_to_char(encoding),
 							pg_encoding_to_char(src_encoding)),
 					 errhint("Use the same encoding as in the template__ database, or use template0 as template__.")));
@@ -385,14 +385,14 @@ createdb(const CreatedbStmt *stmt)
 		if (strcmp(dbcollate, src_collate) != 0)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("new__ collation (%s) is incompatible with the collation of the template__ database (%s)",
+					 errmsg("new collation (%s) is incompatible with the collation of the template__ database (%s)",
 							dbcollate, src_collate),
 					 errhint("Use the same collation as in the template__ database, or use template0 as template__.")));
 
 		if (strcmp(dbctype, src_ctype) != 0)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("new__ LC_CTYPE (%s) is incompatible with the LC_CTYPE of the template__ database (%s)",
+					 errmsg("new LC_CTYPE (%s) is incompatible with the LC_CTYPE of the template__ database (%s)",
 							dbctype, src_ctype),
 					 errhint("Use the same LC_CTYPE as in the template__ database, or use template0 as template__.")));
 	}

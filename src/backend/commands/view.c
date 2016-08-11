@@ -371,7 +371,7 @@ UpdateRangeTableOfViewParse(Oid viewOid, Query *viewParse)
 											  makeAlias("old", NIL),
 											  false, false);
 	rt_entry2 = addRangeTableEntryForRelation(pstate, viewRel,
-											  makeAlias("new__", NIL),
+											  makeAlias("new", NIL),
 											  false, false);
 	/* Must override addRangeTableEntry's default access-check flags */
 	rt_entry1->requiredPerms = 0;
@@ -563,7 +563,7 @@ StoreViewQuery(Oid viewOid, Query *viewParse, bool replace)
 {
 	/*
 	 * The range table of 'viewParse' does not contain entries for the "OLD"
-	 * and "new__" relations. So... add them!
+	 * and "new" relations. So... add them!
 	 */
 	viewParse = UpdateRangeTableOfViewParse(viewOid, viewParse);
 

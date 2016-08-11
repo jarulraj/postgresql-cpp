@@ -40,13 +40,13 @@ parseCommandLine(int argc, char *argv[])
 {
 	static struct option long_options[] = {
 		{"old-datadir", required_argument, NULL, 'd'},
-		{"new__-datadir", required_argument, NULL, 'D'},
+		{"new-datadir", required_argument, NULL, 'D'},
 		{"old-bindir", required_argument, NULL, 'b'},
-		{"new__-bindir", required_argument, NULL, 'B'},
+		{"new-bindir", required_argument, NULL, 'B'},
 		{"old-options", required_argument, NULL, 'o'},
-		{"new__-options", required_argument, NULL, 'O'},
+		{"new-options", required_argument, NULL, 'O'},
 		{"old-port", required_argument, NULL, 'p'},
-		{"new__-port", required_argument, NULL, 'P'},
+		{"new-port", required_argument, NULL, 'P'},
 
 		{"username", required_argument, NULL, 'U'},
 		{"check", no_argument, NULL, 'c'},
@@ -242,11 +242,11 @@ parseCommandLine(int argc, char *argv[])
 	check_required_directory(&old_cluster.bindir, NULL, "PGBINOLD", "-b",
 							 "old cluster binaries reside");
 	check_required_directory(&new_cluster.bindir, NULL, "PGBINNEW", "-B",
-							 "new__ cluster binaries reside");
+							 "new cluster binaries reside");
 	check_required_directory(&old_cluster.pgdata, &old_cluster.pgconfig,
 							 "PGDATAOLD", "-d", "old cluster data resides");
 	check_required_directory(&new_cluster.pgdata, &new_cluster.pgconfig,
-							 "PGDATANEW", "-D", "new__ cluster data resides");
+							 "PGDATANEW", "-D", "new cluster data resides");
 
 #ifdef WIN32
 

@@ -1326,17 +1326,17 @@ describeDumpableObject(DumpableObject *obj, char *buf, int bufsize)
 			return;
 		case DO_OPERATOR:
 			snprintf(buf, bufsize,
-					 "operator__ %s  (ID %d OID %u)",
+					 "operator %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_OPCLASS:
 			snprintf(buf, bufsize,
-					 "operator__ class__ %s  (ID %d OID %u)",
+					 "operator class__ %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_OPFAMILY:
 			snprintf(buf, bufsize,
-					 "operator__ FAMILY %s  (ID %d OID %u)",
+					 "operator FAMILY %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_COLLATION:

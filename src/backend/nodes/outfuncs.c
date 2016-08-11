@@ -2278,7 +2278,7 @@ _outColumnDef(StringInfo str, const ColumnDef *node)
 static void
 _outTypeName(StringInfo str, const TypeName *node)
 {
-	WRITE_NODE_TYPE("typename__");
+	WRITE_NODE_TYPE("typename");
 
 	WRITE_NODE_FIELD(names);
 	WRITE_OID_FIELD(typeOid);

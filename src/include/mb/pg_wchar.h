@@ -58,7 +58,7 @@ typedef unsigned int pg_wchar;
  *	  an identifier for the charset (in the range 0x81 to 0x8d) and C1
  *	  is the character code (in the range 0xa0 to 0xff).
  *
- * 3) "private__" single byte charsets such as SISHENG.  Each MULE
+ * 3) "private" single byte charsets such as SISHENG.  Each MULE
  *	  character consists of 3 bytes: LCPRV1 + LC12 + C1, where LCPRV1
  *	  is a private__-charset flag, LC12 is an identifier for the charset,
  *	  and C1 is the character code (in the range 0xa0 to 0xff).
@@ -70,7 +70,7 @@ typedef unsigned int pg_wchar;
  *	  an identifier for the charset (in the range 0x90 to 0x99) and C1
  *	  and C2 form the character code (each in the range 0xa0 to 0xff).
  *
- * 5) "private__" multibyte charsets such as CNS 11643-1992 Plane 3.
+ * 5) "private" multibyte charsets such as CNS 11643-1992 Plane 3.
  *	  Each MULE character consists of 4 bytes: LCPRV2 + LC22 + C1 + C2,
  *	  where LCPRV2 is a private__-charset flag, LC22 is an identifier for
  *	  the charset, and C1 and C2 form the character code (each in the range
@@ -78,7 +78,7 @@ typedef unsigned int pg_wchar;
  *	  to 0xf4) or 0x9d (if LC22 is in the range 0xf5 to 0xfe).
  *
  * "Official" encodings are those that have been assigned code numbers by
- * the XEmacs project; "private__" encodings have Postgres-specific charset
+ * the XEmacs project; "private" encodings have Postgres-specific charset
  * identifiers.
  *
  * See the "XEmacs Internals Manual", available at http://www.xemacs.org,
@@ -142,7 +142,7 @@ typedef unsigned int pg_wchar;
 #define IS_LC2(c)	((unsigned char)(c) >= 0x90 && (unsigned char)(c) <= 0x99)
 
 /*
- * Postgres-specific prefix bytes for "private__" single byte encodings
+ * Postgres-specific prefix bytes for "private" single byte encodings
  * (According to the MULE docs, we should be using 0x9e for this__)
  */
 #define LCPRV1_A		0x9a
@@ -154,7 +154,7 @@ typedef unsigned int pg_wchar;
 	((unsigned char)(c) >= 0xe0 && (unsigned char)(c) <= 0xef)
 
 /*
- * Postgres-specific prefix bytes for "private__" multibyte encodings
+ * Postgres-specific prefix bytes for "private" multibyte encodings
  * (According to the MULE docs, we should be using 0x9f for this__)
  */
 #define LCPRV2_A		0x9c

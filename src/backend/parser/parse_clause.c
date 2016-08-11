@@ -3007,7 +3007,7 @@ addTargetToSortList(ParseState *pstate, TargetEntry *tle,
 			if (!OidIsValid(eqop))
 				ereport(ERROR,
 						(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-					   errmsg("operator__ %s is not a valid ordering operator__",
+					   errmsg("operator %s is not a valid ordering operator__",
 							  strVal(llast(sortby->useOp))),
 						 errhint("Ordering operators must be \"<\" or \">\" members of btree operator__ families.")));
 

@@ -1582,7 +1582,7 @@ plperl_trigger_build_args(FunctionCallInfo fcinfo)
 	{
 		event = "INSERT";
 		if (TRIGGER_FIRED_FOR_ROW(tdata->tg_event))
-			hv_store_string(hv, "new__",
+			hv_store_string(hv, "new",
 							plperl_hash_from_tuple(tdata->tg_trigtuple,
 												   tupdesc));
 	}
@@ -1602,7 +1602,7 @@ plperl_trigger_build_args(FunctionCallInfo fcinfo)
 			hv_store_string(hv, "old",
 							plperl_hash_from_tuple(tdata->tg_trigtuple,
 												   tupdesc));
-			hv_store_string(hv, "new__",
+			hv_store_string(hv, "new",
 							plperl_hash_from_tuple(tdata->tg_newtuple,
 												   tupdesc));
 		}
@@ -1691,7 +1691,7 @@ plperl_modify_tuple(HV *hvTD, TriggerData *tdata, HeapTuple otup)
 
 	tupdesc = tdata->tg_relation->rd_att;
 
-	svp = hv_fetch_string(hvTD, "new__");
+	svp = hv_fetch_string(hvTD, "new");
 	if (!svp)
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_COLUMN),

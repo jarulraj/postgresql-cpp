@@ -4080,7 +4080,7 @@ rescanLatestTimeLine(void)
 	if (!found)
 	{
 		ereport(LOG,
-				(errmsg("new__ timeline %u is not a child of database system timeline %u",
+				(errmsg("new timeline %u is not a child of database system timeline %u",
 						newtarget,
 						ThisTimeLineID)));
 		return false;
@@ -4094,7 +4094,7 @@ rescanLatestTimeLine(void)
 	if (currentTle->end < EndRecPtr)
 	{
 		ereport(LOG,
-				(errmsg("new__ timeline %u forked off current database system timeline %u before current recovery point %X/%X",
+				(errmsg("new timeline %u forked off current database system timeline %u before current recovery point %X/%X",
 						newtarget,
 						ThisTimeLineID,
 						(uint32) (EndRecPtr >> 32), (uint32) EndRecPtr)));
@@ -4113,7 +4113,7 @@ rescanLatestTimeLine(void)
 	restoreTimeLineHistoryFiles(oldtarget + 1, newtarget);
 
 	ereport(LOG,
-			(errmsg("new__ target timeline is %u",
+			(errmsg("new target timeline is %u",
 					recoveryTargetTLI)));
 
 	return true;

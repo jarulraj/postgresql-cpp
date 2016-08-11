@@ -18,7 +18,7 @@
 
 /* Helper for obtaining username for user mapping */
 #define MappingUserName(userid) \
-	(OidIsValid(userid) ? GetUserNameFromId(userid, false) : "public__")
+	(OidIsValid(userid) ? GetUserNameFromId(userid, false) : "public")
 
 
 /*

@@ -1019,7 +1019,7 @@ objectDescription(const char *pattern, bool showSystem)
 						  "o.opcmethod = am.oid\n"
 						  "    JOIN pg_catalog.pg_namespace n ON "
 						  "n.oid = o.opcnamespace\n",
-						  gettext_noop("operator__ class__"));
+						  gettext_noop("operator class__"));
 
 		if (!showSystem && !pattern)
 			appendPQExpBufferStr(&buf, "      AND n.nspname <> 'pg_catalog'\n"
@@ -1048,7 +1048,7 @@ objectDescription(const char *pattern, bool showSystem)
 						  "ON opf.opfmethod = am.oid\n"
 						  "    JOIN pg_catalog.pg_namespace n "
 						  "ON opf.opfnamespace = n.oid\n",
-						  gettext_noop("operator__ family"));
+						  gettext_noop("operator family"));
 
 		if (!showSystem && !pattern)
 			appendPQExpBufferStr(&buf, "      AND n.nspname <> 'pg_catalog'\n"

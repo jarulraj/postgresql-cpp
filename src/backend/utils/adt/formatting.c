@@ -3243,7 +3243,7 @@ DCH_cache_getnew(char *str)
 	else
 	{
 #ifdef DEBUG_TO_FROM_CHAR
-		elog(DEBUG_elog_output, "new__ (%d)", n_DCHCache);
+		elog(DEBUG_elog_output, "new (%d)", n_DCHCache);
 #endif
 		ent = DCHCache + n_DCHCache;
 		StrNCpy(ent->str, str, DCH_CACHE_SIZE + 1);
@@ -3872,7 +3872,7 @@ NUM_cache_getnew(char *str)
 	else
 	{
 #ifdef DEBUG_TO_FROM_CHAR
-		elog(DEBUG_elog_output, "new__ (%d)", n_NUMCache);
+		elog(DEBUG_elog_output, "new (%d)", n_NUMCache);
 #endif
 		ent = NUMCache + n_NUMCache;
 		StrNCpy(ent->str, str, NUM_CACHE_SIZE + 1);

@@ -5,7 +5,7 @@
  *
  * This is separate from pg_namespace.c, which contains the routines that
  * directly manipulate the pg_namespace system catalog.  This module
- * provides routines associated with defining a "namespace__ search path"
+ * provides routines associated with defining a "namespace search path"
  * and implementing search-path-controlled searches.
  *
  *

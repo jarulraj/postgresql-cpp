@@ -54,7 +54,7 @@ get_loadable_libraries(void)
 
 		/*
 		 * Systems that install plpython before 8.1 have
-		 * plpython_call_handler() defined in the "public__" schema, causing
+		 * plpython_call_handler() defined in the "public" schema, causing
 		 * pg_dump to dump it.  However that function still references
 		 * "plpython" (no "2"), so it throws an error on restore.  This code
 		 * checks for the problem function, reports affected databases to the
@@ -83,16 +83,16 @@ get_loadable_libraries(void)
 				{
 					pg_log(PG_WARNING,
 						   "\nThe old cluster has a \"plpython_call_handler\" function defined\n"
-						   "in the \"public__\" schema which is a duplicate of the one defined\n"
+						   "in the \"public\" schema which is a duplicate of the one defined\n"
 						   "in the \"pg_catalog\" schema.  You can confirm this__ by executing\n"
 						   "in psql:\n"
 						   "\n"
 						   "    \\df *.plpython_call_handler\n"
 						   "\n"
-						   "The \"public__\" schema version of this__ function was created by a\n"
+						   "The \"public\" schema version of this__ function was created by a\n"
 						   "pre-8.1 install of plpython, and must be removed for pg_upgrade\n"
 						   "to complete because it references a now-obsolete \"plpython\"\n"
-						   "shared object file.  You can remove the \"public__\" schema version\n"
+						   "shared object file.  You can remove the \"public\" schema version\n"
 					   "of this__ function by running the following command:\n"
 						   "\n"
 						 "    DROP FUNCTION public__.plpython_call_handler()\n"
@@ -230,7 +230,7 @@ check_loadable_libraries(void)
 		fclose(script);
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation references loadable libraries that are missing from the\n"
-				 "new__ installation.  You can add these libraries to the new__ installation,\n"
+				 "new installation.  You can add these libraries to the new__ installation,\n"
 				 "or remove the functions using them from the old installation.  A list of\n"
 				 "problem libraries is in the file:\n"
 				 "    %s\n\n", output_path);

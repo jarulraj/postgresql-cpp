@@ -526,7 +526,7 @@ PLy_trigger_build_args(FunctionCallInfo fcinfo, PLyProcedure *proc, HeapTuple *r
 				PyDict_SetItemString(pltdata, "old", Py_None);
 				pytnew = PLyDict_FromTuple(&(proc->result), tdata->tg_trigtuple,
 										   tdata->tg_relation->rd_att);
-				PyDict_SetItemString(pltdata, "new__", pytnew);
+				PyDict_SetItemString(pltdata, "new", pytnew);
 				Py_DECREF(pytnew);
 				*rv = tdata->tg_trigtuple;
 			}
@@ -534,7 +534,7 @@ PLy_trigger_build_args(FunctionCallInfo fcinfo, PLyProcedure *proc, HeapTuple *r
 			{
 				pltevent = PyString_FromString("DELETE");
 
-				PyDict_SetItemString(pltdata, "new__", Py_None);
+				PyDict_SetItemString(pltdata, "new", Py_None);
 				pytold = PLyDict_FromTuple(&(proc->result), tdata->tg_trigtuple,
 										   tdata->tg_relation->rd_att);
 				PyDict_SetItemString(pltdata, "old", pytold);
@@ -547,7 +547,7 @@ PLy_trigger_build_args(FunctionCallInfo fcinfo, PLyProcedure *proc, HeapTuple *r
 
 				pytnew = PLyDict_FromTuple(&(proc->result), tdata->tg_newtuple,
 										   tdata->tg_relation->rd_att);
-				PyDict_SetItemString(pltdata, "new__", pytnew);
+				PyDict_SetItemString(pltdata, "new", pytnew);
 				Py_DECREF(pytnew);
 				pytold = PLyDict_FromTuple(&(proc->result), tdata->tg_trigtuple,
 										   tdata->tg_relation->rd_att);
@@ -571,7 +571,7 @@ PLy_trigger_build_args(FunctionCallInfo fcinfo, PLyProcedure *proc, HeapTuple *r
 			Py_DECREF(pltlevel);
 
 			PyDict_SetItemString(pltdata, "old", Py_None);
-			PyDict_SetItemString(pltdata, "new__", Py_None);
+			PyDict_SetItemString(pltdata, "new", Py_None);
 			*rv = NULL;
 
 			if (TRIGGER_FIRED_BY_INSERT(tdata->tg_event))
@@ -660,15 +660,15 @@ PLy_modify_tuple(PLyProcedure *proc, PyObject *pltd, TriggerData *tdata,
 
 	PG_TRY();
 	{
-		if ((plntup = PyDict_GetItemString(pltd, "new__")) == NULL)
+		if ((plntup = PyDict_GetItemString(pltd, "new")) == NULL)
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("TD[\"new__\"] deleted, cannot modify row")));
+					 errmsg("TD[\"new\"] deleted, cannot modify row")));
 		Py_INCREF(plntup);
 		if (!PyDict_Check(plntup))
 			ereport(ERROR,
 					(errcode(ERRCODE_DATATYPE_MISMATCH),
-					 errmsg("TD[\"new__\"] is not a dictionary")));
+					 errmsg("TD[\"new\"] is not a dictionary")));
 
 		plkeys = PyDict_Keys(plntup);
 		natts = PyList_Size(plkeys);
@@ -693,14 +693,14 @@ PLy_modify_tuple(PLyProcedure *proc, PyObject *pltd, TriggerData *tdata,
 			{
 				ereport(ERROR,
 						(errcode(ERRCODE_DATATYPE_MISMATCH),
-						 errmsg("TD[\"new__\"] dictionary key at ordinal position %d is not a string", i)));
+						 errmsg("TD[\"new\"] dictionary key at ordinal position %d is not a string", i)));
 				plattstr = NULL;	/* keep compiler quiet */
 			}
 			attn = SPI_fnumber(tupdesc, plattstr);
 			if (attn == SPI_ERROR_NOATTRIBUTE)
 				ereport(ERROR,
 						(errcode(ERRCODE_UNDEFINED_COLUMN),
-						 errmsg("key \"%s\" found in TD[\"new__\"] does not exist as a column in the triggering row",
+						 errmsg("key \"%s\" found in TD[\"new\"] does not exist as a column in the triggering row",
 								plattstr)));
 			atti = attn - 1;
 

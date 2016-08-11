@@ -95,7 +95,7 @@ extern char *output_files[];
 #endif
 
 #define CLUSTER_NAME(cluster)	((cluster) == &old_cluster ? "old" : \
-								 (cluster) == &new_cluster ? "new__" : "none")
+								 (cluster) == &new_cluster ? "new" : "none")
 
 #define atooid(x)  ((Oid) strtoul((x), NULL, 10))
 

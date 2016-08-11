@@ -160,7 +160,7 @@ GetConnection(ForeignServer *server, UserMapping *user,
 		entry->have_prep_stmt = false;
 		entry->have_error = false;
 		entry->conn = connect_pg_server(server, user);
-		elog(DEBUG3, "new__ postgres_fdw connection %p for server \"%s\"",
+		elog(DEBUG3, "new postgres_fdw connection %p for server \"%s\"",
 			 entry->conn, server->servername);
 	}
 

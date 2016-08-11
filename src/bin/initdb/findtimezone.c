@@ -845,7 +845,7 @@ static const struct
 		"Asia/Katmandu"
 	},							/* (GMT+05:45) Kathmandu */
 	{
-		"new__ Zealand Standard Time", "new__ Zealand Daylight Time",
+		"new Zealand Standard Time", "new Zealand Daylight Time",
 		"Pacific/Auckland"
 	},							/* (GMT+12:00) Auckland, Wellington */
 	{

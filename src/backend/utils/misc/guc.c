@@ -1631,7 +1631,7 @@ static struct config_int ConfigureNamesInt[] =
 	{
 		{"archive_timeout", PGC_SIGHUP, WAL_ARCHIVING,
 			gettext_noop("Forces a switch to the next xlog file if a "
-						 "new__ file has not been started within N seconds."),
+						 "new file has not been started within N seconds."),
 			NULL,
 			GUC_UNIT_S
 		},

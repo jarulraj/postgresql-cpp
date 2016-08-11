@@ -143,7 +143,7 @@ DefineOperator(List *names, List *parameters)
 		else
 			ereport(WARNING,
 					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("operator__ attribute \"%s\" not recognized",
+					 errmsg("operator attribute \"%s\" not recognized",
 							defel->defname)));
 	}
 
@@ -153,7 +153,7 @@ DefineOperator(List *names, List *parameters)
 	if (functionName == NIL)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_FUNCTION_DEFINITION),
-				 errmsg("operator__ procedure must be specified")));
+				 errmsg("operator procedure must be specified")));
 
 	/* Transform type names to type OIDs */
 	if (typeName1)

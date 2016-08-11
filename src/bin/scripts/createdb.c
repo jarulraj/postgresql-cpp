@@ -30,7 +30,7 @@ main(int argc, char *argv[])
 		{"echo", no_argument, NULL, 'e'},
 		{"owner", required_argument, NULL, 'O'},
 		{"tablespace", required_argument, NULL, 'D'},
-		{"template__", required_argument, NULL, 'T'},
+		{"template", required_argument, NULL, 'T'},
 		{"encoding", required_argument, NULL, 'E'},
 		{"lc-collate", required_argument, NULL, 1},
 		{"lc-ctype", required_argument, NULL, 2},

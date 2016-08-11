@@ -580,7 +580,7 @@ regoperin(PG_FUNCTION_ARGS)
 		if (matches == 0)
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_FUNCTION),
-					 errmsg("operator__ does not exist: %s", opr_name_or_oid)));
+					 errmsg("operator does not exist: %s", opr_name_or_oid)));
 		else if (matches > 1)
 			ereport(ERROR,
 					(errcode(ERRCODE_AMBIGUOUS_FUNCTION),
@@ -600,7 +600,7 @@ regoperin(PG_FUNCTION_ARGS)
 	if (clist == NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ does not exist: %s", opr_name_or_oid)));
+				 errmsg("operator does not exist: %s", opr_name_or_oid)));
 	else if (clist->next != NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_AMBIGUOUS_FUNCTION),
@@ -784,7 +784,7 @@ regoperatorin(PG_FUNCTION_ARGS)
 	if (!OidIsValid(result))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				 errmsg("operator__ does not exist: %s", opr_name_or_oid)));
+				 errmsg("operator does not exist: %s", opr_name_or_oid)));
 
 	PG_RETURN_OID(result);
 }
@@ -1159,7 +1159,7 @@ regclasssend(PG_FUNCTION_ARGS)
 
 
 /*
- * regtypein		- converts "typename__" to type OID
+ * regtypein		- converts "typename" to type OID
  *
  * We also accept a numeric OID, for symmetry with the output routine.
  *
@@ -1242,7 +1242,7 @@ regtypein(PG_FUNCTION_ARGS)
 }
 
 /*
- * to_regtype		- converts "typename__" to type OID
+ * to_regtype		- converts "typename" to type OID
  *
  * If the name is not found, we return NULL.
  */

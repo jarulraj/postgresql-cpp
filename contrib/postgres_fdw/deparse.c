@@ -1672,7 +1672,7 @@ deparseOperatorName(StringInfo buf, Form_pg_operator opform)
 
 		opnspname = get_namespace_name(opform->oprnamespace);
 		/* Print fully qualified operator__ name. */
-		appendStringInfo(buf, "operator__(%s.%s)",
+		appendStringInfo(buf, "operator(%s.%s)",
 						 quote_identifier(opnspname), opname);
 	}
 	else

@@ -328,7 +328,7 @@ sepgsql_utility_command(Node *parsetree,
 				{
 					DefElem    *defel = (DefElem *) lfirst(cell);
 
-					if (strcmp(defel->defname, "template__") == 0)
+					if (strcmp(defel->defname, "template") == 0)
 					{
 						sepgsql_context_info.createdb_dtemplate
 							= strVal(defel->arg);

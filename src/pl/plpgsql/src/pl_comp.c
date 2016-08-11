@@ -593,7 +593,7 @@ do_compile(FunctionCallInfo fcinfo,
 						 errhint("The arguments of the trigger can be accessed through TG_NARGS and TG_ARGV instead.")));
 
 			/* Add the record for referencing new__ */
-			rec = plpgsql_build_record("new__", 0, true);
+			rec = plpgsql_build_record("new", 0, true);
 			function->new_varno = rec->dno;
 
 			/* Add the record for referencing OLD */

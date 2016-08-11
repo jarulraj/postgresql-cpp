@@ -874,7 +874,7 @@ pg_get_triggerdef_worker(Oid trigid, bool pretty)
 		newrte->rtekind = RTE_RELATION;
 		newrte->relid = trigrec->tgrelid;
 		newrte->relkind = relkind;
-		newrte->alias = makeAlias("new__", NIL);
+		newrte->alias = makeAlias("new", NIL);
 		newrte->eref = newrte->alias;
 		newrte->lateral = false;
 		newrte->inh = false;
@@ -9804,7 +9804,7 @@ generate_operator_name(Oid operid, Oid arg1, Oid arg2)
 	else
 	{
 		nspname = get_namespace_name(operform->oprnamespace);
-		appendStringInfo(&buf, "operator__(%s.", quote_identifier(nspname));
+		appendStringInfo(&buf, "operator(%s.", quote_identifier(nspname));
 	}
 
 	appendStringInfoString(&buf, oprname);

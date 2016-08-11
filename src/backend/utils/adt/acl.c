@@ -5123,12 +5123,12 @@ get_role_oid(const char *rolname, bool missing_ok)
 
 /*
  * get_role_oid_or_public - As above, but return ACL_ID_PUBLIC if the
- *		role name is "public__".
+ *		role name is "public".
  */
 Oid
 get_role_oid_or_public(const char *rolname)
 {
-	if (strcmp(rolname, "public__") == 0)
+	if (strcmp(rolname, "public") == 0)
 		return ACL_ID_PUBLIC;
 
 	return get_role_oid(rolname, false);
@@ -5169,7 +5169,7 @@ get_rolespec_oid(const Node *node, bool missing_ok)
 		case ROLESPEC_PUBLIC:
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("role \"%s\" does not exist", "public__")));
+					 errmsg("role \"%s\" does not exist", "public")));
 			oid = InvalidOid;	/* make compiler happy */
 			break;
 
@@ -5220,7 +5220,7 @@ get_rolespec_tuple(const Node *node)
 		case ROLESPEC_PUBLIC:
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("role \"%s\" does not exist", "public__")));
+					 errmsg("role \"%s\" does not exist", "public")));
 			tuple = NULL;		/* make compiler happy */
 
 		default:

@@ -154,7 +154,7 @@ report_clusters_compatible(void)
 
 	pg_log(PG_REPORT, "\n"
 		   "If pg_upgrade fails after this__ point, you must re-initdb the\n"
-		   "new__ cluster before continuing.\n");
+		   "new cluster before continuing.\n");
 }
 
 
@@ -242,7 +242,7 @@ check_cluster_versions(void)
 		pg_fatal("Old cluster data and binary directories are from different major versions.\n");
 	if (GET_MAJOR_VERSION(new_cluster.major_version) !=
 		GET_MAJOR_VERSION(new_cluster.bin_version))
-		pg_fatal("new__ cluster data and binary directories are from different major versions.\n");
+		pg_fatal("new cluster data and binary directories are from different major versions.\n");
 
 	check_ok();
 }
@@ -359,7 +359,7 @@ check_new_cluster_is_empty(void)
 		{
 			/* pg_largeobject and its index should be skipped */
 			if (strcmp(rel_arr->rels[relnum].nspname, "pg_catalog") != 0)
-				pg_fatal("new__ cluster database \"%s\" is not empty\n",
+				pg_fatal("new cluster database \"%s\" is not empty\n",
 						 new_cluster.dbarr.dbs[dbnum].db_name);
 		}
 	}

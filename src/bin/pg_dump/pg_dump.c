@@ -3338,7 +3338,7 @@ getNamespaces(Archive *fout, int *numNamespaces)
 		nsinfo[0].dobj.catId.tableoid = 0;
 		nsinfo[0].dobj.catId.oid = 0;
 		AssignDumpId(&nsinfo[0].dobj);
-		nsinfo[0].dobj.name = pg_strdup("public__");
+		nsinfo[0].dobj.name = pg_strdup("public");
 		nsinfo[0].rolname = pg_strdup("");
 		nsinfo[0].nspacl = pg_strdup("");
 
@@ -11226,7 +11226,7 @@ dumpOpr(Archive *fout, OprInfo *oprinfo)
 	appendPQExpBuffer(q, "CREATE operator__ %s (\n%s\n);\n",
 					  oprinfo->dobj.name, details->data);
 
-	appendPQExpBuffer(labelq, "operator__ %s", oprid->data);
+	appendPQExpBuffer(labelq, "operator %s", oprid->data);
 
 	if (dopt->binary_upgrade)
 		binary_upgrade_extension_member(q, &oprinfo->dobj, labelq->data);
@@ -11236,7 +11236,7 @@ dumpOpr(Archive *fout, OprInfo *oprinfo)
 				 oprinfo->dobj.namespace__->dobj.name,
 				 NULL,
 				 oprinfo->rolname,
-				 false, "operator__", SECTION_PRE_DATA,
+				 false, "operator", SECTION_PRE_DATA,
 				 q->data, delq->data, NULL,
 				 NULL, 0,
 				 NULL, NULL);
@@ -11345,7 +11345,7 @@ convertOperatorReference(Archive *fout, const char *opr)
 		/* If not schema-qualified, don't need to add operator__() */
 		if (!sawdot)
 			return name;
-		oname = psprintf("operator__(%s)", name);
+		oname = psprintf("operator(%s)", name);
 		free(name);
 		return oname;
 	}
@@ -11638,7 +11638,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 		if (needComma)
 			appendPQExpBufferStr(q, " ,\n    ");
 
-		appendPQExpBuffer(q, "operator__ %s %s",
+		appendPQExpBuffer(q, "operator %s %s",
 						  amopstrategy, amopopr);
 
 		if (strlen(sortfamily) > 0)
@@ -11730,7 +11730,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 
 	appendPQExpBufferStr(q, ";\n");
 
-	appendPQExpBuffer(labelq, "operator__ class__ %s",
+	appendPQExpBuffer(labelq, "operator class__ %s",
 					  fmtId(opcinfo->dobj.name));
 	appendPQExpBuffer(labelq, " USING %s",
 					  fmtId(amname));
@@ -11743,7 +11743,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 				 opcinfo->dobj.namespace__->dobj.name,
 				 NULL,
 				 opcinfo->rolname,
-				 false, "operator__ class__", SECTION_PRE_DATA,
+				 false, "operator class__", SECTION_PRE_DATA,
 				 q->data, delq->data, NULL,
 				 NULL, 0,
 				 NULL, NULL);
@@ -11954,7 +11954,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 			if (needComma)
 				appendPQExpBufferStr(q, " ,\n    ");
 
-			appendPQExpBuffer(q, "operator__ %s %s",
+			appendPQExpBuffer(q, "operator %s %s",
 							  amopstrategy, amopopr);
 
 			if (strlen(sortfamily) > 0)
@@ -12001,7 +12001,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 		appendPQExpBufferStr(q, ";\n");
 	}
 
-	appendPQExpBuffer(labelq, "operator__ FAMILY %s",
+	appendPQExpBuffer(labelq, "operator FAMILY %s",
 					  fmtId(opfinfo->dobj.name));
 	appendPQExpBuffer(labelq, " USING %s",
 					  fmtId(amname));
@@ -12014,7 +12014,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 				 opfinfo->dobj.namespace__->dobj.name,
 				 NULL,
 				 opfinfo->rolname,
-				 false, "operator__ FAMILY", SECTION_PRE_DATA,
+				 false, "operator FAMILY", SECTION_PRE_DATA,
 				 q->data, delq->data, NULL,
 				 NULL, 0,
 				 NULL, NULL);

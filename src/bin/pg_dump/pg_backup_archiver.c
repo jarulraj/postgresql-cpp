@@ -3154,9 +3154,9 @@ _getObjectDescription(PQExpBuffer buf, TocEntry *te, ArchiveHandle *AH)
 	 */
 	if (strcmp(type, "AGGREGATE") == 0 ||
 		strcmp(type, "FUNCTION") == 0 ||
-		strcmp(type, "operator__") == 0 ||
-		strcmp(type, "operator__ class__") == 0 ||
-		strcmp(type, "operator__ FAMILY") == 0)
+		strcmp(type, "operator") == 0 ||
+		strcmp(type, "operator class__") == 0 ||
+		strcmp(type, "operator FAMILY") == 0)
 	{
 		/* Chop "DROP " off the front and make a modifiable copy */
 		char	   *first = pg_strdup(te->dropStmt + 5);
@@ -3205,7 +3205,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 	if (!ropt->dropSchema)
 	{
 		if (strcmp(te->desc, "SCHEMA") == 0 &&
-			strcmp(te->tag, "public__") == 0)
+			strcmp(te->tag, "public") == 0)
 			return;
 		/* The comment restore would require super-user privs, so avoid it. */
 		if (strcmp(te->desc, "COMMENT") == 0 &&
@@ -3323,9 +3323,9 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 			strcmp(te->desc, "DATABASE") == 0 ||
 			strcmp(te->desc, "DOMAIN") == 0 ||
 			strcmp(te->desc, "FUNCTION") == 0 ||
-			strcmp(te->desc, "operator__") == 0 ||
-			strcmp(te->desc, "operator__ class__") == 0 ||
-			strcmp(te->desc, "operator__ FAMILY") == 0 ||
+			strcmp(te->desc, "operator") == 0 ||
+			strcmp(te->desc, "operator class__") == 0 ||
+			strcmp(te->desc, "operator FAMILY") == 0 ||
 			strcmp(te->desc, "PROCEDURAL LANGUAGE") == 0 ||
 			strcmp(te->desc, "SCHEMA") == 0 ||
 			strcmp(te->desc, "TABLE") == 0 ||

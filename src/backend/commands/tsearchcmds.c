@@ -440,7 +440,7 @@ DefineTSDictionary(List *names, List *parameters)
 	{
 		DefElem    *defel = (DefElem *) lfirst(pl);
 
-		if (pg_strcasecmp(defel->defname, "template__") == 0)
+		if (pg_strcasecmp(defel->defname, "template") == 0)
 		{
 			templId = get_ts_template_oid(defGetQualifiedName(defel), false);
 		}

@@ -502,7 +502,7 @@ mv_GenerateOper(StringInfo buf, Oid opoid)
 	operform = (Form_pg_operator) GETSTRUCT(opertup);
 	Assert(operform->oprkind == 'b');
 
-	appendStringInfo(buf, "operator__(%s.%s)",
+	appendStringInfo(buf, "operator(%s.%s)",
 				quote_identifier(get_namespace_name(operform->oprnamespace)),
 					 NameStr(operform->oprname));
 
@@ -608,7 +608,7 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 		 */
 		ereport(ERROR,
 				(errcode(ERRCODE_CARDINALITY_VIOLATION),
-				 errmsg("new__ data for materialized view \"%s\" contains duplicate rows without any null columns",
+				 errmsg("new data for materialized view \"%s\" contains duplicate rows without any null columns",
 						RelationGetRelationName(matviewRel)),
 				 errdetail("Row: %s",
 			SPI_getvalue(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1))));

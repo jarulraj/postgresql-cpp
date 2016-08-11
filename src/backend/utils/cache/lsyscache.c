@@ -142,7 +142,7 @@ get_op_opfamily_properties(Oid opno, Oid opfamily, bool ordering_op,
 						 CharGetDatum(ordering_op ? AMOP_ORDER : AMOP_SEARCH),
 						 ObjectIdGetDatum(opfamily));
 	if (!HeapTupleIsValid(tp))
-		elog(ERROR, "operator__ %u is not a member of opfamily %u",
+		elog(ERROR, "operator %u is not a member of opfamily %u",
 			 opno, opfamily);
 	amop_tup = (Form_pg_amop) GETSTRUCT(tp);
 	*strategy = amop_tup->amopstrategy;
@@ -1227,7 +1227,7 @@ op_strict(Oid opno)
 	RegProcedure funcid = get_opcode(opno);
 
 	if (funcid == (RegProcedure) InvalidOid)
-		elog(ERROR, "operator__ %u does not exist", opno);
+		elog(ERROR, "operator %u does not exist", opno);
 
 	return func_strict((Oid) funcid);
 }
@@ -1243,7 +1243,7 @@ op_volatile(Oid opno)
 	RegProcedure funcid = get_opcode(opno);
 
 	if (funcid == (RegProcedure) InvalidOid)
-		elog(ERROR, "operator__ %u does not exist", opno);
+		elog(ERROR, "operator %u does not exist", opno);
 
 	return func_volatile((Oid) funcid);
 }
