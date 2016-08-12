@@ -10,7 +10,7 @@
  * src/include/catalog/pg_ts_parser.h
  *
  * NOTES
- *		the genbki.pl script reads this__ file and generates .bki
+ *		the genbki.pl script reads this file and generates .bki
  *		information from the DATA() statements.
  *
  *		XXX do NOT break up DATA() statements into multiple lines!
@@ -24,7 +24,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_ts_parser definition.  cpp turns this__ into
+ *		pg_ts_parser definition.  cpp turns this into
  *		typedef struct FormData_pg_ts_parser
  * ----------------
  */

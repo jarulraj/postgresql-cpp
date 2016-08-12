@@ -58,7 +58,7 @@ handle_help_version_opts(int argc, char *argv[],
  * allowed by prompt_password.
  *
  * If allow_password_reuse is true, we will try to re-use any password
- * given during previous calls to this__ routine.  (Callers should not pass
+ * given during previous calls to this routine.  (Callers should not pass
  * allow_password_reuse=true unless reconnecting to the same database+user
  * as before, else we might create password exposure hazards.)
  */

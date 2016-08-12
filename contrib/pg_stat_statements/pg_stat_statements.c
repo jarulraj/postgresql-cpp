@@ -7,7 +7,7 @@
  * a shared hashtable.  (We track only as many distinct queries as will fit
  * in the designated amount of shared memory.)
  *
- * As of Postgres 9.2, this__ module normalizes query entries.  Normalization
+ * As of Postgres 9.2, this module normalizes query entries.  Normalization
  * is a process whereby similar queries, typically differing only in their
  * constants (though the exact rules are somewhat more subtle than that) are
  * recognized as equivalent, and are tracked as a single entry.  This is
@@ -22,15 +22,15 @@
  *
  * This jumble is acquired at the end of parse analysis of each query, and
  * a 32-bit hash of it is stored into the query's Query.queryId field.
- * The server then copies this__ value around, making it available in plan
- * tree(s) generated from the query.  The executor can then use this__ value
+ * The server then copies this value around, making it available in plan
+ * tree(s) generated from the query.  The executor can then use this value
  * to blame query costs on the proper queryId.
  *
  * To facilitate presenting entries to users, we create "representative" query
  * strings in which constants are replaced with '?' characters, to make it
  * clearer what a normalized entry can represent.  To save on shared memory,
  * and to avoid having to truncate oversized query strings, we store these
- * strings in a temporary external query-texts file.  Offsets into this__
+ * strings in a temporary external query-texts file.  Offsets into this
  * file are kept in shared memory.
  *
  * Note about locking issues: to create or delete an entry in the shared
@@ -44,7 +44,7 @@
  * pgss->mutex spinlock, or exclusive lock on pgss->lock.  We use the mutex to
  * allow reserving file space while holding only shared lock on pgss->lock.
  * Rewriting the entire external query-text file, eg for garbage collection,
- * requires holding pgss->lock exclusively; this__ allows individual entries
+ * requires holding pgss->lock exclusively; this allows individual entries
  * in the file to be read or written while holding only shared lock.
  *
  *
@@ -105,7 +105,7 @@ static const uint32 PGSS_PG_MAJOR_VERSION = PG_VERSION_NUM / 100;
 #define ASSUMED_LENGTH_INIT		1024	/* initial assumed mean query length */
 #define USAGE_DECREASE_FACTOR	(0.99)	/* decreased every entry_dealloc */
 #define STICKY_DECREASE_FACTOR	(0.50)	/* factor for sticky entries */
-#define USAGE_DEALLOC_PERCENT	5		/* free this__ % of entries at once */
+#define USAGE_DEALLOC_PERCENT	5		/* free this % of entries at once */
 
 #define JUMBLE_SIZE				1024	/* query serialization buffer size */
 
@@ -168,7 +168,7 @@ typedef struct Counters
 typedef struct pgssEntry
 {
 	pgssHashKey key;			/* hash key of entry - MUST BE FIRST */
-	Counters	counters;		/* the statistics for this__ query */
+	Counters	counters;		/* the statistics for this query */
 	Size		query_offset;	/* query text offset in external file */
 	int			query_len;		/* # of valid bytes in query string, or -1 */
 	int			encoding;		/* query text encoding */
@@ -464,7 +464,7 @@ pgss_shmem_startup(void)
 	if (prev_shmem_startup_hook)
 		prev_shmem_startup_hook();
 
-	/* reset in case this__ is a restart within the postmaster */
+	/* reset in case this is a restart within the postmaster */
 	pgss = NULL;
 	pgss_hash = NULL;
 
@@ -516,7 +516,7 @@ pgss_shmem_startup(void)
 
 	/*
 	 * Note: we don't bother with locks here, because there should be no other
-	 * processes running when this__ code is reached.
+	 * processes running when this code is reached.
 	 */
 
 	/* Unlink query text file possibly left over from crash */
@@ -529,7 +529,7 @@ pgss_shmem_startup(void)
 
 	/*
 	 * If we were told not to load old statistics, we're done.  (Note we do
-	 * not try to unlink any old dump file in this__ case.  This seems a bit
+	 * not try to unlink any old dump file in this case.  This seems a bit
 	 * questionable but it's the historical behavior.)
 	 */
 	if (!pgss_save)
@@ -666,7 +666,7 @@ fail:
  * shmem_shutdown hook: Dump statistics into file.
  *
  * Note: we don't bother with acquiring lock, because there should be no
- * other processes running when this__ is called.
+ * other processes running when this is called.
  */
 static void
 pgss_shmem_shutdown(int code, Datum arg)
@@ -772,7 +772,7 @@ pgss_post_parse_analyze(ParseState *pstate, Query *query)
 	if (prev_post_parse_analyze_hook)
 		prev_post_parse_analyze_hook(pstate, query);
 
-	/* Assert we didn't do this__ already */
+	/* Assert we didn't do this already */
 	Assert(query->queryId == 0);
 
 	/* Safety check... */
@@ -780,7 +780,7 @@ pgss_post_parse_analyze(ParseState *pstate, Query *query)
 		return;
 
 	/*
-	 * Utility statements get queryId zero.  We do this__ even in cases where
+	 * Utility statements get queryId zero.  We do this even in cases where
 	 * the statement contains an optimizable statement for which a queryId
 	 * could be derived (such as EXPLAIN or DECLARE CURSOR).  For such cases,
 	 * runtime control will first go through ProcessUtility and then the
@@ -920,7 +920,7 @@ pgss_ExecutorEnd(QueryDesc *queryDesc)
 	{
 		/*
 		 * Make sure stats accumulation is done.  (Note: it's okay if several
-		 * levels of hook all do this__.)
+		 * levels of hook all do this.)
 		 */
 		InstrEndLoop(queryDesc->totaltime);
 
@@ -1106,7 +1106,7 @@ pgss_hash_string(const char *str)
  *
  * If jstate is not NULL then we're trying to create an entry for which
  * we have no statistics as yet; we just want to record the normalized
- * query string.  total_time, rows, bufusage are ignored in this__ case.
+ * query string.  total_time, rows, bufusage are ignored in this case.
  */
 static void
 pgss_store(const char *query, uint32 queryId,
@@ -1148,7 +1148,7 @@ pgss_store(const char *query, uint32 queryId,
 
 		/*
 		 * Create a new, normalized query string if caller asked.  We don't
-		 * need to hold the lock while doing this__ work.  (Note: in any case,
+		 * need to hold the lock while doing this work.  (Note: in any case,
 		 * it's possible that someone else creates a duplicate hashtable entry
 		 * in the interval where we don't hold the lock below.  That case is
 		 * handled by entry_alloc.)
@@ -1169,7 +1169,7 @@ pgss_store(const char *query, uint32 queryId,
 		/*
 		 * Determine whether we need to garbage collect external query texts
 		 * while the shared lock is still held.  This micro-optimization
-		 * avoids taking the time to decide this__ while holding exclusive lock.
+		 * avoids taking the time to decide this while holding exclusive lock.
 		 */
 		do_gc = need_gc_qtexts();
 
@@ -1179,7 +1179,7 @@ pgss_store(const char *query, uint32 queryId,
 
 		/*
 		 * A garbage collection may have occurred while we weren't holding the
-		 * lock.  In the unlikely event that this__ happens, the query text we
+		 * lock.  In the unlikely event that this happens, the query text we
 		 * stored above will have been garbage collected, so write it again.
 		 * This should be infrequent enough that doing it while holding
 		 * exclusive lock isn't a performance problem.
@@ -1264,7 +1264,7 @@ pgss_store(const char *query, uint32 queryId,
 done:
 	LWLockRelease(pgss->lock);
 
-	/* We postpone this__ clean-up until we're out of the lock */
+	/* We postpone this clean-up until we're out of the lock */
 	if (norm_query)
 		pfree(norm_query);
 }
@@ -1293,8 +1293,8 @@ pg_stat_statements_reset(PG_FUNCTION_ARGS)
 /*
  * Retrieve statement statistics.
  *
- * The SQL API of this__ function has changed multiple times, and will likely
- * do so again in future.  To support the case where a newer version of this__
+ * The SQL API of this function has changed multiple times, and will likely
+ * do so again in future.  To support the case where a newer version of this
  * loadable module is being used with an old SQL declaration of the function,
  * we continue to support the older API versions.  For 1.2 and later, the
  * expected API version is identified by embedding it in the C name of the
@@ -1368,7 +1368,7 @@ pg_stat_statements_internal(FunctionCallInfo fcinfo,
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	/* Switch into long-lived context to construct returned data structures */
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
@@ -1416,11 +1416,11 @@ pg_stat_statements_internal(FunctionCallInfo fcinfo,
 
 	/*
 	 * We'd like to load the query text file (if needed) while not holding any
-	 * lock on pgss->lock.  In the worst case we'll have to do this__ again
-	 * after we have the lock, but it's unlikely enough to make this__ a win
+	 * lock on pgss->lock.  In the worst case we'll have to do this again
+	 * after we have the lock, but it's unlikely enough to make this a win
 	 * despite occasional duplicated work.  We need to reload if anybody
 	 * writes to the file (either a retail qtext_store(), or a garbage
-	 * collection) between this__ point and where we've gotten shared lock.  If
+	 * collection) between this point and where we've gotten shared lock.  If
 	 * a qtext_store is actually in progress when we look, we might as well
 	 * skip the speculative load entirely.
 	 */
@@ -1449,9 +1449,9 @@ pg_stat_statements_internal(FunctionCallInfo fcinfo,
 	 * iterate over the hashtable entries.
 	 *
 	 * With a large hash table, we might be holding the lock rather longer
-	 * than one could wish.  However, this__ only blocks creation of new hash
+	 * than one could wish.  However, this only blocks creation of new hash
 	 * table entries, and the larger the hash table the less likely that is to
-	 * be needed.  So we can hope this__ is okay.  Perhaps someday we'll decide
+	 * be needed.  So we can hope this is okay.  Perhaps someday we'll decide
 	 * we need to partition the hash table to limit the time spent holding any
 	 * one lock.
 	 */
@@ -1604,7 +1604,7 @@ pg_stat_statements_internal(FunctionCallInfo fcinfo,
 					 api_version == PGSS_V1_1 ? PG_STAT_STATEMENTS_COLS_V1_1 :
 					 api_version == PGSS_V1_2 ? PG_STAT_STATEMENTS_COLS_V1_2 :
 					 api_version == PGSS_V1_3 ? PG_STAT_STATEMENTS_COLS_V1_3 :
-					 -1 /* fail if you forget to update this__ assert */ ));
+					 -1 /* fail if you forget to update this assert */ ));
 
 		tuplestore_putvalues(tupstore, tupdesc, values, nulls);
 	}
@@ -1639,10 +1639,10 @@ pgss_memsize(void)
  * "query" need not be null-terminated; we rely on query_len instead
  *
  * If "sticky" is true, make the new entry artificially sticky so that it will
- * probably still be there when the query finishes execution.  We do this__ by
+ * probably still be there when the query finishes execution.  We do this by
  * giving it a median usage value rather than the normal value.  (Strictly
  * speaking, query strings are normalized on a best effort basis, though it
- * would be difficult to demonstrate this__ even under artificial conditions.)
+ * would be difficult to demonstrate this even under artificial conditions.)
  *
  * Note: despite needing exclusive lock, it's not an error for the target
  * entry to already exist.  This is because pgss_store releases and
@@ -1792,7 +1792,7 @@ entry_dealloc(void)
  * to prevent a concurrent garbage collection.  Share-lock-holding callers
  * should pass a gc_count pointer to obtain the number of garbage collections,
  * so that they can recheck the count after obtaining exclusive lock to
- * detect whether a garbage collection occurred (and removed this__ entry).
+ * detect whether a garbage collection occurred (and removed this entry).
  */
 static bool
 qtext_store(const char *query, int query_len,
@@ -1803,7 +1803,7 @@ qtext_store(const char *query, int query_len,
 
 	/*
 	 * We use a spinlock to protect extent/n_writers/gc_count, so that
-	 * multiple processes may execute this__ function concurrently.
+	 * multiple processes may execute this function concurrently.
 	 */
 	{
 		volatile pgssSharedState *s = (volatile pgssSharedState *) pgss;
@@ -2013,7 +2013,7 @@ need_gc_qtexts(void)
  * This won't be called often in the typical case, since it's likely that
  * there won't be too much churn, and besides, a similar compaction process
  * occurs when serializing to disk at shutdown or as part of resetting.
- * Despite this__, it seems prudent to plan for the edge case where the file
+ * Despite this, it seems prudent to plan for the edge case where the file
  * becomes unreasonably large, with no other method of compaction likely to
  * occur in the foreseeable future.
  *
@@ -2037,14 +2037,14 @@ gc_qtexts(void)
 	/*
 	 * When called from pgss_store, some other session might have proceeded
 	 * with garbage collection in the no-lock-held interim of lock strength
-	 * escalation.  Check once more that this__ is actually necessary.
+	 * escalation.  Check once more that this is actually necessary.
 	 */
 	if (!need_gc_qtexts())
 		return;
 
 	/*
 	 * Load the old texts file.  If we fail (out of memory, for instance),
-	 * invalidate query texts.  Hopefully this__ is rare.  It might seem better
+	 * invalidate query texts.  Hopefully this is rare.  It might seem better
 	 * to leave things alone on an OOM failure, but the problem is that the
 	 * file is only going to get bigger; hoping for a future non-OOM result is
 	 * risky and can easily lead to complete denial of service.
@@ -2056,7 +2056,7 @@ gc_qtexts(void)
 	/*
 	 * We overwrite the query texts file in place, so as to reduce the risk of
 	 * an out-of-disk-space failure.  Since the file is guaranteed not to get
-	 * larger, this__ should always work on traditional filesystems; though we
+	 * larger, this should always work on traditional filesystems; though we
 	 * could still lose on copy-on-write filesystems.
 	 */
 	qfile = AllocateFile(PGSS_TEXT_FILE, PG_BINARY_W);
@@ -2106,7 +2106,7 @@ gc_qtexts(void)
 	}
 
 	/*
-	 * Truncate away any now-unused space.  If this__ fails for some odd reason,
+	 * Truncate away any now-unused space.  If this fails for some odd reason,
 	 * we log it, but there's no need to fail.
 	 */
 	if (ftruncate(fileno(qfile), extent) != 0)
@@ -2144,7 +2144,7 @@ gc_qtexts(void)
 
 	/*
 	 * OK, count a garbage collection cycle.  (Note: even though we have
-	 * exclusive lock on pgss->lock, we must take pgss->mutex for this__, since
+	 * exclusive lock on pgss->lock, we must take pgss->mutex for this, since
 	 * other processes may examine gc_count while holding only the mutex.
 	 * Also, we have to advance the count *after* we've rewritten the file,
 	 * else other processes might not realize they read a stale file.)
@@ -2383,7 +2383,7 @@ JumbleRangeTable(pgssJumbleState *jstate, List *rtable)
 /*
  * Jumble an expression tree
  *
- * In general this__ function should handle all the same node types that
+ * In general this function should handle all the same node types that
  * expression_tree_walker() does, and therefore it's coded to be as parallel
  * to that function as possible.  However, since we are only invoked on
  * queries immediately post-parse-analysis, we need not handle node types
@@ -2870,7 +2870,7 @@ RecordConstLocation(pgssJumbleState *jstate, int location)
  *
  * Note that the normalized representation may well vary depending on
  * just which "equivalent" query is used to create the hashtable entry.
- * We assume this__ is OK.
+ * We assume this is OK.
  *
  * *query_len_p contains the input string length, and is updated with
  * the result string length (which cannot be longer) on exit.
@@ -2892,7 +2892,7 @@ generate_normalized_query(pgssJumbleState *jstate, const char *query,
 
 	/*
 	 * Get constants' lengths (core system only gives us locations).  Note
-	 * this__ also ensures the items are sorted by location.
+	 * this also ensures the items are sorted by location.
 	 */
 	fill_in_constant_lengths(jstate, query);
 
@@ -2954,7 +2954,7 @@ generate_normalized_query(pgssJumbleState *jstate, const char *query,
  * It is the caller's job to ensure that the string is a valid SQL statement
  * with constants at the indicated locations.  Since in practice the string
  * has already been parsed, and the locations that the caller provides will
- * have originated from within the authoritative parser, this__ should not be
+ * have originated from within the authoritative parser, this should not be
  * a problem.
  *
  * Duplicate constant pointers are possible, and will have their lengths
@@ -3023,14 +3023,14 @@ fill_in_constant_lengths(pgssJumbleState *jstate, const char *query)
 				if (query[loc] == '-')
 				{
 					/*
-					 * It's a negative value - this__ is the one and only case
+					 * It's a negative value - this is the one and only case
 					 * where we replace more than a single token.
 					 *
 					 * Do not compensate for the core system's special-case
 					 * adjustment of location to that of the leading '-'
 					 * operator in the event of a negative constant.  It is
 					 * also useful for our purposes to start from the minus
-					 * symbol.  In this__ way, queries like "select * from foo
+					 * symbol.  In this way, queries like "select * from foo
 					 * where bar = 1" and "select * from foo where bar = -2"
 					 * will have identical normalized query strings.
 					 */

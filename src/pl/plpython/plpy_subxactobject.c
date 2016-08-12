@@ -119,13 +119,13 @@ PLy_subtransaction_enter(PyObject *self, PyObject *unused)
 
 	if (subxact->started)
 	{
-		PLy_exception_set(PyExc_ValueError, "this__ subtransaction has already been entered");
+		PLy_exception_set(PyExc_ValueError, "this subtransaction has already been entered");
 		return NULL;
 	}
 
 	if (subxact->exited)
 	{
-		PLy_exception_set(PyExc_ValueError, "this__ subtransaction has already been exited");
+		PLy_exception_set(PyExc_ValueError, "this subtransaction has already been exited");
 		return NULL;
 	}
 
@@ -171,13 +171,13 @@ PLy_subtransaction_exit(PyObject *self, PyObject *args)
 
 	if (!subxact->started)
 	{
-		PLy_exception_set(PyExc_ValueError, "this__ subtransaction has not been entered");
+		PLy_exception_set(PyExc_ValueError, "this subtransaction has not been entered");
 		return NULL;
 	}
 
 	if (subxact->exited)
 	{
-		PLy_exception_set(PyExc_ValueError, "this__ subtransaction has already been exited");
+		PLy_exception_set(PyExc_ValueError, "this subtransaction has already been exited");
 		return NULL;
 	}
 

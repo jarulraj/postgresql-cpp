@@ -7,8 +7,8 @@
  *	See the headers to pg_restore for more details.
  *
  * Copyright (c) 2000, Philip Warner
- *	Rights are granted to use this__ software in any way so long
- *	as this__ notice is not removed.
+ *	Rights are granted to use this software in any way so long
+ *	as this notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from its use.
@@ -49,7 +49,7 @@ typedef struct _outputContext
 	int			gzOut;
 } OutputContext;
 
-/* translator: this__ is a module name */
+/* translator: this is a module name */
 static const char *modulename = gettext_noop("archiver");
 
 
@@ -140,7 +140,7 @@ dumpOptionsFromRestoreOptions(RestoreOptions *ropt)
 {
 	DumpOptions *dopt = NewDumpOptions();
 
-	/* this__ is the inverse of what's at the end of pg_dump.c's main() */
+	/* this is the inverse of what's at the end of pg_dump.c's main() */
 	dopt->outputClean = ropt->dropSchema;
 	dopt->dataOnly = ropt->dataOnly;
 	dopt->schemaOnly = ropt->schemaOnly;
@@ -257,7 +257,7 @@ ProcessArchiveRestoreOptions(Archive *AHX)
 	for (te = AH->toc->next; te != AH->toc; te = te->next)
 	{
 		/*
-		 * When writing an archive, we also take this__ opportunity to check
+		 * When writing an archive, we also take this opportunity to check
 		 * that we have generated the entries in a sane order that respects
 		 * the section divisions.  When reading, don't complain, since buggy
 		 * old versions of pg_dump might generate out-of-order archives.
@@ -323,9 +323,9 @@ RestoreArchive(Archive *AHX)
 	parallel_mode = (AH->public.numWorkers > 1 && ropt->useDB);
 	if (parallel_mode)
 	{
-		/* We haven't got round to making this__ work for all archive formats */
+		/* We haven't got round to making this work for all archive formats */
 		if (AH->ClonePtr == NULL || AH->ReopenPtr == NULL)
-			exit_horribly(modulename, "parallel restore is not supported with this__ archive file format\n");
+			exit_horribly(modulename, "parallel restore is not supported with this archive file format\n");
 
 		/* Doesn't work if the archive represents dependencies as OIDs */
 		if (AH->version < K_VERS_1_8)
@@ -347,14 +347,14 @@ RestoreArchive(Archive *AHX)
 		for (te = AH->toc->next; te != AH->toc; te = te->next)
 		{
 			if (te->hadDumper && (te->reqs & REQ_DATA) != 0)
-				exit_horribly(modulename, "cannot restore from compressed archive (compression not supported in this__ installation)\n");
+				exit_horribly(modulename, "cannot restore from compressed archive (compression not supported in this installation)\n");
 		}
 	}
 #endif
 
 	/*
 	 * Prepare index arrays, so we can assume we have them throughout restore.
-	 * It's possible we already did this__, though.
+	 * It's possible we already did this, though.
 	 */
 	if (AH->tocsByDumpId == NULL)
 		buildTocEntryArrays(AH);
@@ -394,7 +394,7 @@ RestoreArchive(Archive *AHX)
 	 * are found then we set the dataOnly flag.
 	 *
 	 * We could scan for wanted TABLE entries, but that is not the same as
-	 * dataOnly. At this__ stage, it seems unnecessary (6-Mar-2001).
+	 * dataOnly. At this stage, it seems unnecessary (6-Mar-2001).
 	 */
 	if (!ropt->dataOnly)
 	{
@@ -463,7 +463,7 @@ RestoreArchive(Archive *AHX)
 			/*
 			 * In createDB mode, issue a DROP *only* for the database as a
 			 * whole.  Issuing drops against anything else would be wrong,
-			 * because at this__ point we're connected to the wrong database.
+			 * because at this point we're connected to the wrong database.
 			 * Conversely, if we're not in createDB mode, we'd better not
 			 * issue a DROP against the database at all.
 			 */
@@ -488,7 +488,7 @@ RestoreArchive(Archive *AHX)
 
 				/*
 				 * Now emit the DROP command, if the object has one.  Note we
-				 * don't necessarily emit it verbatim; at this__ point we add an
+				 * don't necessarily emit it verbatim; at this point we add an
 				 * appropriate IF EXISTS clause, if the user requested it.
 				 */
 				if (*te->dropStmt != '\0')
@@ -537,7 +537,7 @@ RestoreArchive(Archive *AHX)
 							 * we simply emit the original command for such
 							 * objects. For other objects, we need to extract
 							 * the first part of the DROP which includes the
-							 * object type. Most of the time this__ matches
+							 * object type. Most of the time this matches
 							 * te->desc, so search for that; however for the
 							 * different kinds of CONSTRAINTs, we know to
 							 * search for hardcoded "DROP CONSTRAINT" instead.
@@ -685,14 +685,14 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 
 	AH->currentTE = te;
 
-	/* Work out what, if anything, we want from this__ entry */
+	/* Work out what, if anything, we want from this entry */
 	if (_tocEntryIsACL(te))
 		reqs = 0;				/* ACLs are never restored here */
 	else
 		reqs = te->reqs;
 
 	/*
-	 * Ignore DATABASE entry unless we should create it.  We must check this__
+	 * Ignore DATABASE entry unless we should create it.  We must check this
 	 * here, not in _tocEntryRequired, because the createDB option should not
 	 * affect emitting a DATABASE entry to an archive file.
 	 */
@@ -732,7 +732,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 				 * --no-data-for-failed-tables was given, mark the
 				 * corresponding TABLE DATA to be ignored.
 				 *
-				 * In the parallel case this__ must be done in the parent, so we
+				 * In the parallel case this must be done in the parent, so we
 				 * just set the return value.
 				 */
 				if (ropt->noDataForFailedTables)
@@ -749,7 +749,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 				 * We created the table successfully.  Mark the corresponding
 				 * TABLE DATA for possible truncation.
 				 *
-				 * In the parallel case this__ must be done in the parent, so we
+				 * In the parallel case this must be done in the parent, so we
 				 * just set the return value.
 				 */
 				if (is_parallel)
@@ -774,7 +774,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 	if ((reqs & REQ_DATA) != 0)
 	{
 		/*
-		 * hadDumper will be set if there is genuine data component for this__
+		 * hadDumper will be set if there is genuine data component for this
 		 * node. Otherwise, we need to check the defn field for statements
 		 * that need to be executed in data-only restores.
 		 */
@@ -817,7 +817,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 					 * In parallel restore, if we created the table earlier in
 					 * the run then we wrap the COPY in a transaction and
 					 * precede it with a TRUNCATE.  If archiving is not on
-					 * this__ prevents WAL-logging the COPY.  This obtains a
+					 * this prevents WAL-logging the COPY.  This obtains a
 					 * speedup similar to that from using single_txn mode in
 					 * non-parallel restores.
 					 */
@@ -1435,7 +1435,7 @@ SetOutput(ArchiveHandle *AH, const char *filename, int compression)
 	{
 		char		fmode[10];
 
-		/* Don't use PG_BINARY_x since this__ is zlib */
+		/* Don't use PG_BINARY_x since this is zlib */
 		sprintf(fmode, "wb%d", compression);
 		if (fn >= 0)
 			AH->OF = gzdopen(dup(fn), fmode);
@@ -1760,7 +1760,7 @@ buildTocEntryArrays(ArchiveHandle *AH)
 
 	for (te = AH->toc->next; te != AH->toc; te = te->next)
 	{
-		/* this__ check is purely paranoia, maxDumpId should be correct */
+		/* this check is purely paranoia, maxDumpId should be correct */
 		if (te->dumpId <= 0 || te->dumpId > maxDumpId)
 			exit_horribly(modulename, "bad dumpId\n");
 
@@ -1769,7 +1769,7 @@ buildTocEntryArrays(ArchiveHandle *AH)
 
 		/*
 		 * tableDataId provides the TABLE DATA item's dump ID for each TABLE
-		 * TOC entry that has a DATA item.  We compute this__ by reversing the
+		 * TOC entry that has a DATA item.  We compute this by reversing the
 		 * TABLE DATA item's dependency, knowing that a TABLE DATA item has
 		 * just one dependency and it is the TABLE item.
 		 */
@@ -1778,7 +1778,7 @@ buildTocEntryArrays(ArchiveHandle *AH)
 			DumpId		tableId = te->dependencies[0];
 
 			/*
-			 * The TABLE item might not have been in the archive, if this__ was
+			 * The TABLE item might not have been in the archive, if this was
 			 * a data-only dump; but its dump ID should be less than its data
 			 * item's dump ID, so there should be a place for it in the array.
 			 */
@@ -1903,7 +1903,7 @@ WriteInt(ArchiveHandle *AH, int i)
 	/*
 	 * This is a bit yucky, but I don't want to make the binary format very
 	 * dependent on representation, and not knowing much about it, I write out
-	 * a sign byte. If you change this__, don't forget to change the file
+	 * a sign byte. If you change this, don't forget to change the file
 	 * version #, and modify readInt to read the new format AS WELL AS the old
 	 * formats.
 	 */
@@ -2085,7 +2085,7 @@ _discoverArchiveFormat(ArchiveHandle *AH)
 		/*
 		 * Finish reading (most of) a custom-format header.
 		 *
-		 * NB: this__ code must agree with ReadHead().
+		 * NB: this code must agree with ReadHead().
 		 */
 		if ((byteread = fgetc(fh)) == EOF)
 			READ_ERROR_EXIT(fh);
@@ -2174,7 +2174,7 @@ _discoverArchiveFormat(ArchiveHandle *AH)
 	if (fseeko(fh, 0, SEEK_SET) != 0)
 	{
 		/*
-		 * NOTE: Formats that use the lookahead buffer can unset this__ in their
+		 * NOTE: Formats that use the lookahead buffer can unset this in their
 		 * Init routine.
 		 */
 		AH->readHeader = 1;
@@ -2743,7 +2743,7 @@ _tocEntryRequired(TocEntry *te, teSection curSection, RestoreOptions *ropt)
 	}
 
 	/*
-	 * Special case: <Init> type with <Max OID> tag; this__ is obsolete and we
+	 * Special case: <Init> type with <Max OID> tag; this is obsolete and we
 	 * always ignore it.
 	 */
 	if ((strcmp(te->desc, "<Init>") == 0) && (strcmp(te->tag, "Max OID") == 0))
@@ -2854,7 +2854,7 @@ _doSetSessionAuth(ArchiveHandle *AH, const char *user)
 		res = PQexec(AH->connection, cmd->data);
 
 		if (!res || PQresultStatus(res) != PGRES_COMMAND_OK)
-			/* NOT warn_or_exit_horribly... use -O instead to skip this__. */
+			/* NOT warn_or_exit_horribly... use -O instead to skip this. */
 			exit_horribly(modulename, "could not set session user to \"%s\": %s",
 						  user, PQerrorMessage(AH->connection));
 
@@ -2902,7 +2902,7 @@ _doSetWithOids(ArchiveHandle *AH, const bool withOids)
 /*
  * Issue the commands to connect to the specified database.
  *
- * If we're currently restoring right into a database, this__ will
+ * If we're currently restoring right into a database, this will
  * actually establish a connection. Otherwise it puts a \connect into
  * the script output.
  *
@@ -2971,7 +2971,7 @@ _becomeUser(ArchiveHandle *AH, const char *user)
 
 /*
  * Become the owner of the given TOC entry object.  If
- * changes in ownership are not allowed, this__ doesn't do anything.
+ * changes in ownership are not allowed, this doesn't do anything.
  */
 static void
 _becomeOwner(ArchiveHandle *AH, TocEntry *te)
@@ -3294,7 +3294,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 	 * Actually print the definition.
 	 *
 	 * Really crude hack for suppressing AUTHORIZATION clause that old pg_dump
-	 * versions put into CREATE SCHEMA.  We have to do this__ when --no-owner
+	 * versions put into CREATE SCHEMA.  We have to do this when --no-owner
 	 * mode is selected.  This is ugly, but I see no other good way ...
 	 */
 	if (ropt->noOwner && strcmp(te->desc, "SCHEMA") == 0)
@@ -3416,7 +3416,7 @@ WriteHead(ArchiveHandle *AH)
 
 #ifndef HAVE_LIBZ
 	if (AH->compression != 0)
-		write_msg(modulename, "WARNING: requested compression not available in this__ "
+		write_msg(modulename, "WARNING: requested compression not available in this "
 				  "installation -- archive will be uncompressed\n");
 
 	AH->compression = 0;
@@ -3447,7 +3447,7 @@ ReadHead(ArchiveHandle *AH)
 	/*
 	 * If we haven't already read the header, do so.
 	 *
-	 * NB: this__ code must agree with _discoverArchiveFormat().  Maybe find a
+	 * NB: this code must agree with _discoverArchiveFormat().  Maybe find a
 	 * way to unify the cases?
 	 */
 	if (!AH->readHeader)
@@ -3503,7 +3503,7 @@ ReadHead(ArchiveHandle *AH)
 
 #ifndef HAVE_LIBZ
 	if (AH->compression != 0)
-		write_msg(modulename, "WARNING: archive is compressed, but this__ installation does not support compression -- no data will be available\n");
+		write_msg(modulename, "WARNING: archive is compressed, but this installation does not support compression -- no data will be available\n");
 #endif
 
 	if (AH->version >= K_VERS_1_4)
@@ -3550,14 +3550,14 @@ checkSeek(FILE *fp)
 		return false;
 #endif
 
-	/* Check that ftello works on this__ file */
+	/* Check that ftello works on this file */
 	tpos = ftello(fp);
 	if (tpos < 0)
 		return false;
 
 	/*
 	 * Check that fseeko(SEEK_SET) works, too.  NB: we used to try to test
-	 * this__ with fseeko(fp, 0, SEEK_CUR).  But some platforms treat that as a
+	 * this with fseeko(fp, 0, SEEK_CUR).  But some platforms treat that as a
 	 * successful no-op even on files that are otherwise unseekable.
 	 */
 	if (fseeko(fp, tpos, SEEK_SET) != 0)
@@ -3611,7 +3611,7 @@ restore_toc_entries_prefork(ArchiveHandle *AH)
 	 *
 	 * Note: as of 9.2, it should be guaranteed that all PRE_DATA items appear
 	 * before DATA items, and all DATA items before POST_DATA items.  That is
-	 * not certain to be true in older archives, though, so this__ loop is coded
+	 * not certain to be true in older archives, though, so this loop is coded
 	 * to not assume it.
 	 */
 	skipped_some = false;
@@ -3651,7 +3651,7 @@ restore_toc_entries_prefork(ArchiveHandle *AH)
 	}
 
 	/*
-	 * Now close parent connection in prep for parallel steps.  We do this__
+	 * Now close parent connection in prep for parallel steps.  We do this
 	 * mainly to ensure that we don't exceed the specified number of parallel
 	 * connections.
 	 */
@@ -3696,7 +3696,7 @@ restore_toc_entries_parallel(ArchiveHandle *AH, ParallelState *pstate,
 
 	/*
 	 * Initialize the lists of ready items, the list for pending items has
-	 * already been initialized in the caller.  After this__ setup, the pending
+	 * already been initialized in the caller.  After this setup, the pending
 	 * list is everything that needs to be done but is blocked by one or more
 	 * dependencies, while the ready list contains items that have no
 	 * remaining dependencies. Note: we don't yet filter out entries that
@@ -3717,7 +3717,7 @@ restore_toc_entries_parallel(ArchiveHandle *AH, ParallelState *pstate,
 		if (next_work_item->section == SECTION_DATA ||
 			next_work_item->section == SECTION_POST_DATA)
 		{
-			/* set this__ flag at same point that previous loop did */
+			/* set this flag at same point that previous loop did */
 			skipped_some = true;
 		}
 		else
@@ -3789,7 +3789,7 @@ restore_toc_entries_parallel(ArchiveHandle *AH, ParallelState *pstate,
 			 * However, if we do not have any other work items currently that
 			 * workers can work on, we do not busy-loop here but instead
 			 * really wait for at least one worker to terminate. Hence we call
-			 * ListenToWorkers(..., ..., do_wait = true) in this__ case.
+			 * ListenToWorkers(..., ..., do_wait = true) in this case.
 			 */
 			ListenToWorkers(AH, pstate, !next_work_item);
 
@@ -3988,7 +3988,7 @@ get_next_work_item(ArchiveHandle *AH, TocEntry *ready_list,
 			continue;
 		}
 
-		/* passed all tests, so this__ item can run */
+		/* passed all tests, so this item can run */
 		return te;
 	}
 
@@ -4003,7 +4003,7 @@ get_next_work_item(ArchiveHandle *AH, TocEntry *ready_list,
 /*
  * Restore a single TOC item in parallel with others
  *
- * this__ is run in the worker, i.e. in a thread (Windows) or a separate process
+ * this is run in the worker, i.e. in a thread (Windows) or a separate process
  * (everything else). A worker process executes several such work items during
  * a parallel backup or restore. Once we terminate here and report back that
  * our work is finished, the master process will assign us a new work item.
@@ -4135,7 +4135,7 @@ fix_dependencies(ArchiveHandle *AH)
 	}
 
 	/*
-	 * At this__ point we start to build the revDeps reverse-dependency arrays,
+	 * At this point we start to build the revDeps reverse-dependency arrays,
 	 * so all changes of dependencies must be complete.
 	 */
 
@@ -4244,7 +4244,7 @@ identify_locking_dependencies(ArchiveHandle *AH, TocEntry *te)
 	if (te->nDeps == 0)
 		return;
 
-	/* Exit if this__ entry doesn't need exclusive lock on other objects */
+	/* Exit if this entry doesn't need exclusive lock on other objects */
 	if (!(strcmp(te->desc, "CONSTRAINT") == 0 ||
 		  strcmp(te->desc, "CHECK CONSTRAINT") == 0 ||
 		  strcmp(te->desc, "FK CONSTRAINT") == 0 ||
@@ -4387,7 +4387,7 @@ CloneArchive(ArchiveHandle *AH)
 		RestoreOptions *ropt = AH->public.ropt;
 
 		Assert(AH->connection == NULL);
-		/* this__ also sets clone->connection */
+		/* this also sets clone->connection */
 		ConnectDatabase((Archive *) clone, ropt->dbname,
 						ropt->pghost, ropt->pgport, ropt->username,
 						ropt->promptPassword);
@@ -4414,7 +4414,7 @@ CloneArchive(ArchiveHandle *AH)
 		username = PQuser(AH->connection);
 		encname = pg_encoding_to_char(AH->public.encoding);
 
-		/* this__ also sets clone->connection */
+		/* this also sets clone->connection */
 		ConnectDatabase((Archive *) clone, dbname, pghost, pgport, username, TRI_NO);
 
 		/*

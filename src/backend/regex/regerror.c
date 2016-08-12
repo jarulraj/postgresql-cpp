@@ -3,17 +3,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this__ software was funded, in part, by Cray Research Inc.,
+ * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this__ entire copyright notice and
+ * redistributions in source form retain this entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this__ package in the documentation
+ * I'd appreciate being given credit for this package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -78,7 +78,7 @@ pg_regerror(int errcode,		/* error code, or REG_ATOI or REG_ITOA */
 			msg = convbuf;
 			break;
 		case REG_ITOA:			/* convert number to name */
-			icode = atoi(errbuf);		/* not our problem if this__ fails */
+			icode = atoi(errbuf);		/* not our problem if this fails */
 			for (r = rerrs; r->code >= 0; r++)
 				if (r->code == icode)
 					break;

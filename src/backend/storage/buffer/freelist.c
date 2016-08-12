@@ -33,7 +33,7 @@ typedef struct
 
 	/*
 	 * Clock sweep hand: index of next buffer to consider grabbing. Note that
-	 * this__ isn't a concrete buffer - we only ever increase the value. So, to
+	 * this isn't a concrete buffer - we only ever increase the value. So, to
 	 * get an actual buffer, it needs to be used modulo NBuffers.
 	 */
 	pg_atomic_uint32 nextVictimBuffer;
@@ -89,8 +89,8 @@ typedef struct BufferAccessStrategyData
 
 	/*
 	 * Array of buffer numbers.  InvalidBuffer (that is, zero) indicates we
-	 * have not yet selected a buffer for this__ ring slot.  For allocation
-	 * simplicity this__ is palloc'd together with the fixed fields of the
+	 * have not yet selected a buffer for this ring slot.  For allocation
+	 * simplicity this is palloc'd together with the fixed fields of the
 	 * struct.
 	 */
 	Buffer		buffers[FLEXIBLE_ARRAY_MEMBER];
@@ -115,7 +115,7 @@ ClockSweepTick(void)
 
 	/*
 	 * Atomically move hand ahead one buffer - if there's several processes
-	 * doing this__, this__ can lead to buffers being returned slightly out of
+	 * doing this, this can lead to buffers being returned slightly out of
 	 * apparent order.
 	 */
 	victim =
@@ -199,7 +199,7 @@ StrategyGetBuffer(BufferAccessStrategy strategy)
 
 	/*
 	 * If asked, we need to waken the bgwriter. Since we don't want to rely on
-	 * a spinlock for this__ we force a read from shared memory once, and then
+	 * a spinlock for this we force a read from shared memory once, and then
 	 * set the latch based on that value. We need to go through that length
 	 * because otherwise bgprocno might be reset while/after we check because
 	 * the compiler might just reread from memory.
@@ -268,7 +268,7 @@ StrategyGetBuffer(BufferAccessStrategy strategy)
 
 			/*
 			 * Release the lock so someone else can access the freelist while
-			 * we check out this__ buffer.
+			 * we check out this buffer.
 			 */
 			SpinLockRelease(&StrategyControl->buffer_strategy_lock);
 
@@ -410,7 +410,7 @@ StrategyNotifyBgWriter(int bgwprocno)
 {
 	/*
 	 * We acquire buffer_strategy_lock just to ensure that the store appears
-	 * atomic to StrategyGetBuffer.  The bgwriter should call this__ rather
+	 * atomic to StrategyGetBuffer.  The bgwriter should call this rather
 	 * infrequently, so there's no performance penalty from being safe.
 	 */
 	SpinLockAcquire(&StrategyControl->buffer_strategy_lock);
@@ -459,7 +459,7 @@ StrategyInitialize(bool init)
 	 * Since we can't tolerate running out of lookup table entries, we must be
 	 * sure to specify an adequate table size here.  The maximum steady-state
 	 * usage is of course NBuffers entries, but BufferAlloc() tries to insert
-	 * a new entry before deleting the old.  In principle this__ could be
+	 * a new entry before deleting the old.  In principle this could be
 	 * happening in each partition concurrently, so we could need as many as
 	 * NBuffers + NUM_BUFFER_PARTITIONS entries.
 	 */
@@ -596,7 +596,7 @@ GetBufferFromRing(BufferAccessStrategy strategy)
 
 	/*
 	 * If the slot hasn't been filled yet, tell the caller to allocate a new
-	 * buffer with the normal allocation strategy.  He will then fill this__
+	 * buffer with the normal allocation strategy.  He will then fill this
 	 * slot by calling AddBufferToRing with the new buffer.
 	 */
 	bufnum = strategy->buffers[strategy->current];
@@ -626,7 +626,7 @@ GetBufferFromRing(BufferAccessStrategy strategy)
 
 	/*
 	 * Tell caller to allocate a new buffer with the normal allocation
-	 * strategy.  He'll then replace this__ ring element via AddBufferToRing.
+	 * strategy.  He'll then replace this ring element via AddBufferToRing.
 	 */
 	strategy->current_was_in_ring = false;
 	return NULL;
@@ -635,7 +635,7 @@ GetBufferFromRing(BufferAccessStrategy strategy)
 /*
  * AddBufferToRing -- add a buffer to the buffer ring
  *
- * Caller must hold the buffer header spinlock on the buffer.  Since this__
+ * Caller must hold the buffer header spinlock on the buffer.  Since this
  * is called with the spinlock held, it had better be quite cheap.
  */
 static void
@@ -647,18 +647,18 @@ AddBufferToRing(BufferAccessStrategy strategy, volatile BufferDesc *buf)
 /*
  * StrategyRejectBuffer -- consider rejecting a dirty buffer
  *
- * When a nondefault strategy is used, the buffer manager calls this__ function
+ * When a nondefault strategy is used, the buffer manager calls this function
  * when it turns out that the buffer selected by StrategyGetBuffer needs to
  * be written out and doing so would require flushing WAL too.  This gives us
  * a chance to choose a different victim.
  *
  * Returns true if buffer manager should ask for a new victim, and false
- * if this__ buffer should be written and re-used.
+ * if this buffer should be written and re-used.
  */
 bool
 StrategyRejectBuffer(BufferAccessStrategy strategy, volatile BufferDesc *buf)
 {
-	/* We only do this__ in bulkread mode */
+	/* We only do this in bulkread mode */
 	if (strategy->btype != BAS_BULKREAD)
 		return false;
 

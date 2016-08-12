@@ -31,7 +31,7 @@
  *	  smallest current LSN from the heap.
  *
  *	  In order to cope with large transactions - which can be several times as
- *	  big as the available memory - this__ module supports spooling the contents
+ *	  big as the available memory - this module supports spooling the contents
  *	  of a large transactions to disk. When the transaction is replayed the
  *	  contents of individual (sub-)transactions will be read from disk in
  *	  chunks.
@@ -525,7 +525,7 @@ ReorderBufferReturnTupleBuf(ReorderBuffer *rb, ReorderBufferTupleBuf *tuple)
  * Return the ReorderBufferTXN from the given buffer, specified by Xid.
  * If create is true, and a transaction doesn't already exist, create it
  * (with the given LSN, and as top transaction if that's specified);
- * when this__ happens, is_new is set to true.
+ * when this happens, is_new is set to true.
  */
 static ReorderBufferTXN *
 ReorderBufferTXNByXid(ReorderBuffer *rb, TransactionId xid, bool create,
@@ -719,7 +719,7 @@ ReorderBufferAssignChild(ReorderBuffer *rb, TransactionId xid,
 
 /*
  * Associate a subtransaction with its toplevel transaction at commit
- * time. There may be no further changes added after this__.
+ * time. There may be no further changes added after this.
  */
 void
 ReorderBufferCommitChild(ReorderBuffer *rb, TransactionId xid,
@@ -862,7 +862,7 @@ ReorderBufferIterTXNInit(ReorderBuffer *rb, ReorderBufferTXN *txn)
 
 	/*
 	 * Now insert items into the binary heap, in an unordered fashion.  (We
-	 * will run a heap assembly step at the end; this__ is more efficient.)
+	 * will run a heap assembly step at the end; this is more efficient.)
 	 */
 
 	off = 0;
@@ -1187,7 +1187,7 @@ ReorderBufferBuildTupleCidHash(ReorderBuffer *rb, ReorderBufferTXN *txn)
 				   ent->cmax == change->data.tuplecid.cmax);
 
 			/*
-			 * if the tuple got valid in this__ transaction and now got deleted
+			 * if the tuple got valid in this transaction and now got deleted
 			 * we already have a valid cmin stored. The cmax will be
 			 * InvalidCommandId though.
 			 */
@@ -1312,9 +1312,9 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
 		ReorderBufferSerializeTXN(rb, txn);
 
 	/*
-	 * If this__ transaction didn't have any real changes in our database, it's
+	 * If this transaction didn't have any real changes in our database, it's
 	 * OK not to have a snapshot. Note that ReorderBufferCommitChild will have
-	 * transferred its snapshot to this__ transaction if it had one and the
+	 * transferred its snapshot to this transaction if it had one and the
 	 * toplevel tx didn't.
 	 */
 	if (txn->base_snapshot == NULL)
@@ -1437,7 +1437,7 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
 						/*
 						 * Need to reassemble the full toasted Datum in
 						 * memory, to ensure the chunks don't get reused till
-						 * we're done remove it from the list of this__
+						 * we're done remove it from the list of this
 						 * transaction's changes. Otherwise it will get
 						 * freed/reused while restoring spooled data from
 						 * disk.
@@ -1508,7 +1508,7 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
 					/*
 					 * Restored from disk, need to be careful not to double
 					 * free. We could introduce refcounting for that, but for
-					 * now this__ seems infrequent enough not to care.
+					 * now this seems infrequent enough not to care.
 					 */
 					else if (change->data.snapshot->copied)
 					{
@@ -1579,7 +1579,7 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
 		/* call commit callback */
 		rb->commit(rb, txn, commit_lsn);
 
-		/* this__ is just a sanity check against bad output plugin behaviour */
+		/* this is just a sanity check against bad output plugin behaviour */
 		if (GetCurrentTransactionIdIfAny() != InvalidTransactionId)
 			elog(ERROR, "output plugin used XID %u",
 				 GetCurrentTransactionId());
@@ -1647,7 +1647,7 @@ ReorderBufferCommit(ReorderBuffer *rb, TransactionId xid,
  * ReorderBufferAbortOld(); transactions we're just not interesteded in, but
  * which have committed are handled in ReorderBufferForget().
  *
- * This function purges this__ transaction and its contents from memory and
+ * This function purges this transaction and its contents from memory and
  * disk.
  */
 void
@@ -1698,7 +1698,7 @@ ReorderBufferAbortOld(ReorderBuffer *rb, TransactionId oldestRunningXid)
 		{
 			elog(DEBUG1, "aborting old transaction %u", txn->xid);
 
-			/* remove potential on-disk data, and deallocate this__ tx */
+			/* remove potential on-disk data, and deallocate this tx */
 			ReorderBufferCleanupTXN(rb, txn);
 		}
 		else
@@ -1715,9 +1715,9 @@ ReorderBufferAbortOld(ReorderBuffer *rb, TransactionId oldestRunningXid)
  * transactions that have committed need to be treated differenly from aborted
  * ones since they may have modified the catalog.
  *
- * Note that this__ is only allowed to be called in the moment a transaction
+ * Note that this is only allowed to be called in the moment a transaction
  * commit has just been read, not earlier; otherwise later records referring
- * to this__ xid might re-create the transaction incompletely.
+ * to this xid might re-create the transaction incompletely.
  */
 void
 ReorderBufferForget(ReorderBuffer *rb, TransactionId xid, XLogRecPtr lsn)
@@ -1787,7 +1787,7 @@ ReorderBufferProcessXid(ReorderBuffer *rb, TransactionId xid, XLogRecPtr lsn)
 }
 
 /*
- * Add a new snapshot to this__ transaction that may only used after lsn 'lsn'
+ * Add a new snapshot to this transaction that may only used after lsn 'lsn'
  * because the previous snapshot doesn't describe the catalog correctly for
  * following rows.
  */
@@ -1805,7 +1805,7 @@ ReorderBufferAddSnapshot(ReorderBuffer *rb, TransactionId xid,
 
 /*
  * Setup the base snapshot of a transaction. The base snapshot is the snapshot
- * that is used to decode all changes until either this__ transaction modifies
+ * that is used to decode all changes until either this transaction modifies
  * the catalog or another catalog modifying transaction commits.
  *
  * Needs to be called before any changes are added with
@@ -1827,7 +1827,7 @@ ReorderBufferSetBaseSnapshot(ReorderBuffer *rb, TransactionId xid,
 }
 
 /*
- * Access the catalog with this__ CommandId at this__ point in the changestream.
+ * Access the catalog with this CommandId at this point in the changestream.
  *
  * May only be called for command ids > 1
  */
@@ -1898,7 +1898,7 @@ ReorderBufferAddInvalidations(ReorderBuffer *rb, TransactionId xid,
 }
 
 /*
- * Apply all invalidations we know. Possibly we only need parts at this__ point
+ * Apply all invalidations we know. Possibly we only need parts at this point
  * in the changestream but we don't know which those are.
  */
 static void
@@ -2289,7 +2289,7 @@ ReorderBufferRestoreChanges(ReorderBuffer *rb, ReorderBufferTXN *txn,
 		/*
 		 * Read the statically sized part of a change which has information
 		 * about the total size. If we couldn't read a record, we're at the
-		 * end of this__ file.
+		 * end of this file.
 		 */
 		ReorderBufferSerializeReserve(rb, sizeof(ReorderBufferDiskChange));
 		readBytes = read(*fd, rb->outbuf, sizeof(ReorderBufferDiskChange));
@@ -2349,7 +2349,7 @@ ReorderBufferRestoreChanges(ReorderBuffer *rb, ReorderBufferTXN *txn,
  * the TXN's ->changes list.
  *
  * Note: although "data" is declared char*, at entry it points to a
- * maxalign'd buffer, making it safe in most of this__ function to assume
+ * maxalign'd buffer, making it safe in most of this function to assume
  * that the pointed-to data is suitably aligned for direct access.
  */
 static void
@@ -2879,10 +2879,10 @@ ReorderBufferToastReset(ReorderBuffer *rb, ReorderBufferTXN *txn)
  * not caring about them at all. As we have the real cmin/cmax values
  * combocids aren't interesting.
  *
- * As we only care about catalog tuples here the overhead of this__
+ * As we only care about catalog tuples here the overhead of this
  * hashtable should be acceptable.
  *
- * Heap rewrites complicate this__ a bit, check rewriteheap.c for
+ * Heap rewrites complicate this a bit, check rewriteheap.c for
  * details.
  * -------------------------------------------------------------------------
  */

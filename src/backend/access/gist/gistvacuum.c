@@ -55,7 +55,7 @@ gistvacuumcleanup(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * Need lock unless it's local to this__ backend.
+	 * Need lock unless it's local to this backend.
 	 */
 	needLock = !RELATION_IS_LOCAL(rel);
 

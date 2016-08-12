@@ -10,7 +10,7 @@
  * src/include/catalog/pg_proc.h
  *
  * NOTES
- *	  The script catalog/genbki.pl reads this__ file and generates .bki
+ *	  The script catalog/genbki.pl reads this file and generates .bki
  *	  information from the DATA() statements.  utils/Gen_fmgrtab.pl
  *	  generates fmgroids.h and fmgrtab.c the same way.
  *
@@ -26,7 +26,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_proc definition.  cpp turns this__ into
+ *		pg_proc definition.  cpp turns this into
  *		typedef struct FormData_pg_proc
  * ----------------
  */
@@ -36,7 +36,7 @@
 CATALOG(pg_proc,1255) BKI_BOOTSTRAP BKI_ROWTYPE_OID(81) BKI_SCHEMA_MACRO
 {
 	NameData	proname;		/* procedure name */
-	Oid			pronamespace;	/* OID of namespace containing this__ proc */
+	Oid			pronamespace;	/* OID of namespace containing this proc */
 	Oid			proowner;		/* procedure owner */
 	Oid			prolang;		/* OID of pg_language entry */
 	float4		procost;		/* estimated execution cost */
@@ -2234,11 +2234,11 @@ DESCR("convert inet to cidr");
 DATA(insert OID = 2196 (  inet_client_addr		PGNSP PGUID 12 1 0 0 0 f f f f f f s 0 0 869 "" _null_ _null_ _null_ _null_ _null_ inet_client_addr _null_ _null_ _null_ ));
 DESCR("inet address of the client");
 DATA(insert OID = 2197 (  inet_client_port		PGNSP PGUID 12 1 0 0 0 f f f f f f s 0 0 23 "" _null_ _null_ _null_ _null_ _null_	inet_client_port _null_ _null_ _null_ ));
-DESCR("client's port number for this__ connection");
+DESCR("client's port number for this connection");
 DATA(insert OID = 2198 (  inet_server_addr		PGNSP PGUID 12 1 0 0 0 f f f f f f s 0 0 869 "" _null_ _null_ _null_ _null_ _null_ inet_server_addr _null_ _null_ _null_ ));
 DESCR("inet address of the server");
 DATA(insert OID = 2199 (  inet_server_port		PGNSP PGUID 12 1 0 0 0 f f f f f f s 0 0 23 "" _null_ _null_ _null_ _null_ _null_	inet_server_port _null_ _null_ _null_ ));
-DESCR("server's port number for this__ connection");
+DESCR("server's port number for this connection");
 
 DATA(insert OID = 2627 (  inetnot			PGNSP PGUID 12 1 0 0 0 f f f f t f i 1 0 869 "869" _null_ _null_ _null_ _null_ _null_	inetnot _null_ _null_ _null_ ));
 DATA(insert OID = 2628 (  inetand			PGNSP PGUID 12 1 0 0 0 f f f f t f i 2 0 869 "869 869" _null_ _null_ _null_ _null_ _null_	inetand _null_ _null_ _null_ ));
@@ -3117,7 +3117,7 @@ DESCR("is text search parser visible in search path?");
 DATA(insert OID = 3757 (  pg_ts_dict_is_visible		PGNSP PGUID 12 10 0 0 0 f f f f t f s 1 0 16 "26" _null_ _null_ _null_ _null_ _null_ pg_ts_dict_is_visible _null_ _null_ _null_ ));
 DESCR("is text search dictionary visible in search path?");
 DATA(insert OID = 3768 (  pg_ts_template_is_visible PGNSP PGUID 12 10 0 0 0 f f f f t f s 1 0 16 "26" _null_ _null_ _null_ _null_ _null_ pg_ts_template_is_visible _null_ _null_ _null_ ));
-DESCR("is text search template__ visible in search path?");
+DESCR("is text search template visible in search path?");
 DATA(insert OID = 3758 (  pg_ts_config_is_visible	PGNSP PGUID 12 10 0 0 0 f f f f t f s 1 0 16 "26" _null_ _null_ _null_ _null_ _null_ pg_ts_config_is_visible _null_ _null_ _null_ ));
 DESCR("is text search configuration visible in search path?");
 DATA(insert OID = 3815 (  pg_collation_is_visible	PGNSP PGUID 12 10 0 0 0 f f f f t f s 1 0 16 "26" _null_ _null_ _null_ _null_ _null_ pg_collation_is_visible _null_ _null_ _null_ ));
@@ -4045,9 +4045,9 @@ DESCR("constraint description with pretty-print option");
 DATA(insert OID = 2509 (  pg_get_expr		   PGNSP PGUID 12 1 0 0 0 f f f f t f s 3 0 25 "194 26 16" _null_ _null_ _null_ _null_ _null_ pg_get_expr_ext _null_ _null_ _null_ ));
 DESCR("deparse an encoded expression with pretty-print option");
 DATA(insert OID = 2510 (  pg_prepared_statement PGNSP PGUID 12 1 1000 0 0 f f f f t t s 0 0 2249 "" "{25,25,1184,2211,16}" "{o,o,o,o,o}" "{name,statement,prepare_time,parameter_types,from_sql}" _null_ _null_ pg_prepared_statement _null_ _null_ _null_ ));
-DESCR("get the prepared statements for this__ session");
+DESCR("get the prepared statements for this session");
 DATA(insert OID = 2511 (  pg_cursor PGNSP PGUID 12 1 1000 0 0 f f f f t t s 0 0 2249 "" "{25,25,16,16,16,1184}" "{o,o,o,o,o,o}" "{name,statement,is_holdable,is_binary,is_scrollable,creation_time}" _null_ _null_ pg_cursor _null_ _null_ _null_ ));
-DESCR("get the open cursors for this__ session");
+DESCR("get the open cursors for this session");
 DATA(insert OID = 2599 (  pg_timezone_abbrevs	PGNSP PGUID 12 1 1000 0 0 f f f f t t s 0 0 2249 "" "{25,1186,16}" "{o,o,o}" "{abbrev,utc_offset,is_dst}" _null_ _null_ pg_timezone_abbrevs _null_ _null_ _null_ ));
 DESCR("get the available time zone abbreviations");
 DATA(insert OID = 2856 (  pg_timezone_names		PGNSP PGUID 12 1 1000 0 0 f f f f t t s 0 0 2249 "" "{25,25,1186,16}" "{o,o,o,o}" "{name,abbrev,utc_offset,is_dst}" _null_ _null_ pg_timezone_names _null_ _null_ _null_ ));
@@ -5305,7 +5305,7 @@ DATA(insert OID = 6007 ( pg_replication_origin_session_reset PGNSP PGUID 12 1 0 
 DESCR("teardown configured replication progress tracking");
 
 DATA(insert OID = 6008 ( pg_replication_origin_session_is_setup PGNSP PGUID 12 1 0 0 0 f f f f t f v 0 0 16 "" _null_ _null_ _null_ _null_ _null_ pg_replication_origin_session_is_setup _null_ _null_ _null_ ));
-DESCR("is a replication origin configured in this__ session");
+DESCR("is a replication origin configured in this session");
 
 DATA(insert OID = 6009 ( pg_replication_origin_session_progress PGNSP PGUID 12 1 0 0 0 f f f f t f v 1 0 3220 "16" _null_ _null_ _null_ _null_ _null_ pg_replication_origin_session_progress _null_ _null_ _null_ ));
 DESCR("get the replication progress of the current session");

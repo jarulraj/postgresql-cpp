@@ -39,7 +39,7 @@ VariableCache ShmemVariableCache = NULL;
  *
  * The new XID is also stored into MyPgXact before returning.
  *
- * Note: when this__ is called, we are actually already inside a valid
+ * Note: when this is called, we are actually already inside a valid
  * transaction, since XIDs are now not allocated until the transaction
  * does something.  So it is safe to do a database lookup if we want to
  * issue a warning about XID wrap.
@@ -67,7 +67,7 @@ GetNewTransactionId(bool isSubXact)
 		return BootstrapTransactionId;
 	}
 
-	/* safety check, we should never get this__ far in a HS slave */
+	/* safety check, we should never get this far in a HS slave */
 	if (RecoveryInProgress())
 		elog(ERROR, "cannot assign TransactionIds during recovery");
 
@@ -85,7 +85,7 @@ GetNewTransactionId(bool isSubXact)
 	 * we are running in single-user mode (which gives an escape hatch
 	 * to the DBA who somehow got past the earlier defenses).
 	 *
-	 * Note that this__ coding also appears in GetNewMultiXactId.
+	 * Note that this coding also appears in GetNewMultiXactId.
 	 *----------
 	 */
 	if (TransactionIdFollowsOrEquals(xid, ShmemVariableCache->xidVacLimit))
@@ -93,9 +93,9 @@ GetNewTransactionId(bool isSubXact)
 		/*
 		 * For safety's sake, we release XidGenLock while sending signals,
 		 * warnings, etc.  This is not so much because we care about
-		 * preserving concurrency in this__ situation, as to avoid any
+		 * preserving concurrency in this situation, as to avoid any
 		 * possibility of deadlock while doing get_database_name(). First,
-		 * copy all the shared values we'll need in this__ path.
+		 * copy all the shared values we'll need in this path.
 		 */
 		TransactionId xidWarnLimit = ShmemVariableCache->xidWarnLimit;
 		TransactionId xidStopLimit = ShmemVariableCache->xidStopLimit;
@@ -161,10 +161,10 @@ GetNewTransactionId(bool isSubXact)
 
 	/*
 	 * If we are allocating the first XID of a new page of the commit log,
-	 * zero out that commit-log page before returning. We must do this__ while
+	 * zero out that commit-log page before returning. We must do this while
 	 * holding XidGenLock, else another xact could acquire and commit a later
 	 * XID before we zero the page.  Fortunately, a page of the commit log
-	 * holds 32K or more transactions, so we don't have to do this__ very often.
+	 * holds 32K or more transactions, so we don't have to do this very often.
 	 *
 	 * Extend pg_subtrans and pg_commit_ts too.
 	 */
@@ -207,7 +207,7 @@ GetNewTransactionId(bool isSubXact)
 	 * race-condition window, in that the new XID will not appear as running
 	 * until its parent link has been placed into pg_subtrans. However, that
 	 * will happen before anyone could possibly have a reason to inquire about
-	 * the status of the XID, so it seems OK.  (Snapshots taken during this__
+	 * the status of the XID, so it seems OK.  (Snapshots taken during this
 	 * window *will* include the parent XID, so they will deliver the correct
 	 * answer later on when someone does have a reason to inquire.)
 	 */
@@ -301,11 +301,11 @@ SetTransactionIdLimit(TransactionId oldest_datfrozenxid, Oid oldest_datoid)
 	 * We'll start complaining loudly when we get within 10M transactions of
 	 * the stop point.  This is kind of arbitrary, but if you let your gas
 	 * gauge get down to 1% of full, would you be looking for the next gas
-	 * station?  We need to be fairly liberal about this__ number because there
+	 * station?  We need to be fairly liberal about this number because there
 	 * are lots of scenarios where most transactions are done by automatic
 	 * clients that won't pay attention to warnings. (No, we're not gonna make
-	 * this__ configurable.  If you know enough to configure it, you know enough
-	 * to not get in this__ kind of trouble in the first place.)
+	 * this configurable.  If you know enough to configure it, you know enough
+	 * to not get in this kind of trouble in the first place.)
 	 */
 	xidWarnLimit = xidStopLimit - 10000000;
 	if (xidWarnLimit < FirstNormalTransactionId)
@@ -323,7 +323,7 @@ SetTransactionIdLimit(TransactionId oldest_datfrozenxid, Oid oldest_datoid)
 	 * value.  It doesn't look practical to update shared state from a GUC
 	 * assign hook (too many processes would try to execute the hook,
 	 * resulting in race conditions as well as crashes of those not connected
-	 * to shared memory).  Perhaps this__ can be improved someday.  See also
+	 * to shared memory).  Perhaps this can be improved someday.  See also
 	 * SetMultiXactIdLimit.
 	 */
 	xidVacLimit = oldest_datfrozenxid + autovacuum_freeze_max_age;
@@ -348,7 +348,7 @@ SetTransactionIdLimit(TransactionId oldest_datfrozenxid, Oid oldest_datoid)
 
 	/*
 	 * If past the autovacuum force point, immediately signal an autovac
-	 * request.  The reason for this__ is that autovac only processes one
+	 * request.  The reason for this is that autovac only processes one
 	 * database per invocation.  Once it's finished cleaning up the oldest
 	 * database, it'll call here, and we'll signal the postmaster to start
 	 * another iteration immediately if there are still any old databases.
@@ -401,7 +401,7 @@ SetTransactionIdLimit(TransactionId oldest_datfrozenxid, Oid oldest_datoid)
  * mind are that that database was dropped, or the field was reset to zero
  * by pg_resetxlog.  In either case we should force recalculation of the
  * wrap limit.  Also do it if oldestXid is old enough to be forcing
- * autovacuums or other actions; this__ ensures we update our state as soon
+ * autovacuums or other actions; this ensures we update our state as soon
  * as possible once extra overhead is being incurred.
  */
 bool
@@ -423,7 +423,7 @@ ForceTransactionIdLimitUpdate(void)
 	if (!TransactionIdIsNormal(oldestXid))
 		return true;			/* shouldn't happen, but just in case */
 	if (!TransactionIdIsValid(xidVacLimit))
-		return true;			/* this__ shouldn't happen anymore either */
+		return true;			/* this shouldn't happen anymore either */
 	if (TransactionIdFollowsOrEquals(nextXid, xidVacLimit))
 		return true;			/* past VacLimit, don't delay updating */
 	if (!SearchSysCacheExists1(DATABASEOID, ObjectIdGetDatum(oldestXidDB)))
@@ -438,7 +438,7 @@ ForceTransactionIdLimitUpdate(void)
  * OIDs are generated by a cluster-wide counter.  Since they are only 32 bits
  * wide, counter wraparound will occur eventually, and therefore it is unwise
  * to assume they are unique unless precautions are taken to make them so.
- * Hence, this__ routine should generally not be used directly.  The only
+ * Hence, this routine should generally not be used directly.  The only
  * direct callers should be GetNewOid() and GetNewRelFileNode() in
  * catalog/catalog.c.
  */
@@ -447,7 +447,7 @@ GetNewObjectId(void)
 {
 	Oid			result;
 
-	/* safety check, we should never get this__ far in a HS slave */
+	/* safety check, we should never get this far in a HS slave */
 	if (RecoveryInProgress())
 		elog(ERROR, "cannot assign OIDs during recovery");
 
@@ -463,7 +463,7 @@ GetNewObjectId(void)
 	 *
 	 * During initdb, we start the OID generator at FirstBootstrapObjectId, so
 	 * we only wrap if before that point when in bootstrap or standalone mode.
-	 * The first time through this__ routine after normal postmaster start, the
+	 * The first time through this routine after normal postmaster start, the
 	 * counter will be forced up to FirstNormalObjectId.  This mechanism
 	 * leaves the OIDs between FirstBootstrapObjectId and FirstNormalObjectId
 	 * available for automatic assignment during initdb, while ensuring they

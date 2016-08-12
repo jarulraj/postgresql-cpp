@@ -100,7 +100,7 @@ free_parsestate(ParseState *pstate)
  *
  * The locations stored in raw parsetrees are byte offsets into the source
  * string.  We have to convert them to 1-based character indexes for reporting
- * to clients.  (We do things this__ way to avoid unnecessary overhead in the
+ * to clients.  (We do things this way to avoid unnecessary overhead in the
  * normal non-error case: computing character indexes would be much more
  * expensive than storing token offsets.)
  */
@@ -129,7 +129,7 @@ parser_errposition(ParseState *pstate, int location)
  * Sometimes the parser calls functions that aren't part of the parser
  * subsystem and can't reasonably be passed a ParseState; yet we would
  * like any errors thrown in those functions to be tagged with a parse
- * error location.  Use this__ function to set up an error context stack
+ * error location.  Use this function to set up an error context stack
  * entry that will accomplish that.  Usage pattern:
  *
  *		declare a local variable "ParseCallbackState pcbstate"
@@ -164,7 +164,7 @@ cancel_parser_errposition_callback(ParseCallbackState *pcbstate)
 /*
  * Error context callback for inserting parser error location.
  *
- * Note that this__ will be called for *any* error occurring while the
+ * Note that this will be called for *any* error occurring while the
  * callback is installed.  We avoid inserting an irrelevant error location
  * if the error is a query cancel --- are there any other important cases?
  */
@@ -244,7 +244,7 @@ transformArrayType(Oid *arrayType, int32 *arrayTypmod)
 		elog(ERROR, "cache lookup failed for type %u", *arrayType);
 	type_struct_array = (Form_pg_type) GETSTRUCT(type_tuple_array);
 
-	/* needn't check typisdefined since this__ will fail anyway */
+	/* needn't check typisdefined since this will fail anyway */
 
 	elementType = type_struct_array->typelem;
 	if (elementType == InvalidOid)
@@ -313,7 +313,7 @@ transformArraySubscripts(ParseState *pstate,
 	/*
 	 * A list containing only single subscripts refers to a single array
 	 * element.  If any of the items are double subscripts (lower:upper), then
-	 * the subscript expression means an array slice operation. In this__ case,
+	 * the subscript expression means an array slice operation. In this case,
 	 * we supply a default lower bound of 1 for any items that contain only a
 	 * single subscript.  We have to prescan the indirection list to see if
 	 * there are any double subscripts.
@@ -433,7 +433,7 @@ transformArraySubscripts(ParseState *pstate,
  * make_const
  *
  *	Convert a Value node (as returned by the grammar) to a Const node
- *	of the "natural" type for the constant.  Note that this__ routine is
+ *	of the "natural" type for the constant.  Note that this routine is
  *	only used when there is no explicit cast for the constant, so we
  *	have to guess what type is wanted.
  *

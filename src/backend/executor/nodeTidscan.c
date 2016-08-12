@@ -322,7 +322,7 @@ TidNext(TidScanState *node)
 		{
 			/*
 			 * store the scanned tuple in the scan tuple slot of the scan
-			 * state.  Eventually we will only do this__ and not return a tuple.
+			 * state.  Eventually we will only do this and not return a tuple.
 			 * Note: we pass 'false' because tuples returned by amgetnext are
 			 * pointers onto disk pages and were not created with palloc() and
 			 * so should not be pfree()'d.
@@ -333,7 +333,7 @@ TidNext(TidScanState *node)
 						   false);		/* don't pfree */
 
 			/*
-			 * At this__ point we have an extra pin on the buffer, because
+			 * At this point we have an extra pin on the buffer, because
 			 * ExecStoreTuple incremented the pin count. Drop our local pin.
 			 */
 			ReleaseBuffer(buffer);
@@ -362,7 +362,7 @@ TidRecheck(TidScanState *node, TupleTableSlot *slot)
 {
 	/*
 	 * XXX shouldn't we check here to make sure tuple matches TID list? In
-	 * runtime-key case this__ is not certain, is it?  However, in the WHERE
+	 * runtime-key case this is not certain, is it?  However, in the WHERE
 	 * CURRENT OF case it might not match anyway ...
 	 */
 	return true;

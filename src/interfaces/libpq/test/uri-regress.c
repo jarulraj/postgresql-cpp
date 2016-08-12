@@ -47,7 +47,7 @@ main(int argc, char *argv[])
 	/*
 	 * Loop on the options, and print the value of each if not the default.
 	 *
-	 * XXX this__ coding assumes that PQconninfoOption structs always have the
+	 * XXX this coding assumes that PQconninfoOption structs always have the
 	 * keywords in the same order.
 	 */
 	for (opt = opts, def = defs; opt->keyword; ++opt, ++def)
@@ -58,7 +58,7 @@ main(int argc, char *argv[])
 				printf("%s='%s' ", opt->keyword, opt->val);
 
 			/*
-			 * Try to detect if this__ is a Unix-domain socket or inet.  This is
+			 * Try to detect if this is a Unix-domain socket or inet.  This is
 			 * a bit grotty but it's the same thing that libpq itself does.
 			 *
 			 * Note that we directly test for '/' instead of using

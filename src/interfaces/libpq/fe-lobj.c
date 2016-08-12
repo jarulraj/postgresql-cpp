@@ -148,7 +148,7 @@ lo_truncate(PGconn *conn, int fd, size_t len)
 			return -1;
 	}
 
-	/* Must check this__ on-the-fly because it's not there pre-8.3 */
+	/* Must check this on-the-fly because it's not there pre-8.3 */
 	if (conn->lobjfuncs->fn_lo_truncate == 0)
 	{
 		printfPQExpBuffer(&conn->errorMessage,
@@ -157,7 +157,7 @@ lo_truncate(PGconn *conn, int fd, size_t len)
 	}
 
 	/*
-	 * Long ago, somebody thought it'd be a good idea to declare this__ function
+	 * Long ago, somebody thought it'd be a good idea to declare this function
 	 * as taking size_t ... but the underlying backend function only accepts a
 	 * signed int32 length.  So throw error if the given value overflows
 	 * int32.  (A possible alternative is to automatically redirect the call
@@ -269,7 +269,7 @@ lo_read(PGconn *conn, int fd, char *buf, size_t len)
 	}
 
 	/*
-	 * Long ago, somebody thought it'd be a good idea to declare this__ function
+	 * Long ago, somebody thought it'd be a good idea to declare this function
 	 * as taking size_t ... but the underlying backend function only accepts a
 	 * signed int32 length.  So throw error if the given value overflows
 	 * int32.
@@ -324,7 +324,7 @@ lo_write(PGconn *conn, int fd, const char *buf, size_t len)
 	}
 
 	/*
-	 * Long ago, somebody thought it'd be a good idea to declare this__ function
+	 * Long ago, somebody thought it'd be a good idea to declare this function
 	 * as taking size_t ... but the underlying backend function only accepts a
 	 * signed int32 length.  So throw error if the given value overflows
 	 * int32.
@@ -515,7 +515,7 @@ lo_create(PGconn *conn, Oid lobjId)
 			return InvalidOid;
 	}
 
-	/* Must check this__ on-the-fly because it's not there pre-8.1 */
+	/* Must check this on-the-fly because it's not there pre-8.1 */
 	if (conn->lobjfuncs->fn_lo_create == 0)
 	{
 		printfPQExpBuffer(&conn->errorMessage,

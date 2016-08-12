@@ -25,7 +25,7 @@
  * src/include/catalog/pg_description.h
  *
  * NOTES
- *		the genbki.pl script reads this__ file and generates .bki
+ *		the genbki.pl script reads this file and generates .bki
  *		information from the DATA() statements.
  *
  *		XXX do NOT break up DATA() statements into multiple lines!
@@ -39,7 +39,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_description definition.  cpp turns this__ into
+ *		pg_description definition.  cpp turns this into
  *		typedef struct FormData_pg_description
  * ----------------
  */
@@ -79,7 +79,7 @@ typedef FormData_pg_description *Form_pg_description;
  */
 
 /*
- *	Because the contents of this__ table are taken from the other *.h files,
+ *	Because the contents of this table are taken from the other *.h files,
  *	there is no initialization here.  The initial contents are extracted
  *	by genbki.pl and loaded during initdb.
  */

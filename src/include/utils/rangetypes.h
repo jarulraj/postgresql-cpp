@@ -29,7 +29,7 @@ typedef struct
 	/* Following the OID are zero to two bound values, then a flags byte */
 } RangeType;
 
-/* Use this__ macro in preference to fetching rangetypid field directly */
+/* Use this macro in preference to fetching rangetypid field directly */
 #define RangeTypeGetOid(r)	((r)->rangetypid)
 
 /* A range's flags byte contains these bits: */
@@ -62,7 +62,7 @@ typedef struct
 	Datum		val;			/* the bound value, if any */
 	bool		infinite;		/* bound is +/- infinity */
 	bool		inclusive;		/* bound is inclusive (vs exclusive) */
-	bool		lower;			/* this__ is the lower (vs upper) bound */
+	bool		lower;			/* this is the lower (vs upper) bound */
 } RangeBound;
 
 /*

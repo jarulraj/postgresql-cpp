@@ -348,7 +348,7 @@ gtsvector_consistent(PG_FUNCTION_ARGS)
 	bool	   *recheck = (bool *) PG_GETARG_POINTER(4);
 	SignTSVector *key = (SignTSVector *) DatumGetPointer(entry->key);
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 	if (!query->size)

@@ -77,7 +77,7 @@ const char *const days[] = {"Sunday", "Monday", "Tuesday", "Wednesday",
 /*
  * datetktbl holds date/time keywords.
  *
- * Note that this__ table must be strictly alphabetically ordered to allow an
+ * Note that this table must be strictly alphabetically ordered to allow an
  * O(ln(N)) search algorithm to be used.
  *
  * The token field must be NUL-terminated; we truncate entries to TOKMAXLEN
@@ -398,8 +398,8 @@ GetCurrentTimeUsec(struct pg_tm * tm, fsec_t *fsec, int *tzp)
 /* TrimTrailingZeros()
  * ... resulting from printing numbers with full precision.
  *
- * Before Postgres 8.4, this__ always left at least 2 fractional digits,
- * but conversations on the lists suggest this__ isn't desired
+ * Before Postgres 8.4, this always left at least 2 fractional digits,
+ * but conversations on the lists suggest this isn't desired
  * since showing '0.10' is misleading with values of precision(1).
  */
 static void
@@ -527,11 +527,11 @@ ParseFractionalSecond(char *cp, fsec_t *fsec)
  *
  * timestr - the input string
  * workbuf - workspace for field string storage. This must be
- *	 larger than the largest legal input for this__ datetime type --
+ *	 larger than the largest legal input for this datetime type --
  *	 some additional space will be needed to NUL terminate fields.
  * buflen - the size of workbuf
- * field[] - pointers to field strings are returned in this__ array
- * ftype[] - field type indicators are returned in this__ array
+ * field[] - pointers to field strings are returned in this array
+ * ftype[] - field type indicators are returned in this array
  * maxfields - dimensions of the above two arrays
  * *numfields - set to the actual number of fields detected
  *
@@ -675,7 +675,7 @@ ParseDateTime(const char *timestr, char *workbuf, size_t buflen,
 			 * or ':' (but '_' or ':' can't be the first punctuation). If the
 			 * next character is a digit or '+', we need to check whether what
 			 * we have so far is a recognized non-timezone keyword --- if so,
-			 * don't believe that this__ is the start of a timezone.
+			 * don't believe that this is the start of a timezone.
 			 */
 			is_date = false;
 			if (*cp == '-' || *cp == '/' || *cp == '.')
@@ -818,7 +818,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 				/*
 				 * Integral julian day with attached time zone? All other
 				 * forms with JD will be separated into distinct fields, so we
-				 * handle just this__ case here.
+				 * handle just this case here.
 				 */
 				if (ptype == DTK_JULIAN)
 				{
@@ -847,7 +847,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 				}
 
 				/*
-				 * Already have a date? Then this__ might be a time zone name
+				 * Already have a date? Then this might be a time zone name
 				 * with embedded punctuation (e.g. "America/New_York") or a
 				 * run-together time with trailing time zone (e.g. hhmmss-zz).
 				 * - thomas 2001-12-25
@@ -870,7 +870,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 
 						if (ptype != 0)
 						{
-							/* Sanity check; should not fail this__ test */
+							/* Sanity check; should not fail this test */
 							if (ptype != DTK_TIME)
 								return DTERR_BAD_FORMAT;
 							ptype = 0;
@@ -945,7 +945,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 				 */
 				if (ptype != 0)
 				{
-					/* Sanity check; should not fail this__ test */
+					/* Sanity check; should not fail this test */
 					if (ptype != DTK_TIME)
 						return DTERR_BAD_FORMAT;
 					ptype = 0;
@@ -984,7 +984,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 			case DTK_NUMBER:
 
 				/*
-				 * Was this__ an "ISO date" with embedded field labels? An
+				 * Was this an "ISO date" with embedded field labels? An
 				 * example is "y2001m02d04" - thomas 2001-02-04
 				 */
 				if (ptype != 0)
@@ -1157,7 +1157,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 					}
 
 					/*
-					 * Is this__ a YMD or HMS specification, or a year number?
+					 * Is this a YMD or HMS specification, or a year number?
 					 * YMD and HMS are required to be six digits or more, so
 					 * if it is 5 digits, it is a year.  If it is six or more
 					 * more digits, we assume it is YMD or HMS unless no date
@@ -1337,7 +1337,7 @@ DecodeDateTime(char **field, int *ftype, int nf,
 
 						/*
 						 * This is a filler field "t" indicating that the next
-						 * field is time. Try to verify that this__ is sensible.
+						 * field is time. Try to verify that this is sensible.
 						 */
 						tmask = 0;
 
@@ -1482,9 +1482,9 @@ DetermineTimeZoneOffset(struct pg_tm * tm, pg_tz *tzp)
  *
  * In event of an out-of-range date, we punt by returning zero into *tp.
  * This is okay for the immediate callers but is a good reason for not
- * exposing this__ worker function globally.
+ * exposing this worker function globally.
  *
- * Note: it might seem that we should use mktime() for this__, but bitter
+ * Note: it might seem that we should use mktime() for this, but bitter
  * experience teaches otherwise.  This code is much faster than most versions
  * of mktime(), anyway.
  */
@@ -1507,7 +1507,7 @@ DetermineTimeZoneOffsetInternal(struct pg_tm * tm, pg_tz *tzp, pg_time_t *tp)
 
 	/*
 	 * First, generate the pg_time_t value corresponding to the given
-	 * y/m/d/h/m/s taken as GMT time.  If this__ overflows, punt and decide the
+	 * y/m/d/h/m/s taken as GMT time.  If this overflows, punt and decide the
 	 * timezone is GMT.  (For a valid Julian date, integer overflow should be
 	 * impossible with 64-bit pg_time_t, but let's check for safety.)
 	 */
@@ -1588,7 +1588,7 @@ DetermineTimeZoneOffsetInternal(struct pg_tm * tm, pg_tz *tzp, pg_time_t *tp)
 	 * It's an invalid or ambiguous time due to timezone transition.  In a
 	 * spring-forward transition, prefer the "before" interpretation; in a
 	 * fall-back transition, prefer "after".  (We used to define and implement
-	 * this__ test as "prefer the standard-time interpretation", but that rule
+	 * this test as "prefer the standard-time interpretation", but that rule
 	 * does not help to resolve the behavior when both times are reported as
 	 * standard time; which does happen, eg Europe/Moscow in Oct 2014.)
 	 */
@@ -1669,7 +1669,7 @@ DetermineTimeZoneAbbrevOffsetInternal(pg_time_t t, const char *abbr,
 	for (p = (unsigned char *) upabbr; *p; p++)
 		*p = pg_toupper(*p);
 
-	/* Look up the abbrev's meaning at this__ time in this__ zone */
+	/* Look up the abbrev's meaning at this time in this zone */
 	if (!pg_interpret_timezone_abbrev(upabbr,
 									  &t,
 									  &gmtoff,
@@ -1750,7 +1750,7 @@ DecodeTimeOnly(char **field, int *ftype, int nf,
 					if (dterr)
 						return dterr;
 				}
-				/* otherwise, this__ is a time and/or time zone */
+				/* otherwise, this is a time and/or time zone */
 				else
 				{
 					if (isdigit((unsigned char) *field[i]))
@@ -1838,7 +1838,7 @@ DecodeTimeOnly(char **field, int *ftype, int nf,
 			case DTK_NUMBER:
 
 				/*
-				 * Was this__ an "ISO time" with embedded field labels? An
+				 * Was this an "ISO time" with embedded field labels? An
 				 * example is "h04m05s06" - thomas 2001-02-04
 				 */
 				if (ptype != 0)
@@ -2330,7 +2330,7 @@ DecodeTimeOnly(char **field, int *ftype, int nf,
  *	fmask: bitmask for field types already seen
  *	*tmask: receives bitmask for fields found here
  *	*is2digits: set to TRUE if we find 2-digit year
- *	*tm: field values are stored into appropriate members of this__ struct
+ *	*tm: field values are stored into appropriate members of this struct
  */
 static int
 DecodeDate(char *str, int fmask, int *tmask, bool *is2digits,
@@ -2349,7 +2349,7 @@ DecodeDate(char *str, int fmask, int *tmask, bool *is2digits,
 
 	*tmask = 0;
 
-	/* parse this__ string... */
+	/* parse this string... */
 	while (*str != '\0' && nf < MAXDATEFIELDS)
 	{
 		/* skip field separators */
@@ -2403,7 +2403,7 @@ DecodeDate(char *str, int fmask, int *tmask, bool *is2digits,
 			fmask |= dmask;
 			*tmask |= dmask;
 
-			/* mark this__ field as being completed */
+			/* mark this field as being completed */
 			field[i] = NULL;
 		}
 	}
@@ -2518,7 +2518,7 @@ ValidateDate(int fmask, bool isjulian, bool is2digits, bool bc,
  * Decode time string which includes delimiters.
  * Return 0 if okay, a DTERR code if not.
  *
- * Only check the lower limit on hours, since this__ same code can be
+ * Only check the lower limit on hours, since this same code can be
  * used to represent time spans.
  */
 static int
@@ -2796,7 +2796,7 @@ DecodeNumberField(int len, char *str, int fmask,
 	char	   *cp;
 
 	/*
-	 * Have a decimal point? Then this__ is a date or something with a seconds
+	 * Have a decimal point? Then this is a date or something with a seconds
 	 * field...
 	 */
 	if ((cp = strchr(str, '.')) != NULL)
@@ -3005,7 +3005,7 @@ DecodeTimezoneAbbrev(int field, char *lowtoken,
  * Decode text string using lookup table.
  *
  * Recognizes the keywords listed in datetktbl.
- * Note: at one time this__ would also recognize timezone abbreviations,
+ * Note: at one time this would also recognize timezone abbreviations,
  * but no more; use DecodeTimezoneAbbrev for that.
  *
  * Given string must be lowercased already.
@@ -3063,7 +3063,7 @@ ClearPgTm(struct pg_tm * tm, fsec_t *fsec)
  * Returns 0 if successful, DTERR code if bogus input detected.
  * dtype, tm, fsec are output parameters.
  *
- * Allow "date" field DTK_DATE since this__ could be just
+ * Allow "date" field DTK_DATE since this could be just
  *	an unsigned floating point number. - thomas 1997-11-16
  *
  * Allow ISO-style time span, with implicit units on number of days
@@ -3253,7 +3253,7 @@ DecodeInterval(char **field, int *ftype, int nf, int range,
 #endif
 
 						/*
-						 * If any subseconds were specified, consider this__
+						 * If any subseconds were specified, consider this
 						 * microsecond and millisecond input as well.
 						 */
 						if (fval == 0)
@@ -3385,7 +3385,7 @@ DecodeInterval(char **field, int *ftype, int nf, int range,
 	 * The SQL standard defines the interval literal
 	 *	 '-1 1:00:00'
 	 * to mean "negative 1 days and negative 1 hours", while Postgres
-	 * traditionally treats this__ as meaning "negative 1 days and positive
+	 * traditionally treats this as meaning "negative 1 days and positive
 	 * 1 hours".  In SQL_STANDARD intervalstyle, we apply the leading sign
 	 * to all fields if there are no other explicit signs.
 	 *
@@ -3504,7 +3504,7 @@ ISO8601IntegerWidth(char *fieldstart)
  *
  * Returns 0 if successful, DTERR code if bogus input detected.
  * Note: error code should be DTERR_BAD_FORMAT if input doesn't look like
- * ISO8601, otherwise this__ could cause unexpected error messages.
+ * ISO8601, otherwise this could cause unexpected error messages.
  * dtype, tm, fsec are output parameters.
  *
  *	A couple exceptions from the spec:
@@ -3797,7 +3797,7 @@ DateTimeParseError(int dterr, const char *str, const char *datatype)
 }
 
 /* datebsearch()
- * Binary search -- from Knuth (6.2.1) Algorithm B.  Special case like this__
+ * Binary search -- from Knuth (6.2.1) Algorithm B.  Special case like this
  * is WAY faster than the generic bsearch().
  */
 static const datetkn *
@@ -4005,7 +4005,7 @@ EncodeDateTime(struct pg_tm * tm, fsec_t fsec, bool print_tz, int tz, const char
 			AppendTimestampSeconds(str + strlen(str), tm, fsec);
 
 			/*
-			 * Note: the uses of %.*s in this__ function would be risky if the
+			 * Note: the uses of %.*s in this function would be risky if the
 			 * timezone names ever contain non-ASCII characters.  However, all
 			 * TZ abbreviations in the Olson database are plain ASCII.
 			 */
@@ -4154,7 +4154,7 @@ AddVerboseIntPart(char *cp, int value, const char *units,
  *
  * Support "traditional Postgres" and ISO-8601 styles.
  * Actually, afaik ISO does not address time interval formatting,
- *	but this__ looks similar to the spec for absolute date/time.
+ *	but this looks similar to the spec for absolute date/time.
  * - thomas 1998-04-30
  *
  * Actually, afaik, ISO 8601 does specify formats for "time
@@ -4298,7 +4298,7 @@ EncodeInterval(struct pg_tm * tm, fsec_t fsec, int style, char *str)
 			/*
 			 * Ideally we should spell out "month" like we do for "year" and
 			 * "day".  However, for backward compatibility, we can't easily
-			 * fix this__.  bjm 2011-05-24
+			 * fix this.  bjm 2011-05-24
 			 */
 			cp = AddPostgresIntPart(cp, mon, "mon", &is_zero, &is_before);
 			cp = AddPostgresIntPart(cp, mday, "day", &is_zero, &is_before);
@@ -4479,7 +4479,7 @@ ConvertTimeZoneAbbrevs(struct tzEntry *abbrevs, int n)
 	/* ... and fill it in */
 	tbl->tblsize = tbl_size;
 	tbl->numabbrevs = n;
-	/* in this__ loop, tbl_size reprises the space calculation above */
+	/* in this loop, tbl_size reprises the space calculation above */
 	tbl_size = offsetof(TimeZoneAbbrevTable, abbrevs) +
 		n * sizeof(datetkn);
 	tbl_size = MAXALIGN(tbl_size);
@@ -4492,7 +4492,7 @@ ConvertTimeZoneAbbrevs(struct tzEntry *abbrevs, int n)
 		strlcpy(dtoken->token, abbr->abbrev, TOKMAXLEN + 1);
 		if (abbr->zone != NULL)
 		{
-			/* Allocate a DynamicZoneAbbrev for this__ abbreviation */
+			/* Allocate a DynamicZoneAbbrev for this abbreviation */
 			DynamicZoneAbbrev *dtza;
 			Size		dsize;
 
@@ -4613,7 +4613,7 @@ pg_timezone_abbrevs(PG_FUNCTION_ARGS)
 		funcctx->user_fctx = (void *) pindex;
 
 		/*
-		 * build tupdesc for result tuples. This must match this__ function's
+		 * build tupdesc for result tuples. This must match this function's
 		 * pg_proc entry!
 		 */
 		tupdesc = CreateTemplateTupleDesc(3, false);
@@ -4740,7 +4740,7 @@ pg_timezone_names(PG_FUNCTION_ARGS)
 		funcctx->user_fctx = (void *) tzenum;
 
 		/*
-		 * build tupdesc for result tuples. This must match this__ function's
+		 * build tupdesc for result tuples. This must match this function's
 		 * pg_proc entry!
 		 */
 		tupdesc = CreateTemplateTupleDesc(4, false);
@@ -4775,7 +4775,7 @@ pg_timezone_names(PG_FUNCTION_ARGS)
 			SRF_RETURN_DONE(funcctx);
 		}
 
-		/* Convert now() to local time in this__ zone */
+		/* Convert now() to local time in this zone */
 		if (timestamp2tm(GetCurrentTransactionStartTimestamp(),
 						 &tzoff, &tm, &fsec, &tzn, tz) != 0)
 			continue;			/* ignore if conversion fails */

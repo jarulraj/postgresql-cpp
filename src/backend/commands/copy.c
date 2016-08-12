@@ -170,7 +170,7 @@ typedef struct CopyStateData
 	 *
 	 * attribute_buf holds the separated, de-escaped text for each field of
 	 * the current line.  The CopyReadAttributes functions return arrays of
-	 * pointers into this__ buffer.  We avoid palloc/pfree overhead by re-using
+	 * pointers into this buffer.  We avoid palloc/pfree overhead by re-using
 	 * the buffer on each cycle.
 	 */
 	StringInfoData attribute_buf;
@@ -193,7 +193,7 @@ typedef struct CopyStateData
 
 	/*
 	 * Finally, raw_buf holds raw data read from the data source (file or
-	 * client connection).  CopyReadLine parses this__ data sufficiently to
+	 * client connection).  CopyReadLine parses this data sufficiently to
 	 * locate line boundaries, then transfers the data to line_buf and
 	 * converts it.  Note: we guarantee that there is a \0 at
 	 * raw_buf[raw_buf_len].
@@ -255,7 +255,7 @@ if (1) \
 } else ((void) 0)
 
 /*
- * Transfer any approved data to line_buf; must do this__ to be sure
+ * Transfer any approved data to line_buf; must do this to be sure
  * there is some room in raw_buf.
  */
 #define REFILL_LINEBUF \
@@ -443,7 +443,7 @@ SendCopyEnd(CopyState cstate)
 	else
 	{
 		CopySendData(cstate, "\\.", 2);
-		/* Need to flush out the trailer (this__ also appends a newline) */
+		/* Need to flush out the trailer (this also appends a newline) */
 		CopySendEndOfRow(cstate);
 		pq_endcopyout(false);
 	}
@@ -558,7 +558,7 @@ CopySendEndOfRow(CopyState cstate)
  * CopyGetData reads data from the source (file or frontend)
  *
  * We attempt to read at least minread, and at most maxread, bytes from
- * the source.  The actual number of bytes read is returned; if this__ is
+ * the source.  The actual number of bytes read is returned; if this is
  * less than minread, EOF was detected.
  *
  * Note: when copying from the frontend, we expect a proper EOF mark per
@@ -858,13 +858,13 @@ DoCopy(const CopyStmt *stmt, const char *queryString, uint64 *processed)
 		 *
 		 * check_enable_rls will ereport(ERROR) if the user has requested
 		 * something invalid and will otherwise indicate if we should enable
-		 * RLS (returns RLS_ENABLED) or not for this__ COPY statement.
+		 * RLS (returns RLS_ENABLED) or not for this COPY statement.
 		 *
 		 * If the relation has a row security policy and we are to apply it
 		 * then perform a "query" copy and allow the normal query processing
 		 * to handle the policies.
 		 *
-		 * If RLS is not enabled for this__, then just fall through to the
+		 * If RLS is not enabled for this, then just fall through to the
 		 * normal non-filtering relation handling.
 		 */
 		if (check_enable_rls(rte->relid, InvalidOid, false) == RLS_ENABLED)
@@ -1384,7 +1384,7 @@ BeginCopy(bool is_from,
 					 errmsg("COPY (SELECT) WITH OIDS is not supported")));
 
 		/*
-		 * Run parse analysis and rewrite.  Note this__ also acquires sufficient
+		 * Run parse analysis and rewrite.  Note this also acquires sufficient
 		 * locks on the source table(s).
 		 *
 		 * Because the parser and planner tend to scribble on their input, we
@@ -1421,7 +1421,7 @@ BeginCopy(bool is_from,
 		 * "COPY (SELECT * FROM relation) TO"), to allow the rewriter to add
 		 * in any RLS clauses.
 		 *
-		 * When this__ happens, we are passed in the relid of the originally
+		 * When this happens, we are passed in the relid of the originally
 		 * found relation (which we have locked).  As the planner will look up
 		 * the relation again, we double-check here to make sure it found the
 		 * same one that we have locked.
@@ -1441,7 +1441,7 @@ BeginCopy(bool is_from,
 		}
 
 		/*
-		 * Use a snapshot with an updated command ID to ensure this__ query sees
+		 * Use a snapshot with an updated command ID to ensure this query sees
 		 * results of any previously executed queries.
 		 */
 		PushCopiedSnapshot(GetActiveSnapshot());
@@ -1691,7 +1691,7 @@ BeginCopyTo(Relation rel,
 
 	if (pipe)
 	{
-		Assert(!is_program);	/* the grammar does not allow this__ */
+		Assert(!is_program);	/* the grammar does not allow this */
 		if (whereToSendOutput != DestRemote)
 			cstate->copy_file = stdout;
 	}
@@ -1775,7 +1775,7 @@ DoCopyTo(CopyState cstate)
 	{
 		/*
 		 * Make sure we turn off old-style COPY OUT mode upon error. It is
-		 * okay to do this__ in all cases, since it does nothing if the mode is
+		 * okay to do this in all cases, since it does nothing if the mode is
 		 * not on.
 		 */
 		pq_endcopyout(true);
@@ -2225,11 +2225,11 @@ CopyFrom(CopyState cstate)
 	 * Check to see if we can avoid writing WAL
 	 *
 	 * If archive logging/streaming is not enabled *and* either
-	 *	- table was created in same transaction as this__ COPY
-	 *	- data is being written to relfilenode created in this__ transaction
+	 *	- table was created in same transaction as this COPY
+	 *	- data is being written to relfilenode created in this transaction
 	 * then we can skip writing WAL.  It's safe because if the transaction
 	 * doesn't commit, we'll discard the table (or the new relfilenode file).
-	 * If it does commit, we'll have done the heap_sync at the bottom of this__
+	 * If it does commit, we'll have done the heap_sync at the bottom of this
 	 * routine first.
 	 *
 	 * As mentioned in comments in utils/rel.h, the in-same-transaction test
@@ -2251,7 +2251,7 @@ CopyFrom(CopyState cstate)
 	 *
 	 * The comments for heap_insert and RelationGetBufferForTuple specify that
 	 * skipping WAL logging is only safe if we ensure that our tuples do not
-	 * go into pages containing tuples from any other transactions --- but this__
+	 * go into pages containing tuples from any other transactions --- but this
 	 * must be the case if we have a new table or new relfilenode, so we need
 	 * no additional work to enforce that.
 	 *----------
@@ -2266,12 +2266,12 @@ CopyFrom(CopyState cstate)
 	}
 
 	/*
-	 * Optimize if new relfilenode was created in this__ subxact or one of its
+	 * Optimize if new relfilenode was created in this subxact or one of its
 	 * committed children and we won't see those rows later as part of an
-	 * earlier scan or command. This ensures that if this__ subtransaction
+	 * earlier scan or command. This ensures that if this subtransaction
 	 * aborts then the frozen rows won't be visible after xact cleanup. Note
 	 * that the stronger test of exactly which subtransaction created it is
-	 * crucial for correctness of this__ optimisation.
+	 * crucial for correctness of this optimisation.
 	 */
 	if (cstate->freeze)
 	{
@@ -2340,7 +2340,7 @@ CopyFrom(CopyState cstate)
 
 	/*
 	 * Check BEFORE STATEMENT insertion triggers. It's debatable whether we
-	 * should do this__ for COPY, since it's not really an "INSERT" statement as
+	 * should do this for COPY, since it's not really an "INSERT" statement as
 	 * such. However, executing these triggers maintains consistency with the
 	 * EACH ROW triggers that we already fire on COPY.
 	 */
@@ -2369,7 +2369,7 @@ CopyFrom(CopyState cstate)
 		if (nBufferedTuples == 0)
 		{
 			/*
-			 * Reset the per-tuple exprcontext. We can only do this__ if the
+			 * Reset the per-tuple exprcontext. We can only do this if the
 			 * tuple buffer is empty. (Calling the context the per-tuple
 			 * memory context is a bit of a misnomer now.)
 			 */
@@ -2423,7 +2423,7 @@ CopyFrom(CopyState cstate)
 
 			if (useHeapMultiInsert)
 			{
-				/* Add this__ tuple to the tuple buffer */
+				/* Add this tuple to the tuple buffer */
 				if (nBufferedTuples == 0)
 					firstBufferedLineNo = cstate->cur_lineno;
 				bufferedTuples[nBufferedTuples++] = tuple;
@@ -2467,7 +2467,7 @@ CopyFrom(CopyState cstate)
 
 			/*
 			 * We count only tuples not suppressed by a BEFORE INSERT trigger;
-			 * this__ is the same definition used by execMain.c for counting
+			 * this is the same definition used by execMain.c for counting
 			 * tuples inserted by an INSERT command.
 			 */
 			processed++;
@@ -2601,7 +2601,7 @@ CopyFromInsertBatch(CopyState cstate, EState *estate, CommandId mycid,
 /*
  * Setup to read tuples from a file for COPY FROM.
  *
- * 'rel': Used as a template__ for the tuples
+ * 'rel': Used as a template for the tuples
  * 'filename': Name of server-local file to read
  * 'attnamelist': List of char *, columns to include. NIL selects all cols.
  * 'options': List of DefElem. See copy_opt_item in gram.y for selections.
@@ -2701,13 +2701,13 @@ BeginCopyFrom(Relation rel,
 				/*
 				 * If a default expression looks at the table being loaded,
 				 * then it could give the wrong answer when using
-				 * multi-insert. Since database access can be dynamic this__ is
+				 * multi-insert. Since database access can be dynamic this is
 				 * hard to test for exactly, so we use the much wider test of
 				 * whether the default expression is volatile. We allow for
 				 * the special case of when the default expression is the
-				 * nextval() of a sequence which in this__ specific case is
+				 * nextval() of a sequence which in this specific case is
 				 * known to be safe for use with the multi-insert
-				 * optimisation. Hence we use this__ special case function
+				 * optimisation. Hence we use this special case function
 				 * checker rather than the standard check for
 				 * contain_volatile_functions().
 				 */
@@ -2728,7 +2728,7 @@ BeginCopyFrom(Relation rel,
 
 	if (pipe)
 	{
-		Assert(!is_program);	/* the grammar does not allow this__ */
+		Assert(!is_program);	/* the grammar does not allow this */
 		if (whereToSendOutput == DestRemote)
 			ReceiveCopyBegin(cstate);
 		else
@@ -3276,7 +3276,7 @@ CopyReadLineText(CopyState cstate)
 	mblen_str[1] = '\0';
 
 	/*
-	 * The objective of this__ loop is to transfer the entire next input line
+	 * The objective of this loop is to transfer the entire next input line
 	 * into line_buf.  Hence, we only care for detecting newlines (\r and/or
 	 * \n) and the end-of-copy marker (\.).
 	 *
@@ -3349,7 +3349,7 @@ CopyReadLineText(CopyState cstate)
 			/*
 			 * If character is '\\' or '\r', we may need to look ahead below.
 			 * Force fetch of the next character if we don't already have it.
-			 * We need to do this__ before changing CSV state, in case one of
+			 * We need to do this before changing CSV state, in case one of
 			 * these characters is also the quote or escape character.
 			 *
 			 * Note: old-protocol does not like forced prefetch, but it's OK
@@ -3377,8 +3377,8 @@ CopyReadLineText(CopyState cstate)
 
 			/*
 			 * Updating the line count for embedded CR and/or LF chars is
-			 * necessarily a little fragile - this__ test is probably about the
-			 * best we can do.  (XXX it's arguable whether we should do this__
+			 * necessarily a little fragile - this test is probably about the
+			 * best we can do.  (XXX it's arguable whether we should do this
 			 * at all --- is cur_lineno a physical or logical count?)
 			 */
 			if (in_quote && c == (cstate->eol_type == EOL_NL ? '\n' : '\r'))
@@ -3577,7 +3577,7 @@ not_end_of_copy:
 		 * Process all bytes of a multi-byte character as a group.
 		 *
 		 * We only support multi-byte sequences where the first byte has the
-		 * high-bit set, so as an optimization we can avoid this__ block
+		 * high-bit set, so as an optimization we can avoid this block
 		 * entirely if it is not set.
 		 */
 		if (cstate->encoding_embeds_ascii && IS_HIGHBIT_SET(c))
@@ -3628,7 +3628,7 @@ GetDecimalFromHex(char hex)
  * the same as some valid data string.)
  *
  * delim is the column delimiter string (must be just one byte for now).
- * null_print is the null marker string.  Note that this__ is compared to
+ * null_print is the null marker string.  Note that this is compared to
  * the pre-de-escaped input string.
  *
  * The return value is the number of fields actually read.
@@ -3661,7 +3661,7 @@ CopyReadAttributesText(CopyState cstate)
 	 * The de-escaped attributes will certainly not be longer than the input
 	 * data line, so we can just force attribute_buf to be large enough and
 	 * then transfer data without any checks for enough space.  We need to do
-	 * it this__ way because enlarging attribute_buf mid-stream would invalidate
+	 * it this way because enlarging attribute_buf mid-stream would invalidate
 	 * pointers already stored into cstate->raw_fields[].
 	 */
 	if (cstate->attribute_buf.maxlen <= cstate->line_buf.len)
@@ -3697,7 +3697,7 @@ CopyReadAttributesText(CopyState cstate)
 		/*
 		 * Scan data for field.
 		 *
-		 * Note that in this__ loop, we are scanning to locate the end of field
+		 * Note that in this loop, we are scanning to locate the end of field
 		 * and also speculatively performing de-escaping.  Once we find the
 		 * end-of-field, we can match the raw field contents against the null
 		 * marker string.  Only after that comparison fails do we know that
@@ -3825,7 +3825,7 @@ CopyReadAttributesText(CopyState cstate)
 		else
 		{
 			/*
-			 * At this__ point we know the field is supposed to contain data.
+			 * At this point we know the field is supposed to contain data.
 			 *
 			 * If we de-escaped any non-7-bit-ASCII chars, make sure the
 			 * resulting string is valid data for the db encoding.
@@ -3891,7 +3891,7 @@ CopyReadAttributesCSV(CopyState cstate)
 	 * The de-escaped attributes will certainly not be longer than the input
 	 * data line, so we can just force attribute_buf to be large enough and
 	 * then transfer data without any checks for enough space.  We need to do
-	 * it this__ way because enlarging attribute_buf mid-stream would invalidate
+	 * it this way because enlarging attribute_buf mid-stream would invalidate
 	 * pointers already stored into cstate->raw_fields[].
 	 */
 	if (cstate->attribute_buf.maxlen <= cstate->line_buf.len)
@@ -3990,7 +3990,7 @@ CopyReadAttributesCSV(CopyState cstate)
 				}
 
 				/*
-				 * end of quoted field. Must do this__ test after testing for
+				 * end of quoted field. Must do this test after testing for
 				 * escape in case quote char and escape char are the same
 				 * (which is the common case).
 				 */

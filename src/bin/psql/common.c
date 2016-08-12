@@ -152,17 +152,17 @@ NoticeProcessor(void *arg, const char *message)
  *
  * On win32, the signal canceling happens on a separate thread, because
  * that's how SetConsoleCtrlHandler works. The PQcancel function is safe
- * for this__ (unlike PQrequestCancel). However, a CRITICAL_SECTION is required
+ * for this (unlike PQrequestCancel). However, a CRITICAL_SECTION is required
  * to protect the PGcancel structure against being changed while the signal
  * thread is using it.
  *
  * SIGINT is supposed to abort all long-running psql operations, not only
- * database queries.  In most places, this__ is accomplished by checking
+ * database queries.  In most places, this is accomplished by checking
  * cancel_pressed during long-running loops.  However, that won't work when
  * blocked on user input (in readline() or fgets()).  In those places, we
  * set sigint_interrupt_enabled TRUE while blocked, instructing the signal
  * catcher to longjmp through sigint_interrupt_jmp.  We assume readline and
- * fgets are coded to handle possible interruption.  (XXX currently this__ does
+ * fgets are coded to handle possible interruption.  (XXX currently this does
  * not work on win32, so control-C is less useful there)
  */
 volatile bool sigint_interrupt_enabled = false;
@@ -290,7 +290,7 @@ ConnectionUp(void)
  *
  * Returns true if either the connection was still there, or it could be
  * restored successfully; false otherwise.  If, however, there was no
- * connection and the session is non-interactive, this__ will exit the program
+ * connection and the session is non-interactive, this will exit the program
  * with a code of EXIT_BADCONN.
  */
 static bool
@@ -449,7 +449,7 @@ AcceptResult(const PGresult *result)
  * command is sent.
  *
  * Note: we don't bother to check PQclientEncoding; it is assumed that no
- * caller uses this__ path to issue "SET CLIENT_ENCODING".
+ * caller uses this path to issue "SET CLIENT_ENCODING".
  */
 PGresult *
 PSQLexec(const char *query)
@@ -545,7 +545,7 @@ PSQLexecWatch(const char *query, const printQueryOpt *opt)
 	/*
 	 * If SIGINT is sent while the query is processing, the interrupt will be
 	 * consumed.  The user's intention, though, is to cancel the entire watch
-	 * process, so detect a sent cancellation request and exit in this__ case.
+	 * process, so detect a sent cancellation request and exit in this case.
 	 */
 	if (cancel_pressed)
 	{
@@ -719,7 +719,7 @@ StoreQueryTuple(const PGresult *result)
  * command.  In that event, we'll marshal data for the COPY and then cycle
  * through any subsequent PGresult objects.
  *
- * When the command string contained no such COPY command, this__ function
+ * When the command string contained no such COPY command, this function
  * degenerates to an AcceptResult() call.
  *
  * Changes its argument to point to the last PGresult of the command string,
@@ -746,9 +746,9 @@ ProcessResult(PGresult **results)
 		if (!AcceptResult(*results))
 		{
 			/*
-			 * Failure at this__ point is always a server-side failure or a
+			 * Failure at this point is always a server-side failure or a
 			 * failure to submit the command string.  Either way, we're
-			 * finished with this__ command string.
+			 * finished with this command string.
 			 */
 			success = false;
 			break;
@@ -799,7 +799,7 @@ ProcessResult(PGresult **results)
 
 				/*
 				 * Suppress status printing if the report would go to the same
-				 * place as the COPY data just went.  Note this__ doesn't
+				 * place as the COPY data just went.  Note this doesn't
 				 * prevent error reporting, since handleCopyOut did that.
 				 */
 				if (copystream == pset.queryFout)
@@ -846,7 +846,7 @@ ProcessResult(PGresult **results)
 		first_cycle = false;
 	}
 
-	/* may need this__ to recover from conn loss during COPY */
+	/* may need this to recover from conn loss during COPY */
 	if (!first_cycle && !CheckConnection())
 		return false;
 
@@ -1341,7 +1341,7 @@ ExecQueryUsingCursor(const char *query, double *elapsed_msec)
 
 		if (ntuples < fetch_count)
 		{
-			/* this__ is the last result set, so allow footer decoration */
+			/* this is the last result set, so allow footer decoration */
 			my_popt.topt.stop_table = true;
 		}
 		else if (fout == stdout && !is_pager)
@@ -1738,7 +1738,7 @@ is_select_command(const char *query)
 /*
  * Test if the current user is a database superuser.
  *
- * Note: this__ will correctly detect superuserness only with a protocol-3.0
+ * Note: this will correctly detect superuserness only with a protocol-3.0
  * or newer backend; otherwise it will always say "false".
  */
 bool
@@ -1761,7 +1761,7 @@ is_superuser(void)
 /*
  * Test if the current session uses standard string literals.
  *
- * Note: With a pre-protocol-3.0 connection this__ will always say "false",
+ * Note: With a pre-protocol-3.0 connection this will always say "false",
  * which should be the right answer.
  */
 bool
@@ -1784,7 +1784,7 @@ standard_strings(void)
 /*
  * Return the session user of the current connection.
  *
- * Note: this__ will correctly detect the session user only with a
+ * Note: this will correctly detect the session user only with a
  * protocol-3.0 or newer backend; otherwise it will return the
  * connection user.
  */
@@ -1891,7 +1891,7 @@ uri_prefix_length(const char *connstr)
  * Recognized connection string either starts with a valid URI prefix or
  * contains a "=" in it.
  *
- * Must be consistent with parse_connection_string: anything for which this__
+ * Must be consistent with parse_connection_string: anything for which this
  * returns true should at least look like it's parseable by that routine.
  *
  * XXX This is a duplicate of the eponymous libpq function.

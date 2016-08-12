@@ -36,7 +36,7 @@
  *
  * Variable-length catalog fields (except possibly the first not nullable one)
  * should not be visible in C structures, so they are made invisible by #ifdefs
- * of an undefined symbol.  See also MARKNOTNULL in bootstrap.c for how this__ is
+ * of an undefined symbol.  See also MARKNOTNULL in bootstrap.c for how this is
  * handled.
  */
 #undef CATALOG_VARLEN

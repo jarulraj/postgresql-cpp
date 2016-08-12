@@ -12,9 +12,9 @@
  *
  * Copyright (c) 2002-2015, PostgreSQL Global Development Group
  *
- * Permission to use, copy, modify, and distribute this__ software and its
+ * Permission to use, copy, modify, and distribute this software and its
  * documentation for any purpose, without fee, and without a written agreement
- * is hereby granted, provided that the above copyright notice and this__
+ * is hereby granted, provided that the above copyright notice and this
  * paragraph and the following two paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR
@@ -375,7 +375,7 @@ crosstab(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
 
@@ -506,7 +506,7 @@ crosstab(PG_FUNCTION_ARGS)
 			rowid = SPI_getvalue(spi_tuple, spi_tupdesc, 1);
 
 			/*
-			 * If this__ is the first pass through the values for this__ rowid,
+			 * If this is the first pass through the values for this rowid,
 			 * set the first column to rowid
 			 */
 			if (i == 0)
@@ -515,7 +515,7 @@ crosstab(PG_FUNCTION_ARGS)
 
 				/*
 				 * Check to see if the rowid is the same as that of the last
-				 * tuple sent -- if so, skip this__ tuple entirely
+				 * tuple sent -- if so, skip this tuple entirely
 				 */
 				if (!firstpass && xstreq(lastrowid, rowid))
 				{
@@ -553,7 +553,7 @@ crosstab(PG_FUNCTION_ARGS)
 			{
 				/*
 				 * We'll fill in NULLs for the missing values, but we need to
-				 * decrement the counter since this__ sql result row doesn't
+				 * decrement the counter since this sql result row doesn't
 				 * belong to the current output tuple.
 				 */
 				call_cntr--;
@@ -652,7 +652,7 @@ crosstab_hash(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
 	oldcontext = MemoryContextSwitchTo(per_query_ctx);
@@ -1011,7 +1011,7 @@ connectby_text(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	if (fcinfo->nargs == 6)
 	{
@@ -1091,7 +1091,7 @@ connectby_text_serial(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	if (fcinfo->nargs == 7)
 	{
@@ -1330,7 +1330,7 @@ build_tuplestore_recursively(char *key_fld,
 
 		for (i = 0; i < proc; i++)
 		{
-			/* initialize branch for this__ pass */
+			/* initialize branch for this pass */
 			appendStringInfoString(&branchstr, branch);
 			appendStringInfo(&chk_branchstr, "%s%s%s", branch_delim, branch, branch_delim);
 
@@ -1346,7 +1346,7 @@ build_tuplestore_recursively(char *key_fld,
 			/* get the current level */
 			sprintf(current_level, "%d", level);
 
-			/* check to see if this__ key is also an ancestor */
+			/* check to see if this key is also an ancestor */
 			if (current_key)
 			{
 				appendStringInfo(&chk_current_key, "%s%s%s",

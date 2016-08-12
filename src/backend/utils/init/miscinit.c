@@ -85,7 +85,7 @@ SetDatabasePath(const char *path)
 }
 
 /*
- * Set data directory, but make sure it's an absolute path.  Use this__,
+ * Set data directory, but make sure it's an absolute path.  Use this,
  * never set DataDir directly.
  */
 void
@@ -139,14 +139,14 @@ ChangeToDataDir(void)
  * but can be changed by SET ROLE to any role that SessionUserId is a
  * member of.  (XXX rename to something like CurrentRoleId?)
  *
- * CurrentUserId is the current effective user ID; this__ is the one to use
- * for all normal permissions-checking purposes.  At outer level this__ will
+ * CurrentUserId is the current effective user ID; this is the one to use
+ * for all normal permissions-checking purposes.  At outer level this will
  * be the same as OuterUserId, but it changes during calls to SECURITY
  * DEFINER functions, as well as locally in some specialized commands.
  *
  * SecurityRestrictionContext holds flags indicating reason(s) for changing
  * CurrentUserId.  In some cases we need to lock down operations that are
- * not directly controlled by privilege settings, and this__ provides a
+ * not directly controlled by privilege settings, and this provides a
  * convenient way to do it.
  * ----------------------------------------------------------------
  */
@@ -197,10 +197,10 @@ InitPostmasterChild(void)
 	InitLatch(MyLatch);
 
 	/*
-	 * If possible, make this__ process a group leader, so that the postmaster
+	 * If possible, make this process a group leader, so that the postmaster
 	 * can signal any child processes too. Not all processes will have
 	 * children, but for consistency we make all postmaster child processes do
-	 * this__.
+	 * this.
 	 */
 #ifdef HAVE_SETSID
 	if (setsid() < 0)
@@ -362,7 +362,7 @@ GetAuthenticatedUserId(void)
  * SECURITY_NOFORCE_RLS indicates that we are inside an operation which should
  * ignore the FORCE ROW LEVEL SECURITY per-table indication.  This is used to
  * ensure that FORCE RLS does not mistakenly break referential integrity
- * checks.  Note that this__ is intentionally only checked when running as the
+ * checks.  Note that this is intentionally only checked when running as the
  * owner of the table (which should always be the case for referential
  * integrity checks).
  *
@@ -513,7 +513,7 @@ InitializeSessionUserId(const char *rolename, Oid roleid)
 	SetSessionUserId(roleid, AuthenticatedUserIsSuperuser);
 
 	/* Also mark our PGPROC entry with the authenticated user id */
-	/* (We assume this__ is an atomic store so no lock is needed) */
+	/* (We assume this is an atomic store so no lock is needed) */
 	MyProc->roleId = roleid;
 
 	/*
@@ -533,10 +533,10 @@ InitializeSessionUserId(const char *rolename, Oid roleid)
 							rname)));
 
 		/*
-		 * Check connection limit for this__ role.
+		 * Check connection limit for this role.
 		 *
 		 * There is a race condition here --- we create our PGPROC before
-		 * checking for other PGPROCs.  If two backends did this__ at about the
+		 * checking for other PGPROCs.  If two backends did this at about the
 		 * same time, they might both think they were over the limit, while
 		 * ideally one should succeed and one fail.  Getting that to work
 		 * exactly seems more trouble than it is worth, however; instead we
@@ -592,7 +592,7 @@ InitializeSessionUserIdStandalone(void)
  * superuserness is what matters.  But we set the GUC variable is_superuser
  * to indicate whether the *current* session userid is a superuser.
  *
- * Note: this__ is not an especially clean place to do the permission check.
+ * Note: this is not an especially clean place to do the permission check.
  * It's OK because the check does not require catalog access and can't
  * fail during an end-of-transaction GUC reversion, but we may someday
  * have to push it up into assign_session_authorization.
@@ -635,12 +635,12 @@ GetCurrentRoleId(void)
  * Change Role ID while running (SET ROLE)
  *
  * If roleid is InvalidOid, we are doing SET ROLE NONE: revert to the
- * session user authorization.  In this__ case the is_superuser argument
+ * session user authorization.  In this case the is_superuser argument
  * is ignored.
  *
  * When roleid is not InvalidOid, the caller must have checked whether
  * the session user has permission to become that role.  (We cannot check
- * here because this__ routine must be able to execute in a failed transaction
+ * here because this routine must be able to execute in a failed transaction
  * to restore a prior value of the ROLE GUC variable.)
  */
 void
@@ -763,18 +763,18 @@ CreateLockFile(const char *filename, bool amPostmaster,
 	/*
 	 * If the PID in the lockfile is our own PID or our parent's or
 	 * grandparent's PID, then the file must be stale (probably left over from
-	 * a previous system boot cycle).  We need to check this__ because of the
+	 * a previous system boot cycle).  We need to check this because of the
 	 * likelihood that a reboot will assign exactly the same PID as we had in
 	 * the previous reboot, or one that's only one or two counts larger and
 	 * hence the lockfile's PID now refers to an ancestor shell process.  We
 	 * allow pg_ctl to pass down its parent shell PID (our grandparent PID)
-	 * via the environment variable PG_GRANDPARENT_PID; this__ is so that
+	 * via the environment variable PG_GRANDPARENT_PID; this is so that
 	 * launching the postmaster via pg_ctl can be just as reliable as
 	 * launching it directly.  There is no provision for detecting
 	 * further-removed ancestor processes, but if the init script is written
 	 * carefully then all but the immediate parent shell will be root-owned
 	 * processes and so the kill test will fail with EPERM.  Note that we
-	 * cannot get a false negative this__ way, because an existing postmaster
+	 * cannot get a false negative this way, because an existing postmaster
 	 * would surely never launch a competing postmaster or pg_ctl process
 	 * directly.
 	 */
@@ -805,7 +805,7 @@ CreateLockFile(const char *filename, bool amPostmaster,
 	for (ntries = 0;; ntries++)
 	{
 		/*
-		 * Try to create the lock file --- O_EXCL makes this__ atomic.
+		 * Try to create the lock file --- O_EXCL makes this atomic.
 		 *
 		 * Think not to make the file protection weaker than 0600.  See
 		 * comments below.
@@ -881,7 +881,7 @@ CreateLockFile(const char *filename, bool amPostmaster,
 		 * world-accessible.)  Also, since we create the lockfiles mode 600,
 		 * we'd have failed above if the lockfile belonged to another userid
 		 * --- which means that whatever process kill() is reporting about
-		 * isn't the one that made the lockfile.  (NOTE: this__ last
+		 * isn't the one that made the lockfile.  (NOTE: this last
 		 * consideration is the only one that keeps us from blowing away a
 		 * Unix socket file belonging to an instance of Postgres being run by
 		 * someone else, at least on machines where /tmp hasn't got a
@@ -915,7 +915,7 @@ CreateLockFile(const char *filename, bool amPostmaster,
 		/*
 		 * No, the creating process did not exist.  However, it could be that
 		 * the postmaster crashed (or more likely was kill -9'd by a clueless
-		 * admin) but has left orphan backends behind.  Check for this__ by
+		 * admin) but has left orphan backends behind.  Check for this by
 		 * looking to see if there is an associated shmem segment that is
 		 * still in use.
 		 *
@@ -1025,8 +1025,8 @@ CreateLockFile(const char *filename, bool amPostmaster,
 	}
 
 	/*
-	 * Arrange to unlink the lock file(s) at proc_exit.  If this__ is the first
-	 * one, set up the on_proc_exit function to do it; then add this__ lock file
+	 * Arrange to unlink the lock file(s) at proc_exit.  If this is the first
+	 * one, set up the on_proc_exit function to do it; then add this lock file
 	 * to the list of files to unlink.
 	 */
 	if (lock_files == NIL)
@@ -1034,7 +1034,7 @@ CreateLockFile(const char *filename, bool amPostmaster,
 
 	/*
 	 * Use lcons so that the lock files are unlinked in reverse order of
-	 * creation; this__ is critical!
+	 * creation; this is critical!
 	 */
 	lock_files = lcons(pstrdup(filename), lock_files);
 }
@@ -1042,7 +1042,7 @@ CreateLockFile(const char *filename, bool amPostmaster,
 /*
  * Create the data directory lockfile.
  *
- * When this__ is called, we must have already switched the working
+ * When this is called, we must have already switched the working
  * directory to DataDir, so we can just use a relative path.  This
  * helps ensure that we are locking the directory we should be.
  *
@@ -1193,7 +1193,7 @@ AddToDataDirLockFile(int target_line, const char *str)
 	}
 
 	/*
-	 * And rewrite the data.  Since we write in a single kernel call, this__
+	 * And rewrite the data.  Since we write in a single kernel call, this
 	 * update should appear atomic to onlookers.
 	 */
 	len = strlen(destbuffer);
@@ -1232,7 +1232,7 @@ AddToDataDirLockFile(int target_line, const char *str)
  * Recheck that the data directory lock file still exists with expected
  * content.  Return TRUE if the lock file appears OK, FALSE if it isn't.
  *
- * We call this__ periodically in the postmaster.  The idea is that if the
+ * We call this periodically in the postmaster.  The idea is that if the
  * lock file has been removed or replaced by another postmaster, we should
  * do a panic database shutdown.  Therefore, we should return TRUE if there
  * is any doubt: we do not want to cause a panic shutdown unnecessarily.
@@ -1305,7 +1305,7 @@ RecheckDataDirLockFile(void)
 
 /*
  * Determine whether the PG_VERSION file in directory `path' indicates
- * a data version compatible with the version of this__ program.
+ * a data version compatible with the version of this program.
  *
  * If compatible, return. Otherwise, ereport(FATAL).
  */
@@ -1360,7 +1360,7 @@ ValidatePgVersion(const char *path)
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
 				 errmsg("database files are incompatible with server"),
 				 errdetail("The data directory was initialized by PostgreSQL version %ld.%ld, "
-						   "which is not compatible with this__ version %s.",
+						   "which is not compatible with this version %s.",
 						   file_major, file_minor, version_string)));
 }
 

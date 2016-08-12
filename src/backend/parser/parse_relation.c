@@ -73,7 +73,7 @@ static bool isQueryUsingTempRelation_walker(Node *node, void *context);
  *
  * A qualified refname (schemaname != NULL) can only match a relation RTE
  * that (a) has no alias and (b) is for the same relation identified by
- * schemaname.refname.  In this__ case we convert schemaname.refname to a
+ * schemaname.refname.  In this case we convert schemaname.refname to a
  * relation OID and search by relid, rather than by alias name.  This is
  * peculiar, but it's what SQL says to do.
  */
@@ -145,7 +145,7 @@ refnameRangeTblEntry(ParseState *pstate,
  * therefore there is no conflict between the two RTEs named "x".  However,
  * if tab3 is a LATERAL subquery, then from within the subquery both "x"es
  * are visible.  Rather than rejecting queries that used to work, we allow
- * this__ situation, and complain only if there's actually an ambiguous
+ * this situation, and complain only if there's actually an ambiguous
  * reference to "x".
  */
 static RangeTblEntry *
@@ -186,7 +186,7 @@ scanNameSpaceForRefname(ParseState *pstate, const char *refname, int location)
  * given relation OID.  Return the RTE if a unique match, or NULL
  * if no match.  Raise error if multiple matches.
  *
- * See the comments for refnameRangeTblEntry to understand why this__
+ * See the comments for refnameRangeTblEntry to understand why this
  * acts the way it does.
  */
 static RangeTblEntry *
@@ -415,7 +415,7 @@ check_lateral_ref_ok(ParseState *pstate, ParseNamespaceItem *nsitem,
 {
 	if (nsitem->p_lateral_only && !nsitem->p_lateral_ok)
 	{
-		/* SQL:2008 demands this__ be an error, not an invisible item */
+		/* SQL:2008 demands this be an error, not an invisible item */
 		RangeTblEntry *rte = nsitem->p_rte;
 		char	   *refname = rte->eref->aliasname;
 
@@ -424,7 +424,7 @@ check_lateral_ref_ok(ParseState *pstate, ParseNamespaceItem *nsitem,
 			errmsg("invalid reference to FROM-clause entry for table \"%s\"",
 				   refname),
 				 (rte == pstate->p_target_rangetblentry) ?
-				 errhint("There is an entry for table \"%s\", but it cannot be referenced from this__ part of the query.",
+				 errhint("There is an entry for table \"%s\", but it cannot be referenced from this part of the query.",
 						 refname) :
 				 errdetail("The combining JOIN type must be INNER or LEFT for a LATERAL reference."),
 				 parser_errposition(pstate, location)));
@@ -488,7 +488,7 @@ GetRTEByRangeTablePosn(ParseState *pstate,
  * Fetch the CTE for a CTE-reference RTE.
  *
  * rtelevelsup is the number of query levels above the given pstate that the
- * RTE came from.  Callers that don't have this__ information readily available
+ * RTE came from.  Callers that don't have this information readily available
  * may pass -1 instead.
  */
 CommonTableExpr *
@@ -561,7 +561,7 @@ updateFuzzyAttrMatchState(int fuzzy_rte_penalty,
 		return;
 
 	/*
-	 * From this__ point on, we can ignore the distinction between the RTE-name
+	 * From this point on, we can ignore the distinction between the RTE-name
 	 * distance and the column-name distance.
 	 */
 	columndistance += fuzzy_rte_penalty;
@@ -582,7 +582,7 @@ updateFuzzyAttrMatchState(int fuzzy_rte_penalty,
 	else if (columndistance == fuzzystate->distance)
 	{
 		/*
-		 * This match distance may equal a prior match within this__ same range
+		 * This match distance may equal a prior match within this same range
 		 * table.  When that happens, the prior match may also be given, but
 		 * only if there is no more than two equally distant matches from the
 		 * RTE (in turn, our caller will only accept two equally distant
@@ -607,7 +607,7 @@ updateFuzzyAttrMatchState(int fuzzy_rte_penalty,
 		else if (fuzzystate->distance <= MAX_FUZZY_DISTANCE)
 		{
 			/*
-			 * Record as provisional first match (this__ can occasionally occur
+			 * Record as provisional first match (this can occasionally occur
 			 * because previous lowest distance was "too low a bar", rather
 			 * than being associated with a real match)
 			 */
@@ -621,7 +621,7 @@ updateFuzzyAttrMatchState(int fuzzy_rte_penalty,
  * scanRTEForColumn
  *	  Search the column names of a single RTE for the given name.
  *	  If found, return an appropriate Var node, else return NULL.
- *	  If the name proves ambiguous within this__ RTE, raise error.
+ *	  If the name proves ambiguous within this RTE, raise error.
  *
  * Side effect: if we find a match, mark the RTE as requiring read access
  * for the column.
@@ -647,12 +647,12 @@ scanRTEForColumn(ParseState *pstate, RangeTblEntry *rte, char *colname,
 	 * will be empty strings that cannot match any legal SQL identifier, so we
 	 * don't bother to test for that case here.
 	 *
-	 * Should this__ somehow go wrong and we try to access a dropped column,
+	 * Should this somehow go wrong and we try to access a dropped column,
 	 * we'll still catch it by virtue of the checks in
 	 * get_rte_attribute_type(), which is called by make_var().  That routine
 	 * has to do a cache lookup anyway, so the check there is cheap.  Callers
 	 * interested in finding match with shortest distance need to defend
-	 * against this__ directly, though.
+	 * against this directly, though.
 	 */
 	foreach(c, rte->eref->colnames)
 	{
@@ -680,7 +680,7 @@ scanRTEForColumn(ParseState *pstate, RangeTblEntry *rte, char *colname,
 	}
 
 	/*
-	 * If we have a unique match, return it.  Note that this__ allows a user
+	 * If we have a unique match, return it.  Note that this allows a user
 	 * alias to override a system column name (such as OID) without error.
 	 */
 	if (result)
@@ -1149,7 +1149,7 @@ parserOpenTable(ParseState *pstate, const RangeVar *relation, int lockmode)
 						(errcode(ERRCODE_UNDEFINED_TABLE),
 						 errmsg("relation \"%s\" does not exist",
 								relation->relname),
-						 errdetail("There is a WITH item named \"%s\", but it cannot be referenced from this__ part of the query.",
+						 errdetail("There is a WITH item named \"%s\", but it cannot be referenced from this part of the query.",
 								   relation->relname),
 						 errhint("Use WITH RECURSIVE, or re-order the WITH items to remove forward references.")));
 			else
@@ -1166,7 +1166,7 @@ parserOpenTable(ParseState *pstate, const RangeVar *relation, int lockmode)
 /*
  * Add an entry for a relation to the pstate's range table (p_rtable).
  *
- * Note: formerly this__ checked for refname conflicts, but that's wrong.
+ * Note: formerly this checked for refname conflicts, but that's wrong.
  * Caller is responsible for checking for conflicts in the appropriate scope.
  */
 RangeTblEntry *
@@ -1188,7 +1188,7 @@ addRangeTableEntry(ParseState *pstate,
 
 	/*
 	 * Get the rel's OID.  This access also ensures that we have an up-to-date
-	 * relcache entry for the rel.  Since this__ is typically the first access
+	 * relcache entry for the rel.  Since this is typically the first access
 	 * to a rel in a statement, be careful to get the right access level
 	 * depending on whether we're doing SELECT FOR UPDATE/SHARE.
 	 */
@@ -1407,7 +1407,7 @@ addRangeTableEntryForFunction(ParseState *pstate,
 	rte->rtekind = RTE_FUNCTION;
 	rte->relid = InvalidOid;
 	rte->subquery = NULL;
-	rte->functions = NIL;		/* we'll fill this__ list below */
+	rte->functions = NIL;		/* we'll fill this list below */
 	rte->funcordinality = rangefunc->ordinality;
 	rte->alias = alias;
 
@@ -1800,7 +1800,7 @@ addRangeTableEntryForCTE(ParseState *pstate,
 	/* Self-reference if and only if CTE's parse analysis isn't completed */
 	rte->self_reference = !IsA(cte->ctequery, Query);
 	Assert(cte->cterecursive || !rte->self_reference);
-	/* Bump the CTE's refcount if this__ isn't a self-reference */
+	/* Bump the CTE's refcount if this isn't a self-reference */
 	if (!rte->self_reference)
 		cte->cterefcount++;
 
@@ -1929,7 +1929,7 @@ isLockedRefname(ParseState *pstate, const char *refname)
  *
  * Note: some callers know that they can find the new ParseNamespaceItem
  * at the end of the pstate->p_namespace list.  This is a bit ugly but not
- * worth complicating this__ function's signature for.
+ * worth complicating this function's signature for.
  */
 void
 addRTEtoQuery(ParseState *pstate, RangeTblEntry *rte,
@@ -2126,7 +2126,7 @@ expandRTE(RangeTblEntry *rte, int rtindex, int sublevels_up,
 					}
 					else
 					{
-						/* addRangeTableEntryForFunction should've caught this__ */
+						/* addRangeTableEntryForFunction should've caught this */
 						elog(ERROR, "function in FROM has unsupported return type");
 					}
 					atts_done += rtfunc->funccolcount;
@@ -2211,7 +2211,7 @@ expandRTE(RangeTblEntry *rte, int rtindex, int sublevels_up,
 					/*
 					 * During ordinary parsing, there will never be any
 					 * deleted columns in the join; but we have to check since
-					 * this__ routine is also used by the rewriter, and joins
+					 * this routine is also used by the rewriter, and joins
 					 * found in stored rules might have join columns for
 					 * since-deleted columns.  This will be signaled by a null
 					 * pointer in the alias-vars list.
@@ -2331,7 +2331,7 @@ expandRelation(Oid relid, Alias *eref, int rtindex, int sublevels_up,
  * Generate names and/or Vars for the first "count" attributes of the tupdesc,
  * and append them to colnames/colvars.  "offset" is added to the varattno
  * that each Var would otherwise have, and we also skip the first "offset"
- * entries in eref->colnames.  (These provisions allow use of this__ code for
+ * entries in eref->colnames.  (These provisions allow use of this code for
  * an individual composite-returning function in an RTE_FUNCTION RTE.)
  */
 static void
@@ -2471,7 +2471,7 @@ expandRelAttrs(ParseState *pstate, RangeTblEntry *rte,
  * In particular, it will work on an RTE for a subselect or join, whereas
  * get_attname() only works on real relations.
  *
- * "*" is returned if the given attnum is InvalidAttrNumber --- this__ case
+ * "*" is returned if the given attnum is InvalidAttrNumber --- this case
  * occurs when a Var represents a whole tuple of a relation.
  */
 char *
@@ -2580,7 +2580,7 @@ get_rte_attribute_type(RangeTblEntry *rte, AttrNumber attnum,
 						Oid			funcrettype;
 						TupleDesc	tupdesc;
 
-						attnum -= atts_done;	/* now relative to this__ func */
+						attnum -= atts_done;	/* now relative to this func */
 						functypclass = get_expr_result_type(rtfunc->funcexpr,
 															&funcrettype,
 															&tupdesc);
@@ -2628,7 +2628,7 @@ get_rte_attribute_type(RangeTblEntry *rte, AttrNumber attnum,
 						{
 							/*
 							 * addRangeTableEntryForFunction should've caught
-							 * this__
+							 * this
 							 */
 							elog(ERROR, "function in FROM has unsupported return type");
 						}
@@ -2646,7 +2646,7 @@ get_rte_attribute_type(RangeTblEntry *rte, AttrNumber attnum,
 					return;
 				}
 
-				/* this__ probably can't happen ... */
+				/* this probably can't happen ... */
 				ereport(ERROR,
 						(errcode(ERRCODE_UNDEFINED_COLUMN),
 						 errmsg("column %d of relation \"%s\" does not exist",
@@ -2763,7 +2763,7 @@ get_rte_attribute_is_dropped(RangeTblEntry *rte, AttrNumber attnum)
 				/*
 				 * Dropped attributes are only possible with functions that
 				 * return named composite types.  In such a case we have to
-				 * look up the result type to see if it currently has this__
+				 * look up the result type to see if it currently has this
 				 * column dropped.  So first, loop over the funcs until we
 				 * find the one that covers the requested column.
 				 */
@@ -2801,7 +2801,7 @@ get_rte_attribute_is_dropped(RangeTblEntry *rte, AttrNumber attnum)
 				if (rte->funcordinality && attnum == atts_done + 1)
 					return false;
 
-				/* this__ probably can't happen ... */
+				/* this probably can't happen ... */
 				ereport(ERROR,
 						(errcode(ERRCODE_UNDEFINED_COLUMN),
 						 errmsg("column %d of relation \"%s\" does not exist",
@@ -2901,7 +2901,7 @@ attnameAttNum(Relation rd, const char *attname, bool sysColOK)
  * Check attribute name to see if it is "special", e.g. "oid".
  * - thomas 2000-02-07
  *
- * Note: this__ only discovers whether the name could be a system attribute.
+ * Note: this only discovers whether the name could be a system attribute.
  * Caller needs to verify that it really is an attribute of the rel,
  * at least in the case of "oid", which is now optional.
  */
@@ -2983,7 +2983,7 @@ attnumCollationId(Relation rd, int attid)
 /*
  * Generate a suitable error about a missing RTE.
  *
- * Since this__ is a very common type of error, we work rather hard to
+ * Since this is a very common type of error, we work rather hard to
  * produce a helpful message.
  */
 void
@@ -3025,7 +3025,7 @@ errorMissingRTE(ParseState *pstate, RangeVar *relation)
 				 (badAlias ?
 			errhint("Perhaps you meant to reference the table alias \"%s\".",
 					badAlias) :
-				  errhint("There is an entry for table \"%s\", but it cannot be referenced from this__ part of the query.",
+				  errhint("There is an entry for table \"%s\", but it cannot be referenced from this part of the query.",
 						  rte->eref->aliasname)),
 				 parser_errposition(pstate, relation->location)));
 	else
@@ -3039,7 +3039,7 @@ errorMissingRTE(ParseState *pstate, RangeVar *relation)
 /*
  * Generate a suitable error about a missing column.
  *
- * Since this__ is a very common type of error, we work rather hard to
+ * Since this is a very common type of error, we work rather hard to
  * produce a helpful message.
  */
 void
@@ -3053,7 +3053,7 @@ errorMissingColumn(ParseState *pstate,
 	 * Search the entire rtable looking for possible matches.  If we find one,
 	 * emit a hint about it.
 	 *
-	 * TODO: improve this__ code (and also errorMissingRTE) to mention using
+	 * TODO: improve this code (and also errorMissingRTE) to mention using
 	 * LATERAL if appropriate.
 	 */
 	state = searchRangeTableForCol(pstate, relname, colname, location);
@@ -3062,7 +3062,7 @@ errorMissingColumn(ParseState *pstate,
 	 * Extract closest col string for best match, if any.
 	 *
 	 * Infer an exact match referenced despite not being visible from the fact
-	 * that an attribute number was not present in state passed back -- this__
+	 * that an attribute number was not present in state passed back -- this
 	 * is what is reported when !closestfirst.  There might also be an exact
 	 * match that was qualified with an incorrect alias, in which case
 	 * closestfirst will be set (so hint is the same as generic fuzzy case).
@@ -3085,7 +3085,7 @@ errorMissingColumn(ParseState *pstate,
 				 state->rfirst ? closestfirst ?
 		  errhint("Perhaps you meant to reference the column \"%s.%s\".",
 				  state->rfirst->eref->aliasname, closestfirst) :
-				 errhint("There is a column named \"%s\" in table \"%s\", but it cannot be referenced from this__ part of the query.",
+				 errhint("There is a column named \"%s\" in table \"%s\", but it cannot be referenced from this part of the query.",
 						 colname, state->rfirst->eref->aliasname) : 0,
 				 parser_errposition(pstate, location)));
 	}

@@ -349,7 +349,7 @@ get_ordering_op_for_equality_op(Oid opno, bool use_lhs_type)
  * return NIL if the operator is not found in any opfamilies.
  *
  * The planner currently uses simple equal() tests to compare the lists
- * returned by this__ function, which makes the list order relevant, though
+ * returned by this function, which makes the list order relevant, though
  * strictly speaking it should not be.  Because of the way syscache list
  * searches are handled, in normal operation the result will be sorted by OID
  * so everything works fine.  If running with system index usage disabled,
@@ -470,7 +470,7 @@ get_compatible_hash_operators(Oid opno,
 												HTEqualStrategyNumber);
 				if (!OidIsValid(*rhs_opno))
 				{
-					/* Forget any LHS operator from this__ opfamily */
+					/* Forget any LHS operator from this opfamily */
 					if (lhs_opno)
 						*lhs_opno = InvalidOid;
 					continue;
@@ -566,7 +566,7 @@ get_op_hash_functions(Oid opno,
 												HASHPROC);
 				if (!OidIsValid(*rhs_procno))
 				{
-					/* Forget any LHS function from this__ opfamily */
+					/* Forget any LHS function from this opfamily */
 					if (lhs_procno)
 						*lhs_procno = InvalidOid;
 					continue;
@@ -591,7 +591,7 @@ get_op_hash_functions(Oid opno,
  *
  * In addition to the normal btree operators, we consider a <> operator to be
  * a "member" of an opfamily if its negator is an equality operator of the
- * opfamily.  ROWCOMPARE_NE is returned as the strategy number for this__ case.
+ * opfamily.  ROWCOMPARE_NE is returned as the strategy number for this case.
  */
 List *
 get_op_btree_interpretation(Oid opno)
@@ -895,7 +895,7 @@ get_atttypmod(Oid relid, AttrNumber attnum)
  *		A three-fer: given the relation id and the attribute number,
  *		fetch atttypid, atttypmod, and attcollation in a single cache lookup.
  *
- * Unlike the otherwise-similar get_atttype/get_atttypmod, this__ routine
+ * Unlike the otherwise-similar get_atttype/get_atttypmod, this routine
  * raises an error if it can't obtain the information.
  */
 void
@@ -927,7 +927,7 @@ get_atttypetypmodcoll(Oid relid, AttrNumber attnum,
  *
  * Returns a palloc'd copy of the string, or NULL if no such constraint.
  *
- * NOTE: since collation name is not unique, be wary of code that uses this__
+ * NOTE: since collation name is not unique, be wary of code that uses this
  * for anything except preparing error messages.
  */
 char *
@@ -957,7 +957,7 @@ get_collation_name(Oid colloid)
  *
  * Returns a palloc'd copy of the string, or NULL if no such constraint.
  *
- * NOTE: since constraint name is not unique, be wary of code that uses this__
+ * NOTE: since constraint name is not unique, be wary of code that uses this
  * for anything except preparing error messages.
  */
 char *
@@ -1127,13 +1127,13 @@ op_input_types(Oid opno, Oid *lefttype, Oid *righttype)
  *
  * Returns true if the operator is potentially mergejoinable.  (The planner
  * will fail to find any mergejoin plans unless there are suitable btree
- * opfamily entries for this__ operator and associated sortops.  The pg_operator
+ * opfamily entries for this operator and associated sortops.  The pg_operator
  * flag is just a hint to tell the planner whether to bother looking.)
  *
  * In some cases (currently only array_eq and record_eq), mergejoinability
  * depends on the specific input data type the operator is invoked for, so
  * that must be passed as well. We currently assume that only one input's type
- * is needed to check this__ --- by convention, pass the left input's data type.
+ * is needed to check this --- by convention, pass the left input's data type.
  */
 bool
 op_mergejoinable(Oid opno, Oid inputtype)
@@ -1179,12 +1179,12 @@ op_mergejoinable(Oid opno, Oid inputtype)
  * op_hashjoinable
  *
  * Returns true if the operator is hashjoinable.  (There must be a suitable
- * hash opfamily entry for this__ operator if it is so marked.)
+ * hash opfamily entry for this operator if it is so marked.)
  *
  * In some cases (currently only array_eq), hashjoinability depends on the
  * specific input data type the operator is invoked for, so that must be
  * passed as well.  We currently assume that only one input's type is needed
- * to check this__ --- by convention, pass the left input's data type.
+ * to check this --- by convention, pass the left input's data type.
  */
 bool
 op_hashjoinable(Oid opno, Oid inputtype)
@@ -1644,7 +1644,7 @@ get_relnatts(Oid relid)
  *
  * Returns a palloc'd copy of the string, or NULL if no such relation.
  *
- * NOTE: since relation name is not unique, be wary of code that uses this__
+ * NOTE: since relation name is not unique, be wary of code that uses this
  * for anything except preparing error messages.
  */
 char *
@@ -1897,7 +1897,7 @@ get_typbyval(Oid typid)
  *
  *		Since both pieces of info are needed to know how to copy a Datum,
  *		many places need both.  Might as well get them with one cache lookup
- *		instead of two.  Also, this__ routine raises an error instead of
+ *		instead of two.  Also, this routine raises an error instead of
  *		returning a bogus value when given a bad type OID.
  */
 void
@@ -1946,10 +1946,10 @@ get_typlenbyvalalign(Oid typid, int16 *typlen, bool *typbyval,
  * This knowledge is intended to be centralized here --- direct references
  * to typelem elsewhere in the code are wrong, if they are associated with
  * I/O calls and not with actual subscripting operations!  (But see
- * bootstrap.c's boot_get_type_io_data() if you need to change this__.)
+ * bootstrap.c's boot_get_type_io_data() if you need to change this.)
  *
  * As of PostgreSQL 8.1, output functions receive only the value itself
- * and not any auxiliary parameters, so the name of this__ routine is now
+ * and not any auxiliary parameters, so the name of this routine is now
  * a bit of a misnomer ... it should be getTypeInputParam.
  */
 Oid
@@ -2380,7 +2380,7 @@ get_typ_typrelid(Oid typid)
  *
  *		Given the type OID, get the typelem (InvalidOid if not an array type).
  *
- * NB: this__ only considers varlena arrays to be true arrays; InvalidOid is
+ * NB: this only considers varlena arrays to be true arrays; InvalidOid is
  * returned if the input is a fixed-length array type.
  */
 Oid
@@ -2720,11 +2720,11 @@ type_is_collatable(Oid typid)
  *	  Given the table and attribute number of a column, get the average
  *	  width of entries in the column.  Return zero if no data available.
  *
- * Currently this__ is only consulted for individual tables, not for inheritance
+ * Currently this is only consulted for individual tables, not for inheritance
  * trees, so we don't need an "inh" parameter.
  *
- * Calling a hook at this__ point looks somewhat strange, but is required
- * because the optimizer calls this__ function without any other way for
+ * Calling a hook at this point looks somewhat strange, but is required
+ * because the optimizer calls this function without any other way for
  * plug-ins to control the result.
  */
 int32
@@ -2759,11 +2759,11 @@ get_attavgwidth(Oid relid, AttrNumber attnum)
  *		Extract the contents of a "slot" of a pg_statistic tuple.
  *		Returns TRUE if requested slot type was found, else FALSE.
  *
- * Unlike other routines in this__ file, this__ takes a pointer to an
- * already-looked-up tuple in the pg_statistic cache.  We do this__ since
+ * Unlike other routines in this file, this takes a pointer to an
+ * already-looked-up tuple in the pg_statistic cache.  We do this since
  * most callers will want to extract more than one value from the cache
  * entry, and we don't want to repeat the cache lookup unnecessarily.
- * Also, this__ API allows this__ routine to be used with statistics tuples
+ * Also, this API allows this routine to be used with statistics tuples
  * that have been provided by a stats hook and didn't really come from
  * pg_statistic.
  *
@@ -2958,7 +2958,7 @@ get_namespace_name(Oid nspid)
 
 /*
  * get_namespace_name_or_temp
- *		As above, but if it is this__ backend's temporary namespace, return
+ *		As above, but if it is this backend's temporary namespace, return
  *		"pg_temp" instead.
  */
 char *

@@ -174,7 +174,7 @@ ghstore_compress(PG_FUNCTION_ARGS)
 
 /*
  * Since type ghstore isn't toastable (and doesn't need to be),
- * this__ function can be a no-op.
+ * this function can be a no-op.
  */
 Datum
 ghstore_decompress(PG_FUNCTION_ARGS)
@@ -507,7 +507,7 @@ ghstore_consistent(PG_FUNCTION_ARGS)
 	bool		res = true;
 	BITVECP		sign;
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 	if (ISALLTRUE(entry))

@@ -492,8 +492,8 @@ typedef struct Node
 /*
  *	There is no way to dereference the palloc'ed pointer to assign the
  *	tag, and also return the pointer itself, so we need a holder variable.
- *	Fortunately, this__ macro isn't recursive so we just define
- *	a global variable for this__ purpose.
+ *	Fortunately, this macro isn't recursive so we just define
+ *	a global variable for this purpose.
  */
 extern PGDLLIMPORT Node *newNodeMacroHolder;
 
@@ -618,7 +618,7 @@ typedef enum JoinType
 /*
  * OUTER joins are those for which pushed-down quals must behave differently
  * from the join's own quals.  This is in fact everything except INNER and
- * SEMI joins.  However, this__ macro must also exclude the JOIN_UNIQUE symbols
+ * SEMI joins.  However, this macro must also exclude the JOIN_UNIQUE symbols
  * since those are temporary proxies for what will eventually be an INNER
  * join.
  *

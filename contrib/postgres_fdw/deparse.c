@@ -7,7 +7,7 @@
  * whether they're safe to send to the remote server for execution, as
  * well as functions to construct the query text to be sent.  The latter
  * functionality is annoyingly duplicative of ruleutils.c, but there are
- * enough special considerations that it seems best to keep this__ separate.
+ * enough special considerations that it seems best to keep this separate.
  * One saving grace is that we only need deparse logic for node types that
  * we consider safe to send.
  *
@@ -202,7 +202,7 @@ is_foreign_expr(PlannerInfo *root,
 	 * An expression which includes any mutable functions can't be sent over
 	 * because its result is not stable.  For example, sending now() remote
 	 * side could cause confusion from clock offsets.  Future versions might
-	 * be able to make this__ choice with more granularity.  (We check this__ last
+	 * be able to make this choice with more granularity.  (We check this last
 	 * because it requires a lot of expensive catalog lookups.)
 	 */
 	if (contain_mutable_functions((Node *) expr))
@@ -682,7 +682,7 @@ foreign_expr_walker(Node *node,
  * (This could be fixed with some changes to format_type, but for now there's
  * no need.)  Thus we must exclude information_schema types.
  *
- * XXX there is a problem with this__, which is that the set of built-in
+ * XXX there is a problem with this, which is that the set of built-in
  * objects expands over time.  Something that is built-in to us might not
  * be known to the remote server, if it's of an older version.  But keeping
  * track of that would be a huge exercise.
@@ -1414,7 +1414,7 @@ deparseConst(Const *node, deparse_expr_cxt *context)
 	 * Append ::typename unless the constant will be implicitly typed as the
 	 * right type when it is read in.
 	 *
-	 * XXX this__ code has to be kept in sync with the behavior of the parser,
+	 * XXX this code has to be kept in sync with the behavior of the parser,
 	 * especially make_const.
 	 */
 	switch (node->consttype)
@@ -1554,7 +1554,7 @@ deparseFuncExpr(FuncExpr *node, deparse_expr_cxt *context)
 		Oid			rettype = node->funcresulttype;
 		int32		coercedTypmod;
 
-		/* Get the typmod if this__ is a length-coercion function */
+		/* Get the typmod if this is a length-coercion function */
 		(void) exprIsLengthCoercion((Node *) node, &coercedTypmod);
 
 		deparseExpr((Expr *) linitial(node->args), context);

@@ -53,7 +53,7 @@
 #include "windowapi.h"
 
 /*
- * All the window function APIs are called with this__ object, which is passed
+ * All the window function APIs are called with this object, which is passed
  * to window functions as fcinfo->context.
  */
 typedef struct WindowObjectData
@@ -62,19 +62,19 @@ typedef struct WindowObjectData
 	WindowAggState *winstate;	/* parent WindowAggState */
 	List	   *argstates;		/* ExprState trees for fn's arguments */
 	void	   *localmem;		/* WinGetPartitionLocalMemory's chunk */
-	int			markptr;		/* tuplestore mark pointer for this__ fn */
-	int			readptr;		/* tuplestore read pointer for this__ fn */
+	int			markptr;		/* tuplestore mark pointer for this fn */
+	int			readptr;		/* tuplestore read pointer for this fn */
 	int64		markpos;		/* row that markptr is positioned on */
 	int64		seekpos;		/* row that readptr is positioned on */
 } WindowObjectData;
 
 /*
  * We have one WindowStatePerFunc struct for each window function and
- * window aggregate handled by this__ node.
+ * window aggregate handled by this node.
  */
 typedef struct WindowStatePerFuncData
 {
-	/* Links to WindowFunc expr and state nodes this__ working state is for */
+	/* Links to WindowFunc expr and state nodes this working state is for */
 	WindowFuncExprState *wfuncstate;
 	WindowFunc *wfunc;
 
@@ -153,7 +153,7 @@ typedef struct WindowStatePerAggData
 	int64		transValueCount;	/* number of currently-aggregated rows */
 
 	/* Data local to eval_windowaggregates() */
-	bool		restart;		/* need to restart this__ agg in this__ cycle? */
+	bool		restart;		/* need to restart this agg in this cycle? */
 } WindowStatePerAggData;
 
 static void initialize_windowaggregate(WindowAggState *winstate,
@@ -392,7 +392,7 @@ advance_windowaggregate(WindowAggState *winstate,
  * the inverse transition function (which caller must have checked is
  * available).
  *
- * Returns true if we successfully removed the current row from this__
+ * Returns true if we successfully removed the current row from this
  * aggregate, false if not (in the latter case, caller is responsible
  * for cleaning up by restarting the aggregation).
  */
@@ -461,9 +461,9 @@ advance_windowaggregate_base(WindowAggState *winstate,
 	/*
 	 * In moving-aggregate mode, the state must never be NULL, except possibly
 	 * before any rows have been aggregated (which is surely not the case at
-	 * this__ point).  This restriction allows us to interpret a NULL result
+	 * this point).  This restriction allows us to interpret a NULL result
 	 * from the inverse function as meaning "sorry, can't do an inverse
-	 * transition in this__ case".  We already checked this__ in
+	 * transition in this case".  We already checked this in
 	 * advance_windowaggregate, but just for safety, check again.
 	 */
 	if (peraggstate->transValueIsNull)
@@ -473,7 +473,7 @@ advance_windowaggregate_base(WindowAggState *winstate,
 	 * We mustn't use the inverse transition function to remove the last
 	 * input.  Doing so would yield a non-NULL state, whereas we should be in
 	 * the initial state afterwards which may very well be NULL.  So instead,
-	 * we simply re-initialize the aggregate in this__ case.
+	 * we simply re-initialize the aggregate in this case.
 	 */
 	if (peraggstate->transValueCount == 1)
 	{
@@ -517,7 +517,7 @@ advance_windowaggregate_base(WindowAggState *winstate,
 	 * its first input, we don't need to do anything.
 	 *
 	 * Note: the checks for null values here will never fire, but it seems
-	 * best to have this__ stanza look just like advance_windowaggregate.
+	 * best to have this stanza look just like advance_windowaggregate.
 	 */
 	if (!peraggstate->transtypeByVal &&
 		DatumGetPointer(newVal) != DatumGetPointer(peraggstate->transValue))
@@ -671,7 +671,7 @@ eval_windowaggregates(WindowAggState *winstate)
 	 * the aggregate's current state to what it would be if the removed row
 	 * had never been aggregated in the first place.  Inverse transition
 	 * functions may optionally return NULL, indicating that the function was
-	 * unable to remove the tuple from aggregation.  If this__ happens, or if
+	 * unable to remove the tuple from aggregation.  If this happens, or if
 	 * the aggregate doesn't have an inverse transition function at all, we
 	 * must perform the aggregation all over again for all tuples within the
 	 * new frame boundaries.
@@ -700,12 +700,12 @@ eval_windowaggregates(WindowAggState *winstate)
 
 	/*
 	 * If the frame didn't change compared to the previous row, we can re-use
-	 * the result values that were previously saved at the bottom of this__
-	 * function.  Since we don't know the current frame's end yet, this__ is not
+	 * the result values that were previously saved at the bottom of this
+	 * function.  Since we don't know the current frame's end yet, this is not
 	 * possible to check for fully.  But if the frame end mode is UNBOUNDED
 	 * FOLLOWING or CURRENT ROW, and the current row lies within the previous
 	 * row's frame, then the two frames' ends must coincide.  Note that on the
-	 * first row aggregatedbase == aggregatedupto, meaning this__ test must
+	 * first row aggregatedbase == aggregatedupto, meaning this test must
 	 * fail, so we don't need to check the "there was no previous row" case
 	 * explicitly here.
 	 */
@@ -950,7 +950,7 @@ eval_windowaggregates(WindowAggState *winstate)
 		 *
 		 * XXX in some framing modes, eg ROWS/END_CURRENT_ROW, we can know in
 		 * advance that the next row can't possibly share the same frame. Is
-		 * it worth detecting that and skipping this__ code?
+		 * it worth detecting that and skipping this code?
 		 */
 		if (!peraggstate->resulttypeByVal && !*isnull)
 		{
@@ -1007,7 +1007,7 @@ eval_windowfunction(WindowAggState *winstate, WindowStatePerFunc perfuncstate,
 
 	/*
 	 * Make sure pass-by-ref data is allocated in the appropriate context. (We
-	 * need this__ in case the function returns a pointer into some short-lived
+	 * need this in case the function returns a pointer into some short-lived
 	 * tuple, as is entirely possible.)
 	 */
 	if (!perfuncstate->resulttypeByVal && !fcinfo.isnull &&
@@ -1041,7 +1041,7 @@ begin_partition(WindowAggState *winstate)
 	ExecClearTuple(winstate->agg_row_slot);
 
 	/*
-	 * If this__ is the very first partition, we need to fetch the first input
+	 * If this is the very first partition, we need to fetch the first input
 	 * row to store in first_part_slot.
 	 */
 	if (TupIsNull(winstate->first_part_slot))
@@ -1059,7 +1059,7 @@ begin_partition(WindowAggState *winstate)
 		}
 	}
 
-	/* Create new tuplestore for this__ partition */
+	/* Create new tuplestore for this partition */
 	winstate->buffer = tuplestore_begin_heap(false, false, work_mem);
 
 	/*
@@ -1145,7 +1145,7 @@ spool_tuples(WindowAggState *winstate, int64 pos)
 	 * becomes quite expensive due to frequent buffer flushes.  It's cheaper
 	 * to force the entire partition to get spooled in one go.
 	 *
-	 * XXX this__ is a horrid kluge --- it'd be better to fix the performance
+	 * XXX this is a horrid kluge --- it'd be better to fix the performance
 	 * problem inside tuplestore.  FIXME
 	 */
 	if (!tuplestore_in_memory(winstate->buffer))
@@ -1169,7 +1169,7 @@ spool_tuples(WindowAggState *winstate, int64 pos)
 
 		if (node->partNumCols > 0)
 		{
-			/* Check if this__ tuple still belongs to the current partition */
+			/* Check if this tuple still belongs to the current partition */
 			if (!execTuplesMatch(winstate->first_part_slot,
 								 outerslot,
 								 node->partNumCols, node->partColIdx,
@@ -1208,7 +1208,7 @@ release_partition(WindowAggState *winstate)
 	{
 		WindowStatePerFunc perfuncstate = &(winstate->perfunc[i]);
 
-		/* Release any partition-local state of this__ window function */
+		/* Release any partition-local state of this window function */
 		if (perfuncstate->winobj)
 			perfuncstate->winobj->localmem = NULL;
 	}
@@ -1283,7 +1283,7 @@ row_is_in_frame(WindowAggState *winstate, int64 pos, TupleTableSlot *slot)
 		}
 		else if (frameOptions & FRAMEOPTION_RANGE)
 		{
-			/* parser should have rejected this__ */
+			/* parser should have rejected this */
 			elog(ERROR, "window frame with value offset is not implemented");
 		}
 		else
@@ -1324,7 +1324,7 @@ row_is_in_frame(WindowAggState *winstate, int64 pos, TupleTableSlot *slot)
 		}
 		else if (frameOptions & FRAMEOPTION_RANGE)
 		{
-			/* parser should have rejected this__ */
+			/* parser should have rejected this */
 			elog(ERROR, "window frame with value offset is not implemented");
 		}
 		else
@@ -1430,7 +1430,7 @@ update_frameheadpos(WindowObject winobj, TupleTableSlot *slot)
 		}
 		else if (frameOptions & FRAMEOPTION_RANGE)
 		{
-			/* parser should have rejected this__ */
+			/* parser should have rejected this */
 			elog(ERROR, "window frame with value offset is not implemented");
 		}
 		else
@@ -1534,7 +1534,7 @@ update_frametailpos(WindowObject winobj, TupleTableSlot *slot)
 		}
 		else if (frameOptions & FRAMEOPTION_RANGE)
 		{
-			/* parser should have rejected this__ */
+			/* parser should have rejected this */
 			elog(ERROR, "window frame with value offset is not implemented");
 		}
 		else
@@ -1673,7 +1673,7 @@ restart:
 	 */
 	spool_tuples(winstate, winstate->currentpos);
 
-	/* Move to the next partition if we reached the end of this__ partition */
+	/* Move to the next partition if we reached the end of this partition */
 	if (winstate->partition_spooled &&
 		winstate->currentpos >= winstate->spooled_rows)
 	{
@@ -1810,7 +1810,7 @@ ExecInitWindowAgg(WindowAgg *node, EState *estate, int eflags)
 	 * Create mid-lived context for aggregate trans values etc.
 	 *
 	 * Note that moving aggregates each use their own private context, not
-	 * this__ one.
+	 * this one.
 	 */
 	winstate->aggcontext =
 		AllocSetContextCreate(CurrentMemoryContext,
@@ -2350,7 +2350,7 @@ GetAggInitVal(Datum textInitVal, Oid transtype)
  * are_peers
  * compare two rows to see if they are equal according to the ORDER BY clause
  *
- * NB: this__ does not consider the window frame mode.
+ * NB: this does not consider the window frame mode.
  */
 static bool
 are_peers(WindowAggState *winstate, TupleTableSlot *slot1,
@@ -2423,7 +2423,7 @@ window_gettupleslot(WindowObject winobj, int64 pos, TupleTableSlot *slot)
 		 * There's no API to refetch the tuple at the current position.  We
 		 * have to move one tuple forward, and then one backward.  (We don't
 		 * do it the other way because we might try to fetch the row before
-		 * our mark, which isn't allowed.)  XXX this__ case could stand to be
+		 * our mark, which isn't allowed.)  XXX this case could stand to be
 		 * optimized.
 		 */
 		tuplestore_advance(winstate->buffer, true);
@@ -2464,10 +2464,10 @@ window_gettupleslot(WindowObject winobj, int64 pos, TupleTableSlot *slot)
  * WinGetPartitionLocalMemory
  *		Get working memory that lives till end of partition processing
  *
- * On first call within a given partition, this__ allocates and zeroes the
+ * On first call within a given partition, this allocates and zeroes the
  * requested amount of space.  Subsequent calls just return the same chunk.
  *
- * Memory obtained this__ way is normally used to hold state that should be
+ * Memory obtained this way is normally used to hold state that should be
  * automatically reset for each new partition.  If a window function wants
  * to hold state across the whole query, fcinfo->fn_extra can be used in the
  * usual way for that.
@@ -2498,7 +2498,7 @@ WinGetCurrentPosition(WindowObject winobj)
  * WinGetPartitionRowCount
  *		Return total number of rows contained in the current partition.
  *
- * Note: this__ is a relatively expensive operation because it forces the
+ * Note: this is a relatively expensive operation because it forces the
  * whole partition to be "spooled" into the tuplestore at once.  Once
  * executed, however, additional calls within the same partition are cheap.
  */
@@ -2516,7 +2516,7 @@ WinGetPartitionRowCount(WindowObject winobj)
  *		number (counting from 0) it is allowed to fetch during all subsequent
  *		operations within the current partition.
  *
- * Window functions do not have to call this__, but are encouraged to move the
+ * Window functions do not have to call this, but are encouraged to move the
  * mark forward when possible to keep the tuplestore size down and prevent
  * having to spill rows to disk.
  */
@@ -2553,7 +2553,7 @@ WinSetMarkPosition(WindowObject winobj, int64 markpos)
  *		Compare two rows (specified by absolute position in window) to see
  *		if they are equal according to the ORDER BY clause.
  *
- * NB: this__ does not consider the window frame mode.
+ * NB: this does not consider the window frame mode.
  */
 bool
 WinRowsArePeers(WindowObject winobj, int64 pos1, int64 pos2)
@@ -2603,7 +2603,7 @@ WinRowsArePeers(WindowObject winobj, int64 pos1, int64 pos2)
  *		the row as a side-effect.
  * isnull: output argument, receives isnull status of result
  * isout: output argument, set to indicate whether target row position
- *		is out of partition (can pass NULL if caller doesn't care about this__)
+ *		is out of partition (can pass NULL if caller doesn't care about this)
  *
  * Specifying a nonexistent row is not an error, it just causes a null result
  * (plus setting *isout true, if isout isn't NULL).
@@ -2666,7 +2666,7 @@ WinGetFuncArgInPartition(WindowObject winobj, int argno,
 			 * fetchable during future update_frameheadpos calls.
 			 *
 			 * XXX it is very ugly to pollute window functions' marks with
-			 * this__ consideration; it could for instance mask a logic bug that
+			 * this consideration; it could for instance mask a logic bug that
 			 * lets a window function fetch rows before what it had claimed
 			 * was its mark.  Perhaps use a separate mark for frame head
 			 * probes?
@@ -2699,7 +2699,7 @@ WinGetFuncArgInPartition(WindowObject winobj, int argno,
  *		the row as a side-effect.
  * isnull: output argument, receives isnull status of result
  * isout: output argument, set to indicate whether target row position
- *		is out of frame (can pass NULL if caller doesn't care about this__)
+ *		is out of frame (can pass NULL if caller doesn't care about this)
  *
  * Specifying a nonexistent row is not an error, it just causes a null result
  * (plus setting *isout true, if isout isn't NULL).
@@ -2765,7 +2765,7 @@ WinGetFuncArgInFrame(WindowObject winobj, int argno,
 			 * fetchable during future update_frameheadpos calls.
 			 *
 			 * XXX it is very ugly to pollute window functions' marks with
-			 * this__ consideration; it could for instance mask a logic bug that
+			 * this consideration; it could for instance mask a logic bug that
 			 * lets a window function fetch rows before what it had claimed
 			 * was its mark.  Perhaps use a separate mark for frame head
 			 * probes?
@@ -2792,7 +2792,7 @@ WinGetFuncArgInFrame(WindowObject winobj, int argno,
  * argno: argument number to evaluate (counted from 0)
  * isnull: output argument, receives isnull status of result
  *
- * Note: this__ isn't quite equivalent to WinGetFuncArgInPartition or
+ * Note: this isn't quite equivalent to WinGetFuncArgInPartition or
  * WinGetFuncArgInFrame targeting the current row, because it will succeed
  * even if the WindowObject's mark has been set beyond the current row.
  * This should generally be used for "ordinary" arguments of a window

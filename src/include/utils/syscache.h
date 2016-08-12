@@ -124,7 +124,7 @@ extern Datum SysCacheGetAttr(int cacheId, HeapTuple tup,
 extern uint32 GetSysCacheHashValue(int cacheId,
 					 Datum key1, Datum key2, Datum key3, Datum key4);
 
-/* list-search interface.  Users of this__ must import catcache.h too */
+/* list-search interface.  Users of this must import catcache.h too */
 struct catclist;
 extern struct catclist *SearchSysCacheList(int cacheId, int nkeys,
 				   Datum key1, Datum key2, Datum key3, Datum key4);

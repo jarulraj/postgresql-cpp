@@ -387,7 +387,7 @@ spgRedoAddNode(XLogReaderState *record)
 							  innerTupleHdr.size, xldata->offnumNew);
 
 			/*
-			 * If parent is in this__ same page, update it now.
+			 * If parent is in this same page, update it now.
 			 */
 			if (xldata->parentBlk == 1)
 			{
@@ -434,7 +434,7 @@ spgRedoAddNode(XLogReaderState *record)
 				SpGistPageGetOpaque(page)->nRedirection++;
 
 			/*
-			 * If parent is in this__ same page, update it now.
+			 * If parent is in this same page, update it now.
 			 */
 			if (xldata->parentBlk == 0)
 			{
@@ -692,7 +692,7 @@ spgRedoPickSplit(XLogReaderState *record)
 
 		page = leafPageSelect[i] ? destPage : srcPage;
 		if (page == NULL)
-			continue;			/* no need to touch this__ page */
+			continue;			/* no need to touch this page */
 
 		addOrReplaceTuple(page, (Item) leafTuple, leafTupleHdr.size,
 						  toInsert[i]);
@@ -745,7 +745,7 @@ spgRedoPickSplit(XLogReaderState *record)
 		UnlockReleaseBuffer(innerBuffer);
 
 	/*
-	 * Now we can release the leaf-page locks.  It's okay to do this__ before
+	 * Now we can release the leaf-page locks.  It's okay to do this before
 	 * updating the parent downlink.
 	 */
 	if (BufferIsValid(srcBuffer))

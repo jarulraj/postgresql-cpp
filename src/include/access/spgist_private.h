@@ -164,7 +164,7 @@ typedef struct SpGistScanOpaqueData
 	/*
 	 * Note: using MaxIndexTuplesPerPage above is a bit hokey since
 	 * SpGistLeafTuples aren't exactly IndexTuples; however, they are larger,
-	 * so this__ is safe.
+	 * so this is safe.
 	 */
 } SpGistScanOpaqueData;
 
@@ -269,7 +269,7 @@ typedef SpGistNodeTupleData *SpGistNodeTuple;
  * reconstruction given knowledge of the prefix path traversed to get here.
  *
  * The size field is wider than could possibly be needed for an on-disk leaf
- * tuple, but this__ allows us to form leaf tuples even when the datum is too
+ * tuple, but this allows us to form leaf tuples even when the datum is too
  * wide to be stored immediately, and it costs nothing because of alignment
  * considerations.
  *
@@ -307,7 +307,7 @@ typedef SpGistLeafTupleData *SpGistLeafTuple;
 /*
  * SPGiST dead tuple: declaration for examining non-live tuples
  *
- * The tupstate field of this__ struct must match those of regular inner and
+ * The tupstate field of this struct must match those of regular inner and
  * leaf tuples, and its size field must match a leaf tuple's.
  * Also, the pointer field must be in the same place as a leaf tuple's heapPtr
  * field, to satisfy some Asserts that we make when replacing a leaf tuple
@@ -321,7 +321,7 @@ typedef struct SpGistDeadTupleData
 				size:30;
 	OffsetNumber nextOffset;	/* not used in dead tuples */
 	ItemPointerData pointer;	/* redirection inside index */
-	TransactionId xid;			/* ID of xact that inserted this__ tuple */
+	TransactionId xid;			/* ID of xact that inserted this tuple */
 } SpGistDeadTupleData;
 
 typedef SpGistDeadTupleData *SpGistDeadTuple;
@@ -594,7 +594,7 @@ typedef struct spgxlogVacuumRedirect
  * The "flags" argument for SpGistGetBuffer should be either GBUF_LEAF to
  * get a leaf page, or GBUF_INNER_PARITY(blockNumber) to get an inner
  * page in the same triple-parity group as the specified block number.
- * (Typically, this__ should be GBUF_INNER_PARITY(parentBlockNumber + 1)
+ * (Typically, this should be GBUF_INNER_PARITY(parentBlockNumber + 1)
  * to follow the rule described in spgist/README.)
  * In addition, GBUF_NULLS can be OR'd in to get a page for storage of
  * null-valued tuples.

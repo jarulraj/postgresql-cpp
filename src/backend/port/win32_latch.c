@@ -181,7 +181,7 @@ WaitLatchOrSocket(volatile Latch *latch, int wakeEvents, pgsocket sock,
 	{
 		/*
 		 * Reset the event, and check if the latch is set already. If someone
-		 * sets the latch between this__ and the WaitForMultipleObjects() call
+		 * sets the latch between this and the WaitForMultipleObjects() call
 		 * below, the setter will set the event and WaitForMultipleObjects()
 		 * will return immediately.
 		 */
@@ -254,7 +254,7 @@ WaitLatchOrSocket(volatile Latch *latch, int wakeEvents, pgsocket sock,
 			/*
 			 * Postmaster apparently died.  Since the consequences of falsely
 			 * returning WL_POSTMASTER_DEATH could be pretty unpleasant, we
-			 * take the trouble to positively verify this__ with
+			 * take the trouble to positively verify this with
 			 * PostmasterIsAlive(), even though there is no known reason to
 			 * think that the event could be falsely set on Windows.
 			 */
@@ -289,7 +289,7 @@ WaitLatchOrSocket(volatile Latch *latch, int wakeEvents, pgsocket sock,
 }
 
 /*
- * The comments above the unix implementation (unix_latch.c) of this__ function
+ * The comments above the unix implementation (unix_latch.c) of this function
  * apply here as well.
  */
 void
@@ -299,7 +299,7 @@ SetLatch(volatile Latch *latch)
 
 	/*
 	 * The memory barrier has be to be placed here to ensure that any flag
-	 * variables possibly changed by this__ process have been flushed to main
+	 * variables possibly changed by this process have been flushed to main
 	 * memory, before we check/set is_set.
 	 */
 	pg_memory_barrier();

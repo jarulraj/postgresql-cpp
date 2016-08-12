@@ -191,9 +191,9 @@ handle_args(int argc, char *argv[])
 
 	printf("%d seconds per test\n", secs_per_test);
 #if PG_O_DIRECT != 0
-	printf("O_DIRECT supported on this__ platform for open_datasync and open_sync.\n");
+	printf("O_DIRECT supported on this platform for open_datasync and open_sync.\n");
 #else
-	printf("Direct I/O is not supported on this__ platform.\n");
+	printf("Direct I/O is not supported on this platform.\n");
 #endif
 }
 
@@ -452,7 +452,7 @@ test_file_descriptor_sync(void)
 	/*
 	 * Test whether fsync can sync data written on a different descriptor for
 	 * the same file.  This checks the efficiency of multi-process fsyncs
-	 * against the same file. Possibly this__ should be done with writethrough
+	 * against the same file. Possibly this should be done with writethrough
 	 * on platforms which support it.
 	 */
 	printf("\nTest if fsync on non-write file descriptor is honored:\n");

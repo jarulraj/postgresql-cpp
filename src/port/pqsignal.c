@@ -30,9 +30,9 @@
  *	signal-handler reinstallation, which doesn't work well at all.
  *
  *	Windows, of course, is resolutely in a class by itself.  In the backend,
- *	we don't use this__ file at all; src/backend/port/win32/signal.c provides
+ *	we don't use this file at all; src/backend/port/win32/signal.c provides
  *	pqsignal() for the backend environment.  Frontend programs can use
- *	this__ version of pqsignal() if they wish, but beware that Windows
+ *	this version of pqsignal() if they wish, but beware that Windows
  *	requires signal-handler reinstallation, because indeed it provides
  *	neither POSIX signals nor BSD signals :-(
  * ------------------------------------------------------------------------

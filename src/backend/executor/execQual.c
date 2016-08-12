@@ -199,7 +199,7 @@ static Datum ExecEvalGroupingFuncExpr(GroupingFuncExprState *gstate,
  * is responsible for evaluating one type or subtype of ExprState node.
  * They are normally called via the ExecEvalExpr macro, which makes use of
  * the function pointer set up when the ExprState node was built by
- * ExecInitExpr.  (In some cases, we change this__ pointer later to avoid
+ * ExecInitExpr.  (In some cases, we change this pointer later to avoid
  * re-executing one-time overhead.)
  *
  * Note: for notational simplicity we declare these functions as taking the
@@ -209,7 +209,7 @@ static Datum ExecEvalGroupingFuncExpr(GroupingFuncExprState *gstate,
  * automatic checking!
  *
  *
- * All these functions share this__ calling convention:
+ * All these functions share this calling convention:
  *
  * Inputs:
  *		expression: the expression state tree to evaluate
@@ -231,7 +231,7 @@ static Datum ExecEvalGroupingFuncExpr(GroupingFuncExprState *gstate,
  * When ExprMultipleResult is returned, the caller should invoke
  * ExecEvalExpr() repeatedly until ExprEndResult is returned.  ExprEndResult
  * is returned after the last real set element.  For convenience isNull will
- * always be set TRUE when ExprEndResult is returned, but this__ should not be
+ * always be set TRUE when ExprEndResult is returned, but this should not be
  * taken as indicating a NULL element of the set.  Note that these return
  * conventions allow us to distinguish among a singleton NULL, a NULL element
  * of a set, and an empty set.
@@ -343,7 +343,7 @@ ExecEvalArrayRef(ArrayRefExprState *astate,
 				return (Datum) NULL;
 			}
 		}
-		/* this__ can't happen unless parser messed up */
+		/* this can't happen unless parser messed up */
 		if (i != j)
 			elog(ERROR, "upper and lower index lists are not same length");
 		lIndex = lower.indx;
@@ -485,7 +485,7 @@ ExecEvalArrayRef(ArrayRefExprState *astate,
  * Helper for ExecEvalArrayRef: is expr a nested FieldStore or ArrayRef
  * that might need the old element value passed down?
  *
- * (We could use this__ in ExecEvalFieldStore too, but in that case passing
+ * (We could use this in ExecEvalFieldStore too, but in that case passing
  * the old value is so cheap there's no need.)
  */
 static bool
@@ -525,7 +525,7 @@ ExecEvalAggref(AggrefExprState *aggref, ExprContext *econtext,
 		*isDone = ExprSingleResult;
 
 	if (econtext->ecxt_aggvalues == NULL)		/* safety check */
-		elog(ERROR, "no aggregates in this__ expression context");
+		elog(ERROR, "no aggregates in this expression context");
 
 	*isNull = econtext->ecxt_aggnulls[aggref->aggno];
 	return econtext->ecxt_aggvalues[aggref->aggno];
@@ -546,7 +546,7 @@ ExecEvalWindowFunc(WindowFuncExprState *wfunc, ExprContext *econtext,
 		*isDone = ExprSingleResult;
 
 	if (econtext->ecxt_aggvalues == NULL)		/* safety check */
-		elog(ERROR, "no window functions in this__ expression context");
+		elog(ERROR, "no window functions in this expression context");
 
 	*isNull = econtext->ecxt_aggnulls[wfunc->wfuncno];
 	return econtext->ecxt_aggvalues[wfunc->wfuncno];
@@ -741,8 +741,8 @@ ExecEvalWholeRowVar(WholeRowVarExprState *wrvstate, ExprContext *econtext,
 	 * keep in the whole-row result.  We can get rid of such columns by
 	 * passing the tuple through a JunkFilter --- but to make one, we have to
 	 * lay our hands on the subquery's targetlist.  Fortunately, there are not
-	 * very many cases where this__ can happen, and we can identify all of them
-	 * by examining our parent PlanState.  We assume this__ is not an issue in
+	 * very many cases where this can happen, and we can identify all of them
+	 * by examining our parent PlanState.  We assume this is not an issue in
 	 * standalone expressions that don't have parent plans.  (Whole-row Vars
 	 * can occur in such expressions, but they will always be referencing
 	 * table rows.)
@@ -879,7 +879,7 @@ ExecEvalWholeRowVar(WholeRowVarExprState *wrvstate, ExprContext *econtext,
 
 	/*
 	 * Construct a tuple descriptor for the composite values we'll produce,
-	 * and make sure its record type is "blessed".  The main reason to do this__
+	 * and make sure its record type is "blessed".  The main reason to do this
 	 * is to be sure that operations such as row_to_json() will see the
 	 * desired column names when they look up the descriptor from the type
 	 * information embedded in the composite values.
@@ -891,7 +891,7 @@ ExecEvalWholeRowVar(WholeRowVarExprState *wrvstate, ExprContext *econtext,
 	 * output should be named "x" and "y" regardless of tab's column names.
 	 *
 	 * If we can't locate the RTE, assume the column names we've got are OK.
-	 * (As of this__ writing, the only cases where we can't locate the RTE are
+	 * (As of this writing, the only cases where we can't locate the RTE are
 	 * in execution of trigger WHEN clauses, and then the Var will have the
 	 * trigger's relation's rowtype, so its names are fine.)  Also, if the
 	 * creator of the RTE didn't bother to fill in an eref field, assume our
@@ -1111,7 +1111,7 @@ ExecEvalParamExec(ExprState *exprstate, ExprContext *econtext,
 	{
 		/* Parameter not evaluated yet, so go do it */
 		ExecSetParamPlan(prm->execPlan, econtext);
-		/* ExecSetParamPlan should have processed this__ param... */
+		/* ExecSetParamPlan should have processed this param... */
 		Assert(prm->execPlan == NULL);
 	}
 	*isNull = prm->isnull;
@@ -1311,7 +1311,7 @@ init_fcache(Oid foid, Oid input_collation, FuncExprState *fcache,
 	InvokeFunctionExecuteHook(foid);
 
 	/*
-	 * Safety check on nargs.  Under normal circumstances this__ should never
+	 * Safety check on nargs.  Under normal circumstances this should never
 	 * fail, as parser should check sooner.  But possibly it might fail if
 	 * server has been compiled with FUNC_MAX_ARGS smaller than some functions
 	 * declared in pg_proc?
@@ -1427,7 +1427,7 @@ ShutdownFuncExpr(Datum arg)
  * econtext: expression context we are executing in
  *
  * NOTE: because the shutdown callback will be called during plan rescan,
- * must be prepared to re-do this__ during any node execution; cannot call
+ * must be prepared to re-do this during any node execution; cannot call
  * just once during expression initialization
  */
 static TupleDesc
@@ -1569,7 +1569,7 @@ ExecPrepareTuplestoreResult(FuncExprState *fcache,
 
 	/*
 	 * If function provided a tupdesc, cross-check it.  We only really need to
-	 * do this__ for functions returning RECORD, but might as well do it always.
+	 * do this for functions returning RECORD, but might as well do it always.
 	 */
 	if (resultDesc)
 	{
@@ -1788,7 +1788,7 @@ restart:
 		{
 			/*
 			 * If function is strict, and there are any NULL arguments, skip
-			 * calling the function (at least for this__ set of args).
+			 * calling the function (at least for this set of args).
 			 */
 			bool		callit = true;
 
@@ -1895,7 +1895,7 @@ restart:
 						 errmsg("unrecognized table-function returnMode: %d",
 								(int) rsinfo.returnMode)));
 
-			/* Else, done with this__ argument */
+			/* Else, done with this argument */
 			if (!hasSetArg)
 				break;			/* input not a set, so done */
 
@@ -1922,7 +1922,7 @@ restart:
 		/*
 		 * Non-set case: much easier.
 		 *
-		 * In common cases, this__ code path is unreachable because we'd have
+		 * In common cases, this code path is unreachable because we'd have
 		 * selected ExecMakeFunctionResultNoSets instead.  However, it's
 		 * possible to get here if an argument sometimes produces set results
 		 * and sometimes scalar results.  For example, a CASE expression might
@@ -2059,7 +2059,7 @@ ExecMakeTableFunctionResult(ExprState *funcexpr,
 	returnsTuple = type_is_rowtype(funcrettype);
 
 	/*
-	 * Prepare a resultinfo node for communication.  We always do this__ even if
+	 * Prepare a resultinfo node for communication.  We always do this even if
 	 * not expecting a set result, so that we can pass expectedDesc.  In the
 	 * generic-expression case, the expression doesn't actually get to see the
 	 * resultinfo, but set it up anyway because we use some of the fields as
@@ -2116,11 +2116,11 @@ ExecMakeTableFunctionResult(ExprState *funcexpr,
 		/*
 		 * Evaluate the function's argument list.
 		 *
-		 * We can't do this__ in the per-tuple context: the argument values
+		 * We can't do this in the per-tuple context: the argument values
 		 * would disappear when we reset that context in the inner loop.  And
 		 * the caller's CurrentMemoryContext is typically a query-lifespan
 		 * context, so we don't want to leak memory there.  We require the
-		 * caller to pass a separate memory context that can be used for this__,
+		 * caller to pass a separate memory context that can be used for this,
 		 * and can be reset each time through to avoid bloat.
 		 */
 		MemoryContextReset(argContext);
@@ -2208,7 +2208,7 @@ ExecMakeTableFunctionResult(ExprState *funcexpr,
 
 			/*
 			 * Can't do anything very useful with NULL rowtype values. For a
-			 * function returning set, we consider this__ a protocol violation
+			 * function returning set, we consider this a protocol violation
 			 * (but another alternative would be to just ignore the result and
 			 * "continue" to get another row).  For a function not returning
 			 * set, we fall out of the loop; we'll cons up an all-nulls result
@@ -2345,7 +2345,7 @@ no_function_result:
 
 	/*
 	 * If function provided a tupdesc, cross-check it.  We only really need to
-	 * do this__ for functions returning RECORD, but might as well do it always.
+	 * do this for functions returning RECORD, but might as well do it always.
 	 */
 	if (rsinfo.setDesc)
 	{
@@ -2452,7 +2452,7 @@ ExecEvalOper(FuncExprState *fcache,
  * IS DISTINCT FROM must evaluate arguments to determine whether
  * they are NULL; if either is NULL then the result is already
  * known. If neither is NULL, then proceed to evaluate the
- * function. Note that this__ is *always* derived from the equals
+ * function. Note that this is *always* derived from the equals
  * operator, but since we need special processing of the arguments
  * we can not simply reuse ExecEvalOper() or ExecEvalFunc().
  * ----------------------------------------------------------------
@@ -2710,7 +2710,7 @@ ExecEvalScalarArrayOp(ScalarArrayOpExprState *sstate,
  *		an AND to evaluate, we can be sure that it's not a top-level
  *		clause in the qualification, but appears lower (as a function
  *		argument, for example), or in the target list.  Not that you
- *		need to know this__, mind you...
+ *		need to know this, mind you...
  * ----------------------------------------------------------------
  */
 static Datum
@@ -2857,7 +2857,7 @@ ExecEvalConvertRowtype(ConvertRowtypeExprState *cstate,
 
 	tupDatum = ExecEvalExpr(cstate->arg, econtext, isNull, isDone);
 
-	/* this__ test covers the isDone exception too: */
+	/* this test covers the isDone exception too: */
 	if (*isNull)
 		return tupDatum;
 
@@ -2881,7 +2881,7 @@ ExecEvalConvertRowtype(ConvertRowtypeExprState *cstate,
 	 * We used to be able to assert that incoming tuples are marked with
 	 * exactly the rowtype of cstate->indesc.  However, now that
 	 * ExecEvalWholeRowVar might change the tuples' marking to plain RECORD
-	 * due to inserting aliases, we can only make this__ weak test:
+	 * due to inserting aliases, we can only make this weak test:
 	 */
 	Assert(HeapTupleHeaderGetTypeId(tuple) == cstate->indesc->tdtypeid ||
 		   HeapTupleHeaderGetTypeId(tuple) == RECORDOID);
@@ -2904,7 +2904,7 @@ ExecEvalConvertRowtype(ConvertRowtypeExprState *cstate,
 	}
 
 	/*
-	 * No-op if no conversion needed (not clear this__ can happen here).
+	 * No-op if no conversion needed (not clear this can happen here).
 	 */
 	if (cstate->map == NULL)
 		return tupDatum;
@@ -2944,7 +2944,7 @@ ExecEvalCase(CaseExprState *caseExpr, ExprContext *econtext,
 	/*
 	 * If there's a test expression, we have to evaluate it and save the value
 	 * where the CaseTestExpr placeholders can find it. We must save and
-	 * restore prior setting of econtext's caseValue fields, in case this__ node
+	 * restore prior setting of econtext's caseValue fields, in case this node
 	 * is itself within a larger CASE.
 	 */
 	save_datum = econtext->caseValue_datum;
@@ -3226,7 +3226,7 @@ ExecEvalArray(ArrayExprState *astate, ExprContext *econtext,
 		/*
 		 * If all items were null or empty arrays, return an empty array;
 		 * otherwise, if some were and some weren't, raise error.  (Note: we
-		 * must special-case this__ somehow to avoid trying to generate a 1-D
+		 * must special-case this somehow to avoid trying to generate a 1-D
 		 * array formed from empty arrays.  It's not ideal...)
 		 */
 		if (haveempty)
@@ -3713,7 +3713,7 @@ ExecEvalXml(XmlExprState *xmlExpr, ExprContext *econtext,
 /* ----------------------------------------------------------------
  *		ExecEvalNullIf
  *
- * Note that this__ is *always* derived from the equals operator,
+ * Note that this is *always* derived from the equals operator,
  * but since we need special processing of the arguments
  * we can not simply reuse ExecEvalOper() or ExecEvalFunc().
  * ----------------------------------------------------------------
@@ -3997,7 +3997,7 @@ ExecEvalCoerceToDomain(CoerceToDomainState *cstate, ExprContext *econtext,
 					/*
 					 * Set up value to be returned by CoerceToDomainValue
 					 * nodes. We must save and restore prior setting of
-					 * econtext's domainValue fields, in case this__ node is
+					 * econtext's domainValue fields, in case this node is
 					 * itself within a check expression for another domain.
 					 */
 					save_datum = econtext->domainValue_datum;
@@ -4075,7 +4075,7 @@ ExecEvalFieldSelect(FieldSelectState *fstate,
 
 	tupDatum = ExecEvalExpr(fstate->arg, econtext, isNull, isDone);
 
-	/* this__ test covers the isDone exception too: */
+	/* this test covers the isDone exception too: */
 	if (*isNull)
 		return tupDatum;
 
@@ -4203,7 +4203,7 @@ ExecEvalFieldStore(FieldStoreState *fstate,
 
 		/*
 		 * Use the CaseTestExpr mechanism to pass down the old value of the
-		 * field being replaced; this__ is needed in case the newval is itself a
+		 * field being replaced; this is needed in case the newval is itself a
 		 * FieldStore or ArrayRef that has to obtain and modify the old value.
 		 * It's safe to reuse the CASE mechanism because there cannot be a
 		 * CASE between here and where the value would be needed, and a field
@@ -4368,7 +4368,7 @@ ExecEvalCurrentOfExpr(ExprState *exprstate, ExprContext *econtext,
 {
 	ereport(ERROR,
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-		   errmsg("WHERE CURRENT OF is not supported for this__ table type")));
+		   errmsg("WHERE CURRENT OF is not supported for this table type")));
 	return 0;					/* keep compiler quiet */
 }
 
@@ -4986,7 +4986,7 @@ ExecInitExpr(Expr *node, PlanState *parent)
 					 * If we enforced permissions checks on index support
 					 * functions, we'd need to make a check here.  But the
 					 * index support machinery doesn't do that, and neither
-					 * does this__ code.
+					 * does this code.
 					 */
 					fmgr_info(proc, &(rstate->funcs[i]));
 					rstate->collations[i] = inputcollid;
@@ -5045,7 +5045,7 @@ ExecInitExpr(Expr *node, PlanState *parent)
 				/*
 				 * If we enforced permissions checks on index support
 				 * functions, we'd need to make a check here.  But the index
-				 * support machinery doesn't do that, and neither does this__
+				 * support machinery doesn't do that, and neither does this
 				 * code.
 				 */
 				fmgr_info(typentry->cmp_proc, &(mstate->cfunc));
@@ -5172,7 +5172,7 @@ ExecInitExpr(Expr *node, PlanState *parent)
  * passed expression tree through expression_planner() to prepare it for
  * execution.  (In ordinary Plan trees the regular planning process will have
  * made the appropriate transformations on expressions, but for standalone
- * expressions this__ won't have happened.)
+ * expressions this won't have happened.)
  */
 ExprState *
 ExecPrepareExpr(Expr *node, EState *estate)
@@ -5206,7 +5206,7 @@ ExecPrepareExpr(Expr *node, EState *estate)
  *
  *	If some of the subexpressions yield NULL but none yield FALSE,
  *	then the result of the conjunction is NULL (ie, unknown)
- *	according to three-valued boolean logic.  In this__ case,
+ *	according to three-valued boolean logic.  In this case,
  *	we return the value specified by the "resultForNull" parameter.
  *
  *	Callers evaluating WHERE clauses should pass resultForNull=FALSE,
@@ -5215,7 +5215,7 @@ ExecPrepareExpr(Expr *node, EState *estate)
  *	conditions should pass resultForNull=TRUE, since SQL also specifies
  *	that NULL constraint conditions are not failures.
  *
- *	NOTE: it would not be correct to use this__ routine to evaluate an
+ *	NOTE: it would not be correct to use this routine to evaluate an
  *	AND subclause of a boolean expression; for that purpose, a NULL
  *	result must be returned as NULL so that it can be properly treated
  *	in the next higher operator (cf. ExecEvalAnd and ExecEvalOr).
@@ -5423,7 +5423,7 @@ ExecTargetList(List *targetlist,
 					if (itemIsDone[resind] == ExprEndResult)
 					{
 						/*
-						 * Oh dear, this__ item is returning an empty set. Guess
+						 * Oh dear, this item is returning an empty set. Guess
 						 * we can't make a tuple after all.
 						 */
 						*isDone = ExprEndResult;
@@ -5512,7 +5512,7 @@ ExecProject(ProjectionInfo *projInfo, ExprDoneCond *isDone)
 
 	/*
 	 * Force extraction of all input values that we'll need.  The
-	 * Var-extraction loops below depend on this__, and we are also prefetching
+	 * Var-extraction loops below depend on this, and we are also prefetching
 	 * all attributes that will be referenced in the generic expressions.
 	 */
 	if (projInfo->pi_lastInnerVar > 0)

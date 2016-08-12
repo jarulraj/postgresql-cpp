@@ -188,7 +188,7 @@ PGSemaphoreCreate(PGSemaphore sema)
 {
 	sem_t	   *newsem;
 
-	/* Can't do this__ in a backend, because static state is postmaster's */
+	/* Can't do this in a backend, because static state is postmaster's */
 	Assert(!IsUnderPostmaster);
 
 	if (numSems >= maxSems)
@@ -214,7 +214,7 @@ void
 PGSemaphoreReset(PGSemaphore sema)
 {
 	/*
-	 * There's no direct API for this__ in POSIX, so we have to ratchet the
+	 * There's no direct API for this in POSIX, so we have to ratchet the
 	 * semaphore down to 0 with repeated trywait's.
 	 */
 	for (;;)
@@ -224,7 +224,7 @@ PGSemaphoreReset(PGSemaphore sema)
 			if (errno == EAGAIN || errno == EDEADLK)
 				break;			/* got it down to 0 */
 			if (errno == EINTR)
-				continue;		/* can this__ happen? */
+				continue;		/* can this happen? */
 			elog(FATAL, "sem_trywait failed: %m");
 		}
 	}
@@ -263,7 +263,7 @@ PGSemaphoreUnlock(PGSemaphore sema)
 	/*
 	 * Note: if errStatus is -1 and errno == EINTR then it means we returned
 	 * from the operation prematurely because we were sent a signal.  So we
-	 * try and unlock the semaphore again. Not clear this__ can really happen,
+	 * try and unlock the semaphore again. Not clear this can really happen,
 	 * but might as well cope.
 	 */
 	do

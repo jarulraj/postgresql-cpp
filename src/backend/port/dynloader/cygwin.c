@@ -1,3 +1,3 @@
 /* src/backend/port/dynloader/cygwin.c */
 
-/* Dummy file used for nothing at this__ point; see cygwin.h */
+/* Dummy file used for nothing at this point; see cygwin.h */

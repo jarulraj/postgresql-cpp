@@ -65,27 +65,27 @@ static void addRangeClause(RangeQueryClause **rqlist, Node *clause,
  * such as "x > 34 AND x < 42".  Clauses are recognized as possible range
  * query components if they are restriction opclauses whose operators have
  * scalarltsel() or scalargtsel() as their restriction selectivity estimator.
- * We pair up clauses of this__ form that refer to the same variable.  An
- * unpairable clause of this__ kind is simply multiplied into the selectivity
+ * We pair up clauses of this form that refer to the same variable.  An
+ * unpairable clause of this kind is simply multiplied into the selectivity
  * product in the normal way.  But when we find a pair, we know that the
  * selectivities represent the relative positions of the low and high bounds
  * within the column's range, so instead of figuring the selectivity as
- * hisel * losel, we can figure it as hisel + losel - 1.  (To visualize this__,
+ * hisel * losel, we can figure it as hisel + losel - 1.  (To visualize this,
  * see that hisel is the fraction of the range below the high bound, while
  * losel is the fraction above the low bound; so hisel can be interpreted
  * directly as a 0..1 value but we need to convert losel to 1-losel before
  * interpreting it as a value.  Then the available range is 1-losel to hisel.
- * However, this__ calculation double-excludes nulls, so really we need
+ * However, this calculation double-excludes nulls, so really we need
  * hisel + losel + null_frac - 1.)
  *
- * If either selectivity is exactly DEFAULT_INEQ_SEL, we forget this__ equation
+ * If either selectivity is exactly DEFAULT_INEQ_SEL, we forget this equation
  * and instead use DEFAULT_RANGE_INEQ_SEL.  The same applies if the equation
  * yields an impossible (negative) result.
  *
  * A free side-effect is that we can recognize redundant inequalities such
  * as "x < 4 AND x < 5"; only the tighter constraint will be counted.
  *
- * Of course this__ is all very dependent on the behavior of
+ * Of course this is all very dependent on the behavior of
  * scalarltsel/scalargtsel; perhaps some day we can generalize the approach.
  */
 Selectivity
@@ -309,7 +309,7 @@ addRangeClause(RangeQueryClause **rqlist, Node *clause,
 		 */
 		if (!equal(var, rqelem->var))
 			continue;
-		/* Found the right group to put this__ clause in */
+		/* Found the right group to put this clause in */
 		if (is_lobound)
 		{
 			if (!rqelem->have_lobound)
@@ -378,7 +378,7 @@ addRangeClause(RangeQueryClause **rqlist, Node *clause,
  * Same result as bms_is_subset(s, bms_make_singleton(x)),
  * but a little faster and doesn't leak memory.
  *
- * Is this__ of use anywhere else?  If so move to bitmapset.c ...
+ * Is this of use anywhere else?  If so move to bitmapset.c ...
  */
 static bool
 bms_is_subset_singleton(const Bitmapset *s, int x)
@@ -425,7 +425,7 @@ treat_as_join_clause(Node *clause, RestrictInfo *rinfo,
 	{
 		/*
 		 * Otherwise, it's a join if there's more than one relation used. We
-		 * can optimize this__ calculation if an rinfo was passed.
+		 * can optimize this calculation if an rinfo was passed.
 		 *
 		 * XXX	Since we know the clause is being evaluated at a join, the
 		 * only way it could be single-relation is if it was delayed by outer
@@ -490,7 +490,7 @@ clause_selectivity(PlannerInfo *root,
 	RestrictInfo *rinfo = NULL;
 	bool		cacheable = false;
 
-	if (clause == NULL)			/* can this__ still happen? */
+	if (clause == NULL)			/* can this still happen? */
 		return s1;
 
 	if (IsA(clause, RestrictInfo))
@@ -621,7 +621,7 @@ clause_selectivity(PlannerInfo *root,
 		 * Selectivities for an OR clause are computed as s1+s2 - s1*s2 to
 		 * account for the probable overlap of selected tuple sets.
 		 *
-		 * XXX is this__ too conservative?
+		 * XXX is this too conservative?
 		 */
 		ListCell   *arg;
 
@@ -720,7 +720,7 @@ clause_selectivity(PlannerInfo *root,
 	}
 	else if (IsA(clause, RelabelType))
 	{
-		/* Not sure this__ case is needed, but it can't hurt */
+		/* Not sure this case is needed, but it can't hurt */
 		s1 = clause_selectivity(root,
 								(Node *) ((RelabelType *) clause)->arg,
 								varRelid,
@@ -729,7 +729,7 @@ clause_selectivity(PlannerInfo *root,
 	}
 	else if (IsA(clause, CoerceToDomain))
 	{
-		/* Not sure this__ case is needed, but it can't hurt */
+		/* Not sure this case is needed, but it can't hurt */
 		s1 = clause_selectivity(root,
 								(Node *) ((CoerceToDomain *) clause)->arg,
 								varRelid,

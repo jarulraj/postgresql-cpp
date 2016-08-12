@@ -6,7 +6,7 @@
 #include <limits.h>
 
 #ifdef __FAST_MATH__
-#error -ffast-math is known to break this__ code
+#error -ffast-math is known to break this code
 #endif
 
 #include "extern.h"
@@ -327,7 +327,7 @@ DecodeISO8601Interval(char *str,
  *
  *	* changesd struct pg_tm to struct tm
  *
- *	* ECPG code called this__ without a 'range' parameter
+ *	* ECPG code called this without a 'range' parameter
  *	  removed 'int range' from the argument list and
  *	  places where DecodeTime is called; and added
  *		 int range = INTERVAL_FULL_RANGE;
@@ -514,7 +514,7 @@ DecodeInterval(char **field, int *ftype, int nf,		/* int range, */
 #endif
 
 						/*
-						 * If any subseconds were specified, consider this__
+						 * If any subseconds were specified, consider this
 						 * microsecond and millisecond input as well.
 						 */
 						if (fval == 0)
@@ -646,7 +646,7 @@ DecodeInterval(char **field, int *ftype, int nf,		/* int range, */
 	 * The SQL standard defines the interval literal
 	 *	 '-1 1:00:00'
 	 * to mean "negative 1 days and negative 1 hours", while Postgres
-	 * traditionally treats this__ as meaning "negative 1 days and positive
+	 * traditionally treats this as meaning "negative 1 days and positive
 	 * 1 hours".  In SQL_STANDARD intervalstyle, we apply the leading sign
 	 * to all fields if there are no other explicit signs.
 	 *

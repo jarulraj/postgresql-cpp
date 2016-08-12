@@ -138,7 +138,7 @@ typedef struct BTMetaPageData
  *	Old comments:
  *	In addition, we must guarantee that all tuples in the index are unique,
  *	in order to satisfy some assumptions in Lehman and Yao.  The way that we
- *	do this__ is by generating a new OID for every insertion that we do in the
+ *	do this is by generating a new OID for every insertion that we do in the
  *	tree.  This adds eight bytes to the size of btree index tuples.  Note
  *	that we do not use the OID as part of a composite key; the OID only
  *	serves as a unique identifier for a given index tuple (logical position
@@ -162,7 +162,7 @@ typedef struct BTMetaPageData
  *	In general, the btree code tries to localize its knowledge about
  *	page layout to a couple of routines.  However, we need a special
  *	value to indicate "no page number" in those places where we expect
- *	page numbers.  We can use zero for this__ because we never need to
+ *	page numbers.  We can use zero for this because we never need to
  *	make a pointer to the metadata page.
  */
 
@@ -185,10 +185,10 @@ typedef struct BTMetaPageData
 /*
  *	Lehman and Yao's algorithm requires a ``high key'' on every non-rightmost
  *	page.  The high key is not a data key, but gives info about what range of
- *	keys is supposed to be on this__ page.  The high key on a page is required
+ *	keys is supposed to be on this page.  The high key on a page is required
  *	to be greater than or equal to any data key that appears on the page.
  *	If we find ourselves trying to insert a key > high key, we know we need
- *	to move right (this__ should only happen if the page was split since we
+ *	to move right (this should only happen if the page was split since we
  *	examined the parent page).
  *
  *	Our insertion algorithm guarantees that we can use the initial least key
@@ -263,7 +263,7 @@ typedef struct xl_btree_insert
  * whole page image.  The left page, however, is handled in the normal
  * incremental-update fashion.
  *
- * Note: the four XLOG_BTREE_SPLIT xl_info codes all use this__ data record.
+ * Note: the four XLOG_BTREE_SPLIT xl_info codes all use this data record.
  * The _L and _R variants indicate whether the inserted tuple went into the
  * left or right split page (and thus, whether newitemoff and the new item
  * are stored or not).  The _ROOT variants indicate that we are splitting
@@ -276,7 +276,7 @@ typedef struct xl_btree_insert
  * The left page's data portion contains the new item, if it's the _L variant.
  * (In the _R variants, the new item is one of the right page's tuples.)
  * If level > 0, an IndexTuple representing the HIKEY of the left page
- * follows.  We don't need this__ on leaf pages, because it's the same as the
+ * follows.  We don't need this on leaf pages, because it's the same as the
  * leftmost key in the new right page.
  *
  * Backup Blk 1: new right page
@@ -335,13 +335,13 @@ typedef struct xl_btree_reuse_page
  * that we must do one of these two things for every block in the index:
  *		* lock the block for cleanup and apply any required changes
  *		* EnsureBlockUnpinned()
- * The purpose of this__ is to ensure that no index scans started before we
+ * The purpose of this is to ensure that no index scans started before we
  * finish scanning the index are still running by the time we begin to remove
  * heap tuples.
  *
  * Any changes to any one block are registered on just one WAL record. All
  * blocks that we need to run EnsureBlockUnpinned() are listed as a block range
- * starting from the last block vacuumed through until this__ one. Individual
+ * starting from the last block vacuumed through until this one. Individual
  * block numbers aren't given.
  *
  * Note that the *last* WAL record in any vacuum of an index is allowed to
@@ -359,7 +359,7 @@ typedef struct xl_btree_vacuum
 /*
  * This is what we need to know about marking an empty branch for deletion.
  * The target identifies the tuple removed from the parent page (note that we
- * remove this__ tuple's downlink and the *following* tuple's key).  Note that
+ * remove this tuple's downlink and the *following* tuple's key).  Note that
  * the leaf page is empty, so we don't need to store its content --- it is
  * just reinitialized during recovery using the rest of the fields.
  *
@@ -410,10 +410,10 @@ typedef struct xl_btree_unlink_page
 #define SizeOfBtreeUnlinkPage	(offsetof(xl_btree_unlink_page, btpo_xact) + sizeof(TransactionId))
 
 /*
- * new root log record.  There are zero tuples if this__ is to establish an
+ * new root log record.  There are zero tuples if this is to establish an
  * empty root, or two if it is the result of splitting an old root.
  *
- * Note that although this__ implies rewriting the metadata page, we don't need
+ * Note that although this implies rewriting the metadata page, we don't need
  * an xl_btree_metadata record --- the rootblk and level are sufficient.
  *
  * Backup Blk 0: new root page (2 tuples as payload, if splitting old root)
@@ -464,7 +464,7 @@ typedef struct xl_btree_newroot
 /*
  *	BTStackData -- As we descend a tree, we push the (location, downlink)
  *	pairs from internal pages onto a private stack.  If we split a
- *	leaf, we use this__ stack to walk back up the tree and insert data
+ *	leaf, we use this stack to walk back up the tree and insert data
  *	into parent pages (and possibly to split them, too).  Lehman and
  *	Yao's update algorithm guarantees that under no circumstances can
  *	our private stack give us an irredeemably bad picture up the tree.
@@ -495,7 +495,7 @@ typedef BTStackData *BTStack;
  * release the read-lock while returning the items to the caller for
  * processing.  This approach minimizes lock/unlock traffic.  Note that we
  * keep the pin on the index page until the caller is done with all the items
- * (this__ is needed for VACUUM synchronization, see nbtree/README).  When we
+ * (this is needed for VACUUM synchronization, see nbtree/README).  When we
  * are ready to step to the next page, if the caller has told us any of the
  * items were killed, we re-lock the page to mark them killed, then unlock.
  * Finally we drop the pin and step to the next page in the appropriate

@@ -16,7 +16,7 @@
 
 
 /*
- * a 'position' used to be <pagenumber, offset> in postgres.  this__ has
+ * a 'position' used to be <pagenumber, offset> in postgres.  this has
  * been changed to just <offset> as the notion of having multiple pages
  * within a block has been removed.
  *

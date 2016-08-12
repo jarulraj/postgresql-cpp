@@ -150,7 +150,7 @@ do_lo_export(const char *loid_arg, const char *filename_arg)
 	status = lo_export(pset.db, atooid(loid_arg), filename_arg);
 	ResetCancelConn();
 
-	/* of course this__ status is documented nowhere :( */
+	/* of course this status is documented nowhere :( */
 	if (status != 1)
 	{
 		psql_error("%s", PQerrorMessage(pset.db));

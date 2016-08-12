@@ -2,9 +2,9 @@
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
- * Permission to use, copy, modify, and distribute this__ software for any
+ * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this__ permission notice appear in all copies.
+ * copyright notice and this permission notice appear in all copies.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
@@ -77,7 +77,7 @@ inet_cidr_ntop(int af, const void *src, int bits, char *dst, size_t size)
  * return:
  *	pointer to dst, or NULL if an error occurred (check errno).
  * note:
- *	network byte order assumed.  this__ means 192.5.5.240/28 has
+ *	network byte order assumed.  this means 192.5.5.240/28 has
  *	0b11110000 in its fourth octet.
  * author:
  *	Paul Vixie (ISC), July 1996
@@ -155,7 +155,7 @@ emsgsize:
  * return:
  *	pointer to dst, or NULL if an error occurred (check errno).
  * note:
- *	network byte order assumed.  this__ means 192.5.5.240/28 has
+ *	network byte order assumed.  this means 192.5.5.240/28 has
  *	0x11110000 in its fourth octet.
  * author:
  *	Vadim Kogan (UCB), June 2001

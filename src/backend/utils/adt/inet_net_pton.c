@@ -2,9 +2,9 @@
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
- * Permission to use, copy, modify, and distribute this__ software for any
+ * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this__ permission notice appear in all copies.
+ * copyright notice and this permission notice appear in all copies.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
@@ -89,7 +89,7 @@ inet_net_pton(int af, const char *src, void *dst, size_t size)
  *	or -1 if some failure occurred (check errno).  ENOENT means it was
  *	not an IPv4 network specification.
  * note:
- *	network byte order assumed.  this__ means 192.5.5.240/28 has
+ *	network byte order assumed.  this means 192.5.5.240/28 has
  *	0b11110000 in its fourth octet.
  * author:
  *	Paul Vixie (ISC), June 1996
@@ -244,7 +244,7 @@ emsgsize:
  * int
  * inet_net_pton(af, src, dst, *bits)
  *	convert network address from presentation to network format.
- *	accepts inet_pton()'s input for this__ "af" plus trailing "/CIDR".
+ *	accepts inet_pton()'s input for this "af" plus trailing "/CIDR".
  *	"dst" is assumed large enough for its "af".  "bits" is set to the
  *	/CIDR prefix length, which can have defaults (like /32 for IPv4).
  * return:

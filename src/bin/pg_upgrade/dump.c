@@ -34,7 +34,7 @@ generate_old_dump(void)
 	prep_status("Creating dump of database schemas\n");
 
 	/*
-	 * Set umask for this__ function, all functions it calls, and all
+	 * Set umask for this function, all functions it calls, and all
 	 * subprocesses/threads it creates.  We can't use fopen_priv() as Windows
 	 * uses threads and umask is process-global.
 	 */

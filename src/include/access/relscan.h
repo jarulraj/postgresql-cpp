@@ -28,8 +28,8 @@ typedef struct HeapScanDescData
 	Snapshot	rs_snapshot;	/* snapshot to see */
 	int			rs_nkeys;		/* number of scan keys */
 	ScanKey		rs_key;			/* array of scan key descriptors */
-	bool		rs_bitmapscan;	/* true if this__ is really a bitmap scan */
-	bool		rs_samplescan;	/* true if this__ is really a sample scan */
+	bool		rs_bitmapscan;	/* true if this is really a bitmap scan */
+	bool		rs_samplescan;	/* true if this is really a sample scan */
 	bool		rs_pageatatime; /* verify visibility page-at-a-time? */
 	bool		rs_allow_strat; /* allow or disallow use of access strategy */
 	bool		rs_allow_sync;	/* allow or disallow use of syncscan */
@@ -82,7 +82,7 @@ typedef struct IndexScanDescData
 	/* index access method's private state */
 	void	   *opaque;			/* access-method-specific info */
 
-	/* in an index-only scan, this__ is valid after a successful amgettuple */
+	/* in an index-only scan, this is valid after a successful amgettuple */
 	IndexTuple	xs_itup;		/* index tuple returned by AM */
 	TupleDesc	xs_itupdesc;	/* rowtype descriptor of xs_itup */
 

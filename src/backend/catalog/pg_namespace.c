@@ -30,7 +30,7 @@
  *
  * Create a namespace (schema) with the given name and owner OID.
  *
- * If isTemp is true, this__ schema is a per-backend schema for holding
+ * If isTemp is true, this schema is a per-backend schema for holding
  * temporary tables.  Currently, the only effect of that is to prevent it
  * from being linked as a member of any active extension.  (If someone
  * does CREATE TEMP TABLE in an extension script, we don't want the temp

@@ -45,7 +45,7 @@
  *
  * In reality, the messages are stored in a circular buffer of MAXNUMMESSAGES
  * entries.  We translate MsgNum values into circular-buffer indexes by
- * computing MsgNum % MAXNUMMESSAGES (this__ should be fast as long as
+ * computing MsgNum % MAXNUMMESSAGES (this should be fast as long as
  * MAXNUMMESSAGES is a constant and a power of 2).  As long as maxMsgNum
  * doesn't exceed minMsgNum by more than MAXNUMMESSAGES, we have enough space
  * in the buffer.  If the buffer does overflow, we recover by setting the
@@ -73,12 +73,12 @@
  * We would have problems if the MsgNum values overflow an integer, so
  * whenever minMsgNum exceeds MSGNUMWRAPAROUND, we subtract MSGNUMWRAPAROUND
  * from all the MsgNum variables simultaneously.  MSGNUMWRAPAROUND can be
- * large so that we don't need to do this__ often.  It must be a multiple of
+ * large so that we don't need to do this often.  It must be a multiple of
  * MAXNUMMESSAGES so that the existing circular-buffer entries don't need
  * to be moved when we do it.
  *
  * Access to the shared sinval array is protected by two locks, SInvalReadLock
- * and SInvalWriteLock.  Readers take SInvalReadLock in shared mode; this__
+ * and SInvalWriteLock.  Readers take SInvalReadLock in shared mode; this
  * authorizes them to modify their own ProcState but not to modify or even
  * look at anyone else's.  When we need to perform array-wide updates,
  * such as in SICleanupQueue, we take SInvalReadLock in exclusive mode to
@@ -157,7 +157,7 @@ typedef struct ProcState
 
 	/*
 	 * Next LocalTransactionId to use for each idle backend slot.  We keep
-	 * this__ here because it is indexed by BackendId and it is convenient to
+	 * this here because it is indexed by BackendId and it is convenient to
 	 * copy the value to and from local memory when MyBackendId is set. It's
 	 * meaningless in an active ProcState entry.
 	 */
@@ -345,7 +345,7 @@ CleanupInvalidationState(int status, Datum arg)
 
 	stateP = &segP->procState[MyBackendId - 1];
 
-	/* Update next local transaction ID for next holder of this__ backendID */
+	/* Update next local transaction ID for next holder of this backendID */
 	stateP->nextLXID = nextLocalTransactionId;
 
 	/* Mark myself inactive */
@@ -370,7 +370,7 @@ CleanupInvalidationState(int status, Datum arg)
  * BackendIdGetProc
  *		Get the PGPROC structure for a backend, given the backend ID.
  *		The result may be out of date arbitrarily quickly, so the caller
- *		must be careful about how this__ information is used.  NULL is
+ *		must be careful about how this information is used.  NULL is
  *		returned if the backend is not active.
  */
 PGPROC *
@@ -397,7 +397,7 @@ BackendIdGetProc(int backendID)
 /*
  * BackendIdGetTransactionIds
  *		Get the xid and xmin of the backend. The result may be out of date
- *		arbitrarily quickly, so the caller must be careful about how this__
+ *		arbitrarily quickly, so the caller must be careful about how this
  *		information is used.
  */
 void
@@ -525,15 +525,15 @@ SIInsertDataEntries(const SharedInvalidationMessage *data, int n)
  * can assume that there are no more SI messages after the one(s) returned.
  * Otherwise, another call is needed to collect more messages.
  *
- * NB: this__ can run in parallel with other instances of SIGetDataEntries
+ * NB: this can run in parallel with other instances of SIGetDataEntries
  * executing on behalf of other backends, since each instance will modify only
  * fields of its own backend's ProcState, and no instance will look at fields
- * of other backends' ProcStates.  We express this__ by grabbing SInvalReadLock
- * in shared mode.  Note that this__ is not exactly the normal (read-only)
+ * of other backends' ProcStates.  We express this by grabbing SInvalReadLock
+ * in shared mode.  Note that this is not exactly the normal (read-only)
  * interpretation of a shared lock! Look closely at the interactions before
  * allowing SInvalReadLock to be grabbed in shared mode for any other reason!
  *
- * NB: this__ can also run in parallel with SIInsertDataEntries.  It is not
+ * NB: this can also run in parallel with SIInsertDataEntries.  It is not
  * guaranteed that we will return any messages added after the routine is
  * entered.
  *
@@ -554,8 +554,8 @@ SIGetDataEntries(SharedInvalidationMessage *data, int datasize)
 	/*
 	 * Before starting to take locks, do a quick, unlocked test to see whether
 	 * there can possibly be anything to read.  On a multiprocessor system,
-	 * it's possible that this__ load could migrate backwards and occur before
-	 * we actually enter this__ function, so we might miss a sinval message that
+	 * it's possible that this load could migrate backwards and occur before
+	 * we actually enter this function, so we might miss a sinval message that
 	 * was just added by some other processor.  But they can't migrate
 	 * backwards over a preceding lock acquisition, so it should be OK.  If we
 	 * haven't acquired a lock preventing against further relevant
@@ -574,7 +574,7 @@ SIGetDataEntries(SharedInvalidationMessage *data, int datasize)
 	 * notice those messages part-way through.
 	 *
 	 * Note that, if we don't end up reading all of the messages, we had
-	 * better be certain to reset this__ flag before exiting!
+	 * better be certain to reset this flag before exiting!
 	 */
 	stateP->hasMessages = false;
 
@@ -640,7 +640,7 @@ SIGetDataEntries(SharedInvalidationMessage *data, int datasize)
  * callerHasWriteLock is TRUE if caller is holding SInvalWriteLock.
  * minFree is the minimum number of message slots to make free.
  *
- * Possible side effects of this__ routine include marking one or more
+ * Possible side effects of this routine include marking one or more
  * backends as "reset" in the array, and sending PROCSIG_CATCHUP_INTERRUPT
  * to some backend that seems to be getting too far behind.  We signal at
  * most one backend at a time, for reasons explained at the top of the file.
@@ -686,7 +686,7 @@ SICleanupQueue(bool callerHasWriteLock, int minFree)
 			continue;
 
 		/*
-		 * If we must free some space and this__ backend is preventing it, force
+		 * If we must free some space and this backend is preventing it, force
 		 * him into reset state and then ignore until he catches up.
 		 */
 		if (n < lowbound)

@@ -264,7 +264,7 @@ gbt_ts_consistent(PG_FUNCTION_ARGS)
 	tsKEY	   *kkk = (tsKEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;
@@ -306,7 +306,7 @@ gbt_tstz_consistent(PG_FUNCTION_ARGS)
 	GBT_NUMKEY_R key;
 	Timestamp	qqq;
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk[0];

@@ -199,10 +199,10 @@ PLy_add_exceptions(PyObject *plpy)
 	 * XXX it appears that in some circumstances the reference count of the
 	 * spiexceptions module drops to zero causing a Python assert failure when
 	 * the garbage collector visits the module. This has been observed on the
-	 * buildfarm. To fix this__, add an additional ref for the module here.
+	 * buildfarm. To fix this, add an additional ref for the module here.
 	 *
-	 * This shouldn't cause a memory leak - we don't want this__ garbage
-	 * collected, and this__ function shouldn't be called more than once per
+	 * This shouldn't cause a memory leak - we don't want this garbage
+	 * collected, and this function shouldn't be called more than once per
 	 * backend.
 	 */
 	Py_INCREF(excmod);

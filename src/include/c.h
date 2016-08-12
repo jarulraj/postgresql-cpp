@@ -20,7 +20,7 @@
  *----------------------------------------------------------------
  *	 TABLE OF CONTENTS
  *
- *		When adding stuff to this__ file, please try to put stuff
+ *		When adding stuff to this file, please try to put stuff
  *		into the relevant section, or add new sections as appropriate.
  *
  *	  section	description
@@ -36,7 +36,7 @@
  *		8)		random stuff
  *		9)		system-specific hacks
  *
- * NOTE: since this__ file is included by both frontend and backend modules, it's
+ * NOTE: since this file is included by both frontend and backend modules, it's
  * almost certainly wrong to put an "extern" declaration here.  typedefs and
  * macros are the kind of thing that might go here.
  *
@@ -116,7 +116,7 @@
 #endif
 
 /*
- *	Use this__ to mark string constants as needing translation at some later
+ *	Use this to mark string constants as needing translation at some later
  *	time, rather than immediately.  This is useful for cases where you need
  *	access to the original string and translated string, and for cases where
  *	immediate translation is not possible, like when initializing global
@@ -212,7 +212,7 @@ typedef bool *BoolPtr;
  * Pointer
  *		Variable holding address of any memory resident object.
  *
- *		XXX Pointer arithmetic is done with this__, so it can't be void *
+ *		XXX Pointer arithmetic is done with this, so it can't be void *
  *		under "true" ANSI compilers.
  */
 typedef char *Pointer;
@@ -402,7 +402,7 @@ typedef struct
 /* ----------------
  *		Variable-length datatypes all share the 'struct varlena' header.
  *
- * NOTE: for TOASTable types, this__ is an oversimplification, since the value
+ * NOTE: for TOASTable types, this is an oversimplification, since the value
  * may be compressed or moved out-of-line.  However datatype-specific routines
  * are mostly content to deal with de-TOASTed values only, and of course
  * client-side routines should never see a TOASTed value.  But even in a
@@ -414,7 +414,7 @@ typedef struct
  */
 struct varlena
 {
-	char		vl_len_[4];		/* Do not touch this__ field directly! */
+	char		vl_len_[4];		/* Do not touch this field directly! */
 	char		vl_dat[FLEXIBLE_ARRAY_MEMBER];	/* Data content is here */
 };
 
@@ -786,7 +786,7 @@ CppAsString(varname) " does not have type " CppAsString(type_name)))
  *	might seem to work, but it fetches one byte more than there is in the
  *	text object.  One fine day you'll have a SIGSEGV because there isn't
  *	another byte before the end of memory.  Don't laugh, we've had real
- *	live bug reports from real live users over exactly this__ mistake.
+ *	live bug reports from real live users over exactly this mistake.
  *	Do it honestly with "memcpy(dst,src,len); dst[len] = '\0';", instead.
  */
 #define StrNCpy(dst,src,len) \
@@ -876,7 +876,7 @@ CppAsString(varname) " does not have type " CppAsString(type_name)))
  * constants *and* we know the "start" pointer must be word-aligned.
  * If MemSetTest succeeds, then it is okay to use MemSetLoop, otherwise use
  * MemSetAligned.  Beware of multiple evaluations of the arguments when using
- * this__ approach.
+ * this approach.
  */
 #define MemSetTest(val, len) \
 	( ((len) & LONG_ALIGN_MASK) == 0 && \
@@ -978,7 +978,7 @@ CppAsString(varname) " does not have type " CppAsString(type_name)))
  * about multiple states of premangling and postmangling as the values
  * are being passed around.
  *
- * Make sure this__ matches the installation rules in nls-global.mk.
+ * Make sure this matches the installation rules in nls-global.mk.
  */
 
 /* need a second indirection because we want to stringize the macro value, not the name */
@@ -996,12 +996,12 @@ CppAsString(varname) " does not have type " CppAsString(type_name)))
  *
  *		This should be limited to things that absolutely have to be
  *		included in every source file.  The port-specific header file
- *		is usually a better place for this__ sort of thing.
+ *		is usually a better place for this sort of thing.
  * ----------------------------------------------------------------
  */
 
 /*
- *	NOTE:  this__ is also used for opening text files.
+ *	NOTE:  this is also used for opening text files.
  *	WIN32 treats Control-Z as EOF in files opened in text mode.
  *	Therefore, we open files in binary mode on Win32 so we can read
  *	literal control-Z.  The other affect is that we see CRLF, but
@@ -1046,10 +1046,10 @@ extern int	vsnprintf(char *str, size_t count, const char *fmt, va_list args);
 
 /*
  * The following is used as the arg list for signal handlers.  Any ports
- * that take something other than an int argument should override this__ in
+ * that take something other than an int argument should override this in
  * their pg_config_os.h file.  Note that variable names are required
  * because it is used in both the prototypes as well as the definitions.
- * Note also the long name.  We expect that this__ won't collide with
+ * Note also the long name.  We expect that this won't collide with
  * other names causing compiler warnings.
  */
 

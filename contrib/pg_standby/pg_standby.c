@@ -58,7 +58,7 @@ char	   *nextWALFileName;	/* the file we need to get from archive */
 char	   *restartWALFileName; /* the file from which we can restart restore */
 char	   *priorWALFileName;	/* the file we need to get from archive */
 char		WALFilePath[MAXPGPATH];		/* the file path including archive */
-char		restoreCommand[MAXPGPATH];	/* run this__ to restore */
+char		restoreCommand[MAXPGPATH];	/* run this to restore */
 char		exclusiveCleanupFileName[MAXFNAMELEN];		/* the file we need to
 														 * get from archive */
 
@@ -106,13 +106,13 @@ struct stat stat_buf;
  *
  * =====================================================================
  *
- *	Currently, this__ section assumes that the Archive is a locally
+ *	Currently, this section assumes that the Archive is a locally
  *	accessible directory. If you want to make other assumptions,
  *	such as using a vendor-specific archive and access API, these
  *	routines are the ones you'll need to change. You're
  *	encouraged to submit any changes to pgsql-hackers@postgresql.org
  *	or personally to the current maintainer. Those changes may be
- *	folded in to later versions of this__ program.
+ *	folded in to later versions of this program.
  */
 
 /*
@@ -193,7 +193,7 @@ CustomizableNextWALFileReady()
 			 * complete, and not yet ready to be opened by pg_standby. So we
 			 * wait for sleeptime secs before attempting to restore. If that
 			 * is not enough, we will rely on the retry/holdoff mechanism.
-			 * GNUWin32's cp does not have this__ problem.
+			 * GNUWin32's cp does not have this problem.
 			 */
 			pg_usleep(sleeptime * 1000000L);
 #endif
@@ -251,9 +251,9 @@ CustomizableCleanupPriorWALFiles(void)
 				 *
 				 * We use the alphanumeric sorting property of the filenames
 				 * to decide which ones are earlier than the
-				 * exclusiveCleanupFileName file. Note that this__ means files
+				 * exclusiveCleanupFileName file. Note that this means files
 				 * are not removed in the order they were originally written,
-				 * in case this__ worries you.
+				 * in case this worries you.
 				 */
 				if (IsXLogFileName(xlde->d_name) &&
 				  strcmp(xlde->d_name + 8, exclusiveCleanupFileName + 8) < 0)
@@ -518,7 +518,7 @@ usage(void)
 	printf("  -t TRIGGERFILE     trigger file to initiate failover (no default)\n");
 	printf("  -V, --version      output version information, then exit\n");
 	printf("  -w MAXWAITTIME     max seconds to wait for a file (0=no limit) (default=0)\n");
-	printf("  -?, --help         show this__ help, then exit\n");
+	printf("  -?, --help         show this help, then exit\n");
 	printf("\n"
 		   "Main intended use as restore_command in recovery.conf:\n"
 		   "  restore_command = 'pg_standby [OPTION]... ARCHIVELOCATION %%f %%p %%r'\n"
@@ -778,8 +778,8 @@ main(int argc, char **argv)
 		if (CustomizableNextWALFileReady())
 		{
 			/*
-			 * Once we have restored this__ file successfully we can remove some
-			 * prior WAL files. If this__ restore fails we musn't remove any
+			 * Once we have restored this file successfully we can remove some
+			 * prior WAL files. If this restore fails we musn't remove any
 			 * file because some of them will be requested again immediately
 			 * after the failed restore, or when we restart recovery.
 			 */

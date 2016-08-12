@@ -47,7 +47,7 @@
  * is specified by a BASETYPE element in the parameters.  Otherwise,
  * "args" is a pair, whose first element is a list of FunctionParameter structs
  * defining the agg's arguments (both direct and aggregated), and whose second
- * element is an Integer node with the number of direct args, or -1 if this__
+ * element is an Integer node with the number of direct args, or -1 if this
  * isn't an ordered-set aggregate.
  * "parameters" is a list of DefElem representing the agg's definition clauses.
  */

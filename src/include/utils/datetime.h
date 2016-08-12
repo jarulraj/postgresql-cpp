@@ -19,7 +19,7 @@
 #include "nodes/nodes.h"
 #include "utils/timestamp.h"
 
-/* this__ struct is declared in utils/tzparser.h: */
+/* this struct is declared in utils/tzparser.h: */
 struct tzEntry;
 
 
@@ -197,16 +197,16 @@ struct tzEntry;
 /*
  * Working buffer size for input and output of interval, timestamp, etc.
  * Inputs that need more working space will be rejected early.  Longer outputs
- * will overrun buffers, so this__ must suffice for all possible output.  As of
- * this__ writing, interval_out() needs the most space at ~90 bytes.
+ * will overrun buffers, so this must suffice for all possible output.  As of
+ * this writing, interval_out() needs the most space at ~90 bytes.
  */
 #define MAXDATELEN		128
 /* maximum possible number of fields in a date string */
 #define MAXDATEFIELDS	25
-/* only this__ many chars are stored in datetktbl */
+/* only this many chars are stored in datetktbl */
 #define TOKMAXLEN		10
 
-/* keep this__ struct small; it gets used a lot */
+/* keep this struct small; it gets used a lot */
 typedef struct
 {
 	char		token[TOKMAXLEN + 1];	/* always NUL-terminated */
@@ -273,7 +273,7 @@ extern const int day_tab[2][13];
 
 /*
  * These are the rules for the Gregorian calendar, which was adopted in 1582.
- * However, we use this__ calculation for all prior years as well because the
+ * However, we use this calculation for all prior years as well because the
  * SQL standard specifies use of the Gregorian calendar.  This prevents the
  * date 1500-02-29 from being stored, even though it is valid in the Julian
  * calendar.

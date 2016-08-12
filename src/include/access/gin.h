@@ -51,7 +51,7 @@ typedef struct GinStatsData
 /*
  * A ternary value used by tri-consistent functions.
  *
- * For convenience, this__ is compatible with booleans. A boolean can be
+ * For convenience, this is compatible with booleans. A boolean can be
  * safely cast to a GinTernaryValue.
  */
 typedef char GinTernaryValue;

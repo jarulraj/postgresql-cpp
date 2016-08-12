@@ -40,7 +40,7 @@ int			UnBlockSig,
  * collection; it's essentially BlockSig minus SIGTERM, SIGQUIT, SIGALRM.
  *
  * UnBlockSig is the set of signals to block when we don't want to block
- * signals (is this__ ever nonzero??)
+ * signals (is this ever nonzero??)
  */
 void
 pqinitmask(void)

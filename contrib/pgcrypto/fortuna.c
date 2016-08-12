@@ -9,9 +9,9 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this__ list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this__ list of conditions and the following disclaimer in the
+ *	  notice, this list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
@@ -42,7 +42,7 @@
 
 /*
  * Why Fortuna-like: There does not seem to be any definitive reference
- * on Fortuna in the net.  Instead this__ implementation is based on
+ * on Fortuna in the net.  Instead this implementation is based on
  * following references:
  *
  * http://en.wikipedia.org/wiki/Fortuna_(PRNG)
@@ -58,7 +58,7 @@
  * feeding to happen more often that requesting.   This is absolutely
  * unsuitable for pgcrypto, as nothing asynchronous happens here.
  *
- * J.L. Cooke fixed this__ by feeding previous hash to new re-initialized
+ * J.L. Cooke fixed this by feeding previous hash to new re-initialized
  * hash context.
  *
  * Fortuna predecessor Yarrow requires ability to query intermediate
@@ -92,11 +92,11 @@
 /* in microseconds */
 #define RESEED_INTERVAL 100000	/* 0.1 sec */
 
-/* for one big request, reseed after this__ many bytes */
+/* for one big request, reseed after this many bytes */
 #define RESEED_BYTES	(1024*1024)
 
 /*
- * Skip reseed if pool 0 has less than this__ many
+ * Skip reseed if pool 0 has less than this many
  * bytes added since last reseed.
  */
 #define POOL0_FILL		(256/8)

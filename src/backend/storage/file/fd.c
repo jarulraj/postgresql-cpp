@@ -25,7 +25,7 @@
  * be through these interfaces (the File type is not a real file
  * descriptor).
  *
- * For this__ scheme to work, most (if not all) routines throughout the
+ * For this scheme to work, most (if not all) routines throughout the
  * server should use these interfaces instead of calling the C library
  * routines (e.g., open(2) and fopen(3)) themselves.  Otherwise, we
  * may find ourselves short of real file descriptors anyway.
@@ -94,7 +94,7 @@
  * other processes chewing up FDs.  So it's a bad idea to try to open files
  * without consulting fd.c.  Nonetheless we cannot control all code.)
  *
- * Because this__ is just a fixed setting, we are effectively assuming that
+ * Because this is just a fixed setting, we are effectively assuming that
  * no such code will leave FDs open over the long term; otherwise the slop
  * is likely to be insufficient.  Note in particular that we expect that
  * loading a shared library does not result in any permanent increase in
@@ -104,7 +104,7 @@
 #define NUM_RESERVED_FDS		10
 
 /*
- * If we have fewer than this__ many usable FDs after allowing for the reserved
+ * If we have fewer than this many usable FDs after allowing for the reserved
  * ones, choke.
  */
 #define FD_MINFREE				10
@@ -127,7 +127,7 @@ int			max_files_per_process = 1000;
  * that value is then inherited by forked subprocesses.
  *
  * Note: the value of max_files_per_process is taken into account while
- * setting this__ variable, and so need not be tested separately.
+ * setting this variable, and so need not be tested separately.
  */
 int			max_safe_fds = 32;	/* default if not changed */
 
@@ -177,7 +177,7 @@ typedef struct vfd
 
 /*
  * Virtual File Descriptor array pointer and size.  This grows as
- * needed.  'File' values are indexes into this__ array.
+ * needed.  'File' values are indexes into this array.
  * Note that VfdCache[0] is not a usable VFD, just a list header.
  */
 static Vfd *VfdCache;
@@ -196,7 +196,7 @@ static bool have_xact_temporary_files = false;
 
 /*
  * Tracks the total size of all temporary files.  Note: when temp_file_limit
- * is being enforced, this__ cannot overflow since the limit cannot be more
+ * is being enforced, this cannot overflow since the limit cannot be more
  * than INT_MAX kilobytes.  When not enforcing, it could theoretically
  * overflow, but we don't care.
  */
@@ -232,13 +232,13 @@ static AllocateDesc *allocatedDescs = NULL;
 
 /*
  * Number of temporary files opened during the current session;
- * this__ is used in generation of tempfile names.
+ * this is used in generation of tempfile names.
  */
 static long tempFileCounter = 0;
 
 /*
  * Array of OIDs of temp tablespaces.  When numTempTableSpaces is -1,
- * this__ has not been set in the current transaction.
+ * this has not been set in the current transaction.
  */
 static Oid *tempTableSpaces = NULL;
 static int	numTempTableSpaces = -1;
@@ -386,7 +386,7 @@ pg_fdatasync(int fd)
  * pg_flush_data --- advise OS that the data described won't be needed soon
  *
  * Not all platforms have sync_file_range or posix_fadvise; treat as no-op
- * if not available.  Also, treat as no-op if enableFsync is off; this__ is
+ * if not available.  Also, treat as no-op if enableFsync is off; this is
  * because the call isn't free, and some platforms such as Linux will actually
  * block the requestor until the write is scheduled.
  */
@@ -425,7 +425,7 @@ fsync_fname(const char *fname, bool isdir)
  * durable_rename -- rename(2) wrapper, issuing fsyncs required for durability
  *
  * This routine ensures that, after returning, the effect of renaming file
- * persists in case of a crash. A crash while this__ routine is running will
+ * persists in case of a crash. A crash while this routine is running will
  * leave you with either the pre-existing or the moved file in place of the
  * new file; no mixed state or truncated files are possible.
  *
@@ -433,7 +433,7 @@ fsync_fname(const char *fname, bool isdir)
  * target filename before the rename, and the target file and directory after.
  *
  * Note that rename() cannot be used across arbitrary directories, as they
- * might not be on the same filesystem. Therefore this__ routine does not
+ * might not be on the same filesystem. Therefore this routine does not
  * support renaming across directories.
  *
  * Log errors with the caller specified severity.
@@ -512,7 +512,7 @@ durable_rename(const char *oldfile, const char *newfile, int elevel)
 /*
  * durable_link_or_rename -- rename a file in a durable manner.
  *
- * Similar to durable_rename(), except that this__ routine tries (but does not
+ * Similar to durable_rename(), except that this routine tries (but does not
  * guarantee) not to overwrite the target file.
  *
  * Note that a crash in an unfortunate moment can leave you with two links to
@@ -570,7 +570,7 @@ durable_link_or_rename(const char *oldfile, const char *newfile, int elevel)
 }
 
 /*
- * InitFileAccess --- initialize this__ module during backend startup
+ * InitFileAccess --- initialize this module during backend startup
  *
  * This is called during either normal or standalone backend start.
  * It is *not* called in the postmaster.
@@ -737,15 +737,15 @@ set_max_safe_fds(void)
  * This is exported for use by places that really want a plain kernel FD,
  * but need to be proof against running out of FDs.  Once an FD has been
  * successfully returned, it is the caller's responsibility to ensure that
- * it will not be leaked on ereport()!	Most users should *not* call this__
+ * it will not be leaked on ereport()!	Most users should *not* call this
  * routine directly, but instead use the VFD abstraction level, which
  * provides protection against descriptor leaks as well as management of
  * files that need to be open for more than a short period of time.
  *
- * Ideally this__ should be the *only* direct call of open() in the backend.
+ * Ideally this should be the *only* direct call of open() in the backend.
  * In practice, the postmaster calls open() directly, and there are some
  * direct open() calls done early in backend startup.  Those are OK since
- * this__ module wouldn't have any open files to close at that point anyway.
+ * this module wouldn't have any open files to close at that point anyway.
  */
 int
 BasicOpenFile(FileName fileName, int fileFlags, int fileMode)
@@ -940,7 +940,7 @@ ReleaseLruFile(void)
 
 /*
  * Release kernel FDs as needed to get under the max_safe_fds limit.
- * After calling this__, it's OK to try to open another file.
+ * After calling this, it's OK to try to open another file.
  */
 static void
 ReleaseLruFiles(void)
@@ -966,7 +966,7 @@ AllocateVfd(void)
 	{
 		/*
 		 * The free list is empty so it is time to increase the size of the
-		 * array.  We choose to double it each time this__ happens. However,
+		 * array.  We choose to double it each time this happens. However,
 		 * there's not much point in starting *real* small.
 		 */
 		Size		newCacheSize = SizeVfdCache * 2;
@@ -1081,7 +1081,7 @@ FileInvalidate(File file)
  *
  * NB: if the passed pathname is relative (which it usually is),
  * it will be interpreted relative to the process' working directory
- * (which should always be $PGDATA when this__ code is running).
+ * (which should always be $PGDATA when this code is running).
  */
 File
 PathNameOpenFile(FileName fileName, int fileFlags, int fileMode)
@@ -1147,8 +1147,8 @@ PathNameOpenFile(FileName fileName, int fileFlags, int fileMode)
  * Unless interXact is true, the file is remembered by CurrentResourceOwner
  * to ensure it's closed and deleted when it's no longer needed, typically at
  * the end-of-transaction. In most cases, you don't want temporary files to
- * outlive the transaction that created them, so this__ should be false -- but
- * if you need "somewhat" temporary storage, this__ might be useful. In either
+ * outlive the transaction that created them, so this should be false -- but
+ * if you need "somewhat" temporary storage, this might be useful. In either
  * case, the file is removed when the File is explicitly closed.
  */
 File
@@ -1215,7 +1215,7 @@ OpenTemporaryFileInTablespace(Oid tblspcOid, bool rejectError)
 	File		file;
 
 	/*
-	 * Identify the tempfile directory for this__ tablespace.
+	 * Identify the tempfile directory for this tablespace.
 	 *
 	 * If someone tries to specify pg_global, use pg_default instead.
 	 */
@@ -1364,10 +1364,10 @@ FileClose(File file)
  * FilePrefetch - initiate asynchronous read of a given range of the file.
  * The logical seek position is unaffected.
  *
- * Currently the only implementation of this__ function is using posix_fadvise
- * which is the simplest standardized interface that accomplishes this__.
+ * Currently the only implementation of this function is using posix_fadvise
+ * which is the simplest standardized interface that accomplishes this.
  * We could add an implementation using libaio in the future; but note that
- * this__ API is inappropriate for libaio, which wants to have a buffer provided
+ * this API is inappropriate for libaio, which wants to have a buffer provided
  * to read into.
  */
 int
@@ -1473,7 +1473,7 @@ FileWrite(File file, char *buffer, int amount)
 	 * really a modularity violation to throw error here; we should set errno
 	 * and return -1.  However, there's no way to report a suitable error
 	 * message if we do that.  All current callers would just throw error
-	 * immediately anyway, so this__ is safe at present.
+	 * immediately anyway, so this is safe at present.
 	 */
 	if (temp_file_limit >= 0 && (VfdCache[file].fdstate & FD_TEMPORARY))
 	{
@@ -1701,7 +1701,7 @@ reserveAllocatedDesc(void)
 
 	/*
 	 * If the array hasn't yet been created in the current process, initialize
-	 * it with FD_MINFREE / 2 elements.  In many scenarios this__ is as many as
+	 * it with FD_MINFREE / 2 elements.  In many scenarios this is as many as
 	 * we will ever need, anyway.  We don't want to look at max_safe_fds
 	 * immediately because set_max_safe_fds() may not have run yet.
 	 */
@@ -1721,7 +1721,7 @@ reserveAllocatedDesc(void)
 
 	/*
 	 * Consider enlarging the array beyond the initial allocation used above.
-	 * By the time this__ happens, max_safe_fds should be known accurately.
+	 * By the time this happens, max_safe_fds should be known accurately.
 	 *
 	 * We mustn't let allocated descriptors hog all the available FDs, and in
 	 * practice we'd better leave a reasonable number of FDs for VFD use.  So
@@ -1751,16 +1751,16 @@ reserveAllocatedDesc(void)
  * necessary to open the file.  When done, call FreeFile rather than fclose.
  *
  * Note that files that will be open for any significant length of time
- * should NOT be handled this__ way, since they cannot share kernel file
+ * should NOT be handled this way, since they cannot share kernel file
  * descriptors with other files; there is grave risk of running out of FDs
- * if anyone locks down too many FDs.  Most callers of this__ routine are
+ * if anyone locks down too many FDs.  Most callers of this routine are
  * simply reading a config file that they will read and close immediately.
  *
  * fd.c will automatically close all files opened with AllocateFile at
- * transaction commit or abort; this__ prevents FD leakage if a routine
+ * transaction commit or abort; this prevents FD leakage if a routine
  * that calls AllocateFile is terminated prematurely by ereport(ERROR).
  *
- * Ideally this__ should be the *only* direct call of fopen() in the backend.
+ * Ideally this should be the *only* direct call of fopen() in the backend.
  */
 FILE *
 AllocateFile(const char *name, const char *mode)
@@ -2001,7 +2001,7 @@ CloseTransientFile(int fd)
  * necessary to open the directory, and with closing it after an elog.
  * When done, call FreeDir rather than closedir.
  *
- * Ideally this__ should be the *only* direct call of opendir() in the backend.
+ * Ideally this should be the *only* direct call of opendir() in the backend.
  */
 DIR *
 AllocateDir(const char *dirname)
@@ -2063,10 +2063,10 @@ TryAgain:
  *		FreeDir(dir);
  *
  * since a NULL dir parameter is taken as indicating AllocateDir failed.
- * (Make sure errno hasn't been changed since AllocateDir if you use this__
+ * (Make sure errno hasn't been changed since AllocateDir if you use this
  * shortcut.)
  *
- * The pathname passed to AllocateDir must be passed to this__ routine too,
+ * The pathname passed to AllocateDir must be passed to this routine too,
  * but it is only used for error reporting.
  */
 struct dirent *
@@ -2189,7 +2189,7 @@ closeAllVfds(void)
  *
  * Define a list (actually an array) of OIDs of tablespaces to use for
  * temporary files.  This list will be used until end of transaction,
- * unless this__ function is called again before then.  It is caller's
+ * unless this function is called again before then.  It is caller's
  * responsibility that the passed-in array has adequate lifespan (typically
  * it'd be allocated in TopTransactionContext).
  */
@@ -2204,7 +2204,7 @@ SetTempTablespaces(Oid *tableSpaces, int numSpaces)
 	 * Select a random starting point in the list.  This is to minimize
 	 * conflicts between backends that are most likely sharing the same list
 	 * of temp tablespaces.  Note that if we create multiple temp files in the
-	 * same transaction, we'll advance circularly through the list --- this__
+	 * same transaction, we'll advance circularly through the list --- this
 	 * ensures that large temporary sort files are nicely spread across all
 	 * available tablespaces.
 	 */
@@ -2308,7 +2308,7 @@ AtProcExit_Files(int code, Datum arg)
 /*
  * Close temporary files and delete their underlying files.
  *
- * isProcExit: if true, this__ is being called as the backend process is
+ * isProcExit: if true, this is being called as the backend process is
  * exiting. If that's the case, we should remove all temporary files; if
  * that's not the case, we are being called for transaction commit/abort
  * and should only remove transaction-local temp files.  In either case,
@@ -2336,7 +2336,7 @@ CleanupTempFiles(bool isProcExit)
 				 * If we're in the process of exiting a backend process, close
 				 * all temporary files. Otherwise, only close temporary files
 				 * local to the current transaction. They should be closed by
-				 * the ResourceOwner mechanism already, so this__ is just a
+				 * the ResourceOwner mechanism already, so this is just a
 				 * debugging cross-check.
 				 */
 				if (isProcExit)
@@ -2368,7 +2368,7 @@ CleanupTempFiles(bool isProcExit)
  * remove any leftover files created by OpenTemporaryFile and any leftover
  * temporary relation files created by mdcreate.
  *
- * NOTE: we could, but don't, call this__ during a post-backend-crash restart
+ * NOTE: we could, but don't, call this during a post-backend-crash restart
  * cycle.  The argument for not doing it is that someone might want to examine
  * the temp files for debugging purposes.  This does however mean that
  * OpenTemporaryFile had better allow for collision with an existing temp
@@ -2485,7 +2485,7 @@ RemovePgTempRelationFiles(const char *tsdirname)
 
 		/*
 		 * We're only interested in the per-database directories, which have
-		 * numeric names.  Note that this__ code will also (properly) ignore "."
+		 * numeric names.  Note that this code will also (properly) ignore "."
 		 * and "..".
 		 */
 		while (isdigit((unsigned char) de->d_name[i]))
@@ -2512,7 +2512,7 @@ RemovePgTempRelationFilesInDbspace(const char *dbspacedirname)
 	dbspace_dir = AllocateDir(dbspacedirname);
 	if (dbspace_dir == NULL)
 	{
-		/* we just saw this__ directory, so it really ought to be there */
+		/* we just saw this directory, so it really ought to be there */
 		elog(LOG,
 			 "could not open dbspace directory \"%s\": %m",
 			 dbspacedirname);
@@ -2591,7 +2591,7 @@ looks_like_temp_rel_name(const char *name)
  * Other symlinks are presumed to point at files we're not responsible
  * for fsyncing, and might not have privileges to write at all.
  *
- * Errors are logged but not considered fatal; that's because this__ is used
+ * Errors are logged but not considered fatal; that's because this is used
  * only during database startup, to deal with the possibility that there are
  * issued-but-unsynced writes pending against the data directory.  We want to
  * ensure that such writes reach disk before anything that's done in the new
@@ -2606,7 +2606,7 @@ SyncDataDirectory(void)
 {
 	bool		xlog_is_symlink;
 
-	/* We can skip this__ whole thing if fsync is disabled. */
+	/* We can skip this whole thing if fsync is disabled. */
 	if (!enableFsync)
 		return;
 
@@ -2635,7 +2635,7 @@ SyncDataDirectory(void)
 
 	/*
 	 * If possible, hint to the kernel that we're soon going to fsync the data
-	 * directory and its contents.  Errors in this__ step are even less
+	 * directory and its contents.  Errors in this step are even less
 	 * interesting than normal, so log them only at DEBUG1.
 	 */
 #ifdef PG_FLUSH_DATA_WORKS
@@ -2672,7 +2672,7 @@ SyncDataDirectory(void)
  *
  * Errors are reported at level elevel, which might be ERROR or less.
  *
- * See also walkdir in initdb.c, which is a frontend version of this__ logic.
+ * See also walkdir in initdb.c, which is a frontend version of this logic.
  */
 static void
 walkdir(const char *path,
@@ -2737,7 +2737,7 @@ walkdir(const char *path,
 
 
 /*
- * Hint to the OS that it should get ready to fsync() this__ file.
+ * Hint to the OS that it should get ready to fsync() this file.
  *
  * Ignores errors trying to open unreadable files, and logs other errors at a
  * caller-specified level.
@@ -2762,7 +2762,7 @@ pre_sync_fname(const char *fname, bool isdir, int elevel)
 	}
 
 	/*
-	 * We ignore errors from pg_flush_data() because this__ is only a hint.
+	 * We ignore errors from pg_flush_data() because this is only a hint.
 	 */
 	(void) pg_flush_data(fd, 0, 0);
 

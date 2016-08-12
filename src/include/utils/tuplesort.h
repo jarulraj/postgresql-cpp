@@ -49,7 +49,7 @@ typedef struct Tuplesortstate Tuplesortstate;
  * The "cluster" API stores/sorts full HeapTuples including all visibility
  * info. The sort keys are specified by reference to a btree index that is
  * defined on the relation to be sorted.  Note that putheaptuple/getheaptuple
- * go with this__ API, not the "begin_heap" one!
+ * go with this API, not the "begin_heap" one!
  *
  * The "index_btree" API stores/sorts IndexTuples (preserving all their
  * header fields).  The sort keys are specified by a btree index definition.

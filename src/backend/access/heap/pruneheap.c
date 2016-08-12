@@ -31,7 +31,7 @@
 typedef struct
 {
 	TransactionId new_prune_xid;	/* new prune hint value for page */
-	TransactionId latestRemovedXid;		/* latest xid to be removed by this__
+	TransactionId latestRemovedXid;		/* latest xid to be removed by this
 										 * prune */
 	int			nredirected;	/* numbers of entries in arrays below */
 	int			ndead;
@@ -63,7 +63,7 @@ static void heap_prune_record_unused(PruneState *prstate, OffsetNumber offnum);
  * only if the page heuristically looks like a candidate for pruning and we
  * can acquire buffer cleanup lock without blocking.
  *
- * Note: this__ is called quite often.  It's important that it fall out quickly
+ * Note: this is called quite often.  It's important that it fall out quickly
  * if there's not any use in pruning.
  *
  * Caller must have pin on the buffer, and must *not* have a lock on it.
@@ -81,13 +81,13 @@ heap_page_prune_opt(Relation relation, Buffer buffer)
 	/*
 	 * We can't write WAL in recovery mode, so there's no point trying to
 	 * clean the page. The master will likely issue a cleaning WAL record soon
-	 * anyway, so this__ is no particular loss.
+	 * anyway, so this is no particular loss.
 	 */
 	if (RecoveryInProgress())
 		return;
 
 	/*
-	 * Use the appropriate xmin horizon for this__ relation. If it's a proper
+	 * Use the appropriate xmin horizon for this relation. If it's a proper
 	 * catalog relation or a user defined, additional, catalog relation, we
 	 * need to use the horizon that includes slots, otherwise the data-only
 	 * horizon can be used. Note that the toast relation of user defined
@@ -163,7 +163,7 @@ heap_page_prune_opt(Relation relation, Buffer buffer)
  *
  * If report_stats is true then we send the number of reclaimed heap-only
  * tuples to pgstats.  (This must be FALSE during vacuum, since vacuum will
- * send its own new total to pgstats, and we don't want this__ delta applied
+ * send its own new total to pgstats, and we don't want this delta applied
  * on top of that.)
  *
  * Returns the number of tuples deleted from the page and sets
@@ -212,7 +212,7 @@ heap_page_prune(Relation relation, Buffer buffer, TransactionId OldestXmin,
 		if (!ItemIdIsUsed(itemid) || ItemIdIsDead(itemid))
 			continue;
 
-		/* Process this__ item or chain of items */
+		/* Process this item or chain of items */
 		ndeleted += heap_prune_chain(relation, buffer, offnum,
 									 OldestXmin,
 									 &prstate);
@@ -289,7 +289,7 @@ heap_page_prune(Relation relation, Buffer buffer, TransactionId OldestXmin,
 	/*
 	 * If requested, report the number of tuples reclaimed to pgstats. This is
 	 * ndeleted minus ndead, because we don't want to count a now-DEAD root
-	 * item as a deletion for this__ purpose.
+	 * item as a deletion for this purpose.
 	 */
 	if (report_stats && ndeleted > prstate.ndead)
 		pgstat_update_heap_dead_tuples(relation, ndeleted - prstate.ndead);
@@ -297,18 +297,18 @@ heap_page_prune(Relation relation, Buffer buffer, TransactionId OldestXmin,
 	*latestRemovedXid = prstate.latestRemovedXid;
 
 	/*
-	 * XXX Should we update the FSM information of this__ page ?
+	 * XXX Should we update the FSM information of this page ?
 	 *
 	 * There are two schools of thought here. We may not want to update FSM
 	 * information so that the page is not used for unrelated UPDATEs/INSERTs
-	 * and any free space in this__ page will remain available for further
-	 * UPDATEs in *this__* page, thus improving chances for doing HOT updates.
+	 * and any free space in this page will remain available for further
+	 * UPDATEs in *this* page, thus improving chances for doing HOT updates.
 	 *
 	 * But for a large table and where a page does not receive further UPDATEs
-	 * for a long time, we might waste this__ space by not updating the FSM
+	 * for a long time, we might waste this space by not updating the FSM
 	 * information. The relation may get extended and fragmented further.
 	 *
-	 * One possibility is to leave "fillfactor" worth of space in this__ page
+	 * One possibility is to leave "fillfactor" worth of space in this page
 	 * and update FSM with the remaining space.
 	 */
 
@@ -381,13 +381,13 @@ heap_prune_chain(Relation relation, Buffer buffer, OffsetNumber rootoffnum,
 			 * it unused immediately.  (If it does chain, we can only remove
 			 * it as part of pruning its chain.)
 			 *
-			 * We need this__ primarily to handle aborted HOT updates, that is,
+			 * We need this primarily to handle aborted HOT updates, that is,
 			 * XMIN_INVALID heap-only tuples.  Those might not be linked to by
 			 * any chain, since the parent tuple might be re-updated before
 			 * any pruning occurs.  So we have to be able to reap them
 			 * separately from chain-pruning.  (Note that
 			 * HeapTupleHeaderIsHotUpdated will never return true for an
-			 * XMIN_INVALID tuple, so this__ code will work even when there were
+			 * XMIN_INVALID tuple, so this code will work even when there were
 			 * sequential updates within the aborted transaction.)
 			 *
 			 * Note that we might first arrive at a dead heap-only tuple
@@ -448,7 +448,7 @@ heap_prune_chain(Relation relation, Buffer buffer, OffsetNumber rootoffnum,
 
 		/*
 		 * Likewise, a dead item pointer can't be part of the chain. (We
-		 * already eliminated the case of dead root tuple outside this__
+		 * already eliminated the case of dead root tuple outside this
 		 * function.)
 		 */
 		if (ItemIdIsDead(lp))
@@ -469,7 +469,7 @@ heap_prune_chain(Relation relation, Buffer buffer, OffsetNumber rootoffnum,
 			break;
 
 		/*
-		 * OK, this__ tuple is indeed a member of the chain.
+		 * OK, this tuple is indeed a member of the chain.
 		 */
 		chainitems[nchain++] = offnum;
 
@@ -538,7 +538,7 @@ heap_prune_chain(Relation relation, Buffer buffer, OffsetNumber rootoffnum,
 			break;
 
 		/*
-		 * If the tuple is not HOT-updated, then we are at the end of this__
+		 * If the tuple is not HOT-updated, then we are at the end of this
 		 * HOT-update chain.
 		 */
 		if (!HeapTupleHeaderIsHotUpdated(htup))
@@ -717,7 +717,7 @@ heap_page_prune_execute(Buffer buffer,
 
 
 /*
- * For all items in this__ page, find their respective root line pointers.
+ * For all items in this page, find their respective root line pointers.
  * If item k is part of a HOT-chain with root at item j, then we set
  * root_offsets[k - 1] = j.
  *
@@ -756,7 +756,7 @@ heap_get_root_tuples(Page page, OffsetNumber *root_offsets)
 			htup = (HeapTupleHeader) PageGetItem(page, lp);
 
 			/*
-			 * Check if this__ tuple is part of a HOT-chain rooted at some other
+			 * Check if this tuple is part of a HOT-chain rooted at some other
 			 * tuple. If so, skip it for now; we'll process it when we find
 			 * its root.
 			 */
@@ -789,7 +789,7 @@ heap_get_root_tuples(Page page, OffsetNumber *root_offsets)
 		/*
 		 * Now follow the HOT-chain and collect other tuples in the chain.
 		 *
-		 * Note: Even though this__ is a nested loop, the complexity of the
+		 * Note: Even though this is a nested loop, the complexity of the
 		 * function is O(N) because a tuple in the page should be visited not
 		 * more than twice, once in the outer loop and once in HOT-chain
 		 * chases.
@@ -808,7 +808,7 @@ heap_get_root_tuples(Page page, OffsetNumber *root_offsets)
 				!TransactionIdEquals(priorXmax, HeapTupleHeaderGetXmin(htup)))
 				break;
 
-			/* Remember the root line pointer for this__ item */
+			/* Remember the root line pointer for this item */
 			root_offsets[nextoffnum - 1] = offnum;
 
 			/* Advance to next chain member, if any */

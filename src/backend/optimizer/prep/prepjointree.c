@@ -52,7 +52,7 @@ typedef struct pullup_replace_vars_context
 
 typedef struct reduce_outer_joins_state
 {
-	Relids		relids;			/* base relids within this__ subtree */
+	Relids		relids;			/* base relids within this subtree */
 	bool		contains_outer; /* does subtree contain outer join(s)? */
 	List	   *sub_states;		/* List of states for subtree components */
 } reduce_outer_joins_state;
@@ -124,11 +124,11 @@ static Node *find_jointree_node_for_rel(Node *jtnode, int relid);
  *
  * A clause "foo op ANY (sub-SELECT)" can be processed by pulling the
  * sub-SELECT up to become a rangetable entry and treating the implied
- * comparisons as quals of a semijoin.  However, this__ optimization *only*
+ * comparisons as quals of a semijoin.  However, this optimization *only*
  * works at the top level of WHERE or a JOIN/ON clause, because we cannot
  * distinguish whether the ANY ought to return FALSE or NULL in cases
  * involving NULL inputs.  Also, in an outer join's ON clause we can only
- * do this__ if the sublink is degenerate (ie, references only the nullable
+ * do this if the sublink is degenerate (ie, references only the nullable
  * side of the join).  In that case it is legal to push the semijoin
  * down into the nullable side of the join.  If the sublink references any
  * nonnullable-side variables then it would have to be evaluated as part
@@ -220,7 +220,7 @@ pull_up_sublinks_jointree_recurse(PlannerInfo *root, Node *jtnode,
 		/*
 		 * Note that the result will be either newf, or a stack of JoinExprs
 		 * with newf at the base.  We rely on subsequent optimization steps to
-		 * flatten this__ and rearrange the joins as needed.
+		 * flatten this and rearrange the joins as needed.
 		 *
 		 * Although we could include the pulled-up subqueries in the returned
 		 * relids, there's no need since upper quals couldn't refer to their
@@ -297,7 +297,7 @@ pull_up_sublinks_jointree_recurse(PlannerInfo *root, Node *jtnode,
 		 * relids, there's no need since upper quals couldn't refer to their
 		 * outputs anyway.  But we *do* need to include the join's own rtindex
 		 * because we haven't yet collapsed join alias variables, so upper
-		 * levels would mistakenly think they couldn't use references to this__
+		 * levels would mistakenly think they couldn't use references to this
 		 * join.
 		 */
 		*relids = bms_join(leftrelids, rightrelids);
@@ -565,7 +565,7 @@ pull_up_sublinks_qual_recurse(PlannerInfo *root, Node *node,
  * obtained via inlining.  However, we do it after pull_up_sublinks
  * so that we can inline any functions used in SubLink subselects.
  *
- * Like most of the planner, this__ feels free to scribble on its input data
+ * Like most of the planner, this feels free to scribble on its input data
  * structure.
  */
 void
@@ -628,11 +628,11 @@ pull_up_subqueries(PlannerInfo *root)
  * Or, if it's valid to drop the current node from the jointree completely,
  * it returns NULL.
  *
- * If this__ jointree node is within either side of an outer join, then
+ * If this jointree node is within either side of an outer join, then
  * lowest_outer_join references the lowest such JoinExpr node; otherwise
- * it is NULL.  We use this__ to constrain the effects of LATERAL subqueries.
+ * it is NULL.  We use this to constrain the effects of LATERAL subqueries.
  *
- * If this__ jointree node is within the nullable side of an outer join, then
+ * If this jointree node is within the nullable side of an outer join, then
  * lowest_nulling_outer_join references the lowest such JoinExpr node;
  * otherwise it is NULL.  This forces use of the PlaceHolderVar mechanism for
  * references to non-nullable targetlist items, but only for references above
@@ -647,10 +647,10 @@ pull_up_subqueries(PlannerInfo *root)
  * deletable leaf node (for example, a VALUES RTE that could be pulled up).
  * If it's FALSE, we'll avoid pullup in such cases.
  *
- * A tricky aspect of this__ code is that if we pull up a subquery we have
+ * A tricky aspect of this code is that if we pull up a subquery we have
  * to replace Vars that reference the subquery's outputs throughout the
  * parent query, including quals attached to jointree nodes above the one
- * we are currently processing!  We handle this__ by being careful not to
+ * we are currently processing!  We handle this by being careful not to
  * change the jointree structure while recursing: no nodes other than leaf
  * RangeTblRef entries and entirely-empty FromExprs will be replaced or
  * deleted.  Also, we can't turn pullup_replace_vars loose on the whole
@@ -682,7 +682,7 @@ pull_up_subqueries_recurse(PlannerInfo *root, Node *jtnode,
 		RangeTblEntry *rte = rt_fetch(varno, root->parse->rtable);
 
 		/*
-		 * Is this__ a subquery RTE, and if so, is the subquery simple enough to
+		 * Is this a subquery RTE, and if so, is the subquery simple enough to
 		 * pull up?
 		 *
 		 * If we are looking at an append-relation member, we can't pull it up
@@ -703,7 +703,7 @@ pull_up_subqueries_recurse(PlannerInfo *root, Node *jtnode,
 		 * Alternatively, is it a simple UNION ALL subquery?  If so, flatten
 		 * into an "append relation".
 		 *
-		 * It's safe to do this__ regardless of whether this__ query is itself an
+		 * It's safe to do this regardless of whether this query is itself an
 		 * appendrel member.  (If you're thinking we should try to flatten the
 		 * two levels of appendrel together, you're right; but we handle that
 		 * in set_append_rel_pathlist, not here.)
@@ -724,7 +724,7 @@ pull_up_subqueries_recurse(PlannerInfo *root, Node *jtnode,
 			is_simple_values(root, rte, deletion_ok))
 			return pull_up_simple_values(root, jtnode, rte);
 
-		/* Otherwise, do nothing at this__ node. */
+		/* Otherwise, do nothing at this node. */
 	}
 	else if (IsA(jtnode, FromExpr))
 	{
@@ -770,7 +770,7 @@ pull_up_subqueries_recurse(PlannerInfo *root, Node *jtnode,
 
 		if (deletion_ok && !have_undeleted_child)
 		{
-			/* OK to delete this__ FromExpr entirely */
+			/* OK to delete this FromExpr entirely */
 			root->hasDeletedRTEs = true;		/* probably is set already */
 			return NULL;
 		}
@@ -880,14 +880,14 @@ pull_up_simple_subquery(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte,
 
 	/*
 	 * Need a modifiable copy of the subquery to hack on.  Even if we didn't
-	 * sometimes choose not to pull up below, we must do this__ to avoid
+	 * sometimes choose not to pull up below, we must do this to avoid
 	 * problems if the same subquery is referenced from multiple jointree
 	 * items (which can't happen normally, but might after rule rewriting).
 	 */
 	subquery = copyObject(rte->subquery);
 
 	/*
-	 * Create a PlannerInfo data structure for this__ subquery.
+	 * Create a PlannerInfo data structure for this subquery.
 	 *
 	 * NOTE: the next few steps should match the first processing in
 	 * subquery_planner().  Can we refactor to avoid code duplication, or
@@ -942,7 +942,7 @@ pull_up_simple_subquery(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte,
 	 * up.  If not, abandon processing it.
 	 *
 	 * We don't really need to recheck all the conditions involved, but it's
-	 * easier just to keep this__ "if" looking the same as the one in
+	 * easier just to keep this "if" looking the same as the one in
 	 * pull_up_subqueries_recurse.
 	 */
 	if (is_simple_subquery(subquery, rte,
@@ -971,7 +971,7 @@ pull_up_simple_subquery(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte,
 	 * pullup_replace_vars' decisions about whether PlaceHolderVar wrappers
 	 * are needed for tlist entries.  (Likely it'd be better to do
 	 * flatten_join_alias_vars on the whole query tree at some earlier stage,
-	 * maybe even in the rewriter; but for now let's just fix this__ case here.)
+	 * maybe even in the rewriter; but for now let's just fix this case here.)
 	 */
 	subquery->targetList = (List *)
 		flatten_join_alias_vars(subroot, (Node *) subquery->targetList);
@@ -1129,7 +1129,7 @@ pull_up_simple_subquery(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte,
 	 * adjusted, so having created them with the subquery's varno is correct.
 	 *
 	 * Likewise, relids appearing in AppendRelInfo nodes have to be fixed. We
-	 * already checked that this__ won't require introducing multiple subrelids
+	 * already checked that this won't require introducing multiple subrelids
 	 * into the single-slot AppendRelInfo structs.
 	 */
 	if (parse->hasSubLinks || root->glob->lastPHId != 0 ||
@@ -1164,7 +1164,7 @@ pull_up_simple_subquery(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte,
 	 * if it copied any SubLinks out of the subquery's targetlist, we still
 	 * could have SubLinks added to the query in the expressions of FUNCTION
 	 * and VALUES RTEs copied up from the subquery.  So it's necessary to copy
-	 * subquery->hasSubLinks anyway.  Perhaps this__ can be improved someday.
+	 * subquery->hasSubLinks anyway.  Perhaps this can be improved someday.
 	 */
 	parse->hasSubLinks |= subquery->hasSubLinks;
 
@@ -1270,7 +1270,7 @@ pull_up_simple_union_all(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte)
  *
  * Note that setOpQuery is the Query containing the setOp node, whose tlist
  * contains references to all the setop output columns.  When called from
- * pull_up_simple_union_all, this__ is *not* the same as root->parse, which is
+ * pull_up_simple_union_all, this is *not* the same as root->parse, which is
  * the parent Query we are pulling up into.
  *
  * parentRTindex is the appendrel parent's index in root->parse->rtable.
@@ -1310,7 +1310,7 @@ pull_up_union_leaf_queries(Node *setOp, PlannerInfo *root, int parentRTindex,
 
 		/*
 		 * Recursively apply pull_up_subqueries to the new child RTE.  (We
-		 * must build the AppendRelInfo first, because this__ will modify it.)
+		 * must build the AppendRelInfo first, because this will modify it.)
 		 * Note that we can pass NULL for containing-join info even if we're
 		 * actually under an outer join, because the child's expressions
 		 * aren't going to propagate up to the join.  Also, we ignore the
@@ -1343,7 +1343,7 @@ pull_up_union_leaf_queries(Node *setOp, PlannerInfo *root, int parentRTindex,
 /*
  * make_setop_translation_list
  *	  Build the list of translations from parent Vars to child Vars for
- *	  a UNION ALL member.  (At this__ point it's just a simple list of
+ *	  a UNION ALL member.  (At this point it's just a simple list of
  *	  referencing Vars, but if we succeed in pulling up the member
  *	  subquery, the Vars will get replaced by pulled-up expressions.)
  */
@@ -1453,7 +1453,7 @@ is_simple_subquery(Query *subquery, RangeTblEntry *rte,
 	 * we couldn't tell where to evaluate them.  (This test is separate from
 	 * the deletion_ok flag for possible future expansion: deletion_ok tells
 	 * whether the immediate parent site in the jointree could cope, not
-	 * whether we'd have PHV issues.  It's possible this__ restriction could be
+	 * whether we'd have PHV issues.  It's possible this restriction could be
 	 * fixed by letting the PHVs use the relids of the parent jointree item,
 	 * but that complication is for another day.)
 	 *
@@ -1509,10 +1509,10 @@ is_simple_subquery(Query *subquery, RangeTblEntry *rte,
 		 * to qual-postponement issues similar to the case checked for above.
 		 * (We wouldn't need to prevent pullup if no such references appear in
 		 * outer-query quals, but we don't have enough info here to check
-		 * that.  Also, maybe this__ restriction could be removed if we forced
+		 * that.  Also, maybe this restriction could be removed if we forced
 		 * such refs to be wrapped in PlaceHolderVars, even when they're below
 		 * the nearest outer join?	But it's a pretty hokey usage, so not
-		 * clear this__ is worth sweating over.)
+		 * clear this is worth sweating over.)
 		 */
 		if (lowest_outer_join != NULL)
 		{
@@ -1616,7 +1616,7 @@ pull_up_simple_values(PlannerInfo *root, Node *jtnode, RangeTblEntry *rte)
 	 * Replace all of the top query's references to the RTE's outputs with
 	 * copies of the adjusted VALUES expressions, being careful not to replace
 	 * any of the jointree structure. (This'd be a lot cleaner if we could use
-	 * query_tree_mutator.)  Much of this__ should be no-ops in the dummy Query
+	 * query_tree_mutator.)  Much of this should be no-ops in the dummy Query
 	 * that surrounds a VALUES RTE, but it's not enough code to be worth
 	 * removing.
 	 */
@@ -1694,7 +1694,7 @@ is_simple_values(PlannerInfo *root, RangeTblEntry *rte, bool deletion_ok)
 	/*
 	 * Do not pull up a VALUES that's not the only RTE in its parent query.
 	 * This is actually the only case that the parser will generate at the
-	 * moment, and assuming this__ is true greatly simplifies
+	 * moment, and assuming this is true greatly simplifies
 	 * pull_up_simple_values().
 	 */
 	if (list_length(root->parse->rtable) != 1 ||
@@ -1794,7 +1794,7 @@ is_safe_append_member(Query *subquery)
 	 *
 	 * Also, the child can't have any WHERE quals because there's no place to
 	 * put them in an appendrel.  (This is a bit annoying...) If we didn't
-	 * need to check this__, we'd just test whether get_relids_in_jointree()
+	 * need to check this, we'd just test whether get_relids_in_jointree()
 	 * yields a singleton set, to be more consistent with the coding of
 	 * fix_append_rel_relids().
 	 */
@@ -1856,7 +1856,7 @@ jointree_contains_lateral_outer_refs(Node *jtnode, bool restricted,
 		JoinExpr   *j = (JoinExpr *) jtnode;
 
 		/*
-		 * If this__ is an outer join, we mustn't allow any upper lateral
+		 * If this is an outer join, we mustn't allow any upper lateral
 		 * references in or below it.
 		 */
 		if (j->jointype != JOIN_INNER)
@@ -1907,7 +1907,7 @@ replace_vars_in_jointree(Node *jtnode,
 		/*
 		 * If the RangeTblRef refers to a LATERAL subquery (that isn't the
 		 * same subquery we're pulling up), it might contain references to the
-		 * target subquery, which we must replace.  We drive this__ from the
+		 * target subquery, which we must replace.  We drive this from the
 		 * jointree scan, rather than a scan of the rtable, for a couple of
 		 * reasons: we can avoid processing no-longer-referenced RTEs, and we
 		 * can use the appropriate setting of need_phvs depending on whether
@@ -1972,7 +1972,7 @@ replace_vars_in_jointree(Node *jtnode,
 
 		if (j == lowest_nulling_outer_join)
 		{
-			/* no more PHVs in or below this__ join */
+			/* no more PHVs in or below this join */
 			context->need_phvs = false;
 			lowest_nulling_outer_join = NULL;
 		}
@@ -1994,7 +1994,7 @@ replace_vars_in_jointree(Node *jtnode,
 /*
  * Apply pullup variable replacement throughout an expression tree
  *
- * Returns a modified copy of the tree, so this__ can't be used where we
+ * Returns a modified copy of the tree, so this can't be used where we
  * need to do in-place replacement.
  */
 static Node *
@@ -2018,7 +2018,7 @@ pullup_replace_vars_callback(Var *var,
 	/*
 	 * If PlaceHolderVars are needed, we cache the modified expressions in
 	 * rcon->rv_cache[].  This is not in hopes of any material speed gain
-	 * within this__ function, but to avoid generating identical PHVs with
+	 * within this function, but to avoid generating identical PHVs with
 	 * different IDs.  That would result in duplicate evaluations at runtime,
 	 * and possibly prevent optimizations that rely on recognizing different
 	 * references to the same subquery output as being equal().  So it's worth
@@ -2042,9 +2042,9 @@ pullup_replace_vars_callback(Var *var,
 		int			save_sublevelsup = context->sublevels_up;
 
 		/*
-		 * If generating an expansion for a var of a named rowtype (ie, this__
+		 * If generating an expansion for a var of a named rowtype (ie, this
 		 * is a plain relation RTE), then we must include dummy items for
-		 * dropped columns.  If the var is RECORD (ie, this__ is a JOIN), then
+		 * dropped columns.  If the var is RECORD (ie, this is a JOIN), then
 		 * omit dropped columns. Either way, attach column names to the
 		 * RowExpr for use of ruleutils.c.
 		 *
@@ -2177,7 +2177,7 @@ pullup_replace_vars_callback(Var *var,
 			/*
 			 * Cache it if possible (ie, if the attno is in range, which it
 			 * probably always should be).  We can cache the value even if we
-			 * decided we didn't need a PHV, since this__ result will be
+			 * decided we didn't need a PHV, since this result will be
 			 * suitable for any request that has need_phvs.
 			 */
 			if (varattno > InvalidAttrNumber &&
@@ -2280,7 +2280,7 @@ pull_up_subqueries_cleanup(Node *jtnode)
  * operations, flatten it into an append relation, which we can process more
  * intelligently than the general setops case.  Otherwise, do nothing.
  *
- * In most cases, this__ can succeed only for a top-level query, because for a
+ * In most cases, this can succeed only for a top-level query, because for a
  * subquery in FROM, the parent query's invocation of pull_up_subqueries would
  * already have flattened the UNION via pull_up_simple_union_all.  But there
  * are a few cases we can support here but not in that code path, for example
@@ -2315,7 +2315,7 @@ flatten_simple_union_all(PlannerInfo *root)
 
 	/*
 	 * Locate the leftmost leaf query in the setops tree.  The upper query's
-	 * Vars all refer to this__ RTE (see transformSetOperationStmt).
+	 * Vars all refer to this RTE (see transformSetOperationStmt).
 	 */
 	leftmostjtnode = topop->larg;
 	while (leftmostjtnode && IsA(leftmostjtnode, SetOperationStmt))
@@ -2329,7 +2329,7 @@ flatten_simple_union_all(PlannerInfo *root)
 	 * Make a copy of the leftmost RTE and add it to the rtable.  This copy
 	 * will represent the leftmost leaf query in its capacity as a member of
 	 * the appendrel.  The original will represent the appendrel as a whole.
-	 * (We must do things this__ way because the upper query's Vars have to be
+	 * (We must do things this way because the upper query's Vars have to be
 	 * seen as referring to the whole appendrel.)
 	 */
 	childRTE = copyObject(leftmostRTE);
@@ -2352,7 +2352,7 @@ flatten_simple_union_all(PlannerInfo *root)
 	parse->jointree->fromlist = list_make1(rtr);
 
 	/*
-	 * Now pretend the query has no setops.  We must do this__ before trying to
+	 * Now pretend the query has no setops.  We must do this before trying to
 	 * do subquery pullup, because of Assert in pull_up_simple_subquery.
 	 */
 	parse->setOperations = NULL;
@@ -2383,7 +2383,7 @@ flatten_simple_union_all(PlannerInfo *root)
  *
  * More generally, an outer join can be reduced in strength if there is a
  * strict qual above it in the qual tree that constrains a Var from the
- * nullable side of the join to be non-null.  (For FULL joins this__ applies
+ * nullable side of the join to be non-null.  (For FULL joins this applies
  * to each side separately.)
  *
  * Another transformation we apply here is to recognize cases like
@@ -2400,7 +2400,7 @@ flatten_simple_union_all(PlannerInfo *root)
  * but the main reason to do it is to not need to invent a JOIN_REVERSE_ANTI
  * join type.
  *
- * To ease recognition of strict qual clauses, we require this__ routine to be
+ * To ease recognition of strict qual clauses, we require this routine to be
  * run after expression preprocessing (i.e., qual canonicalization and JOIN
  * alias-var expansion).
  */
@@ -2499,7 +2499,7 @@ reduce_outer_joins_pass1(Node *jtnode)
  * reduce_outer_joins_pass2 - phase 2 processing
  *
  *	jtnode: current jointree node
- *	state: state data collected by phase 1 for this__ node
+ *	state: state data collected by phase 1 for this node
  *	root: toplevel planner state
  *	nonnullable_rels: set of base relids forced non-null by upper quals
  *	nonnullable_vars: list of Vars forced non-null by upper quals
@@ -2566,7 +2566,7 @@ reduce_outer_joins_pass2(Node *jtnode,
 		List	   *local_nonnullable_vars = NIL;
 		bool		computed_local_nonnullable_vars = false;
 
-		/* Can we simplify this__ join? */
+		/* Can we simplify this join? */
 		switch (jointype)
 		{
 			case JOIN_INNER:
@@ -2610,7 +2610,7 @@ reduce_outer_joins_pass2(Node *jtnode,
 
 		/*
 		 * Convert JOIN_RIGHT to JOIN_LEFT.  Note that in the case where we
-		 * reduced JOIN_FULL to JOIN_RIGHT, this__ will mean the JoinExpr no
+		 * reduced JOIN_FULL to JOIN_RIGHT, this will mean the JoinExpr no
 		 * longer matches the internal ordering of any CoalesceExpr's built to
 		 * represent merged join variables.  We don't care about that at
 		 * present, but be wary of it ...
@@ -2634,7 +2634,7 @@ reduce_outer_joins_pass2(Node *jtnode,
 		 * detect an anti-join, in particular if we were to check whether Vars
 		 * coming from the RHS must be non-null because of table constraints.
 		 * That seems complicated and expensive though (in particular, one
-		 * would have to be wary of lower outer joins). For the moment this__
+		 * would have to be wary of lower outer joins). For the moment this
 		 * seems sufficient.
 		 */
 		if (jointype == JOIN_LEFT)
@@ -2678,7 +2678,7 @@ reduce_outer_joins_pass2(Node *jtnode,
 			List	   *pass_forced_null_vars;
 
 			/*
-			 * If this__ join is (now) inner, we can add any constraints its
+			 * If this join is (now) inner, we can add any constraints its
 			 * quals provide to those we got from above.  But if it is outer,
 			 * we can pass down the local constraints only into the nullable
 			 * side, because an outer join never eliminates any rows from its
@@ -2787,7 +2787,7 @@ reduce_outer_joins_pass2(Node *jtnode,
  * Find any PlaceHolderVar nodes in the given tree that reference the
  * pulled-up relid, and change them to reference the replacement relid(s).
  *
- * NOTE: although this__ has the form of a walker, we cheat and modify the
+ * NOTE: although this has the form of a walker, we cheat and modify the
  * nodes in-place.  This should be OK since the tree was copied by
  * pullup_replace_vars earlier.  Avoid scribbling on the original values of
  * the bitmapsets, though, because expression_tree_mutator doesn't copy those.

@@ -18,7 +18,7 @@
 
 /*
  * Identifiers for timeout reasons.  Note that in case multiple timeouts
- * trigger at the same time, they are serviced in the order of this__ enum.
+ * trigger at the same time, they are serviced in the order of this enum.
  */
 typedef enum TimeoutId
 {

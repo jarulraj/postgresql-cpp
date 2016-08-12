@@ -9,8 +9,8 @@
  *	See the headers to pg_restore for more details.
  *
  * Copyright (c) 2000, Philip Warner
- *		Rights are granted to use this__ software in any way so long
- *		as this__ notice is not removed.
+ *		Rights are granted to use this software in any way so long
+ *		as this notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from it's use.
@@ -49,7 +49,7 @@
 #define GZWRITE(p, s, n, fh) (fwrite(p, s, n, fh) * (s))
 #define GZREAD(p, s, n, fh) fread(p, s, n, fh)
 #define GZEOF(fh)	feof(fh)
-/* this__ is just the redefinition of a libz constant */
+/* this is just the redefinition of a libz constant */
 #define Z_DEFAULT_COMPRESSION (-1)
 
 typedef struct _z_stream
@@ -351,7 +351,7 @@ struct _tocEntry
 	char	   *defn;
 	char	   *dropStmt;
 	char	   *copyStmt;
-	DumpId	   *dependencies;	/* dumpIds of objects this__ one depends on */
+	DumpId	   *dependencies;	/* dumpIds of objects this one depends on */
 	int			nDeps;			/* number of dependencies */
 
 	DataDumperPtr dataDumper;	/* Routine to dump data for object */
@@ -366,9 +366,9 @@ struct _tocEntry
 	struct _tocEntry *par_prev; /* list links for pending/ready items; */
 	struct _tocEntry *par_next; /* these are NULL if not in either list */
 	int			depCount;		/* number of dependencies not yet restored */
-	DumpId	   *revDeps;		/* dumpIds of objects depending on this__ one */
+	DumpId	   *revDeps;		/* dumpIds of objects depending on this one */
 	int			nRevDeps;		/* number of such dependencies */
-	DumpId	   *lockDeps;		/* dumpIds of objects this__ one needs lock on */
+	DumpId	   *lockDeps;		/* dumpIds of objects this one needs lock on */
 	int			nLockDeps;		/* number of such dependencies */
 };
 

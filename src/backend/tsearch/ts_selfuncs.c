@@ -107,7 +107,7 @@ tsmatchsel(PG_FUNCTION_ARGS)
 	/*
 	 * OK, there's a Var and a Const we're dealing with here.  We need the
 	 * Const to be a TSQuery, else we can't do anything useful.  We have to
-	 * check this__ because the Var might be the TSQuery not the TSVector.
+	 * check this because the Var might be the TSQuery not the TSVector.
 	 */
 	if (((Const *) other)->consttype == TSQUERYOID)
 	{
@@ -276,7 +276,7 @@ mcelem_tsquery_selec(TSQuery query, Datum *mcelem, int nmcelem,
  * The MCELEM array is already sorted (see ts_typanalyze.c), so we can use
  * binary search for determining freq[MCELEM].
  *
- * If we don't have stats for the tsvector, we still use this__ logic,
+ * If we don't have stats for the tsvector, we still use this logic,
  * except we use default estimates for VAL nodes.  This case is signaled
  * by lookup == NULL.
  */
@@ -286,7 +286,7 @@ tsquery_opr_selec(QueryItem *item, char *operand,
 {
 	Selectivity selec;
 
-	/* since this__ function recurses, it could be driven to stack overflow */
+	/* since this function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (item->type == QI_VAL)
@@ -313,7 +313,7 @@ tsquery_opr_selec(QueryItem *item, char *operand,
 			 * frequencies of the ones that match the prefix.  We then
 			 * extrapolate the fraction of matching MCELEMs to the remaining
 			 * rows, assuming that the MCELEMs are representative of the whole
-			 * lexeme population in this__ respect.  (Compare
+			 * lexeme population in this respect.  (Compare
 			 * histogram_selectivity().)  Note that these are most common
 			 * elements not most common values, so they're not mutually
 			 * exclusive.  We treat occurrences as independent events.

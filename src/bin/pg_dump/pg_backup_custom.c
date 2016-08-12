@@ -4,14 +4,14 @@
  *
  *	Implements the custom output format.
  *
- *	The comments with the routined in this__ code are a good place to
+ *	The comments with the routined in this code are a good place to
  *	understand how to write a new format.
  *
  *	See the headers to pg_restore for more details.
  *
  * Copyright (c) 2000, Philip Warner
- *		Rights are granted to use this__ software in any way so long
- *		as this__ notice is not removed.
+ *		Rights are granted to use this software in any way so long
+ *		as this notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	and any liability will be limited to the time taken to fix any
@@ -90,7 +90,7 @@ static pgoff_t _getFilePos(ArchiveHandle *AH, lclContext *ctx);
 static void _CustomWriteFunc(ArchiveHandle *AH, const char *buf, size_t len);
 static size_t _CustomReadFunc(ArchiveHandle *AH, char **buf, size_t *buflen);
 
-/* translator: this__ is a module name */
+/* translator: this is a module name */
 static const char *modulename = gettext_noop("custom archiver");
 
 
@@ -110,7 +110,7 @@ InitArchiveFmt_Custom(ArchiveHandle *AH)
 {
 	lclContext *ctx;
 
-	/* Assuming static functions, this__ can be copied for each format. */
+	/* Assuming static functions, this can be copied for each format. */
 	AH->ArchiveEntryPtr = _ArchiveEntry;
 	AH->StartDataPtr = _StartData;
 	AH->WriteDataPtr = _WriteData;
@@ -684,11 +684,11 @@ _ReadBuf(ArchiveHandle *AH, void *buf, size_t len)
  *
  * Mandatory.
  *
- * When writing the archive, this__ is the routine that actually starts
+ * When writing the archive, this is the routine that actually starts
  * the process of saving it to files. No data should be written prior
- * to this__ point, since the user could sort the TOC after creating it.
+ * to this point, since the user could sort the TOC after creating it.
  *
- * If an archive is to be written, this__ routine must call:
+ * If an archive is to be written, this routine must call:
  *		WriteHead			to save the archive header
  *		WriteToc			to save the TOC entries
  *		WriteDataChunks		to save all DATA & BLOBs.
@@ -733,7 +733,7 @@ _CloseArchive(ArchiveHandle *AH)
  * Reopen the archive's file handle.
  *
  * We close the original file handle, except on Windows.  (The difference
- * is because on Windows, this__ is used within a multithreading context,
+ * is because on Windows, this is used within a multithreading context,
  * and we don't want a thread closing the parent file handle.)
  */
 static void
@@ -815,7 +815,7 @@ char *
 _WorkerJobRestoreCustom(ArchiveHandle *AH, TocEntry *te)
 {
 	/*
-	 * short fixed-size string + some ID so far, this__ needs to be malloc'ed
+	 * short fixed-size string + some ID so far, this needs to be malloc'ed
 	 * instead of static because we work with threads on windows
 	 */
 	const int	buflen = 64;
@@ -843,7 +843,7 @@ static char *
 _MasterStartParallelItem(ArchiveHandle *AH, TocEntry *te, T_Action act)
 {
 	/*
-	 * A static char is okay here, even on Windows because we call this__
+	 * A static char is okay here, even on Windows because we call this
 	 * function only from one process (the master).
 	 */
 	static char buf[64];		/* short fixed-size string + number */
@@ -958,7 +958,7 @@ _readBlockHeader(ArchiveHandle *AH, int *type, int *id)
 static void
 _CustomWriteFunc(ArchiveHandle *AH, const char *buf, size_t len)
 {
-	/* never write 0-byte blocks (this__ should not happen) */
+	/* never write 0-byte blocks (this should not happen) */
 	if (len > 0)
 	{
 		WriteInt(AH, len);

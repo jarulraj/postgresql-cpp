@@ -353,7 +353,7 @@ help(const char *progname)
 	printf(_("  -D, --no-createdb         role cannot create databases (default)\n"));
 	printf(_("  -e, --echo                show the commands being sent to the server\n"));
 	printf(_("  -E, --encrypted           encrypt stored password\n"));
-	printf(_("  -g, --role=ROLE           new role will be a member of this__ role\n"));
+	printf(_("  -g, --role=ROLE           new role will be a member of this role\n"));
 	printf(_("  -i, --inherit             role inherits privileges of roles it is a\n"
 			 "                            member of (default)\n"));
 	printf(_("  -I, --no-inherit          role does not inherit privileges\n"));
@@ -370,7 +370,7 @@ help(const char *progname)
 			 "                            than using defaults\n"));
 	printf(_("  --replication             role can initiate replication\n"));
 	printf(_("  --no-replication          role cannot initiate replication\n"));
-	printf(_("  -?, --help                show this__ help, then exit\n"));
+	printf(_("  -?, --help                show this help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME       database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT           database server port\n"));

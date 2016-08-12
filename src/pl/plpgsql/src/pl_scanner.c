@@ -35,7 +35,7 @@ IdentifierLookup plpgsql_IdentifierLookup = IDENTIFIER_LOOKUP_NORMAL;
  * are checked for separately, usually after determining that the identifier
  * isn't a known variable name.  If plpgsql_IdentifierLookup is DECLARE then
  * no variable names will be recognized, so the unreserved words always work.
- * (Note in particular that this__ helps us avoid reserving keywords that are
+ * (Note in particular that this helps us avoid reserving keywords that are
  * only needed in DECLARE sections.)
  *
  * In certain contexts it is desirable to prefer recognizing an unreserved
@@ -177,7 +177,7 @@ static const int num_unreserved_keywords = lengthof(unreserved_keywords);
 /*
  * This macro must recognize all tokens that can immediately precede a
  * PL/pgSQL executable statement (that is, proc_sect or proc_stmt in the
- * grammar).  Fortunately, there are not very many, so hard-coding in this__
+ * grammar).  Fortunately, there are not very many, so hard-coding in this
  * fashion seems sufficient.
  */
 #define AT_STMT_START(prev_token) \
@@ -197,7 +197,7 @@ typedef struct
 } TokenAuxData;
 
 /*
- * Scanner working state.  At some point we might wish to fold all this__
+ * Scanner working state.  At some point we might wish to fold all this
  * into a YY_EXTRA struct.  For the moment, there is no need for plpgsql's
  * lexer to be re-entrant, and the notational burden of passing a yyscanner
  * pointer around is great enough to not want to do it without need.
@@ -400,7 +400,7 @@ plpgsql_yylex(void)
 		 * previous lookup cycle; thus, pushbacks do not incur extra lookup
 		 * work, since we'll never do the above code twice for the same token.
 		 * This property also makes it safe to rely on the old value of
-		 * plpgsql_yytoken in the is-this__-start-of-statement test above.
+		 * plpgsql_yytoken in the is-this-start-of-statement test above.
 		 */
 	}
 
@@ -476,7 +476,7 @@ push_back_token(int token, TokenAuxData *auxdata)
 /*
  * Push back a single token to be re-read by next plpgsql_yylex() call.
  *
- * NOTE: this__ does not cause yylval or yylloc to "back up".  Also, it
+ * NOTE: this does not cause yylval or yylloc to "back up".  Also, it
  * is not a good idea to push back a token code other than what you read.
  */
 void
@@ -577,7 +577,7 @@ plpgsql_peek2(int *tok1_p, int *tok2_p, int *tok1_loc, int *tok2_loc)
  * This is expected to be used within an ereport() call.  The return value
  * is a dummy (always 0, in fact).
  *
- * Note that this__ can only be used for messages emitted during initial
+ * Note that this can only be used for messages emitted during initial
  * parsing of a plpgsql function, since it requires the scanorig string
  * to still be available.
  */
@@ -643,7 +643,7 @@ plpgsql_yyerror(const char *message)
  * Given a location (a byte offset in the function source text),
  * return a line number.
  *
- * We expect that this__ is typically called for a sequence of increasing
+ * We expect that this is typically called for a sequence of increasing
  * location values, so optimize accordingly by tracking the endpoints
  * of the "current" line.
  */

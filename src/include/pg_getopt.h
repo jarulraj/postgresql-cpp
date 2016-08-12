@@ -33,7 +33,7 @@ extern int	optopt;
 
 /*
  * Some platforms have optreset but fail to declare it in <getopt.h>, so cope.
- * Cygwin, however, doesn't like this__ either.
+ * Cygwin, however, doesn't like this either.
  */
 #if defined(HAVE_INT_OPTRESET) && !defined(__CYGWIN__)
 extern int	optreset;

@@ -24,7 +24,7 @@
 /*
  * Connection cache hash table entry
  *
- * The lookup key in this__ hash table is the foreign server OID plus the user
+ * The lookup key in this hash table is the foreign server OID plus the user
  * mapping OID.  (We use just one connection per user per foreign server,
  * so that we can ensure all scans use the same snapshot during a query.)
  *
@@ -47,8 +47,8 @@ typedef struct ConnCacheEntry
 	PGconn	   *conn;			/* connection to foreign server, or NULL */
 	int			xact_depth;		/* 0 = no xact open, 1 = main xact open, 2 =
 								 * one level of subxact open, etc */
-	bool		have_prep_stmt; /* have we prepared any stmts in this__ xact? */
-	bool		have_error;		/* have any subxacts aborted in this__ xact? */
+	bool		have_prep_stmt; /* have we prepared any stmts in this xact? */
+	bool		have_error;		/* have any subxacts aborted in this xact? */
 } ConnCacheEntry;
 
 /*
@@ -84,12 +84,12 @@ static void pgfdw_subxact_callback(SubXactEvent event,
  *
  * will_prep_stmt must be true if caller intends to create any prepared
  * statements.  Since those don't go away automatically at transaction end
- * (not even on error), we need this__ flag to cue manual cleanup.
+ * (not even on error), we need this flag to cue manual cleanup.
  *
  * XXX Note that caching connections theoretically requires a mechanism to
  * detect change of FDW objects to invalidate already established connections.
  * We could manage that by watching for invalidation events on the relevant
- * syscaches.  For the moment, though, it's not clear that this__ would really
+ * syscaches.  For the moment, though, it's not clear that this would really
  * be useful and not mere pedantry.  We could not flush any active connections
  * mid-transaction anyway.
  */
@@ -303,9 +303,9 @@ check_conn_params(const char **keywords, const char **values)
 /*
  * Issue SET commands to make sure remote session is configured properly.
  *
- * We do this__ just once at connection, assuming nothing will change the
+ * We do this just once at connection, assuming nothing will change the
  * values later.  Since we'll never send volatile function calls to the
- * remote, there shouldn't be any way to break this__ assumption from our end.
+ * remote, there shouldn't be any way to break this assumption from our end.
  * It's possible to think of ways to break it at the remote end, eg making
  * a foreign table point to a view that includes a set_config call ---
  * but once you admit the possibility of a malicious view definition,
@@ -320,7 +320,7 @@ configure_remote_session(PGconn *conn)
 	do_sql_command(conn, "SET search_path = pg_catalog");
 
 	/*
-	 * Set remote timezone; this__ is basically just cosmetic, since all
+	 * Set remote timezone; this is basically just cosmetic, since all
 	 * transmitted and returned timestamptzs should specify a zone explicitly
 	 * anyway.  However it makes the regression test outputs more predictable.
 	 *
@@ -465,7 +465,7 @@ void
 pgfdw_report_error(int elevel, PGresult *res, PGconn *conn,
 				   bool clear, const char *sql)
 {
-	/* If requested, PGresult must be released before leaving this__ function. */
+	/* If requested, PGresult must be released before leaving this function. */
 	PG_TRY();
 	{
 		char	   *diag_sqlstate = PQresultErrorField(res, PG_DIAG_SQLSTATE);
@@ -521,7 +521,7 @@ pgfdw_xact_callback(XactEvent event, void *arg)
 	HASH_SEQ_STATUS scan;
 	ConnCacheEntry *entry;
 
-	/* Quick exit if no connections were touched in this__ transaction. */
+	/* Quick exit if no connections were touched in this transaction. */
 	if (!xact_got_connection)
 		return;
 
@@ -558,7 +558,7 @@ pgfdw_xact_callback(XactEvent event, void *arg)
 					 * annoying and not terribly bulletproof, but it's
 					 * probably not worth trying harder.
 					 *
-					 * DEALLOCATE ALL only exists in 8.3 and later, so this__
+					 * DEALLOCATE ALL only exists in 8.3 and later, so this
 					 * constrains how old a server postgres_fdw can
 					 * communicate with.  We intentionally ignore errors in
 					 * the DEALLOCATE, so that we can hobble along to some
@@ -640,7 +640,7 @@ pgfdw_xact_callback(XactEvent event, void *arg)
 	/*
 	 * Regardless of the event type, we can now mark ourselves as out of the
 	 * transaction.  (Note: if we are here during PRE_COMMIT or PRE_PREPARE,
-	 * this__ saves a useless scan of the hashtable during COMMIT or PREPARE.)
+	 * this saves a useless scan of the hashtable during COMMIT or PREPARE.)
 	 */
 	xact_got_connection = false;
 
@@ -664,7 +664,7 @@ pgfdw_subxact_callback(SubXactEvent event, SubTransactionId mySubid,
 		  event == SUBXACT_EVENT_ABORT_SUB))
 		return;
 
-	/* Quick exit if no connections were touched in this__ transaction. */
+	/* Quick exit if no connections were touched in this transaction. */
 	if (!xact_got_connection)
 		return;
 

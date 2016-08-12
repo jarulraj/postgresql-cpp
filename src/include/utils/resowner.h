@@ -37,7 +37,7 @@ extern PGDLLIMPORT ResourceOwner TopTransactionResourceOwner;
 /*
  * Resource releasing is done in three phases: pre-locks, locks, and
  * post-locks.  The pre-lock phase must release any resources that are
- * visible to other backends (such as pinned buffers); this__ ensures that
+ * visible to other backends (such as pinned buffers); this ensures that
  * when we release a lock that another backend may be waiting on, it will
  * see us as being fully out of our transaction.  The post-lock phase
  * should be used for backend-internal cleanup.
@@ -51,7 +51,7 @@ typedef enum
 
 /*
  *	Dynamically loaded modules can get control during ResourceOwnerRelease
- *	by providing a callback of this__ form.
+ *	by providing a callback of this form.
  */
 typedef void (*ResourceReleaseCallback) (ResourceReleasePhase phase,
 													 bool isCommit,

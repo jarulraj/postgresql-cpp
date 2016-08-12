@@ -49,15 +49,15 @@ typedef struct Instrumentation
 	/* Info about current plan cycle: */
 	bool		running;		/* TRUE if we've completed first tuple */
 	instr_time	starttime;		/* Start time of current iteration of node */
-	instr_time	counter;		/* Accumulated runtime for this__ node */
-	double		firsttuple;		/* Time for first tuple of this__ cycle */
-	double		tuplecount;		/* Tuples emitted so far this__ cycle */
+	instr_time	counter;		/* Accumulated runtime for this node */
+	double		firsttuple;		/* Time for first tuple of this cycle */
+	double		tuplecount;		/* Tuples emitted so far this cycle */
 	BufferUsage bufusage_start; /* Buffer usage at start */
 	/* Accumulated statistics across all completed cycles: */
 	double		startup;		/* Total startup time (in seconds) */
 	double		total;			/* Total total time (in seconds) */
 	double		ntuples;		/* Total tuples produced */
-	double		nloops;			/* # of run cycles for this__ node */
+	double		nloops;			/* # of run cycles for this node */
 	double		nfiltered1;		/* # tuples removed by scanqual or joinqual */
 	double		nfiltered2;		/* # tuples removed by "other" quals */
 	BufferUsage bufusage;		/* Total buffer usage */

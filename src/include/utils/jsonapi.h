@@ -35,7 +35,7 @@ typedef enum
 
 
 /*
- * All the fields in this__ structure should be treated as read-only.
+ * All the fields in this structure should be treated as read-only.
  *
  * If strval is not null, then it should contain the de-escaped value
  * of the lexeme if it's a string. Otherwise most of these field names
@@ -113,7 +113,7 @@ extern int json_count_array_elements(JsonLexContext *lex);
 /*
  * constructors for JsonLexContext, with or without strval element.
  * If supplied, the strval element will contain a de-escaped version of
- * the lexeme. However, doing this__ imposes a performance penalty, so
+ * the lexeme. However, doing this imposes a performance penalty, so
  * it should be avoided if the de-escaped lexeme is not required.
  *
  * If you already have the json as a text* value, use the first of these

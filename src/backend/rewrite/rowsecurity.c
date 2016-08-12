@@ -13,7 +13,7 @@
  * Any part of the system which is returning records back to the user, or
  * which is accepting records from the user to add to a table, needs to
  * consider the policies associated with the table (if any).  For normal
- * queries, this__ is handled by calling get_row_security_policies() during
+ * queries, this is handled by calling get_row_security_policies() during
  * rewrite, for each RTE in the query.  This returns the expressions defined
  * by the table's policies as a list that is prepended to the securityQuals
  * list for the RTE.  For queries which modify the table, any WITH CHECK
@@ -99,7 +99,7 @@ row_security_policy_hook_type row_security_policy_hook_restrictive = NULL;
  * applied to the specified RTE.
  *
  * In addition, hasRowSecurity is set to true if row level security is enabled
- * (even if this__ RTE doesn't have any row security quals), and hasSubLinks is
+ * (even if this RTE doesn't have any row security quals), and hasSubLinks is
  * set to true if any of the quals returned contain sublinks.
  */
 void
@@ -120,17 +120,17 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 	*hasRowSecurity = false;
 	*hasSubLinks = false;
 
-	/* If this__ is not a normal relation, just return immediately */
+	/* If this is not a normal relation, just return immediately */
 	if (rte->relkind != RELKIND_RELATION)
 		return;
 
 	/* Switch to checkAsUser if it's set */
 	user_id = rte->checkAsUser ? rte->checkAsUser : GetUserId();
 
-	/* Determine the state of RLS for this__, pass checkAsUser explicitly */
+	/* Determine the state of RLS for this, pass checkAsUser explicitly */
 	rls_status = check_enable_rls(rte->relid, rte->checkAsUser, false);
 
-	/* If there is no RLS on this__ table at all, nothing to do */
+	/* If there is no RLS on this table at all, nothing to do */
 	if (rls_status == RLS_NONE)
 		return;
 
@@ -142,7 +142,7 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 	if (rls_status == RLS_NONE_ENV)
 	{
 		/*
-		 * Indicate that this__ query may involve RLS and must therefore be
+		 * Indicate that this query may involve RLS and must therefore be
 		 * replanned if the environment changes (GUCs, role), but we are not
 		 * adding anything here.
 		 */
@@ -152,10 +152,10 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 	}
 
 	/*
-	 * RLS is enabled for this__ relation.
+	 * RLS is enabled for this relation.
 	 *
 	 * Get the security policies that should be applied, based on the command
-	 * type.  Note that if this__ isn't the target relation, we actually want
+	 * type.  Note that if this isn't the target relation, we actually want
 	 * the relation's SELECT policies, regardless of the query command type,
 	 * for example in UPDATE t1 ... FROM t2 we need to apply t1's UPDATE
 	 * policies and t2's SELECT policies.
@@ -273,7 +273,7 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 
 		/*
 		 * Get and add ALL/SELECT policies, if SELECT rights are required
-		 * for this__ relation (eg: when RETURNING is used).  These are added as
+		 * for this relation (eg: when RETURNING is used).  These are added as
 		 * WCO policies rather than security quals to ensure that an error is
 		 * raised if a policy is violated; otherwise, we might end up silently
 		 * dropping rows to be added.
@@ -327,7 +327,7 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 			 * Get and add ALL/SELECT policies, as WCO_RLS_CONFLICT_CHECK
 			 * WCOs to ensure they are considered when taking the UPDATE
 			 * path of an INSERT .. ON CONFLICT DO UPDATE, if SELECT
-			 * rights are required for this__ relation, also as WCO policies,
+			 * rights are required for this relation, also as WCO policies,
 			 * again, to avoid silently dropping data.  See above.
 			 */
 			if (rte->requiredPerms & ACL_SELECT)
@@ -359,7 +359,7 @@ get_row_security_policies(Query *root, RangeTblEntry *rte, int rt_index,
 	heap_close(rel, NoLock);
 
 	/*
-	 * Mark this__ query as having row security, so plancache can invalidate it
+	 * Mark this query as having row security, so plancache can invalidate it
 	 * when necessary (eg: role changes)
 	 */
 	*hasRowSecurity = true;
@@ -427,7 +427,7 @@ get_policies_for_relation(Relation relation, CmdType cmd, Oid user_id,
 		}
 
 		/*
-		 * Add this__ policy to the list of permissive policies if it
+		 * Add this policy to the list of permissive policies if it
 		 * applies to the specified role.
 		 */
 		if (cmd_matches && check_role_for_policy(policy->roles, user_id))
@@ -552,7 +552,7 @@ add_security_quals(int rt_index,
 
 	/*
 	 * First collect up the permissive quals.  If we do not find any permissive
-	 * policies then no rows are visible (this__ is handled below).
+	 * policies then no rows are visible (this is handled below).
 	 */
 	foreach(item, permissive_policies)
 	{

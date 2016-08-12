@@ -10,7 +10,7 @@
  * This code connects to a database, creates a schema and table, and summarizes
  * the numbers contained therein.  To see it working, insert an initial value
  * with "total" type and some initial value; then insert some other rows with
- * "delta" type.  Delta rows will be deleted by this__ worker and their values
+ * "delta" type.  Delta rows will be deleted by this worker and their values
  * aggregated into the total.
  *
  * Copyright (C) 2013-2014, PostgreSQL Global Development Group
@@ -31,7 +31,7 @@
 #include "storage/proc.h"
 #include "storage/shmem.h"
 
-/* these headers are used by this__ particular worker's code */
+/* these headers are used by this particular worker's code */
 #include "access/xact.h"
 #include "executor/spi.h"
 #include "fmgr.h"
@@ -186,7 +186,7 @@ worker_spi_main(Datum main_arg)
 	initialize_worker_spi(table);
 
 	/*
-	 * Quote identifiers passed to us.  Note that this__ must be done after
+	 * Quote identifiers passed to us.  Note that this must be done after
 	 * initialize_worker_spi, because that routine assumes the names are not
 	 * quoted.
 	 *
@@ -212,7 +212,7 @@ worker_spi_main(Datum main_arg)
 					 table->name);
 
 	/*
-	 * Main loop: do this__ until the SIGTERM handler tells us to terminate
+	 * Main loop: do this until the SIGTERM handler tells us to terminate
 	 */
 	while (!got_sigterm)
 	{
@@ -299,7 +299,7 @@ worker_spi_main(Datum main_arg)
 }
 
 /*
- * Entrypoint of this__ module.
+ * Entrypoint of this module.
  *
  * We register more than one worker process here, to demonstrate how that can
  * be done.

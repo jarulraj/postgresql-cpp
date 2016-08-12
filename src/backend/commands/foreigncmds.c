@@ -58,7 +58,7 @@ static void import_error_callback(void *arg);
  * if the list is empty.
  *
  * Note: The array is usually stored to database without further
- * processing, hence any validation should be done before this__
+ * processing, hence any validation should be done before this
  * conversion.
  */
 static Datum
@@ -122,7 +122,7 @@ transformGenericOptions(Oid catalogId,
 		ListCell   *prev = NULL;
 
 		/*
-		 * Find the element in resultOptions.  We need this__ for validation in
+		 * Find the element in resultOptions.  We need this for validation in
 		 * all cases.  Also identify the previous element.
 		 */
 		foreach(cell, resultOptions)
@@ -137,7 +137,7 @@ transformGenericOptions(Oid catalogId,
 
 		/*
 		 * It is possible to perform multiple SET/DROP actions on the same
-		 * option.  The standard permits this__, as long as the options to be
+		 * option.  The standard permits this, as long as the options to be
 		 * added are unique.  Note that an unspecified action is taken to be
 		 * ADD.
 		 */
@@ -200,7 +200,7 @@ transformGenericOptions(Oid catalogId,
 /*
  * Internal workhorse for changing a data wrapper's owner.
  *
- * Allow this__ only for superusers; also the new owner must be a
+ * Allow this only for superusers; also the new owner must be a
  * superuser.
  */
 static void
@@ -589,7 +589,7 @@ CreateForeignDataWrapper(CreateFdwStmt *stmt)
 	ownerId = GetUserId();
 
 	/*
-	 * Check that there is no other foreign-data wrapper by this__ name.
+	 * Check that there is no other foreign-data wrapper by this name.
 	 */
 	if (GetForeignDataWrapperByName(stmt->fdwname, true) != NULL)
 		ereport(ERROR,
@@ -726,7 +726,7 @@ AlterForeignDataWrapper(AlterFdwStmt *stmt)
 
 		/*
 		 * It could be that the behavior of accessing foreign table changes
-		 * with the new handler.  Warn about this__.
+		 * with the new handler.  Warn about this.
 		 */
 		ereport(WARNING,
 				(errmsg("changing the foreign-data wrapper handler can change behavior of existing foreign tables")));
@@ -740,7 +740,7 @@ AlterForeignDataWrapper(AlterFdwStmt *stmt)
 		/*
 		 * It could be that existing options for the FDW or dependent SERVER,
 		 * USER MAPPING or FOREIGN TABLE objects are no longer valid according
-		 * to the new validator.  Warn about this__.
+		 * to the new validator.  Warn about this.
 		 */
 		if (OidIsValid(fdwvalidator))
 			ereport(WARNING,
@@ -799,7 +799,7 @@ AlterForeignDataWrapper(AlterFdwStmt *stmt)
 		ObjectAddress referenced;
 
 		/*
-		 * Flush all existing dependency records of this__ FDW on functions; we
+		 * Flush all existing dependency records of this FDW on functions; we
 		 * assume there can be none other than the ones we are fixing.
 		 */
 		deleteDependencyRecordsForClass(ForeignDataWrapperRelationId,
@@ -882,7 +882,7 @@ CreateForeignServer(CreateForeignServerStmt *stmt)
 	ownerId = GetUserId();
 
 	/*
-	 * Check that there is no other foreign server by this__ name.
+	 * Check that there is no other foreign server by this name.
 	 */
 	if (GetForeignServerByName(stmt->servername, true) != NULL)
 		ereport(ERROR,
@@ -1340,7 +1340,7 @@ RemoveUserMapping(DropUserMappingStmt *stmt)
 		if (!OidIsValid(useId))
 		{
 			/*
-			 * IF EXISTS specified, role not found and not public. Notice this__
+			 * IF EXISTS specified, role not found and not public. Notice this
 			 * and leave.
 			 */
 			elog(NOTICE, "role \"%s\" does not exist, skipping",
@@ -1568,7 +1568,7 @@ ImportForeignSchema(ImportForeignSchemaStmt *stmt)
 
 		/*
 		 * Process each parse tree (we allow the FDW to put more than one
-		 * command per string, though this__ isn't really advised).
+		 * command per string, though this isn't really advised).
 		 */
 		foreach(lc2, raw_parsetree_list)
 		{

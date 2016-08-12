@@ -721,7 +721,7 @@ get_path_all(FunctionCallInfo fcinfo, bool as_text)
 	 * If the array contains any null elements, return NULL, on the grounds
 	 * that you'd have gotten NULL if any RHS value were NULL in a nested
 	 * series of applications of the -> operator.  (Note: because we also
-	 * return NULL for error cases such as no-such-field, this__ is true
+	 * return NULL for error cases such as no-such-field, this is true
 	 * regardless of the contents of the rest of the array.)
 	 */
 	if (array_contains_nulls(path))
@@ -739,7 +739,7 @@ get_path_all(FunctionCallInfo fcinfo, bool as_text)
 		tpath[i] = TextDatumGetCString(pathtext[i]);
 
 		/*
-		 * we have no idea at this__ stage what structure the document is so
+		 * we have no idea at this stage what structure the document is so
 		 * just convert anything in the path that we can to an integer and set
 		 * all the other integers to INT_MIN which will never match.
 		 */
@@ -849,7 +849,7 @@ get_object_start(void *state)
 	if (lex_level == 0 && _state->npath == 0)
 	{
 		/*
-		 * Special case: we should match the entire object.  We only need this__
+		 * Special case: we should match the entire object.  We only need this
 		 * at outermost level because at nested levels the match will have
 		 * been started by the outer field or array element callback.
 		 */
@@ -893,14 +893,14 @@ get_object_field_start(void *state, char *fname, bool isnull)
 		}
 		else
 		{
-			/* end of path, so we want this__ value */
+			/* end of path, so we want this value */
 			get_next = true;
 		}
 	}
 
 	if (get_next)
 	{
-		/* this__ object overrides any previous matching object */
+		/* this object overrides any previous matching object */
 		_state->tresult = NULL;
 		_state->result_start = NULL;
 
@@ -934,12 +934,12 @@ get_object_field_end(void *state, char *fname, bool isnull)
 	{
 		if (lex_level < _state->npath)
 		{
-			/* done with this__ field so reset pathok */
+			/* done with this field so reset pathok */
 			_state->pathok[lex_level] = false;
 		}
 		else
 		{
-			/* end of path, so we want this__ value */
+			/* end of path, so we want this value */
 			get_last = true;
 		}
 	}
@@ -962,7 +962,7 @@ get_object_field_end(void *state, char *fname, bool isnull)
 			_state->tresult = cstring_to_text_with_len(start, len);
 		}
 
-		/* this__ should be unnecessary but let's do it for cleanliness: */
+		/* this should be unnecessary but let's do it for cleanliness: */
 		_state->result_start = NULL;
 	}
 }
@@ -975,7 +975,7 @@ get_array_start(void *state)
 
 	if (lex_level < _state->npath)
 	{
-		/* Initialize counting of elements in this__ array */
+		/* Initialize counting of elements in this array */
 		_state->array_cur_index[lex_level] = -1;
 
 		/* INT_MIN value is reserved to represent invalid subscript */
@@ -992,7 +992,7 @@ get_array_start(void *state)
 	else if (lex_level == 0 && _state->npath == 0)
 	{
 		/*
-		 * Special case: we should match the entire array.  We only need this__
+		 * Special case: we should match the entire array.  We only need this
 		 * at the outermost level because at nested levels the match will
 		 * have been started by the outer field or array element callback.
 		 */
@@ -1039,7 +1039,7 @@ get_array_element_start(void *state, bool isnull)
 		}
 		else
 		{
-			/* end of path, so we want this__ value */
+			/* end of path, so we want this value */
 			get_next = true;
 		}
 	}
@@ -1077,12 +1077,12 @@ get_array_element_end(void *state, bool isnull)
 	{
 		if (lex_level < _state->npath)
 		{
-			/* done with this__ element so reset pathok */
+			/* done with this element so reset pathok */
 			_state->pathok[lex_level] = false;
 		}
 		else
 		{
-			/* end of path, so we want this__ value */
+			/* end of path, so we want this value */
 			get_last = true;
 		}
 	}
@@ -1177,7 +1177,7 @@ get_jsonb_path_all(FunctionCallInfo fcinfo, bool as_text)
 	 * If the array contains any null elements, return NULL, on the grounds
 	 * that you'd have gotten NULL if any RHS value were NULL in a nested
 	 * series of applications of the -> operator.  (Note: because we also
-	 * return NULL for error cases such as no-such-field, this__ is true
+	 * return NULL for error cases such as no-such-field, this is true
 	 * regardless of the contents of the rest of the array.)
 	 */
 	if (array_contains_nulls(path))
@@ -1337,7 +1337,7 @@ json_array_length(PG_FUNCTION_ARGS)
 	state = palloc0(sizeof(AlenState));
 	sem = palloc0(sizeof(JsonSemAction));
 
-	/* palloc0 does this__ for us */
+	/* palloc0 does this for us */
 #if 0
 	state->count = 0;
 #endif
@@ -1746,7 +1746,7 @@ each_scalar(void *state, char *token, JsonTokenType tokentype)
  *
  * get the elements from a json array
  *
- * a lot of this__ processing is similar to the json_each* functions
+ * a lot of this processing is similar to the json_each* functions
  */
 
 Datum
@@ -2443,10 +2443,10 @@ hash_object_field_end(void *state, char *fname, bool isnull)
 
 	/*
 	 * Ignore field names >= NAMEDATALEN - they can't match a record field.
-	 * (Note: without this__ test, the hash code would truncate the string at
+	 * (Note: without this test, the hash code would truncate the string at
 	 * NAMEDATALEN-1, and could then match against a similarly-truncated
-	 * record field name.  That would be a reasonable behavior, but this__ code
-	 * has previously insisted on exact equality, so we keep this__ behavior.)
+	 * record field name.  That would be a reasonable behavior, but this code
+	 * has previously insisted on exact equality, so we keep this behavior.)
 	 */
 	if (strlen(fname) >= NAMEDATALEN)
 		return;
@@ -2846,7 +2846,7 @@ populate_recordset_object_start(void *state)
 	if (lex_level > 1)
 		return;
 
-	/* Object at level 1: set up a new hash table for this__ object */
+	/* Object at level 1: set up a new hash table for this object */
 	memset(&ctl, 0, sizeof(ctl));
 	ctl.keysize = NAMEDATALEN;
 	ctl.entrysize = sizeof(JsonHashEntry);
@@ -2876,7 +2876,7 @@ populate_recordset_object_end(void *state)
 	if (_state->lex->lex_level > 1)
 		return;
 
-	/* Otherwise, construct and return a tuple based on this__ level-1 object */
+	/* Otherwise, construct and return a tuple based on this level-1 object */
 	values = (Datum *) palloc(ncolumns * sizeof(Datum));
 	nulls = (bool *) palloc(ncolumns * sizeof(bool));
 
@@ -2968,7 +2968,7 @@ populate_recordset_object_end(void *state)
 
 	tuplestore_puttuple(_state->tuple_store, rettuple);
 
-	/* Done with hash for this__ object */
+	/* Done with hash for this object */
 	hash_destroy(json_hash);
 	_state->json_hash = NULL;
 }
@@ -3041,10 +3041,10 @@ populate_recordset_object_field_end(void *state, char *fname, bool isnull)
 
 	/*
 	 * Ignore field names >= NAMEDATALEN - they can't match a record field.
-	 * (Note: without this__ test, the hash code would truncate the string at
+	 * (Note: without this test, the hash code would truncate the string at
 	 * NAMEDATALEN-1, and could then match against a similarly-truncated
-	 * record field name.  That would be a reasonable behavior, but this__ code
-	 * has previously insisted on exact equality, so we keep this__ behavior.)
+	 * record field name.  That would be a reasonable behavior, but this code
+	 * has previously insisted on exact equality, so we keep this behavior.)
 	 */
 	if (strlen(fname) >= NAMEDATALEN)
 		return;
@@ -3093,7 +3093,7 @@ findJsonbValueFromContainerLen(JsonbContainer *container, uint32 flags,
  * Semantic actions for json_strip_nulls.
  *
  * Simply repeat the input on the output unless we encounter
- * a null object field. State for this__ is set when the field
+ * a null object field. State for this is set when the field
  * is started and reset when the scalar action (which must be next)
  * is called.
  */
@@ -3139,7 +3139,7 @@ sn_object_field_start(void *state, char *fname, bool isnull)
 	{
 		/*
 		 * The next thing must be a scalar or isnull couldn't be true, so
-		 * there is no danger of this__ state being carried down into a nested
+		 * there is no danger of this state being carried down into a nested
 		 * object or array. The flag will be reset in the scalar action.
 		 */
 		_state->skip_next_null = true;
@@ -3254,10 +3254,10 @@ jsonb_strip_nulls(PG_FUNCTION_ARGS)
 
 		if (last_was_key)
 		{
-			/* if the last element was a key this__ one can't be */
+			/* if the last element was a key this one can't be */
 			last_was_key = false;
 
-			/* skip this__ field if value is null */
+			/* skip this field if value is null */
 			if (type == WJB_VALUE && v.type == JsonbValue::jbvNull)
 				continue;
 
@@ -3597,7 +3597,7 @@ jsonb_delete_path(PG_FUNCTION_ARGS)
 
 /*
  * Iterate over all jsonb objects and merge them into one.
- * The logic of this__ function copied from the same hstore function,
+ * The logic of this function copied from the same hstore function,
  * except the case, when it1 & it2 represents jbvObject.
  * In that case we just append the content of it2 to it1 without any
  * verifications.

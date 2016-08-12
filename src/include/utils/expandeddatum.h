@@ -21,7 +21,7 @@
  * is a worthwhile trade-off.
  *
  * References to expanded objects are a type of TOAST pointer.
- * Because of longstanding conventions in Postgres, this__ means that the
+ * Because of longstanding conventions in Postgres, this means that the
  * flattened form of such an object must always be a varlena object.
  * Fortunately that's no restriction in practice.
  *
@@ -76,7 +76,7 @@ typedef struct ExpandedObjectMethods
 } ExpandedObjectMethods;
 
 /*
- * Every expanded object must contain this__ header; typically the header
+ * Every expanded object must contain this header; typically the header
  * is embedded in some larger struct that adds type-specific fields.
  *
  * It is presumed that the header object and all subsidiary data are stored
@@ -93,7 +93,7 @@ typedef struct ExpandedObjectMethods
  * But note that these pointers are just a convenience; a pointer object
  * appearing somewhere else would still be legal.
  *
- * The typedef declaration for this__ appears in postgres.h.
+ * The typedef declaration for this appears in postgres.h.
  */
 struct ExpandedObjectHeader
 {
@@ -103,13 +103,13 @@ struct ExpandedObjectHeader
 	/* Pointer to methods required for object type */
 	const ExpandedObjectMethods *eoh_methods;
 
-	/* Memory context containing this__ header and subsidiary data */
+	/* Memory context containing this header and subsidiary data */
 	MemoryContext eoh_context;
 
-	/* Standard R/W TOAST pointer for this__ object is kept here */
+	/* Standard R/W TOAST pointer for this object is kept here */
 	char		eoh_rw_ptr[EXPANDED_POINTER_SIZE];
 
-	/* Standard R/O TOAST pointer for this__ object is kept here */
+	/* Standard R/O TOAST pointer for this object is kept here */
 	char		eoh_ro_ptr[EXPANDED_POINTER_SIZE];
 };
 
@@ -121,7 +121,7 @@ struct ExpandedObjectHeader
  * (EOH_HEADER_MAGIC to the code).  This works since no 4-byte-header varlena
  * could have that as its first 4 bytes.  Caution: we could not reliably tell
  * the difference between an ExpandedObjectHeader and a short-header object
- * with this__ trick.  However, it works fine if the argument fetching code
+ * with this trick.  However, it works fine if the argument fetching code
  * always returns either a 4-byte-header flat object or an expanded object.
  */
 #define EOH_HEADER_MAGIC (-1)

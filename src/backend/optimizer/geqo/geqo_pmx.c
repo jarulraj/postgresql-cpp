@@ -28,8 +28,8 @@
 /*	Colorado State University								 */
 /*															 */
 /*	Permission is hereby granted to copy all or any part of  */
-/*	this__ program for free distribution.   The author's name  */
-/*	and this__ copyright notice must be included in any copy.  */
+/*	this program for free distribution.   The author's name  */
+/*	and this copyright notice must be included in any copy.  */
 /*															 */
 /*************************************************************/
 

@@ -4,7 +4,7 @@
  *	  Exports from postmaster/bgwriter.c and postmaster/checkpointer.c.
  *
  * The bgwriter process used to handle checkpointing duties too.  Now
- * there is a separate process, but we did not bother to split this__ header.
+ * there is a separate process, but we did not bother to split this header.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
  *

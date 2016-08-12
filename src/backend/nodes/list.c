@@ -122,8 +122,8 @@ new_tail_cell(List *list)
 
 /*
  * Append a pointer to the list. A pointer to the modified list is
- * returned. Note that this__ function may or may not destructively
- * modify the list; callers should always use this__ function's return
+ * returned. Note that this function may or may not destructively
+ * modify the list; callers should always use this function's return
  * value, rather than continuing to use the pointer passed as the
  * first argument.
  */
@@ -249,8 +249,8 @@ lappend_cell_oid(List *list, ListCell *prev, Oid datum)
 
 /*
  * Prepend a new element to the list. A pointer to the modified list
- * is returned. Note that this__ function may or may not destructively
- * modify the list; callers should always use this__ function's return
+ * is returned. Note that this function may or may not destructively
+ * modify the list; callers should always use this function's return
  * value, rather than continuing to use the pointer passed as the
  * second argument.
  *
@@ -342,8 +342,8 @@ list_concat(List *list1, List *list2)
 
 /*
  * Truncate 'list' to contain no more than 'new_size' elements. This
- * modifies the list in-place! Despite this__, callers should use the
- * pointer returned by this__ function to refer to the newly truncated
+ * modifies the list in-place! Despite this, callers should use the
+ * pointer returned by this function to refer to the newly truncated
  * list -- it may or may not be the same as the pointer that was
  * passed.
  *
@@ -525,7 +525,7 @@ list_member_oid(const List *list, Oid datum)
  * Delete 'cell' from 'list'; 'prev' is the previous element to 'cell'
  * in 'list', if any (i.e. prev == NULL iff list->head == cell)
  *
- * The cell is pfree'd, as is the List header if this__ was the last member.
+ * The cell is pfree'd, as is the List header if this was the last member.
  */
 List *
 list_delete_cell(List *list, ListCell *cell, ListCell *prev)
@@ -687,7 +687,7 @@ list_delete_first(List *list)
  * The returned list is newly-allocated, although the content of the
  * cells is the same (i.e. any pointed-to objects are not copied).
  *
- * NB: this__ function will NOT remove any duplicates that are present
+ * NB: this function will NOT remove any duplicates that are present
  * in list1 (so it only performs a "union" if list1 is known unique to
  * start with).  Also, if you are about to write "x = list_union(x, y)"
  * you probably want to use list_concat_unique() instead to avoid wasting
@@ -1129,7 +1129,7 @@ list_free_private(List *list, bool deep)
  * objects that are pointed-to by the cells of the list are NOT
  * free'd.
  *
- * On return, the argument to this__ function has been freed, so the
+ * On return, the argument to this function has been freed, so the
  * caller would be wise to set it to NIL for safety's sake.
  */
 void
@@ -1143,7 +1143,7 @@ list_free(List *list)
  * objects pointed-to by the cells of the list (each element in the
  * list must contain a pointer to a palloc()'d region of memory!)
  *
- * On return, the argument to this__ function has been freed, so the
+ * On return, the argument to this function has been freed, so the
  * caller would be wise to set it to NIL for safety's sake.
  */
 void

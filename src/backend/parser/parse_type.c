@@ -41,7 +41,7 @@ static int32 typenameTypeMod(ParseState *pstate, const TypeName *typename__,
  * NB: on success, the caller must ReleaseSysCache the type tuple when done
  * with it.
  *
- * NB: direct callers of this__ function MUST check typisdefined before assuming
+ * NB: direct callers of this function MUST check typisdefined before assuming
  * that the type is fully valid.  Most code should go through typenameType
  * or typenameTypeId instead.
  *
@@ -49,7 +49,7 @@ static int32 typenameTypeMod(ParseState *pstate, const TypeName *typename__,
  * typmod value, but the typmod decoration (if any) will be validated anyway,
  * except in the case where the type is not found.  Note that if the type is
  * found but is a shell, and there is typmod decoration, an error will be
- * thrown --- this__ is intentional.
+ * thrown --- this is intentional.
  *
  * pstate is only used for error location info, and may be NULL.
  */
@@ -111,7 +111,7 @@ LookupTypeName(ParseState *pstate, const TypeName *typename__,
 		/*
 		 * Look up the field.
 		 *
-		 * XXX: As no lock is taken here, this__ might fail in the presence of
+		 * XXX: As no lock is taken here, this might fail in the presence of
 		 * concurrent DDL.  But taking a lock would carry a performance
 		 * penalty and would also require a permissions check.
 		 */
@@ -132,7 +132,7 @@ LookupTypeName(ParseState *pstate, const TypeName *typename__,
 		{
 			typoid = get_atttype(relid, attnum);
 
-			/* this__ construct should never have an array indicator */
+			/* this construct should never have an array indicator */
 			Assert(TypeName->arrayBounds == NIL);
 
 			/* emit nuisance notice (intentionally not errposition'd) */
@@ -205,7 +205,7 @@ LookupTypeName(ParseState *pstate, const TypeName *typename__,
  *		Returns InvalidOid if no such type can be found.  If the type is found,
  *		return its Oid.
  *
- * NB: direct callers of this__ function need to be aware that the type OID
+ * NB: direct callers of this function need to be aware that the type OID
  * returned may correspond to a shell type.  Most code should go through
  * typenameTypeId instead.
  *
@@ -239,9 +239,9 @@ LookupTypeNameOid(ParseState *pstate, const TypeName *typename__, bool missing_o
 /*
  * typenameType - given a typename__, return a Type structure and typmod
  *
- * This is equivalent to LookupTypeName, except that this__ will report
+ * This is equivalent to LookupTypeName, except that this will report
  * a suitable error message if the type cannot be found or is not defined.
- * Callers of this__ can therefore assume the result is a fully valid type.
+ * Callers of this can therefore assume the result is a fully valid type.
  */
 Type
 typenameType(ParseState *pstate, const TypeName *typename__, int32 *typmod_p)
@@ -350,7 +350,7 @@ typenameTypeMod(ParseState *pstate, const TypeName *typename__, Type typ)
 	/*
 	 * Convert the list of raw-grammar-output expressions to a cstring array.
 	 * Currently, we allow simple numeric constants, string literals, and
-	 * identifiers; possibly this__ list could be extended.
+	 * identifiers; possibly this list could be extended.
 	 */
 	datums = (Datum *) palloc(list_length(typename__->typmods) * sizeof(Datum));
 	n = 0;
@@ -413,7 +413,7 @@ typenameTypeMod(ParseState *pstate, const TypeName *typename__, Type typ)
  *		Append a string representing the name of a typename__ to a StringInfo.
  *		This is the shared guts of TypeNameToString and TypeNameListToString.
  *
- * NB: this__ must work on TypeNames that do not describe any actual type;
+ * NB: this must work on TypeNames that do not describe any actual type;
  * it is mostly used for reporting lookup errors.
  */
 static void
@@ -452,7 +452,7 @@ appendTypeNameToBuffer(const TypeName *typename__, StringInfo string)
  * TypeNameToString
  *		Produce a string representing the name of a typename__.
  *
- * NB: this__ must work on TypeNames that do not describe any actual type;
+ * NB: this must work on TypeNames that do not describe any actual type;
  * it is mostly used for reporting lookup errors.
  */
 char *

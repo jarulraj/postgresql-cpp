@@ -62,7 +62,7 @@
  *
  * Some callers wish to use the CachedPlan API even with one-shot queries
  * that have no reason to be saved at all.  We therefore support a "oneshot"
- * variant that does no data copying or invalidation checking.  In this__ case
+ * variant that does no data copying or invalidation checking.  In this case
  * there are no separate memory contexts: the CachedPlanSource struct and
  * all subsidiary data live in the caller's CurrentMemoryContext, and there
  * is no way to free memory short of clearing that entire context.  A oneshot
@@ -95,7 +95,7 @@ typedef struct CachedPlanSource
 												 * parsing and planning */
 	Oid			planUserId;		/* User-id that the plan depends on */
 	MemoryContext query_context;	/* context holding the above, or NULL */
-	/* If we have a generic plan, this__ is a reference-counted link to it: */
+	/* If we have a generic plan, this is a reference-counted link to it: */
 	struct CachedPlan *gplan;	/* generic plan, or NULL if not valid */
 	/* Some state flags: */
 	bool		is_oneshot;		/* is it a "oneshot" plan? */
@@ -132,10 +132,10 @@ typedef struct CachedPlan
 	bool		is_saved;		/* is CachedPlan in a long-lived context? */
 	bool		is_valid;		/* is the stmt_list currently valid? */
 	TransactionId saved_xmin;	/* if valid, replan when TransactionXmin
-								 * changes from this__ value */
-	int			generation;		/* parent's generation number for this__ plan */
-	int			refcount;		/* count of live references to this__ struct */
-	MemoryContext context;		/* context containing this__ CachedPlan */
+								 * changes from this value */
+	int			generation;		/* parent's generation number for this plan */
+	int			refcount;		/* count of live references to this struct */
+	MemoryContext context;		/* context containing this CachedPlan */
 } CachedPlan;
 
 

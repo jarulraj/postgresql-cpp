@@ -51,14 +51,14 @@
  *
  *	  * ExecInitNode() notices that it is looking at a nest loop and
  *		as the code below demonstrates, it calls ExecInitNestLoop().
- *		Eventually this__ calls ExecInitNode() on the right and left subplans
+ *		Eventually this calls ExecInitNode() on the right and left subplans
  *		and so forth until the entire plan is initialized.  The result
  *		of ExecInitNode() is a plan state tree built with the same structure
  *		as the underlying plan tree.
  *
  *	  * Then when ExecutorRun() is called, it calls ExecutePlan() which calls
  *		ExecProcNode() repeatedly on the top node of the plan state tree.
- *		Each time this__ happens, ExecProcNode() will end up calling
+ *		Each time this happens, ExecProcNode() will end up calling
  *		ExecNestLoop(), which calls ExecProcNode() on its subplans.
  *		Each of these subplans is a sequential scan so ExecSeqScan() is
  *		called.  The slots returned by ExecSeqScan() may contain
@@ -334,7 +334,7 @@ ExecInitNode(Plan *node, EState *estate, int eflags)
 	}
 
 	/*
-	 * Initialize any initPlans present in this__ node.  The planner put them in
+	 * Initialize any initPlans present in this node.  The planner put them in
 	 * a separate list for us.
 	 */
 	subps = NIL;
@@ -349,7 +349,7 @@ ExecInitNode(Plan *node, EState *estate, int eflags)
 	}
 	result->initPlan = subps;
 
-	/* Set up instrumentation for this__ node if requested */
+	/* Set up instrumentation for this node if requested */
 	if (estate->es_instrument)
 		result->instrument = InstrAlloc(1, estate->es_instrument);
 
@@ -371,7 +371,7 @@ ExecProcNode(PlanState *node)
 	CHECK_FOR_INTERRUPTS();
 
 	if (node->chgParam != NULL) /* something changed */
-		ExecReScan(node);		/* let ReScan handle this__ */
+		ExecReScan(node);		/* let ReScan handle this */
 
 	if (node->instrument)
 		InstrStartNode(node->instrument);
@@ -554,7 +554,7 @@ MultiExecProcNode(PlanState *node)
 	CHECK_FOR_INTERRUPTS();
 
 	if (node->chgParam != NULL) /* something changed */
-		ExecReScan(node);		/* let ReScan handle this__ */
+		ExecReScan(node);		/* let ReScan handle this */
 
 	switch (nodeTag(node))
 	{
@@ -594,7 +594,7 @@ MultiExecProcNode(PlanState *node)
  *		Recursively cleans up all the nodes in the plan rooted
  *		at 'node'.
  *
- *		After this__ operation, the query plan will not be able to be
+ *		After this operation, the query plan will not be able to be
  *		processed any further.  This should be called only after
  *		the query plan has been fully executed.
  * ----------------------------------------------------------------

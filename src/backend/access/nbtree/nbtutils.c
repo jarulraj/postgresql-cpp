@@ -107,7 +107,7 @@ _bt_mkscankey(Relation rel, IndexTuple itup)
  *		comparison data ultimately used must match the key datatypes.
  *
  *		The result cannot be used with _bt_compare(), unless comparison
- *		data is first stored into the key entries.  Currently this__
+ *		data is first stored into the key entries.  Currently this
  *		routine is only called by nbtsort.c and tuplesort.c, which have
  *		their own comparison routines.
  */
@@ -274,7 +274,7 @@ _bt_preprocess_array_keys(IndexScanDesc scan)
 		 * workspace context.
 		 */
 		arrayval = DatumGetArrayTypeP(cur->sk_argument);
-		/* We could cache this__ data, but not clear it's worth it */
+		/* We could cache this data, but not clear it's worth it */
 		get_typlenbyvalalign(ARR_ELEMTYPE(arrayval),
 							 &elmlen, &elmbyval, &elmalign);
 		deconstruct_array(arrayval,
@@ -378,7 +378,7 @@ _bt_find_extreme_element(IndexScanDesc scan, ScanKey skey,
 	/*
 	 * Determine the nominal datatype of the array elements.  We have to
 	 * support the convention that sk_subtype == InvalidOid means the opclass
-	 * input type; this__ is a hack to simplify life for ScanKeyInit().
+	 * input type; this is a hack to simplify life for ScanKeyInit().
 	 */
 	elemtype = skey->sk_subtype;
 	if (elemtype == InvalidOid)
@@ -387,7 +387,7 @@ _bt_find_extreme_element(IndexScanDesc scan, ScanKey skey,
 	/*
 	 * Look up the appropriate comparison operator in the opfamily.
 	 *
-	 * Note: it's possible that this__ would fail, if the opfamily is
+	 * Note: it's possible that this would fail, if the opfamily is
 	 * incomplete, but it seems quite unlikely that an opfamily would omit
 	 * non-cross-type comparison operators for any datatype that it supports
 	 * at all.
@@ -447,7 +447,7 @@ _bt_sort_array_elements(IndexScanDesc scan, ScanKey skey,
 	/*
 	 * Determine the nominal datatype of the array elements.  We have to
 	 * support the convention that sk_subtype == InvalidOid means the opclass
-	 * input type; this__ is a hack to simplify life for ScanKeyInit().
+	 * input type; this is a hack to simplify life for ScanKeyInit().
 	 */
 	elemtype = skey->sk_subtype;
 	if (elemtype == InvalidOid)
@@ -456,7 +456,7 @@ _bt_sort_array_elements(IndexScanDesc scan, ScanKey skey,
 	/*
 	 * Look up the appropriate comparison function in the opfamily.
 	 *
-	 * Note: it's possible that this__ would fail, if the opfamily is
+	 * Note: it's possible that this would fail, if the opfamily is
 	 * incomplete, but it seems quite unlikely that an opfamily would omit
 	 * non-cross-type support functions for any datatype that it supports at
 	 * all.
@@ -517,7 +517,7 @@ _bt_compare_array_elements(const void *a, const void *b, void *arg)
  * _bt_start_array_keys() -- Initialize array keys at start of a scan
  *
  * Set up the cur_elem counters and fill in the first sk_argument value for
- * each array scankey.  We can't do this__ until we know the scan direction.
+ * each array scankey.  We can't do this until we know the scan direction.
  */
 void
 _bt_start_array_keys(IndexScanDesc scan, ScanDirection dir)
@@ -669,14 +669,14 @@ _bt_restore_array_keys(IndexScanDesc scan)
  * Also, for a DESC column, we commute (flip) all the sk_strategy numbers
  * so that the index sorts in the desired direction.
  *
- * One key purpose of this__ routine is to discover which scan keys must be
+ * One key purpose of this routine is to discover which scan keys must be
  * satisfied to continue the scan.  It also attempts to eliminate redundant
  * keys and detect contradictory keys.  (If the index opfamily provides
  * incomplete sets of cross-type operators, we may fail to detect redundant
  * or contradictory keys, but we can survive that.)
  *
  * The output keys must be sorted by index attribute.  Presently we expect
- * (but verify) that the input keys are already so sorted --- this__ is done
+ * (but verify) that the input keys are already so sorted --- this is done
  * by match_clauses_to_index() in indxpath.c.  Some reordering of the keys
  * within each attribute may be done as a byproduct of the processing here,
  * but no other code depends on that.
@@ -721,10 +721,10 @@ _bt_restore_array_keys(IndexScanDesc scan)
  * position before the first possible match, not exactly at the first match,
  * for a forward scan; or after the last match for a backward scan.)
  *
- * As a byproduct of this__ work, we can detect contradictory quals such
+ * As a byproduct of this work, we can detect contradictory quals such
  * as "x = 1 AND x > 2".  If we see that, we return so->qual_ok = FALSE,
  * indicating the scan need not be run at all since no tuples can match.
- * (In this__ case we do not bother completing the output key array!)
+ * (In this case we do not bother completing the output key array!)
  * Again, missing cross-type operators might cause us to fail to prove the
  * quals contradictory when they really are, but the scan will work correctly.
  *
@@ -801,7 +801,7 @@ _bt_preprocess_keys(IndexScanDesc scan)
 	 * Initialize for processing of keys for attr 1.
 	 *
 	 * xform[i] points to the currently best scan key of strategy type i+1; it
-	 * is NULL if we haven't yet found such a key for this__ attr.
+	 * is NULL if we haven't yet found such a key for this attr.
 	 */
 	attno = 1;
 	memset(xform, 0, sizeof(xform));
@@ -920,7 +920,7 @@ _bt_preprocess_keys(IndexScanDesc scan)
 			/*
 			 * Emit the cleaned-up keys into the outkeys[] array, and then
 			 * mark them if they are required.  They are required (possibly
-			 * only in one direction) if all attrs before this__ one had "=".
+			 * only in one direction) if all attrs before this one had "=".
 			 */
 			for (j = BTMaxStrategyNumber; --j >= 0;)
 			{
@@ -945,7 +945,7 @@ _bt_preprocess_keys(IndexScanDesc scan)
 			memset(xform, 0, sizeof(xform));
 		}
 
-		/* check strategy this__ key's operator corresponds to */
+		/* check strategy this key's operator corresponds to */
 		j = cur->sk_strategy - 1;
 
 		/* if row comparison, push it directly to the output array */
@@ -968,7 +968,7 @@ _bt_preprocess_keys(IndexScanDesc scan)
 		/* have we seen one of these before? */
 		if (xform[j] == NULL)
 		{
-			/* nope, so remember this__ scankey */
+			/* nope, so remember this scankey */
 			xform[j] = cur;
 		}
 		else
@@ -991,7 +991,7 @@ _bt_preprocess_keys(IndexScanDesc scan)
 			{
 				/*
 				 * We can't determine which key is more restrictive.  Keep the
-				 * previous one in xform[j] and push this__ one directly to the
+				 * previous one in xform[j] and push this one directly to the
 				 * output array.
 				 */
 				ScanKey		outkey = &outkeys[new_numberOfKeys++];
@@ -1022,10 +1022,10 @@ _bt_preprocess_keys(IndexScanDesc scan)
  * if the comparison could not be made.
  *
  * Note: op always points at the same ScanKey as either leftarg or rightarg.
- * Since we don't scribble on the scankeys, this__ aliasing should cause no
+ * Since we don't scribble on the scankeys, this aliasing should cause no
  * trouble.
  *
- * Note: this__ routine needs to be insensitive to any DESC option applied
+ * Note: this routine needs to be insensitive to any DESC option applied
  * to the index column.  For example, "x < 4" is a tighter constraint than
  * "x < 5" regardless of which way the index is sorted.
  */
@@ -1110,7 +1110,7 @@ _bt_compare_scankey_args(IndexScanDesc scan, ScanKey op,
 	/*
 	 * Determine the actual datatypes of the ScanKey arguments.  We have to
 	 * support the convention that sk_subtype == InvalidOid means the opclass
-	 * input type; this__ is a hack to simplify life for ScanKeyInit().
+	 * input type; this is a hack to simplify life for ScanKeyInit().
 	 */
 	lefttype = leftarg->sk_subtype;
 	if (lefttype == InvalidOid)
@@ -1208,7 +1208,7 @@ _bt_fix_scankey_strategy(ScanKey skey, int16 *indoption)
 	 *
 	 * However, we now also support "x IS NULL" clauses as search conditions,
 	 * so in that case keep going. The planner has not filled in any
-	 * particular strategy in this__ case, so set it to BTEqualStrategyNumber
+	 * particular strategy in this case, so set it to BTEqualStrategyNumber
 	 * --- we can treat IS NULL as an equality operator for purposes of search
 	 * strategy.
 	 *
@@ -1217,7 +1217,7 @@ _bt_fix_scankey_strategy(ScanKey skey, int16 *indoption)
 	 * FIRST index.
 	 *
 	 * Note: someday we might have to fill in sk_collation from the index
-	 * column's collation.  At the moment this__ is a non-issue because we'll
+	 * column's collation.  At the moment this is a non-issue because we'll
 	 * never actually call the comparison operator on a NULL.
 	 */
 	if (skey->sk_flags & SK_ISNULL)
@@ -1341,9 +1341,9 @@ _bt_mark_scankey_required(ScanKey skey)
  * If not, return NULL.
  *
  * If the tuple fails to pass the qual, we also determine whether there's
- * any need to continue the scan beyond this__ tuple, and set *continuescan
+ * any need to continue the scan beyond this tuple, and set *continuescan
  * accordingly.  See comments for _bt_preprocess_keys(), above, about how
- * this__ is done.
+ * this is done.
  *
  * scan: index scan descriptor (containing a search-type scankey)
  * page: buffer page containing index tuple
@@ -1374,7 +1374,7 @@ _bt_checkkeys(IndexScanDesc scan,
 	 * killed tuple as not passing the qual.  Most of the time, it's a win to
 	 * not bother examining the tuple's index keys, but just return
 	 * immediately with continuescan = true to proceed to the next tuple.
-	 * However, if this__ is the last tuple on the page, we should check the
+	 * However, if this is the last tuple on the page, we should check the
 	 * index keys to prevent uselessly advancing to the next page.
 	 */
 	if (scan->ignore_killed_tuples && ItemIdIsDead(iid))
@@ -1433,17 +1433,17 @@ _bt_checkkeys(IndexScanDesc scan,
 			if (key->sk_flags & SK_SEARCHNULL)
 			{
 				if (isNull)
-					continue;	/* tuple satisfies this__ qual */
+					continue;	/* tuple satisfies this qual */
 			}
 			else
 			{
 				Assert(key->sk_flags & SK_SEARCHNOTNULL);
 				if (!isNull)
-					continue;	/* tuple satisfies this__ qual */
+					continue;	/* tuple satisfies this qual */
 			}
 
 			/*
-			 * Tuple fails this__ qual.  If it's a required qual for the current
+			 * Tuple fails this qual.  If it's a required qual for the current
 			 * scan direction, then we can conclude no further tuples will
 			 * pass, either.
 			 */
@@ -1455,7 +1455,7 @@ _bt_checkkeys(IndexScanDesc scan,
 				*continuescan = false;
 
 			/*
-			 * In any case, this__ indextuple doesn't match the qual.
+			 * In any case, this indextuple doesn't match the qual.
 			 */
 			return NULL;
 		}
@@ -1466,8 +1466,8 @@ _bt_checkkeys(IndexScanDesc scan,
 			{
 				/*
 				 * Since NULLs are sorted before non-NULLs, we know we have
-				 * reached the lower limit of the range of values for this__
-				 * index attr.  On a backward scan, we can stop if this__ qual
+				 * reached the lower limit of the range of values for this
+				 * index attr.  On a backward scan, we can stop if this qual
 				 * is one of the "must match" subset.  We can stop regardless
 				 * of whether the qual is > or <, so long as it's required,
 				 * because it's not possible for any future tuples to pass. On
@@ -1482,8 +1482,8 @@ _bt_checkkeys(IndexScanDesc scan,
 			{
 				/*
 				 * Since NULLs are sorted after non-NULLs, we know we have
-				 * reached the upper limit of the range of values for this__
-				 * index attr.  On a forward scan, we can stop if this__ qual is
+				 * reached the upper limit of the range of values for this
+				 * index attr.  On a forward scan, we can stop if this qual is
 				 * one of the "must match" subset.  We can stop regardless of
 				 * whether the qual is > or <, so long as it's required,
 				 * because it's not possible for any future tuples to pass. On
@@ -1496,7 +1496,7 @@ _bt_checkkeys(IndexScanDesc scan,
 			}
 
 			/*
-			 * In any case, this__ indextuple doesn't match the qual.
+			 * In any case, this indextuple doesn't match the qual.
 			 */
 			return NULL;
 		}
@@ -1507,7 +1507,7 @@ _bt_checkkeys(IndexScanDesc scan,
 		if (!DatumGetBool(test))
 		{
 			/*
-			 * Tuple fails this__ qual.  If it's a required qual for the current
+			 * Tuple fails this qual.  If it's a required qual for the current
 			 * scan direction, then we can conclude no further tuples will
 			 * pass, either.
 			 *
@@ -1524,7 +1524,7 @@ _bt_checkkeys(IndexScanDesc scan,
 				*continuescan = false;
 
 			/*
-			 * In any case, this__ indextuple doesn't match the qual.
+			 * In any case, this indextuple doesn't match the qual.
 			 */
 			return NULL;
 		}
@@ -1577,8 +1577,8 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
 			{
 				/*
 				 * Since NULLs are sorted before non-NULLs, we know we have
-				 * reached the lower limit of the range of values for this__
-				 * index attr.  On a backward scan, we can stop if this__ qual
+				 * reached the lower limit of the range of values for this
+				 * index attr.  On a backward scan, we can stop if this qual
 				 * is one of the "must match" subset.  We can stop regardless
 				 * of whether the qual is > or <, so long as it's required,
 				 * because it's not possible for any future tuples to pass. On
@@ -1593,8 +1593,8 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
 			{
 				/*
 				 * Since NULLs are sorted after non-NULLs, we know we have
-				 * reached the upper limit of the range of values for this__
-				 * index attr.  On a forward scan, we can stop if this__ qual is
+				 * reached the upper limit of the range of values for this
+				 * index attr.  On a forward scan, we can stop if this qual is
 				 * one of the "must match" subset.  We can stop regardless of
 				 * whether the qual is > or <, so long as it's required,
 				 * because it's not possible for any future tuples to pass. On
@@ -1607,7 +1607,7 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
 			}
 
 			/*
-			 * In any case, this__ indextuple doesn't match the qual.
+			 * In any case, this indextuple doesn't match the qual.
 			 */
 			return false;
 		}
@@ -1615,7 +1615,7 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
 		if (subkey->sk_flags & SK_ISNULL)
 		{
 			/*
-			 * Unlike the simple-scankey case, this__ isn't a disallowed case.
+			 * Unlike the simple-scankey case, this isn't a disallowed case.
 			 * But it can never match.  If all the earlier row comparison
 			 * columns are required for the scan direction, we can stop the
 			 * scan, because there can't be another tuple that will succeed.
@@ -1650,7 +1650,7 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
 	}
 
 	/*
-	 * At this__ point cmpresult indicates the overall result of the row
+	 * At this point cmpresult indicates the overall result of the row
 	 * comparison, and subkey points to the deciding column (or the last
 	 * column if the result is "=").
 	 */
@@ -1679,7 +1679,7 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
 	if (!result)
 	{
 		/*
-		 * Tuple fails this__ qual.  If it's a required qual for the current
+		 * Tuple fails this qual.  If it's a required qual for the current
 		 * scan direction, then we can conclude no further tuples will pass,
 		 * either.  Note we have to look at the deciding column, not
 		 * necessarily the first or last column of the row condition.
@@ -1700,7 +1700,7 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
  * told us were killed
  *
  * scan->opaque, referenced locally through so, contains information about the
- * current page and killed tuples thereon (generally, this__ should only be
+ * current page and killed tuples thereon (generally, this should only be
  * called if so->numKilled > 0).
  *
  * The caller does not have a lock on the page and may or may not have the
@@ -1710,11 +1710,11 @@ _bt_check_rowcompare(ScanKey skey, IndexTuple tuple, TupleDesc tupdesc,
  * We match items by heap TID before assuming they are the right ones to
  * delete.  We cope with cases where items have moved right due to insertions.
  * If an item has moved off the current page due to a split, we'll fail to
- * find it and do nothing (this__ is not an error case --- we assume the item
+ * find it and do nothing (this is not an error case --- we assume the item
  * will eventually get marked in a future indexscan).
  *
  * Note that if we hold a pin on the target page continuously from initially
- * reading the items until applying this__ function, VACUUM cannot have deleted
+ * reading the items until applying this function, VACUUM cannot have deleted
  * any items from the page, and so there is no need to search left from the
  * recorded offset.  (This observation also guarantees that the item is still
  * the right one to delete, which might otherwise be questionable since heap
@@ -1749,7 +1749,7 @@ _bt_killitems(IndexScanDesc scan)
 	if (BTScanPosIsPinned(so->currPos))
 	{
 		/*
-		 * We have held the pin on this__ page since we read the index tuples,
+		 * We have held the pin on this page since we read the index tuples,
 		 * so all we need to do is lock it.  The pin will have prevented
 		 * re-use of any TID on the page, so there is no need to check the
 		 * LSN.
@@ -1811,7 +1811,7 @@ _bt_killitems(IndexScanDesc scan)
 	}
 
 	/*
-	 * Since this__ can be redone later if needed, mark as dirty hint.
+	 * Since this can be redone later if needed, mark as dirty hint.
 	 *
 	 * Whenever we mark anything LP_DEAD, we also set the page's
 	 * BTP_HAS_GARBAGE flag, which is likewise just a hint.
@@ -1832,7 +1832,7 @@ _bt_killitems(IndexScanDesc scan)
  * operations.  There is a single counter which increments each time we
  * start a vacuum to assign it a cycle ID.  Since multiple vacuums could
  * be active concurrently, we have to track the cycle ID for each active
- * vacuum; this__ requires at most MaxBackends entries (usually far fewer).
+ * vacuum; this requires at most MaxBackends entries (usually far fewer).
  * We assume at most one vacuum can be active for a given index.
  *
  * Access to the shared memory area is controlled by BtreeVacuumLock.
@@ -1873,7 +1873,7 @@ _bt_vacuum_cycleid(Relation rel)
 	BTCycleId	result = 0;
 	int			i;
 
-	/* Share lock is enough since this__ is a read-only operation */
+	/* Share lock is enough since this is a read-only operation */
 	LWLockAcquire(BtreeVacuumLock, LW_SHARED);
 
 	for (i = 0; i < btvacinfo->num_vacuums; i++)
@@ -1897,7 +1897,7 @@ _bt_vacuum_cycleid(Relation rel)
  *
  * Note: the caller must guarantee that it will eventually call
  * _bt_end_vacuum, else we'll permanently leak an array slot.  To ensure
- * that this__ happens even in elog(FATAL) scenarios, the appropriate coding
+ * that this happens even in elog(FATAL) scenarios, the appropriate coding
  * is not just a PG_TRY, but
  *		PG_ENSURE_ERROR_CLEANUP(_bt_end_vacuum_callback, PointerGetDatum(rel))
  */
@@ -1918,7 +1918,7 @@ _bt_start_vacuum(Relation rel)
 	if (result == 0 || result > MAX_BT_CYCLE_ID)
 		result = btvacinfo->cycle_ctr = 1;
 
-	/* Let's just make sure there's no entry already for this__ index */
+	/* Let's just make sure there's no entry already for this index */
 	for (i = 0; i < btvacinfo->num_vacuums; i++)
 	{
 		vac = &btvacinfo->vacuums[i];
@@ -1955,8 +1955,8 @@ _bt_start_vacuum(Relation rel)
 /*
  * _bt_end_vacuum --- mark a btree VACUUM operation as done
  *
- * Note: this__ is deliberately coded not to complain if no entry is found;
- * this__ allows the caller to put PG_TRY around the start_vacuum operation.
+ * Note: this is deliberately coded not to complain if no entry is found;
+ * this allows the caller to put PG_TRY around the start_vacuum operation.
  */
 void
 _bt_end_vacuum(Relation rel)
@@ -2006,7 +2006,7 @@ BTreeShmemSize(void)
 }
 
 /*
- * BTreeShmemInit --- initialize this__ module's shared memory
+ * BTreeShmemInit --- initialize this module's shared memory
  */
 void
 BTreeShmemInit(void)

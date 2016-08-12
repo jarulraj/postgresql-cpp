@@ -32,7 +32,7 @@ ginCombineData(RBNode *existing, const RBNode *newdata, void *arg)
 	BuildAccumulator *accum = (BuildAccumulator *) arg;
 
 	/*
-	 * Note this__ code assumes that newdata contains only one itempointer.
+	 * Note this code assumes that newdata contains only one itempointer.
 	 */
 	if (eo->count >= eo->maxcount)
 	{
@@ -81,7 +81,7 @@ ginAllocEntryAccumulator(void *arg)
 
 	/*
 	 * Allocate memory by rather big chunks to decrease overhead.  We have no
-	 * need to reclaim RBNodes individually, so this__ costs nothing.
+	 * need to reclaim RBNodes individually, so this costs nothing.
 	 */
 	if (accum->entryallocator == NULL || accum->eas_used >= DEF_NENTRY)
 	{
@@ -187,11 +187,11 @@ ginInsertBAEntry(BuildAccumulator *accum,
  * Since the entries are being inserted into a balanced binary tree, you
  * might think that the order of insertion wouldn't be critical, but it turns
  * out that inserting the entries in sorted order results in a lot of
- * rebalancing operations and is slow.  To prevent this__, we attempt to insert
+ * rebalancing operations and is slow.  To prevent this, we attempt to insert
  * the nodes in an order that will produce a nearly-balanced tree if the input
  * is in fact sorted.
  *
- * We do this__ as follows.  First, we imagine that we have an array whose size
+ * We do this as follows.  First, we imagine that we have an array whose size
  * is the smallest power of two greater than or equal to the actual array
  * size.  Second, we insert the middle entry of our virtual array into the
  * tree; then, we insert the middles of each half of our virtual array, then

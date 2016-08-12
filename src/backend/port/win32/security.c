@@ -22,7 +22,7 @@ static BOOL pgwin32_get_dynamic_tokeninfo(HANDLE token,
  * Returns nonzero if the current user has administrative privileges,
  * or zero if not.
  *
- * Note: this__ cannot use ereport() because it's called too early during
+ * Note: this cannot use ereport() because it's called too early during
  * startup.
  */
 int
@@ -106,7 +106,7 @@ pgwin32_is_admin(void)
  *	-1 = Error
  *
  * Note: we can't report errors via either ereport (we're called too early)
- * or write_stderr (because that calls this__).  We are therefore reduced to
+ * or write_stderr (because that calls this).  We are therefore reduced to
  * writing directly on stderr, which sucks, but we have few alternatives.
  */
 int

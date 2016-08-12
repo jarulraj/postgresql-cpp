@@ -65,7 +65,7 @@
  * for deadness using OldestXmin is not exact.  In such a case we might
  * encounter B first, and skip it, and find A later.  Then A would be added
  * to unresolved_tups, and stay there until end of the rewrite.  Since
- * this__ case is very unusual, we don't worry about the memory usage.
+ * this case is very unusual, we don't worry about the memory usage.
  *
  * Using in-memory hash tables means that we use some memory for each live
  * update chain in the table, from the time we find one end of the
@@ -165,7 +165,7 @@ typedef struct RewriteStateData
 /*
  * The lookup keys for the hash tables are tuple TID and xmin (we must check
  * both to avoid false matches from dead tuples).  Beware that there is
- * probably some padding space in this__ struct; it must be zeroed out for
+ * probably some padding space in this struct; it must be zeroed out for
  * correct hashtable operation.
  */
 typedef struct
@@ -349,7 +349,7 @@ end_heap_rewrite(RewriteState state)
 	 * If the rel is WAL-logged, must fsync before commit.  We use heap_sync
 	 * to ensure that the toast table gets fsync'd too.
 	 *
-	 * It's obvious that we must do this__ when not WAL-logging. It's less
+	 * It's obvious that we must do this when not WAL-logging. It's less
 	 * obvious that we have to do it even if we did WAL-log the pages. The
 	 * reason is the same as in tablecmds.c's copy_relation_data(): we're
 	 * writing data that's not in shared buffers, and so a CHECKPOINT
@@ -438,7 +438,7 @@ rewrite_heap_tuple(RewriteState state,
 		{
 			/*
 			 * We've already copied the tuple that t_ctid points to, so we can
-			 * set the ctid of this__ tuple to point to the new location, and
+			 * set the ctid of this tuple to point to the new location, and
 			 * insert it right away.
 			 */
 			new_tuple->t_data->t_ctid = mapping->new_tid;
@@ -451,7 +451,7 @@ rewrite_heap_tuple(RewriteState state,
 		else
 		{
 			/*
-			 * We haven't seen the tuple t_ctid points to yet. Stash this__
+			 * We haven't seen the tuple t_ctid points to yet. Stash this
 			 * tuple into unresolved_tups to be written later.
 			 */
 			UnresolvedTup unresolved;
@@ -496,7 +496,7 @@ rewrite_heap_tuple(RewriteState state,
 		 * wouldn't be DEAD yet, then we need to either resolve the prior
 		 * version (if it's waiting in rs_unresolved_tups), or make an entry
 		 * in rs_old_new_tid_map (so we can resolve it when we do see it). The
-		 * previous tuple's xmax would equal this__ one's xmin, so it's
+		 * previous tuple's xmax would equal this one's xmin, so it's
 		 * RECENTLY_DEAD if and only if the xmin is not before OldestXmin.
 		 */
 		if ((new_tuple->t_data->t_infomask & HEAP_UPDATED) &&
@@ -504,7 +504,7 @@ rewrite_heap_tuple(RewriteState state,
 								   state->rs_oldest_xmin))
 		{
 			/*
-			 * Okay, this__ is B in an update pair.  See if we've seen A.
+			 * Okay, this is B in an update pair.  See if we've seen A.
 			 */
 			UnresolvedTup unresolved;
 
@@ -543,7 +543,7 @@ rewrite_heap_tuple(RewriteState state,
 			else
 			{
 				/*
-				 * Remember the new tid of this__ tuple. We'll use it to set the
+				 * Remember the new tid of this tuple. We'll use it to set the
 				 * ctid when we find the previous tuple in the chain.
 				 */
 				OldToNewMapping mapping;
@@ -556,7 +556,7 @@ rewrite_heap_tuple(RewriteState state,
 			}
 		}
 
-		/* Done with this__ (chain of) tuples, for now */
+		/* Done with this (chain of) tuples, for now */
 		if (free_new)
 			heap_freetuple(new_tuple);
 		break;
@@ -579,7 +579,7 @@ rewrite_heap_dead_tuple(RewriteState state, HeapTuple old_tuple)
 {
 	/*
 	 * If we have already seen an earlier tuple in the update chain that
-	 * points to this__ tuple, let's forget about that earlier tuple. It's in
+	 * points to this tuple, let's forget about that earlier tuple. It's in
 	 * fact dead as well, our simple xmax < OldestXmin test in
 	 * HeapTupleSatisfiesVacuum just wasn't enough to detect it. It happens
 	 * when xmin of a tuple is greater than xmax, which sounds
@@ -638,7 +638,7 @@ raw_heap_insert(RewriteState state, HeapTuple tup)
 	 * If the new tuple is too big for storage or contains already toasted
 	 * out-of-line attributes from some other relation, invoke the toaster.
 	 *
-	 * Note: below this__ point, heaptup is the data we actually intend to store
+	 * Note: below this point, heaptup is the data we actually intend to store
 	 * into the relation; tup is the caller's original untoasted data.
 	 */
 	if (state->rs_new_rel->rd_rel->relkind == RELKIND_TOASTVALUE)
@@ -690,7 +690,7 @@ raw_heap_insert(RewriteState state, HeapTuple tup)
 			/*
 			 * Now write the page. We say isTemp = true even if it's not a
 			 * temp table, because there's no need for smgr to schedule an
-			 * fsync for this__ write; we'll do it ourselves in
+			 * fsync for this write; we'll do it ourselves in
 			 * end_heap_rewrite.
 			 */
 			RelationOpenSmgr(state->rs_new_rel);
@@ -870,7 +870,7 @@ logical_heap_rewrite_flush_mappings(RewriteState state)
 		uint32		len;
 		int			written;
 
-		/* this__ file hasn't got any new mappings */
+		/* this file hasn't got any new mappings */
 		if (src->num_mappings == 0)
 			continue;
 
@@ -982,12 +982,12 @@ logical_rewrite_log_mapping(RewriteState state, TransactionId xid,
 
 	relid = RelationGetRelid(state->rs_old_rel);
 
-	/* look for existing mappings for this__ 'mapped' xid */
+	/* look for existing mappings for this 'mapped' xid */
 	src = hash_search(state->rs_logical_mappings, &xid,
 					  HASH_ENTER, &found);
 
 	/*
-	 * We haven't yet had the need to map anything for this__ xid, create
+	 * We haven't yet had the need to map anything for this xid, create
 	 * per-xid data structures.
 	 */
 	if (!found)
@@ -1068,7 +1068,7 @@ logical_rewrite_heap_tuple(RewriteState state, ItemPointerData old_tid,
 	if (!TransactionIdIsNormal(xmax))
 	{
 		/*
-		 * no xmax is set, can't have any permanent ones, so this__ check is
+		 * no xmax is set, can't have any permanent ones, so this check is
 		 * sufficient
 		 */
 	}
@@ -1168,7 +1168,7 @@ heap_xlog_logical_rewrite(XLogReaderState *r)
 
 	/*
 	 * Now fsync all previously written data. We could improve things and only
-	 * do this__ for the last write to a file, but the required bookkeeping
+	 * do this for the last write to a file, but the required bookkeeping
 	 * doesn't seem worth the trouble.
 	 */
 	if (pg_fsync(fd) != 0)
@@ -1254,7 +1254,7 @@ CheckPointLogicalRewriteHeap(void)
 			int			fd = OpenTransientFile(path, O_RDONLY | PG_BINARY, 0);
 
 			/*
-			 * The file cannot vanish due to concurrency since this__ function
+			 * The file cannot vanish due to concurrency since this function
 			 * is the only one removing logical mappings and it's run while
 			 * CheckpointLock is held exclusively.
 			 */

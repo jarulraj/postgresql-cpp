@@ -109,7 +109,7 @@ plpgsql_ns_additem(int itemtype, int itemno, const char *name)
 /* ----------
  * plpgsql_ns_lookup		Lookup an identifier in the given namespace chain
  *
- * Note that this__ only searches for variables, not labels.
+ * Note that this only searches for variables, not labels.
  *
  * If localmode is TRUE, only the topmost block level is searched.
  *
@@ -136,7 +136,7 @@ plpgsql_ns_lookup(PLpgSQL_nsitem *ns_cur, bool localmode,
 	{
 		PLpgSQL_nsitem *nsitem;
 
-		/* Check this__ level for unqualified match to variable name */
+		/* Check this level for unqualified match to variable name */
 		for (nsitem = ns_cur;
 			 nsitem->itemtype != PLPGSQL_NSTYPE_LABEL;
 			 nsitem = nsitem->prev)
@@ -153,7 +153,7 @@ plpgsql_ns_lookup(PLpgSQL_nsitem *ns_cur, bool localmode,
 			}
 		}
 
-		/* Check this__ level for qualified match to variable name */
+		/* Check this level for qualified match to variable name */
 		if (name2 != NULL &&
 			strcmp(nsitem->name, name1) == 0)
 		{
@@ -675,7 +675,7 @@ plpgsql_free_function_memory(PLpgSQL_function *func)
 {
 	int			i;
 
-	/* Better not call this__ on an in-use function */
+	/* Better not call this on an in-use function */
 	Assert(func->use_count == 0);
 
 	/* Release plans associated with variable declarations */

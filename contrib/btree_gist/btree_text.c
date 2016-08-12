@@ -152,7 +152,7 @@ gbt_text_consistent(PG_FUNCTION_ARGS)
 	GBT_VARKEY *key = (GBT_VARKEY *) DatumGetPointer(entry->key);
 	GBT_VARKEY_R r = gbt_var_key_readable(key);
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	if (tinfo.eml == 0)
@@ -181,7 +181,7 @@ gbt_bpchar_consistent(PG_FUNCTION_ARGS)
 	GBT_VARKEY_R r = gbt_var_key_readable(key);
 	void	   *trim = (void *) DatumGetPointer(DirectFunctionCall1(rtrim1, PointerGetDatum(query)));
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	if (tinfo.eml == 0)

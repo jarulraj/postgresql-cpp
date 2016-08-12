@@ -118,7 +118,7 @@ pgwin32_dispatch_queued_signals(void)
 		{
 			if (exec_mask & sigmask(i))
 			{
-				/* Execute this__ signal */
+				/* Execute this signal */
 				pqsigfunc	sig = pg_signal_array[i];
 
 				if (sig == SIG_DFL)
@@ -283,7 +283,7 @@ pg_signal_thread(LPVOID param)
 			HANDLE		newpipe;
 
 			/*
-			 * We have a connected pipe. Pass this__ off to a separate thread
+			 * We have a connected pipe. Pass this off to a separate thread
 			 * that will do the actual processing of the pipe.
 			 *
 			 * We must also create a new instance of the pipe *before* we
@@ -306,7 +306,7 @@ pg_signal_thread(LPVOID param)
 				write_stderr("could not create signal listener pipe: error code %lu; retrying\n", GetLastError());
 
 				/*
-				 * Keep going so we at least dispatch this__ signal. Hopefully,
+				 * Keep going so we at least dispatch this signal. Hopefully,
 				 * the call will succeed when retried in the loop soon after.
 				 */
 			}

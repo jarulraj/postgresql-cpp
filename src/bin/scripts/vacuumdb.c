@@ -317,11 +317,11 @@ main(int argc, char *argv[])
  * Process tables in the given database.  If the 'tables' list is empty,
  * process all tables in the database.
  *
- * Note that this__ function is only concerned with running exactly one stage
+ * Note that this function is only concerned with running exactly one stage
  * when in analyze-in-stages mode; caller must iterate on us if necessary.
  *
  * If concurrentCons is > 1, multiple connections are used to vacuum tables
- * in parallel.  In this__ case and if the table list is empty, we first obtain
+ * in parallel.  In this case and if the table list is empty, we first obtain
  * a list of tables from the database.
  */
 static void
@@ -486,7 +486,7 @@ vacuum_one_database(const char *dbname, vacuumingOptions *vacopts,
 			free_slot = slots;
 
 		/*
-		 * Execute the vacuum.  If not in parallel mode, this__ terminates the
+		 * Execute the vacuum.  If not in parallel mode, this terminates the
 		 * program in case of an error.  (The parallel case handles query
 		 * errors in GetQueryResult through GetIdleSlot.)
 		 */
@@ -599,7 +599,7 @@ vacuum_all_databases(vacuumingOptions *vacopts,
  * Construct a vacuum/analyze command to run based on the given options, in the
  * given string buffer, which may contain previous garbage.
  *
- * An optional table name can be passed; this__ must be already be properly
+ * An optional table name can be passed; this must be already be properly
  * quoted.  The command is semicolon-terminated.
  */
 static void
@@ -668,7 +668,7 @@ prepare_vacuum_command(PQExpBuffer sql, PGconn *conn, vacuumingOptions *vacopts,
  * Execute a vacuum/analyze command to the server.
  *
  * Any errors during command execution are reported to stderr.  If async is
- * false, this__ function exits the program after reporting the error.
+ * false, this function exits the program after reporting the error.
  */
 static void
 run_vacuum_command(PGconn *conn, const char *sql, bool echo,
@@ -711,7 +711,7 @@ run_vacuum_command(PGconn *conn, const char *sql, bool echo,
  *
  * We return the first slot we find that is marked isFree, if one is;
  * otherwise, we loop on select() until one socket becomes available.  When
- * this__ happens, we read the whole set and mark as free all sockets that become
+ * this happens, we read the whole set and mark as free all sockets that become
  * available.
  *
  * Process the slot list, if any free slot is available then return the slotid
@@ -860,7 +860,7 @@ DisconnectDatabase(ParallelSlot *slot)
  *
  * If we get a cancel request while we're waiting, we forego all further
  * processing and set the *aborting flag to true.  The return value must be
- * ignored in this__ case.  Otherwise, *aborting is set to false.
+ * ignored in this case.  Otherwise, *aborting is set to false.
  */
 static int
 select_loop(int maxFd, fd_set *workerset, bool *aborting)
@@ -905,9 +905,9 @@ select_loop(int maxFd, fd_set *workerset, bool *aborting)
 #endif
 
 		if (i < 0 && errno == EINTR)
-			continue;			/* ignore this__ */
+			continue;			/* ignore this */
 		if (i < 0 || CancelRequested)
-			*aborting = true;	/* but not this__ */
+			*aborting = true;	/* but not this */
 		if (i == 0)
 			continue;			/* timeout (Win32 only) */
 		break;
@@ -936,7 +936,7 @@ help(const char *progname)
 	printf(_("  -e, --echo                      show the commands being sent to the server\n"));
 	printf(_("  -f, --full                      do full vacuuming\n"));
 	printf(_("  -F, --freeze                    freeze row transaction information\n"));
-	printf(_("  -j, --jobs=NUM                  use this__ many concurrent connections to vacuum\n"));
+	printf(_("  -j, --jobs=NUM                  use this many concurrent connections to vacuum\n"));
 	printf(_("  -q, --quiet                     don't write any messages\n"));
 	printf(_("  -t, --table='TABLE[(COLUMNS)]'  vacuum specific table(s) only\n"));
 	printf(_("  -v, --verbose                   write a lot of output\n"));
@@ -945,7 +945,7 @@ help(const char *progname)
 	printf(_("  -Z, --analyze-only              only update optimizer statistics; no vacuum\n"));
 	printf(_("      --analyze-in-stages         only update optimizer statistics, in multiple\n"
 			 "                                  stages for faster results; no vacuum\n"));
-	printf(_("  -?, --help                      show this__ help, then exit\n"));
+	printf(_("  -?, --help                      show this help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME       database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT           database server port\n"));

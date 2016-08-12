@@ -45,7 +45,7 @@ typedef struct
 
 /* Header overhead *in addition to* VARHDRSZ */
 #define VARBITHDRSZ			sizeof(int32)
-/* Number of bits in this__ bit string */
+/* Number of bits in this bit string */
 #define VARBITLEN(PTR)		(((VarBit *) (PTR))->bit_len)
 /* Pointer to the first byte containing bit string data */
 #define VARBITS(PTR)		(((VarBit *) (PTR))->bit_dat)

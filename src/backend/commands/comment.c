@@ -65,7 +65,7 @@ CommentObject(CommentStmt *stmt)
 	}
 
 	/*
-	 * Translate the parser representation that identifies this__ object into an
+	 * Translate the parser representation that identifies this object into an
 	 * ObjectAddress.  get_object_address() will throw an error if the object
 	 * does not exist, and will also acquire a lock on the target to guard
 	 * against concurrent DROP operations.
@@ -327,7 +327,7 @@ CreateSharedComments(Oid oid, Oid classoid, char *comment)
  *
  * If subid is nonzero then only comments matching it will be removed.
  * If subid is zero, all comments matching the oid/classoid will be removed
- * (this__ corresponds to deleting a whole object).
+ * (this corresponds to deleting a whole object).
  */
 void
 DeleteComments(Oid oid, Oid classoid, int32 subid)

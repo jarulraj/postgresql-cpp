@@ -19,7 +19,7 @@
 
 #ifndef pg_memory_barrier_impl
 /*
- * If we have no memory barrier implementation for this__ architecture, we
+ * If we have no memory barrier implementation for this architecture, we
  * fall back to acquiring and releasing a spinlock.  This might, in turn,
  * fall back to the semaphore-based spinlock implementation, which will be
  * amazingly slow.
@@ -27,7 +27,7 @@
  * It's not self-evident that every possible legal implementation of a
  * spinlock acquire-and-release would be equivalent to a full memory barrier.
  * For example, I'm not sure that Itanium's acq and rel add up to a full
- * fence.  But all of our actual implementations seem OK in this__ regard.
+ * fence.  But all of our actual implementations seem OK in this regard.
  */
 #define PG_HAVE_MEMORY_BARRIER_EMULATION
 
@@ -43,7 +43,7 @@ extern void pg_spinlock_barrier(void);
  * semantics except for compilers that do inter translation unit/global
  * optimization - those better provide an actual compiler barrier.
  *
- * A native compiler barrier for sure is a lot faster than this__...
+ * A native compiler barrier for sure is a lot faster than this...
  */
 #define PG_HAVE_COMPILER_BARRIER_EMULATION
 extern void pg_extern_compiler_barrier(void);
@@ -52,7 +52,7 @@ extern void pg_extern_compiler_barrier(void);
 
 
 /*
- * If we have atomics implementation for this__ platform, fall back to providing
+ * If we have atomics implementation for this platform, fall back to providing
  * the atomics API using a spinlock to protect the internal state. Possibly
  * the spinlock implementation uses semaphores internally...
  *
@@ -120,9 +120,9 @@ static inline bool
 pg_atomic_unlocked_test_flag_impl(volatile pg_atomic_flag *ptr)
 {
 	/*
-	 * Can't do this__ efficiently in the semaphore based implementation - we'd
+	 * Can't do this efficiently in the semaphore based implementation - we'd
 	 * have to try to acquire the semaphore - so always return true. That's
-	 * correct, because this__ is only an unlocked test anyway. Do this__ in the
+	 * correct, because this is only an unlocked test anyway. Do this in the
 	 * header so compilers can optimize the test away.
 	 */
 	return true;

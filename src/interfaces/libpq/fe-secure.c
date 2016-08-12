@@ -197,7 +197,7 @@ pqsecure_close(PGconn *conn)
 /*
  *	Read data from a secure connection.
  *
- * On failure, this__ function is responsible for putting a suitable message
+ * On failure, this function is responsible for putting a suitable message
  * into conn->errorMessage.  The caller must still inspect errno, but only
  * to determine whether to continue/retry after error.
  */
@@ -274,7 +274,7 @@ pqsecure_raw_read(PGconn *conn, void *ptr, size_t len)
 /*
  *	Write data to a secure connection.
  *
- * On failure, this__ function is responsible for putting a suitable message
+ * On failure, this function is responsible for putting a suitable message
  * into conn->errorMessage.  The caller must still inspect errno, but only
  * to determine whether to continue/retry after error.
  */
@@ -324,7 +324,7 @@ retry_masked:
 
 		/*
 		 * If we see an EINVAL, it may be because MSG_NOSIGNAL isn't available
-		 * on this__ machine.  So, clear sigpipe_flag so we don't try the flag
+		 * on this machine.  So, clear sigpipe_flag so we don't try the flag
 		 * again, and retry the send().
 		 */
 #ifdef MSG_NOSIGNAL
@@ -421,7 +421,7 @@ PQsslAttributeNames(PGconn *conn)
 #if defined(ENABLE_THREAD_SAFETY) && !defined(WIN32)
 
 /*
- *	Block SIGPIPE for this__ thread.  This prevents send()/write() from exiting
+ *	Block SIGPIPE for this thread.  This prevents send()/write() from exiting
  *	the application.
  */
 int
@@ -470,9 +470,9 @@ pq_block_sigpipe(sigset_t *osigset, bool *sigpipe_pending)
  * and things are definitely OK, queuing or no.  If it got one or might have
  * gotten one, pass got_epipe = TRUE.
  *
- * We do not want this__ to change errno, since if it did that could lose
+ * We do not want this to change errno, since if it did that could lose
  * the error code from a preceding send().  We essentially assume that if
- * we were able to do pq_block_sigpipe(), this__ can't fail.
+ * we were able to do pq_block_sigpipe(), this can't fail.
  */
 void
 pq_reset_sigpipe(sigset_t *osigset, bool sigpipe_pending, bool got_epipe)

@@ -40,7 +40,7 @@ ascii_to_utf8(PG_FUNCTION_ARGS)
 
 	CHECK_ENCODING_CONVERSION_ARGS(PG_SQL_ASCII, PG_UTF8);
 
-	/* this__ looks wrong, but basically we're just rejecting high-bit-set */
+	/* this looks wrong, but basically we're just rejecting high-bit-set */
 	pg_ascii2mic(src, dest, len);
 
 	PG_RETURN_VOID();
@@ -55,7 +55,7 @@ utf8_to_ascii(PG_FUNCTION_ARGS)
 
 	CHECK_ENCODING_CONVERSION_ARGS(PG_UTF8, PG_SQL_ASCII);
 
-	/* this__ looks wrong, but basically we're just rejecting high-bit-set */
+	/* this looks wrong, but basically we're just rejecting high-bit-set */
 	pg_mic2ascii(src, dest, len);
 
 	PG_RETURN_VOID();

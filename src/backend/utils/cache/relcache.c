@@ -138,7 +138,7 @@ static long relcacheInvalsReceived = 0L;
  * cleanup work.  This list intentionally has limited size; if it overflows,
  * we fall back to scanning the whole hashtable.  There is no value in a very
  * large list because (1) at some point, a hash_seq_search scan is faster than
- * retail lookups, and (2) the value of this__ is to reduce EOXact work for
+ * retail lookups, and (2) the value of this is to reduce EOXact work for
  * short transactions, which can't have dirtied all that many tables anyway.
  * EOXactListAdd() does not bother to prevent duplicate list entries, so the
  * cleanup processing must be idempotent.
@@ -303,7 +303,7 @@ ScanPgRelation(Oid targetRelId, bool indexOK, bool force_non_historic)
 	/*
 	 * If something goes wrong during backend startup, we might find ourselves
 	 * trying to read pg_class before we've selected a database.  That ain't
-	 * gonna work, so bail out with a useful error message.  If this__ happens,
+	 * gonna work, so bail out with a useful error message.  If this happens,
 	 * it probably means a relcache entry that needs to be nailed isn't.
 	 */
 	if (!OidIsValid(MyDatabaseId))
@@ -319,7 +319,7 @@ ScanPgRelation(Oid targetRelId, bool indexOK, bool force_non_historic)
 
 	/*
 	 * Open pg_class and fetch a tuple.  Force heap scan if we haven't yet
-	 * built the critical relcache entries (this__ includes initdb and startup
+	 * built the critical relcache entries (this includes initdb and startup
 	 * without a pg_internal.init file).  The caller can also force a heap
 	 * scan by setting indexOK == false.
 	 */
@@ -439,7 +439,7 @@ RelationParseRelOptions(Relation relation, HeapTuple tuple)
 
 	/*
 	 * Fetch reloptions from tuple; have to use a hardwired descriptor because
-	 * we might not have any other for pg_class yet (consider executing this__
+	 * we might not have any other for pg_class yet (consider executing this
 	 * code for pg_class itself)
 	 */
 	options = extractRelOptions(tuple,
@@ -505,7 +505,7 @@ RelationBuildTupleDesc(Relation relation)
 
 	/*
 	 * Open pg_attribute and begin a scan.  Force heap scan if we haven't yet
-	 * built the critical relcache entries (this__ includes initdb and startup
+	 * built the critical relcache entries (this includes initdb and startup
 	 * without a pg_internal.init file).
 	 */
 	pg_attribute_desc = heap_open(AttributeRelationId, AccessShareLock);
@@ -567,7 +567,7 @@ RelationBuildTupleDesc(Relation relation)
 
 	/*
 	 * The attcacheoff values we read from pg_attribute should all be -1
-	 * ("unknown").  Verify this__ if assert checking is on.  They will be
+	 * ("unknown").  Verify this if assert checking is on.  They will be
 	 * computed when and if needed during tuple access.
 	 */
 #ifdef USE_ASSERT_CHECKING
@@ -750,7 +750,7 @@ RelationBuildRuleLock(Relation relation)
 		 * rtable entries.  We have to look at the qual as well, in case it
 		 * contains sublinks.
 		 *
-		 * The reason for doing this__ when the rule is loaded, rather than when
+		 * The reason for doing this when the rule is loaded, rather than when
 		 * it is stored, is that otherwise ALTER TABLE OWNER would have to
 		 * grovel through stored rules to update checkAsUser fields. Scanning
 		 * the rule tree during load is relatively cheap (compared to
@@ -800,7 +800,7 @@ RelationBuildRuleLock(Relation relation)
  *
  *		Determine whether two RuleLocks are equivalent
  *
- *		Probably this__ should be in the rules code someplace...
+ *		Probably this should be in the rules code someplace...
  */
 static bool
 equalRuleLocks(RuleLock *rlock1, RuleLock *rlock2)
@@ -1003,7 +1003,7 @@ RelationBuildDesc(Oid targetRelId, bool insertIt)
 				 * here, in case we are looking at a pg_class entry left over
 				 * from a crashed backend that coincidentally had the same
 				 * BackendId we're using.  We should *not* consider such a
-				 * table to be "ours"; this__ is why we need the separate
+				 * table to be "ours"; this is why we need the separate
 				 * rd_islocaltemp flag.  The pg_class entry will get flushed
 				 * if/when we clean out the corresponding temp table namespace
 				 * in preparation for using it.
@@ -1026,7 +1026,7 @@ RelationBuildDesc(Oid targetRelId, bool insertIt)
 	RelationBuildTupleDesc(relation);
 
 	/*
-	 * Fetch rules and triggers that affect this__ relation
+	 * Fetch rules and triggers that affect this relation
 	 */
 	if (relation->rd_rel->relhasrules)
 		RelationBuildRuleLock(relation);
@@ -1181,7 +1181,7 @@ RelationInitIndexAccessInfo(Relation relation)
 
 	/*
 	 * Make a copy of the pg_index entry for the index.  Since pg_index
-	 * contains variable-length and possibly-null fields, we have to do this__
+	 * contains variable-length and possibly-null fields, we have to do this
 	 * honestly rather than just treating it as a Form_pg_index struct.
 	 */
 	tuple = SearchSysCache1(INDEXRELID,
@@ -1346,7 +1346,7 @@ IndexSupportInitialize(oidvector *indclass,
 		if (!OidIsValid(indclass->values[attIndex]))
 			elog(ERROR, "bogus pg_index tuple");
 
-		/* look up the info for this__ opclass, using a cache */
+		/* look up the info for this opclass, using a cache */
 		opcentry = LookupOpclassInfo(indclass->values[attIndex],
 									 maxSupportNumber);
 
@@ -1377,7 +1377,7 @@ IndexSupportInitialize(oidvector *indclass,
  * existing opclass --- all you can do is drop it, which will result in
  * a useless but harmless dead entry in the cache.  To support altering
  * opclass membership (not the same as opfamily membership!), we'd need to
- * be able to flush this__ cache as well as the contents of relcache entries
+ * be able to flush this cache as well as the contents of relcache entries
  * for indexes.
  */
 static OpClassCacheEnt *
@@ -1435,7 +1435,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 	 * operator class cache and force reloading of the info on each call. This
 	 * is helpful because we want to test the case where a cache flush occurs
 	 * while we are loading the info, and it's very hard to provoke that if
-	 * this__ happens only once per opclass per backend.
+	 * this happens only once per opclass per backend.
 	 */
 #if defined(CLOBBER_CACHE_ALWAYS)
 	opcentry->valid = false;
@@ -1542,7 +1542,7 @@ LookupOpclassInfo(Oid operatorClassOid,
  *
  * Note that these catalogs can't have constraints (except attnotnull),
  * default values, rules, or triggers, since we don't cope with any of that.
- * (Well, actually, this__ only matters for properties that need to be valid
+ * (Well, actually, this only matters for properties that need to be valid
  * during bootstrap or before RelationCacheInitializePhase3 runs, and none of
  * these properties matter then...)
  *
@@ -1571,7 +1571,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 	relation->rd_refcnt = 1;
 
 	/*
-	 * all entries built with this__ routine are nailed-in-cache; none are for
+	 * all entries built with this routine are nailed-in-cache; none are for
 	 * new or temp relations.
 	 */
 	relation->rd_isnailed = true;
@@ -1586,7 +1586,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 	 * The data we insert here is pretty incomplete/bogus, but it'll serve to
 	 * get us launched.  RelationCacheInitializePhase3() will read the real
 	 * data from pg_class and replace what we've done here.  Note in
-	 * particular that relowner is left as zero; this__ cues
+	 * particular that relowner is left as zero; this cues
 	 * RelationCacheInitializePhase3 that the real data isn't there yet.
 	 */
 	relation->rd_rel = (Form_pg_class) palloc0(CLASS_TUPLE_SIZE);
@@ -1620,7 +1620,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 	/*
 	 * initialize attribute tuple form
 	 *
-	 * Unlike the case with the relation tuple, this__ data had better be right
+	 * Unlike the case with the relation tuple, this data had better be right
 	 * because it will never be replaced.  The data comes from
 	 * src/include/catalog/ headers via genbki.pl.
 	 */
@@ -1657,7 +1657,7 @@ formrdesc(const char *relationName, Oid relationReltype,
 	}
 
 	/*
-	 * initialize relation id from info in att array (my, this__ is ugly)
+	 * initialize relation id from info in att array (my, this is ugly)
 	 */
 	RelationGetRelid(relation) = relation->rd_att->attrs[0]->attrelid;
 
@@ -1733,7 +1733,7 @@ RelationIdGetRelation(Oid relationId)
 {
 	Relation	rd;
 
-	/* Make sure we're in an xact, even if this__ ends up being a cache hit */
+	/* Make sure we're in an xact, even if this ends up being a cache hit */
 	Assert(IsTransactionState());
 
 	/*
@@ -1813,7 +1813,7 @@ RelationDecrementReferenceCount(Relation rel)
  *
  *	NOTE: if compiled with -DRELCACHE_FORCE_RELEASE then relcache entries
  *	will be freed as soon as their refcount goes to zero.  In combination
- *	with aset.c's CLOBBER_FREED_MEMORY option, this__ provides a good test
+ *	with aset.c's CLOBBER_FREED_MEMORY option, this provides a good test
  *	to catch references to already-released relcache entries.  It slows
  *	things down quite a bit, however.
  */
@@ -1850,13 +1850,13 @@ RelationClose(Relation relation)
  *
  *	We assume that at the time we are called, we have at least AccessShareLock
  *	on the target index.  (Note: in the calls from RelationClearRelation,
- *	this__ is legitimate because we know the rel has positive refcount.)
+ *	this is legitimate because we know the rel has positive refcount.)
  *
  *	If the target index is an index on pg_class or pg_index, we'd better have
  *	previously gotten at least AccessShareLock on its underlying catalog,
  *	else we are at risk of deadlock against someone trying to exclusive-lock
  *	the heap and index in that order.  This is ensured in current usage by
- *	only applying this__ to indexes being opened or having positive refcount.
+ *	only applying this to indexes being opened or having positive refcount.
  */
 static void
 RelationReloadIndexInfo(Relation relation)
@@ -1916,7 +1916,7 @@ RelationReloadIndexInfo(Relation relation)
 	 * For a non-system index, there are fields of the pg_index row that are
 	 * allowed to change, so re-read that row and update the relcache entry.
 	 * Most of the info derived from pg_index (such as support function lookup
-	 * info) cannot change, and indeed the whole point of this__ routine is to
+	 * info) cannot change, and indeed the whole point of this routine is to
 	 * update the relcache entry without clobbering that data; so wholesale
 	 * replacement is not appropriate.
 	 */
@@ -2048,7 +2048,7 @@ RelationClearRelation(Relation relation, bool rebuild)
 	 * As per notes above, a rel to be rebuilt MUST have refcnt > 0; while of
 	 * course it would be an equally bad idea to blow away one with nonzero
 	 * refcnt, since that would leave someone somewhere with a dangling
-	 * pointer.  All callers are expected to have verified that this__ holds.
+	 * pointer.  All callers are expected to have verified that this holds.
 	 */
 	Assert(rebuild ?
 		   !RelationHasReferenceCountZero(relation) :
@@ -2160,7 +2160,7 @@ RelationClearRelation(Relation relation, bool rebuild)
 		 * through the cache entry rebuild.  The outer transaction should
 		 * still see the not-modified cache entry as valid.)  The worst
 		 * consequence of an error is leaking the necessarily-unreferenced new
-		 * entry, and this__ shouldn't happen often enough for that to be a big
+		 * entry, and this shouldn't happen often enough for that to be a big
 		 * problem.
 		 *
 		 * When rebuilding an open relcache entry, we must preserve ref count,
@@ -2169,9 +2169,9 @@ RelationClearRelation(Relation relation, bool rebuild)
 		 * rewrite-rule substructures in place, because various places assume
 		 * that these structures won't move while they are working with an
 		 * open relcache entry.  (Note: the refcount mechanism for tupledescs
-		 * might someday allow us to remove this__ hack for the tupledesc.)
+		 * might someday allow us to remove this hack for the tupledesc.)
 		 *
-		 * Note that this__ process does not touch CurrentResourceOwner; which
+		 * Note that this process does not touch CurrentResourceOwner; which
 		 * is good because whatever ref counts the entry may have do not
 		 * necessarily belong to that resource owner.
 		 */
@@ -2191,7 +2191,7 @@ RelationClearRelation(Relation relation, bool rebuild)
 			 * still invisible. In that case it's fine to just mark the
 			 * relation as invalid and return - it'll fully get reloaded by
 			 * the cache reset at the end of logical decoding (or at the next
-			 * access).  During normal processing we don't want to ignore this__
+			 * access).  During normal processing we don't want to ignore this
 			 * case as it shouldn't happen there, as explained below.
 			 */
 			if (HistoricSnapshotActive())
@@ -2212,9 +2212,9 @@ RelationClearRelation(Relation relation, bool rebuild)
 		keep_policies = equalRSDesc(relation->rd_rsdesc, newrel->rd_rsdesc);
 
 		/*
-		 * Perform swapping of the relcache entry contents.  Within this__
+		 * Perform swapping of the relcache entry contents.  Within this
 		 * process the old entry is momentarily invalid, so there *must* be no
-		 * possibility of CHECK_FOR_INTERRUPTS within this__ sequence. Do it in
+		 * possibility of CHECK_FOR_INTERRUPTS within this sequence. Do it in
 		 * all-in-line code for safety.
 		 *
 		 * Since the vast majority of fields should be swapped, our method is
@@ -2373,13 +2373,13 @@ RelationCacheInvalidateEntry(Oid relationId)
  *	 Likewise, we need not discard new-relfilenode-in-transaction hints,
  *	 since any invalidation of those would be a local event.
  *
- *	 We do this__ in two phases: the first pass deletes deletable items, and
+ *	 We do this in two phases: the first pass deletes deletable items, and
  *	 the second one rebuilds the rebuildable items.  This is essential for
  *	 safety, because hash_seq_search only copes with concurrent deletion of
  *	 the element it is currently visiting.  If a second SI overflow were to
  *	 occur while we are walking the table, resulting in recursive entry to
- *	 this__ routine, we could crash because the inner invocation blows away
- *	 the entry next to be visited by the outer scan.  But this__ way is OK,
+ *	 this routine, we could crash because the inner invocation blows away
+ *	 the entry next to be visited by the outer scan.  But this way is OK,
  *	 because (a) during the first pass we won't process any more SI messages,
  *	 so hash_seq_search will complete safely; (b) during the second pass we
  *	 only hold onto pointers to nondeletable entries.
@@ -2429,7 +2429,7 @@ RelationCacheInvalidate(void)
 
 		if (RelationHasReferenceCountZero(relation))
 		{
-			/* Delete this__ entry immediately */
+			/* Delete this entry immediately */
 			Assert(!relation->rd_isnailed);
 			RelationClearRelation(relation, false);
 		}
@@ -2437,7 +2437,7 @@ RelationCacheInvalidate(void)
 		{
 			/*
 			 * If it's a mapped relation, immediately update its rd_node in
-			 * case its relfilenode changed.  We must do this__ during phase 1
+			 * case its relfilenode changed.  We must do this during phase 1
 			 * in case the relation is consulted during rebuild of other
 			 * relcache entries in phase 2.  It's safe since consulting the
 			 * map doesn't involve any access to relcache entries.
@@ -2446,7 +2446,7 @@ RelationCacheInvalidate(void)
 				RelationInitPhysicalAddr(relation);
 
 			/*
-			 * Add this__ entry to list of stuff to rebuild in second pass.
+			 * Add this entry to list of stuff to rebuild in second pass.
 			 * pg_class goes to the front of rebuildFirstList while
 			 * pg_class_oid_index goes to the back of rebuildFirstList, so
 			 * they are done first and second respectively.  Other nailed
@@ -2539,7 +2539,7 @@ RememberToFreeTupleDescAtEOX(TupleDesc td)
  *
  *	Clean up the relcache at main-transaction commit or abort.
  *
- * Note: this__ must be called *before* processing invalidation messages.
+ * Note: this must be called *before* processing invalidation messages.
  * In the case of abort, we don't want to try to rebuild any invalidated
  * cache entries (since we can't safely do database accesses).  Therefore
  * we must reset refcnts before handling pending invalidations.
@@ -2610,7 +2610,7 @@ AtEOXact_RelationCache(bool isCommit)
  *
  *	Clean up a single rel at main-transaction commit or abort
  *
- * NB: this__ processing must be idempotent, because EOXactListAdd() doesn't
+ * NB: this processing must be idempotent, because EOXactListAdd() doesn't
  * bother to prevent duplicate entries in eoxact_list[].
  */
 static void
@@ -2620,13 +2620,13 @@ AtEOXact_cleanup(Relation relation, bool isCommit)
 	 * The relcache entry's ref count should be back to its normal
 	 * not-in-a-transaction state: 0 unless it's nailed in cache.
 	 *
-	 * In bootstrap mode, this__ is NOT true, so don't check it --- the
+	 * In bootstrap mode, this is NOT true, so don't check it --- the
 	 * bootstrap code expects relations to stay open across start/commit
 	 * transaction calls.  (That seems bogus, but it's not worth fixing.)
 	 *
-	 * Note: ideally this__ check would be applied to every relcache entry, not
+	 * Note: ideally this check would be applied to every relcache entry, not
 	 * just those that have eoxact work to do.  But it's not worth forcing a
-	 * scan of the whole relcache just for this__.  (Moreover, doing so would
+	 * scan of the whole relcache just for this.  (Moreover, doing so would
 	 * mean that assert-enabled testing never tests the hash_search code path
 	 * above, which seems a bad idea.)
 	 */
@@ -2698,7 +2698,7 @@ AtEOXact_cleanup(Relation relation, bool isCommit)
  *
  *	Clean up the relcache at sub-transaction commit or abort.
  *
- * Note: this__ must be called *before* processing invalidation messages.
+ * Note: this must be called *before* processing invalidation messages.
  */
 void
 AtEOSubXact_RelationCache(bool isCommit, SubTransactionId mySubid,
@@ -2744,7 +2744,7 @@ AtEOSubXact_RelationCache(bool isCommit, SubTransactionId mySubid,
  *
  *	Clean up a single rel at subtransaction commit or abort
  *
- * NB: this__ processing must be idempotent, because EOXactListAdd() doesn't
+ * NB: this processing must be idempotent, because EOXactListAdd() doesn't
  * bother to prevent duplicate entries in eoxact_list[].
  */
 static void
@@ -2835,7 +2835,7 @@ RelationBuildLocalRelation(const char *relname,
 	/*
 	 * check for creation of a rel that must be nailed in cache.
 	 *
-	 * XXX this__ list had better match the relations specially handled in
+	 * XXX this list had better match the relations specially handled in
 	 * RelationCacheInitializePhase2/3.
 	 */
 	switch (relid)
@@ -2888,12 +2888,12 @@ RelationBuildLocalRelation(const char *relname,
 
 	rel->rd_refcnt = nailit ? 1 : 0;
 
-	/* it's being created in this__ transaction */
+	/* it's being created in this transaction */
 	rel->rd_createSubid = GetCurrentSubTransactionId();
 	rel->rd_newRelfilenodeSubid = InvalidSubTransactionId;
 
 	/*
-	 * create a new tuple descriptor from the one passed in.  We do this__
+	 * create a new tuple descriptor from the one passed in.  We do this
 	 * partly to copy it into the cache context, and partly because the new
 	 * relation can't have any defaults or constraints yet; they have to be
 	 * added in later steps, because they require additions to multiple system
@@ -3003,7 +3003,7 @@ RelationBuildLocalRelation(const char *relname,
 
 	/*
 	 * Flag relation as needing eoxact cleanup (to clear rd_createSubid). We
-	 * can't do this__ before storing relid in it.
+	 * can't do this before storing relid in it.
 	 */
 	EOXactListAdd(rel);
 
@@ -3148,7 +3148,7 @@ RelationSetNewRelfilenode(Relation relation, char persistence,
  *		RelationCacheInitialize
  *
  *		This initializes the relation descriptor cache.  At the time
- *		that this__ is invoked, we can't do database access yet (mainly
+ *		that this is invoked, we can't do database access yet (mainly
  *		because the transaction subsystem is not up); all we are doing
  *		is making an empty cache hashtable.  This must be done before
  *		starting the initialization transaction, because otherwise
@@ -3190,7 +3190,7 @@ RelationCacheInitialize(void)
  *		This is called to prepare for access to shared catalogs during startup.
  *		We must at least set up nailed reldescs for pg_database, pg_authid,
  *		and pg_auth_members.  Ideally we'd like to have reldescs for their
- *		indexes, too.  We attempt to load this__ information from the shared
+ *		indexes, too.  We attempt to load this information from the shared
  *		relcache init file.  If that's missing or broken, just make phony
  *		entries for the catalogs themselves.  RelationCacheInitializePhase3
  *		will clean up as needed.
@@ -3240,13 +3240,13 @@ RelationCacheInitializePhase2(void)
  *		RelationCacheInitializePhase3
  *
  *		This is called as soon as the catcache and transaction system
- *		are functional and we have determined MyDatabaseId.  At this__ point
+ *		are functional and we have determined MyDatabaseId.  At this point
  *		we can actually read data from the database's system catalogs.
  *		We first try to read pre-computed relcache entries from the local
  *		relcache init file.  If that's missing or broken, make phony entries
  *		for the minimum set of nailed-in-cache relations.  Then (unless
  *		bootstrapping) make sure we have entries for the critical system
- *		indexes.  Once we've done all this__, we have enough infrastructure to
+ *		indexes.  Once we've done all this, we have enough infrastructure to
  *		open any system catalog or use any catcache.  The last step is to
  *		rewrite the cache files if needed.
  */
@@ -3383,7 +3383,7 @@ RelationCacheInitializePhase3(void)
 	 * a shared-inval cache flush causing relcache entries to be removed.
 	 * Since hash_seq_search only guarantees to still work after the *current*
 	 * entry is removed, it's unsafe to continue the hashtable scan afterward.
-	 * We handle this__ by restarting the scan from scratch after each access.
+	 * We handle this by restarting the scan from scratch after each access.
 	 * This is theoretically O(N^2), but the number of entries that actually
 	 * need to be fixed is small enough that it doesn't matter.
 	 */
@@ -3395,7 +3395,7 @@ RelationCacheInitializePhase3(void)
 		bool		restart = false;
 
 		/*
-		 * Make sure *this__* entry doesn't get flushed while we work with it.
+		 * Make sure *this* entry doesn't get flushed while we work with it.
 		 */
 		RelationIncrementReferenceCount(relation);
 
@@ -3528,7 +3528,7 @@ load_critical_index(Oid indexoid, Oid heapoid)
 	/*
 	 * We must lock the underlying catalog before locking the index to avoid
 	 * deadlock, since RelationBuildDesc might well need to read the catalog,
-	 * and if anyone else is exclusive-locking this__ catalog and index they'll
+	 * and if anyone else is exclusive-locking this catalog and index they'll
 	 * be doing it in that order.
 	 */
 	LockRelationOid(heapoid, AccessShareLock);
@@ -3546,7 +3546,7 @@ load_critical_index(Oid indexoid, Oid heapoid)
  * GetPgClassDescriptor -- get a predefined tuple descriptor for pg_class
  * GetPgIndexDescriptor -- get a predefined tuple descriptor for pg_index
  *
- * We need this__ kluge because we have to be able to access non-fixed-width
+ * We need this kluge because we have to be able to access non-fixed-width
  * fields of pg_class and pg_index before we have the standard catalog caches
  * available.  We use predefined data that's set up in just the same way as
  * the bootstrapped reldescs used by formrdesc().  The resulting tupdesc is
@@ -3770,7 +3770,7 @@ CheckConstraintCmp(const void *a, const void *b)
 }
 
 /*
- * RelationGetIndexList -- get a list of OIDs of indexes on this__ relation
+ * RelationGetIndexList -- get a list of OIDs of indexes on this relation
  *
  * The index list is created only if someone requests it.  We scan pg_index
  * to find relevant indexes, and add the list to the relcache entry so that
@@ -3781,7 +3781,7 @@ CheckConstraintCmp(const void *a, const void *b)
  *
  * Indexes that are marked not IndexIsLive are omitted from the returned list.
  * Such indexes are expected to be dropped momentarily, and should not be
- * touched at all by any caller of this__ function.
+ * touched at all by any caller of this function.
  *
  * The returned list is guaranteed to be sorted in order by OID.  This is
  * needed by the executor, since for index types that we obtain exclusive
@@ -3795,7 +3795,7 @@ CheckConstraintCmp(const void *a, const void *b)
  * since the caller will typically be doing syscache lookups on the relevant
  * indexes, and syscache lookup could cause SI messages to be processed!
  *
- * We also update rd_oidindex, which this__ module treats as effectively part
+ * We also update rd_oidindex, which this module treats as effectively part
  * of the index list.  rd_oidindex is valid when rd_indexvalid isn't zero;
  * it is the pg_class OID of a unique index on OID when the relation has one,
  * and InvalidOid if there is no such index.
@@ -3832,7 +3832,7 @@ RelationGetIndexList(Relation relation)
 	result = NIL;
 	oidIndex = InvalidOid;
 
-	/* Prepare to scan pg_index for entries having indrelid = this__ rel. */
+	/* Prepare to scan pg_index for entries having indrelid = this rel. */
 	ScanKeyInit(&skey,
 				Anum_pg_index_indrelid,
 				BTEqualStrategyNumber, F_OIDEQ,
@@ -3926,7 +3926,7 @@ RelationGetIndexList(Relation relation)
  * insert_ordered_oid
  *		Insert a new Oid into a sorted list of Oids, preserving ordering
  *
- * Building the ordered list this__ way is O(N^2), but with a pretty small
+ * Building the ordered list this way is O(N^2), but with a pretty small
  * constant, so for the number of entries we expect it will probably be
  * faster than trying to apply qsort().  Most tables don't have very many
  * indexes...
@@ -4091,7 +4091,7 @@ RelationGetIndexExpressions(Relation relation)
 	 * Run the expressions through eval_const_expressions. This is not just an
 	 * optimization, but is necessary, because the planner will be comparing
 	 * them to similarly-processed qual clauses, and may fail to detect valid
-	 * matches without this__.  We don't bother with canonicalize_qual, however.
+	 * matches without this.  We don't bother with canonicalize_qual, however.
 	 */
 	result = (List *) eval_const_expressions(NULL, (Node *) result);
 
@@ -4152,7 +4152,7 @@ RelationGetIndexPredicate(Relation relation)
 	 * Run the expression through const-simplification and canonicalization.
 	 * This is not just an optimization, but is necessary, because the planner
 	 * will be comparing it to similarly-processed qual clauses, and may fail
-	 * to detect valid matches without this__.  This must match the processing
+	 * to detect valid matches without this.  This must match the processing
 	 * done to qual clauses in preprocess_expression()!  (We can skip the
 	 * stuff involving subqueries, however, since we don't allow any in index
 	 * predicates.)
@@ -4179,7 +4179,7 @@ RelationGetIndexPredicate(Relation relation)
  * RelationGetIndexAttrBitmap -- get a bitmap of index attribute numbers
  *
  * The result has a bit set for each attribute used anywhere in the index
- * definitions of all the indexes on this__ relation.  (This includes not only
+ * definitions of all the indexes on this relation.  (This includes not only
  * simple index keys, but attributes used in expressions and partial-index
  * predicates.)
  *
@@ -4273,12 +4273,12 @@ RelationGetIndexAttrBitmap(Relation relation, IndexAttrBitmapKind attrKind)
 		/* Extract index key information from the index's pg_index row */
 		indexInfo = BuildIndexInfo(indexDesc);
 
-		/* Can this__ index be referenced by a foreign key? */
+		/* Can this index be referenced by a foreign key? */
 		isKey = indexInfo->ii_Unique &&
 			indexInfo->ii_Expressions == NIL &&
 			indexInfo->ii_Predicate == NIL;
 
-		/* Is this__ index the configured (or default) replica identity? */
+		/* Is this index the configured (or default) replica identity? */
 		isIDKey = (indexOid == relreplindex);
 
 		/* Collect simple attribute references */
@@ -4355,7 +4355,7 @@ RelationGetIndexAttrBitmap(Relation relation, IndexAttrBitmapKind attrKind)
  * associated exclusion constraint.  It returns arrays (palloc'd in caller's
  * context) of the exclusion operator OIDs, their underlying functions'
  * OIDs, and their strategy numbers in the index's opclasses.  We cache
- * all this__ information since it requires a fair amount of work to get.
+ * all this information since it requires a fair amount of work to get.
  */
 void
 RelationGetExclusionInfo(Relation indexRelation,
@@ -4391,7 +4391,7 @@ RelationGetExclusionInfo(Relation indexRelation,
 
 	/*
 	 * Search pg_constraint for the constraint associated with the index. To
-	 * make this__ not too painfully slow, we use the index on conrelid; that
+	 * make this not too painfully slow, we use the index on conrelid; that
 	 * will hold the parent relation's OID not the index's own OID.
 	 */
 	ScanKeyInit(&skey[0],
@@ -4499,7 +4499,7 @@ errtable(Relation rel)
  * errtablecol --- stores schema_name, table_name and column_name
  * of a table column within the current errordata.
  *
- * The column is specified by attribute number --- for most callers, this__ is
+ * The column is specified by attribute number --- for most callers, this is
  * easier and less error-prone than getting the column name for themselves.
  */
 int
@@ -4522,7 +4522,7 @@ errtablecol(Relation rel, int attnum)
  * of a table column within the current errordata, where the column name is
  * given directly rather than extracted from the relation's catalog data.
  *
- * Don't use this__ directly unless errtablecol() is inconvenient for some
+ * Don't use this directly unless errtablecol() is inconvenient for some
  * reason.  This might possibly be needed during intermediate states in ALTER
  * TABLE, for instance.
  */
@@ -4553,7 +4553,7 @@ errtableconstraint(Relation rel, const char *conname)
  *	load_relcache_init_file, write_relcache_init_file
  *
  *		In late 1992, we started regularly having databases with more than
- *		a thousand classes in them.  With this__ number of classes, it became
+ *		a thousand classes in them.  With this number of classes, it became
  *		critical to do indexed lookups on the system catalogs.
  *
  *		Bootstrapping these lookups is very hard.  We want to be able to
@@ -4582,7 +4582,7 @@ errtableconstraint(Relation rel, const char *conname)
  *		slows down backend startup noticeably.
  *
  *		We can in fact go further, and save more relcache entries than
- *		just the ones that are absolutely critical; this__ allows us to speed
+ *		just the ones that are absolutely critical; this allows us to speed
  *		up backend startup by not having to build such entries the hard way.
  *		Presently, all the catalog and index entries that are referred to
  *		by catcaches are stored in the initialization files.
@@ -4630,7 +4630,7 @@ load_relcache_init_file(bool shared)
 
 	/*
 	 * Read the index relcache entries from the file.  Note we will not enter
-	 * any of them into the cache if the read fails partway through; this__
+	 * any of them into the cache if the read fails partway through; this
 	 * helps to guard against broken init files.
 	 */
 	max_rels = 100;
@@ -5013,7 +5013,7 @@ write_relcache_init_file(bool shared)
 	if (fp == NULL)
 	{
 		/*
-		 * We used to consider this__ a fatal error, but we might as well
+		 * We used to consider this a fatal error, but we might as well
 		 * continue with backend startup ...
 		 */
 		ereport(WARNING,
@@ -5086,7 +5086,7 @@ write_relcache_init_file(bool shared)
 			Form_pg_am	am = rel->rd_am;
 
 			/* write the pg_index tuple */
-			/* we assume this__ was created by heap_copytuple! */
+			/* we assume this was created by heap_copytuple! */
 			write_item(rel->rd_indextuple,
 					   HEAPTUPLESIZE + rel->rd_indextuple->t_len,
 					   fp);
@@ -5152,7 +5152,7 @@ write_relcache_init_file(bool shared)
 		 *
 		 * Note: a failure here is possible under Cygwin, if some other
 		 * backend is holding open an unlinked-but-not-yet-gone init file. So
-		 * treat this__ as a noncritical failure; just remove the useless temp
+		 * treat this as a noncritical failure; just remove the useless temp
 		 * file on failure.
 		 */
 		if (rename(tempfilename, finalfilename) < 0)
@@ -5187,7 +5187,7 @@ write_item(const void *data, Size len, FILE *fp)
  * which RelationCacheInitializePhase3 chooses to nail for efficiency reasons,
  * but which does not support any syscache.
  *
- * Note: this__ function is currently never called for shared rels.  If it were,
+ * Note: this function is currently never called for shared rels.  If it were,
  * we'd probably also need a special case for DatabaseNameIndexId, which is
  * critical but does not support a syscache.
  */
@@ -5196,7 +5196,7 @@ RelationIdIsInInitFile(Oid relationId)
 {
 	if (relationId == TriggerRelidNameIndexId)
 	{
-		/* If this__ Assert fails, we don't need this__ special case anymore. */
+		/* If this Assert fails, we don't need this special case anymore. */
 		Assert(!RelationSupportsSysCache(relationId));
 		return true;
 	}
@@ -5225,7 +5225,7 @@ RelationIdIsInInitFile(Oid relationId)
  * then release the lock in RelationCacheInitFilePostInvalidate.  Caller must
  * send any pending SI messages between those calls.
  *
- * Notice this__ deals only with the local init file, not the shared init file.
+ * Notice this deals only with the local init file, not the shared init file.
  * The reason is that there can never be a "significant" change to the
  * relcache entry of a shared relation; the most that could happen is
  * updates of noncritical fields such as relpages/reltuples.  So, while
@@ -5271,7 +5271,7 @@ RelationCacheInitFilePostInvalidate(void)
  * scenarios, and even in simple crash-recovery cases there are windows for
  * the init files to become out-of-sync with the database.  So now we just
  * remove them during startup and expect the first backend launch to rebuild
- * them.  Of course, this__ has to happen in each database of the cluster.
+ * them.  Of course, this has to happen in each database of the cluster.
  */
 void
 RelationCacheInitFileRemove(void)

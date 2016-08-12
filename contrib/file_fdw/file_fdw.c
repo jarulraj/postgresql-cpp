@@ -39,7 +39,7 @@
 PG_MODULE_MAGIC;
 
 /*
- * Describes the valid options for objects that use this__ wrapper.
+ * Describes the valid options for objects that use this wrapper.
  */
 struct FileFdwOption
 {
@@ -196,7 +196,7 @@ file_fdw_validator(PG_FUNCTION_ARGS)
 	 * This is because the filename is one of those options, and we don't want
 	 * non-superusers to be able to determine which file gets read.
 	 *
-	 * Putting this__ sort of permissions check in a validator is a bit of a
+	 * Putting this sort of permissions check in a validator is a bit of a
 	 * crock, but there doesn't seem to be any other place that can enforce
 	 * the check more cleanly.
 	 *
@@ -238,9 +238,9 @@ file_fdw_validator(PG_FUNCTION_ARGS)
 					(errcode(ERRCODE_FDW_INVALID_OPTION_NAME),
 					 errmsg("invalid option \"%s\"", def->defname),
 					 buf.len > 0
-					 ? errhint("Valid options in this__ context are: %s",
+					 ? errhint("Valid options in this context are: %s",
 							   buf.data)
-				  : errhint("There are no valid options in this__ context.")));
+				  : errhint("There are no valid options in this context.")));
 		}
 
 		/*
@@ -472,7 +472,7 @@ fileGetForeignRelSize(PlannerInfo *root,
 	FileFdwPlanState *fdw_private;
 
 	/*
-	 * Fetch options.  We only need filename at this__ point, but we might as
+	 * Fetch options.  We only need filename at this point, but we might as
 	 * well get everything and not need to re-fetch it later in planning.
 	 */
 	fdw_private = (FileFdwPlanState *) palloc(sizeof(FileFdwPlanState));
@@ -581,7 +581,7 @@ fileExplainForeignScan(ForeignScanState *node, ExplainState *es)
 	char	   *filename;
 	List	   *options;
 
-	/* Fetch options --- we only need filename at this__ point */
+	/* Fetch options --- we only need filename at this point */
 	fileGetOptions(RelationGetRelid(node->ss.ss_currentRelation),
 				   &filename, &options);
 
@@ -710,7 +710,7 @@ fileReScanForeignScan(ForeignScanState *node)
 
 /*
  * fileEndForeignScan
- *		Finish scanning foreign table and dispose objects used for this__ scan
+ *		Finish scanning foreign table and dispose objects used for this scan
  */
 static void
 fileEndForeignScan(ForeignScanState *node)
@@ -724,7 +724,7 @@ fileEndForeignScan(ForeignScanState *node)
 
 /*
  * fileAnalyzeForeignTable
- *		Test whether analyzing this__ foreign table is supported
+ *		Test whether analyzing this foreign table is supported
  */
 static bool
 fileAnalyzeForeignTable(Relation relation,
@@ -788,7 +788,7 @@ check_selective_binary_conversion(RelOptInfo *baserel,
 	*columns = NIL;				/* default result */
 
 	/*
-	 * Check format of the file.  If binary format, this__ is irrelevant.
+	 * Check format of the file.  If binary format, this is irrelevant.
 	 */
 	table = GetForeignTable(foreigntableid);
 	foreach(lc, table->options)
@@ -929,7 +929,7 @@ estimate_size(PlannerInfo *root, RelOptInfo *baserel,
 	else
 	{
 		/*
-		 * Otherwise we have to fake it.  We back into this__ estimate using the
+		 * Otherwise we have to fake it.  We back into this estimate using the
 		 * planner's idea of the relation width; which is bogus if not all
 		 * columns are being read, not to mention that the text representation
 		 * of a row probably isn't the same size as its internal

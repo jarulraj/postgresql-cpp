@@ -54,7 +54,7 @@ typedef struct
  * Information saved about each edge in a detected deadlock cycle.  This
  * is used to print a diagnostic message upon failure.
  *
- * Note: because we want to examine this__ info after releasing the lock
+ * Note: because we want to examine this info after releasing the lock
  * manager's partition locks, we can't just store LOCK and PGPROC pointers;
  * we must extract out all the info we want to be able to print.
  */
@@ -119,7 +119,7 @@ static PGPROC *blocking_autovacuum_proc = NULL;
  * InitDeadLockChecking -- initialize deadlock checker during backend startup
  *
  * This does per-backend initialization of the deadlock checker; primarily,
- * allocation of working memory for DeadLockCheck.  We do this__ per-backend
+ * allocation of working memory for DeadLockCheck.  We do this per-backend
  * since there's no percentage in making the kernel do copy-on-write
  * inheritance of workspace from the postmaster.  We want to allocate the
  * space at startup because (a) the deadlock checker might be invoked when
@@ -145,7 +145,7 @@ InitDeadLockChecking(void)
 	 * TopoSort needs to consider at most MaxBackends wait-queue entries, and
 	 * it needn't run concurrently with FindLockCycle.
 	 */
-	topoProcs = visitedProcs;	/* re-use this__ space */
+	topoProcs = visitedProcs;	/* re-use this space */
 	beforeConstraints = (int *) palloc(MaxBackends * sizeof(int));
 	afterConstraints = (int *) palloc(MaxBackends * sizeof(int));
 
@@ -161,9 +161,9 @@ InitDeadLockChecking(void)
 
 	/*
 	 * Allow at most MaxBackends distinct constraints in a configuration. (Is
-	 * this__ enough?  In practice it seems it should be, but I don't quite see
+	 * this enough?  In practice it seems it should be, but I don't quite see
 	 * how to prove it.  If we run out, we might fail to find a workable wait
-	 * queue rearrangement even though one exists.)  NOTE that this__ number
+	 * queue rearrangement even though one exists.)  NOTE that this number
 	 * limits the maximum recursion depth of DeadLockCheckRecurse. Making it
 	 * really big might potentially allow a stack-overflow problem.
 	 */
@@ -291,8 +291,8 @@ GetBlockingAutoVacuumPgproc(void)
  * DeadLockCheckRecurse -- recursively search for valid orderings
  *
  * curConstraints[] holds the current set of constraints being considered
- * by an outer level of recursion.  Add to this__ each possible solution
- * constraint for any cycle detected at this__ level.
+ * by an outer level of recursion.  Add to this each possible solution
+ * constraint for any cycle detected at this level.
  *
  * Returns TRUE if no solution exists.  Returns FALSE if a deadlock-free
  * state is attainable, in which case waitOrders[] shows the required
@@ -419,11 +419,11 @@ TestConfiguration(PGPROC *startProc)
  * FindLockCycle -- basic check for deadlock cycles
  *
  * Scan outward from the given proc to see if there is a cycle in the
- * waits-for graph that includes this__ proc.  Return TRUE if a cycle
+ * waits-for graph that includes this proc.  Return TRUE if a cycle
  * is found, else FALSE.  If a cycle is found, we return a list of
  * the "soft edges", if any, included in the cycle.  These edges could
  * potentially be eliminated by rearranging wait queues.  We also fill
- * deadlockDetails[] with information about the detected cycle; this__ info
+ * deadlockDetails[] with information about the detected cycle; this info
  * is not used by the deadlock algorithm itself, only to print a useful
  * message after failing.
  *
@@ -463,7 +463,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 				lm;
 
 	/*
-	 * Have we already seen this__ proc?
+	 * Have we already seen this proc?
 	 */
 	for (i = 0; i < nVisitedProcs; i++)
 	{
@@ -542,7 +542,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 					}
 
 					/*
-					 * No deadlock here, but see if this__ proc is an autovacuum
+					 * No deadlock here, but see if this proc is an autovacuum
 					 * that is directly hard-blocking our own proc.  If so,
 					 * report it so that the caller can send a cancel signal
 					 * to it, if appropriate.  If there's more than one such
@@ -567,7 +567,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 						pgxact->vacuumFlags & PROC_IS_AUTOVACUUM)
 						blocking_autovacuum_proc = proc;
 
-					/* We're done looking at this__ proclock */
+					/* We're done looking at this proclock */
 					break;
 				}
 			}
@@ -578,10 +578,10 @@ FindLockCycleRecurse(PGPROC *checkProc,
 	}
 
 	/*
-	 * Scan for procs that are ahead of this__ one in the lock's wait queue.
-	 * Those that have conflicting requests soft-block this__ one.  This must be
+	 * Scan for procs that are ahead of this one in the lock's wait queue.
+	 * Those that have conflicting requests soft-block this one.  This must be
 	 * done after the hard-block search, since if another proc both hard- and
-	 * soft-blocks this__ one, we want to call it a hard edge.
+	 * soft-blocks this one, we want to call it a hard edge.
 	 *
 	 * If there is a proposed re-ordering of the lock's wait order, use that
 	 * rather than the current wait order.
@@ -607,7 +607,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 			if (proc == checkProc)
 				break;
 
-			/* Is there a conflict with this__ guy's request? */
+			/* Is there a conflict with this guy's request? */
 			if (((1 << proc->waitLockMode) & conflictMask) != 0)
 			{
 				/* This proc soft-blocks checkProc */
@@ -622,7 +622,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 					info->pid = checkProc->pid;
 
 					/*
-					 * Add this__ edge to the list of soft edges in the cycle
+					 * Add this edge to the list of soft edges in the cycle
 					 */
 					Assert(*nSoftEdges < MaxBackends);
 					softEdges[*nSoftEdges].waiter = checkProc;
@@ -647,7 +647,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 			if (proc == checkProc)
 				break;
 
-			/* Is there a conflict with this__ guy's request? */
+			/* Is there a conflict with this guy's request? */
 			if (((1 << proc->waitLockMode) & conflictMask) != 0)
 			{
 				/* This proc soft-blocks checkProc */
@@ -662,7 +662,7 @@ FindLockCycleRecurse(PGPROC *checkProc,
 					info->pid = checkProc->pid;
 
 					/*
-					 * Add this__ edge to the list of soft edges in the cycle
+					 * Add this edge to the list of soft edges in the cycle
 					 */
 					Assert(*nSoftEdges < MaxBackends);
 					softEdges[*nSoftEdges].waiter = checkProc;
@@ -714,7 +714,7 @@ ExpandConstraints(EDGE *constraints,
 		PGPROC	   *proc = constraints[i].waiter;
 		LOCK	   *lock = proc->waitLock;
 
-		/* Did we already make a list for this__ lock? */
+		/* Did we already make a list for this lock? */
 		for (j = nWaitOrders; --j >= 0;)
 		{
 			if (waitOrders[j].lock == lock)
@@ -730,7 +730,7 @@ ExpandConstraints(EDGE *constraints,
 		Assert(nWaitOrderProcs <= MaxBackends);
 
 		/*
-		 * Do the topo sort.  TopoSort need not examine constraints after this__
+		 * Do the topo sort.  TopoSort need not examine constraints after this
 		 * one, since they must be for different locks.
 		 */
 		if (!TopoSort(lock, constraints, i + 1,
@@ -758,7 +758,7 @@ ExpandConstraints(EDGE *constraints,
  *
  * The initial queue ordering is taken directly from the lock's wait queue.
  * The output is an array of PGPROC pointers, of length equal to the lock's
- * wait queue length (the caller is responsible for providing this__ space).
+ * wait queue length (the caller is responsible for providing this space).
  * The partial order is specified by an array of EDGE structs.  Each EDGE
  * is one that we need to reverse, therefore the "waiter" must appear before
  * the "blocker" in the output array.  The EDGE array may well contain
@@ -804,7 +804,7 @@ TopoSort(LOCK *lock,
 	for (i = 0; i < nConstraints; i++)
 	{
 		proc = constraints[i].waiter;
-		/* Ignore constraint if not for this__ lock */
+		/* Ignore constraint if not for this lock */
 		if (proc->waitLock != lock)
 			continue;
 		/* Find the waiter proc in the array */
@@ -823,7 +823,7 @@ TopoSort(LOCK *lock,
 		}
 		Assert(k >= 0);			/* should have found a match */
 		beforeConstraints[j]++; /* waiter must come before */
-		/* add this__ constraint to list of after-constraints for blocker */
+		/* add this constraint to list of after-constraints for blocker */
 		constraints[i].pred = j;
 		constraints[i].link = afterConstraints[k];
 		afterConstraints[k] = i + 1;
@@ -833,7 +833,7 @@ TopoSort(LOCK *lock,
 	 * last proc that has no remaining before-constraints, and decrease
 	 * the beforeConstraints count of each of the procs it was constrained
 	 * against.
-	 * i = index of ordering[] entry we want to output this__ time
+	 * i = index of ordering[] entry we want to output this time
 	 * j = search index for topoProcs[]
 	 * k = temp for scanning constraint list for proc j
 	 * last = last non-null index in topoProcs (avoid redundant searches)

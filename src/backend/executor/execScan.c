@@ -162,7 +162,7 @@ ExecScan(ScanState *node,
 
 	/*
 	 * Reset per-tuple memory context to free any expression evaluation
-	 * storage allocated in the previous tuple cycle.  Note this__ can't happen
+	 * storage allocated in the previous tuple cycle.  Note this can't happen
 	 * until we're done projecting out tuples from a scan tuple.
 	 */
 	ResetExprContext(econtext);
@@ -215,7 +215,7 @@ ExecScan(ScanState *node,
 				/*
 				 * Form a projection tuple, store it in the result tuple slot
 				 * and return it --- unless we find we can project no tuples
-				 * from this__ scan tuple, in which case continue scan.
+				 * from this scan tuple, in which case continue scan.
 				 */
 				resultSlot = ExecProject(projInfo, &isDone);
 				if (isDone != ExprEndResult)
@@ -248,7 +248,7 @@ ExecScan(ScanState *node,
  *
  * We can avoid a projection step if the requested tlist exactly matches
  * the underlying tuple type.  If so, we just set ps_ProjInfo to NULL.
- * Note that this__ case occurs not only for simple "SELECT * FROM ...", but
+ * Note that this case occurs not only for simple "SELECT * FROM ...", but
  * also in most cases where there are joins or other processing nodes above
  * the scan node, because the planner will preferentially generate a matching
  * tlist.

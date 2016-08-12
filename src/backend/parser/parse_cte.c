@@ -53,7 +53,7 @@ static const char *const recursion_errormsgs[] = {
 /*
  * For WITH RECURSIVE, we have to find an ordering of the clause members
  * with no forward references, and determine which members are recursive
- * (i.e., self-referential).  It is convenient to do this__ with an array
+ * (i.e., self-referential).  It is convenient to do this with an array
  * of CteItems instead of a list of CommonTableExprs.
  */
 typedef struct CteItem
@@ -112,7 +112,7 @@ transformWithClause(ParseState *pstate, WithClause *withClause)
 
 	/*
 	 * For either type of WITH, there must not be duplicate CTE names in the
-	 * list.  Check this__ right away so we needn't worry later.
+	 * list.  Check this right away so we needn't worry later.
 	 *
 	 * Also, tentatively mark each CTE as non-recursive, and initialize its
 	 * reference count to zero, and set pstate->p_hasModifyingCTE if needed.
@@ -265,7 +265,7 @@ analyzeCTE(ParseState *pstate, CommonTableExpr *cte)
 				 parser_errposition(pstate, cte->location)));
 
 	/*
-	 * CTE queries are always marked not canSetTag.  (Currently this__ only
+	 * CTE queries are always marked not canSetTag.  (Currently this only
 	 * matters for data-modifying statements, for which the flag will be
 	 * propagated to the ModifyTable plan node.)
 	 */
@@ -281,7 +281,7 @@ analyzeCTE(ParseState *pstate, CommonTableExpr *cte)
 		/*
 		 * Verify that the previously determined output column types and
 		 * collations match what the query really produced.  We have to check
-		 * this__ because the recursive term could have overridden the
+		 * this because the recursive term could have overridden the
 		 * non-recursive term, and we don't have any easy way to fix that.
 		 */
 		ListCell   *lctlist,
@@ -339,7 +339,7 @@ analyzeCTE(ParseState *pstate, CommonTableExpr *cte)
 /*
  * Compute derived fields of a CTE, given the transformed output targetlist
  *
- * For a nonrecursive CTE, this__ is called after transforming the CTE's query.
+ * For a nonrecursive CTE, this is called after transforming the CTE's query.
  * For a recursive CTE, we call it after transforming the non-recursive term,
  * and pass the targetlist emitted by the non-recursive term only.
  *
@@ -496,7 +496,7 @@ makeDependencyGraphWalker(Node *node, CteState *cstate)
 					}
 					else
 					{
-						/* Found out this__ one is self-referential */
+						/* Found out this one is self-referential */
 						cte->cterecursive = true;
 					}
 					break;
@@ -614,7 +614,7 @@ TopologicalSort(ParseState *pstate, CteItem *items, int numitems)
 
 		/*
 		 * Items up through i are known to have no dependencies left, so we
-		 * can skip them in this__ loop.
+		 * can skip them in this loop.
 		 */
 		for (j = i + 1; j < numitems; j++)
 		{

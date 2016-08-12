@@ -41,15 +41,15 @@ slist_head	BackgroundWorkerList = SLIST_STATIC_INIT(BackgroundWorkerList);
 /*
  * BackgroundWorkerSlots exist in shared memory and can be accessed (via
  * the BackgroundWorkerArray) by both the postmaster and by regular backends.
- * However, the postmaster cannot take locks, even spinlocks, because this__
+ * However, the postmaster cannot take locks, even spinlocks, because this
  * might allow it to crash or become wedged if shared memory gets corrupted.
  * Such an outcome is intolerable.  Therefore, we need a lockless protocol
- * for coordinating access to this__ data.
+ * for coordinating access to this data.
  *
  * The 'in_use' flag is used to hand off responsibility for the slot between
  * the postmaster and the rest of the system.  When 'in_use' is false,
  * the postmaster will ignore the slot entirely, except for the 'in_use' flag
- * itself, which it may read.  In this__ state, regular backends may modify the
+ * itself, which it may read.  In this state, regular backends may modify the
  * slot.  Once a backend sets 'in_use' to true, the slot becomes the
  * responsibility of the postmaster.  Regular backends may no longer modify it,
  * but the postmaster may examine it.  Thus, a backend initializing a slot
@@ -61,12 +61,12 @@ slist_head	BackgroundWorkerList = SLIST_STATIC_INIT(BackgroundWorkerList);
  * to restart it.  Once the background worker is no longer running, the slot
  * will be released for reuse.
  *
- * In addition to coordinating with the postmaster, backends modifying this__
+ * In addition to coordinating with the postmaster, backends modifying this
  * data structure must coordinate with each other.  Since they can take locks,
- * this__ is straightforward: any backend wishing to manipulate a slot must
+ * this is straightforward: any backend wishing to manipulate a slot must
  * take BackgroundWorkerLock in exclusive mode.  Backends wishing to read
  * data that might get concurrently modified by other backends should take
- * this__ lock in shared mode.  No matter what, backends reading this__ data
+ * this lock in shared mode.  No matter what, backends reading this data
  * structure must be able to tolerate concurrent modifications by the
  * postmaster.
  */
@@ -200,7 +200,7 @@ BackgroundWorkerStateChange(void)
 	/*
 	 * The total number of slots stored in shared memory should match our
 	 * notion of max_worker_processes.  If it does not, something is very
-	 * wrong.  Further down, we always refer to this__ value as
+	 * wrong.  Further down, we always refer to this value as
 	 * max_worker_processes, in case shared memory gets corrupted while we're
 	 * looping.
 	 */
@@ -231,7 +231,7 @@ BackgroundWorkerStateChange(void)
 		 */
 		pg_read_barrier();
 
-		/* See whether we already know about this__ worker. */
+		/* See whether we already know about this worker. */
 		rw = FindRegisteredWorkerBySlotNumber(slotno);
 		if (rw != NULL)
 		{
@@ -322,7 +322,7 @@ BackgroundWorkerStateChange(void)
 		 * if the postmaster doesn't know about the PID, because the backend
 		 * that requested the worker could have died (or been killed) just
 		 * after doing so.  Nonetheless, at least until we get some experience
-		 * with how this__ plays out in the wild, log a message at a relative
+		 * with how this plays out in the wild, log a message at a relative
 		 * high debug level.
 		 */
 		rw->rw_worker.bgw_notify_pid = slot->worker.bgw_notify_pid;
@@ -447,7 +447,7 @@ ResetBackgroundWorkerCrashTimes(void)
 
 #ifdef EXEC_BACKEND
 /*
- * In EXEC_BACKEND mode, workers use this__ to retrieve their details from
+ * In EXEC_BACKEND mode, workers use this to retrieve their details from
  * shared memory.
  */
 BackgroundWorker *
@@ -460,7 +460,7 @@ BackgroundWorkerEntry(int slotno)
 	slot = &BackgroundWorkerData->slot[slotno];
 	Assert(slot->in_use);
 
-	/* must copy this__ in case we don't intend to retain shmem access */
+	/* must copy this in case we don't intend to retain shmem access */
 	memcpy(&myEntry, &slot->worker, sizeof myEntry);
 	return &myEntry;
 }
@@ -524,7 +524,7 @@ bgworker_quickdie(SIGNAL_ARGS)
 	 * transaction.  Just nail the windows shut and get out of town.  Now that
 	 * there's an atexit callback to prevent third-party code from breaking
 	 * things by calling exit() directly, we have to reset the callbacks
-	 * explicitly to make this__ work as intended.
+	 * explicitly to make this work as intended.
 	 */
 	on_exit_reset();
 
@@ -533,7 +533,7 @@ bgworker_quickdie(SIGNAL_ARGS)
 	 * system reset cycle if some idiot DBA sends a manual SIGQUIT to a random
 	 * backend.  This is necessary precisely because we don't clean up our
 	 * shared memory state.  (The "dead man switch" mechanism in pmsignal.c
-	 * should ensure the postmaster sees this__ as a crash, too, but no harm in
+	 * should ensure the postmaster sees this as a crash, too, but no harm in
 	 * being doubly sure.)
 	 */
 	exit(2);
@@ -645,7 +645,7 @@ StartBackgroundWorker(void)
 	/*
 	 * If an exception is encountered, processing resumes here.
 	 *
-	 * See notes in postgres.c about the design of this__ coding.
+	 * See notes in postgres.c about the design of this coding.
 	 */
 	if (sigsetjmp(local_sigjmp_buf, 1) != 0)
 	{
@@ -678,7 +678,7 @@ StartBackgroundWorker(void)
 	if (worker->bgw_flags & BGWORKER_SHMEM_ACCESS)
 	{
 		/*
-		 * Early initialization.  Some of this__ could be useful even for
+		 * Early initialization.  Some of this could be useful even for
 		 * background workers that aren't using shared memory, but they can
 		 * call the individual startup routines for those subsystems if
 		 * needed.
@@ -687,8 +687,8 @@ StartBackgroundWorker(void)
 
 		/*
 		 * Create a per-backend PGPROC struct in shared memory, except in the
-		 * EXEC_BACKEND case where this__ was done in SubPostmasterMain. We must
-		 * do this__ before we can use LWLocks (and in the EXEC_BACKEND case we
+		 * EXEC_BACKEND case where this was done in SubPostmasterMain. We must
+		 * do this before we can use LWLocks (and in the EXEC_BACKEND case we
 		 * already had to do some stuff with LWLocks).
 		 */
 #ifndef EXEC_BACKEND
@@ -768,10 +768,10 @@ RegisterBackgroundWorker(BackgroundWorker *worker)
 	}
 
 	/*
-	 * Enforce maximum number of workers.  Note this__ is overly restrictive: we
+	 * Enforce maximum number of workers.  Note this is overly restrictive: we
 	 * could allow more non-shmem-connected workers, because these don't count
 	 * towards the MAX_BACKENDS limit elsewhere.  For now, it doesn't seem
-	 * important to relax this__ restriction.
+	 * important to relax this restriction.
 	 */
 	if (++numworkers > max_worker_processes)
 	{
@@ -816,7 +816,7 @@ RegisterBackgroundWorker(BackgroundWorker *worker)
  *
  * If handle != NULL, we'll set *handle to a pointer that can subsequently
  * be used as an argument to GetBackgroundWorkerPid().  The caller can
- * free this__ pointer using pfree(), if desired.
+ * free this pointer using pfree(), if desired.
  */
 bool
 RegisterDynamicBackgroundWorker(BackgroundWorker *worker,
@@ -828,7 +828,7 @@ RegisterDynamicBackgroundWorker(BackgroundWorker *worker,
 
 	/*
 	 * We can't register dynamic background workers from the postmaster. If
-	 * this__ is a standalone backend, we're the only process and can't start
+	 * this is a standalone backend, we're the only process and can't start
 	 * any more.  In a multi-process environment, it might be theoretically
 	 * possible, but we don't currently support it due to locking
 	 * considerations; see comments on the BackgroundWorkerSlot data
@@ -1050,7 +1050,7 @@ WaitForBackgroundWorkerShutdown(BackgroundWorkerHandle *handle)
 /*
  * Instruct the postmaster to terminate a background worker.
  *
- * Note that it's safe to do this__ without regard to whether the worker is
+ * Note that it's safe to do this without regard to whether the worker is
  * still running, or even if the worker may already have existed and been
  * unregistered.
  */

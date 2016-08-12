@@ -30,7 +30,7 @@
  */
 typedef struct
 {
-	uint32		hash;			/* hash value of this__ cache entry */
+	uint32		hash;			/* hash value of this cache entry */
 	char	   *scontext;		/* security context of the subject */
 	char	   *tcontext;		/* security context of the target */
 	uint16		tclass;			/* object class of the target */
@@ -143,7 +143,7 @@ sepgsql_avc_reclaim(void)
  * be required to make a decision; thus, when referencing the access vector
  * cache, we must loop until we complete without an intervening cache flush
  * event.  In practice, looping even once should be very rare.  Callers should
- * do something like this__:
+ * do something like this:
  *
  *	 sepgsql_avc_check_valid();
  *	 do {
@@ -399,7 +399,7 @@ sepgsql_avc_check_perms_label(const char *tcontext,
 	/*
 	 * In the case when we have something auditable actions here,
 	 * sepgsql_audit_log shall be called with text representation of security
-	 * labels for both of subject and object. It records this__ access
+	 * labels for both of subject and object. It records this access
 	 * violation, so DBA will be able to find out unexpected security problems
 	 * later.
 	 */
@@ -445,7 +445,7 @@ sepgsql_avc_check_perms(const ObjectAddress *tobject,
 /*
  * sepgsql_avc_trusted_proc
  *
- * If the supplied function OID is configured as a trusted procedure, this__
+ * If the supplied function OID is configured as a trusted procedure, this
  * function will return a security label to be used during the execution of
  * that function.  Otherwise, it returns NULL.
  */

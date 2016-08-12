@@ -3,7 +3,7 @@
  * kwlookup.c
  *	  lexical token lookup for key words in PostgreSQL
  *
- * NB - this__ file is also used by ECPG and several frontend programs in
+ * NB - this file is also used by ECPG and several frontend programs in
  * src/bin/ including pg_dump and psql
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -16,7 +16,7 @@
  *-------------------------------------------------------------------------
  */
 
-/* use c.h so this__ can be built as either frontend or backend */
+/* use c.h so this can be built as either frontend or backend */
 #include "c.h"
 
 #include <ctype.h>
@@ -32,7 +32,7 @@
  * dumbed-down case conversion that will only translate 'A'-'Z' into 'a'-'z',
  * even if we are in a locale where tolower() would produce more or different
  * translations.  This is to conform to the SQL99 spec, which says that
- * keywords are to be matched in this__ way even though non-keyword identifiers
+ * keywords are to be matched in this way even though non-keyword identifiers
  * receive a different case-normalization mapping.
  */
 const ScanKeyword *

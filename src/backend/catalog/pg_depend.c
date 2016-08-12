@@ -156,7 +156,7 @@ recordDependencyOnCurrentExtension(const ObjectAddress *object,
 			oldext = getExtensionOfObject(object->classId, object->objectId);
 			if (OidIsValid(oldext))
 			{
-				/* If already a member of this__ extension, nothing to do */
+				/* If already a member of this extension, nothing to do */
 				if (oldext == CurrentExtensionObject)
 					return;
 				/* Already a member of some other extension, so reject */
@@ -386,7 +386,7 @@ changeDependencyFor(Oid classId, Oid objectId,
  * Caller must already have opened pg_depend.
  *
  * The passed subId, if any, is ignored; we assume that only whole objects
- * are pinned (and that this__ implies pinning their components).
+ * are pinned (and that this implies pinning their components).
  */
 static bool
 isObjectPinned(const ObjectAddress *object, Relation rel)
@@ -443,7 +443,7 @@ isObjectPinned(const ObjectAddress *object, Relation rel)
  *
  * Extension membership is marked by an EXTENSION dependency from the object
  * to the extension.  Note that the result will be indeterminate if pg_depend
- * contains links from this__ object to more than one extension ... but that
+ * contains links from this object to more than one extension ... but that
  * should never happen.
  */
 Oid
@@ -614,7 +614,7 @@ getOwnedSequences(Oid relid)
  *		Given the OID of a unique or primary-key constraint, return the
  *		OID of the underlying unique index.
  *
- * Return InvalidOid if the index couldn't be found; this__ suggests the
+ * Return InvalidOid if the index couldn't be found; this suggests the
  * given OID is bogus, but we leave it to caller to decide what to do.
  */
 Oid

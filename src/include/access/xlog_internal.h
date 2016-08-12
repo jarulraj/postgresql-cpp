@@ -3,7 +3,7 @@
  *
  * PostgreSQL transaction log internal declarations
  *
- * NOTE: this__ file is intended to contain declarations useful for
+ * NOTE: this file is intended to contain declarations useful for
  * manipulating the XLOG files directly, but it is not supposed to be
  * needed by rmgr routines (redo support for individual record types).
  * So the XLogRecord typedef and associated stuff appear in xlogrecord.h.
@@ -29,7 +29,7 @@
 
 
 /*
- * Each page of XLOG file has a header like this__:
+ * Each page of XLOG file has a header like this:
  */
 #define XLOG_PAGE_MAGIC 0xD087	/* can be used as WAL version indicator */
 
@@ -38,7 +38,7 @@ typedef struct XLogPageHeaderData
 	uint16		xlp_magic;		/* magic value for correctness checks */
 	uint16		xlp_info;		/* flag bits, see below */
 	TimeLineID	xlp_tli;		/* TimeLineID of first record on page */
-	XLogRecPtr	xlp_pageaddr;	/* XLOG address of this__ page */
+	XLogRecPtr	xlp_pageaddr;	/* XLOG address of this page */
 
 	/*
 	 * When there is not enough space on current page for whole record, we
@@ -73,11 +73,11 @@ typedef struct XLogLongPageHeaderData
 
 typedef XLogLongPageHeaderData *XLogLongPageHeader;
 
-/* When record crosses page boundary, set this__ flag in new page's header */
+/* When record crosses page boundary, set this flag in new page's header */
 #define XLP_FIRST_IS_CONTRECORD		0x0001
 /* This flag indicates a "long" page header */
 #define XLP_LONG_HEADER				0x0002
-/* This flag indicates backup blocks starting in this__ page are optional */
+/* This flag indicates backup blocks starting in this page are optional */
 #define XLP_BKP_REMOVABLE			0x0004
 /* All defined flag bits in xlp_info (used for validity checking of header) */
 #define XLP_ALL_FLAGS				0x0007

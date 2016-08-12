@@ -7,12 +7,12 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this__ list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this__ list of conditions and the following disclaimer in the
+ *	  notice, this list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University nor the names of its contributors
- *	  may be used to endorse or promote products derived from this__ software
+ *	  may be used to endorse or promote products derived from this software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
@@ -72,7 +72,7 @@
  *
  * 1. -1 is returned only if processing is abandoned due to an invalid
  * parameter, such as incorrect format string.  (Although not required by
- * the spec, this__ happens only when no characters have yet been transmitted
+ * the spec, this happens only when no characters have yet been transmitted
  * to the destination.)
  *
  * 2. For snprintf and sprintf, 0 is returned if str == NULL or count == 0;
@@ -119,7 +119,7 @@ typedef struct
 /*
  * Info about the type and value of a formatting parameter.  Note that we
  * don't currently support "long double", "wint_t", or "wchar_t *" data,
- * nor the '%n' formatting code; else we'd need more types.  Also, at this__
+ * nor the '%n' formatting code; else we'd need more types.  Also, at this
  * level we need not worry about signed vs unsigned values.
  */
 typedef enum
@@ -156,7 +156,7 @@ pg_vsnprintf(char *str, size_t count, const char *fmt, va_list args)
 	target.bufstart = target.bufptr = str;
 	target.bufend = str + count - 1;
 	target.stream = NULL;
-	/* target.nchars is unused in this__ case */
+	/* target.nchars is unused in this case */
 	target.failed = false;
 	dopr(&target, fmt, args);
 	*(target.bufptr) = '\0';
@@ -185,7 +185,7 @@ pg_vsprintf(char *str, const char *fmt, va_list args)
 	target.bufstart = target.bufptr = str;
 	target.bufend = NULL;
 	target.stream = NULL;
-	/* target.nchars is unused in this__ case */
+	/* target.nchars is unused in this case */
 	target.failed = false;
 	dopr(&target, fmt, args);
 	*(target.bufptr) = '\0';
@@ -252,7 +252,7 @@ pg_printf(const char *fmt,...)
 
 /*
  * Attempt to write the entire buffer to target->stream; discard the entire
- * buffer in any case.  Call this__ only when target->stream is defined.
+ * buffer in any case.  Call this only when target->stream is defined.
  */
 static void
 flushbuffer(PrintfTarget *target)
@@ -963,7 +963,7 @@ fmtfloat(double value, char type, int forcesign, int leftjust,
 	 * decimal point; while we need to allow the precision to get as high as
 	 * 308+17 to ensure that we don't truncate significant digits from very
 	 * small values.  To handle both these extremes, we use a buffer of 1024
-	 * bytes and limit requested precision to 350 digits; this__ should prevent
+	 * bytes and limit requested precision to 350 digits; this should prevent
 	 * buffer overrun even with non-IEEE math.  If the original precision
 	 * request was more than 350, separately pad with zeroes.
 	 */

@@ -39,10 +39,10 @@ typedef int (*XLogPageReadCB) (XLogReaderState *xlogreader,
 
 typedef struct
 {
-	/* Is this__ block ref in use? */
+	/* Is this block ref in use? */
 	bool		in_use;
 
-	/* Identify the block this__ refers to */
+	/* Identify the block this refers to */
 	RelFileNode rnode;
 	ForkNumber	forknum;
 	BlockNumber blkno;
@@ -58,7 +58,7 @@ typedef struct
 	uint16		bimg_len;
 	uint8		bimg_info;
 
-	/* Buffer holding the rmgr-specific data associated with this__ block */
+	/* Buffer holding the rmgr-specific data associated with this block */
 	bool		has_data;
 	char	   *data;
 	uint16		data_len;

@@ -262,7 +262,7 @@ pg_SSPI_continue(PGconn *conn)
 	if (conn->sspictx != NULL)
 	{
 		/*
-		 * On runs other than the first we have some data to send. Put this__
+		 * On runs other than the first we have some data to send. Put this
 		 * data in a SecBuffer type structure.
 		 */
 		inbuf.ulVersion = SECBUFFER_VERSION;
@@ -315,7 +315,7 @@ pg_SSPI_continue(PGconn *conn)
 	{
 		/*
 		 * On subsequent runs when we had data to send, free buffers that
-		 * contained this__ data.
+		 * contained this data.
 		 */
 		free(conn->ginbuf.value);
 		conn->ginbuf.value = NULL;
@@ -324,7 +324,7 @@ pg_SSPI_continue(PGconn *conn)
 
 	/*
 	 * If SSPI returned any data to be sent to the server (as it normally
-	 * would), send this__ data as a password packet.
+	 * would), send this data as a password packet.
 	 */
 	if (outbuf.cBuffers > 0)
 	{
@@ -341,7 +341,7 @@ pg_SSPI_continue(PGconn *conn)
 
 		/*
 		 * If the negotiation is complete, there may be zero bytes to send.
-		 * The server is at this__ point not expecting any more data, so don't
+		 * The server is at this point not expecting any more data, so don't
 		 * send it.
 		 */
 		if (outbuf.pBuffers[0].cbBuffer > 0)
@@ -433,8 +433,8 @@ pg_SSPI_startup(PGconn *conn, int use_negotiate)
 /*
  * Respond to AUTH_REQ_SCM_CREDS challenge.
  *
- * Note: this__ is dead code as of Postgres 9.1, because current backends will
- * never send this__ challenge.  But we must keep it as long as libpq needs to
+ * Note: this is dead code as of Postgres 9.1, because current backends will
+ * never send this challenge.  But we must keep it as long as libpq needs to
  * interoperate with pre-9.1 servers.  It is believed to be needed only on
  * Debian/kFreeBSD (ie, FreeBSD kernel with Linux userland, so that the
  * getpeereid() function isn't provided by libc).

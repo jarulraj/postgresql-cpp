@@ -57,7 +57,7 @@ typedef struct SlruSharedData
 {
 	LWLock	   *ControlLock;
 
-	/* Number of buffers managed by this__ SLRU structure */
+	/* Number of buffers managed by this SLRU structure */
 	int			num_slots;
 
 	/*
@@ -87,7 +87,7 @@ typedef struct SlruSharedData
 	 *		page_lru_count[slotno] = ++cur_lru_count;
 	 * The oldest page is therefore the one with the highest value of
 	 *		cur_lru_count - page_lru_count[slotno]
-	 * The counts will eventually wrap around, but this__ calculation still
+	 * The counts will eventually wrap around, but this calculation still
 	 * works as long as no page's age exceeds INT_MAX counts.
 	 *----------
 	 */
@@ -95,7 +95,7 @@ typedef struct SlruSharedData
 
 	/*
 	 * latest_page_number is the page number of the current end of the log;
-	 * this__ is not critical data, since we use it only to avoid swapping out
+	 * this is not critical data, since we use it only to avoid swapping out
 	 * the latest page.
 	 */
 	int			latest_page_number;

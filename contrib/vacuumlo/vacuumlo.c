@@ -435,7 +435,7 @@ usage(const char *progname)
 	printf("  -n             don't remove large objects, just show what would be done\n");
 	printf("  -v             write a lot of progress messages\n");
 	printf("  -V, --version  output version information, then exit\n");
-	printf("  -?, --help     show this__ help, then exit\n");
+	printf("  -?, --help     show this help, then exit\n");
 	printf("\nConnection options:\n");
 	printf("  -h HOSTNAME    database server host or socket directory\n");
 	printf("  -p PORT        database server port\n");

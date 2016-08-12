@@ -80,13 +80,13 @@ lnext:
 		HTSU_Result test;
 		HeapTuple	copyTuple;
 
-		/* clear any leftover test tuple for this__ rel */
+		/* clear any leftover test tuple for this rel */
 		testTuple = &(node->lr_curtuples[erm->rti - 1]);
 		if (*testTuple != NULL)
 			heap_freetuple(*testTuple);
 		*testTuple = NULL;
 
-		/* if child rel, must check whether it produced this__ row */
+		/* if child rel, must check whether it produced this row */
 		if (erm->rti != erm->prti)
 		{
 			Oid			tableoid;
@@ -102,7 +102,7 @@ lnext:
 			Assert(OidIsValid(erm->relid));
 			if (tableoid != erm->relid)
 			{
-				/* this__ child is inactive right now */
+				/* this child is inactive right now */
 				erm->ermActive = false;
 				ItemPointerSetInvalid(&(erm->curCtid));
 				continue;
@@ -125,7 +125,7 @@ lnext:
 			bool		updated = false;
 
 			fdwroutine = GetFdwRoutineForRelation(erm->relation, false);
-			/* this__ should have been checked already, but let's be safe */
+			/* this should have been checked already, but let's be safe */
 			if (fdwroutine->RefetchForeignRow == NULL)
 				ereport(ERROR,
 						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
@@ -137,7 +137,7 @@ lnext:
 													  &updated);
 			if (copyTuple == NULL)
 			{
-				/* couldn't get the lock, so skip this__ row */
+				/* couldn't get the lock, so skip this row */
 				goto lnext;
 			}
 
@@ -268,7 +268,7 @@ lnext:
 		/*
 		 * Transfer any already-fetched tuples into the EPQ state, and fetch a
 		 * copy of any rows that were successfully locked without any update
-		 * having occurred.  (We do this__ in a separate pass so as to avoid
+		 * having occurred.  (We do this in a separate pass so as to avoid
 		 * overhead in the common case where there are no concurrent updates.)
 		 * Make sure any inactive child rels have NULL test tuples in EPQ.
 		 */
@@ -290,11 +290,11 @@ lnext:
 			/* was tuple updated and fetched above? */
 			if (node->lr_curtuples[erm->rti - 1] != NULL)
 			{
-				/* yes, so set it as the EPQ test tuple for this__ rel */
+				/* yes, so set it as the EPQ test tuple for this rel */
 				EvalPlanQualSetTuple(&node->lr_epqstate,
 									 erm->rti,
 									 node->lr_curtuples[erm->rti - 1]);
-				/* freeing this__ tuple is now the responsibility of EPQ */
+				/* freeing this tuple is now the responsibility of EPQ */
 				node->lr_curtuples[erm->rti - 1] = NULL;
 				continue;
 			}
@@ -380,7 +380,7 @@ ExecInitLockRows(LockRows *node, EState *estate, int eflags)
 
 	/*
 	 * LockRows nodes do no projections, so initialize projection info for
-	 * this__ node appropriately
+	 * this node appropriately
 	 */
 	ExecAssignResultTypeFromTL(&lrstate->ps);
 	lrstate->ps.ps_ProjInfo = NULL;
@@ -393,7 +393,7 @@ ExecInitLockRows(LockRows *node, EState *estate, int eflags)
 		palloc0(lrstate->lr_ntables * sizeof(HeapTuple));
 
 	/*
-	 * Locate the ExecRowMark(s) that this__ node is responsible for, and
+	 * Locate the ExecRowMark(s) that this node is responsible for, and
 	 * construct ExecAuxRowMarks for them.  (InitPlan should already have
 	 * built the global list of ExecRowMarks.)
 	 */
@@ -441,7 +441,7 @@ ExecInitLockRows(LockRows *node, EState *estate, int eflags)
  *		ExecEndLockRows
  *
  *		This shuts down the subplan and frees resources allocated
- *		to this__ node.
+ *		to this node.
  * ----------------------------------------------------------------
  */
 void

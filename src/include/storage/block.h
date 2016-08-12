@@ -37,7 +37,7 @@ typedef uint32 BlockNumber;
 /*
  * BlockId:
  *
- * this__ is a storage type for BlockNumber.  in other words, this__ type
+ * this is a storage type for BlockNumber.  in other words, this type
  * is used for on-disk structures (e.g., in HeapTupleData) whereas
  * BlockNumber is the type on which calculations are performed (e.g.,
  * in access method code).
@@ -45,10 +45,10 @@ typedef uint32 BlockNumber;
  * there doesn't appear to be any reason to have separate types except
  * for the fact that BlockIds can be SHORTALIGN'd (and therefore any
  * structures that contains them, such as ItemPointerData, can also be
- * SHORTALIGN'd).  this__ is an important consideration for reducing the
+ * SHORTALIGN'd).  this is an important consideration for reducing the
  * space requirements of the line pointer (ItemIdData) array on each
  * page and the header of each heap or index tuple, so it doesn't seem
- * wise to change this__ without good reason.
+ * wise to change this without good reason.
  */
 typedef struct BlockIdData
 {

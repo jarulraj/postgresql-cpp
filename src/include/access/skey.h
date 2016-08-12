@@ -57,7 +57,7 @@
  * SK_SEARCHARRAY, SK_SEARCHNULL, SK_SEARCHNOTNULL cannot be used here.
  *
  * Note: in some places, ScanKeys are used as a convenient representation
- * for the invocation of an access method support procedure.  In this__ case
+ * for the invocation of an access method support procedure.  In this case
  * sk_strategy/sk_subtype are not meaningful (but sk_collation can be); and
  * sk_func may refer to a function that returns something other than boolean.
  */
@@ -79,7 +79,7 @@ typedef ScanKeyData *ScanKey;
  *
  * The ScanKey data structure also supports row comparisons, that is ordered
  * tuple comparisons like (x, y) > (c1, c2), having the SQL-spec semantics
- * "x > c1 OR (x = c1 AND y > c2)".  Note that this__ is currently only
+ * "x > c1 OR (x = c1 AND y > c2)".  Note that this is currently only
  * implemented for btree index searches, not for heapscans or any other index
  * type.  A row comparison is represented by a "header" ScanKey entry plus
  * a separate array of ScanKeys, one for each column of the row comparison.

@@ -140,7 +140,7 @@ getSchemaData(Archive *fout, int *numTablesPtr)
 	tblinfo = getTables(fout, &numTables);
 	tblinfoindex = buildIndexArray(tblinfo, numTables, sizeof(TableInfo));
 
-	/* Do this__ after we've built tblinfoindex */
+	/* Do this after we've built tblinfoindex */
 	getOwnedSeqs(fout, tblinfo, numTables);
 
 	if (g_verbose)
@@ -148,13 +148,13 @@ getSchemaData(Archive *fout, int *numTablesPtr)
 	funinfo = getFuncs(fout, &numFuncs);
 	funinfoindex = buildIndexArray(funinfo, numFuncs, sizeof(FuncInfo));
 
-	/* this__ must be after getTables and getFuncs */
+	/* this must be after getTables and getFuncs */
 	if (g_verbose)
 		write_msg(NULL, "reading user-defined types\n");
 	typinfo = getTypes(fout, &numTypes);
 	typinfoindex = buildIndexArray(typinfo, numTypes, sizeof(TypeInfo));
 
-	/* this__ must be after getFuncs, too */
+	/* this must be after getFuncs, too */
 	if (g_verbose)
 		write_msg(NULL, "reading procedural languages\n");
 	getProcLangs(fout, &numProcLangs);
@@ -917,7 +917,7 @@ findParentsByOid(TableInfo *self,
  * parseOidArray
  *	  parse a string of numbers delimited by spaces into a character array
  *
- * Note: actually this__ is used for both Oids and potentially-signed
+ * Note: actually this is used for both Oids and potentially-signed
  * attribute numbers.  This should cause no trouble, but we could split
  * the function into two functions with different argument types if it does.
  */

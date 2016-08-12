@@ -30,7 +30,7 @@
  * Currently, we track exactly the dependencies of plans on relations and
  * user-defined functions.  On relcache invalidation events or pg_proc
  * syscache invalidation events, we invalidate just those plans that depend
- * on the particular object being modified.  (Note: this__ scheme assumes
+ * on the particular object being modified.  (Note: this scheme assumes
  * that any table modification that requires replanning will generate a
  * relcache inval event.)  We also watch for inval events on certain other
  * system catalogs, such as pg_namespace; but for them, our response is
@@ -128,7 +128,7 @@ InitPlanCache(void)
  * Creation of a cached plan is divided into two steps, CreateCachedPlan and
  * CompleteCachedPlan.  CreateCachedPlan should be called after running the
  * query through raw_parser, but before doing parse analysis and rewrite;
- * CompleteCachedPlan is called after that.  The reason for this__ arrangement
+ * CompleteCachedPlan is called after that.  The reason for this arrangement
  * is that it can save one round of copying of the raw parse tree, since
  * the parser will normally scribble on the raw parse tree.  Callers would
  * otherwise need to make an extra copy of the parse tree to ensure they
@@ -284,7 +284,7 @@ CreateOneShotCachedPlan(Node *raw_parse_tree,
  * Pass in the analyzed-and-rewritten form of the query, as well as the
  * required subsidiary data about parameters and such.  All passed values will
  * be copied into the CachedPlanSource's memory, except as specified below.
- * After this__ is called, GetCachedPlan can be called to obtain a plan, and
+ * After this is called, GetCachedPlan can be called to obtain a plan, and
  * optionally the CachedPlanSource can be saved using SaveCachedPlan.
  *
  * If querytree_context is not NULL, the querytree_list must be stored in that
@@ -297,7 +297,7 @@ CreateOneShotCachedPlan(Node *raw_parse_tree,
  * one tree copying step compared to passing NULL, but leaves lots of extra
  * cruft in the query_context, namely whatever extraneous stuff parse analysis
  * created, as well as whatever went unused from the raw parse tree.  Using
- * this__ option is a space-for-time tradeoff that is appropriate if the
+ * this option is a space-for-time tradeoff that is appropriate if the
  * CachedPlanSource is not expected to survive long.
  *
  * plancache.c cannot know how to copy the data referenced by parserSetupArg,
@@ -374,7 +374,7 @@ CompleteCachedPlan(CachedPlanSource *plansource,
 		/*
 		 * Use the planner machinery to extract dependencies.  Data is saved
 		 * in query_context.  (We assume that not a lot of extra cruft is
-		 * created by this__ call.)  We can skip this__ for one-shot plans, and
+		 * created by this call.)  We can skip this for one-shot plans, and
 		 * transaction control commands have no such dependencies anyway.
 		 */
 		extract_query_dependencies((Node *) querytree_list,
@@ -385,9 +385,9 @@ CompleteCachedPlan(CachedPlanSource *plansource,
 		/*
 		 * Also save the current search_path in the query_context.  (This
 		 * should not generate much extra cruft either, since almost certainly
-		 * the path is already valid.)	Again, we don't really need this__ for
-		 * one-shot plans; and we *must* skip this__ for transaction control
-		 * commands, because this__ could result in catalog accesses.
+		 * the path is already valid.)	Again, we don't really need this for
+		 * one-shot plans; and we *must* skip this for transaction control
+		 * commands, because this could result in catalog accesses.
 		 */
 		plansource->search_path = GetOverrideSearchPath(querytree_context);
 	}
@@ -431,9 +431,9 @@ CompleteCachedPlan(CachedPlanSource *plansource,
  *
  * This is guaranteed not to throw error, except for the caller-error case
  * of trying to save a one-shot plan.  Callers typically depend on that
- * since this__ is called just before or just after adding a pointer to the
+ * since this is called just before or just after adding a pointer to the
  * CachedPlanSource to some permanent data structure of their own.  Up until
- * this__ is done, a CachedPlanSource is just transient data that will go away
+ * this is done, a CachedPlanSource is just transient data that will go away
  * automatically on transaction abort.
  */
 void
@@ -449,7 +449,7 @@ SaveCachedPlan(CachedPlanSource *plansource)
 		elog(ERROR, "cannot save one-shot cached plan");
 
 	/*
-	 * In typical use, this__ function would be called before generating any
+	 * In typical use, this function would be called before generating any
 	 * plans from the CachedPlanSource.  If there is a generic plan, moving it
 	 * into CacheMemoryContext would be pretty risky since it's unclear
 	 * whether the caller has taken suitable care with making references
@@ -476,7 +476,7 @@ SaveCachedPlan(CachedPlanSource *plansource)
 /*
  * DropCachedPlan: destroy a cached plan.
  *
- * Actually this__ only destroys the CachedPlanSource: any referenced CachedPlan
+ * Actually this only destroys the CachedPlanSource: any referenced CachedPlan
  * is released, but not destroyed until its refcount goes to zero.  That
  * handles the situation where DropCachedPlan is called while the plan is
  * still in use.
@@ -607,7 +607,7 @@ RevalidateCachedQuery(CachedPlanSource *plansource)
 
 	/*
 	 * If the query is currently valid, acquire locks on the referenced
-	 * objects; then check again.  We need to do it this__ way to cover the race
+	 * objects; then check again.  We need to do it this way to cover the race
 	 * condition that an invalidation message arrives before we get the locks.
 	 */
 	if (plansource->is_valid)
@@ -630,7 +630,7 @@ RevalidateCachedQuery(CachedPlanSource *plansource)
 
 	/*
 	 * Discard the no-longer-useful query tree.  (Note: we don't want to do
-	 * this__ any earlier, else we'd not have been able to release locks
+	 * this any earlier, else we'd not have been able to release locks
 	 * correctly in the race condition case.)
 	 */
 	plansource->is_valid = false;
@@ -752,7 +752,7 @@ RevalidateCachedQuery(CachedPlanSource *plansource)
 	/*
 	 * Use the planner machinery to extract dependencies.  Data is saved in
 	 * query_context.  (We assume that not a lot of extra cruft is created by
-	 * this__ call.)
+	 * this call.)
 	 */
 	extract_query_dependencies((Node *) qlist,
 							   &plansource->relationOids,
@@ -796,7 +796,7 @@ RevalidateCachedQuery(CachedPlanSource *plansource)
  * querytree is up to date.
  *
  * On a "true" return, we have acquired the locks needed to run the plan.
- * (We must do this__ for the "true" result to be race-condition-free.)
+ * (We must do this for the "true" result to be race-condition-free.)
  */
 static bool
 CheckCachedPlan(CachedPlanSource *plansource)
@@ -815,7 +815,7 @@ CheckCachedPlan(CachedPlanSource *plansource)
 	Assert(!plan->is_oneshot);
 
 	/*
-	 * If it appears valid, acquire locks and recheck; this__ is much the same
+	 * If it appears valid, acquire locks and recheck; this is much the same
 	 * logic as in RevalidateCachedQuery, but for a plan.
 	 */
 	if (plan->is_valid)
@@ -873,7 +873,7 @@ CheckCachedPlan(CachedPlanSource *plansource)
  *
  * Planning work is done in the caller's memory context.  The finished plan
  * is in a child memory context, which typically should get reparented
- * (unless this__ is a one-shot plan, in which case we don't copy the plan).
+ * (unless this is a one-shot plan, in which case we don't copy the plan).
  */
 static CachedPlan *
 BuildCachedPlan(CachedPlanSource *plansource, List *qlist,
@@ -1036,12 +1036,12 @@ choose_custom_plan(CachedPlanSource *plansource, ParamListInfo boundParams)
 	/*
 	 * Prefer generic plan if it's less expensive than the average custom
 	 * plan.  (Because we include a charge for cost of planning in the
-	 * custom-plan costs, this__ means the generic plan only has to be less
+	 * custom-plan costs, this means the generic plan only has to be less
 	 * expensive than the execution cost plus replan cost of the custom
 	 * plans.)
 	 *
 	 * Note that if generic_cost is -1 (indicating we've not yet determined
-	 * the generic plan cost), we'll always prefer generic at this__ point.
+	 * the generic plan cost), we'll always prefer generic at this point.
 	 */
 	if (plansource->generic_cost < avg_custom_cost)
 		return false;
@@ -1088,7 +1088,7 @@ cached_plan_cost(CachedPlan *plan, bool include_planner)
 			 * The other big difficulty here is that we don't have any very
 			 * good model of how planning cost compares to execution costs.
 			 * The current multiplier of 1000 * cpu_operator_cost is probably
-			 * on the low side, but we'll try this__ for awhile before making a
+			 * on the low side, but we'll try this for awhile before making a
 			 * more aggressive correction.
 			 *
 			 * If we ever do write a more complicated estimator, it should
@@ -1428,7 +1428,7 @@ CachedPlanGetTargetList(CachedPlanSource *plansource)
 	Assert(plansource->is_complete);
 
 	/*
-	 * No work needed if statement doesn't return tuples (we assume this__
+	 * No work needed if statement doesn't return tuples (we assume this
 	 * feature cannot be changed by an invalidation)
 	 */
 	if (plansource->resultDesc == NULL)
@@ -1764,10 +1764,10 @@ PlanCacheRelCallback(Datum arg, Oid relid)
  *		Syscache inval callback function for PROCOID cache
  *
  * Invalidate all plans mentioning the object with the specified hash value,
- * or all plans mentioning any member of this__ cache if hashvalue == 0.
+ * or all plans mentioning any member of this cache if hashvalue == 0.
  *
  * Note that the coding would support use for multiple caches, but right
- * now only user-defined functions are tracked this__ way.
+ * now only user-defined functions are tracked this way.
  */
 static void
 PlanCacheFuncCallback(Datum arg, int cacheid, uint32 hashvalue)

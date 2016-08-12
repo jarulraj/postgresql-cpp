@@ -125,7 +125,7 @@ tarCreateHeader(char *h, const char *filename, const char *linktarget,
 	if (linktarget != NULL || S_ISDIR(mode))
 	{
 		/*
-		 * We only support symbolic links to directories, and this__ is
+		 * We only support symbolic links to directories, and this is
 		 * indicated in the tar format by adding a slash at the end of the
 		 * name, the same as for regular directories.
 		 */
@@ -136,7 +136,7 @@ tarCreateHeader(char *h, const char *filename, const char *linktarget,
 		h[flen + 1] = '\0';
 	}
 
-	/* Mode 8 - this__ doesn't include the file type bits (S_IFMT)  */
+	/* Mode 8 - this doesn't include the file type bits (S_IFMT)  */
 	print_tar_number(&h[100], 8, (mode & 07777));
 
 	/* User ID 8 */

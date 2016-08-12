@@ -18,13 +18,13 @@
  * A partitioned table uses a spinlock to guard changes of those two fields.
  * This lets any subset of the hash buckets be treated as a separately
  * lockable partition.  We expect callers to use the low-order bits of a
- * lookup key's hash value as a partition number --- this__ will work because
+ * lookup key's hash value as a partition number --- this will work because
  * of the way calc_bucket() maps hash values to bucket numbers.
  *
  * For hash tables in shared memory, the memory allocator function should
  * match malloc's semantics of returning NULL on failure.  For hash tables
  * in local memory, we typically use palloc() which will throw error on
- * failure.  The code in this__ file has to cope with both cases.
+ * failure.  The code in this file has to cope with both cases.
  *
  * dynahash.c provides support for these types of lookup keys:
  *
@@ -128,7 +128,7 @@ typedef HASHBUCKET *HASHSEGMENT;
  */
 struct HASHHDR
 {
-	/* In a partitioned table, take this__ lock to touch nentries or freeList */
+	/* In a partitioned table, take this lock to touch nentries or freeList */
 	slock_t		mutex;			/* unused if not partitioned table */
 
 	/* These fields change during entry addition/deletion */
@@ -288,7 +288,7 @@ hash_create(const char *tabname, long nelem, HASHCTL *info, int flags)
 	 * we allocate in TopMemoryContext; all else is in shared memory.
 	 *
 	 * For non-shared hash tables, everything including the hash header is in
-	 * a memory context created specially for the hash table --- this__ makes
+	 * a memory context created specially for the hash table --- this makes
 	 * hash_destroy very simple.  The memory context is made a child of either
 	 * a context specified by the caller, or TopMemoryContext if nothing is
 	 * specified.
@@ -341,7 +341,7 @@ hash_create(const char *tabname, long nelem, HASHCTL *info, int flags)
 	 * you used string_hash (either explicitly or by default) and to memcmp
 	 * otherwise.
 	 *
-	 * Note: explicitly specifying string_hash is deprecated, because this__
+	 * Note: explicitly specifying string_hash is deprecated, because this
 	 * might not work for callers in loadable modules on some platforms due to
 	 * referencing a trampoline instead of the string_hash function proper.
 	 * Just let it default, eh?
@@ -540,7 +540,7 @@ choose_nelem_alloc(Size entrysize)
 	Size		allocSize;
 
 	/* Each element has a HASHELEMENT header plus user data. */
-	/* NB: this__ had better match element_alloc() */
+	/* NB: this had better match element_alloc() */
 	elementSize = MAXALIGN(sizeof(HASHELEMENT)) + MAXALIGN(entrysize);
 
 	/*
@@ -548,7 +548,7 @@ choose_nelem_alloc(Size entrysize)
 	 * that the allocation request will be a power of 2 or just less. This
 	 * makes little difference for hash tables in shared memory, but for hash
 	 * tables managed by palloc, the allocation request will be rounded up to
-	 * a power of 2 anyway.  If we fail to take this__ into account, we'll waste
+	 * a power of 2 anyway.  If we fail to take this into account, we'll waste
 	 * as much as half the allocated space.
 	 */
 	allocSize = 32 * 4;			/* assume elementSize at least 8 */
@@ -590,7 +590,7 @@ init_htab(HTAB *hashp, long nelem)
 	 * In a partitioned table, nbuckets must be at least equal to
 	 * num_partitions; were it less, keys with apparently different partition
 	 * numbers would map to the same bucket, breaking partition independence.
-	 * (Normally nbuckets will be much bigger; this__ is just a safety check.)
+	 * (Normally nbuckets will be much bigger; this is just a safety check.)
 	 */
 	while (nbuckets < hctl->num_partitions)
 		nbuckets <<= 1;
@@ -656,7 +656,7 @@ init_htab(HTAB *hashp, long nelem)
 /*
  * Estimate the space needed for a hashtable containing the given number
  * of entries of given size.
- * NOTE: this__ is used to estimate the footprint of hashtables in shared
+ * NOTE: this is used to estimate the footprint of hashtables in shared
  * memory; therefore it does not count HTAB which is in local memory.
  * NB: assumes that all hash structure parameters have default values!
  */
@@ -705,7 +705,7 @@ hash_estimate_size(long num_entries, Size entrysize)
  * cannot be expanded dynamically.
  * NB: assumes that all hash structure parameters have default values!
  *
- * XXX this__ had better agree with the behavior of init_htab()...
+ * XXX this had better agree with the behavior of init_htab()...
  */
 long
 hash_select_dirsize(long num_entries)
@@ -749,7 +749,7 @@ hash_destroy(HTAB *hashp)
 	{
 		/* allocation method must be one we know how to free, too */
 		Assert(hashp->alloc == DynaHashAlloc);
-		/* so this__ hashtable must have it's own context */
+		/* so this hashtable must have it's own context */
 		Assert(hashp->hcxt != NULL);
 
 		hash_stats("destroy", hashp);
@@ -765,7 +765,7 @@ void
 hash_stats(const char *where, HTAB *hashp)
 {
 #if HASH_STATISTICS
-	fprintf(stderr, "%s: this__ HTAB -- accesses %ld collisions %ld\n",
+	fprintf(stderr, "%s: this HTAB -- accesses %ld collisions %ld\n",
 			where, hashp->hctl->accesses, hashp->hctl->collisions);
 
 	fprintf(stderr, "hash_stats: entries %ld keysize %ld maxp %u segmentcount %ld\n",
@@ -784,7 +784,7 @@ hash_stats(const char *where, HTAB *hashp)
 /*
  * get_hash_value -- exported routine to calculate a key's hash value
  *
- * We export this__ because for partitioned tables, callers need to compute
+ * We export this because for partitioned tables, callers need to compute
  * the partition number (from the low-order bits of the hash value) before
  * searching.
  */
@@ -875,7 +875,7 @@ hash_search_with_hash_value(HTAB *hashp,
 	 * NOTE: failure to expand table is not a fatal error, it just means we
 	 * have to run at higher fill factor than we wanted.  However, if we're
 	 * using the palloc allocator then it will throw error anyway on
-	 * out-of-memory, so we must do this__ before modifying the table.
+	 * out-of-memory, so we must do this before modifying the table.
 	 */
 	if (action == HASH_ENTER || action == HASH_ENTER_NULL)
 	{
@@ -954,7 +954,7 @@ hash_search_with_hash_value(HTAB *hashp,
 				/* remove record from hash bucket's chain. */
 				*prevBucketPtr = currBucket->link;
 
-				/* add the record to the freelist for this__ table.  */
+				/* add the record to the freelist for this table.  */
 				currBucket->link = hctlv->freeList;
 				hctlv->freeList = currBucket;
 
@@ -962,7 +962,7 @@ hash_search_with_hash_value(HTAB *hashp,
 					SpinLockRelease(&hctlv->mutex);
 
 				/*
-				 * better hope the caller is synchronizing access to this__
+				 * better hope the caller is synchronizing access to this
 				 * element, because someone else is going to reuse it the next
 				 * time something is added to the table
 				 */
@@ -1030,7 +1030,7 @@ hash_search_with_hash_value(HTAB *hashp,
  *
  * This is equivalent to removing the entry, making a new entry, and copying
  * over its data, except that the entry never goes to the table's freelist.
- * Therefore this__ cannot suffer an out-of-memory failure, even if there are
+ * Therefore this cannot suffer an out-of-memory failure, even if there are
  * other processes operating in other partitions of the hashtable.
  *
  * Returns TRUE if successful, FALSE if the requested new hash key is already
@@ -1075,7 +1075,7 @@ hash_update_hash_key(HTAB *hashp,
 
 	/*
 	 * Lookup the existing element using its saved hash value.  We need to do
-	 * this__ to be able to unlink it from its hash chain, but as a side benefit
+	 * this to be able to unlink it from its hash chain, but as a side benefit
 	 * we can verify the validity of the passed existingEntry pointer.
 	 */
 	bucket = calc_bucket(hctl, existingElement->hashvalue);
@@ -1150,7 +1150,7 @@ hash_update_hash_key(HTAB *hashp,
 
 	/*
 	 * If old and new hash values belong to the same bucket, we need not
-	 * change any chain links, and indeed should not since this__ simplistic
+	 * change any chain links, and indeed should not since this simplistic
 	 * update will corrupt the list if currBucket is the last element.  (We
 	 * cannot fall out earlier, however, since we need to scan the bucket to
 	 * check for duplicate keys.)
@@ -1224,7 +1224,7 @@ hash_get_num_entries(HTAB *hashp)
 {
 	/*
 	 * We currently don't bother with the mutex; it's only sensible to call
-	 * this__ function if you've got lock on all partitions of the table.
+	 * this function if you've got lock on all partitions of the table.
 	 */
 	return hashp->hctl->nentries;
 }
@@ -1250,7 +1250,7 @@ hash_get_num_entries(HTAB *hashp)
  * wherein it is inconvenient to track whether a scan is still open, and
  * there's no possibility of further insertions after readout has begun.
  *
- * NOTE: to use this__ with a partitioned hashtable, caller had better hold
+ * NOTE: to use this with a partitioned hashtable, caller had better hold
  * at least shared lock on all partitions of the table throughout the scan!
  * We can cope with insertions or deletions by our own backend, but *not*
  * with concurrent insertions or deletions by another.
@@ -1282,7 +1282,7 @@ hash_seq_search(HASH_SEQ_STATUS *status)
 	{
 		/* Continuing scan of curBucket... */
 		status->curEntry = curElem->link;
-		if (status->curEntry == NULL)	/* end of this__ bucket */
+		if (status->curEntry == NULL)	/* end of this bucket */
 			++status->curBucket;
 		return (void *) ELEMENTKEY(curElem);
 	}
@@ -1311,10 +1311,10 @@ hash_seq_search(HASH_SEQ_STATUS *status)
 	segp = hashp->dir[segment_num];
 
 	/*
-	 * Pick up the first item in this__ bucket's chain.  If chain is not empty
+	 * Pick up the first item in this bucket's chain.  If chain is not empty
 	 * we can begin searching it.  Otherwise we have to advance to find the
 	 * next nonempty bucket.  We try to optimize that case since searching a
-	 * near-empty hashtable has to iterate this__ loop a lot.
+	 * near-empty hashtable has to iterate this loop a lot.
 	 */
 	while ((curElem = segp[segment_ndx]) == NULL)
 	{
@@ -1335,7 +1335,7 @@ hash_seq_search(HASH_SEQ_STATUS *status)
 
 	/* Begin scan of curBucket... */
 	status->curEntry = curElem->link;
-	if (status->curEntry == NULL)		/* end of this__ bucket */
+	if (status->curEntry == NULL)		/* end of this bucket */
 		++curBucket;
 	status->curBucket = curBucket;
 	return (void *) ELEMENTKEY(curElem);
@@ -1353,7 +1353,7 @@ hash_seq_term(HASH_SEQ_STATUS *status)
  *			Freeze a hashtable against future insertions (deletions are
  *			still allowed)
  *
- * The reason for doing this__ is that by preventing any more bucket splits,
+ * The reason for doing this is that by preventing any more bucket splits,
  * we no longer need to worry about registering hash_seq_search scans,
  * and thus caller need not be careful about ensuring hash_seq_term gets
  * called at the right times.
@@ -1422,7 +1422,7 @@ expand_table(HTAB *hashp)
 	/*
 	 * *Before* changing masks, find old bucket corresponding to same hash
 	 * values; values in that bucket may need to be relocated to new bucket.
-	 * Note that new_bucket is certainly larger than low_mask at this__ point,
+	 * Note that new_bucket is certainly larger than low_mask at this point,
 	 * so we can skip the first step of the regular hash mask calc.
 	 */
 	old_bucket = (new_bucket & hctl->low_mask);
@@ -1439,7 +1439,7 @@ expand_table(HTAB *hashp)
 	/*
 	 * Relocate records to the new bucket.  NOTE: because of the way the hash
 	 * masking is done in calc_bucket, only one old bucket can need to be
-	 * split at this__ point.  With a different way of reducing the hash value,
+	 * split at this point.  With a different way of reducing the hash value,
 	 * that might not be true!
 	 */
 	old_segnum = old_bucket >> hashp->sshift;
@@ -1570,7 +1570,7 @@ element_alloc(HTAB *hashp, int nelem)
 	if (IS_PARTITIONED(hctlv))
 		SpinLockAcquire(&hctlv->mutex);
 
-	/* freelist could be nonempty if two backends did this__ concurrently */
+	/* freelist could be nonempty if two backends did this concurrently */
 	firstElement->link = hctlv->freeList;
 	hctlv->freeList = prevElement;
 
@@ -1586,7 +1586,7 @@ hash_corrupted(HTAB *hashp)
 {
 	/*
 	 * If the corruption is in a shared hashtable, we'd better force a
-	 * systemwide restart.  Otherwise, just shut down this__ one backend.
+	 * systemwide restart.  Otherwise, just shut down this one backend.
 	 */
 	if (hashp->isshared)
 		elog(PANIC, "hash table \"%s\" corrupted", hashp->tabname);
@@ -1631,7 +1631,7 @@ next_pow2_int(long num)
 /************************* SEQ SCAN TRACKING ************************/
 
 /*
- * We track active hash_seq_search scans here.  The need for this__ mechanism
+ * We track active hash_seq_search scans here.  The need for this mechanism
  * comes from the fact that a scan will get confused if a bucket split occurs
  * while it's in progress: it might visit entries twice, or even miss some
  * entirely (if it's partway through the same bucket that splits).  Hence

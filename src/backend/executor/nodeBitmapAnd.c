@@ -135,7 +135,7 @@ MultiExecBitmapAnd(BitmapAndState *node)
 		 * If at any stage we have a completely empty bitmap, we can fall out
 		 * without evaluating the remaining subplans, since ANDing them can no
 		 * longer change the result.  (Note: the fact that indxpath.c orders
-		 * the subplans by selectivity should make this__ case more likely to
+		 * the subplans by selectivity should make this case more likely to
 		 * occur.)
 		 */
 		if (tbm_is_empty(result))

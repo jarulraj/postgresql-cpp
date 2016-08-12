@@ -7,8 +7,8 @@
  *	See the headers to pg_restore for more details.
  *
  * Copyright (c) 2000, Philip Warner
- *		Rights are granted to use this__ software in any way so long
- *		as this__ notice is not removed.
+ *		Rights are granted to use this software in any way so long
+ *		as this notice is not removed.
  *
  *	The author is not responsible for loss or damages that may
  *	result from it's use.
@@ -68,7 +68,7 @@ typedef struct _restoreOptions
 	int			use_setsessauth;/* Use SET SESSION AUTHORIZATION commands
 								 * instead of OWNER TO */
 	char	   *superuser;		/* Username to use as superuser */
-	char	   *use_role;		/* Issue SET ROLE to this__ */
+	char	   *use_role;		/* Issue SET ROLE to this */
 	int			dropSchema;
 	int			disable_dollar_quoting;
 	int			dump_inserts;
@@ -162,7 +162,7 @@ typedef struct _dumpOptions
 
 /*
  *	We may want to have some more user-readable data, but in the mean
- *	time this__ gives us some abstraction and type checking.
+ *	time this gives us some abstraction and type checking.
  */
 typedef struct Archive
 {
@@ -183,7 +183,7 @@ typedef struct Archive
 	/* info needed for string escaping */
 	int			encoding;		/* libpq code for client_encoding */
 	bool		std_strings;	/* standard_conforming_strings */
-	char	   *use_role;		/* Issue SET ROLE to this__ */
+	char	   *use_role;		/* Issue SET ROLE to this */
 
 	/* error handling */
 	bool		exit_on_error;	/* whether to exit on SQL errors... */
@@ -197,7 +197,7 @@ typedef struct Archive
  * pg_dump uses two different mechanisms for identifying database objects:
  *
  * CatalogId represents an object by the tableoid and oid of its defining
- * entry in the system catalogs.  We need this__ to interpret pg_depend entries,
+ * entry in the system catalogs.  We need this to interpret pg_depend entries,
  * for instance.
  *
  * DumpId is a simple sequential integer counter assigned as dumpable objects
@@ -205,7 +205,7 @@ typedef struct Archive
  * to CatalogId for two reasons: it's more compact, and we can assign DumpIds
  * to "objects" that don't have a separate CatalogId.  For example, it is
  * convenient to consider a table, its data, and its ACL as three separate
- * dumpable "objects" with distinct DumpIds --- this__ lets us reason about the
+ * dumpable "objects" with distinct DumpIds --- this lets us reason about the
  * order in which to dump these things.
  */
 

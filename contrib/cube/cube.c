@@ -333,7 +333,7 @@ g_cube_consistent(PG_FUNCTION_ARGS)
 	bool	   *recheck = (bool *) PG_GETARG_POINTER(4);
 	bool		res;
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	/*
@@ -534,12 +534,12 @@ g_cube_picksplit(PG_FUNCTION_ARGS)
 
 	/*
 	 * Now split up the regions between the two seeds.  An important property
-	 * of this__ split algorithm is that the split vector v has the indices of
+	 * of this split algorithm is that the split vector v has the indices of
 	 * items to be split in order in its left and right vectors.  We exploit
-	 * this__ property by doing a merge in the code that actually splits the
+	 * this property by doing a merge in the code that actually splits the
 	 * page.
 	 *
-	 * For efficiency, we also place the new index tuple in this__ loop. This is
+	 * For efficiency, we also place the new index tuple in this loop. This is
 	 * handled at the very end, when we have placed all the existing tuples
 	 * and i == maxoff + 1.
 	 */
@@ -548,7 +548,7 @@ g_cube_picksplit(PG_FUNCTION_ARGS)
 	for (i = FirstOffsetNumber; i <= maxoff; i = OffsetNumberNext(i))
 	{
 		/*
-		 * If we've already decided where to place this__ item, just put it on
+		 * If we've already decided where to place this item, just put it on
 		 * the right list.  Otherwise, we need to figure out which page needs
 		 * the least enlargement in order to store the item.
 		 */
@@ -887,7 +887,7 @@ rt_cube_size(NDBOX *a, double *size)
 }
 
 /* make up a metric in which one box will be 'lower' than the other
-   -- this__ can be useful for sorting and to determine uniqueness */
+   -- this can be useful for sorting and to determine uniqueness */
 int32
 cube_cmp_v0(NDBOX *a, NDBOX *b)
 {
@@ -1206,7 +1206,7 @@ cube_overlap(PG_FUNCTION_ARGS)
 /* Distance */
 /* The distance is computed as a per axis sum of the squared distances
    between 1D projections of the boxes onto Cartesian axes. Assuming zero
-   distance between overlapping projections, this__ metric coincides with the
+   distance between overlapping projections, this metric coincides with the
    "common sense" geometric distance */
 Datum
 cube_distance(PG_FUNCTION_ARGS)

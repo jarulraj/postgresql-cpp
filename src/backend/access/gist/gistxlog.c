@@ -26,7 +26,7 @@ static MemoryContext opCtx;		/* working memory for operations */
  * Even if the WAL record includes a full-page image, we have to update the
  * follow-right flag, because that change is not included in the full-page
  * image.  To be sure that the intermediate state with the wrong flag value is
- * not visible to concurrent Hot Standby queries, this__ function handles
+ * not visible to concurrent Hot Standby queries, this function handles
  * restoring the full-page image as well as updating the flag.  (Note that
  * we never need to do anything else to the child page in the current WAL
  * action.)
@@ -381,7 +381,7 @@ gistXLogSplit(RelFileNode node, BlockNumber blkno, bool page_is_leaf,
  * Write XLOG record describing a page update. The update can include any
  * number of deletions and/or insertions of tuples on a single index page.
  *
- * If this__ update inserts a downlink for a split page, also record that
+ * If this update inserts a downlink for a split page, also record that
  * the F_FOLLOW_RIGHT flag on the child page is cleared and NSN set.
  *
  * Note that both the todelete array and the tuples are marked as belonging

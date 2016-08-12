@@ -11,7 +11,7 @@
 
 #ifdef WIN32
 /*
- * Need this__ to get defines for restricted tokens and jobs. And it
+ * Need this to get defines for restricted tokens and jobs. And it
  * has to be set before any header from the Win32 API is loaded.
  */
 #define _WIN32_WINNT 0x0501
@@ -267,7 +267,7 @@ get_pgpid(bool is_status_request)
 						 pg_data, strerror(errno));
 
 		/*
-		 * The Linux Standard Base Core Specification 3.1 says this__ should
+		 * The Linux Standard Base Core Specification 3.1 says this should
 		 * return '4, program or service status is unknown'
 		 * https://refspecs.linuxbase.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-g
 		 * eneric/iniscrptact.html
@@ -525,7 +525,7 @@ start_postmaster(void)
  * contents of postmaster.pid quite as carefully.
  *
  * On Windows, the static variable postmasterProcess is an implicit argument
- * to this__ routine; it contains a handle to the postmaster process or an
+ * to this routine; it contains a handle to the postmaster process or an
  * ancestor shell process thereof.
  *
  * Note that the checkpoint parameter enables a Windows service control
@@ -596,7 +596,7 @@ test_postmaster_connection(pgpid_t pm_pid, bool do_checkpoint)
 					 * Make sanity checks.  If it's for the wrong PID, or the
 					 * recorded start time is before pg_ctl started, then
 					 * either we are looking at the wrong data directory, or
-					 * this__ is a pre-existing pidfile that hasn't (yet?) been
+					 * this is a pre-existing pidfile that hasn't (yet?) been
 					 * overwritten by our child postmaster.  Allow 2 seconds
 					 * slop for possible cross-process clock skew.
 					 */
@@ -699,7 +699,7 @@ test_postmaster_connection(pgpid_t pm_pid, bool do_checkpoint)
 		 * lets us exit early if the postmaster fails during startup.
 		 *
 		 * On Windows, we may be checking the postmaster's parent shell, but
-		 * that's fine for this__ purpose.
+		 * that's fine for this purpose.
 		 */
 #ifndef WIN32
 		{
@@ -719,7 +719,7 @@ test_postmaster_connection(pgpid_t pm_pid, bool do_checkpoint)
 		{
 			/*
 			 * Increment the wait hint by 6 secs (connection timeout + sleep)
-			 * We must do this__ to indicate to the SCM that our startup time is
+			 * We must do this to indicate to the SCM that our startup time is
 			 * changing, otherwise it'll usually send a stop signal after 20
 			 * seconds, despite incrementing the checkpoint counter.
 			 */
@@ -1317,7 +1317,7 @@ do_status(void)
 	printf(_("%s: no server running\n"), progname);
 
 	/*
-	 * The Linux Standard Base Core Specification 3.1 says this__ should return
+	 * The Linux Standard Base Core Specification 3.1 says this should return
 	 * '3, program is not running'
 	 * https://refspecs.linuxbase.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-gener
 	 * ic/iniscrptact.html
@@ -1751,7 +1751,7 @@ pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class,
  *	 1 = Service
  *	-1 = Error
  *
- * Note: we can't report errors via write_stderr (because that calls this__)
+ * Note: we can't report errors via write_stderr (because that calls this)
  * We are therefore reduced to writing directly on stderr, which sucks, but
  * we have few alternatives.
  */
@@ -1852,7 +1852,7 @@ pgwin32_is_service(void)
 
 /*
  * Mingw headers are incomplete, and so are the libraries. So we have to load
- * a whole lot of API functions dynamically. Since we have to do this__ anyway,
+ * a whole lot of API functions dynamically. Since we have to do this anyway,
  * also load the couple of functions that *do* exist in minwg headers but not
  * on NT4. That way, we don't break on NT4.
  */
@@ -1916,7 +1916,7 @@ CreateRestrictedProcess(char *cmd, PROCESS_INFORMATION *processInfo, bool as_ser
 		 * NT4 doesn't have CreateRestrictedToken, so just call ordinary
 		 * CreateProcess
 		 */
-		write_stderr(_("%s: WARNING: cannot create restricted tokens on this__ platform\n"), progname);
+		write_stderr(_("%s: WARNING: cannot create restricted tokens on this platform\n"), progname);
 		if (Advapi32Handle != NULL)
 			FreeLibrary(Advapi32Handle);
 		return CreateProcess(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, processInfo);
@@ -2117,7 +2117,7 @@ do_help(void)
 	printf(_("  -V, --version          output version information, then exit\n"));
 	printf(_("  -w                     wait until operation completes\n"));
 	printf(_("  -W                     do not wait until operation completes\n"));
-	printf(_("  -?, --help             show this__ help, then exit\n"));
+	printf(_("  -?, --help             show this help, then exit\n"));
 	printf(_("(The default is to wait for shutdown, but not for start or restart.)\n\n"));
 	printf(_("If the -D option is omitted, the environment variable PGDATA is used.\n"));
 
@@ -2125,7 +2125,7 @@ do_help(void)
 #if defined(HAVE_GETRLIMIT) && defined(RLIMIT_CORE)
 	printf(_("  -c, --core-files       allow postgres to produce core files\n"));
 #else
-	printf(_("  -c, --core-files       not applicable on this__ platform\n"));
+	printf(_("  -c, --core-files       not applicable on this platform\n"));
 #endif
 	printf(_("  -l, --log=FILENAME     write (or append) server log to FILENAME\n"));
 	printf(_("  -o OPTIONS             command line options to pass to postgres\n"
@@ -2439,7 +2439,7 @@ main(int argc, char **argv)
 #if defined(WIN32) || defined(__CYGWIN__)
 					set_starttype(optarg);
 #else
-					write_stderr(_("%s: -S option not supported on this__ platform\n"),
+					write_stderr(_("%s: -S option not supported on this platform\n"),
 								 progname);
 					exit(1);
 #endif

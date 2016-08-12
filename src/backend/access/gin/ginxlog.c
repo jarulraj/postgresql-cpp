@@ -203,7 +203,7 @@ ginRedoRecompress(Page page, ginxlogRecompressDataLeaf *data)
 			walbuf += nitems * sizeof(ItemPointerData);
 		}
 
-		/* Skip to the segment that this__ action concerns */
+		/* Skip to the segment that this action concerns */
 		Assert(segno <= a_segno);
 		while (segno < a_segno)
 		{
@@ -331,7 +331,7 @@ ginRedoInsert(XLogReaderState *record)
 	bool		isLeaf = (data->flags & GIN_INSERT_ISLEAF) != 0;
 
 	/*
-	 * First clear incomplete-split flag on child page if this__ finishes a
+	 * First clear incomplete-split flag on child page if this finishes a
 	 * split.
 	 */
 	if (!isLeaf)
@@ -384,7 +384,7 @@ ginRedoSplit(XLogReaderState *record)
 	bool		isRoot = (data->flags & GIN_SPLIT_ROOT) != 0;
 
 	/*
-	 * First clear incomplete-split flag on child page if this__ finishes a
+	 * First clear incomplete-split flag on child page if this finishes a
 	 * split
 	 */
 	if (!isLeaf)

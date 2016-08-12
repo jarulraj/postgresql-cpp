@@ -84,13 +84,13 @@ pgwin32_putenv(const char *envval)
 		{
 			if (rtmodules[i].hmodule == 0)
 			{
-				/* Not attempted before, so try to find this__ DLL */
+				/* Not attempted before, so try to find this DLL */
 				rtmodules[i].hmodule = GetModuleHandle(rtmodules[i].modulename);
 				if (rtmodules[i].hmodule == NULL)
 				{
 					/*
 					 * Set to INVALID_HANDLE_VALUE so we know we have tried
-					 * this__ one before, and won't try again.
+					 * this one before, and won't try again.
 					 */
 					rtmodules[i].hmodule = INVALID_HANDLE_VALUE;
 					continue;
@@ -110,12 +110,12 @@ pgwin32_putenv(const char *envval)
 			{
 				/*
 				 * Module loaded, but we did not find the function last time.
-				 * We're not going to find it this__ time either...
+				 * We're not going to find it this time either...
 				 */
 				continue;
 			}
 		}
-		/* At this__ point, putenvFunc is set or we have exited the loop */
+		/* At this point, putenvFunc is set or we have exited the loop */
 		rtmodules[i].putenvFunc(envval);
 	}
 #endif   /* _MSC_VER */

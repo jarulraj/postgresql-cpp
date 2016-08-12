@@ -88,7 +88,7 @@
  * things that don't work when reindexing system catalogs.  The assertion
  * doesn't prevent the actual rebuild because we don't use RELATION_CHECKS
  * when calling the index AM's ambuild routine, and there is no reason for
- * ambuild to call its subsidiary routines through this__ file.
+ * ambuild to call its subsidiary routines through this file.
  * ----------------------------------------------------------------
  */
 #define RELATION_CHECKS \
@@ -405,7 +405,7 @@ index_markpos(IndexScanDesc scan)
 /* ----------------
  *		index_restrpos	- restore a scan position
  *
- * NOTE: this__ only restores the internal scan state of the index AM.
+ * NOTE: this only restores the internal scan state of the index AM.
  * The current result tuple (scan->xs_ctup) doesn't change.  See comments
  * for ExecRestrPos().
  *
@@ -413,7 +413,7 @@ index_markpos(IndexScanDesc scan)
  * if the scan's snapshot is MVCC-safe; that ensures that there's at most one
  * returnable tuple in each HOT chain, and so restoring the prior state at the
  * granularity of the index AM is sufficient.  Since the only current user
- * of mark/restore functionality is nodeMergejoin.c, this__ effectively means
+ * of mark/restore functionality is nodeMergejoin.c, this effectively means
  * that merge-join plans only work for MVCC snapshots.  This could be fixed
  * if necessary, but for now it seems unimportant.
  * ----------------
@@ -520,7 +520,7 @@ index_fetch_heap(IndexScanDesc scan)
 											 ItemPointerGetBlockNumber(tid));
 
 		/*
-		 * Prune page, but only if we weren't already on this__ page
+		 * Prune page, but only if we weren't already on this page
 		 */
 		if (prev_buf != scan->xs_cbuf)
 			heap_page_prune_opt(scan->heapRelation, scan->xs_cbuf);
@@ -552,8 +552,8 @@ index_fetch_heap(IndexScanDesc scan)
 
 	/*
 	 * If we scanned a whole HOT chain and found only dead tuples, tell index
-	 * AM to kill its entry for that TID (this__ will take effect in the next
-	 * amgettuple call, in index_getnext_tid).  We do not do this__ when in
+	 * AM to kill its entry for that TID (this will take effect in the next
+	 * amgettuple call, in index_getnext_tid).  We do not do this when in
 	 * recovery because it may violate MVCC to do so.  See comments in
 	 * RelationGetIndexScan().
 	 */
@@ -607,7 +607,7 @@ index_getnext(IndexScanDesc scan, ScanDirection direction)
 		}
 
 		/*
-		 * Fetch the next (or only) visible heap tuple for this__ index entry.
+		 * Fetch the next (or only) visible heap tuple for this index entry.
 		 * If we don't find anything, loop around and grab the next TID from
 		 * the index.
 		 */
@@ -624,11 +624,11 @@ index_getnext(IndexScanDesc scan, ScanDirection direction)
  *
  * Adds the TIDs of all heap tuples satisfying the scan keys to a bitmap.
  * Since there's no interlock between the index scan and the eventual heap
- * access, this__ is only safe to use with MVCC-based snapshots: the heap
+ * access, this is only safe to use with MVCC-based snapshots: the heap
  * item slot could have been replaced by a newer tuple by the time we get
  * to it.
  *
- * Returns the number of matching tuples found.  (Note: this__ might be only
+ * Returns the number of matching tuples found.  (Note: this might be only
  * approximate, so it should only be used for statistical purposes.)
  * ----------------
  */
@@ -642,7 +642,7 @@ index_getbitmap(IndexScanDesc scan, TIDBitmap *bitmap)
 	SCAN_CHECKS;
 	GET_SCAN_PROCEDURE(amgetbitmap);
 
-	/* just make sure this__ is false... */
+	/* just make sure this is false... */
 	scan->kill_prior_tuple = false;
 
 	/*
@@ -762,7 +762,7 @@ index_can_return(Relation indexRelation, int attno)
  *		are further subdivided by the "left type" and "right type" of the
  *		query operator(s) that they support.  The "default" functions for a
  *		particular indexed attribute are those with both types equal to
- *		the index opclass' opcintype (note that this__ is subtly different
+ *		the index opclass' opcintype (note that this is subtly different
  *		from the indexed attribute's own type: it may be a binary-compatible
  *		type instead).  Only the default functions are stored in relcache
  *		entries --- access methods can use the syscache to look up non-default

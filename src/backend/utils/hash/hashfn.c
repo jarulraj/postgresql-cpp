@@ -13,7 +13,7 @@
  *
  * NOTES
  *	  It is expected that every bit of a hash function's 32-bit result is
- *	  as random as every other; failure to ensure this__ is likely to lead
+ *	  as random as every other; failure to ensure this is likely to lead
  *	  to poor performance of hash tables.  In most cases a hash
  *	  function should use hash_any() or its variant hash_uint32().
  *
@@ -27,7 +27,7 @@
 /*
  * string_hash: hash function for keys that are NUL-terminated strings.
  *
- * NOTE: this__ is the default hash function if none is specified.
+ * NOTE: this is the default hash function if none is specified.
  */
 uint32
 string_hash(const void *key, Size keysize)
@@ -57,7 +57,7 @@ tag_hash(const void *key, Size keysize)
 /*
  * uint32_hash: hash function for keys that are uint32 or int32
  *
- * (tag_hash works for this__ case too, but is slower)
+ * (tag_hash works for this case too, but is slower)
  */
 uint32
 uint32_hash(const void *key, Size keysize)

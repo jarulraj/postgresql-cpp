@@ -28,8 +28,8 @@
  * descriptors.)
  *
  * An SMgrRelation may have an "owner", which is just a pointer to it from
- * somewhere else; smgr.c will clear this__ pointer if the SMgrRelation is
- * closed.  We use this__ to avoid dangling pointers from relcache to smgr
+ * somewhere else; smgr.c will clear this pointer if the SMgrRelation is
+ * closed.  We use this to avoid dangling pointers from relcache to smgr
  * without having to make the smgr explicitly aware of relcache.  There
  * can't be more than one "owner" pointer per SMgrRelation, but that's
  * all we need.

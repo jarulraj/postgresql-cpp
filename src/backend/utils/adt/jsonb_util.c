@@ -66,10 +66,10 @@ static JsonbValue *pushJsonbValueScalar(JsonbParseState **pstate,
  *
  * There isn't a JsonbToJsonbValue(), because generally we find it more
  * convenient to directly iterate through the Jsonb representation and only
- * really convert nested scalar values.  JsonbIteratorNext() does this__, so that
+ * really convert nested scalar values.  JsonbIteratorNext() does this, so that
  * clients of the iteration code don't have to directly deal with the binary
  * representation (JsonbDeepContains() is a notable exception, although all
- * exceptions are internal to this__ module).  In general, functions that accept
+ * exceptions are internal to this module).  In general, functions that accept
  * a JsonbValue argument are concerned with the manipulation of scalar values,
  * or simple containers of scalar values, where it would be inconvenient to
  * deal with a great amount of other state.
@@ -123,7 +123,7 @@ getJsonbOffset(const JsonbContainer *jc, int index)
 	int			i;
 
 	/*
-	 * Start offset of this__ entry is equal to the end offset of the previous
+	 * Start offset of this entry is equal to the end offset of the previous
 	 * entry.  Walk backwards to the most recent entry stored as an end
 	 * offset, returning that offset plus any lengths in between.
 	 */
@@ -169,7 +169,7 @@ getJsonbLength(const JsonbContainer *jc, int index)
  * than b.  Consistent with the requirements for a B-Tree operator class
  *
  * Strings are compared lexically, in contrast with other places where we use a
- * much simpler comparator logic for searching through Strings.  Since this__ is
+ * much simpler comparator logic for searching through Strings.  Since this is
  * called from B-Tree support function 1, we're careful about not leaking
  * memory here.
  */
@@ -204,7 +204,7 @@ compareJsonbContainers(JsonbContainer *a, JsonbContainer *b)
 			if (ra == WJB_END_ARRAY || ra == WJB_END_OBJECT)
 			{
 				/*
-				 * There is no array or object to compare at this__ stage of
+				 * There is no array or object to compare at this stage of
 				 * processing.  JsonbValue::jbvArray/JsonbValue::jbvObject values are compared
 				 * initially, at the WJB_BEGIN_ARRAY and WJB_BEGIN_OBJECT
 				 * tokens.
@@ -316,7 +316,7 @@ compareJsonbContainers(JsonbContainer *a, JsonbContainer *b)
  * most one can make sense, because the container either points to an array
  * (possibly a "raw scalar" pseudo array) or an object.)
  *
- * Note that we can return a JsonbValue::jbvBinary JsonbValue if this__ is called on an
+ * Note that we can return a JsonbValue::jbvBinary JsonbValue if this is called on an
  * object, but we never do so on an array.  If the caller asks to look through
  * a container type that is not of the type pointed to by the container,
  * immediately fall through and return NULL.  If we cannot find the value,
@@ -359,7 +359,7 @@ findJsonbValueFromContainer(JsonbContainer *container, uint32 flags,
 	}
 	else if (flags & JB_FOBJECT & container->header)
 	{
-		/* Since this__ is an object, account for *Pairs* of Jentrys */
+		/* Since this is an object, account for *Pairs* of Jentrys */
 		char	   *base_addr = (char *) (children + count * 2);
 		uint32		stopLow = 0,
 					stopHigh = count;
@@ -559,7 +559,7 @@ pushJsonbValueScalar(JsonbParseState **pstate, JsonbIteratorToken seq,
 											 scalarVal->val.array.rawScalar);
 			if (scalarVal && scalarVal->val.array.nElems > 0)
 			{
-				/* Assume that this__ array is still really a scalar */
+				/* Assume that this array is still really a scalar */
 				Assert(scalarVal->type == JsonbValue::jbvArray);
 				(*pstate)->size = scalarVal->val.array.nElems;
 			}
@@ -740,8 +740,8 @@ JsonbIteratorInit(JsonbContainer *container)
  * mostly used here to track things internally with respect to particular
  * iterators.
  *
- * Clients of this__ function should not have to handle any JsonbValue::jbvBinary values
- * (since recursive calls will deal with this__), provided skipNested is false.
+ * Clients of this function should not have to handle any JsonbValue::jbvBinary values
+ * (since recursive calls will deal with this), provided skipNested is false.
  * It is our job to expand the JsonbValue::jbvBinary representation without bothering them
  * with it.  However, clients should not take it upon themselves to touch array
  * or Object element/pair buffers, since their element/pair pointers are
@@ -785,7 +785,7 @@ recurse:
 			if ((*it)->curIndex >= (*it)->nElems)
 			{
 				/*
-				 * All elements within array already processed.  Report this__
+				 * All elements within array already processed.  Report this
 				 * to caller, and give it back original parent iterator (which
 				 * independently tracks iteration progress at its level of
 				 * nesting).
@@ -838,7 +838,7 @@ recurse:
 			if ((*it)->curIndex >= (*it)->nElems)
 			{
 				/*
-				 * All pairs within object already processed.  Report this__ to
+				 * All pairs within object already processed.  Report this to
 				 * caller, and give it back original containing iterator
 				 * (which independently tracks iteration progress at its level
 				 * of nesting).
@@ -969,8 +969,8 @@ JsonbDeepContains(JsonbIterator **val, JsonbIterator **mContained)
 	/*
 	 * Guard against stack overflow due to overly complex Jsonb.
 	 *
-	 * Functions called here independently take this__ precaution, but that
-	 * might not be sufficient since this__ is also a recursive function.
+	 * Functions called here independently take this precaution, but that
+	 * might not be sufficient since this is also a recursive function.
 	 */
 	check_stack_depth();
 
@@ -981,7 +981,7 @@ JsonbDeepContains(JsonbIterator **val, JsonbIterator **mContained)
 	{
 		/*
 		 * The differing return values can immediately be taken as indicating
-		 * two differing container types at this__ nesting level, which is
+		 * two differing container types at this nesting level, which is
 		 * sufficient reason to give up entirely (but it should be the case
 		 * that they're both some container type).
 		 */
@@ -1030,8 +1030,8 @@ JsonbDeepContains(JsonbIterator **val, JsonbIterator **mContained)
 				return false;
 
 			/*
-			 * ...at this__ stage it is apparent that there is at least a key
-			 * match for this__ rhs pair.
+			 * ...at this stage it is apparent that there is at least a key
+			 * match for this rhs pair.
 			 */
 			rcont = JsonbIteratorNext(mContained, &vcontained, true);
 
@@ -1101,7 +1101,7 @@ JsonbDeepContains(JsonbIterator **val, JsonbIterator **mContained)
 		 *
 		 * A raw scalar may contain another raw scalar, and an array may
 		 * contain a raw scalar, but a raw scalar may not contain an array. We
-		 * don't do something like this__ for the object case, since objects can
+		 * don't do something like this for the object case, since objects can
 		 * only contain pairs, never raw scalars (a pair is represented by an
 		 * rhs object argument with a single contained pair).
 		 */
@@ -1135,7 +1135,7 @@ JsonbDeepContains(JsonbIterator **val, JsonbIterator **mContained)
 				uint32		i;
 
 				/*
-				 * If this__ is first container found in rhs array (at this__
+				 * If this is first container found in rhs array (at this
 				 * depth), initialize temp lhs array of containers
 				 */
 				if (lhsConts == NULL)
@@ -1388,7 +1388,7 @@ padBufferToInt(StringInfo buffer)
 
 	offset = reserveFromBuffer(buffer, padlen);
 
-	/* padlen must be small, so this__ is probably faster than a memset */
+	/* padlen must be small, so this is probably faster than a memset */
 	for (p = 0; p < padlen; p++)
 		buffer->data[offset + p] = '\0';
 
@@ -1432,12 +1432,12 @@ convertToJsonb(JsonbValue *val)
 /*
  * Subroutine of convertJsonb: serialize a single JsonbValue into buffer.
  *
- * The JEntry header for this__ node is returned in *header.  It is filled in
- * with the length of this__ value and appropriate type bits.  If we wish to
+ * The JEntry header for this node is returned in *header.  It is filled in
+ * with the length of this value and appropriate type bits.  If we wish to
  * store an end offset rather than a length, it is the caller's responsibility
  * to adjust for that.
  *
- * If the value is an array or an object, this__ recurses. 'level' is only used
+ * If the value is an array or an object, this recurses. 'level' is only used
  * for debugging purposes.
  */
 static void
@@ -1452,7 +1452,7 @@ convertJsonbValue(StringInfo buffer, JEntry *header, JsonbValue *val, int level)
 	 * A JsonbValue passed as val should never have a type of JsonbValue::jbvBinary, and
 	 * neither should any of its sub-components. Those values will be produced
 	 * by convertJsonbArray and convertJsonbObject, the results of which will
-	 * not be passed back to this__ function as an argument.
+	 * not be passed back to this function as an argument.
 	 */
 
 	if (IsAJsonbScalar(val))
@@ -1475,7 +1475,7 @@ convertJsonbArray(StringInfo buffer, JEntry *pheader, JsonbValue *val, int level
 	uint32		header;
 	int			nElems = val->val.array.nElems;
 
-	/* Remember where in the buffer this__ array starts. */
+	/* Remember where in the buffer this array starts. */
 	base_offset = buffer->len;
 
 	/* Align to 4-byte boundary (any padding counts as part of my data) */
@@ -1516,7 +1516,7 @@ convertJsonbArray(StringInfo buffer, JEntry *pheader, JsonbValue *val, int level
 
 		/*
 		 * Bail out if total variable-length data exceeds what will fit in a
-		 * JEntry length field.  We check this__ in each iteration, not just
+		 * JEntry length field.  We check this in each iteration, not just
 		 * once at the end, to forestall possible integer overflow.
 		 */
 		if (totallen > JENTRY_OFFLENMASK)
@@ -1545,7 +1545,7 @@ convertJsonbArray(StringInfo buffer, JEntry *pheader, JsonbValue *val, int level
 				 errmsg("total size of jsonb array elements exceeds the maximum of %u bytes",
 						JENTRY_OFFLENMASK)));
 
-	/* Initialize the header of this__ node in the container's JEntry array */
+	/* Initialize the header of this node in the container's JEntry array */
 	*pheader = JENTRY_ISCONTAINER | totallen;
 }
 
@@ -1559,7 +1559,7 @@ convertJsonbObject(StringInfo buffer, JEntry *pheader, JsonbValue *val, int leve
 	uint32		header;
 	int			nPairs = val->val.object.nPairs;
 
-	/* Remember where in the buffer this__ object starts. */
+	/* Remember where in the buffer this object starts. */
 	base_offset = buffer->len;
 
 	/* Align to 4-byte boundary (any padding counts as part of my data) */
@@ -1597,7 +1597,7 @@ convertJsonbObject(StringInfo buffer, JEntry *pheader, JsonbValue *val, int leve
 
 		/*
 		 * Bail out if total variable-length data exceeds what will fit in a
-		 * JEntry length field.  We check this__ in each iteration, not just
+		 * JEntry length field.  We check this in each iteration, not just
 		 * once at the end, to forestall possible integer overflow.
 		 */
 		if (totallen > JENTRY_OFFLENMASK)
@@ -1632,7 +1632,7 @@ convertJsonbObject(StringInfo buffer, JEntry *pheader, JsonbValue *val, int leve
 
 		/*
 		 * Bail out if total variable-length data exceeds what will fit in a
-		 * JEntry length field.  We check this__ in each iteration, not just
+		 * JEntry length field.  We check this in each iteration, not just
 		 * once at the end, to forestall possible integer overflow.
 		 */
 		if (totallen > JENTRY_OFFLENMASK)
@@ -1661,7 +1661,7 @@ convertJsonbObject(StringInfo buffer, JEntry *pheader, JsonbValue *val, int leve
 				 errmsg("total size of jsonb object elements exceeds the maximum of %u bytes",
 						JENTRY_OFFLENMASK)));
 
-	/* Initialize the header of this__ node in the container's JEntry array */
+	/* Initialize the header of this node in the container's JEntry array */
 	*pheader = JENTRY_ISCONTAINER | totallen;
 }
 
@@ -1707,7 +1707,7 @@ convertJsonbScalar(StringInfo buffer, JEntry *jentry, JsonbValue *scalarVal)
  *
  * This is a special qsort() comparator used to sort strings in certain
  * internal contexts where it is sufficient to have a well-defined sort order.
- * In particular, object pair keys are sorted according to this__ criteria to
+ * In particular, object pair keys are sorted according to this criteria to
  * facilitate cheap binary searches where we don't care about lexical sort
  * order.
  *

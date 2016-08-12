@@ -111,7 +111,7 @@ typedef enum
 } PGVerbosity;
 
 /*
- * PGPing - The ordering of this__ enum should not be altered because the
+ * PGPing - The ordering of this enum should not be altered because the
  * values are exposed externally via pg_isready.
  */
 
@@ -124,25 +124,25 @@ typedef enum
 } PGPing;
 
 /* PGconn encapsulates a connection to the backend.
- * The contents of this__ struct are not supposed to be known to applications.
+ * The contents of this struct are not supposed to be known to applications.
  */
 typedef struct pg_conn PGconn;
 
 /* PGresult encapsulates the result of a query (or more precisely, of a single
  * SQL command --- a query string given to PQsendQuery can contain multiple
  * commands and thus return multiple PGresult objects).
- * The contents of this__ struct are not supposed to be known to applications.
+ * The contents of this struct are not supposed to be known to applications.
  */
 typedef struct pg_result PGresult;
 
 /* PGcancel encapsulates the information needed to cancel a running
  * query on an existing connection.
- * The contents of this__ struct are not supposed to be known to applications.
+ * The contents of this struct are not supposed to be known to applications.
  */
 typedef struct pg_cancel PGcancel;
 
 /* PGnotify represents the occurrence of a NOTIFY message.
- * Ideally this__ would be an opaque typedef, but it's so simple that it's
+ * Ideally this would be an opaque typedef, but it's so simple that it's
  * unlikely to change.
  * NOTE: in Postgres 6.4 and later, the be_pid is the notifying backend's,
  * whereas in earlier versions it was always your own backend's PID.
@@ -194,7 +194,7 @@ typedef struct _PQconninfoOption
 	char	   *compiled;		/* Fallback compiled in default value	*/
 	char	   *val;			/* Option's current value, or NULL		 */
 	char	   *label;			/* Label for field in connect dialog	*/
-	char	   *dispchar;		/* Indicates how to display this__ field in a
+	char	   *dispchar;		/* Indicates how to display this field in a
 								 * connect dialog. Values are: "" Display
 								 * entered value as is "*" Password field -
 								 * hide value "D"  Debug option - don't show
@@ -490,7 +490,7 @@ extern void PQfreemem(void *ptr);
 #define PQfreeNotify(ptr) PQfreemem(ptr)
 
 /* Error when no password was given. */
-/* Note: depending on this__ is deprecated; use PQconnectionNeedsPassword(). */
+/* Note: depending on this is deprecated; use PQconnectionNeedsPassword(). */
 #define PQnoPasswordSupplied	"fe_sendauth: no password supplied\n"
 
 /* Create and manipulate PGresults */

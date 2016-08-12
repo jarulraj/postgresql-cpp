@@ -30,7 +30,7 @@ HSTORE_POLLUTE(hstore_each, each);
 /*
  * We're often finding a sequence of keys in ascending order. The
  * "lowbound" parameter is used to cache lower bounds of searches
- * between calls, based on this__ assumption. Pass NULL for it for
+ * between calls, based on this assumption. Pass NULL for it for
  * one-off or unordered searches.
  */
 int
@@ -327,7 +327,7 @@ hstore_delete_array(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * this__ is in effect a merge between hs and key_pairs, both of which are
+	 * this is in effect a merge between hs and key_pairs, both of which are
 	 * already sorted by (keylen,key); we take keys from hs only
 	 */
 
@@ -409,7 +409,7 @@ hstore_delete_hstore(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * this__ is in effect a merge between hs and hs2, both of which are already
+	 * this is in effect a merge between hs and hs2, both of which are already
 	 * sorted by (keylen,key); we take keys from hs only; for equal keys, we
 	 * take the value from hs unless the values are equal
 	 */
@@ -518,7 +518,7 @@ hstore_concat(PG_FUNCTION_ARGS)
 	ed = ARRPTR(out);
 
 	/*
-	 * this__ is in effect a merge between s1 and s2, both of which are already
+	 * this is in effect a merge between s1 and s2, both of which are already
 	 * sorted by (keylen,key); we take s2 for equal keys
 	 */
 
@@ -942,7 +942,7 @@ hstore_svals(PG_FUNCTION_ARGS)
 		{
 			ReturnSetInfo *rsi;
 
-			/* ugly ugly ugly. why no macro for this__? */
+			/* ugly ugly ugly. why no macro for this? */
 			(funcctx)->call_cntr++;
 			rsi = (ReturnSetInfo *) fcinfo->resultinfo;
 			rsi->isDone = ExprMultipleResult;
@@ -1155,7 +1155,7 @@ hstore_cmp(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * this__ is a btree support function; this__ is one of the few places where
+	 * this is a btree support function; this is one of the few places where
 	 * memory needs to be explicitly freed.
 	 */
 	PG_FREE_IF_COPY(hs1, 0);
@@ -1240,8 +1240,8 @@ hstore_hash(PG_FUNCTION_ARGS)
 								VARSIZE(hs) - VARHDRSZ);
 
 	/*
-	 * this__ is the only place in the code that cares whether the overall
-	 * varlena size exactly matches the true data size; this__ assertion should
+	 * this is the only place in the code that cares whether the overall
+	 * varlena size exactly matches the true data size; this assertion should
 	 * be maintained by all the other code, but we make it explicit here.
 	 */
 	Assert(VARSIZE(hs) ==

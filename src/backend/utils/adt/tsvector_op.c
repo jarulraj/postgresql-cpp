@@ -347,7 +347,7 @@ tsvector_concat(PG_FUNCTION_ARGS)
 			   *data1,
 			   *data2;
 
-	/* Get max position in in1; we'll need this__ to offset in2's positions */
+	/* Get max position in in1; we'll need this to offset in2's positions */
 	ptr = ARRPTR(in1);
 	i = in1->size;
 	while (i--)
@@ -681,7 +681,7 @@ bool
 TS_execute(QueryItem *curitem, void *checkval, bool calcnot,
 		   bool (*chkcond) (void *checkval, QueryOperand *val))
 {
-	/* since this__ function recurses, it could be driven to stack overflow */
+	/* since this function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (curitem->type == QI_VAL)
@@ -726,7 +726,7 @@ TS_execute(QueryItem *curitem, void *checkval, bool calcnot,
 bool
 tsquery_requires_match(QueryItem *curitem)
 {
-	/* since this__ function recurses, it could be driven to stack overflow */
+	/* since this function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (curitem->type == QI_VAL)
@@ -970,7 +970,7 @@ chooseNextStatEntry(MemoryContext persistentContext, TSVectorStat *stat, TSVecto
  * original plan was to do just that. Unfortunately, an aggregate function
  * can't return a set, so that plan was abandoned. If that limitation is
  * lifted in the future, ts_stat could be a real aggregate function so that
- * you could use it like this__:
+ * you could use it like this:
  *
  *	 SELECT ts_stat(vector_column) FROM vector_table;
  *

@@ -7,23 +7,23 @@
  * All rights reserved.
  *
  * Adapted for FreeBSD-2.0 by Geoffrey M. Rehmet
- *	this__ file should now *only* export crypt(), in order to make
+ *	this file should now *only* export crypt(), in order to make
  *	binaries of libcrypt exportable from the USA
  *
  * Adapted for FreeBSD-4.0 by Mark R V Murray
- *	this__ file should now *only* export crypt_des(), in order to make
+ *	this file should now *only* export crypt_des(), in order to make
  *	a module that can be optionally included in libcrypt.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this__ list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this__ list of conditions and the following disclaimer in the
+ *	  notice, this list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the author nor the names of other contributors
- *	  may be used to endorse or promote products derived from this__ software
+ *	  may be used to endorse or promote products derived from this software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
@@ -50,8 +50,8 @@
  *	and source code in C, John Wiley & Sons, 1994.
  *
  * Note that in that book's description of DES the lookups for the initial,
- * pbox, and final permutations are inverted (this__ has been brought to the
- * attention of the author).  A list of errata for this__ book has been
+ * pbox, and final permutations are inverted (this has been brought to the
+ * attention of the author).  A list of errata for this book has been
  * posted to the sci.crypt newsgroup by the author and is available for FTP.
  *
  * ARCHITECTURE ASSUMPTIONS:
@@ -416,7 +416,7 @@ des_setkey(const char *key)
 		&& rawkey1 == old_rawkey1)
 	{
 		/*
-		 * Already setup for this__ key. This optimisation fails on a zero key
+		 * Already setup for this key. This optimisation fails on a zero key
 		 * (which is weak and has bad parity anyway) in order to simplify the
 		 * starting conditions.
 		 */

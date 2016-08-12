@@ -54,7 +54,7 @@ typedef PageXLogRecPtr PageGistNSN;
 
 typedef struct GISTPageOpaqueData
 {
-	PageGistNSN nsn;			/* this__ value must change on page split */
+	PageGistNSN nsn;			/* this value must change on page split */
 	BlockNumber rightlink;		/* next page if any */
 	uint16		flags;			/* see bit definitions above */
 	uint16		gist_page_id;	/* for identification of GiST indexes */
@@ -79,7 +79,7 @@ typedef GISTPageOpaqueData *GISTPageOpaque;
  * the union keys for each side.
  *
  * If spl_ldatum_exists and spl_rdatum_exists are true, then we are performing
- * a "secondary split" using a non-first index column.  In this__ case some
+ * a "secondary split" using a non-first index column.  In this case some
  * decisions have already been made about a page split, and the set of tuples
  * being passed to PickSplit is just the tuples about which we are undecided.
  * spl_ldatum/spl_rdatum then contain the union keys for the tuples already
@@ -89,7 +89,7 @@ typedef GISTPageOpaqueData *GISTPageOpaque;
  * them.  If it does so, it should union the given tuples' keys into the
  * existing spl_ldatum/spl_rdatum values rather than just setting those values
  * from scratch, and then set spl_ldatum_exists/spl_rdatum_exists to false to
- * show it has done this__.
+ * show it has done this.
  *
  * If the PickSplit method fails to clear spl_ldatum_exists/spl_rdatum_exists,
  * the core GiST code will make its own decision about how to merge the
@@ -100,7 +100,7 @@ typedef GISTPageOpaqueData *GISTPageOpaque;
 typedef struct GIST_SPLITVEC
 {
 	OffsetNumber *spl_left;		/* array of entries that go left */
-	int			spl_nleft;		/* size of this__ array */
+	int			spl_nleft;		/* size of this array */
 	Datum		spl_ldatum;		/* Union of keys in spl_left */
 	bool		spl_ldatum_exists;		/* true, if spl_ldatum already exists. */
 

@@ -81,7 +81,7 @@ RemoveObjects(DropStmt *stmt)
 									 stmt->missing_ok);
 
 		/*
-		 * Issue NOTICE if supplied object was not found.  Note this__ is only
+		 * Issue NOTICE if supplied object was not found.  Note this is only
 		 * relevant in the missing_ok case, because otherwise
 		 * get_object_address would have thrown an error.
 		 */
@@ -95,7 +95,7 @@ RemoveObjects(DropStmt *stmt)
 		/*
 		 * Although COMMENT ON FUNCTION, SECURITY LABEL ON FUNCTION, etc. are
 		 * happy to operate on an aggregate as on any other function, we have
-		 * historically not allowed this__ for DROP FUNCTION.
+		 * historically not allowed this for DROP FUNCTION.
 		 */
 		if (stmt->removeType == OBJECT_FUNCTION)
 		{
@@ -309,7 +309,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 		case OBJECT_TSTEMPLATE:
 			if (!schema_does_not_exist_skipping(objname, &msg, &name))
 			{
-				msg = gettext_noop("text search template__ \"%s\" does not exist, skipping");
+				msg = gettext_noop("text search template \"%s\" does not exist, skipping");
 				name = NameListToString(objname);
 			}
 			break;

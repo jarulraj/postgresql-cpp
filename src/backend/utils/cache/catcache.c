@@ -44,7 +44,7 @@
 /*
  * Given a hash value and the size of the hash table, find the bucket
  * in which the hash value belongs. Since the hash table must contain
- * a power-of-2 number of elements, this__ is a simple bitmask.
+ * a power-of-2 number of elements, this is a simple bitmask.
  */
 #define HASH_INDEX(h, sz) ((Index) ((h) & ((sz) - 1)))
 
@@ -98,7 +98,7 @@ static HeapTuple build_dummy_tuple(CatCache *cache, int nkeys, ScanKey skeys);
  * Look up the hash and equality functions for system types that are used
  * as cache key fields.
  *
- * XXX this__ should be replaced by catalog lookups,
+ * XXX this should be replaced by catalog lookups,
  * but that seems to pose considerable risk of circularity...
  */
 static void
@@ -364,7 +364,7 @@ CatCacheRemoveCTup(CatCache *cache, CatCTup *ct)
 	if (ct->c_list)
 	{
 		/*
-		 * The cleanest way to handle this__ is to call CatCacheRemoveCList,
+		 * The cleanest way to handle this is to call CatCacheRemoveCList,
 		 * which will recurse back to me, and the recursive call will do the
 		 * work.  Set the "dead" flag to make sure it does recurse.
 		 */
@@ -470,7 +470,7 @@ CatalogCacheIdInvalidate(int cacheId, uint32 hashValue)
 		 */
 
 		/*
-		 * Invalidate *all* CatCLists in this__ cache; it's too hard to tell
+		 * Invalidate *all* CatCLists in this cache; it's too hard to tell
 		 * which searches might still be correct, so just zap 'em all.
 		 */
 		dlist_foreach_modify(iter, &ccp->cc_lists)
@@ -509,7 +509,7 @@ CatalogCacheIdInvalidate(int cacheId, uint32 hashValue)
 				/* could be multiple matches, so keep looking! */
 			}
 		}
-		break;					/* need only search this__ one cache */
+		break;					/* need only search this one cache */
 	}
 }
 
@@ -607,7 +607,7 @@ ResetCatalogCache(CatCache *cache)
 	dlist_mutable_iter iter;
 	int			i;
 
-	/* Remove each list in this__ cache, or at least mark it dead */
+	/* Remove each list in this cache, or at least mark it dead */
 	dlist_foreach_modify(iter, &cache->cc_lists)
 	{
 		CatCList   *cl = dlist_container(CatCList, cache_elem, iter.cur);
@@ -618,7 +618,7 @@ ResetCatalogCache(CatCache *cache)
 			CatCacheRemoveCList(cache, cl);
 	}
 
-	/* Remove each tuple in this__ cache, or at least mark it dead */
+	/* Remove each tuple in this cache, or at least mark it dead */
 	for (i = 0; i < cache->cc_nbuckets; i++)
 	{
 		dlist_head *bucket = &cache->cc_bucket[i];
@@ -676,7 +676,7 @@ ResetCatalogCaches(void)
  *	kinds of trouble if a cache flush occurs while loading cache entries.
  *	We now avoid the need to do it by copying cc_tupdesc out of the relcache,
  *	rather than relying on the relcache to keep a tupdesc for us.  Of course
- *	this__ assumes the tupdesc of a cachable system table will not change...)
+ *	this assumes the tupdesc of a cachable system table will not change...)
  */
 void
 CatalogCacheFlushCatalog(Oid catId)
@@ -689,13 +689,13 @@ CatalogCacheFlushCatalog(Oid catId)
 	{
 		CatCache   *cache = slist_container(CatCache, cc_next, iter.cur);
 
-		/* Does this__ cache store tuples of the target catalog? */
+		/* Does this cache store tuples of the target catalog? */
 		if (cache->cc_reloid == catId)
 		{
 			/* Yes, so flush all its contents */
 			ResetCatalogCache(cache);
 
-			/* Tell inval.c to call syscache callbacks for this__ cache */
+			/* Tell inval.c to call syscache callbacks for this cache */
 			CallSyscacheCallbacks(cache->id, 0);
 		}
 	}
@@ -735,10 +735,10 @@ InitCatCache(int id,
 	int			i;
 
 	/*
-	 * nbuckets is the initial number of hash buckets to use in this__ catcache.
+	 * nbuckets is the initial number of hash buckets to use in this catcache.
 	 * It will be enlarged later if it becomes too full.
 	 *
-	 * nbuckets must be a power of two.  We check this__ via Assert rather than
+	 * nbuckets must be a power of two.  We check this via Assert rather than
 	 * a full runtime check because the values will be coming from constant
 	 * tables.
 	 *
@@ -780,7 +780,7 @@ InitCatCache(int id,
 
 	/*
 	 * initialize the cache's relation information for the relation
-	 * corresponding to this__ cache, and initialize some of the new cache's
+	 * corresponding to this cache, and initialize some of the new cache's
 	 * other internal fields.  But don't open the relation yet.
 	 */
 	cp->id = id;
@@ -857,7 +857,7 @@ RehashCatCache(CatCache *cp)
  *
  * This function does final initialization of a catcache: obtain the tuple
  * descriptor and set up the hash and equality function links.  We assume
- * that the relcache entry can be opened at this__ point!
+ * that the relcache entry can be opened at this point!
  */
 #ifdef CACHEDEBUG
 #define CatalogCacheInitializeCache_DEBUG1 \
@@ -954,7 +954,7 @@ CatalogCacheInitializeCache(CatCache *cache)
 		cache->cc_isname[i] = (keytype == NAMEOID);
 
 		/*
-		 * Do equality-function lookup (we assume this__ won't need a catalog
+		 * Do equality-function lookup (we assume this won't need a catalog
 		 * lookup for any supported type)
 		 */
 		fmgr_info_cxt(eqfunc,
@@ -977,7 +977,7 @@ CatalogCacheInitializeCache(CatCache *cache)
 	}
 
 	/*
-	 * mark this__ cache fully initialized
+	 * mark this cache fully initialized
 	 */
 	cache->cc_tupdesc = tupdesc;
 }
@@ -985,7 +985,7 @@ CatalogCacheInitializeCache(CatCache *cache)
 /*
  * InitCatCachePhase2 -- external interface for CatalogCacheInitializeCache
  *
- * One reason to call this__ routine is to ensure that the relcache has
+ * One reason to call this routine is to ensure that the relcache has
  * created entries for all the catalogs and indexes referenced by catcaches.
  * Therefore, provide an option to open the index as well as fixing the
  * cache itself.  An exception is the indexes on pg_am, which we don't use
@@ -1006,7 +1006,7 @@ InitCatCachePhase2(CatCache *cache, bool touch_index)
 		/*
 		 * We must lock the underlying catalog before opening the index to
 		 * avoid deadlock, since index_open could possibly result in reading
-		 * this__ same catalog, and if anyone else is exclusive-locking this__
+		 * this same catalog, and if anyone else is exclusive-locking this
 		 * catalog and index they'll be doing it in that order.
 		 */
 		LockRelationOid(cache->cc_reloid, AccessShareLock);
@@ -1064,7 +1064,7 @@ IndexScanOK(CatCache *cache, ScanKey cur_skey)
 
 			/*
 			 * Always do heap scans in pg_am, because it's so small there's
-			 * not much point in an indexscan anyway.  We *must* do this__ when
+			 * not much point in an indexscan anyway.  We *must* do this when
 			 * initially building critical relcache entries, but we might as
 			 * well just always do it.
 			 */
@@ -1123,7 +1123,7 @@ SearchCatCache(CatCache *cache,
 	SysScanDesc scandesc;
 	HeapTuple	ntp;
 
-	/* Make sure we're in an xact, even if this__ ends up being a cache hit */
+	/* Make sure we're in an xact, even if this ends up being a cache hit */
 	Assert(IsTransactionState());
 
 	/*
@@ -1317,7 +1317,7 @@ SearchCatCache(CatCache *cache,
  *
  *	NOTE: if compiled with -DCATCACHE_FORCE_RELEASE then catcache entries
  *	will be freed as soon as their refcount goes to zero.  In combination
- *	with aset.c's CLOBBER_FREED_MEMORY option, this__ provides a good test
+ *	with aset.c's CLOBBER_FREED_MEMORY option, this provides a good test
  *	to catch references to already-released catcache entries.
  */
 void
@@ -1348,7 +1348,7 @@ ReleaseCatCache(HeapTuple tuple)
  *
  *		Compute the hash value for a given set of search keys.
  *
- * The reason for exposing this__ as part of the API is that the hash value is
+ * The reason for exposing this as part of the API is that the hash value is
  * exposed in cache invalidation operations, so there are places outside the
  * catcache code that need to be able to compute the hash values.
  */
@@ -1436,7 +1436,7 @@ SearchCatCacheList(CatCache *cache,
 
 	/*
 	 * compute a hash value of the given keys for faster search.  We don't
-	 * presently divide the CatCList items into buckets, but this__ still lets
+	 * presently divide the CatCList items into buckets, but this still lets
 	 * us skip non-matching items quickly most of the time.
 	 */
 	lHashValue = CatalogCacheComputeHashValue(cache, nkeys, cur_skey);
@@ -1535,7 +1535,7 @@ SearchCatCacheList(CatCache *cache,
 			dlist_head *bucket;
 
 			/*
-			 * See if there's an entry for this__ tuple already.
+			 * See if there's an entry for this tuple already.
 			 */
 			ct = NULL;
 			hashValue = CatalogCacheComputeTupleHashValue(cache, ntp);
@@ -1846,7 +1846,7 @@ build_dummy_tuple(CatCache *cache, int nkeys, ScanKey skeys)
  *
  *	Also note that it's not an error if there are no catcaches for the
  *	specified relation.  inval.c doesn't know exactly which rels have
- *	catcaches --- it will call this__ routine for any tuple that's in a
+ *	catcaches --- it will call this routine for any tuple that's in a
  *	system relation.
  */
 void
@@ -1873,7 +1873,7 @@ PrepareToInvalidateCacheTuple(Relation relation,
 	/* ----------------
 	 *	for each cache
 	 *	   if the cache contains tuples from the specified relation
-	 *		   compute the tuple's hash value(s) in this__ cache,
+	 *		   compute the tuple's hash value(s) in this cache,
 	 *		   and call the passed function to register the information.
 	 * ----------------
 	 */

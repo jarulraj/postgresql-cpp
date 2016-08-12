@@ -33,7 +33,7 @@ maketree(QueryItem *in)
 {
 	NODE	   *node = (NODE *) palloc(sizeof(NODE));
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	node->valnode = in;
@@ -60,7 +60,7 @@ typedef struct
 static void
 plainnode(PLAINTREE *state, NODE *node)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (state->cur == state->len)
@@ -113,7 +113,7 @@ plaintree(NODE *root, int *len)
 static void
 freetree(NODE *node)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (!node)
@@ -134,7 +134,7 @@ freetree(NODE *node)
 static NODE *
 clean_NOT_intree(NODE *node)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (node->valnode->type == QI_VAL)
@@ -221,7 +221,7 @@ clean_fakeval_intree(NODE *node, char *result)
 	char		lresult = V_UNKNOWN,
 				rresult = V_UNKNOWN;
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (node->valnode->type == QI_VAL)

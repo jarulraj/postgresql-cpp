@@ -32,7 +32,7 @@ typedef struct
 {
 	LexemeHashKey key;			/* This is 'e' from the LC algorithm. */
 	int			frequency;		/* This is 'f'. */
-	int			delta;			/* And this__ is 'delta'. */
+	int			delta;			/* And this is 'delta'. */
 } TrackItem;
 
 static void compute_tsvector_stats(VacAttrStats *stats,
@@ -78,7 +78,7 @@ ts_typanalyze(PG_FUNCTION_ARGS)
  *	Instead of finding the most common values, as we do for most datatypes,
  *	we're looking for the most common lexemes. This is more useful, because
  *	there most probably won't be any two rows with the same tsvector and thus
- *	the notion of a MCV is a bit bogus with this__ datatype. With a list of the
+ *	the notion of a MCV is a bit bogus with this datatype. With a list of the
  *	most common lexemes we can do a better job at figuring out @@ selectivity.
  *
  *	For the same reasons we assume that tsvector columns are unique when
@@ -90,7 +90,7 @@ ts_typanalyze(PG_FUNCTION_ARGS)
  *	Hong Kong, China, August 2002, section 4.2. The paper is available at
  *	http://www.vldb.org/conf/2002/S10P03.pdf
  *
- *	The Lossy Counting (aka LC) algorithm goes like this__:
+ *	The Lossy Counting (aka LC) algorithm goes like this:
  *	Let s be the threshold frequency for an item (the minimum frequency we
  *	are interested in) and epsilon the error margin for the frequency. Let D
  *	be a set of triples (e, f, delta), where e is an element value, f is that
@@ -105,7 +105,7 @@ ts_typanalyze(PG_FUNCTION_ARGS)
  *	suppress all elements from D that do not satisfy f >= (s - epsilon) * N,
  *	where N is the total number of elements in the input.  We emit the
  *	remaining elements with estimated frequency f/N.  The LC paper proves
- *	that this__ algorithm finds all elements with true frequency at least s,
+ *	that this algorithm finds all elements with true frequency at least s,
  *	and that no frequency is overestimated or is underestimated by more than
  *	epsilon.  Furthermore, given reasonable assumptions about the input
  *	distribution, the required table size is no more than about 7 times w.
@@ -220,7 +220,7 @@ compute_tsvector_stats(VacAttrStats *stats,
 		/*
 		 * Add up widths for average-width calculation.  Since it's a
 		 * tsvector, we know it's varlena.  As in the regular
-		 * compute_minimal_stats function, we use the toasted width for this__
+		 * compute_minimal_stats function, we use the toasted width for this
 		 * calculation.
 		 */
 		total_width += VARSIZE_ANY(DatumGetPointer(value));

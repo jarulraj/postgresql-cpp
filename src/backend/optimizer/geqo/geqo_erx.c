@@ -25,8 +25,8 @@
 /*	Colorado State University								 */
 /*															 */
 /*	Permission is hereby granted to copy all or any part of  */
-/*	this__ program for free distribution.   The author's name  */
-/*	and this__ copyright notice must be included in any copy.  */
+/*	this program for free distribution.   The author's name  */
+/*	and this copyright notice must be included in any copy.  */
 /*															 */
 /*************************************************************/
 
@@ -111,7 +111,7 @@ gimme_edge_table(PlannerInfo *root, Gene *tour1, Gene *tour2,
 	for (index1 = 0; index1 < num_gene; index1++)
 	{
 		/*
-		 * presume the tour is circular, i.e. 1->2, 2->3, 3->1 this__ operaton
+		 * presume the tour is circular, i.e. 1->2, 2->3, 3->1 this operaton
 		 * maps n back to 1
 		 */
 
@@ -219,7 +219,7 @@ gimme_tour(PlannerInfo *root, Edge *edge_table, Gene *new_gene, int num_gene)
 			new_gene[i] = edge_failure(root, new_gene, i - 1, edge_table, num_gene);
 		}
 
-		/* mark this__ node as incorporated */
+		/* mark this node as incorporated */
 		edge_table[(int) new_gene[i - 1]].unused_edges = -1;
 
 	}							/* for (i=1; i<num_gene; i++) */
@@ -287,7 +287,7 @@ gimme_gene(PlannerInfo *root, Edge edge, Edge *edge_table)
 	int			rand_decision;
 
 	/*
-	 * no point has edges to more than 4 other points thus, this__ contrived
+	 * no point has edges to more than 4 other points thus, this contrived
 	 * minimum will be replaced
 	 */
 
@@ -315,7 +315,7 @@ gimme_gene(PlannerInfo *root, Edge edge, Edge *edge_table)
 		 * give priority to candidates with fewest remaining unused edges;
 		 * find out what the minimum number of unused edges is
 		 * (minimum_edges); if there is more than one cadidate with the
-		 * minimum number of unused edges keep count of this__ number
+		 * minimum number of unused edges keep count of this number
 		 * (minimum_count);
 		 */
 
@@ -444,7 +444,7 @@ edge_failure(PlannerInfo *root, Gene *gene, int index, Edge *edge_table, int num
 	}
 
 	/*
-	 * edge table seems to be empty; this__ happens sometimes on the last point
+	 * edge table seems to be empty; this happens sometimes on the last point
 	 * due to the fact that the first point is removed from the table even
 	 * though only one of its edges has been determined
 	 */

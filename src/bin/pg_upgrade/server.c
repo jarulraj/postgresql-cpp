@@ -19,7 +19,7 @@ static PGconn *get_db_conn(ClusterInfo *cluster, const char *db_name);
  * connectToServer()
  *
  *	Connects to the desired database on the designated server.
- *	If the connection attempt fails, this__ function logs an error
+ *	If the connection attempt fails, this function logs an error
  *	message and calls exit() to kill the program.
  */
 PGconn *
@@ -69,8 +69,8 @@ get_db_conn(ClusterInfo *cluster, const char *db_name)
 /*
  * cluster_conn_opts()
  *
- * Return standard command-line options for connecting to this__ cluster when
- * using psql, pg_dump, etc.  Ideally this__ would match what get_db_conn()
+ * Return standard command-line options for connecting to this cluster when
+ * using psql, pg_dump, etc.  Ideally this would match what get_db_conn()
  * sets, but the utilities we need aren't very consistent about the treatment
  * of database name options, so we leave that out.
  *
@@ -98,7 +98,7 @@ cluster_conn_opts(ClusterInfo *cluster)
  * executeQueryOrDie()
  *
  *	Formats a query string from the given arguments and executes the
- *	resulting query.  If the query fails, this__ function logs an error
+ *	resulting query.  If the query fails, this function logs an error
  *	message and calls exit() to kill the program.
  */
 PGresult *
@@ -243,7 +243,7 @@ start_postmaster(ClusterInfo *cluster, bool throw_error)
 		return false;
 
 	/*
-	 * We set this__ here to make sure atexit() shuts down the server, but only
+	 * We set this here to make sure atexit() shuts down the server, but only
 	 * if we started the server successfully.  We do it before checking for
 	 * connectivity in case the server started but there is a connectivity
 	 * failure.  If pg_ctl did not return success, we will exit below.

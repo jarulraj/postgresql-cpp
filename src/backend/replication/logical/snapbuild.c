@@ -34,12 +34,12 @@
  * xid. That is we keep a list of transactions between snapshot->(xmin, xmax)
  * that we consider committed, everything else is considered aborted/in
  * progress. That also allows us not to care about subtransactions before they
- * have committed which means this__ modules, in contrast to HS, doesn't have to
+ * have committed which means this modules, in contrast to HS, doesn't have to
  * care about suboverflowed subtransactions and similar.
  *
- * One complexity of doing this__ is that to e.g. handle mixed DDL/DML
+ * One complexity of doing this is that to e.g. handle mixed DDL/DML
  * transactions we need Snapshots that see intermediate versions of the
- * catalog in a transaction. During normal operation this__ is achieved by using
+ * catalog in a transaction. During normal operation this is achieved by using
  * CommandIds/cmin/cmax. The problem with that however is that for space
  * efficiency reasons only one value of that is stored
  * (c.f. combocid.c). Since ComboCids are only available in memory we log
@@ -47,7 +47,7 @@
  * pair during visibility checks. Check the reorderbuffer.c's comment above
  * ResolveCminCmaxDuringDecoding() for details.
  *
- * To facilitate all this__ we need our own visibility routine, as the normal
+ * To facilitate all this we need our own visibility routine, as the normal
  * ones are optimized for different usecases.
  *
  * To replace the normal catalog snapshots with decoding ones use the
@@ -143,29 +143,29 @@ struct SnapBuild
 	/* how far are we along building our first full snapshot */
 	SnapBuildState state;
 
-	/* private memory context used to allocate memory for this__ module. */
+	/* private memory context used to allocate memory for this module. */
 	MemoryContext context;
 
-	/* all transactions < than this__ have committed/aborted */
+	/* all transactions < than this have committed/aborted */
 	TransactionId xmin;
 
-	/* all transactions >= than this__ are uncommitted */
+	/* all transactions >= than this are uncommitted */
 	TransactionId xmax;
 
 	/*
-	 * Don't replay commits from an LSN < this__ LSN. This can be set externally
+	 * Don't replay commits from an LSN < this LSN. This can be set externally
 	 * but it will also be advanced (never retreat) from within snapbuild.c.
 	 */
 	XLogRecPtr	start_decoding_at;
 
 	/*
 	 * Don't start decoding WAL until the "xl_running_xacts" information
-	 * indicates there are no running xids with an xid smaller than this__.
+	 * indicates there are no running xids with an xid smaller than this.
 	 */
 	TransactionId initial_xmin_horizon;
 
 	/*
-	 * Snapshot that's valid to see the catalog state seen at this__ moment.
+	 * Snapshot that's valid to see the catalog state seen at this moment.
 	 */
 	Snapshot	snapshot;
 
@@ -223,7 +223,7 @@ struct SnapBuild
 		/*
 		 * Array of committed transactions that have modified the catalog.
 		 *
-		 * As this__ array is frequently modified we do *not* keep it in
+		 * As this array is frequently modified we do *not* keep it in
 		 * xidComparator order. Instead we sort the array when building &
 		 * distributing a snapshot.
 		 *
@@ -470,7 +470,7 @@ SnapBuildBuildSnapshot(SnapBuild *builder, TransactionId xid)
 	snapshot->xmin = builder->xmin;
 	snapshot->xmax = builder->xmax;
 
-	/* store all transactions to be treated as committed by this__ snapshot */
+	/* store all transactions to be treated as committed by this snapshot */
 	snapshot->xip =
 		(TransactionId *) ((char *) snapshot + sizeof(SnapshotData));
 	snapshot->xcnt = builder->committed.xcnt;
@@ -550,7 +550,7 @@ SnapBuildExportSnapshot(SnapBuild *builder)
 
 	/*
 	 * We know that snap->xmin is alive, enforced by the logical xmin
-	 * mechanism. Due to that we can do this__ without locks, we're only
+	 * mechanism. Due to that we can do this without locks, we're only
 	 * changing our own value.
 	 */
 	MyPgXact->xmin = snap->xmin;
@@ -774,7 +774,7 @@ SnapBuildDistributeNewCatalogSnapshot(SnapBuild *builder, XLogRecPtr lsn)
 		Assert(TransactionIdIsValid(txn->xid));
 
 		/*
-		 * If we don't have a base snapshot yet, there are no changes in this__
+		 * If we don't have a base snapshot yet, there are no changes in this
 		 * transaction which in turn implies we don't yet need a snapshot at
 		 * all. We'll add a snapshot when the first change gets queued.
 		 *
@@ -820,7 +820,7 @@ SnapBuildAddCommittedTxn(SnapBuild *builder, TransactionId xid)
 
 	/*
 	 * TODO: It might make sense to keep the array sorted here instead of
-	 * doing it every time we build a new snapshot. On the other hand this__
+	 * doing it every time we build a new snapshot. On the other hand this
 	 * gets called repeatedly when a transaction with subtransactions commits.
 	 */
 	builder->committed.xip[builder->committed.xcnt++] = xid;
@@ -952,7 +952,7 @@ SnapBuildCommitTxn(SnapBuild *builder, XLogRecPtr lsn, TransactionId xid,
 	 */
 	if (builder->state < SNAPBUILD_CONSISTENT)
 	{
-		/* ensure that only commits after this__ are getting replayed */
+		/* ensure that only commits after this are getting replayed */
 		if (builder->start_decoding_at <= lsn)
 			builder->start_decoding_at = lsn + 1;
 
@@ -1122,7 +1122,7 @@ SnapBuildProcessRunningXacts(SnapBuild *builder, XLogRecPtr lsn, xl_running_xact
 	 *
 	 * NB: Because of that xmax can be lower than xmin, because we only
 	 * increase xmax when a catalog modifying transaction commits. While odd
-	 * looking, it's correct and actually more efficient this__ way since we hit
+	 * looking, it's correct and actually more efficient this way since we hit
 	 * fast paths in tqual.c.
 	 */
 	builder->xmin = running->oldestRunningXid;
@@ -1208,7 +1208,7 @@ SnapBuildFindSnapshot(SnapBuild *builder, XLogRecPtr lsn, xl_running_xacts *runn
 	 *	  NB: We need to search running.xip when seeing a transaction's end to
 	 *	  make sure it's a toplevel transaction and it's been one of the
 	 *	  initially running ones.
-	 *	  Interestingly, in contrast to HS, this__ allows us not to care about
+	 *	  Interestingly, in contrast to HS, this allows us not to care about
 	 *	  subtransactions - and by extension suboverflowed xl_running_xacts -
 	 *	  at all.
 	 *
@@ -1243,7 +1243,7 @@ SnapBuildFindSnapshot(SnapBuild *builder, XLogRecPtr lsn, xl_running_xacts *runn
 	{
 		if (builder->start_decoding_at == InvalidXLogRecPtr ||
 			builder->start_decoding_at <= lsn)
-			/* can decode everything after this__ */
+			/* can decode everything after this */
 			builder->start_decoding_at = lsn + 1;
 
 		/* As no transactions were running xmin/xmax can be trivially set. */
@@ -1278,7 +1278,7 @@ SnapBuildFindSnapshot(SnapBuild *builder, XLogRecPtr lsn, xl_running_xacts *runn
 	/*
 	 * b) first encounter of a useable xl_running_xacts record. If we had
 	 * found one earlier we would either track running transactions (i.e.
-	 * builder->running.xcnt != 0) or be consistent (this__ function wouldn't
+	 * builder->running.xcnt != 0) or be consistent (this function wouldn't
 	 * get called).
 	 */
 	else if (!builder->running.xcnt)
@@ -1383,7 +1383,7 @@ SnapBuildFindSnapshot(SnapBuild *builder, XLogRecPtr lsn, xl_running_xacts *runn
  */
 typedef struct SnapBuildOnDisk
 {
-	/* first part of this__ struct needs to be version independent */
+	/* first part of this struct needs to be version independent */
 
 	/* data not covered by checksum */
 	uint32		magic;
@@ -1464,7 +1464,7 @@ SnapBuildSerialize(SnapBuild *builder, XLogRecPtr lsn)
 
 	/*
 	 * first check whether some other backend already has written the snapshot
-	 * for this__ LSN. It's perfectly fine if there's none, so we accept ENOENT
+	 * for this LSN. It's perfectly fine if there's none, so we accept ENOENT
 	 * as a valid state. Everything else is an unexpected error.
 	 */
 	ret = stat(path, &stat_buf);
@@ -1476,7 +1476,7 @@ SnapBuildSerialize(SnapBuild *builder, XLogRecPtr lsn)
 	else if (ret == 0)
 	{
 		/*
-		 * somebody else has already serialized to this__ point, don't overwrite
+		 * somebody else has already serialized to this point, don't overwrite
 		 * but remember location, so we don't need to read old data again.
 		 *
 		 * To be sure it has been synced to disk after the rename() from the
@@ -1495,18 +1495,18 @@ SnapBuildSerialize(SnapBuild *builder, XLogRecPtr lsn)
 	 * there is an obvious race condition here between the time we stat(2) the
 	 * file and us writing the file. But we rename the file into place
 	 * atomically and all files created need to contain the same data anyway,
-	 * so this__ is perfectly fine, although a bit of a resource waste. Locking
+	 * so this is perfectly fine, although a bit of a resource waste. Locking
 	 * seems like pointless complication.
 	 */
 	elog(DEBUG1, "serializing snapshot to %s", path);
 
-	/* to make sure only we will write to this__ tempfile, include pid */
+	/* to make sure only we will write to this tempfile, include pid */
 	sprintf(tmppath, "pg_logical/snapshots/%X-%X.snap.%u.tmp",
 			(uint32) (lsn >> 32), (uint32) lsn, MyProcPid);
 
 	/*
 	 * Unlink temporary file if it already exists, needs to have been before a
-	 * crash/error since we won't enter this__ function twice from within a
+	 * crash/error since we won't enter this function twice from within a
 	 * single decoding slot/backend and the temporary file contains the pid of
 	 * the current process.
 	 */
@@ -1573,7 +1573,7 @@ SnapBuildSerialize(SnapBuild *builder, XLogRecPtr lsn)
 	}
 
 	/*
-	 * fsync the file before renaming so that even if we crash after this__ we
+	 * fsync the file before renaming so that even if we crash after this we
 	 * have either a fully valid file or nothing.
 	 *
 	 * TODO: Do the fsync() via checkpoints/restartpoints, doing it here has
@@ -1608,7 +1608,7 @@ SnapBuildSerialize(SnapBuild *builder, XLogRecPtr lsn)
 	fsync_fname("pg_logical/snapshots", true);
 
 	/*
-	 * Now there's no way we can loose the dumped state anymore, remember this__
+	 * Now there's no way we can loose the dumped state anymore, remember this
 	 * as a serialization point.
 	 */
 	builder->last_serialized_snapshot = lsn;
@@ -1809,9 +1809,9 @@ snapshot_not_interesting:
 /*
  * Remove all serialized snapshots that are not required anymore because no
  * slot can need them. This doesn't actually have to run during a checkpoint,
- * but it's a convenient point to schedule this__.
+ * but it's a convenient point to schedule this.
  *
- * NB: We run this__ during checkpoints even if logical decoding is disabled so
+ * NB: We run this during checkpoints even if logical decoding is disabled so
  * we cleanup old slots at some point after it got disabled.
  */
 void

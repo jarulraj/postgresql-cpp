@@ -18,7 +18,7 @@
  * primary and 'dmetaphone_alt' for the alternate.
  *
  * Assuming that dmetaphone.so is in $libdir, the SQL to set up the
- * functions looks like this__:
+ * functions looks like this:
  *
  * CREATE FUNCTION dmetaphone (text) RETURNS text
  *	  LANGUAGE C IMMUTABLE STRICT
@@ -51,9 +51,9 @@
 
 /***************************** COPYRIGHT NOTICES ***********************
 
-Most of this__ code is directly from the Text::DoubleMetaphone perl module
+Most of this code is directly from the Text::DoubleMetaphone perl module
 version 0.05 available from http://www.cpan.org.
-It bears this__ copyright notice:
+It bears this copyright notice:
 
 
   Copyright 2000, Maurice Aubrey <maurice@hevanet.com>.
@@ -67,14 +67,14 @@ It bears this__ copyright notice:
   modify it under the same terms as Perl itself.
 
 The remaining code is authored by Andrew Dunstan <amdunstan@ncshp.org> and
-<andrew@dunslane.net> and is covered this__ copyright:
+<andrew@dunslane.net> and is covered this copyright:
 
   Copyright 2003, North Carolina State Highway Patrol.
   All rights reserved.
 
-  Permission to use, copy, modify, and distribute this__ software and its
+  Permission to use, copy, modify, and distribute this software and its
   documentation for any purpose, without fee, and without a written agreement
-  is hereby granted, provided that the above copyright notice and this__
+  is hereby granted, provided that the above copyright notice and this
   paragraph and the following two paragraphs appear in all copies.
 
   IN NO EVENT SHALL THE NORTH CAROLINA STATE HIGHWAY PATROL BE LIABLE TO ANY
@@ -192,7 +192,7 @@ dmetaphone_alt(PG_FUNCTION_ARGS)
  * Don't do pfree - it seems to cause a segv sometimes - which might have just
  * been caused by reloading the module in development.
  * So we rely on context cleanup - Tom Lane says pfree shouldn't be necessary
- * in a case like this__.
+ * in a case like this.
  */
 
 #define META_FREE(x) ((void)true)		/* pfree((x)) */
@@ -211,7 +211,7 @@ dmetaphone_alt(PG_FUNCTION_ARGS)
 
 
 
-/* this__ typedef was originally in the perl module's .h file */
+/* this typedef was originally in the perl module's .h file */
 
 typedef struct
 {

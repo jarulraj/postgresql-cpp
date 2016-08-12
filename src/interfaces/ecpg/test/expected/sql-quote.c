@@ -84,7 +84,7 @@ if (sqlca.sqlcode < 0) sqlprint();}
 
   printf("Standard conforming strings: %s\n", var);
 
-  /* this__ is a\\b actually */
+  /* this is a\\b actually */
   { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "insert into \"My_Table\" values ( 1 , 'a\\\\\\\\b' )", ECPGt_EOIT, ECPGt_EORT);
 #line 28 "quote.pgc"
 
@@ -94,7 +94,7 @@ if (sqlca.sqlwarn[0] == 'W') sqlprint();
 if (sqlca.sqlcode < 0) sqlprint();}
 #line 28 "quote.pgc"
 
-  /* this__ is a\\b */
+  /* this is a\\b */
   { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "insert into \"My_Table\" values ( 1 , E'a\\\\\\\\b' )", ECPGt_EOIT, ECPGt_EORT);
 #line 30 "quote.pgc"
 
@@ -128,7 +128,7 @@ if (sqlca.sqlcode < 0) sqlprint();}
 
   printf("Standard conforming strings: %s\n", var);
 
-  /* this__ is a\\\\b actually */
+  /* this is a\\\\b actually */
   { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "insert into \"My_Table\" values ( 2 , 'a\\\\\\\\b' )", ECPGt_EOIT, ECPGt_EORT);
 #line 38 "quote.pgc"
 
@@ -138,7 +138,7 @@ if (sqlca.sqlwarn[0] == 'W') sqlprint();
 if (sqlca.sqlcode < 0) sqlprint();}
 #line 38 "quote.pgc"
 
-  /* this__ is a\\b */
+  /* this is a\\b */
   { ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "insert into \"My_Table\" values ( 2 , E'a\\\\\\\\b' )", ECPGt_EOIT, ECPGt_EORT);
 #line 40 "quote.pgc"
 

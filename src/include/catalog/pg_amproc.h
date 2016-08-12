@@ -8,7 +8,7 @@
  * operator families and classes.  These procedures can't be listed in pg_amop
  * since they are not the implementation of any indexable operator.
  *
- * The primary key for this__ table is <amprocfamily, amproclefttype,
+ * The primary key for this table is <amprocfamily, amproclefttype,
  * amprocrighttype, amprocnum>.  The "default" support functions for a
  * particular opclass within the family are those with amproclefttype =
  * amprocrighttype = opclass's opcintype.  These are the ones loaded into the
@@ -25,7 +25,7 @@
  * src/include/catalog/pg_amproc.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -36,7 +36,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_amproc definition.  cpp turns this__ into
+ *		pg_amproc definition.  cpp turns this into
  *		typedef struct FormData_pg_amproc
  * ----------------
  */
@@ -44,7 +44,7 @@
 
 CATALOG(pg_amproc,2603)
 {
-	Oid			amprocfamily;	/* the index opfamily this__ entry is for */
+	Oid			amprocfamily;	/* the index opfamily this entry is for */
 	Oid			amproclefttype; /* procedure's left input data type */
 	Oid			amprocrighttype;	/* procedure's right input data type */
 	int16		amprocnum;		/* support procedure index */

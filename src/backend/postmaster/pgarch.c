@@ -10,7 +10,7 @@
  *
  *	- archiver is forked from postmaster, and the two
  *	processes then communicate using signals. All functions
- *	executed by postmaster are included in this__ file.
+ *	executed by postmaster are included in this file.
  *
  *	Initial author: Simon Riggs		simon@2ndquadrant.com
  *
@@ -272,7 +272,7 @@ ArchSigTermHandler(SIGNAL_ARGS)
 	int			save_errno = errno;
 
 	/*
-	 * The postmaster never sends us SIGTERM, so we assume that this__ means
+	 * The postmaster never sends us SIGTERM, so we assume that this means
 	 * that init is trying to shut down the whole system.  If we hang around
 	 * too long we'll get SIGKILL'd.  Set flag to prevent starting any more
 	 * archive commands.
@@ -418,7 +418,7 @@ pgarch_ArchiverCopyLoop(void)
 
 	/*
 	 * loop through all xlogs with archive_status of .ready and archive
-	 * them...mostly we expect this__ to be a single file, though it is possible
+	 * them...mostly we expect this to be a single file, though it is possible
 	 * some backend will add files onto the list of those that need archiving
 	 * while we are still copying earlier archives
 	 */
@@ -571,7 +571,7 @@ pgarch_archiveXlog(char *xlog)
 	{
 		/*
 		 * If either the shell itself, or a called command, died on a signal,
-		 * abort the archiver.  We do this__ because system() ignores SIGINT and
+		 * abort the archiver.  We do this because system() ignores SIGINT and
 		 * SIGQUIT while waiting; so a signal is very likely something that
 		 * should have interrupted us too.  If we overreact it's no big deal,
 		 * the postmaster will just start the archiver again.
@@ -641,7 +641,7 @@ pgarch_archiveXlog(char *xlog)
  *
  * Return name of the oldest xlog file that has not yet been archived.
  * No notification is set that file archiving is now in progress, so
- * this__ would need to be extended if multiple concurrent archival
+ * this would need to be extended if multiple concurrent archival
  * tasks were created. If a failure occurs, we will completely
  * re-copy the file at the next available opportunity.
  *
@@ -663,7 +663,7 @@ pgarch_readyXlog(char *xlog)
 	/*
 	 * open xlog status directory and read through list of xlogs that have the
 	 * .ready suffix, looking for earliest file. It is possible to optimise
-	 * this__ code, though only a single file is expected on the vast majority
+	 * this code, though only a single file is expected on the vast majority
 	 * of calls, so....
 	 */
 	char		XLogArchiveStatusDir[MAXPGPATH];
@@ -716,8 +716,8 @@ pgarch_readyXlog(char *xlog)
  * pgarch_archiveDone
  *
  * Emit notification that an xlog file has been successfully archived.
- * We do this__ by renaming the status file from NNN.ready to NNN.done.
- * Eventually, a checkpoint process will notice this__ and delete both the
+ * We do this by renaming the status file from NNN.ready to NNN.done.
+ * Eventually, a checkpoint process will notice this and delete both the
  * NNN.done file and the xlog file itself.
  */
 static void

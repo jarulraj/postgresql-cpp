@@ -11,7 +11,7 @@
  * src/include/catalog/pg_opfamily.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_opfamily definition. cpp turns this__ into
+ *		pg_opfamily definition. cpp turns this into
  *		typedef struct FormData_pg_opfamily
  * ----------------
  */
@@ -31,8 +31,8 @@
 CATALOG(pg_opfamily,2753)
 {
 	Oid			opfmethod;		/* index access method opfamily is for */
-	NameData	opfname;		/* name of this__ opfamily */
-	Oid			opfnamespace;	/* namespace of this__ opfamily */
+	NameData	opfname;		/* name of this opfamily */
+	Oid			opfnamespace;	/* namespace of this opfamily */
 	Oid			opfowner;		/* opfamily owner */
 } FormData_pg_opfamily;
 

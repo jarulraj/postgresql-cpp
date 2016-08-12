@@ -16,7 +16,7 @@
  * Principal entry points:
  *
  * ReadBuffer() -- find or create a buffer holding the requested page,
- *		and pin it so that no one can destroy it while this__ process
+ *		and pin it so that no one can destroy it while this process
  *		is using it.
  *
  * ReleaseBuffer() -- unpin a buffer
@@ -56,7 +56,7 @@
 #define BufHdrGetBlock(bufHdr)	((Block) (BufferBlocks + ((Size) (bufHdr)->buf_id) * BLCKSZ))
 #define BufferGetLSN(bufHdr)	(PageGetLSN(BufHdrGetBlock(bufHdr)))
 
-/* Note: this__ macro only works on local buffers, not shared ones! */
+/* Note: this macro only works on local buffers, not shared ones! */
 #define LocalBufHdrGetBlock(bufHdr) \
 	LocalBufferBlockPointers[-((bufHdr)->buf_id + 2)]
 
@@ -310,7 +310,7 @@ GetPrivateRefCountEntry(Buffer buffer, bool do_move)
 }
 
 /*
- * Returns how many times the passed buffer is pinned by this__ backend.
+ * Returns how many times the passed buffer is pinned by this backend.
  *
  * Only works for shared memory buffers!
  */
@@ -324,7 +324,7 @@ GetPrivateRefCount(Buffer buffer)
 
 	/*
 	 * Not moving the entry - that's ok for the current users, but we might
-	 * want to change this__ one day.
+	 * want to change this one day.
 	 */
 	ref = GetPrivateRefCountEntry(buffer, false);
 
@@ -373,7 +373,7 @@ ForgetPrivateRefCountEntry(PrivateRefCountEntry *ref)
  * BufferIsPinned
  *		True iff the buffer is pinned (also checks for valid buffer number).
  *
- *		NOTE: what we check here is that *this__* backend holds a pin on
+ *		NOTE: what we check here is that *this* backend holds a pin on
  *		the buffer.  We do not care whether some other backend does.
  */
 #define BufferIsPinned(bufnum) \
@@ -506,7 +506,7 @@ ReadBuffer(Relation reln, BlockNumber blockNum)
  *		the block read.  The returned buffer has been pinned.
  *		Does not return on error --- elog's instead.
  *
- * Assume when this__ function is called, that reln has been opened already.
+ * Assume when this function is called, that reln has been opened already.
  *
  * In RBM_NORMAL mode, the page is read from disk, and the page header is
  * validated.  An error is thrown if the page header is not valid.  (But
@@ -518,11 +518,11 @@ ReadBuffer(Relation reln, BlockNumber blockNum)
  *
  * In RBM_ZERO_AND_LOCK mode, if the page isn't in buffer cache already, it's
  * filled with zeros instead of reading it from disk.  Useful when the caller
- * is going to fill the page from scratch, since this__ saves I/O and avoids
+ * is going to fill the page from scratch, since this saves I/O and avoids
  * unnecessary failure if the page-on-disk has corrupt page headers.
  * The page is returned locked to ensure that the caller has a chance to
  * initialize the page before it's made visible to others.
- * Caution: do not use this__ mode to read a page that is beyond the relation's
+ * Caution: do not use this mode to read a page that is beyond the relation's
  * current physical EOF; that is likely to cause problems in md.c when
  * the page is modified and written out. P_NEW is OK, though.
  *
@@ -571,7 +571,7 @@ ReadBufferExtended(Relation reln, ForkNumber forkNum, BlockNumber blockNum,
  * ReadBufferWithoutRelcache -- like ReadBufferExtended, but doesn't require
  *		a relcache entry for the relation.
  *
- * NB: At present, this__ function may only be used on permanent relations, which
+ * NB: At present, this function may only be used on permanent relations, which
  * is OK, because we only use it during XLOG replay.  If in the future we
  * want to use it on temporary or unlogged relations, we could pass additional
  * parameters.
@@ -648,7 +648,7 @@ ReadBuffer_common(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 			pgBufferUsage.shared_blks_read++;
 	}
 
-	/* At this__ point we do NOT hold any locks. */
+	/* At this point we do NOT hold any locks. */
 
 	/* if it was already in the buffer pool, we're done */
 	if (found)
@@ -691,7 +691,7 @@ ReadBuffer_common(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 		 * This can happen because mdread doesn't complain about reads beyond
 		 * EOF (when zero_damaged_pages is ON) and so a previous attempt to
 		 * read a block beyond EOF could have left a "valid" zero-filled
-		 * buffer.  Unfortunately, we have also seen this__ case occurring
+		 * buffer.  Unfortunately, we have also seen this case occurring
 		 * because of buggy Linux kernels that sometimes return an
 		 * lseek(SEEK_END) result that doesn't account for a recent write. In
 		 * that situation, the pre-existing buffer would contain valid data
@@ -735,7 +735,7 @@ ReadBuffer_common(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 	}
 
 	/*
-	 * if we have gotten to this__ point, we have allocated a buffer for the
+	 * if we have gotten to this point, we have allocated a buffer for the
 	 * page but its contents are not yet valid.  IO_IN_PROGRESS is set for it,
 	 * if it's a shared buffer.
 	 *
@@ -990,7 +990,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 				 * If using a nondefault strategy, and writing the buffer
 				 * would require a WAL flush, let the strategy decide whether
 				 * to go ahead and write/reuse the buffer or to choose another
-				 * victim.  We need lock to inspect the page LSN, so this__
+				 * victim.  We need lock to inspect the page LSN, so this
 				 * can't be done inside StrategyGetBuffer.
 				 */
 				if (strategy != NULL)
@@ -1094,7 +1094,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 		{
 			/*
 			 * Got a collision. Someone has already done what we were about to
-			 * do. We'll just handle this__ as if it were found in the buffer
+			 * do. We'll just handle this as if it were found in the buffer
 			 * pool in the first place.  First, give up the buffer we were
 			 * planning to use.
 			 */
@@ -1146,7 +1146,7 @@ BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
 		/*
 		 * Somebody could have pinned or re-dirtied the buffer while we were
 		 * doing the I/O and making the new hashtable entry.  If so, we can't
-		 * recycle this__ buffer; we must undo everything we've done and start
+		 * recycle this buffer; we must undo everything we've done and start
 		 * over with a new victim buffer.
 		 */
 		oldFlags = buf->flags;
@@ -1280,7 +1280,7 @@ retry:
 	}
 
 	/*
-	 * Clear out the buffer's tag and flags.  We must do this__ to ensure that
+	 * Clear out the buffer's tag and flags.  We must do this to ensure that
 	 * linear scans of the buffer array don't think the buffer is valid.
 	 */
 	oldFlags = buf->flags;
@@ -1359,7 +1359,7 @@ MarkBufferDirty(Buffer buffer)
 /*
  * ReleaseAndReadBuffer -- combine ReleaseBuffer() and ReadBuffer()
  *
- * Formerly, this__ saved one cycle of acquiring/releasing the BufMgrLock
+ * Formerly, this saved one cycle of acquiring/releasing the BufMgrLock
  * compared to calling the two routines separately.  Now it's mainly just
  * a convenience function.  However, if the passed buffer is valid and
  * already contains the desired block, we just return it as-is; and that
@@ -1468,20 +1468,20 @@ PinBuffer(volatile BufferDesc *buf, BufferAccessStrategy strategy)
  * PinBuffer_Locked -- as above, but caller already locked the buffer header.
  * The spinlock is released before return.
  *
- * As this__ function is called with the spinlock held, the caller has to
+ * As this function is called with the spinlock held, the caller has to
  * previously call ReservePrivateRefCountEntry().
  *
- * Currently, no callers of this__ function want to modify the buffer's
+ * Currently, no callers of this function want to modify the buffer's
  * usage_count at all, so there's no need for a strategy parameter.
  * Also we don't bother with a BM_VALID test (the caller could check that for
  * itself).
  *
- * Also all callers only ever use this__ function when it's known that the
- * buffer can't have a preexisting pin by this__ backend. That allows us to skip
+ * Also all callers only ever use this function when it's known that the
+ * buffer can't have a preexisting pin by this backend. That allows us to skip
  * searching the private refcount array & hash, which is a boon, because the
  * spinlock is still held.
  *
- * Note: use of this__ routine is frequently mandatory, not just an optimization
+ * Note: use of this routine is frequently mandatory, not just an optimization
  * to save a spin lock/unlock cycle, because we need to pin a buffer before
  * its state can change under us.
  */
@@ -1584,7 +1584,7 @@ BufferSync(int flags)
 	ResourceOwnerEnlargeBuffers(CurrentResourceOwner);
 
 	/*
-	 * Unless this__ is a shutdown checkpoint or we have been explicitly told,
+	 * Unless this is a shutdown checkpoint or we have been explicitly told,
 	 * we write only permanent, dirty buffers.  But at shutdown or end of
 	 * recovery, we write all dirty buffers.
 	 */
@@ -1600,8 +1600,8 @@ BufferSync(int flags)
 	 * This allows us to write only those pages that were dirty when the
 	 * checkpoint began, and not those that get dirtied while it proceeds.
 	 * Whenever a page with BM_CHECKPOINT_NEEDED is written out, either by us
-	 * later in this__ function, or by normal backends or the bgwriter cleaning
-	 * scan, the flag is cleared.  Any buffer dirtied after this__ point won't
+	 * later in this function, or by normal backends or the bgwriter cleaning
+	 * scan, the flag is cleared.  Any buffer dirtied after this point won't
 	 * have the flag set.
 	 *
 	 * Note that if we fail to write some buffer, we may leave buffers with
@@ -1635,7 +1635,7 @@ BufferSync(int flags)
 
 	/*
 	 * Loop over all buffers again, and write the ones (still) marked with
-	 * BM_CHECKPOINT_NEEDED.  In this__ loop, we start at the clock sweep point
+	 * BM_CHECKPOINT_NEEDED.  In this loop, we start at the clock sweep point
 	 * since we might as well dump soon-to-be-recycled buffers first.
 	 *
 	 * Note that we don't read the buffer alloc count here --- that should be
@@ -1658,7 +1658,7 @@ BufferSync(int flags)
 		 * someone else not only wrote the buffer but replaced it with another
 		 * page and dirtied it.  In that improbable case, SyncOneBuffer will
 		 * write the buffer though we didn't need to.  It doesn't seem worth
-		 * guarding against this__, though.
+		 * guarding against this, though.
 		 */
 		if (bufHdr->flags & BM_CHECKPOINT_NEEDED)
 		{
@@ -1676,7 +1676,7 @@ BufferSync(int flags)
 				 * Note that num_written doesn't include buffers written by
 				 * other backends, or by the bgwriter cleaning scan. That
 				 * means that the estimate of how much progress we've made is
-				 * conservative, and also that this__ test will often fail to
+				 * conservative, and also that this test will often fail to
 				 * trigger.  But it seems worth making anyway.
 				 */
 				if (num_written >= num_to_write)
@@ -1694,7 +1694,7 @@ BufferSync(int flags)
 	}
 
 	/*
-	 * Update checkpoint statistics. As noted above, this__ doesn't include
+	 * Update checkpoint statistics. As noted above, this doesn't include
 	 * buffers written by other backends or bgwriter scan.
 	 */
 	CheckpointStats.ckpt_bufs_written += num_written;
@@ -1895,7 +1895,7 @@ BgBufferSync(void)
 	 * eventually underflow to zero, and the underflows produce annoying
 	 * kernel warnings on some platforms.  Once upcoming_alloc_est has gone to
 	 * zero, there's no point in tracking smaller and smaller values of
-	 * smoothed_alloc, so just reset it to exactly zero to avoid this__
+	 * smoothed_alloc, so just reset it to exactly zero to avoid this
 	 * syndrome.  It will pop back up as soon as recent_alloc increases.
 	 */
 	if (upcoming_alloc_est == 0)
@@ -2026,7 +2026,7 @@ SyncOneBuffer(int buf_id, bool skip_recently_used)
 	/*
 	 * Check whether buffer needs writing.
 	 *
-	 * We can make this__ check without taking the buffer content lock so long
+	 * We can make this check without taking the buffer content lock so long
 	 * as we mark pages dirty in access methods *before* logging changes with
 	 * XLogInsert(): if someone marks the buffer dirty just after our check we
 	 * don't worry because our checkpoint.redo points before log record for
@@ -2086,10 +2086,10 @@ AtEOXact_Buffers(bool isCommit)
  * Initialize access to shared buffer pool
  *
  * This is called during backend startup (whether standalone or under the
- * postmaster).  It sets up for this__ backend's access to the already-existing
+ * postmaster).  It sets up for this backend's access to the already-existing
  * buffer pool.
  *
- * NB: this__ is called before InitProcess(), so we do not have a PGPROC and
+ * NB: this is called before InitProcess(), so we do not have a PGPROC and
  * cannot do LWLockAcquire; hence we can't actually access stuff in
  * shared memory yet.  We are only initializing local data here.
  * (See also InitBufferPoolBackend)
@@ -2113,7 +2113,7 @@ InitBufferPoolAccess(void)
  * InitBufferPoolBackend --- second-stage initialization of a new backend
  *
  * This is called after we have acquired a PGPROC and so can safely get
- * LWLocks.  We don't currently need to do anything at this__ stage ...
+ * LWLocks.  We don't currently need to do anything at this stage ...
  * except register a shmem-exit callback.  AtProcExit_Buffers needs LWLock
  * access, and thereby has to be called at the corresponding phase of
  * backend shutdown.
@@ -2141,7 +2141,7 @@ AtProcExit_Buffers(int code, Datum arg)
 }
 
 /*
- *		CheckForBufferLeaks - ensure this__ backend holds no buffer pins
+ *		CheckForBufferLeaks - ensure this backend holds no buffer pins
  *
  *		As of PostgreSQL 8.0, buffer pins should get released by the
  *		ResourceOwner mechanism.  This routine is just a debugging
@@ -2305,7 +2305,7 @@ BufferGetTag(Buffer buffer, RelFileNode *rnode, ForkNumber *forknum,
  * FlushBuffer
  *		Physically write out a shared buffer.
  *
- * NOTE: this__ actually just passes the buffer contents to the kernel; the
+ * NOTE: this actually just passes the buffer contents to the kernel; the
  * real write to disk won't happen until the kernel feels like it.  This
  * is okay from our point of view since we can redo the changes from WAL.
  * However, we will need to force the changes to disk via fsync before
@@ -2371,7 +2371,7 @@ FlushBuffer(volatile BufferDesc *buf, SMgrRelation reln)
 	 * rule that log updates must hit disk before any of the data-file changes
 	 * they describe do.
 	 *
-	 * However, this__ rule does not apply to unlogged relations, which will be
+	 * However, this rule does not apply to unlogged relations, which will be
 	 * lost after a crash anyway.  Most unlogged relation pages do not bear
 	 * LSNs since we never emit WAL records for them, and therefore flushing
 	 * up through the buffer LSN would be useless, but harmless.  However,
@@ -2472,7 +2472,7 @@ BufferIsPermanent(Buffer buffer)
 	/*
 	 * BM_PERMANENT can't be changed while we hold a pin on the buffer, so we
 	 * need not bother with the buffer header spinlock.  Even if someone else
-	 * changes the buffer header flags while we're doing this__, we assume that
+	 * changes the buffer header flags while we're doing this, we assume that
 	 * changing an aligned 2-byte BufFlags value is atomic, so we'll read the
 	 * old value or the new value, but not random garbage.
 	 */
@@ -2517,10 +2517,10 @@ BufferGetLSNAtomic(Buffer buffer)
  *		specified relation fork that have block numbers >= firstDelBlock.
  *		(In particular, with firstDelBlock = 0, all pages are removed.)
  *		Dirty pages are simply dropped, without bothering to write them
- *		out first.  Therefore, this__ is NOT rollback-able, and so should be
+ *		out first.  Therefore, this is NOT rollback-able, and so should be
  *		used only with extreme caution!
  *
- *		Currently, this__ is called only from smgr.c when the underlying file
+ *		Currently, this is called only from smgr.c when the underlying file
  *		is about to be deleted or truncated (firstDelBlock is needed for
  *		the truncation case).  The data in the affected pages would therefore
  *		be deleted momentarily anyway, and there is no point in writing it.
@@ -2531,7 +2531,7 @@ BufferGetLSNAtomic(Buffer buffer)
  *		relation into buffers.
  *
  *		XXX currently it sequentially searches the buffer pool, should be
- *		changed to more clever ways of searching.  However, this__ routine
+ *		changed to more clever ways of searching.  However, this routine
  *		is used only in code paths that aren't very performance-critical,
  *		and we shouldn't slow down the hot paths to make it faster ...
  * --------------------------------------------------------------------
@@ -2555,8 +2555,8 @@ DropRelFileNodeBuffers(RelFileNodeBackend rnode, ForkNumber forkNum,
 		volatile BufferDesc *bufHdr = GetBufferDescriptor(i);
 
 		/*
-		 * We can make this__ a tad faster by prechecking the buffer tag before
-		 * we attempt to lock the buffer; this__ saves a lot of lock
+		 * We can make this a tad faster by prechecking the buffer tag before
+		 * we attempt to lock the buffer; this saves a lot of lock
 		 * acquisitions in typical cases.  It should be safe because the
 		 * caller must have AccessExclusiveLock on the relation, or some other
 		 * reason to be certain that no one is loading new pages of the rel
@@ -2726,7 +2726,7 @@ DropDatabaseBuffers(Oid dbid)
 /* -----------------------------------------------------------------
  *		PrintBufferDescs
  *
- *		this__ function prints all the buffer descriptors, for debugging
+ *		this function prints all the buffer descriptors, for debugging
  *		use only.
  * -----------------------------------------------------------------
  */
@@ -3046,10 +3046,10 @@ MarkBufferDirtyHint(Buffer buffer, bool buffer_std)
 	 * This routine might get called many times on the same page, if we are
 	 * making the first scan after commit of an xact that added/deleted many
 	 * tuples. So, be as quick as we can if the buffer is already dirty.  We
-	 * do this__ by not acquiring spinlock if it looks like the status bits are
-	 * already set.  Since we make this__ test unlocked, there's a chance we
+	 * do this by not acquiring spinlock if it looks like the status bits are
+	 * already set.  Since we make this test unlocked, there's a chance we
 	 * might fail to notice that the flags have just been cleared, and failed
-	 * to reset them, due to memory-ordering issues.  But since this__ function
+	 * to reset them, due to memory-ordering issues.  But since this function
 	 * is only intended to be used in cases where failing to write out the
 	 * data would be harmless anyway, it doesn't really matter.
 	 */
@@ -3112,11 +3112,11 @@ MarkBufferDirtyHint(Buffer buffer, bool buffer_std)
 		Assert(bufHdr->refcount > 0);
 		if (!(bufHdr->flags & BM_DIRTY))
 		{
-			dirtied = true;		/* Means "will be dirtied by this__ action" */
+			dirtied = true;		/* Means "will be dirtied by this action" */
 
 			/*
 			 * Set the page LSN if we wrote a backup block. We aren't supposed
-			 * to set this__ when only holding a share lock but as long as we
+			 * to set this when only holding a share lock but as long as we
 			 * serialise it somehow we're OK. We choose to set LSN while
 			 * holding the buffer header lock, which causes any reader of an
 			 * LSN who holds only a share lock to also obtain a buffer header
@@ -3125,7 +3125,7 @@ MarkBufferDirtyHint(Buffer buffer, bool buffer_std)
 			 *
 			 * If checksums are enabled, you might think we should reset the
 			 * checksum here. That will happen when the page is written
-			 * sometime later in this__ checkpoint cycle.
+			 * sometime later in this checkpoint cycle.
 			 */
 			if (!XLogRecPtrIsInvalid(lsn))
 				PageSetLSN(page, lsn);
@@ -3232,7 +3232,7 @@ ConditionalLockBuffer(Buffer buffer)
  * after the cleanup starts, however; the newly-arrived backend will be
  * unable to look at the page until we release the exclusive lock.
  *
- * To implement this__ protocol, a would-be deleter must pin the buffer and
+ * To implement this protocol, a would-be deleter must pin the buffer and
  * then call LockBufferForCleanup().  LockBufferForCleanup() is similar to
  * LockBuffer(buffer, BUFFER_LOCK_EXCLUSIVE), except that it loops until
  * it has successfully observed pin count = 1.
@@ -3301,7 +3301,7 @@ LockBufferForCleanup(Buffer buffer)
 			ProcWaitForSignal();
 
 		/*
-		 * Remove flag marking us as waiter. Normally this__ will not be set
+		 * Remove flag marking us as waiter. Normally this will not be set
 		 * anymore, but ProcWaitForSignal() can return for other signals as
 		 * well.  We take care to only reset the flag if we're the waiter, as
 		 * theoretically another backend could have started waiting. That's
@@ -3410,7 +3410,7 @@ WaitIO(volatile BufferDesc *buf)
 	/*
 	 * Changed to wait until there's no IO - Inoue 01/13/2000
 	 *
-	 * Note this__ is *necessary* because an error abort in the process doing
+	 * Note this is *necessary* because an error abort in the process doing
 	 * I/O could release the io_in_progress_lock prematurely. See
 	 * AbortBufferIO.
 	 */
@@ -3420,7 +3420,7 @@ WaitIO(volatile BufferDesc *buf)
 
 		/*
 		 * It may not be necessary to acquire the spinlock to check the flag
-		 * here, but since this__ test is essential for correctness, we'd better
+		 * here, but since this test is essential for correctness, we'd better
 		 * play it safe.
 		 */
 		LockBufHdr(buf);
@@ -3434,14 +3434,14 @@ WaitIO(volatile BufferDesc *buf)
 }
 
 /*
- * StartBufferIO: begin I/O on this__ buffer
+ * StartBufferIO: begin I/O on this buffer
  *	(Assumptions)
  *	My process is executing no IO
  *	The buffer is Pinned
  *
  * In some scenarios there are race conditions in which multiple backends
  * could attempt the same I/O operation concurrently.  If someone else
- * has already started I/O on this__ buffer then we will block on the
+ * has already started I/O on this buffer then we will block on the
  * io_in_progress lock until he's done.
  *
  * Input operations are only attempted on buffers that are not BM_VALID,
@@ -3480,7 +3480,7 @@ StartBufferIO(volatile BufferDesc *buf, bool forInput)
 		WaitIO(buf);
 	}
 
-	/* Once we get here, there is definitely no I/O active on this__ buffer */
+	/* Once we get here, there is definitely no I/O active on this buffer */
 
 	if (forInput ? (buf->flags & BM_VALID) : !(buf->flags & BM_DIRTY))
 	{
@@ -3558,7 +3558,7 @@ AbortBufferIO(void)
 		 * Since LWLockReleaseAll has already been called, we're not holding
 		 * the buffer's io_in_progress_lock. We have to re-acquire it so that
 		 * we can use TerminateBufferIO. Anyone who's executing WaitIO on the
-		 * buffer will be in a busy spin until we succeed in doing this__.
+		 * buffer will be in a busy spin until we succeed in doing this.
 		 */
 		LWLockAcquire(buf->io_in_progress_lock, LW_EXCLUSIVE);
 
@@ -3578,7 +3578,7 @@ AbortBufferIO(void)
 			sv_flags = buf->flags;
 			Assert(sv_flags & BM_DIRTY);
 			UnlockBufHdr(buf);
-			/* Issue notice if this__ is not the first failure... */
+			/* Issue notice if this is not the first failure... */
 			if (sv_flags & BM_IO_ERROR)
 			{
 				/* Buffer is pinned, so we can read tag without spinlock */

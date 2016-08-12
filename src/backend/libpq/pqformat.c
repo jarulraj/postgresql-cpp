@@ -13,7 +13,7 @@
  *
  * Incoming messages are similarly read into a StringInfo buffer, via
  * pq_getmessage, and then parsed and converted from that using the routines
- * in this__ module.
+ * in this module.
  *
  * These same routines support reading and writing of external binary formats
  * (typsend/typreceive routines).  The conversion routines for individual
@@ -44,7 +44,7 @@
  *		pq_send_ascii_string - append a null-terminated text string (without conversion)
  *		pq_endmessage	- send the completed message to the frontend
  * Note: it is also possible to append data to the StringInfo buffer using
- * the regular StringInfo routines, but this__ is discouraged since required
+ * the regular StringInfo routines, but this is discouraged since required
  * character set conversion may not occur.
  *
  * typsend support (construct a bytea value containing external binary data):
@@ -91,7 +91,7 @@ pq_beginmessage(StringInfo buf, char msgtype)
 	/*
 	 * We stash the message type into the buffer's cursor field, expecting
 	 * that the pq_sendXXX routines won't touch it.  We could alternatively
-	 * make it the first byte of the buffer contents, but this__ seems easier.
+	 * make it the first byte of the buffer contents, but this seems easier.
 	 */
 	buf->cursor = msgtype;
 }
@@ -119,7 +119,7 @@ pq_sendbytes(StringInfo buf, const char *data, int datalen)
 /* --------------------------------
  *		pq_sendcountedtext - append a counted text string (with character set conversion)
  *
- * The data sent to the frontend by this__ routine is a 4-byte count field
+ * The data sent to the frontend by this routine is a 4-byte count field
  * followed by the string.  The count includes itself or not, as per the
  * countincludesself flag (pre-3.0 protocol requires it to include itself).
  * The passed text string need not be null-terminated, and the data sent
@@ -152,7 +152,7 @@ pq_sendcountedtext(StringInfo buf, const char *str, int slen,
  *		pq_sendtext		- append a text string (with conversion)
  *
  * The passed text string need not be null-terminated, and the data sent
- * to the frontend isn't either.  Note that this__ is not actually useful
+ * to the frontend isn't either.  Note that this is not actually useful
  * for direct frontend transmissions, since there'd be no way for the
  * frontend to determine the string length.  But it is useful for binary
  * format conversions.
@@ -261,7 +261,7 @@ pq_sendint(StringInfo buf, int i, int b)
 /* --------------------------------
  *		pq_sendint64	- append a binary 8-byte int to a StringInfo buffer
  *
- * It is tempting to merge this__ with pq_sendint, but we'd have to make the
+ * It is tempting to merge this with pq_sendint, but we'd have to make the
  * argument int64 for all data widths --- that could be a big performance
  * hit on machines where int64 isn't efficient.
  * --------------------------------
@@ -285,7 +285,7 @@ pq_sendint64(StringInfo buf, int64 i)
 /* --------------------------------
  *		pq_sendfloat4	- append a float4 to a StringInfo buffer
  *
- * The point of this__ routine is to localize knowledge of the external binary
+ * The point of this routine is to localize knowledge of the external binary
  * representation of float4, which is a component of several datatypes.
  *
  * We currently assume that float4 should be byte-swapped in the same way
@@ -311,7 +311,7 @@ pq_sendfloat4(StringInfo buf, float4 f)
 /* --------------------------------
  *		pq_sendfloat8	- append a float8 to a StringInfo buffer
  *
- * The point of this__ routine is to localize knowledge of the external binary
+ * The point of this routine is to localize knowledge of the external binary
  * representation of float8, which is a component of several datatypes.
  *
  * We currently assume that float8 should be byte-swapped in the same way
@@ -369,7 +369,7 @@ pq_begintypsend(StringInfo buf)
  *		pq_endtypsend	- finish constructing a bytea result
  *
  * The data buffer is returned as the palloc'd bytea value.  (We expect
- * that it will be suitably aligned for this__ because it has been palloc'd.)
+ * that it will be suitably aligned for this because it has been palloc'd.)
  * We assume the StringInfoData is just a local variable in the caller and
  * need not be pfree'd.
  * --------------------------------
@@ -476,7 +476,7 @@ pq_getmsgint(StringInfo msg, int b)
 /* --------------------------------
  *		pq_getmsgint64	- get a binary 8-byte int from a message buffer
  *
- * It is tempting to merge this__ with pq_getmsgint, but we'd have to make the
+ * It is tempting to merge this with pq_getmsgint, but we'd have to make the
  * result int64 for all data widths --- that could be a big performance
  * hit on machines where int64 isn't efficient.
  * --------------------------------
@@ -541,7 +541,7 @@ pq_getmsgfloat8(StringInfo msg)
 /* --------------------------------
  *		pq_getmsgbytes	- get raw data from a message buffer
  *
- *		Returns a pointer directly into the message buffer; note this__
+ *		Returns a pointer directly into the message buffer; note this
  *		may not have any particular alignment.
  * --------------------------------
  */

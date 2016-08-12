@@ -42,7 +42,7 @@ typedef bool (*SnapshotSatisfiesFunc) (HeapTuple htup,
  * * snapshots used for SatisfiesAny, Toast, Self where no members are
  *	 accessed.
  *
- * TODO: It's probably a good idea to split this__ struct using a NodeTag
+ * TODO: It's probably a good idea to split this struct using a NodeTag
  * similar to how parser and executor nodes are handled, with one type for
  * each different kind of snapshot to avoid overloading the meaning of
  * individual fields.
@@ -65,7 +65,7 @@ typedef struct SnapshotData
 	TransactionId xmax;			/* all XID >= xmax are invisible to me */
 
 	/*
-	 * For normal MVCC snapshot this__ contains the all xact IDs that are in
+	 * For normal MVCC snapshot this contains the all xact IDs that are in
 	 * progress, unless the snapshot was taken during recovery in which case
 	 * it's empty. For historic MVCC snapshots, the meaning is inverted, i.e.
 	 * it contains *committed* transactions between xmin and xmax.
@@ -76,7 +76,7 @@ typedef struct SnapshotData
 	uint32		xcnt;			/* # of xact ids in xip[] */
 
 	/*
-	 * For non-historic MVCC snapshots, this__ contains subxact IDs that are in
+	 * For non-historic MVCC snapshots, this contains subxact IDs that are in
 	 * progress (and other transactions that are in progress if taken during
 	 * recovery). For historic snapshot it contains *all* xids assigned to the
 	 * replayed transaction, including the toplevel xid.

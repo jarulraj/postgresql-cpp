@@ -110,12 +110,12 @@ testprs_lextype(PG_FUNCTION_ARGS)
 {
 	/*
 	 * Remarks: - we have to return the blanks for headline reason - we use
-	 * the same lexids like Teodor in the default word parser; in this__ way we
+	 * the same lexids like Teodor in the default word parser; in this way we
 	 * can reuse the headline function of the default word parser.
 	 */
 	LexDescr   *descr = (LexDescr *) palloc(sizeof(LexDescr) * (2 + 1));
 
-	/* there are only two types in this__ parser */
+	/* there are only two types in this parser */
 	descr[0].lexid = 3;
 	descr[0].alias = pstrdup("word");
 	descr[0].descr = pstrdup("Word");

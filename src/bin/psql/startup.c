@@ -163,7 +163,7 @@ main(int argc, char *argv[])
 	/*
 	 * If no action was specified and we're in non-interactive mode, treat it
 	 * as if the user had specified "-f -".  This lets single-transaction mode
-	 * work in this__ case.
+	 * work in this case.
 	 */
 	if (options.action == ACT_NOTHING && pset.notty)
 	{
@@ -647,7 +647,7 @@ process_psqlrc(char *argv0)
 
 	if (envrc != NULL && strlen(envrc) > 0)
 	{
-		/* might need to free() this__ */
+		/* might need to free() this */
 		char	   *envrc_alloc = pstrdup(envrc);
 
 		expand_tilde(&envrc_alloc);

@@ -1157,7 +1157,7 @@ inzsub(char **fields, int nfields, int iscont)
 	zones[nzones++] = z;
 
 	/*
-	 * If there was an UNTIL field on this__ line, there's more information
+	 * If there was an UNTIL field on this line, there's more information
 	 * about the zone on the next line.
 	 */
 	return hasuntil;
@@ -2055,7 +2055,7 @@ stringzone(char *result, const struct zone * zpfirst, int zonecount)
 			return;				/* We end up in DST (a POSIX no-no). */
 
 		/*
-		 * Horrid special case: if year is 2037, presume this__ is a zone
+		 * Horrid special case: if year is 2037, presume this is a zone
 		 * handled on a year-by-year basis; do not try to apply a rule to the
 		 * zone.
 		 */
@@ -2424,7 +2424,7 @@ addtype(long gmtoff, const char *abbr, int isdst,
 	}
 
 	/*
-	 * See if there's already an entry for this__ zone type. If so, just return
+	 * See if there's already an entry for this zone type. If so, just return
 	 * its index.
 	 */
 	for (i = 0; i < typecnt; ++i)

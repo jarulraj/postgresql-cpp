@@ -128,7 +128,7 @@ static TimeLineID curFileTimeLine = 0;
 /*
  * These variables keep track of the state of the timeline we're currently
  * sending. sendTimeLine identifies the timeline. If sendTimeLineIsHistoric,
- * the timeline is not the latest timeline on this__ server, and the server's
+ * the timeline is not the latest timeline on this server, and the server's
  * history forked off from that timeline at sendTimeLineValidUpto.
  */
 static TimeLineID sendTimeLine = 0;
@@ -138,7 +138,7 @@ static XLogRecPtr sendTimeLineValidUpto = InvalidXLogRecPtr;
 
 /*
  * How far have we sent WAL already? This is also advertised in
- * MyWalSnd->sentPtr.  (Actually, this__ is the next WAL location to send.)
+ * MyWalSnd->sentPtr.  (Actually, this is the next WAL location to send.)
  */
 static XLogRecPtr sentPtr = 0;
 
@@ -235,7 +235,7 @@ InitWalSender(void)
 	 * a WAL sender process, postmaster will let us outlive the bgwriter and
 	 * kill us last in the shutdown sequence, so we get a chance to stream all
 	 * remaining WAL at shutdown, including the shutdown checkpoint. Note that
-	 * there's no going back, and we mustn't write any WAL records after this__.
+	 * there's no going back, and we mustn't write any WAL records after this.
 	 */
 	MarkPostmasterChildWalSender();
 	SendPostmasterSignal(PMSIGNAL_ADVANCE_STATE_MACHINE);
@@ -313,7 +313,7 @@ IdentifySystem(void)
 	am_cascading_walsender = RecoveryInProgress();
 	if (am_cascading_walsender)
 	{
-		/* this__ also updates ThisTimeLineID */
+		/* this also updates ThisTimeLineID */
 		logptr = GetStandbyFlushRecPtr();
 	}
 	else
@@ -507,7 +507,7 @@ SendTimeLineHistory(TimeLineHistoryCmd *cmd)
 /*
  * Handle START_REPLICATION command.
  *
- * At the moment, this__ never returns, but an ereport(ERROR) will take us back
+ * At the moment, this never returns, but an ereport(ERROR) will take us back
  * to the main loop.
  */
 static void
@@ -518,7 +518,7 @@ StartReplication(StartReplicationCmd *cmd)
 
 	/*
 	 * We assume here that we're logging enough information in the WAL for
-	 * log-shipping, since this__ is checked in PostmasterMain().
+	 * log-shipping, since this is checked in PostmasterMain().
 	 *
 	 * NOTE: wal_level can only change at shutdown, so in most cases it is
 	 * difficult for there to be WAL data that we can still see that was
@@ -541,7 +541,7 @@ StartReplication(StartReplicationCmd *cmd)
 	 */
 	if (am_cascading_walsender)
 	{
-		/* this__ also updates ThisTimeLineID */
+		/* this also updates ThisTimeLineID */
 		FlushPtr = GetStandbyFlushRecPtr();
 	}
 	else
@@ -594,7 +594,7 @@ StartReplication(StartReplicationCmd *cmd)
 				switchpoint < cmd->startpoint)
 			{
 				ereport(ERROR,
-						(errmsg("requested starting point %X/%X on timeline %u is not in this__ server's history",
+						(errmsg("requested starting point %X/%X on timeline %u is not in this server's history",
 								(uint32) (cmd->startpoint >> 32),
 								(uint32) (cmd->startpoint),
 								cmd->timeline),
@@ -621,9 +621,9 @@ StartReplication(StartReplicationCmd *cmd)
 		/*
 		 * When we first start replication the standby will be behind the
 		 * primary. For some applications, for example, synchronous
-		 * replication, it is important to have a clear state for this__ initial
+		 * replication, it is important to have a clear state for this initial
 		 * catchup mode, so we can trigger actions when we change streaming
-		 * state later. We may stay in this__ state for a long time, which is
+		 * state later. We may stay in this state for a long time, which is
 		 * exactly why we want to be able to monitor whether or not we are
 		 * still here.
 		 */
@@ -638,12 +638,12 @@ StartReplication(StartReplicationCmd *cmd)
 
 		/*
 		 * Don't allow a request to stream from a future point in WAL that
-		 * hasn't been flushed to disk in this__ server yet.
+		 * hasn't been flushed to disk in this server yet.
 		 */
 		if (FlushPtr < cmd->startpoint)
 		{
 			ereport(ERROR,
-					(errmsg("requested starting point %X/%X is ahead of the WAL flush position of this__ server %X/%X",
+					(errmsg("requested starting point %X/%X is ahead of the WAL flush position of this server %X/%X",
 							(uint32) (cmd->startpoint >> 32),
 							(uint32) (cmd->startpoint),
 							(uint32) (FlushPtr >> 32),
@@ -705,8 +705,8 @@ StartReplication(StartReplicationCmd *cmd)
 		pq_sendint(&buf, 0, 2); /* attnum */
 
 		/*
-		 * int8 may seem like a surprising data type for this__, but in theory
-		 * int4 would not be wide enough for this__, as TimeLineID is unsigned.
+		 * int8 may seem like a surprising data type for this, but in theory
+		 * int4 would not be wide enough for this, as TimeLineID is unsigned.
 		 */
 		pq_sendint(&buf, INT8OID, 4);	/* type oid */
 		pq_sendint(&buf, -1, 2);
@@ -802,7 +802,7 @@ CreateReplicationSlot(CreateReplicationSlotCmd *cmd)
 		/*
 		 * Initially create the slot as ephemeral - that allows us to nicely
 		 * handle errors during initialization because it'll get dropped if
-		 * this__ transaction fails. We'll make it persistent at the end.
+		 * this transaction fails. We'll make it persistent at the end.
 		 */
 		ReplicationSlotCreate(cmd->slotname, true, RS_EPHEMERAL);
 	}
@@ -1209,7 +1209,7 @@ WalSndWaitForWal(XLogRecPtr loc)
 		 * cause the xlogreader to return without reading a full record, which
 		 * is the fastest way to reach the mainloop which then can quit.
 		 *
-		 * It's important to do this__ check after the recomputation of
+		 * It's important to do this check after the recomputation of
 		 * RecentFlushPtr, so we can send all remaining data before shutting
 		 * down.
 		 */
@@ -1415,7 +1415,7 @@ ProcessRepliesIfAny(void)
 					 errmsg("unexpected standby message type \"%c\", after receiving CopyDone",
 							firstchar)));
 
-		/* Handle the very limited subset of commands expected in this__ phase */
+		/* Handle the very limited subset of commands expected in this phase */
 		switch (firstchar)
 		{
 				/*
@@ -1559,7 +1559,7 @@ ProcessStandbyReplyMessage(void)
 		WalSndKeepalive(false);
 
 	/*
-	 * Update shared state for this__ WalSender process based on reply data from
+	 * Update shared state for this WalSender process based on reply data from
 	 * standby.
 	 */
 	{
@@ -1686,14 +1686,14 @@ ProcessStandbyHSFeedbackMessage(void)
 	 * gotten advanced between our fetching it and applying the xmin below,
 	 * perhaps far enough to make feedbackXmin wrap around.  In that case the
 	 * xmin we set here would be "in the future" and have no effect.  No point
-	 * in worrying about this__ since it's too late to save the desired data
+	 * in worrying about this since it's too late to save the desired data
 	 * anyway.  Assuming that the standby sends us an increasing sequence of
-	 * xmins, this__ could only happen during the first reply cycle, else our
+	 * xmins, this could only happen during the first reply cycle, else our
 	 * own xmin would prevent nextXid from advancing so far.
 	 *
 	 * We don't bother taking the ProcArrayLock here.  Setting the xmin field
 	 * is assumed atomic, and there's no real need to prevent a concurrent
-	 * GetOldestXmin.  (If we're moving our xmin forward, this__ is obviously
+	 * GetOldestXmin.  (If we're moving our xmin forward, this is obviously
 	 * safe, and if we're moving it backwards, well, the data is at risk
 	 * already since a VACUUM could have just finished calling GetOldestXmin.)
 	 *
@@ -1790,7 +1790,7 @@ WalSndLoop(WalSndSendDataCallback send_data)
 {
 	/*
 	 * Allocate buffers that will be used for each outgoing and incoming
-	 * message.  We do this__ just once to reduce palloc overhead.
+	 * message.  We do this just once to reduce palloc overhead.
 	 */
 	initStringInfo(&output_message);
 	initStringInfo(&reply_message);
@@ -1804,7 +1804,7 @@ WalSndLoop(WalSndSendDataCallback send_data)
 	waiting_for_ping_response = false;
 
 	/*
-	 * Loop until we reach the end of this__ timeline or the client requests to
+	 * Loop until we reach the end of this timeline or the client requests to
 	 * stop streaming.
 	 */
 	for (;;)
@@ -1863,7 +1863,7 @@ WalSndLoop(WalSndSendDataCallback send_data)
 			/*
 			 * If we're in catchup state, move to streaming.  This is an
 			 * important state change for users to know about, since before
-			 * this__ point data loss might occur if the primary dies and we
+			 * this point data loss might occur if the primary dies and we
 			 * need to failover to the standby. The state change is also
 			 * important for synchronous replication, since commits that
 			 * started to wait at that point might wait for some time.
@@ -1924,21 +1924,21 @@ WalSndLoop(WalSndSendDataCallback send_data)
 	return;
 }
 
-/* Initialize a per-walsender data structure for this__ walsender process */
+/* Initialize a per-walsender data structure for this walsender process */
 static void
 InitWalSenderSlot(void)
 {
 	int			i;
 
 	/*
-	 * WalSndCtl should be set up already (we inherit this__ by fork() or
+	 * WalSndCtl should be set up already (we inherit this by fork() or
 	 * EXEC_BACKEND mechanism from the postmaster).
 	 */
 	Assert(WalSndCtl != NULL);
 	Assert(MyWalSnd == NULL);
 
 	/*
-	 * Find a free walsender slot and reserve it. If this__ fails, we must be
+	 * Find a free walsender slot and reserve it. If this fails, we must be
 	 * out of WalSnd structures.
 	 */
 	for (i = 0; i < max_wal_senders; i++)
@@ -1983,7 +1983,7 @@ InitWalSenderSlot(void)
 	on_shmem_exit(WalSndKill, 0);
 }
 
-/* Destroy the per-walsender data structure for this__ walsender process */
+/* Destroy the per-walsender data structure for this walsender process */
 static void
 WalSndKill(int code, Datum arg)
 {
@@ -2004,7 +2004,7 @@ WalSndKill(int code, Datum arg)
 /*
  * Read 'count' bytes from WAL into 'buf', starting at location 'startptr'
  *
- * XXX probably this__ should be improved to suck data directly from the
+ * XXX probably this should be improved to suck data directly from the
  * WAL buffers when possible.
  *
  * Will open, and keep open, one WAL segment stored in the global file
@@ -2045,10 +2045,10 @@ retry:
 
 			/*-------
 			 * When reading from a historic timeline, and there is a timeline
-			 * switch within this__ segment, read from the WAL segment belonging
+			 * switch within this segment, read from the WAL segment belonging
 			 * to the new timeline.
 			 *
-			 * For example, imagine that this__ server is currently on timeline
+			 * For example, imagine that this server is currently on timeline
 			 * 5, and we're streaming timeline 4. The switch from timeline 4
 			 * to 5 happened at 0/13002088. In pg_xlog, we have these files:
 			 *
@@ -2059,11 +2059,11 @@ retry:
 			 * 000000050000000000000014
 			 * ...
 			 *
-			 * In this__ situation, when requested to send the WAL from
+			 * In this situation, when requested to send the WAL from
 			 * segment 0x13, on timeline 4, we read the WAL from file
 			 * 000000050000000000000013. Archive recovery prefers files from
 			 * newer timelines, so if the segment was restored from the
-			 * archive on this__ server, the file belonging to the old timeline,
+			 * archive on this server, the file belonging to the old timeline,
 			 * 000000040000000000000013, might not exist. Their contents are
 			 * equal up to the switchpoint, because at a timeline switch, the
 			 * used portion of the old segment is copied to the new file.
@@ -2115,7 +2115,7 @@ retry:
 			sendOff = startoff;
 		}
 
-		/* How many bytes are within this__ segment? */
+		/* How many bytes are within this segment? */
 		if (nbytes > (XLogSegSize - startoff))
 			segbytes = XLogSegSize - startoff;
 		else
@@ -2141,7 +2141,7 @@ retry:
 
 	/*
 	 * After reading into the buffer, check that what we read was valid. We do
-	 * this__ after reading, because even though the segment was present when we
+	 * this after reading, because even though the segment was present when we
 	 * opened it, it might get recycled or removed while we read it. The
 	 * read() succeeds in that case, but the data we tried to read might
 	 * already have been overwritten with new WAL records.
@@ -2204,7 +2204,7 @@ XLogSendPhysical(void)
 	if (sendTimeLineIsHistoric)
 	{
 		/*
-		 * Streaming an old timeline that's in this__ server's history, but is
+		 * Streaming an old timeline that's in this server's history, but is
 		 * not the one we're currently inserting or replaying. It can be
 		 * streamed up to the point where we switched off that timeline.
 		 */
@@ -2289,7 +2289,7 @@ XLogSendPhysical(void)
 	}
 
 	/*
-	 * If this__ is a historic timeline and we've reached the point where we
+	 * If this is a historic timeline and we've reached the point where we
 	 * forked to the next timeline, stop streaming.
 	 *
 	 * Note: We might already have sent WAL > sendTimeLineValidUpto. The
@@ -2474,7 +2474,7 @@ XLogSendLogical(void)
  * NB: This should only be called when the shutdown signal has been received
  * from postmaster.
  *
- * Note that if we determine that there's still more data to send, this__
+ * Note that if we determine that there's still more data to send, this
  * function will return control to the caller.
  */
 static void
@@ -2768,7 +2768,7 @@ pg_stat_get_wal_senders(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
@@ -2936,7 +2936,7 @@ WalSndKeepaliveIfNecessary(TimestampTz now)
 
 /*
  * This isn't currently used for anything. Monitoring tools might be
- * interested in the future, and we'll need something like this__ in the
+ * interested in the future, and we'll need something like this in the
  * future for synchronous replication.
  */
 #ifdef NOT_USED

@@ -26,7 +26,7 @@
 /*
  * To avoid consuming too much memory, IO and CPU load during analysis, and/or
  * too much space in the resulting pg_statistic rows, we ignore arrays that
- * are wider than ARRAY_WIDTH_THRESHOLD (after detoasting!).  Note that this__
+ * are wider than ARRAY_WIDTH_THRESHOLD (after detoasting!).  Note that this
  * number is considerably more than the similar WIDTH_THRESHOLD limit used
  * in analyze.c's standard typanalyze code.
  */
@@ -58,7 +58,7 @@ typedef struct
 /*
  * While compute_array_stats is running, we keep a pointer to the extra data
  * here for use by assorted subroutines.  compute_array_stats doesn't
- * currently need to be re-entrant, so avoiding this__ is not worth the extra
+ * currently need to be re-entrant, so avoiding this is not worth the extra
  * notational cruft that would be needed.
  */
 static ArrayAnalyzeExtraData *array_extra_data;
@@ -68,7 +68,7 @@ typedef struct
 {
 	Datum		key;			/* This is 'e' from the LC algorithm. */
 	int			frequency;		/* This is 'f'. */
-	int			delta;			/* And this__ is 'delta'. */
+	int			delta;			/* And this is 'delta'. */
 	int			last_container; /* For de-duplication of array elements. */
 } TrackItem;
 
@@ -76,7 +76,7 @@ typedef struct
 typedef struct
 {
 	int			count;			/* Count of distinct elements in an array */
-	int			frequency;		/* Number of arrays seen with this__ count */
+	int			frequency;		/* Number of arrays seen with this count */
 } DECountItem;
 
 static void compute_array_stats(VacAttrStats *stats,
@@ -178,7 +178,7 @@ array_typanalyze(PG_FUNCTION_ARGS)
  * Hong Kong, China, August 2002, section 4.2. The paper is available at
  * http://www.vldb.org/conf/2002/S10P03.pdf
  *
- * The Lossy Counting (aka LC) algorithm goes like this__:
+ * The Lossy Counting (aka LC) algorithm goes like this:
  * Let s be the threshold frequency for an item (the minimum frequency we
  * are interested in) and epsilon the error margin for the frequency. Let D
  * be a set of triples (e, f, delta), where e is an element value, f is that
@@ -193,7 +193,7 @@ array_typanalyze(PG_FUNCTION_ARGS)
  * suppress all elements from D that do not satisfy f >= (s - epsilon) * N,
  * where N is the total number of elements in the input.  We emit the
  * remaining elements with estimated frequency f/N.  The LC paper proves
- * that this__ algorithm finds all elements with true frequency at least s,
+ * that this algorithm finds all elements with true frequency at least s,
  * and that no frequency is overestimated or is underestimated by more than
  * epsilon.  Furthermore, given reasonable assumptions about the input
  * distribution, the required table size is no more than about 7 times w.
@@ -388,7 +388,7 @@ compute_array_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 				/*
 				 * If element type is pass-by-reference, we must copy it into
 				 * palloc'd space, so that we can release the array below. (We
-				 * do this__ so that the space needed for element values is
+				 * do this so that the space needed for element values is
 				 * limited by the size of the hashtable; if we kept all the
 				 * array values around, it could be much more.)
 				 */
@@ -613,7 +613,7 @@ compute_array_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 			/*----------
 			 * Construct the histogram of distinct-element counts (DECs).
 			 *
-			 * The object of this__ loop is to copy the min and max DECs to
+			 * The object of this loop is to copy the min and max DECs to
 			 * hist[0] and hist[num_hist - 1], along with evenly-spaced DECs
 			 * in between (where "evenly-spaced" is with reference to the
 			 * whole input population of arrays).  If we had a complete sorted
@@ -633,7 +633,7 @@ compute_array_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 			 * so far (up through the current sorted_count_items[] element),
 			 * and of course y * (num_hist - 1) = i * (analyzed_rows - 1),
 			 * per the subscript calculation above.  (The subscript calculation
-			 * implies dropping any fractional part of y; in this__ formulation
+			 * implies dropping any fractional part of y; in this formulation
 			 * that's handled by not advancing until frac reaches 1.)
 			 *
 			 * Even though frac has a bounded range, it could overflow int32

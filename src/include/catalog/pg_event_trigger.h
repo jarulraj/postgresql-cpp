@@ -11,7 +11,7 @@
  * src/include/catalog/pg_event_trigger.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_event_trigger definition.    cpp turns this__ into
+ *		pg_event_trigger definition.    cpp turns this into
  *		typedef struct FormData_pg_event_trigger
  * ----------------
  */
@@ -38,7 +38,7 @@ CATALOG(pg_event_trigger,3466)
 								 * session_replication_role */
 
 #ifdef CATALOG_VARLEN
-	text		evttags[1];		/* command TAGs this__ event trigger targets */
+	text		evttags[1];		/* command TAGs this event trigger targets */
 #endif
 } FormData_pg_event_trigger;
 

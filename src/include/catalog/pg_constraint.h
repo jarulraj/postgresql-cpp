@@ -11,7 +11,7 @@
  * src/include/catalog/pg_constraint.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 #include "nodes/pg_list.h"
 
 /* ----------------
- *		pg_constraint definition.  cpp turns this__ into
+ *		pg_constraint definition.  cpp turns this into
  *		typedef struct FormData_pg_constraint
  * ----------------
  */
@@ -41,7 +41,7 @@ CATALOG(pg_constraint,2606)
 	 * constraint.  We associate a namespace with constraint names only for
 	 * SQL-spec compatibility.
 	 */
-	NameData	conname;		/* name of this__ constraint */
+	NameData	conname;		/* name of this constraint */
 	Oid			connamespace;	/* OID of namespace containing constraint */
 	char		contype;		/* constraint type; see codes below */
 	bool		condeferrable;	/* deferrable constraint? */
@@ -50,19 +50,19 @@ CATALOG(pg_constraint,2606)
 
 	/*
 	 * conrelid and conkey are only meaningful if the constraint applies to a
-	 * specific relation (this__ excludes domain constraints and assertions).
+	 * specific relation (this excludes domain constraints and assertions).
 	 * Otherwise conrelid is 0 and conkey is NULL.
 	 */
-	Oid			conrelid;		/* relation this__ constraint constrains */
+	Oid			conrelid;		/* relation this constraint constrains */
 
 	/*
-	 * contypid links to the pg_type row for a domain if this__ is a domain
+	 * contypid links to the pg_type row for a domain if this is a domain
 	 * constraint.  Otherwise it's 0.
 	 *
 	 * For SQL-style global ASSERTIONs, both conrelid and contypid would be
 	 * zero. This is not presently supported, however.
 	 */
-	Oid			contypid;		/* domain this__ constraint constrains */
+	Oid			contypid;		/* domain this constraint constrains */
 
 	/*
 	 * conindid links to the index supporting the constraint, if any;
@@ -72,7 +72,7 @@ CATALOG(pg_constraint,2606)
 	 * columns).  Notice that the index is on conrelid in the first case but
 	 * confrelid in the second.
 	 */
-	Oid			conindid;		/* index supporting this__ constraint */
+	Oid			conindid;		/* index supporting this constraint */
 
 	/*
 	 * These fields, plus confkey, are only meaningful for a foreign-key
@@ -95,7 +95,7 @@ CATALOG(pg_constraint,2606)
 #ifdef CATALOG_VARLEN			/* variable-length fields start here */
 
 	/*
-	 * Columns of conrelid that the constraint applies to, if known (this__ is
+	 * Columns of conrelid that the constraint applies to, if known (this is
 	 * NULL for trigger constraints)
 	 */
 	int16		conkey[1];

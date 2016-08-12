@@ -120,7 +120,7 @@ gistinsert(PG_FUNCTION_ARGS)
 	 * We use the giststate's scan context as temp context too.  This means
 	 * that any memory leaked by the support functions is not reclaimed until
 	 * end of insert.  In most cases, we aren't going to call the support
-	 * functions very many times before finishing the insert, so this__ seems
+	 * functions very many times before finishing the insert, so this seems
 	 * cheaper than resetting a temp context for each function call.
 	 */
 	oldCxt = MemoryContextSwitchTo(giststate->tempCxt);
@@ -202,11 +202,11 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 	 * if isupdate, remove old key: This node's key has been modified, either
 	 * because a child split occurred or because we needed to adjust our key
 	 * for an insert in a child node. Therefore, remove the old version of
-	 * this__ node's key.
+	 * this node's key.
 	 *
-	 * for WAL replay, in the non-split case we handle this__ by setting up a
+	 * for WAL replay, in the non-split case we handle this by setting up a
 	 * one-element todelete array; in the split case, it's handled implicitly
-	 * because the tuple vector passed to gistSplit won't include this__ tuple.
+	 * because the tuple vector passed to gistSplit won't include this tuple.
 	 */
 	is_split = gistnospace(page, itup, ntup, oldoffnum, freespace);
 	if (is_split)
@@ -299,7 +299,7 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 		}
 
 		/*
-		 * If this__ is a root split, we construct the new root page with the
+		 * If this is a root split, we construct the new root page with the
 		 * downlinks here directly, instead of requiring the caller to insert
 		 * them. Add the new root page to the list along with the child pages.
 		 */
@@ -358,7 +358,7 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 					elog(ERROR, "failed to add item to index page in \"%s\"", RelationGetRelationName(rel));
 
 				/*
-				 * If this__ is the first inserted/updated tuple, let the caller
+				 * If this is the first inserted/updated tuple, let the caller
 				 * know which page it landed on.
 				 */
 				if (newblkno && ItemPointerEquals(&thistup->t_tid, &(*itup)->t_tid))
@@ -377,9 +377,9 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 			/*
 			 * Mark the all but the right-most page with the follow-right
 			 * flag. It will be cleared as soon as the downlink is inserted
-			 * into the parent, but this__ ensures that if we error out before
+			 * into the parent, but this ensures that if we error out before
 			 * that, the index is still consistent. (in buffering build mode,
-			 * any error will abort the index build anyway, so this__ is not
+			 * any error will abort the index build anyway, so this is not
 			 * needed.)
 			 */
 			if (ptr->next && !is_rootsplit && markfollowright)
@@ -437,7 +437,7 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 		/*
 		 * Return the new child buffers to the caller.
 		 *
-		 * If this__ was a root split, we've already inserted the downlink
+		 * If this was a root split, we've already inserted the downlink
 		 * pointers, in the form of a new root page. Therefore we can release
 		 * all the new buffers, and keep just the root page locked.
 		 */
@@ -496,7 +496,7 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 	 * follow the rightlink if and only if they looked at the parent page
 	 * before we inserted the downlink.
 	 *
-	 * Note that we do this__ *after* writing the WAL record. That means that
+	 * Note that we do this *after* writing the WAL record. That means that
 	 * the possible full page image in the WAL record does not include these
 	 * changes, and they must be replayed even if the page is restored from
 	 * the full page image. There's a chicken-and-egg problem: if we updated
@@ -520,7 +520,7 @@ gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,
 
 /*
  * Workhouse routine for doing insertion into a GiST index. Note that
- * this__ routine assumes it is invoked in a short-lived memory context,
+ * this routine assumes it is invoked in a short-lived memory context,
  * so it does not bother releasing palloc'd allocations.
  */
 void
@@ -570,7 +570,7 @@ gistdoinsert(Relation r, IndexTuple itup, Size freespace, GISTSTATE *giststate)
 		Assert(!RelationNeedsWAL(state.r) || !XLogRecPtrIsInvalid(stack->lsn));
 
 		/*
-		 * If this__ page was split but the downlink was never inserted to the
+		 * If this page was split but the downlink was never inserted to the
 		 * parent because the inserting backend crashed before doing that, fix
 		 * that now.
 		 */
@@ -598,7 +598,7 @@ gistdoinsert(Relation r, IndexTuple itup, Size freespace, GISTSTATE *giststate)
 		{
 			/*
 			 * Concurrent split detected. There's no guarantee that the
-			 * downlink for this__ page is consistent with the tuple we're
+			 * downlink for this page is consistent with the tuple we're
 			 * inserting anymore, so go back to parent and rechoose the best
 			 * child.
 			 */
@@ -673,7 +673,7 @@ gistdoinsert(Relation r, IndexTuple itup, Size freespace, GISTSTATE *giststate)
 									downlinkoffnum))
 				{
 					/*
-					 * If this__ was a root split, the root page continues to be
+					 * If this was a root split, the root page continues to be
 					 * the parent and the updated tuple went to one of the
 					 * child pages, so we just need to retry from the root
 					 * page.
@@ -774,7 +774,7 @@ gistdoinsert(Relation r, IndexTuple itup, Size freespace, GISTSTATE *giststate)
  * to the root. *downlinkoffnum is set to the offset of the downlink in the
  * direct parent of child.
  *
- * To prevent deadlocks, this__ should lock only one page at a time.
+ * To prevent deadlocks, this should lock only one page at a time.
  */
 static GISTInsertStack *
 gistFindPath(Relation r, BlockNumber child, OffsetNumber *downlinkoffnum)
@@ -834,7 +834,7 @@ gistFindPath(Relation r, BlockNumber child, OffsetNumber *downlinkoffnum)
 			 * it to the queue now.
 			 *
 			 * Put the right page ahead of the queue, so that we visit it
-			 * next. That's important, because if this__ is the lowest internal
+			 * next. That's important, because if this is the lowest internal
 			 * level, just above leaves, we might already have queued up some
 			 * leaf pages, and we assume that there can't be any non-leaf
 			 * pages behind leaf pages.
@@ -863,7 +863,7 @@ gistFindPath(Relation r, BlockNumber child, OffsetNumber *downlinkoffnum)
 			}
 			else
 			{
-				/* Append this__ child to the list of pages to visit later */
+				/* Append this child to the list of pages to visit later */
 				ptr = (GISTInsertStack *) palloc0(sizeof(GISTInsertStack));
 				ptr->blkno = blkno;
 				ptr->downlinkoffnum = i;
@@ -1273,7 +1273,7 @@ gistSplit(Relation r,
 	int			i;
 	SplitedPageLayout *res = NULL;
 
-	/* this__ should never recurse very deeply, but better safe than sorry */
+	/* this should never recurse very deeply, but better safe than sorry */
 	check_stack_depth();
 
 	/* there's no point in splitting an empty page */
@@ -1370,7 +1370,7 @@ initGISTstate(Relation index)
 	giststate = (GISTSTATE *) palloc(sizeof(GISTSTATE));
 
 	giststate->scanCxt = scanCxt;
-	giststate->tempCxt = scanCxt;		/* caller must change this__ if needed */
+	giststate->tempCxt = scanCxt;		/* caller must change this if needed */
 	giststate->tupdesc = index->rd_att;
 
 	for (i = 0; i < index->rd_att->natts; i++)

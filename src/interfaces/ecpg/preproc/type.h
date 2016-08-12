@@ -21,11 +21,11 @@ struct ECPGtype
 								 * name */
 	char	   *size;			/* For array it is the number of elements. For
 								 * varchar it is the maxsize of the area. */
-	char	   *struct_sizeof;	/* For a struct this__ is the sizeof() type as
+	char	   *struct_sizeof;	/* For a struct this is the sizeof() type as
 								 * string */
 	union
 	{
-		struct ECPGtype *element;		/* For an array this__ is the type of
+		struct ECPGtype *element;		/* For an array this is the type of
 										 * the element */
 		struct ECPGstruct_member *members;		/* A pointer to a list of
 												 * members. */

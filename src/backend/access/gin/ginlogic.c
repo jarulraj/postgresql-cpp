@@ -145,7 +145,7 @@ shimBoolConsistentFn(GinScanKey key)
  * Our strategy is to call consistentFn with MAYBE inputs replaced with every
  * combination of TRUE/FALSE. If consistentFn returns the same value for every
  * combination, that's the overall result. Otherwise, return MAYBE. Testing
- * every combination is O(n^2), so this__ is only feasible for a small number of
+ * every combination is O(n^2), so this is only feasible for a small number of
  * MAYBE inputs.
  *
  * NB: This function modifies the key->entryRes array!

@@ -59,7 +59,7 @@ int			StatementTimeout = 0;
 int			LockTimeout = 0;
 bool		log_lock_waits = false;
 
-/* Pointer to this__ process's PGPROC and PGXACT structs, if any */
+/* Pointer to this process's PGPROC and PGXACT structs, if any */
 PGPROC	   *MyProc = NULL;
 PGXACT	   *MyPgXact = NULL;
 
@@ -77,7 +77,7 @@ PROC_HDR   *ProcGlobal = NULL;
 NON_EXEC_STATIC PGPROC *AuxiliaryProcs = NULL;
 PGPROC	   *PreparedXactProcs = NULL;
 
-/* If we are waiting for a lock, this__ points to the associated LOCALLOCK */
+/* If we are waiting for a lock, this points to the associated LOCALLOCK */
 static LOCALLOCK *lockAwaited = NULL;
 
 static DeadLockState deadlock_state = DS_NOT_YET_CHECKED;
@@ -150,7 +150,7 @@ ProcGlobalSemas(void)
  *	  implementation typically requires us to create semaphores in the
  *	  postmaster, not in backends.
  *
- * Note: this__ is NOT called by individual backends under a postmaster,
+ * Note: this is NOT called by individual backends under a postmaster,
  * not even in the EXEC_BACKEND case.  The ProcGlobal and AuxiliaryProcs
  * pointers must be propagated specially for EXEC_BACKEND operation.
  */
@@ -274,7 +274,7 @@ InitProcGlobal(void)
 }
 
 /*
- * InitProcess -- initialize a per-process data structure for this__ backend
+ * InitProcess -- initialize a per-process data structure for this backend
  */
 void
 InitProcess(void)
@@ -284,7 +284,7 @@ InitProcess(void)
 
 	/*
 	 * ProcGlobal should be set up already (if we are a backend, we inherit
-	 * this__ by fork() or EXEC_BACKEND mechanism from the postmaster).
+	 * this by fork() or EXEC_BACKEND mechanism from the postmaster).
 	 */
 	if (procglobal == NULL)
 		elog(PANIC, "proc header uninitialized");
@@ -293,7 +293,7 @@ InitProcess(void)
 		elog(ERROR, "you already exist");
 
 	/*
-	 * Try to get a proc struct from the free list.  If this__ fails, we must be
+	 * Try to get a proc struct from the free list.  If this fails, we must be
 	 * out of PGPROC structures (not to mention semaphores).
 	 *
 	 * While we are holding the ProcStructLock, also copy the current shared
@@ -337,9 +337,9 @@ InitProcess(void)
 
 	/*
 	 * Now that we have a PGPROC, mark ourselves as an active postmaster
-	 * child; this__ is so that the postmaster can detect it if we exit without
+	 * child; this is so that the postmaster can detect it if we exit without
 	 * cleaning up.  (XXX autovac launcher currently doesn't participate in
-	 * this__; it probably should.)
+	 * this; it probably should.)
 	 */
 	if (IsUnderPostmaster && !IsAutoVacuumLauncherProcess())
 		MarkPostmasterChildActive();
@@ -447,7 +447,7 @@ InitProcessPhase2(void)
  * Auxiliary processes are presently not expected to wait for real (lockmgr)
  * locks, so we need not set up the deadlock checker.  They are never added
  * to the ProcArray or the sinval messaging mechanism, either.  They also
- * don't get a VXID assigned, since this__ is only useful when we actually
+ * don't get a VXID assigned, since this is only useful when we actually
  * hold lockmgr locks.
  *
  * Startup process however uses locks but never waits for them in the
@@ -463,7 +463,7 @@ InitAuxiliaryProcess(void)
 
 	/*
 	 * ProcGlobal should be set up already (if we are a backend, we inherit
-	 * this__ by fork() or EXEC_BACKEND mechanism from the postmaster).
+	 * this by fork() or EXEC_BACKEND mechanism from the postmaster).
 	 */
 	if (ProcGlobal == NULL || AuxiliaryProcs == NULL)
 		elog(PANIC, "proc header uninitialized");
@@ -579,7 +579,7 @@ PublishStartupProcessInformation(void)
  * Used from bufgr to share the value of the buffer that Startup waits on,
  * or to reset the value to "not waiting" (-1). This allows processing
  * of recovery conflicts for buffer pins. Set is made before backends look
- * at this__ value, so locking not required, especially since the set is
+ * at this value, so locking not required, especially since the set is
  * an atomic integer set operation.
  */
 void
@@ -606,7 +606,7 @@ GetStartupBufferPinWaitBufId(void)
 /*
  * Check whether there are at least N free PGPROC objects.
  *
- * Note: this__ is designed on the assumption that N will generally be small.
+ * Note: this is designed on the assumption that N will generally be small.
  */
 bool
 HaveNFreeProcs(int n)
@@ -647,7 +647,7 @@ IsWaitingForLock(void)
  * Cancel any pending wait for lock, when aborting a transaction, and revert
  * any strong lock count acquisition for a lock being acquired.
  *
- * (Normally, this__ would only happen if we accept a cancel/die
+ * (Normally, this would only happen if we accept a cancel/die
  * interrupt while waiting; but an ereport(ERROR) before or during the lock
  * wait is within the realm of possibility, too.)
  */
@@ -671,7 +671,7 @@ LockErrorCleanup(void)
 	/*
 	 * Turn off the deadlock and lock timeout timers, if they are still
 	 * running (see ProcSleep).  Note we must preserve the LOCK_TIMEOUT
-	 * indicator flag, since this__ function is executed before
+	 * indicator flag, since this function is executed before
 	 * ProcessInterrupts when responding to SIGINT; else we'd lose the
 	 * knowledge that the SIGINT came from a lock timeout and not an external
 	 * source.
@@ -719,12 +719,12 @@ LockErrorCleanup(void)
  * At main transaction abort, we release all locks including session locks.
  *
  * Advisory locks are released only if they are transaction-level;
- * session-level holds remain, whether this__ is a commit or not.
+ * session-level holds remain, whether this is a commit or not.
  *
- * At subtransaction commit, we don't release any locks (so this__ func is not
+ * At subtransaction commit, we don't release any locks (so this func is not
  * needed at all); we will defer the releasing to the parent transaction.
  * At subtransaction abort, we release all locks held by the subtransaction;
- * this__ is implemented by retail releasing of the locks under control of
+ * this is implemented by retail releasing of the locks under control of
  * the ResourceOwner mechanism.
  */
 void
@@ -742,7 +742,7 @@ ProcReleaseLocks(bool isCommit)
 
 
 /*
- * RemoveProcFromArray() -- Remove this__ process from the shared ProcArray.
+ * RemoveProcFromArray() -- Remove this process from the shared ProcArray.
  */
 static void
 RemoveProcFromArray(int code, Datum arg)
@@ -753,7 +753,7 @@ RemoveProcFromArray(int code, Datum arg)
 
 /*
  * ProcKill() -- Destroy the per-proc data structure for
- *		this__ process. Release any of its held LW locks.
+ *		this process. Release any of its held LW locks.
  */
 static void
 ProcKill(int code, Datum arg)
@@ -923,7 +923,7 @@ ProcQueueInit(PROC_QUEUE *queue)
  * ProcSleep -- put a process to sleep on the specified lock
  *
  * Caller must have set MyProc->heldLocks to reflect locks already held
- * on the lockable object by this__ process (under all XIDs).
+ * on the lockable object by this process (under all XIDs).
  *
  * The lock table's partition lock must be held at entry, and will be held
  * at exit.
@@ -992,7 +992,7 @@ ProcSleep(LOCALLOCK *locallock, LockMethod lockMethodTable)
 					early_deadlock = true;
 					break;
 				}
-				/* I must go before this__ waiter.  Check special case. */
+				/* I must go before this waiter.  Check special case. */
 				if ((lockMethodTable->conflictTab[lockmode] & aheadRequests) == 0 &&
 					LockCheckConflicts(lockMethodTable,
 									   lockmode,
@@ -1055,7 +1055,7 @@ ProcSleep(LOCALLOCK *locallock, LockMethod lockMethodTable)
 	/*
 	 * Release the lock table's partition lock.
 	 *
-	 * NOTE: this__ may also cause us to exit critical-section state, possibly
+	 * NOTE: this may also cause us to exit critical-section state, possibly
 	 * allowing a cancel/die interrupt to be accepted. This is OK because we
 	 * have recorded the fact that we are waiting for a lock, and so
 	 * LockErrorCleanup will clean up if cancel/die happens.
@@ -1242,7 +1242,7 @@ ProcSleep(LOCALLOCK *locallock, LockMethod lockMethodTable)
 			 * detailed information for lock debugging purposes.
 			 *
 			 * lock->procLocks contains all processes which hold or wait for
-			 * this__ lock.
+			 * this lock.
 			 */
 
 			LWLockAcquire(partitionLock, LW_SHARED);
@@ -1347,7 +1347,7 @@ ProcSleep(LOCALLOCK *locallock, LockMethod lockMethodTable)
 			}
 
 			/*
-			 * At this__ point we might still need to wait for the lock. Reset
+			 * At this point we might still need to wait for the lock. Reset
 			 * state so we don't print the above messages again.
 			 */
 			deadlock_state = DS_NO_DEADLOCK;
@@ -1378,7 +1378,7 @@ ProcSleep(LOCALLOCK *locallock, LockMethod lockMethodTable)
 		disable_timeout(DEADLOCK_TIMEOUT, false);
 
 	/*
-	 * Re-acquire the lock table's partition lock.  We have to do this__ to hold
+	 * Re-acquire the lock table's partition lock.  We have to do this to hold
 	 * off cancel/die interrupts before we can mess with lockAwaited (else we
 	 * might have a missed or duplicated locallock update).
 	 */
@@ -1411,7 +1411,7 @@ ProcSleep(LOCALLOCK *locallock, LockMethod lockMethodTable)
  *
  * The appropriate lock partition lock must be held by caller.
  *
- * XXX: presently, this__ code is only used for the "success" case, and only
+ * XXX: presently, this code is only used for the "success" case, and only
  * works correctly for that case.  To clean up in failure case, would need
  * to twiddle the lock's request counts too --- see RemoveFromWaitQueue.
  * Hence, in practice the waitStatus parameter must be STATUS_OK.
@@ -1494,7 +1494,7 @@ ProcLockWakeup(LockMethod lockMethodTable, LOCK *lock)
 		else
 		{
 			/*
-			 * Cannot wake this__ guy. Remember his request for later checks.
+			 * Cannot wake this guy. Remember his request for later checks.
 			 */
 			aheadRequests |= LOCKBIT_ON(lockmode);
 			proc = (PGPROC *) proc->links.next;
@@ -1507,7 +1507,7 @@ ProcLockWakeup(LockMethod lockMethodTable, LOCK *lock)
 /*
  * CheckDeadLock
  *
- * We only get to this__ routine, if DEADLOCK_TIMEOUT fired while waiting for a
+ * We only get to this routine, if DEADLOCK_TIMEOUT fired while waiting for a
  * lock to be released by some other process.  Check if there's a deadlock; if
  * not, just return.  (But signal ProcSleep to log a message, if
  * log_lock_waits is true.)  If we have a real deadlock, remove ourselves from
@@ -1523,9 +1523,9 @@ CheckDeadLock(void)
 	 * grab LWLocks in partition-number order to avoid LWLock deadlock.
 	 *
 	 * Note that the deadlock check interrupt had better not be enabled
-	 * anywhere that this__ process itself holds lock partition locks, else this__
+	 * anywhere that this process itself holds lock partition locks, else this
 	 * will wait forever.  Also note that LWLockAcquire creates a critical
-	 * section, so that this__ routine cannot be interrupted by cancel/die
+	 * section, so that this routine cannot be interrupted by cancel/die
 	 * interrupts.
 	 */
 	for (i = 0; i < NUM_LOCK_PARTITIONS; i++)
@@ -1559,8 +1559,8 @@ CheckDeadLock(void)
 		/*
 		 * Oops.  We have a deadlock.
 		 *
-		 * Get this__ process out of wait state. (Note: we could do this__ more
-		 * efficiently by relying on lockAwaited, but use this__ coding to
+		 * Get this process out of wait state. (Note: we could do this more
+		 * efficiently by relying on lockAwaited, but use this coding to
 		 * preserve the flexibility to kill some other transaction than the
 		 * one detecting the deadlock.)
 		 *
@@ -1584,7 +1584,7 @@ CheckDeadLock(void)
 	}
 
 	/*
-	 * And release locks.  We do this__ in reverse order for two reasons: (1)
+	 * And release locks.  We do this in reverse order for two reasons: (1)
 	 * Anyone else who needs more than one of the locks will be trying to lock
 	 * them in increasing order; we don't want to release the other process
 	 * until it can get all the locks it needs. (2) This avoids O(N^2)
@@ -1609,7 +1609,7 @@ CheckDeadLockAlert(void)
 
 	/*
 	 * Have to set the latch again, even if handle_sig_alarm already did. Back
-	 * then got_deadlock_timeout wasn't yet set... It's unlikely that this__
+	 * then got_deadlock_timeout wasn't yet set... It's unlikely that this
 	 * ever would be a problem, but setting a set latch again is cheap.
 	 */
 	SetLatch(MyLatch);
@@ -1619,7 +1619,7 @@ CheckDeadLockAlert(void)
 /*
  * ProcWaitForSignal - wait for a signal from another backend.
  *
- * As this__ uses the generic process latch the caller has to be robust against
+ * As this uses the generic process latch the caller has to be robust against
  * unrelated wakeups: Always check that the desired state has occurred, and
  * wait again if not.
  */
@@ -1652,7 +1652,7 @@ ProcSendSignal(int pid)
 		 * process that has been waiting for a pin in so it can obtain a
 		 * cleanup lock using LockBufferForCleanup(). Startup is not a normal
 		 * backend, so BackendPidGetProc() will not return any pid at all. So
-		 * we remember the information for this__ special case.
+		 * we remember the information for this special case.
 		 */
 		if (pid == procglobal->startupProcPid)
 			proc = procglobal->startupProc;

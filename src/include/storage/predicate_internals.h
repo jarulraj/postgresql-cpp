@@ -43,7 +43,7 @@ typedef uint64 SerCommitSeqNo;
  *
  * A home-grown list is maintained in shared memory to manage these.
  * An entry is used when the serializable transaction acquires a snapshot.
- * Unless the transaction is rolled back, this__ entry must generally remain
+ * Unless the transaction is rolled back, this entry must generally remain
  * until all concurrent transactions have completed.  (There are special
  * optimizations for READ ONLY transactions which often allow them to be
  * cleaned up earlier.)  A transaction which is rolled back is cleaned up
@@ -101,7 +101,7 @@ typedef struct SERIALIZABLEXACT
 								 * exists; else invalid */
 	TransactionId finishedBefore;		/* invalid means still running; else
 										 * the struct expires when no
-										 * serializable xids are before this__. */
+										 * serializable xids are before this. */
 	TransactionId xmin;			/* the transaction's snapshot xmin */
 	uint32		flags;			/* OR'd combination of values defined below */
 	int			pid;			/* pid of associated process */
@@ -156,7 +156,7 @@ typedef struct PredXactListData
 	TransactionId SxactGlobalXmin;		/* global xmin for active serializable
 										 * transactions */
 	int			SxactGlobalXminCount;	/* how many active serializable
-										 * transactions have this__ xmin */
+										 * transactions have this xmin */
 	int			WritableSxactCount;		/* how many non-read-only serializable
 										 * transactions are active */
 	SerCommitSeqNo LastSxactCommitSeqNo;		/* a strictly monotonically
@@ -167,9 +167,9 @@ typedef struct PredXactListData
 	SerCommitSeqNo CanPartialClearThrough;		/* can clear predicate locks
 												 * and inConflicts for
 												 * committed transactions
-												 * through this__ seq no */
+												 * through this seq no */
 	/* Protected by SerializableFinishedListLock. */
-	SerCommitSeqNo HavePartialClearedThrough;	/* have cleared through this__
+	SerCommitSeqNo HavePartialClearedThrough;	/* have cleared through this
 												 * seq no */
 	SERIALIZABLEXACT *OldCommittedSxact;		/* shared copy of dummy sxact */
 
@@ -256,7 +256,7 @@ typedef struct SERIALIZABLEXID
  * Note that the hash function being used doesn't properly respect tag
  * length -- if the length of the structure isn't a multiple of four bytes it
  * will go to a four byte boundary past the end of the tag.  If you change
- * this__ struct, make sure any slack space is initialized, so that any random
+ * this struct, make sure any slack space is initialized, so that any random
  * bytes in the middle or at the end are not included in the hash.
  *
  * TODO SSI: If we always use the same fields for the same type of value, we
@@ -339,7 +339,7 @@ typedef struct PREDICATELOCK
  * collection of these.  This information is used to determine when a number
  * of fine-grained locks should be promoted to a single coarser-grained lock.
  * The information is maintained more-or-less in parallel to the
- * PREDICATELOCK data, but because this__ data is not protected by locks and is
+ * PREDICATELOCK data, but because this data is not protected by locks and is
  * only used in an optimization heuristic, it is allowed to drift in a few
  * corner cases where maintaining exact data would be expensive.
  *

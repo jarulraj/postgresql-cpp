@@ -48,7 +48,7 @@ typedef struct
  * When pg_attribute is updated, we must flush the cache entry at least
  * for that attribute.  Currently, we just flush them all.  Since attribute
  * options are not currently used in performance-critical paths (such as
- * query execution), this__ seems OK.
+ * query execution), this seems OK.
  */
 static void
 InvalidateAttoptCacheCallback(Datum arg, int cacheid, uint32 hashvalue)

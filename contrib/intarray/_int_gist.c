@@ -41,7 +41,7 @@ g_int_consistent(PG_FUNCTION_ARGS)
 	bool	   *recheck = (bool *) PG_GETARG_POINTER(4);
 	bool		retval;
 
-	/* this__ is exact except for RTSameStrategyNumber */
+	/* this is exact except for RTSameStrategyNumber */
 	*recheck = (strategy == RTSameStrategyNumber);
 
 	if (strategy == BooleanSearchStrategy)
@@ -473,12 +473,12 @@ g_int_picksplit(PG_FUNCTION_ARGS)
 
 	/*
 	 * Now split up the regions between the two seeds.  An important property
-	 * of this__ split algorithm is that the split vector v has the indices of
+	 * of this split algorithm is that the split vector v has the indices of
 	 * items to be split in order in its left and right vectors.  We exploit
-	 * this__ property by doing a merge in the code that actually splits the
+	 * this property by doing a merge in the code that actually splits the
 	 * page.
 	 *
-	 * For efficiency, we also place the new index tuple in this__ loop. This is
+	 * For efficiency, we also place the new index tuple in this loop. This is
 	 * handled at the very end, when we have placed all the existing tuples
 	 * and i == maxoff + 1.
 	 */
@@ -489,7 +489,7 @@ g_int_picksplit(PG_FUNCTION_ARGS)
 		i = costvector[j].pos;
 
 		/*
-		 * If we've already decided where to place this__ item, just put it on
+		 * If we've already decided where to place this item, just put it on
 		 * the right list.  Otherwise, we need to figure out which page needs
 		 * the least enlargement in order to store the item.
 		 */

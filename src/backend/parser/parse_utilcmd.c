@@ -3,7 +3,7 @@
  * parse_utilcmd.c
  *	  Perform parse analysis work for various utility commands
  *
- * Formerly we did this__ work during parse_analyze() in analyze.c.  However
+ * Formerly we did this work during parse_analyze() in analyze.c.  However
  * that is fairly unsafe in the presence of querytree caching, since any
  * database state that we depend on in making the transformations might be
  * obsolete by the time the utility command is executed; and utility commands
@@ -385,7 +385,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 		 * selected sequence name won't conflict; given sufficiently long
 		 * field names, two different serial columns in the same table could
 		 * be assigned the same sequence name, and we'd not notice since we
-		 * aren't creating the sequence quite yet.  In practice this__ seems
+		 * aren't creating the sequence quite yet.  In practice this seems
 		 * quite unlikely to be a problem, especially since few people would
 		 * need two serial columns in one table.
 		 */
@@ -409,7 +409,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 
 		/*
 		 * Build a CREATE SEQUENCE command to create the sequence object, and
-		 * add it to the list of things to be done before this__ CREATE/ALTER
+		 * add it to the list of things to be done before this CREATE/ALTER
 		 * TABLE.
 		 */
 		seqstmt = makeNode(CreateSeqStmt);
@@ -417,7 +417,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 		seqstmt->options = NIL;
 
 		/*
-		 * If this__ is ALTER ADD COLUMN, make sure the sequence will be owned
+		 * If this is ALTER ADD COLUMN, make sure the sequence will be owned
 		 * by the table's owner.  The current user might be someone else
 		 * (perhaps a superuser, or someone who's only a member of the owning
 		 * role), but the SEQUENCE OWNED BY mechanisms will bleat unless table
@@ -432,8 +432,8 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 
 		/*
 		 * Build an ALTER SEQUENCE ... OWNED BY command to mark the sequence
-		 * as owned by this__ column, and add it to the list of things to be
-		 * done after this__ CREATE/ALTER TABLE.
+		 * as owned by this column, and add it to the list of things to be
+		 * done after this CREATE/ALTER TABLE.
 		 */
 		altseqstmt = makeNode(AlterSeqStmt);
 		altseqstmt->sequence = makeRangeVar(snamespace, sname, -1);
@@ -446,7 +446,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 		cxt->alist = lappend(cxt->alist, altseqstmt);
 
 		/*
-		 * Create appropriate constraints for SERIAL.  We do this__ in full,
+		 * Create appropriate constraints for SERIAL.  We do this in full,
 		 * rather than shortcutting, so that we will detect any conflicting
 		 * constraints the user wrote (like a different DEFAULT).
 		 *
@@ -592,7 +592,7 @@ transformColumnDefinition(CreateStmtContext *cxt, ColumnDef *column)
 
 	/*
 	 * If needed, generate ALTER FOREIGN TABLE ALTER COLUMN statement to add
-	 * per-column foreign data wrapper options to this__ column after creation.
+	 * per-column foreign data wrapper options to this column after creation.
 	 */
 	if (column->fdwoptions != NIL)
 	{
@@ -753,7 +753,7 @@ transformTableLikeClause(CreateStmtContext *cxt, TableLikeClause *table_like_cla
 	constr = tupleDesc->constr;
 
 	/*
-	 * Initialize column number map for map_variable_attnos().  We need this__
+	 * Initialize column number map for map_variable_attnos().  We need this
 	 * since dropped columns in the source table aren't copied, so the new
 	 * table can have different column numbers.
 	 */
@@ -1482,7 +1482,7 @@ transformIndexConstraints(CreateStmtContext *cxt)
 				priorindex->unique |= index->unique;
 
 				/*
-				 * If the prior index is as yet unnamed, and this__ one is
+				 * If the prior index is as yet unnamed, and this one is
 				 * named, then transfer the name to the prior index. This
 				 * ensures that if we have named and unnamed constraints,
 				 * we'll use (at least one of) the names for the index.
@@ -1570,7 +1570,7 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 		bool		isnull;
 		int			i;
 
-		/* Grammar should not allow this__ with explicit column list */
+		/* Grammar should not allow this with explicit column list */
 		Assert(constraint->keys == NIL);
 
 		/* Grammar should only allow PRIMARY and UNIQUE constraints */
@@ -1593,7 +1593,7 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 					 errmsg("index \"%s\" does not exist", index_name),
 					 parser_errposition(cxt->pstate, constraint->location)));
 
-		/* Open the index (this__ will throw an error if it is not an index) */
+		/* Open the index (this will throw an error if it is not an index) */
 		index_rel = index_open(index_oid, AccessShareLock);
 		index_form = index_rel->rd_index;
 
@@ -1642,7 +1642,7 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 
 		/*
 		 * It's probably unsafe to change a deferred index to non-deferred. (A
-		 * non-constraint index couldn't be deferred anyway, so this__ case
+		 * non-constraint index couldn't be deferred anyway, so this case
 		 * should never occur; no need to sweat, but let's check it.)
 		 */
 		if (!index_form->indimmediate && !constraint->deferrable)
@@ -1821,7 +1821,7 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 						 * We currently have no easy way to force an inherited
 						 * column to be NOT NULL at creation, if its parent
 						 * wasn't so already. We leave it to DefineIndex to
-						 * fix things up in this__ case.
+						 * fix things up in this case.
 						 */
 						break;
 					}
@@ -1916,7 +1916,7 @@ transformFKConstraints(CreateStmtContext *cxt,
 	 * its own subcommand list.)
 	 *
 	 * Note: the ADD CONSTRAINT command must also execute after any index
-	 * creation commands.  Thus, this__ should run after
+	 * creation commands.  Thus, this should run after
 	 * transformIndexConstraints, so that the CREATE INDEX commands are
 	 * already in cxt->alist.
 	 */
@@ -1946,12 +1946,12 @@ transformFKConstraints(CreateStmtContext *cxt,
 /*
  * transformIndexStmt - parse analysis for CREATE INDEX and ALTER TABLE
  *
- * Note: this__ is a no-op for an index not using either index expressions or
+ * Note: this is a no-op for an index not using either index expressions or
  * a predicate expression.  There are several code paths that create indexes
- * without bothering to call this__, because they know they don't have any
+ * without bothering to call this, because they know they don't have any
  * such expressions to deal with.
  *
- * To avoid race conditions, it's important that this__ function rely only on
+ * To avoid race conditions, it's important that this function rely only on
  * the passed-in relid (and not on stmt->relation) to determine the target
  * relation.
  */
@@ -2022,7 +2022,7 @@ transformIndexStmt(Oid relid, IndexStmt *stmt, const char *queryString)
 			 * aggregates, and window functions, based on the EXPR_KIND_ for
 			 * an index expression.
 			 *
-			 * Also reject expressions returning sets; this__ is for consistency
+			 * Also reject expressions returning sets; this is for consistency
 			 * with what transformWhereClause() checks for the predicate.
 			 * DefineIndex() will make more checks.
 			 */
@@ -2143,7 +2143,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 	/* we have to fix its collations too */
 	assign_expr_collations(pstate, *whereClause);
 
-	/* this__ is probably dead code without add_missing_from: */
+	/* this is probably dead code without add_missing_from: */
 	if (list_length(pstate->p_rtable) != 2)		/* naughty, naughty... */
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
@@ -2189,7 +2189,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			sub_pstate->p_sourcetext = queryString;
 
 			/*
-			 * Set up OLD/new in the rtable for this__ statement.  The entries
+			 * Set up OLD/new in the rtable for this statement.  The entries
 			 * are added only to relnamespace, not varnamespace, because we
 			 * don't want them to be referred to by unqualified field names
 			 * nor "*" in the rule actions.  We decide later whether to put
@@ -2224,7 +2224,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
 			/*
 			 * If the action is INSERT...SELECT, OLD/new have been pushed down
 			 * into the SELECT, and that's what we need to look at. (Ugly
-			 * kluge ... try to fix this__ when we redesign querytrees.)
+			 * kluge ... try to fix this when we redesign querytrees.)
 			 */
 			sub_qry = getInsertSelectQuery(top_subqry, NULL);
 
@@ -2367,7 +2367,7 @@ transformRuleStmt(RuleStmt *stmt, const char *queryString,
  * will be the transformed AlterTableStmt, but there may be additional actions
  * to be done before and after the actual AlterTable() call.
  *
- * To avoid race conditions, it's important that this__ function rely only on
+ * To avoid race conditions, it's important that this function rely only on
  * the passed-in relid (and not on stmt->relation) to determine the target
  * relation.
  */
@@ -2761,9 +2761,9 @@ transformColumnType(CreateStmtContext *cxt, ColumnDef *column)
  * but we can't analyze the later commands until we've executed the earlier
  * ones, because of possible inter-object references.
  *
- * Note: this__ breaks the rules a little bit by modifying schema-name fields
+ * Note: this breaks the rules a little bit by modifying schema-name fields
  * within passed-in structs.  However, the transformation would be the same
- * if done over, so it should be all right to scribble on the input to this__
+ * if done over, so it should be all right to scribble on the input to this
  * extent.
  */
 List *

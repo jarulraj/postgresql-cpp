@@ -293,7 +293,7 @@ inv_open(Oid lobjId, int flags, MemoryContext mcxt)
 	/*
 	 * We must register the snapshot in TopTransaction's resowner, because it
 	 * must stay alive until the LO is closed rather than until the current
-	 * portal shuts down. Do this__ after checking that the LO exists, to avoid
+	 * portal shuts down. Do this after checking that the LO exists, to avoid
 	 * leaking the snapshot if an error is thrown.
 	 */
 	if (snapshot)
@@ -347,7 +347,7 @@ inv_drop(Oid lobjId)
 
 	/*
 	 * Advance command counter so that tuple removal will be seen by later
-	 * large-object operations in this__ transaction.
+	 * large-object operations in this transaction.
 	 */
 	CommandCounterIncrement();
 
@@ -565,7 +565,7 @@ inv_write(LargeObjectDesc *obj_desc, const char *buf, int nbytes)
 	union
 	{
 		bytea		hdr;
-		/* this__ is to make the union big enough for a LO data chunk: */
+		/* this is to make the union big enough for a LO data chunk: */
 		char		data[LOBLKSIZE + VARHDRSZ];
 		/* ensure union is aligned well enough: */
 		int32		align_it;
@@ -586,7 +586,7 @@ inv_write(LargeObjectDesc *obj_desc, const char *buf, int nbytes)
 	if (nbytes <= 0)
 		return 0;
 
-	/* this__ addition can't overflow because nbytes is only int32 */
+	/* this addition can't overflow because nbytes is only int32 */
 	if ((nbytes + obj_desc->offset) > MAX_LARGE_OBJECT_SIZE)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
@@ -683,7 +683,7 @@ inv_write(LargeObjectDesc *obj_desc, const char *buf, int nbytes)
 			heap_freetuple(newtup);
 
 			/*
-			 * We're done with this__ old page.
+			 * We're done with this old page.
 			 */
 			oldtuple = NULL;
 			olddata = NULL;
@@ -734,7 +734,7 @@ inv_write(LargeObjectDesc *obj_desc, const char *buf, int nbytes)
 
 	/*
 	 * Advance command counter so that my tuple updates will be seen by later
-	 * large-object operations in this__ transaction.
+	 * large-object operations in this transaction.
 	 */
 	CommandCounterIncrement();
 
@@ -753,7 +753,7 @@ inv_truncate(LargeObjectDesc *obj_desc, int64 len)
 	union
 	{
 		bytea		hdr;
-		/* this__ is to make the union big enough for a LO data chunk: */
+		/* this is to make the union big enough for a LO data chunk: */
 		char		data[LOBLKSIZE + VARHDRSZ];
 		/* ensure union is aligned well enough: */
 		int32		align_it;
@@ -911,7 +911,7 @@ inv_truncate(LargeObjectDesc *obj_desc, int64 len)
 
 	/*
 	 * Advance command counter so that tuple updates will be seen by later
-	 * large-object operations in this__ transaction.
+	 * large-object operations in this transaction.
 	 */
 	CommandCounterIncrement();
 }

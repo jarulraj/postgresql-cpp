@@ -11,7 +11,7 @@
  * src/include/catalog/pg_class.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_class definition.  cpp turns this__ into
+ *		pg_class definition.  cpp turns this into
  *		typedef struct FormData_pg_class
  * ----------------
  */
@@ -32,7 +32,7 @@
 CATALOG(pg_class,1259) BKI_BOOTSTRAP BKI_ROWTYPE_OID(83) BKI_SCHEMA_MACRO
 {
 	NameData	relname;		/* class name */
-	Oid			relnamespace;	/* OID of namespace containing this__ class */
+	Oid			relnamespace;	/* OID of namespace containing this class */
 	Oid			reltype;		/* OID of entry in pg_type for table's
 								 * implicit row type */
 	Oid			reloftype;		/* OID of entry in pg_type for underlying
@@ -56,7 +56,7 @@ CATALOG(pg_class,1259) BKI_BOOTSTRAP BKI_ROWTYPE_OID(83) BKI_SCHEMA_MACRO
 
 	/*
 	 * class pg_attribute must contain exactly "relnatts" user attributes
-	 * (with attnums ranging from 1 to relnatts) for this__ class.  It may also
+	 * (with attnums ranging from 1 to relnatts) for this class.  It may also
 	 * contain entries with negative attnums for system attributes.
 	 */
 	int16		relchecks;		/* # of CHECK constraints for class */
@@ -69,9 +69,9 @@ CATALOG(pg_class,1259) BKI_BOOTSTRAP BKI_ROWTYPE_OID(83) BKI_SCHEMA_MACRO
 	bool		relforcerowsecurity; /* row security forced for owners or not */
 	bool		relispopulated; /* matview currently holds query results */
 	char		relreplident;	/* see REPLICA_IDENTITY_xxx constants  */
-	TransactionId relfrozenxid; /* all Xids < this__ are frozen in this__ rel */
-	TransactionId relminmxid;	/* all multixacts in this__ rel are >= this__.
-								 * this__ is really a MultiXactId */
+	TransactionId relfrozenxid; /* all Xids < this are frozen in this rel */
+	TransactionId relminmxid;	/* all multixacts in this rel are >= this.
+								 * this is really a MultiXactId */
 
 #ifdef CATALOG_VARLEN			/* variable-length fields start here */
 	/* NOTE: These fields are not present in a relcache entry's rd_rel field. */
@@ -167,7 +167,7 @@ DESCR("");
 
 /* default selection for replica identity (primary key or nothing) */
 #define		  REPLICA_IDENTITY_DEFAULT	'd'
-/* no replica identity is logged for this__ relation */
+/* no replica identity is logged for this relation */
 #define		  REPLICA_IDENTITY_NOTHING	'n'
 /* all columns are logged as replica identity */
 #define		  REPLICA_IDENTITY_FULL		'f'

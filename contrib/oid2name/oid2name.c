@@ -186,7 +186,7 @@ help(const char *progname)
 		   "  -U NAME        connect as specified database user\n"
 		   "  -V, --version  output version information, then exit\n"
 		   "  -x             extended (show additional columns)\n"
-		   "  -?, --help     show this__ help, then exit\n"
+		   "  -?, --help     show this help, then exit\n"
 		   "\nThe default action is to show all database OIDs.\n\n"
 		   "Report bugs to <pgsql-bugs@postgresql.org>.\n",
 		   progname, progname);

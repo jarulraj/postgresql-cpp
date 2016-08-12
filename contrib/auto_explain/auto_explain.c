@@ -71,7 +71,7 @@ _PG_init(void)
 	/* Define custom GUC variables. */
 	DefineCustomIntVariable("auto_explain.log_min_duration",
 		 "Sets the minimum execution time above which plans will be logged.",
-						 "Zero prints all plans. -1 turns this__ feature off.",
+						 "Zero prints all plans. -1 turns this feature off.",
 							&auto_explain_log_min_duration,
 							-1,
 							-1, INT_MAX / 1000,
@@ -286,7 +286,7 @@ explain_ExecutorEnd(QueryDesc *queryDesc)
 
 		/*
 		 * Make sure stats accumulation is done.  (Note: it's okay if several
-		 * levels of hook all do this__.)
+		 * levels of hook all do this.)
 		 */
 		InstrEndLoop(queryDesc->totaltime);
 

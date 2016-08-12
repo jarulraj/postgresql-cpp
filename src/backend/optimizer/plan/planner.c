@@ -175,7 +175,7 @@ standard_planner(Query *parse, int cursorOptions, ParamListInfo boundParams)
 		cursorOptions |= ((DeclareCursorStmt *) parse->utilityStmt)->options;
 
 	/*
-	 * Set up global state for this__ planner invocation.  This data is needed
+	 * Set up global state for this planner invocation.  This data is needed
 	 * across all levels of sub-Query that might exist in the given command,
 	 * so we keep it in a separate struct that's linked to by each per-Query
 	 * PlannerInfo.
@@ -287,14 +287,14 @@ standard_planner(Query *parse, int cursorOptions, ParamListInfo boundParams)
  * glob is the global state for the current planner run.
  * parse is the querytree produced by the parser & rewriter.
  * parent_root is the immediate parent Query's info (NULL at the top level).
- * hasRecursion is true if this__ is a recursive WITH query.
+ * hasRecursion is true if this is a recursive WITH query.
  * tuple_fraction is the fraction of tuples we expect will be retrieved.
  * tuple_fraction is interpreted as explained for grouping_planner, below.
  *
  * If subroot isn't NULL, we pass back the query's final PlannerInfo struct;
- * among other things this__ tells the output sort ordering of the plan.
+ * among other things this tells the output sort ordering of the plan.
  *
- * Basically, this__ routine does the stuff that should only be done once
+ * Basically, this routine does the stuff that should only be done once
  * per Query object.  It then calls grouping_planner.  At one time,
  * grouping_planner could be invoked recursively on the same Query object;
  * that's not currently true, but we keep the separation between the two
@@ -320,7 +320,7 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 	bool		hasOuterJoins;
 	ListCell   *l;
 
-	/* Create a PlannerInfo data structure for this__ subquery */
+	/* Create a PlannerInfo data structure for this subquery */
 	root = makeNode(PlannerInfo);
 	root->parse = parse;
 	root->glob = glob;
@@ -353,7 +353,7 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 
 	/*
 	 * Look for ANY and EXISTS SubLinks in WHERE and JOIN/ON clauses, and try
-	 * to transform them into joins.  Note that this__ step does not descend
+	 * to transform them into joins.  Note that this step does not descend
 	 * into subqueries; if we pull up any subqueries below, their SubLinks are
 	 * processed just before pulling them up.
 	 */
@@ -368,16 +368,16 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 	inline_set_returning_functions(root);
 
 	/*
-	 * Check to see if any subqueries in the jointree can be merged into this__
+	 * Check to see if any subqueries in the jointree can be merged into this
 	 * query.
 	 */
 	pull_up_subqueries(root);
 
 	/*
-	 * If this__ is a simple UNION ALL query, flatten it into an appendrel. We
-	 * do this__ now because it requires applying pull_up_subqueries to the leaf
+	 * If this is a simple UNION ALL query, flatten it into an appendrel. We
+	 * do this now because it requires applying pull_up_subqueries to the leaf
 	 * queries of the UNION ALL, which weren't touched above because they
-	 * weren't referenced by the jointree (they will be after we do this__).
+	 * weren't referenced by the jointree (they will be after we do this).
 	 */
 	if (parse->setOperations)
 		flatten_simple_union_all(root);
@@ -407,7 +407,7 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 	}
 
 	/*
-	 * Preprocess RowMark information.  We need to do this__ after subquery
+	 * Preprocess RowMark information.  We need to do this after subquery
 	 * pullup (so that all non-inherited RTEs are present) and before
 	 * inheritance expansion (so that the info is available for
 	 * expand_inherited_tables to examine and modify).
@@ -431,7 +431,7 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 	 */
 	root->hasHavingQual = (parse->havingQual != NULL);
 
-	/* Clear this__ flag; might get set in distribute_qual_to_rels */
+	/* Clear this flag; might get set in distribute_qual_to_rels */
 	root->hasPseudoConstantQuals = false;
 
 	/*
@@ -542,7 +542,7 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 	 * In some cases we may want to transfer a HAVING clause into WHERE. We
 	 * cannot do so if the HAVING clause contains aggregates (obviously) or
 	 * volatile functions (since a HAVING clause is supposed to be executed
-	 * only once per group).  We also can't do this__ if there are any nonempty
+	 * only once per group).  We also can't do this if there are any nonempty
 	 * grouping sets; moving such a clause into WHERE would potentially change
 	 * the results, if any referenced column isn't present in all the grouping
 	 * sets.  (If there are only empty grouping sets, then the HAVING clause
@@ -566,7 +566,7 @@ subquery_planner(PlannerGlobal *glob, Query *parse,
 	 * seems not worth optimizing.)
 	 *
 	 * Note that both havingQual and parse->jointree->quals are in
-	 * implicitly-ANDed-list form at this__ point, even though they are declared
+	 * implicitly-ANDed-list form at this point, even though they are declared
 	 * as Node *.
 	 */
 	newHaving = NIL;
@@ -697,7 +697,7 @@ preprocess_expression(PlannerInfo *root, Node *expr, int kind)
 
 	/*
 	 * If the query has any join RTEs, replace join alias variables with
-	 * base-relation variables.  We must do this__ before sublink processing,
+	 * base-relation variables.  We must do this before sublink processing,
 	 * else sublinks expanded out from join aliases would not get processed.
 	 * We can skip it in non-lateral RTE functions, VALUES lists, and
 	 * TABLESAMPLE clauses, however, since they can't contain any Vars of the
@@ -712,15 +712,15 @@ preprocess_expression(PlannerInfo *root, Node *expr, int kind)
 	/*
 	 * Simplify constant expressions.
 	 *
-	 * Note: an essential effect of this__ is to convert named-argument function
+	 * Note: an essential effect of this is to convert named-argument function
 	 * calls to positional notation and insert the current actual values of
 	 * any default arguments for functions.  To ensure that happens, we *must*
 	 * process all expressions here.  Previous PG versions sometimes skipped
 	 * const-simplification if it didn't seem worth the trouble, but we can't
 	 * do that anymore.
 	 *
-	 * Note: this__ also flattens nested AND and OR expressions into N-argument
-	 * form.  All processing of a qual expression after this__ point must be
+	 * Note: this also flattens nested AND and OR expressions into N-argument
+	 * form.  All processing of a qual expression after this point must be
 	 * careful to maintain AND/OR flatness --- that is, do not generate a tree
 	 * with AND directly under AND, nor OR directly under OR.
 	 */
@@ -748,13 +748,13 @@ preprocess_expression(PlannerInfo *root, Node *expr, int kind)
 	 * SS_replace_correlation_vars ...
 	 */
 
-	/* Replace uplevel vars with Param nodes (this__ IS possible in VALUES) */
+	/* Replace uplevel vars with Param nodes (this IS possible in VALUES) */
 	if (root->query_level > 1)
 		expr = SS_replace_correlation_vars(root, expr);
 
 	/*
 	 * If it's a qual or havingQual, convert it to implicit-AND format. (We
-	 * don't want to do this__ before eval_const_expressions, since the latter
+	 * don't want to do this before eval_const_expressions, since the latter
 	 * would be unable to simplify a top-level AND correctly. Also,
 	 * SS_process_sublinks expects explicit-AND format.)
 	 */
@@ -824,13 +824,13 @@ preprocess_phv_expression(PlannerInfo *root, Expr *expr)
  *	  Generate a plan in the case where the result relation is an
  *	  inheritance set.
  *
- * We have to handle this__ case differently from cases where a source relation
+ * We have to handle this case differently from cases where a source relation
  * is an inheritance set. Source inheritance is expanded at the bottom of the
  * plan tree (see allpaths.c), but target inheritance has to be expanded at
  * the top.  The reason is that for UPDATE, each target relation needs a
  * different targetlist matching its own column set.  Fortunately,
  * the UPDATE/DELETE target can never be the nullable side of an outer join,
- * so it's OK to generate the plan this__ way.
+ * so it's OK to generate the plan this way.
  *
  * Returns a query plan.
  */
@@ -909,7 +909,7 @@ inheritance_planner(PlannerInfo *root)
 	 * Next, we want to identify which AppendRelInfo items contain references
 	 * to any of the aforesaid subquery RTEs.  These items will need to be
 	 * copied and modified to adjust their subquery references; whereas the
-	 * other ones need not be touched.  It's worth being tense over this__
+	 * other ones need not be touched.  It's worth being tense over this
 	 * because we can usually avoid processing most of the AppendRelInfo
 	 * items, thereby saving O(N^2) space and time when the target is a large
 	 * inheritance tree.  We can identify AppendRelInfo items by their
@@ -951,7 +951,7 @@ inheritance_planner(PlannerInfo *root)
 		memcpy(&subroot, root, sizeof(PlannerInfo));
 
 		/*
-		 * Generate modified query with this__ rel as target.  We first apply
+		 * Generate modified query with this rel as target.  We first apply
 		 * adjust_appendrel_attrs, which copies the Query and changes
 		 * references to the parent RTE to refer to the current child RTE,
 		 * then fool around with subquery RTEs.
@@ -1007,7 +1007,7 @@ inheritance_planner(PlannerInfo *root)
 											makeNode(RangeTblEntry));
 
 		/*
-		 * If this__ isn't the first child Query, generate duplicates of all
+		 * If this isn't the first child Query, generate duplicates of all
 		 * subquery (or subquery-to-be) RTEs, and adjust Var numbering to
 		 * reference the duplicates.  To simplify the loop logic, we scan the
 		 * original rtable not the copy just made by adjust_appendrel_attrs;
@@ -1078,7 +1078,7 @@ inheritance_planner(PlannerInfo *root)
 		/*
 		 * We'll use the first child relation (even if it's excluded) as the
 		 * nominal target relation of the ModifyTable node.  Because of the
-		 * way expand_inherited_rtentry works, this__ should always be the RTE
+		 * way expand_inherited_rtentry works, this should always be the RTE
 		 * representing the parent table in its role as a simple member of the
 		 * inheritance set.  (It would be logically cleaner to use the
 		 * inheritance parent RTE as the nominal target; but since that RTE
@@ -1090,7 +1090,7 @@ inheritance_planner(PlannerInfo *root)
 			nominalRelation = appinfo->child_relid;
 
 		/*
-		 * If this__ child rel was excluded by constraint exclusion, exclude it
+		 * If this child rel was excluded by constraint exclusion, exclude it
 		 * from the result plan.
 		 */
 		if (is_dummy_plan(subplan))
@@ -1099,7 +1099,7 @@ inheritance_planner(PlannerInfo *root)
 		subplans = lappend(subplans, subplan);
 
 		/*
-		 * If this__ is the first non-excluded child, its post-planning rtable
+		 * If this is the first non-excluded child, its post-planning rtable
 		 * becomes the initial contents of final_rtable; otherwise, append
 		 * just its modified subquery RTEs to final_rtable.
 		 */
@@ -1113,12 +1113,12 @@ inheritance_planner(PlannerInfo *root)
 
 			/*
 			 * Check to see if any of the original RTEs were turned into
-			 * subqueries during planning.  Currently, this__ should only ever
+			 * subqueries during planning.  Currently, this should only ever
 			 * happen due to securityQuals being involved which push a
 			 * relation down under a subquery, to ensure that the security
 			 * barrier quals are evaluated first.
 			 *
-			 * When this__ happens, we want to use the new subqueries in the
+			 * When this happens, we want to use the new subqueries in the
 			 * final rtable.
 			 */
 			forboth(cell1, final_rtable, cell2, subroot.parse->rtable)
@@ -1160,7 +1160,7 @@ inheritance_planner(PlannerInfo *root)
 		save_rel_array_size = subroot.simple_rel_array_size;
 		save_rel_array = subroot.simple_rel_array;
 
-		/* Make sure any initplans from this__ rel get into the outer list */
+		/* Make sure any initplans from this rel get into the outer list */
 		root->init_plans = subroot.init_plans;
 
 		/* Build list of target-relation RT indexes */
@@ -1299,7 +1299,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 
 		/*
 		 * Calculate pathkeys representing the sort order (if any) of the set
-		 * operation's result.  We have to do this__ before overwriting the sort
+		 * operation's result.  We have to do this before overwriting the sort
 		 * key information...
 		 */
 		current_pathkeys = make_pathkeys_for_sortclauses(root,
@@ -1309,7 +1309,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 		/*
 		 * We should not need to call preprocess_targetlist, since we must be
 		 * in a SELECT query node.  Instead, use the targetlist returned by
-		 * plan_set_operations (since this__ tells whether it returned any
+		 * plan_set_operations (since this tells whether it returned any
 		 * resjunk columns!), and transfer any sort key information from the
 		 * original tlist.
 		 */
@@ -1406,9 +1406,9 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 
 				/*
 				 * Now that we've pinned down an order for the groupClause for
-				 * this__ list of grouping sets, we need to remap the entries in
+				 * this list of grouping sets, we need to remap the entries in
 				 * the grouping sets from sortgrouprefs to plain indices
-				 * (0-based) into the groupClause for this__ collection of
+				 * (0-based) into the groupClause for this collection of
 				 * grouping sets.
 				 */
 
@@ -1534,7 +1534,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 		qp_extra.groupClause = llast(rollup_groupclauses);
 
 		/*
-		 * Generate the best unsorted and presorted paths for this__ Query (but
+		 * Generate the best unsorted and presorted paths for this Query (but
 		 * note there may not be any presorted paths).  We also generate (in
 		 * standard_qp_callback) pathkey representations of the query's sort
 		 * clause, distinct clause, etc.
@@ -1552,7 +1552,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 
 		/*
 		 * If there's grouping going on, estimate the number of result groups.
-		 * We couldn't do this__ any earlier because it depends on relation size
+		 * We couldn't do this any earlier because it depends on relation size
 		 * estimates that are created within query_planner().
 		 *
 		 * Then convert tuple_fraction to fractional form if it is absolute,
@@ -1649,7 +1649,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 			 * Since there was no grouping or aggregation, it's reasonable to
 			 * assume the UNIQUE filter has effects comparable to GROUP BY.
 			 * (If DISTINCT is used with grouping, we ignore its effects for
-			 * rowcount estimation purposes; this__ amounts to assuming the
+			 * rowcount estimation purposes; this amounts to assuming the
 			 * grouped rows are distinct already.)
 			 */
 			List	   *distinctExprs;
@@ -1883,7 +1883,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 
 			/*
 			 * groupColIdx is now cast in stone, so record a mapping from
-			 * tleSortGroupRef to column index. setrefs.c needs this__ to
+			 * tleSortGroupRef to column index. setrefs.c needs this to
 			 * finalize GROUPING() operations.
 			 */
 
@@ -2003,7 +2003,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 				 * actually do not need the FROM table at all!	We can just
 				 * throw away the plan-so-far and generate a Result node. This
 				 * is a sufficiently unusual corner case that it's not worth
-				 * contorting the structure of this__ routine to avoid having to
+				 * contorting the structure of this routine to avoid having to
 				 * generate the plan in the first place.
 				 */
 				result_plan = (Plan *) make_result(root,
@@ -2041,7 +2041,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 			/*
 			 * If the top-level plan node is one that cannot do expression
 			 * evaluation, we must insert a Result node to project the desired
-			 * tlist.  (In some cases this__ might not really be required, but
+			 * tlist.  (In some cases this might not really be required, but
 			 * it's not worth trying to avoid it.  In particular, think not to
 			 * skip adding the Result if the initial window_tlist matches the
 			 * top-level plan node's output, because we might change the tlist
@@ -2103,7 +2103,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 				 * plan's tlist for any partitioning or ordering columns that
 				 * aren't plain Vars.  (In theory, make_windowInputTargetList
 				 * should have provided all such columns, but let's not assume
-				 * that here.)	Furthermore, this__ way we can use existing
+				 * that here.)	Furthermore, this way we can use existing
 				 * infrastructure to identify which input columns are the
 				 * interesting ones.
 				 */
@@ -2202,7 +2202,7 @@ grouping_planner(PlannerInfo *root, double tuple_fraction)
 		if (!tested_hashed_distinct)
 		{
 			/*
-			 * At this__ point, either hashed or sorted grouping will have to
+			 * At this point, either hashed or sorted grouping will have to
 			 * work from result_plan, so we pass that as both "cheapest" and
 			 * "sorted".
 			 */
@@ -2376,7 +2376,7 @@ remap_groupColIdx(PlannerInfo *root, List *groupClause)
 /*
  * Build Agg and Sort nodes to implement sorted grouping with one or more
  * grouping sets. (A plain GROUP BY or just the presence of aggregates counts
- * for this__ purpose as a single grouping set; the calling code is responsible
+ * for this purpose as a single grouping set; the calling code is responsible
  * for providing a non-empty rollup_groupclauses list for such cases, though
  * rollup_lists may be null.)
  *
@@ -2388,7 +2388,7 @@ remap_groupColIdx(PlannerInfo *root, List *groupClause)
  * represent the required data and a convenient way to account for the costs
  * of execution.
  *
- * rollup_groupclauses and rollup_lists are destroyed by this__ function.
+ * rollup_groupclauses and rollup_lists are destroyed by this function.
  */
 static Plan *
 build_grouping_chain(PlannerInfo *root,
@@ -2536,7 +2536,7 @@ build_grouping_chain(PlannerInfo *root,
  * expressions, and add them to the cost estimates for the Plan node.
  *
  * If the tlist contains set-returning functions, also inflate the Plan's cost
- * and plan_rows estimates accordingly.  (Hence, this__ must be called *after*
+ * and plan_rows estimates accordingly.  (Hence, this must be called *after*
  * any logic that uses plan_rows to, eg, estimate qual evaluation costs.)
  *
  * Note: during initial stages of planning, we mostly consider plan nodes with
@@ -2553,7 +2553,7 @@ build_grouping_chain(PlannerInfo *root,
  * accounted for as we create those nodes.  Presently, of the node types we
  * can add on later, only Agg, WindowAgg, and Group project new tlists (the
  * rest just copy their input tuples) --- so make_agg(), make_windowagg() and
- * make_group() are responsible for calling this__ function to account for their
+ * make_group() are responsible for calling this function to account for their
  * tlist costs.
  */
 void
@@ -2591,7 +2591,7 @@ add_tlist_costs_to_plan(PlannerInfo *root, Plan *plan, List *tlist)
  * Currently, such dummy plans are Result nodes with constant FALSE
  * filter quals (see set_dummy_rel_pathlist and create_append_plan).
  *
- * XXX this__ probably ought to be somewhere else, but not clear where.
+ * XXX this probably ought to be somewhere else, but not clear where.
  */
 bool
 is_dummy_plan(Plan *plan)
@@ -2618,7 +2618,7 @@ is_dummy_plan(Plan *plan)
 /*
  * Create a bitmapset of the RT indexes of live base relations
  *
- * Helper for preprocess_rowmarks ... at this__ point in the proceedings,
+ * Helper for preprocess_rowmarks ... at this point in the proceedings,
  * the only good way to distinguish baserels from appendrel children
  * is to see what is in the join tree.
  */
@@ -2803,7 +2803,7 @@ select_rowmark_type(RangeTblEntry *rte, LockClauseStrength strength)
 				/*
 				 * We don't need a tuple lock, only the ability to re-fetch
 				 * the row.  Regular tables support ROW_MARK_REFERENCE, but if
-				 * this__ RTE has security barrier quals, it will be turned into
+				 * this RTE has security barrier quals, it will be turned into
 				 * a subquery during planning, so use ROW_MARK_COPY.
 				 *
 				 * This is only necessary for LCS_NONE, since real tuple locks
@@ -2841,9 +2841,9 @@ select_rowmark_type(RangeTblEntry *rte, LockClauseStrength strength)
  * 0 if the corresponding clause is not present, and -1 if it's present
  * but we couldn't estimate the value for it.  (The "0" convention is OK
  * for OFFSET but a little bit bogus for LIMIT: effectively we estimate
- * LIMIT 0 as though it were LIMIT 1.  But this__ is in line with the planner's
+ * LIMIT 0 as though it were LIMIT 1.  But this is in line with the planner's
  * usual practice of never estimating less than one row.)  These values will
- * be passed to make_limit, which see if you change this__ code.
+ * be passed to make_limit, which see if you change this code.
  *
  * The return value is the suitably adjusted tuple_fraction to use for
  * planning the query.  This adjustment is not overridable, since it reflects
@@ -3188,7 +3188,7 @@ preprocess_groupclause(PlannerInfo *root, List *force)
  * sorted with smallest sets first.
  *
  * We want to produce the absolute minimum possible number of lists here to
- * avoid excess sorts. Fortunately, there is an algorithm for this__; the problem
+ * avoid excess sorts. Fortunately, there is an algorithm for this; the problem
  * of finding the minimal partition of a partially-ordered set into chains
  * (which is what we need, taking the list of grouping sets as a poset ordered
  * by set inclusion) can be mapped to the problem of finding the maximum
@@ -3221,7 +3221,7 @@ extract_rollup_sets(List *groupingSets)
 	ListCell   *lc;
 
 	/*
-	 * Start by stripping out empty sets.  The algorithm doesn't require this__,
+	 * Start by stripping out empty sets.  The algorithm doesn't require this,
 	 * but the planner currently needs all empty sets to be returned in the
 	 * first list, so we strip them here and add them back after.
 	 */
@@ -3247,7 +3247,7 @@ extract_rollup_sets(List *groupingSets)
 	 * set_masks[i] = bitmapset for testing inclusion
 	 * adjacency[i] = array [n, v1, v2, ... vn] of adjacency indices
 	 *
-	 * chains[i] will be the result group this__ set is assigned to.
+	 * chains[i] will be the result group this set is assigned to.
 	 *
 	 * We index all of these from 1 rather than 0 because it is convenient
 	 * to leave 0 free for the NIL node in the graph algorithm.
@@ -3631,7 +3631,7 @@ choose_hashed_grouping(PlannerInfo *root,
 	 * presorted_path + group or agg [+ final sort] where brackets indicate a
 	 * step that may not be needed.  We assume grouping_planner() will have
 	 * passed us a presorted path only if it's a winner compared to
-	 * cheapest_path for this__ purpose.
+	 * cheapest_path for this purpose.
 	 *
 	 * These path variables are dummies that just hold cost fields; we don't
 	 * make actual Paths for these steps.
@@ -3699,7 +3699,7 @@ choose_hashed_grouping(PlannerInfo *root,
  *
  * This is fairly similar to choose_hashed_grouping, but there are enough
  * differences that it doesn't seem worth trying to unify the two functions.
- * (One difference is that we sometimes apply this__ after forming a Plan,
+ * (One difference is that we sometimes apply this after forming a Plan,
  * so the input alternatives can't be represented as Paths --- instead we
  * pass in the costs as individual variables.)
  *
@@ -3802,7 +3802,7 @@ choose_hashed_distinct(PlannerInfo *root,
 
 	/*
 	 * Now for the GROUP case.  See comments in grouping_planner about the
-	 * sorting choices here --- this__ code should match that code.
+	 * sorting choices here --- this code should match that code.
 	 */
 	sorted_p.startup_cost = sorted_startup_cost;
 	sorted_p.total_cost = sorted_total_cost;
@@ -3863,7 +3863,7 @@ choose_hashed_distinct(PlannerInfo *root,
  * will be computed by the inserted nodes rather than by the subplan.
  * For example, given a query like
  *		SELECT a+b,SUM(c+d) FROM table GROUP BY a+b;
- * we want to pass this__ targetlist to the subplan:
+ * we want to pass this targetlist to the subplan:
  *		a+b,c,d
  * where the a+b target will be used by the Sort/Group steps, and the
  * other targets will be used for computing the final results.
@@ -3881,7 +3881,7 @@ choose_hashed_distinct(PlannerInfo *root,
  *			expressions (if there are any) in the returned target list.
  * 'need_tlist_eval' is set true if we really need to evaluate the
  *			returned tlist as-is.  (Note: locate_grouping_columns assumes
- *			that if this__ is FALSE, all grouping columns are simple Vars.)
+ *			that if this is FALSE, all grouping columns are simple Vars.)
  *
  * The result is the targetlist to be passed to query_planner.
  */
@@ -3925,7 +3925,7 @@ make_subplanTargetList(PlannerInfo *root,
 		 * If grouping, create sub_tlist entries for all GROUP BY columns, and
 		 * make an array showing where the group columns are in the sub_tlist.
 		 *
-		 * Note: with this__ implementation, the array entries will always be
+		 * Note: with this implementation, the array entries will always be
 		 * 1..N, but we don't want callers to assume that.
 		 */
 		AttrNumber *grpColIdx;
@@ -3989,7 +3989,7 @@ make_subplanTargetList(PlannerInfo *root,
 	/*
 	 * Pull out all the Vars mentioned in non-group cols (plus HAVING), and
 	 * add them to the result tlist if not already present.  (A Var used
-	 * directly as a GROUP BY item will be present already.)  Note this__
+	 * directly as a GROUP BY item will be present already.)  Note this
 	 * includes Vars used in resjunk items, so we are covering the needs of
 	 * ORDER BY and window specifications.  Vars used within Aggrefs will be
 	 * pulled out here, too.
@@ -4095,7 +4095,7 @@ locate_grouping_columns(PlannerInfo *root,
  *	  Fix up targetlist returned by plan_set_operations().
  *
  * We need to transpose sort key info from the orig_tlist into new_tlist.
- * NOTE: this__ would not be good enough if we supported resjunk sort keys
+ * NOTE: this would not be good enough if we supported resjunk sort keys
  * for results of set operations --- then, we'd need to project a whole
  * new tlist to evaluate the resjunk columns.  For now, just ereport if we
  * find any resjunk columns in orig_tlist.
@@ -4202,11 +4202,11 @@ select_active_windows(PlannerInfo *root, WindowFuncLists *wflists)
  *	  Generate appropriate target list for initial input to WindowAgg nodes.
  *
  * When grouping_planner inserts one or more WindowAgg nodes into the plan,
- * this__ function computes the initial target list to be computed by the node
+ * this function computes the initial target list to be computed by the node
  * just below the first WindowAgg.  This list must contain all values needed
  * to evaluate the window functions, compute the final target list, and
  * perform any required final sort step.  If multiple WindowAggs are needed,
- * each intermediate one adds its window function results onto this__ tlist;
+ * each intermediate one adds its window function results onto this tlist;
  * only the topmost WindowAgg computes the actual desired target list.
  *
  * This function is much like make_subplanTargetList, though not quite enough
@@ -4295,7 +4295,7 @@ make_windowInputTargetList(PlannerInfo *root,
 		if (tle->ressortgroupref != 0 &&
 			bms_is_member(tle->ressortgroupref, sgrefs))
 		{
-			/* Don't want to deconstruct this__ value, so add to new_tlist */
+			/* Don't want to deconstruct this value, so add to new_tlist */
 			TargetEntry *newtle;
 
 			newtle = makeTargetEntry(tle->expr,
@@ -4452,7 +4452,7 @@ get_column_info_for_window(PlannerInfo *root, WindowClause *wc, List *tlist,
 														 tlist);
 			if (list_length(new_pathkeys) > list_length(pathkeys))
 			{
-				/* this__ sort clause is actually significant */
+				/* this sort clause is actually significant */
 				(*partColIdx)[*partNumCols] = sortColIdx[scidx++];
 				(*partOperators)[*partNumCols] = sgc->eqop;
 				(*partNumCols)++;
@@ -4470,7 +4470,7 @@ get_column_info_for_window(PlannerInfo *root, WindowClause *wc, List *tlist,
 														 tlist);
 			if (list_length(new_pathkeys) > list_length(pathkeys))
 			{
-				/* this__ sort clause is actually significant */
+				/* this sort clause is actually significant */
 				(*ordColIdx)[*ordNumCols] = sortColIdx[scidx++];
 				(*ordOperators)[*ordNumCols] = sgc->eqop;
 				(*ordNumCols)++;
@@ -4501,7 +4501,7 @@ get_column_info_for_window(PlannerInfo *root, WindowClause *wc, List *tlist,
  * side-effect that is useful when the expression will get evaluated more than
  * once.  Also, we must fix operator function IDs.
  *
- * Note: this__ must not make any damaging changes to the passed-in expression
+ * Note: this must not make any damaging changes to the passed-in expression
  * tree.  (It would actually be okay to apply fix_opfuncids to it, but since
  * we first do an expression_tree_mutator-based walk, what is returned will
  * be a new node tree.)
@@ -4591,7 +4591,7 @@ plan_cluster_use_sort(Oid tableOid, Oid indexOid)
 
 	/*
 	 * It's possible that get_relation_info did not generate an IndexOptInfo
-	 * for the desired index; this__ could happen if it's not yet reached its
+	 * for the desired index; this could happen if it's not yet reached its
 	 * indcheckxmin usability horizon, or if it's a system index and we're
 	 * ignoring system indexes.  In such cases we should tell CLUSTER to not
 	 * trust the index contents but use seqscan-and-sort.

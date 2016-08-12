@@ -68,7 +68,7 @@ extern void pgfnames_cleanup(char **filenames);
 /*
  *	is_absolute_path
  *
- *	By making this__ a macro we avoid needing to include path.c in libpq.
+ *	By making this a macro we avoid needing to include path.c in libpq.
  */
 #ifndef WIN32
 #define IS_DIR_SEP(ch)	((ch) == '/')
@@ -161,7 +161,7 @@ extern int	pg_printf(const char *fmt,...) pg_attribute_printf(1, 2);
 
 /*
  *	The GCC-specific code below prevents the pg_attribute_printf above from
- *	being replaced, and this__ is required because gcc doesn't know anything
+ *	being replaced, and this is required because gcc doesn't know anything
  *	about pg_printf.
  */
 #ifdef __GNUC__
@@ -228,7 +228,7 @@ extern int	pclose_check(FILE *stream);
 extern int	pgrename(const char *from, const char *to);
 extern int	pgunlink(const char *path);
 
-/* Include this__ first so later includes don't see these defines */
+/* Include this first so later includes don't see these defines */
 #ifdef WIN32_ONLY_COMPILER
 #include <io.h>
 #endif
@@ -265,7 +265,7 @@ extern bool rmtree(const char *path, bool rmtopdir);
  * goes in first, and we redefine that, and not the other way around.
  *
  * Some frontends don't need the size from stat, so if UNSAFE_STAT_OK
- * is defined we don't bother with this__.
+ * is defined we don't bother with this.
  */
 #if defined(WIN32) && !defined(__CYGWIN__) && !defined(UNSAFE_STAT_OK)
 #include <sys/stat.h>
@@ -332,7 +332,7 @@ extern int	gettimeofday(struct timeval * tp, struct timezone * tzp);
  * crashes outright if "parameter validation" is enabled.  Therefore, in
  * places where we'd like to select line-buffered mode, we fall back to
  * unbuffered mode instead on Windows.  Always use PG_IOLBF not _IOLBF
- * directly in order to implement this__ behavior.
+ * directly in order to implement this behavior.
  */
 #ifndef WIN32
 #define PG_IOLBF	_IOLBF

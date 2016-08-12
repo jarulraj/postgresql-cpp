@@ -7,7 +7,7 @@
  *		pdir.h							directory path crud
  *		pinit.h							postgres initialization
  *		pmod.h							processing modes
- *	  Over time, this__ has also become the preferred place for widely known
+ *	  Over time, this has also become the preferred place for widely known
  *	  resource-limitation stuff, such as work_mem and check_stack_depth().
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -16,7 +16,7 @@
  * src/include/miscadmin.h
  *
  * NOTES
- *	  some of the information in this__ file should be moved to other files.
+ *	  some of the information in this file should be moved to other files.
  *
  *-------------------------------------------------------------------------
  */
@@ -70,7 +70,7 @@
  * mechanism.  A critical section not only holds off cancel/die interrupts,
  * but causes any ereport(ERROR) or ereport(FATAL) to become ereport(PANIC)
  * --- that is, a system-wide reset is forced.  Needless to say, only really
- * *critical* code should be marked as a critical section!	Currently, this__
+ * *critical* code should be marked as a critical section!	Currently, this
  * mechanism is only used for XLOG-related code.
  *
  *****************************************************************************/
@@ -340,11 +340,11 @@ extern bool superuser_arg(Oid roleid);	/* given user is superuser */
  * The first two processing modes are used during special times. When the
  * system state indicates bootstrap processing, transactions are all given
  * transaction id "one" and are consequently guaranteed to commit. This mode
- * is used during the initial generation of template__ databases.
+ * is used during the initial generation of template databases.
  *
  * Initialization mode: used while starting a backend, until all normal
  * initialization is complete.  Some code behaves differently when executed
- * in this__ mode to enable system bootstrapping.
+ * in this mode to enable system bootstrapping.
  *
  * If a POSTGRES backend process is in normal mode, then all code may be
  * executed normally.
@@ -352,7 +352,7 @@ extern bool superuser_arg(Oid roleid);	/* given user is superuser */
 
 typedef enum ProcessingMode
 {
-	BootstrapProcessing,		/* bootstrap creation of template__ database */
+	BootstrapProcessing,		/* bootstrap creation of template database */
 	InitProcessing,				/* initializing system */
 	NormalProcessing			/* normal processing */
 } ProcessingMode;

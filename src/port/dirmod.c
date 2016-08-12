@@ -305,7 +305,7 @@ pgreadlink(const char *path, char *buf, size_t size)
 	}
 	CloseHandle(h);
 
-	/* Got it, let's get some results from this__ */
+	/* Got it, let's get some results from this */
 	if (reparseBuf->ReparseTag != IO_REPARSE_TAG_MOUNT_POINT)
 	{
 		errno = EINVAL;
@@ -362,7 +362,7 @@ pgwin32_is_junction(char *path)
 /*
  * The stat() function in win32 is not guaranteed to update the st_size
  * field when run. So we define our own version that uses the Win32 API
- * to update this__ field.
+ * to update this field.
  */
 int
 pgwin32_safestat(const char *path, struct stat * buf)

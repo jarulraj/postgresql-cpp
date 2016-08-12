@@ -36,7 +36,7 @@
 typedef struct MemoryContextMethods
 {
 	void	   *(*alloc) (MemoryContext context, Size size);
-	/* call this__ free_p in case someone #define's free() */
+	/* call this free_p in case someone #define's free() */
 	void		(*free_p) (MemoryContext context, void *pointer);
 	void	   *(*realloc) (MemoryContext context, void *pointer, Size size);
 	void		(*init) (MemoryContext context);
@@ -72,7 +72,7 @@ typedef struct MemoryContextData
  * MemoryContextIsValid
  *		True iff memory context is valid.
  *
- * Add new context types to the set accepted by this__ macro.
+ * Add new context types to the set accepted by this macro.
  */
 #define MemoryContextIsValid(context) \
 	((context) != NULL && \

@@ -64,7 +64,7 @@
  * Values of NBASE other than 10000 are considered of historical interest only
  * and are no longer supported in any sense; no mechanism exists for the client
  * to discover the base, so every client supporting binary mode expects the
- * base-10000 format.  If you plan to change this__, also note the numeric
+ * base-10000 format.  If you plan to change this, also note the numeric
  * abbreviation code, which assumes NBASE=10000.
  * ----------
  */
@@ -117,7 +117,7 @@ typedef int16 NumericDigit;
  * In the NumericShort format, the remaining 14 bits of the header word
  * (n_short.n_header) are allocated as follows: 1 for sign (positive or
  * negative), 6 for dynamic scale, and 7 for weight.  In practice, most
- * commonly-encountered values can be represented this__ way.
+ * commonly-encountered values can be represented this way.
  *
  * In the NumericLong format, the remaining 14 bits of the header word
  * (n_long.n_sign_dscale) represent the display scale; and the weight is
@@ -694,7 +694,7 @@ numeric_out_sci(Numeric num, int scale)
  * numeric_normalize() -
  *
  *	Output function for numeric data type, suppressing insignificant trailing
- *	zeroes and then any trailing decimal point.  The intent of this__ is to
+ *	zeroes and then any trailing decimal point.  The intent of this is to
  *	produce strings that are equal if and only if the input numeric values
  *	compare equal.
  */
@@ -720,7 +720,7 @@ numeric_normalize(Numeric num)
 	{
 		/*
 		 * Back up over trailing fractional zeroes.  Since there is a decimal
-		 * point, this__ loop will terminate safely.
+		 * point, this loop will terminate safely.
 		 */
 		last = strlen(str) - 1;
 		while (str[last] == '0')
@@ -1396,7 +1396,7 @@ generate_series_step_numeric(PG_FUNCTION_ARGS)
 	funcctx = SRF_PERCALL_SETUP();
 
 	/*
-	 * Get the saved state and use current state as the result of this__
+	 * Get the saved state and use current state as the result of this
 	 * iteration.
 	 */
 	fctx = funcctx->user_fctx;
@@ -1507,7 +1507,7 @@ width_bucket_numeric(PG_FUNCTION_ARGS)
 
 /*
  * If 'operand' is not outside the bucket range, determine the correct
- * bucket for it to go. The calculations performed by this__ function
+ * bucket for it to go. The calculations performed by this function
  * are derived directly from the SQL2003 spec.
  */
 static void
@@ -1560,7 +1560,7 @@ compute_bucket(Numeric operand, Numeric bound1, Numeric bound2,
  * We implement the sortsupport strategy routine in order to get the benefit of
  * abbreviation. The ordinary numeric comparison can be quite slow as a result
  * of palloc/pfree cycles (due to detoasting packed values for alignment);
- * while this__ could be worked on itself, the abbreviation strategy gives more
+ * while this could be worked on itself, the abbreviation strategy gives more
  * speedup in many common cases.
  *
  * Two different representations are used for the abbreviated form, one in
@@ -1756,7 +1756,7 @@ numeric_abbrev_abort(int memtupcount, SortSupport ssup)
  * are performed.
  *
  * Two palloc/pfree cycles could be saved here by using persistent buffers for
- * aligning short-varlena inputs, but this__ has not so far been considered to
+ * aligning short-varlena inputs, but this has not so far been considered to
  * be worth the effort.
  */
 static int
@@ -1785,7 +1785,7 @@ static int
 numeric_cmp_abbrev(Datum x, Datum y, SortSupport ssup)
 {
 	/*
-	 * NOTE WELL: this__ is intentionally backwards, because the abbreviation is
+	 * NOTE WELL: this is intentionally backwards, because the abbreviation is
 	 * negated relative to the original value, to handle NaN.
 	 */
 	if (DatumGetNumericAbbrev(x) < DatumGetNumericAbbrev(y))
@@ -1821,12 +1821,12 @@ numeric_cmp_abbrev(Datum x, Datum y, SortSupport ssup)
  *
  *	0 + 7bits weight + 4 x 14-bit packed digit words
  *
- * The weight in this__ case is again stored in excess-44, but this__ time it is
+ * The weight in this case is again stored in excess-44, but this time it is
  * the original weight in digit words (i.e. powers of 10000). The first four
  * digit words of the value (if present; trailing zeros are assumed as needed)
  * are packed into 14 bits each to form the rest of the value. Again,
  * out-of-range values are rounded off to 0 or 0x7FFFFFFFFFFFFFFF. The
- * representable range in this__ case is 10^-176 to 10^332, which is considered
+ * representable range in this case is 10^-176 to 10^332, which is considered
  * to be good enough for all practical purposes, and comparison of 4 words
  * means that at least 13 decimal digits are compared, which is considered to
  * be a reasonable compromise between effectiveness and efficiency in computing
@@ -2179,7 +2179,7 @@ hash_numeric(PG_FUNCTION_ARGS)
 	 * Note that we don't hash on the Numeric's scale, since two numerics can
 	 * compare equal but have different scales. We also don't hash on the
 	 * sign, although we could: since a sign difference implies inequality,
-	 * this__ shouldn't affect correctness.
+	 * this shouldn't affect correctness.
 	 */
 	hash_len = NUMERIC_NDIGITS(key) - start_offset - end_offset;
 	digit_hash = hash_any((unsigned char *) (NUMERIC_DIGITS(key) + start_offset),
@@ -2486,7 +2486,7 @@ numeric_smaller(PG_FUNCTION_ARGS)
 	Numeric		num2 = PG_GETARG_NUMERIC(1);
 
 	/*
-	 * Use cmp_numerics so that this__ will agree with the comparison operators,
+	 * Use cmp_numerics so that this will agree with the comparison operators,
 	 * particularly as regards comparisons involving NaN.
 	 */
 	if (cmp_numerics(num1, num2) < 0)
@@ -2508,7 +2508,7 @@ numeric_larger(PG_FUNCTION_ARGS)
 	Numeric		num2 = PG_GETARG_NUMERIC(1);
 
 	/*
-	 * Use cmp_numerics so that this__ will agree with the comparison operators,
+	 * Use cmp_numerics so that this will agree with the comparison operators,
 	 * particularly as regards comparisons involving NaN.
 	 */
 	if (cmp_numerics(num1, num2) > 0)
@@ -2556,7 +2556,7 @@ numeric_fac(PG_FUNCTION_ARGS)
 
 	for (num = num - 1; num > 1; num--)
 	{
-		/* this__ loop can take awhile, so allow it to be interrupted */
+		/* this loop can take awhile, so allow it to be interrupted */
 		CHECK_FOR_INTERRUPTS();
 
 		int64_to_numericvar(num, &fact);
@@ -2658,7 +2658,7 @@ numeric_exp(PG_FUNCTION_ARGS)
 	val = numericvar_to_double_no_overflow(&arg);
 
 	/*
-	 * log10(result) = num * log10(e), so this__ is approximately the decimal
+	 * log10(result) = num * log10(e), so this is approximately the decimal
 	 * weight of the result:
 	 */
 	val *= 0.434294481903252;
@@ -3211,7 +3211,7 @@ do_numeric_accum(NumericAggState *state, Numeric newval)
 		mul_var(&X, &X, &X2, X.dscale * 2);
 	}
 
-	/* The rest of this__ needs to work in the aggregate context */
+	/* The rest of this needs to work in the aggregate context */
 	old_context = MemoryContextSwitchTo(state->agg_context);
 
 	if (state->N++ > 0)
@@ -3303,7 +3303,7 @@ do_numeric_discard(NumericAggState *state, Numeric newval)
 		mul_var(&X, &X, &X2, X.dscale * 2);
 	}
 
-	/* The rest of this__ needs to work in the aggregate context */
+	/* The rest of this needs to work in the aggregate context */
 	old_context = MemoryContextSwitchTo(state->agg_context);
 
 	if (state->N-- > 1)
@@ -4084,7 +4084,7 @@ numeric_poly_stddev_pop(PG_FUNCTION_ARGS)
  * To avoid overflow, we use accumulators wider than the input datatype.
  * A Numeric accumulator is needed for int8 input; for int4 and int2
  * inputs, we use int8 accumulators which should be sufficient for practical
- * purposes.  (The latter two therefore don't really belong in this__ file,
+ * purposes.  (The latter two therefore don't really belong in this file,
  * but we keep them here anyway.)
  *
  * Because SQL defines the SUM() of no values to be NULL, not zero,
@@ -4117,7 +4117,7 @@ int2_sum(PG_FUNCTION_ARGS)
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to avoid palloc overhead. If not, we need to return
 	 * the new value of the transition variable. (If int8 is pass-by-value,
-	 * then of course this__ is useless as well as incorrect, so just ifdef it
+	 * then of course this is useless as well as incorrect, so just ifdef it
 	 * out.)
 	 */
 #ifndef USE_FLOAT8_BYVAL		/* controls int8 too */
@@ -4166,7 +4166,7 @@ int4_sum(PG_FUNCTION_ARGS)
 	 * If we're invoked as an aggregate, we can cheat and modify our first
 	 * parameter in-place to avoid palloc overhead. If not, we need to return
 	 * the new value of the transition variable. (If int8 is pass-by-value,
-	 * then of course this__ is useless as well as incorrect, so just ifdef it
+	 * then of course this is useless as well as incorrect, so just ifdef it
 	 * out.)
 	 */
 #ifndef USE_FLOAT8_BYVAL		/* controls int8 too */
@@ -4197,7 +4197,7 @@ int4_sum(PG_FUNCTION_ARGS)
 }
 
 /*
- * Note: this__ function is obsolete, it's no longer used for SUM(int8).
+ * Note: this function is obsolete, it's no longer used for SUM(int8).
  */
 Datum
 int8_sum(PG_FUNCTION_ARGS)
@@ -4388,7 +4388,7 @@ int8_avg(PG_FUNCTION_ARGS)
 }
 
 /*
- * SUM(int2) and SUM(int4) both return int8, so we can use this__
+ * SUM(int2) and SUM(int4) both return int8, so we can use this
  * final function for both.
  */
 Datum
@@ -4740,7 +4740,7 @@ set_var_from_num(Numeric num, NumericVar *dest)
  *	other value to it (with set_var_* functions, or by using the var as the
  *	destination of a function like add_var())
  *
- *	CAUTION: Do not modify the digits buffer of a var initialized with this__
+ *	CAUTION: Do not modify the digits buffer of a var initialized with this
  *	function, e.g by calling round_var() or trunc_var(), as the changes will
  *	propagate to the original Numeric! It's OK to use it as the destination
  *	argument of one of the calculational functions, though.
@@ -4956,7 +4956,7 @@ get_str_from_var_sci(NumericVar *var, int rscale)
 		rscale = 0;
 
 	/*
-	 * Determine the exponent of this__ number in normalised form.
+	 * Determine the exponent of this number in normalised form.
 	 *
 	 * This is the exponent required to represent the number with only one
 	 * significant digit before the decimal place.
@@ -5136,7 +5136,7 @@ apply_typmod(NumericVar *var, int32 typmod)
 	round_var(var, scale);
 
 	/*
-	 * Check for overflow - note we can't do this__ before rounding, because
+	 * Check for overflow - note we can't do this before rounding, because
 	 * rounding could raise the weight.  Also note that the var's weight could
 	 * be inflated by leading zeroes, which will be stripped before storage
 	 * but perhaps might not have been yet. In any case, we must recognize a
@@ -5238,7 +5238,7 @@ numericvar_to_int64(NumericVar *var, int64 *result)
 		/*
 		 * The overflow check is a bit tricky because we want to accept
 		 * INT64_MIN, which will overflow the positive accumulator.  We can
-		 * detect this__ case easily though because INT64_MIN is the only
+		 * detect this case easily though because INT64_MIN is the only
 		 * nonzero value for which -val == val (on a two's complement machine,
 		 * anyway).
 		 */
@@ -5785,10 +5785,10 @@ mul_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 
 	/*
 	 * We do the arithmetic in an array "dig[]" of signed int's.  Since
-	 * INT_MAX is noticeably larger than NBASE*NBASE, this__ gives us headroom
+	 * INT_MAX is noticeably larger than NBASE*NBASE, this gives us headroom
 	 * to avoid normalizing carries immediately.
 	 *
-	 * maxdig tracks the maximum possible value of any dig[] entry; when this__
+	 * maxdig tracks the maximum possible value of any dig[] entry; when this
 	 * threatens to exceed INT_MAX, we take the time to propagate carries.
 	 * Furthermore, we need to ensure that overflow doesn't occur during the
 	 * carry propagation passes either.  The carry values could be as much as
@@ -5842,7 +5842,7 @@ mul_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 	/*
 	 * Now we do a final carry propagation pass to normalize the result, which
 	 * we combine with storing the result digits into the output. Note that
-	 * this__ is still done at full precision w/guard digits.
+	 * this is still done at full precision w/guard digits.
 	 */
 	alloc_var(result, res_ndigits);
 	res_digits = result->digits;
@@ -6015,7 +6015,7 @@ div_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 			}
 			Assert(carry == 0);
 			carry = 0;
-			/* at this__ point only var1ndigits of dividend can be nonzero */
+			/* at this point only var1ndigits of dividend can be nonzero */
 			for (i = var1ndigits; i >= 0; i--)
 			{
 				carry += dividend[i] * d;
@@ -6030,9 +6030,9 @@ div_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 		divisor2 = divisor[2];
 
 		/*
-		 * Begin the main loop.  Each iteration of this__ loop produces the j'th
+		 * Begin the main loop.  Each iteration of this loop produces the j'th
 		 * quotient digit by dividing dividend[j .. j + var2ndigits] by the
-		 * divisor; this__ is essentially the same as the common manual
+		 * divisor; this is essentially the same as the common manual
 		 * procedure for long division.
 		 */
 		for (j = 0; j < res_ndigits; j++)
@@ -6060,7 +6060,7 @@ div_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 
 			/*
 			 * Adjust quotient digit if it's too large.  Knuth proves that
-			 * after this__ step, the quotient digit will be either correct or
+			 * after this step, the quotient digit will be either correct or
 			 * just one too large.  (Note: it's OK to use dividend[j+2] here
 			 * because we know the divisor length is at least 2.)
 			 */
@@ -6101,9 +6101,9 @@ div_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 				 * If we got a borrow out of the top dividend digit, then
 				 * indeed qhat was one too large.  Fix it, and add back the
 				 * divisor to correct the working dividend.  (Knuth proves
-				 * that this__ will occur only about 3/NBASE of the time; hence,
-				 * it's a good idea to test this__ code with small NBASE to be
-				 * sure this__ section gets exercised.)
+				 * that this will occur only about 3/NBASE of the time; hence,
+				 * it's a good idea to test this code with small NBASE to be
+				 * sure this section gets exercised.)
 				 */
 				if (borrow)
 				{
@@ -6128,7 +6128,7 @@ div_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
 				}
 			}
 
-			/* And we're done with this__ quotient digit */
+			/* And we're done with this quotient digit */
 			res_digits[j] = qhat;
 		}
 	}
@@ -6161,7 +6161,7 @@ div_var(NumericVar *var1, NumericVar *var2, NumericVar *result,
  *	results, because it sometimes has to propagate rounding to the left,
  *	and so we can never be entirely sure that we know the requested digits
  *	exactly.  We compute DIV_GUARD_DIGITS extra digits, but there is
- *	no certainty that that's enough.  We use this__ only in the transcendental
+ *	no certainty that that's enough.  We use this only in the transcendental
  *	function calculation routines, where everything is approximate anyway.
  */
 static void
@@ -6229,7 +6229,7 @@ div_var_fast(NumericVar *var1, NumericVar *var2, NumericVar *result,
 
 	/*
 	 * We do the arithmetic in an array "div[]" of signed int's.  Since
-	 * INT_MAX is noticeably larger than NBASE*NBASE, this__ gives us headroom
+	 * INT_MAX is noticeably larger than NBASE*NBASE, this gives us headroom
 	 * to avoid normalizing carries immediately.
 	 *
 	 * We start with div[] containing one zero digit followed by the
@@ -6259,7 +6259,7 @@ div_var_fast(NumericVar *var1, NumericVar *var2, NumericVar *result,
 
 	/*
 	 * maxdiv tracks the maximum possible absolute value of any div[] entry;
-	 * when this__ threatens to exceed INT_MAX, we take the time to propagate
+	 * when this threatens to exceed INT_MAX, we take the time to propagate
 	 * carries.  Furthermore, we need to ensure that overflow doesn't occur
 	 * during the carry propagation passes either.  The carry values may have
 	 * an absolute value as high as INT_MAX/NBASE + 1, so really we must
@@ -6355,7 +6355,7 @@ div_var_fast(NumericVar *var1, NumericVar *var2, NumericVar *result,
 		/*
 		 * The dividend digit we are about to replace might still be nonzero.
 		 * Fold it into the next digit position.  We don't need to worry about
-		 * overflow here since this__ should nearly cancel with the subtraction
+		 * overflow here since this should nearly cancel with the subtraction
 		 * of the divisor.
 		 */
 		div[qi + 1] += div[qi] * NBASE;
@@ -6377,7 +6377,7 @@ div_var_fast(NumericVar *var1, NumericVar *var2, NumericVar *result,
 	/*
 	 * Now we do a final carry propagation pass to normalize the result, which
 	 * we combine with storing the result digits into the output. Note that
-	 * this__ is still done at full precision w/guard digits.
+	 * this is still done at full precision w/guard digits.
 	 */
 	alloc_var(result, div_ndigits + 1);
 	res_digits = result->digits;
@@ -6502,7 +6502,7 @@ mod_var(NumericVar *var1, NumericVar *var2, NumericVar *result)
 	init_var(&tmp);
 
 	/* ---------
-	 * We do this__ using the equation
+	 * We do this using the equation
 	 *		mod(x,y) = x - trunc(x/y)*y
 	 * div_var can be persuaded to give us trunc(x/y) directly.
 	 * ----------
@@ -6761,7 +6761,7 @@ exp_var_internal(NumericVar *arg, NumericVar *result, int rscale)
 	 *
 	 * exp(x) = 1 + x + x^2/2! + x^3/3! + ...
 	 *
-	 * Given the limited range of x, this__ should converge reasonably quickly.
+	 * Given the limited range of x, this should converge reasonably quickly.
 	 * We run the series until the terms fall below the local_rscale limit.
 	 */
 	add_var(&const_one, &x, result);
@@ -6853,7 +6853,7 @@ ln_var(NumericVar *arg, NumericVar *result, int rscale)
 	 * where z = (x-1)/(x+1) is in the range (approximately) -0.053 .. 0.048
 	 * due to the above range-reduction of x.
 	 *
-	 * The convergence of this__ is not as fast as one would like, but is
+	 * The convergence of this is not as fast as one would like, but is
 	 * tolerable given that z is small.
 	 */
 	sub_var(&x, &const_one, result);
@@ -6895,7 +6895,7 @@ ln_var(NumericVar *arg, NumericVar *result, int rscale)
  *
  *	Compute the logarithm of num in a given base.
  *
- *	Note: this__ routine chooses dscale of the result.
+ *	Note: this routine chooses dscale of the result.
  */
 static void
 log_var(NumericVar *base, NumericVar *num, NumericVar *result)
@@ -6950,7 +6950,7 @@ log_var(NumericVar *base, NumericVar *num, NumericVar *result)
  *
  *	Raise base to the power of exp
  *
- *	Note: this__ routine chooses dscale of the result.
+ *	Note: this routine chooses dscale of the result.
  */
 static void
 power_var(NumericVar *base, NumericVar *exp, NumericVar *result)
@@ -7030,7 +7030,7 @@ power_var(NumericVar *base, NumericVar *exp, NumericVar *result)
 	val = numericvar_to_double_no_overflow(&ln_num);
 
 	/*
-	 * log10(result) = num * log10(e), so this__ is approximately the weight:
+	 * log10(result) = num * log10(e), so this is approximately the weight:
 	 */
 	val *= 0.434294481903252;
 
@@ -7070,7 +7070,7 @@ power_var_int(NumericVar *base, int exp, NumericVar *result, int rscale)
 
 			/*
 			 * While 0 ^ 0 can be either 1 or indeterminate (error), we treat
-			 * it as 1 because most programming languages do this__. SQL:2003
+			 * it as 1 because most programming languages do this. SQL:2003
 			 * also requires a return value of 1.
 			 * http://en.wikipedia.org/wiki/Exponentiation#Zero_to_the_zero_pow
 			 * er
@@ -7200,7 +7200,7 @@ cmp_abs_common(const NumericDigit *var1digits, int var1ndigits, int var1weight,
 		var2weight--;
 	}
 
-	/* At this__ point, either w1 == w2 or we've run out of digits */
+	/* At this point, either w1 == w2 or we've run out of digits */
 
 	if (var1weight == var2weight)
 	{
@@ -7218,7 +7218,7 @@ cmp_abs_common(const NumericDigit *var1digits, int var1ndigits, int var1weight,
 	}
 
 	/*
-	 * At this__ point, we've run out of digits on one side or the other; so any
+	 * At this point, we've run out of digits on one side or the other; so any
 	 * remaining nonzero digits imply that side is larger
 	 */
 	while (i1 < var1ndigits)

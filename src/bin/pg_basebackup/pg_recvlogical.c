@@ -73,7 +73,7 @@ usage(void)
 	printf(_("      --drop-slot        drop the replication slot (for the slot's name see --slot)\n"));
 	printf(_("      --start            start streaming in a replication slot (for the slot's name see --slot)\n"));
 	printf(_("\nOptions:\n"));
-	printf(_("  -f, --file=FILE        receive log into this__ file, - for stdout\n"));
+	printf(_("  -f, --file=FILE        receive log into this file, - for stdout\n"));
 	printf(_("  -F  --fsync-interval=SECS\n"
 			 "                         time between fsyncs to the output file (default: %d)\n"), (fsync_interval / 1000));
 	printf(_("      --if-not-exists    do not error if slot already exists when creating a slot\n"));
@@ -88,7 +88,7 @@ usage(void)
 	printf(_("  -S, --slot=SLOTNAME    name of the logical replication slot\n"));
 	printf(_("  -v, --verbose          output verbose messages\n"));
 	printf(_("  -V, --version          output version information, then exit\n"));
-	printf(_("  -?, --help             show this__ help, then exit\n"));
+	printf(_("  -?, --help             show this help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -d, --dbname=DBNAME    database to connect to\n"));
 	printf(_("  -h, --host=HOSTNAME    database server host or socket directory\n"));
@@ -503,7 +503,7 @@ StreamLogicalLog(void)
 			goto error;
 		}
 
-		/* Extract WAL location for this__ block */
+		/* Extract WAL location for this block */
 		{
 			XLogRecPtr	temp = fe_recvint64(&copybuf[1]);
 

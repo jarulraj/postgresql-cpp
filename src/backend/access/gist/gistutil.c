@@ -160,7 +160,7 @@ gistMakeUnionItVec(GISTSTATE *giststate, IndexTuple *itvec, int len,
 	{
 		int			j;
 
-		/* Collect non-null datums for this__ column */
+		/* Collect non-null datums for this column */
 		evec->n = 0;
 		for (j = 0; j < len; j++)
 		{
@@ -179,7 +179,7 @@ gistMakeUnionItVec(GISTSTATE *giststate, IndexTuple *itvec, int len,
 			evec->n++;
 		}
 
-		/* If this__ column was all NULLs, the union is NULL */
+		/* If this column was all NULLs, the union is NULL */
 		if (evec->n == 0)
 		{
 			attr[i] = (Datum) 0;
@@ -444,7 +444,7 @@ gistchoose(Relation r, Page p, IndexTuple it,	/* it has compressed entry */
 			float		usize;
 			bool		IsNull;
 
-			/* Compute penalty for this__ column. */
+			/* Compute penalty for this column. */
 			datum = index_getattr(itup, j + 1, giststate->tupdesc, &IsNull);
 			gistdentryinit(giststate, j, &entry, datum, r, p, i,
 						   FALSE, IsNull);
@@ -456,11 +456,11 @@ gistchoose(Relation r, Page p, IndexTuple it,	/* it has compressed entry */
 			if (best_penalty[j] < 0 || usize < best_penalty[j])
 			{
 				/*
-				 * new best penalty for column.  Tentatively select this__ tuple
+				 * new best penalty for column.  Tentatively select this tuple
 				 * as the target, and record the best penalty.  Then reset the
 				 * next column's penalty to "unknown" (and indirectly, the
 				 * same for all the ones to its right).  This will force us to
-				 * adopt this__ tuple's penalty values as the best for all the
+				 * adopt this tuple's penalty values as the best for all the
 				 * remaining columns during subsequent loop iterations.
 				 */
 				result = i;
@@ -475,15 +475,15 @@ gistchoose(Relation r, Page p, IndexTuple it,	/* it has compressed entry */
 			else if (best_penalty[j] == usize)
 			{
 				/*
-				 * The current tuple is exactly as good for this__ column as the
-				 * best tuple seen so far.  The next iteration of this__ loop
+				 * The current tuple is exactly as good for this column as the
+				 * best tuple seen so far.  The next iteration of this loop
 				 * will compare the next column.
 				 */
 			}
 			else
 			{
 				/*
-				 * The current tuple is worse for this__ column than the best
+				 * The current tuple is worse for this column than the best
 				 * tuple seen so far.  Skip the remaining columns and move on
 				 * to the next tuple, if any.
 				 */
@@ -494,13 +494,13 @@ gistchoose(Relation r, Page p, IndexTuple it,	/* it has compressed entry */
 
 		/*
 		 * If we looped past the last column, and did not update "result",
-		 * then this__ tuple is exactly as good as the prior best tuple.
+		 * then this tuple is exactly as good as the prior best tuple.
 		 */
 		if (j == r->rd_att->natts && result != i)
 		{
 			if (keep_current_best == -1)
 			{
-				/* we didn't make the random choice yet for this__ old best */
+				/* we didn't make the random choice yet for this old best */
 				keep_current_best = (random() <= (MAX_RANDOM_VALUE / 2)) ? 1 : 0;
 			}
 			if (keep_current_best == 0)
@@ -522,7 +522,7 @@ gistchoose(Relation r, Page p, IndexTuple it,	/* it has compressed entry */
 		{
 			if (keep_current_best == -1)
 			{
-				/* we didn't make the random choice yet for this__ old best */
+				/* we didn't make the random choice yet for this old best */
 				keep_current_best = (random() <= (MAX_RANDOM_VALUE / 2)) ? 1 : 0;
 			}
 			if (keep_current_best == 1)
@@ -647,9 +647,9 @@ gistFetchTuple(GISTSTATE *giststate, Relation r, IndexTuple tuple)
 		else
 		{
 			/*
-			 * Index-only scans not supported for this__ column. Since the
+			 * Index-only scans not supported for this column. Since the
 			 * planner chose an index-only scan anyway, it is not interested
-			 * in this__ column, and we can replace it with a NULL.
+			 * in this column, and we can replace it with a NULL.
 			 */
 			isnull[i] = true;
 			fetchatt[i] = (Datum) 0;
@@ -705,7 +705,7 @@ GISTInitBuffer(Buffer b, uint32 f)
 	PageInit(page, pageSize, sizeof(GISTPageOpaqueData));
 
 	opaque = GistPageGetOpaque(page);
-	/* page was already zeroed by PageInit, so this__ is not needed: */
+	/* page was already zeroed by PageInit, so this is not needed: */
 	/* memset(&(opaque->nsn), 0, sizeof(GistNSN)); */
 	opaque->rightlink = InvalidBlockNumber;
 	opaque->flags = f;
@@ -772,7 +772,7 @@ gistNewBuffer(Relation r)
 
 		/*
 		 * We have to guard against the possibility that someone else already
-		 * recycled this__ page; the buffer may be locked if so.
+		 * recycled this page; the buffer may be locked if so.
 		 */
 		if (ConditionalLockBuffer(buffer))
 		{

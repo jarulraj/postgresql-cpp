@@ -51,7 +51,7 @@ struct Latch *MyLatch;
 
 /*
  * DataDir is the absolute path to the top level of the PGDATA directory tree.
- * Except during early startup, this__ is also the server's working directory;
+ * Except during early startup, this is also the server's working directory;
  * most code therefore can simply use relative paths and not reference DataDir
  * explicitly.
  */
@@ -65,7 +65,7 @@ char		pkglib_path[MAXPGPATH];		/* full path to lib directory */
 #ifdef EXEC_BACKEND
 char		postgres_exec_path[MAXPGPATH];		/* full path to backend */
 
-/* note: currently this__ is not valid in backend processes */
+/* note: currently this is not valid in backend processes */
 #endif
 
 BackendId	MyBackendId = InvalidBackendId;

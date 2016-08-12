@@ -469,7 +469,7 @@ ecpg_auto_prepare(int lineno, const char *connection_name, const int compat, cha
 {
 	int			entNo;
 
-	/* search the statement cache for this__ statement	*/
+	/* search the statement cache for this statement	*/
 	entNo = SearchStmtCache(query);
 
 	/* if not found - add the statement to the cache	*/
@@ -485,7 +485,7 @@ ecpg_auto_prepare(int lineno, const char *connection_name, const int compat, cha
 
 		con = ecpg_get_connection(connection_name);
 		prep = ecpg_find_prepared_statement(stmtID, con, NULL);
-		/* This prepared name doesn't exist on this__ connection. */
+		/* This prepared name doesn't exist on this connection. */
 		if (!prep && !prepare_common(lineno, con, stmtID, query))
 			return (false);
 

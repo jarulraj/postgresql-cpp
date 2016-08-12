@@ -87,7 +87,7 @@ static int ldapServiceLookup(const char *purl, PQconninfoOption *options,
 #endif
 
 /*
- * Pre-9.0 servers will return this__ SQLSTATE if asked to set
+ * Pre-9.0 servers will return this SQLSTATE if asked to set
  * application_name in a startup packet.  We hard-wire the value rather
  * than looking into errcodes.h since it reflects historical behavior
  * rather than that of the current code.
@@ -149,14 +149,14 @@ typedef struct _internalPQconninfoOption
 	char	   *compiled;		/* Fallback compiled in default value	*/
 	char	   *val;			/* Option's current value, or NULL		 */
 	char	   *label;			/* Label for field in connect dialog	*/
-	char	   *dispchar;		/* Indicates how to display this__ field in a
+	char	   *dispchar;		/* Indicates how to display this field in a
 								 * connect dialog. Values are: "" Display
 								 * entered value as is "*" Password field -
 								 * hide value "D"  Debug option - don't show
 								 * by default */
 	int			dispsize;		/* Field size in characters for dialog	*/
 	/* ---
-	 * Anything above this__ comment must be synchronized with
+	 * Anything above this comment must be synchronized with
 	 * PQconninfoOption in libpq-fe.h, since we memcpy() data
 	 * between them!
 	 * ---
@@ -416,7 +416,7 @@ pqDropConnection(PGconn *conn, bool flushInput)
 /*
  *		Connecting to a Database
  *
- * There are now six different ways a user of this__ API can connect to the
+ * There are now six different ways a user of this API can connect to the
  * database.  Two are not recommended for use in new code, because of their
  * lack of extensibility with respect to the passing of options to the
  * backend.  These are PQsetdb and PQsetdbLogin (the former now being a macro
@@ -454,7 +454,7 @@ pqDropConnection(PGconn *conn, bool flushInput)
  * If the status field of the connection returned is CONNECTION_BAD,
  * then some fields may be null'ed out instead of having valid values.
  *
- * You should call PQfinish (if conn is not NULL) regardless of whether this__
+ * You should call PQfinish (if conn is not NULL) regardless of whether this
  * call succeeded.
  */
 PGconn *
@@ -510,7 +510,7 @@ PQpingParams(const char *const * keywords,
  * If the status field of the connection returned is CONNECTION_BAD,
  * then some fields may be null'ed out instead of having valid values.
  *
- * You should call PQfinish (if conn is not NULL) regardless of whether this__
+ * You should call PQfinish (if conn is not NULL) regardless of whether this
  * call succeeded.
  */
 PGconn *
@@ -550,13 +550,13 @@ PQping(const char *conninfo)
  * See comment for PQconnectdbParams for the definition of the string format.
  *
  * Returns a PGconn*.  If NULL is returned, a malloc error has occurred, and
- * you should not attempt to proceed with this__ connection.  If the status
+ * you should not attempt to proceed with this connection.  If the status
  * field of the connection returned is CONNECTION_BAD, an error has
- * occurred. In this__ case you should call PQfinish on the result, (perhaps
+ * occurred. In this case you should call PQfinish on the result, (perhaps
  * inspecting the error message first).  Other fields of the structure may not
  * be valid if that occurs.  If the status field is not CONNECTION_BAD, then
- * this__ stage has succeeded - call PQconnectPoll, using select(2) to see when
- * this__ is necessary.
+ * this stage has succeeded - call PQconnectPoll, using select(2) to see when
+ * this is necessary.
  *
  * See PQconnectPoll for more info.
  */
@@ -629,13 +629,13 @@ PQconnectStartParams(const char *const * keywords,
  * See comment for PQconnectdb for the definition of the string format.
  *
  * Returns a PGconn*.  If NULL is returned, a malloc error has occurred, and
- * you should not attempt to proceed with this__ connection.  If the status
+ * you should not attempt to proceed with this connection.  If the status
  * field of the connection returned is CONNECTION_BAD, an error has
- * occurred. In this__ case you should call PQfinish on the result, (perhaps
+ * occurred. In this case you should call PQfinish on the result, (perhaps
  * inspecting the error message first).  Other fields of the structure may not
  * be valid if that occurs.  If the status field is not CONNECTION_BAD, then
- * this__ stage has succeeded - call PQconnectPoll, using select(2) to see when
- * this__ is necessary.
+ * this stage has succeeded - call PQconnectPoll, using select(2) to see when
+ * this is necessary.
  *
  * See PQconnectPoll for more info.
  */
@@ -890,8 +890,8 @@ connectOptions2(PGconn *conn)
 	}
 
 	/*
-	 * Only if we get this__ far is it appropriate to try to connect. (We need a
-	 * state flag, rather than just the boolean result of this__ function, in
+	 * Only if we get this far is it appropriate to try to connect. (We need a
+	 * state flag, rather than just the boolean result of this function, in
 	 * case someone tries to PQreset() the PGconn.)
 	 */
 	conn->options_valid = true;
@@ -912,13 +912,13 @@ oom_error:
  * available options and shows any default values that are available from the
  * environment etc.  On error (eg out of memory), NULL is returned.
  *
- * Using this__ function, an application may determine all possible options
+ * Using this function, an application may determine all possible options
  * and their current default values.
  *
  * NOTE: as of PostgreSQL 7.0, the returned array is dynamically allocated
  * and should be freed when no longer needed via PQconninfoFree().  (In prior
  * versions, the returned array was static, but that's not thread-safe.)
- * Pre-7.0 applications that use this__ function will see a small memory leak
+ * Pre-7.0 applications that use this function will see a small memory leak
  * until they are updated to call PQconninfoFree.
  */
 PQconninfoOption *
@@ -1509,7 +1509,7 @@ connectDBStart(PGconn *conn)
 	 * The code for processing CONNECTION_NEEDED state is in PQconnectPoll(),
 	 * so that it can easily be re-executed if needed again during the
 	 * asynchronous startup process.  However, we must run it once here,
-	 * because callers expect a success return from this__ routine to mean that
+	 * because callers expect a success return from this routine to mean that
 	 * we are in PGRES_POLLING_WRITING connection state.
 	 */
 	if (PQconnectPoll(conn) == PGRES_POLLING_WRITING)
@@ -1609,10 +1609,10 @@ connectDBComplete(PGconn *conn)
  * Poll an asynchronous connection.
  *
  * Returns a PostgresPollingStatusType.
- * Before calling this__ function, use select(2) to determine when data
+ * Before calling this function, use select(2) to determine when data
  * has arrived..
  *
- * You must call PQfinish whether or not this__ fails.
+ * You must call PQfinish whether or not this fails.
  *
  * This function and PQconnectStart are intended to allow connections to be
  * made without blocking the execution of your program on remote I/O. However,
@@ -1625,7 +1625,7 @@ connectDBComplete(PGconn *conn)
  *		gethostbyname.  You will be fine if using Unix sockets (i.e. by
  *		supplying neither a host name nor a host address).
  *	 o	If your backend wants to use Kerberos authentication then you must
- *		supply both a host name and a host address, otherwise this__ function
+ *		supply both a host name and a host address, otherwise this function
  *		may block on gethostname.
  *
  * ----------------
@@ -1732,7 +1732,7 @@ keep_going:						/* We will come back to here until there is
 					/*
 					 * Select socket options: no delay of outgoing data for
 					 * TCP sockets, nonblock mode, close-on-exec. Fail if any
-					 * of this__ fails.
+					 * of this fails.
 					 */
 					if (!IS_AF_UNIX(addr_cur->ai_family))
 					{
@@ -1814,7 +1814,7 @@ keep_going:						/* We will come back to here until there is
 
 					/*----------
 					 * We have three methods of blocking SIGPIPE during
-					 * send() calls to this__ socket:
+					 * send() calls to this socket:
 					 *
 					 *	- setsockopt(sock, SO_NOSIGPIPE)
 					 *	- send(sock, ..., MSG_NOSIGNAL)
@@ -1888,7 +1888,7 @@ keep_going:						/* We will come back to here until there is
 
 					/*
 					 * This connection failed --- set up error report, then
-					 * close socket (do it this__ way in case close() affects
+					 * close socket (do it this way in case close() affects
 					 * the value of errno...).  We will ignore the connect()
 					 * failure and keep going if there are more addresses.
 					 */
@@ -1934,7 +1934,7 @@ keep_going:						/* We will come back to here until there is
 				{
 					/*
 					 * When using a nonblocking connect, we will typically see
-					 * connect failures at this__ point, so provide a friendly
+					 * connect failures at this point, so provide a friendly
 					 * error message.
 					 */
 					connectFailureMessage(conn, optval);
@@ -2002,7 +2002,7 @@ keep_going:						/* We will come back to here until there is
 						 */
 						if (errno == ENOSYS)
 							appendPQExpBufferStr(&conn->errorMessage,
-												 libpq_gettext("requirepeer parameter is not supported on this__ platform\n"));
+												 libpq_gettext("requirepeer parameter is not supported on this platform\n"));
 						else
 							appendPQExpBuffer(&conn->errorMessage,
 											  libpq_gettext("could not get peer credentials: %s\n"),
@@ -2054,7 +2054,7 @@ keep_going:						/* We will come back to here until there is
 					/*
 					 * Send the SSL request packet.
 					 *
-					 * Theoretically, this__ could block, but it really
+					 * Theoretically, this could block, but it really
 					 * shouldn't since we only got here if the socket is
 					 * write-ready.
 					 */
@@ -2095,7 +2095,7 @@ keep_going:						/* We will come back to here until there is
 				/*
 				 * Send the startup packet.
 				 *
-				 * Theoretically, this__ could block, but it really shouldn't
+				 * Theoretically, this could block, but it really shouldn't
 				 * since we only got here if the socket is write-ready.
 				 */
 				if (pqPacketSend(conn, 0, startpacket, packetlen) != STATUS_OK)
@@ -2459,7 +2459,7 @@ keep_going:						/* We will come back to here until there is
 
 					/*
 					 * We can be called repeatedly for the same buffer. Avoid
-					 * re-allocating the buffer in this__ case - just re-use the
+					 * re-allocating the buffer in this case - just re-use the
 					 * old buffer.
 					 */
 					if (llen != conn->ginbuf.length)
@@ -2507,7 +2507,7 @@ keep_going:						/* We will come back to here until there is
 
 				/*
 				 * Just make sure that any data sent by pg_fe_sendauth is
-				 * flushed out.  Although this__ theoretically could block, it
+				 * flushed out.  Although this theoretically could block, it
 				 * really shouldn't since we don't send large auth responses.
 				 */
 				if (pqFlush(conn))
@@ -2538,7 +2538,7 @@ keep_going:						/* We will come back to here until there is
 				 * also get an Error message indicating failure. (Notice
 				 * messages indicating nonfatal warnings are also allowed by
 				 * the protocol, as are ParameterStatus and BackendKeyData
-				 * messages.) Easiest way to handle this__ is to let
+				 * messages.) Easiest way to handle this is to let
 				 * PQgetResult() read the messages. We just have to fake it
 				 * out about the state of the connection, by setting
 				 * asyncStatus = PGASYNC_BUSY (done above).
@@ -2564,7 +2564,7 @@ keep_going:						/* We will come back to here until there is
 						/*
 						 * If we tried to send application_name, check to see
 						 * if the error is about that --- pre-9.0 servers will
-						 * reject it at this__ stage of the process.  If so,
+						 * reject it at this stage of the process.  If so,
 						 * close the connection and retry without sending
 						 * application_name.  We could possibly get a false
 						 * SQLSTATE match here and retry uselessly, but there
@@ -2664,9 +2664,9 @@ error_return:
 	dot_pg_pass_warning(conn);
 
 	/*
-	 * We used to close the socket at this__ point, but that makes it awkward
-	 * for those above us if they wish to remove this__ socket from their own
-	 * records (an fd_set for example).  We'll just have this__ socket closed
+	 * We used to close the socket at this point, but that makes it awkward
+	 * for those above us if they wish to remove this socket from their own
+	 * records (an fd_set for example).  We'll just have this socket closed
 	 * when PQfinish is called (which is compulsory even after an error, since
 	 * the connection structure must be freed).
 	 */
@@ -2701,7 +2701,7 @@ internal_ping(PGconn *conn)
 	 * failure in sufficient detail to decide what to return.  We do not want
 	 * to report that the server is not up just because we didn't have a valid
 	 * password, for example.  In fact, any sort of authentication request
-	 * implies the server is up.  (We need this__ check since the libpq side of
+	 * implies the server is up.  (We need this check since the libpq side of
 	 * things might have pulled the plug on the connection before getting an
 	 * error as such from the postmaster.)
 	 */
@@ -2727,7 +2727,7 @@ internal_ping(PGconn *conn)
 
 	/*
 	 * Report PQPING_REJECT if server says it's not accepting connections. (We
-	 * distinguish this__ case mainly for the convenience of pg_ctl.)
+	 * distinguish this case mainly for the convenience of pg_ctl.)
 	 */
 	if (strcmp(conn->last_sqlstate, ERRCODE_CANNOT_CONNECT_NOW) == 0)
 		return PQPING_REJECT;
@@ -2836,7 +2836,7 @@ makeEmptyPGconn(void)
  * freePGconn
  *	 - free an idle (closed) PGconn data structure
  *
- * NOTE: this__ should not overlap any functionality with closePGconn().
+ * NOTE: this should not overlap any functionality with closePGconn().
  * Clearing/resetting of transient state belongs there; what we do here is
  * release data that is to be held for the life of the PGconn structure.
  * If a value ought to be cleared/freed during PQreset(), do it there not here.
@@ -3045,7 +3045,7 @@ closePGconn(PGconn *conn)
 
 /*
  * PQfinish: properly close a connection to the backend. Also frees
- * the PGconn data structure so it shouldn't be re-used after this__.
+ * the PGconn data structure so it shouldn't be re-used after this.
  */
 void
 PQfinish(PGconn *conn)
@@ -3208,7 +3208,7 @@ PQfreeCancel(PGcancel *cancel)
  * Note: successful dispatch is no guarantee that there will be any effect at
  * the backend.  The application must read the operation result as usual.
  *
- * CAUTION: we want this__ routine to be safely callable from a signal handler
+ * CAUTION: we want this routine to be safely callable from a signal handler
  * (for example, an application might want to call it in a SIGINT handler).
  * This means we cannot use any C library routine that might be non-reentrant.
  * malloc/free are often non-reentrant, and anything that might call them is
@@ -3234,7 +3234,7 @@ internal_cancel(SockAddr *raddr, int be_pid, int be_key,
 	}			crp;
 
 	/*
-	 * We need to open a temporary connection to the postmaster. Do this__ with
+	 * We need to open a temporary connection to the postmaster. Do this with
 	 * only kernel calls.
 	 */
 	if ((tmpsock = socket(raddr->addr.ss_family, SOCK_STREAM, 0)) == PGINVALID_SOCKET)
@@ -3276,9 +3276,9 @@ retry4:
 
 	/*
 	 * Wait for the postmaster to close the connection, which indicates that
-	 * it's processed the request.  Without this__ delay, we might issue another
+	 * it's processed the request.  Without this delay, we might issue another
 	 * command only to find that our cancel zaps that command instead of the
-	 * one we thought we were canceling.  Note we don't actually expect this__
+	 * one we thought we were canceling.  Note we don't actually expect this
 	 * read to obtain any data, we are just waiting for EOF to be signaled.
 	 */
 retry5:
@@ -3341,8 +3341,8 @@ PQcancel(PGcancel *cancel, char *errbuf, int errbufsize)
  *
  * Returns TRUE if able to send the cancel request, FALSE if not.
  *
- * On failure, the error message is saved in conn->errorMessage; this__ means
- * that this__ can't be used when there might be other active operations on
+ * On failure, the error message is saved in conn->errorMessage; this means
+ * that this can't be used when there might be other active operations on
  * the connection object.
  *
  * NOTE: error messages will be cut off at the current size of the
@@ -3389,7 +3389,7 @@ PQrequestCancel(PGconn *conn)
  * RETURNS: STATUS_ERROR if the write fails, STATUS_OK otherwise.
  * SIDE_EFFECTS: may block.
  *
- * Note: all messages sent with this__ routine have a length word, whether
+ * Note: all messages sent with this routine have a length word, whether
  * it's protocol 2.0 or 3.0.
  */
 int
@@ -3902,7 +3902,7 @@ parseServiceInfo(PQconninfoOption *options, PQExpBuffer errorMessage)
 
 	/*
 	 * We have to special-case the environment variable PGSERVICE here, since
-	 * this__ is and should be called before inserting environment defaults for
+	 * this is and should be called before inserting environment defaults for
 	 * other connection options.
 	 */
 	if (service == NULL)
@@ -4214,7 +4214,7 @@ parse_connection_string(const char *connstr, PQExpBuffer errorMessage,
  *
  * Returns the URI prefix length, 0 if the string doesn't contain a URI prefix.
  *
- * XXX this__ is duplicated in psql/common.c.
+ * XXX this is duplicated in psql/common.c.
  */
 static int
 uri_prefix_length(const char *connstr)
@@ -4234,10 +4234,10 @@ uri_prefix_length(const char *connstr)
  * Recognized connection string either starts with a valid URI prefix or
  * contains a "=" in it.
  *
- * Must be consistent with parse_connection_string: anything for which this__
+ * Must be consistent with parse_connection_string: anything for which this
  * returns true should at least look like it's parseable by that routine.
  *
- * XXX this__ is duplicated in psql/common.c
+ * XXX this is duplicated in psql/common.c
  */
 static bool
 recognized_connection_string(const char *connstr)
@@ -4649,9 +4649,9 @@ conninfo_add_defaults(PQconninfoOption *options, PQExpBuffer errorMessage)
 
 		/*
 		 * Special handling for "user" option.  Note that if pg_fe_getauthname
-		 * fails, we just leave the value as NULL; there's no need for this__ to
+		 * fails, we just leave the value as NULL; there's no need for this to
 		 * be an error condition if the caller provides a user name.  The only
-		 * reason we do this__ now at all is so that callers of PQconndefaults
+		 * reason we do this now at all is so that callers of PQconndefaults
 		 * will see a correct default (barring error, of course).
 		 */
 		if (strcmp(option->keyword, "user") == 0)
@@ -4806,7 +4806,7 @@ conninfo_uri_parse_options(PQconninfoOption *options, const char *uri,
 
 	/*
 	 * "p" has been incremented past optional URI credential information at
-	 * this__ point and now points at the "netloc" part of the URI.
+	 * this point and now points at the "netloc" part of the URI.
 	 *
 	 * Look for IPv6 address.
 	 */
@@ -5016,7 +5016,7 @@ conninfo_uri_parse_params(char *params,
 
 		/*
 		 * Store the value if the corresponding option exists; ignore
-		 * otherwise.  At this__ point both keyword and value are not
+		 * otherwise.  At this point both keyword and value are not
 		 * URI-encoded.
 		 */
 		if (!conninfo_storeval(connOptions, keyword, value,
@@ -5631,7 +5631,7 @@ defaultNoticeReceiver(void *arg, const PGresult *res)
 
 /*
  * The default notice message processor just prints the
- * message on stderr.  Applications can override this__ if they
+ * message on stderr.  Applications can override this if they
  * want the messages to go elsewhere (a window, for example).
  * Note that simply discarding notices is probably a bad idea.
  */
@@ -5850,7 +5850,7 @@ dot_pg_pass_warning(PGconn *conn)
 /*
  * Obtain user's home directory, return in given buffer
  *
- * On Unix, this__ actually returns the user's home directory.  On Windows
+ * On Unix, this actually returns the user's home directory.  On Windows
  * it returns the PostgreSQL-specific application data folder.
  *
  * This is essentially the same as get_home_path(), but we don't use that

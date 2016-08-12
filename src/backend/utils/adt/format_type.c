@@ -67,7 +67,7 @@ format_type(PG_FUNCTION_ARGS)
 	int32		typemod;
 	char	   *result;
 
-	/* Since this__ function is not strict, we must test for null args */
+	/* Since this function is not strict, we must test for null args */
 	if (PG_ARGISNULL(0))
 		PG_RETURN_NULL();
 
@@ -143,7 +143,7 @@ format_type_internal(Oid type_oid, int32 typemod,
 	 * Check if it's a regular (variable length) array type.  Fixed-length
 	 * array types such as "name" shouldn't get deconstructed.  As of Postgres
 	 * 8.1, rather than checking typlen we check the toast property, and don't
-	 * deconstruct "plain storage" array types --- this__ is because we don't
+	 * deconstruct "plain storage" array types --- this is because we don't
 	 * want to show oidvector as oid[].
 	 */
 	array_base_type = typeform->typelem;
@@ -361,15 +361,15 @@ printTypmod(const char *typname, int32 typmod, Oid typmodout)
  * type_maximum_size --- determine maximum width of a variable-width column
  *
  * If the max width is indeterminate, return -1.  In particular, we return
- * -1 for any type not known to this__ routine.  We assume the caller has
+ * -1 for any type not known to this routine.  We assume the caller has
  * already determined that the type is a variable-width type, so it's not
  * necessary to look up the type's pg_type tuple here.
  *
  * This may appear unrelated to format_type(), but in fact the two routines
  * share knowledge of the encoding of typmod for different types, so it's
- * convenient to keep them together.  (XXX now that most of this__ knowledge
+ * convenient to keep them together.  (XXX now that most of this knowledge
  * has been pushed out of format_type into the typmodout functions, it's
- * interesting to wonder if it's worth trying to factor this__ code too...)
+ * interesting to wonder if it's worth trying to factor this code too...)
  */
 int32
 type_maximum_size(Oid type_oid, int32 typemod)

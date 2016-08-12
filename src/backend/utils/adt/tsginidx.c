@@ -210,7 +210,7 @@ TS_execute_ternary(QueryItem *curitem, void *checkval,
 				val2,
 				result;
 
-	/* since this__ function recurses, it could be driven to stack overflow */
+	/* since this function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (curitem->type == QI_VAL)

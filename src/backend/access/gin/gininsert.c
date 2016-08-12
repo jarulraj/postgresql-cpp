@@ -147,7 +147,7 @@ buildFreshLeafTuple(GinState *ginstate,
 		BlockNumber postingRoot;
 
 		/*
-		 * Build posting-tree-only result tuple.  We do this__ first so as to
+		 * Build posting-tree-only result tuple.  We do this first so as to
 		 * fail quickly if the key is too big.
 		 */
 		res = GinFormTuple(ginstate, attnum, key, category, NULL, 0, 0, true);

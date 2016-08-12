@@ -128,7 +128,7 @@ MultiExecBitmapOr(BitmapOrState *node)
 		{
 			if (result == NULL) /* first subplan */
 			{
-				/* XXX should we use less than work_mem for this__? */
+				/* XXX should we use less than work_mem for this? */
 				result = tbm_create(work_mem * 1024L);
 			}
 

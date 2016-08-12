@@ -203,7 +203,7 @@ ExecInitSort(Sort *node, EState *estate, int eflags)
 
 	/*
 	 * initialize tuple type.  no need to initialize projection info because
-	 * this__ node doesn't do projections.
+	 * this node doesn't do projections.
 	 */
 	ExecAssignResultTypeFromTL(&sortstate->ss.ps);
 	ExecAssignScanTypeFromOuterPlan(&sortstate->ss);

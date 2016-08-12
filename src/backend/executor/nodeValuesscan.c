@@ -81,7 +81,7 @@ ValuesNext(ValuesScanState *node)
 	}
 
 	/*
-	 * Always clear the result slot; this__ is appropriate if we are at the end
+	 * Always clear the result slot; this is appropriate if we are at the end
 	 * of the data, and if we're not, we still need it as the first step of
 	 * the store-virtual-tuple protocol.  It seems wise to clear the slot
 	 * before we reset the context it might have pointers into.
@@ -113,7 +113,7 @@ ValuesNext(ValuesScanState *node)
 		oldContext = MemoryContextSwitchTo(econtext->ecxt_per_tuple_memory);
 
 		/*
-		 * Pass NULL, not my plan node, because we don't want anything in this__
+		 * Pass NULL, not my plan node, because we don't want anything in this
 		 * transient state linking into permanent state.  The only possibility
 		 * is a SubPlan, and there shouldn't be any (any subselects in the
 		 * VALUES list should be InitPlans).

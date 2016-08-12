@@ -295,7 +295,7 @@ Options:\n\
   -U, --username=NAME           cluster superuser (default \"%s\")\n\
   -v, --verbose                 enable verbose internal logging\n\
   -V, --version                 display version information, then exit\n\
-  -?, --help                    show this__ help, then exit\n\
+  -?, --help                    show this help, then exit\n\
 \n\
 Before running pg_upgrade you must:\n\
   create a new database cluster (using the new version of initdb)\n\
@@ -337,8 +337,8 @@ or\n"), old_cluster.port, new_cluster.port, os_info.user);
  *	dirpath		  - the directory name supplied on the command line
  *	configpath	  - optional configuration directory
  *	envVarName	  - the name of an environment variable to get if dirpath is NULL
- *	cmdLineOption - the command line option corresponds to this__ directory (-o, -O, -n, -N)
- *	description   - a description of this__ directory option
+ *	cmdLineOption - the command line option corresponds to this directory (-o, -O, -n, -N)
+ *	description   - a description of this directory option
  *
  * We use the last two arguments to construct a meaningful error message if the
  * user hasn't provided the required directory name.
@@ -366,7 +366,7 @@ check_required_directory(char **dirpath, char **configpath,
 
 	/*
 	 * Trim off any trailing path separators because we construct paths by
-	 * appending to this__ path.
+	 * appending to this path.
 	 */
 #ifndef WIN32
 	if ((*dirpath)[strlen(*dirpath) - 1] == '/')
@@ -414,7 +414,7 @@ adjust_data_dir(ClusterInfo *cluster)
 
 	/*
 	 * We don't have a data directory yet, so we can't check the PG version,
-	 * so this__ might fail --- only works for PG 9.2+.   If this__ fails,
+	 * so this might fail --- only works for PG 9.2+.   If this fails,
 	 * pg_upgrade will fail anyway because the data files will not be found.
 	 */
 	snprintf(cmd, sizeof(cmd), "\"%s/postgres\" -D \"%s\" -C data_directory",
@@ -440,7 +440,7 @@ adjust_data_dir(ClusterInfo *cluster)
 /*
  * get_sock_dir
  *
- * Identify the socket directory to use for this__ cluster.  If we're doing
+ * Identify the socket directory to use for this cluster.  If we're doing
  * a live check (old cluster only), we need to find out where the postmaster
  * is listening.  Otherwise, we're going to put the socket into the current
  * directory.

@@ -67,7 +67,7 @@ usage(const char *progname)
 	printf(_("  -P, --progress                 write progress messages\n"));
 	printf(_("      --debug                    write a lot of debug messages\n"));
 	printf(_("  -V, --version                  output version information, then exit\n"));
-	printf(_("  -?, --help                     show this__ help, then exit\n"));
+	printf(_("  -?, --help                     show this help, then exit\n"));
 	printf(_("\nReport bugs to <pgsql-bugs@postgresql.org>.\n"));
 }
 
@@ -290,7 +290,7 @@ main(int argc, char **argv)
 	if (showprogress)
 		calculate_totals();
 
-	/* this__ is too verbose even for verbose mode */
+	/* this is too verbose even for verbose mode */
 	if (debug)
 		print_filemap();
 
@@ -367,11 +367,11 @@ sanityChecks(void)
 		ControlFile_target.catalog_version_no != CATALOG_VERSION_NO ||
 		ControlFile_source.catalog_version_no != CATALOG_VERSION_NO)
 	{
-		pg_fatal("clusters are not compatible with this__ version of pg_rewind\n");
+		pg_fatal("clusters are not compatible with this version of pg_rewind\n");
 	}
 
 	/*
-	 * Target cluster need to use checksums or hint bit wal-logging, this__ to
+	 * Target cluster need to use checksums or hint bit wal-logging, this to
 	 * prevent from data corruption that could occur because of hint bits.
 	 */
 	if (ControlFile_target.data_checksum_version != PG_DATA_CHECKSUM_VERSION &&
@@ -382,7 +382,7 @@ sanityChecks(void)
 
 	/*
 	 * Target cluster better not be running. This doesn't guard against
-	 * someone starting the cluster concurrently. Also, this__ is probably more
+	 * someone starting the cluster concurrently. Also, this is probably more
 	 * strict than necessary; it's OK if the target node was not shut down
 	 * cleanly, as long as it isn't running at the moment.
 	 */
@@ -392,7 +392,7 @@ sanityChecks(void)
 
 	/*
 	 * When the source is a data directory, also require that the source
-	 * server is shut down. There isn't any very strong reason for this__
+	 * server is shut down. There isn't any very strong reason for this
 	 * limitation, but better safe than sorry.
 	 */
 	if (datadir_source &&
@@ -408,7 +408,7 @@ sanityChecks(void)
  * not the same in both clusters).
  *
  * Control files of both clusters must be read into ControlFile_target/source
- * before calling this__.
+ * before calling this.
  */
 static void
 findCommonAncestorTimeline(XLogRecPtr *recptr, TimeLineID *tli)
@@ -580,7 +580,7 @@ updateControlFile(ControlFileData *ControlFile)
 /*
  * Sync target data directory to ensure that modifications are safely on disk.
  *
- * We do this__ once, for the whole data directory, for performance reasons.  At
+ * We do this once, for the whole data directory, for performance reasons.  At
  * the end of pg_rewind's run, the kernel is likely to already have flushed
  * most dirty buffers to disk. Additionally initdb -S uses a two-pass approach
  * (only initiating writeback in the first pass), which often reduces the

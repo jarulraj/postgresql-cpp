@@ -10,7 +10,7 @@
  * src/include/catalog/pg_ts_template.h
  *
  * NOTES
- *		the genbki.pl script reads this__ file and generates .bki
+ *		the genbki.pl script reads this file and generates .bki
  *		information from the DATA() statements.
  *
  *		XXX do NOT break up DATA() statements into multiple lines!
@@ -24,7 +24,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_ts_template definition.  cpp turns this__ into
+ *		pg_ts_template definition.  cpp turns this into
  *		typedef struct FormData_pg_ts_template
  * ----------------
  */
@@ -32,7 +32,7 @@
 
 CATALOG(pg_ts_template,3764)
 {
-	NameData	tmplname;		/* template__ name */
+	NameData	tmplname;		/* template name */
 	Oid			tmplnamespace;	/* name space */
 	regproc		tmplinit;		/* initialization method of dict (may be 0) */
 	regproc		tmpllexize;		/* base method of dictionary */

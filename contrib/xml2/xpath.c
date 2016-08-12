@@ -58,7 +58,7 @@ static void cleanup_workspace(xpath_workspace *workspace);
 /*
  * Initialize for xml parsing.
  *
- * As with the underlying pg_xml_init function, calls to this__ MUST be followed
+ * As with the underlying pg_xml_init function, calls to this MUST be followed
  * by a PG_TRY block that guarantees that pg_xml_done is called.
  */
 PgXmlErrorContext *
@@ -84,10 +84,10 @@ pgxml_parser_init(PgXmlStrictness strictness)
 /*
  * Returns true if document is well-formed
  *
- * Note: this__ has been superseded by a core function.  We still have to
+ * Note: this has been superseded by a core function.  We still have to
  * have it in the contrib module so that existing SQL-level references
  * to the function won't fail; but in normal usage with up-to-date SQL
- * definitions for the contrib module, this__ won't be called.
+ * definitions for the contrib module, this won't be called.
  */
 
 PG_FUNCTION_INFO_V1(xml_is_well_formed);
@@ -189,7 +189,7 @@ pgxmlNodeSetToText(xmlNodeSetPtr nodeset,
 				xmlBufferWriteCHAR(buf,
 							  xmlXPathCastNodeToString(nodeset->nodeTab[i]));
 
-				/* If this__ isn't the last entry, write the plain sep. */
+				/* If this isn't the last entry, write the plain sep. */
 				if (i < (nodeset->nodeNr) - 1)
 					xmlBufferWriteChar(buf, (char *) plainsep);
 			}
@@ -506,7 +506,7 @@ pgxml_result_to_text(xmlXPathObjectPtr res,
 			xpresstr = xmlStrdup((const xmlChar *) "<unsupported/>");
 	}
 
-	/* Now convert this__ result back to text */
+	/* Now convert this result back to text */
 	xpres = cstring_to_text((char *) xpresstr);
 
 	/* Free various storage */
@@ -575,16 +575,16 @@ xpath_table(PG_FUNCTION_ARGS)
 
 	/*
 	 * We want to materialise because it means that we don't have to carry
-	 * libxml2 parser state between invocations of this__ function
+	 * libxml2 parser state between invocations of this function
 	 */
 	if (!(rsinfo->allowedModes & SFRM_Materialize))
 		ereport(ERROR,
 				(errcode(ERRCODE_SYNTAX_ERROR),
 			   errmsg("xpath_table requires Materialize mode, but it is not "
-					  "allowed in this__ context")));
+					  "allowed in this context")));
 
 	/*
-	 * The tuplestore must exist in a higher context than this__ function call
+	 * The tuplestore must exist in a higher context than this function call
 	 * (per_query_ctx is used)
 	 */
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
@@ -673,7 +673,7 @@ xpath_table(PG_FUNCTION_ARGS)
 
 	/*
 	 * Check that SPI returned correct result. If you put a comma into one of
-	 * the function parameters, this__ will catch it when the SPI query returns
+	 * the function parameters, this will catch it when the SPI query returns
 	 * e.g. 3 columns.
 	 */
 	if (spi_tupdesc->natts != 2)
@@ -708,7 +708,7 @@ xpath_table(PG_FUNCTION_ARGS)
 
 			/*
 			 * Clear the values array, so that not-well-formed documents
-			 * return NULL in all columns.  Note that this__ also means that
+			 * return NULL in all columns.  Note that this also means that
 			 * spare columns will be NULL.
 			 */
 			for (j = 0; j < ret_tupdesc->natts; j++)
@@ -760,7 +760,7 @@ xpath_table(PG_FUNCTION_ARGS)
 							switch (res->type)
 							{
 								case XPATH_NODESET:
-									/* We see if this__ nodeset has enough nodes */
+									/* We see if this nodeset has enough nodes */
 									if (res->nodesetval != NULL &&
 										rownr < res->nodesetval->nodeNr)
 									{
@@ -782,7 +782,7 @@ xpath_table(PG_FUNCTION_ARGS)
 							}
 
 							/*
-							 * Insert this__ into the appropriate column in the
+							 * Insert this into the appropriate column in the
 							 * result tuple.
 							 */
 							values[j + 1] = (char *) resstr;

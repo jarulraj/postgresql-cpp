@@ -79,7 +79,7 @@
 			return false; \
 	} while (0)
 
-/* Compare a parse location field (this__ is a no-op, per note above) */
+/* Compare a parse location field (this is a no-op, per note above) */
 #define COMPARE_LOCATION_FIELD(fldname) \
 	((void) 0)
 
@@ -164,7 +164,7 @@ _equalConst(const Const *a, const Const *b)
 	COMPARE_LOCATION_FIELD(location);
 
 	/*
-	 * We treat all NULL constants of the same type as equal. Someday this__
+	 * We treat all NULL constants of the same type as equal. Someday this
 	 * might need to change?  But datumIsEqual doesn't work on nulls, so...
 	 */
 	if (a->constisnull)
@@ -2581,7 +2581,7 @@ _equalList(const List *a, const List *b)
 	COMPARE_SCALAR_FIELD(length);
 
 	/*
-	 * We place the switch outside the loop for the sake of efficiency; this__
+	 * We place the switch outside the loop for the sake of efficiency; this
 	 * may not be worth doing...
 	 */
 	switch (a->type)

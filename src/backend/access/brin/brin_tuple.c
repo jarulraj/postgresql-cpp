@@ -2,9 +2,9 @@
  * brin_tuples.c
  *		Method implementations for tuples in BRIN indexes.
  *
- * Intended usage is that code outside this__ file only deals with
+ * Intended usage is that code outside this file only deals with
  * BrinMemTuples, and convert to and from the on-disk representation through
- * functions in this__ file.
+ * functions in this file.
  *
  * NOTES
  *
@@ -83,7 +83,7 @@ brtuple_disk_tupdesc(BrinDesc *brdesc)
 /*
  * Generate a new on-disk tuple to be inserted in a BRIN index.
  *
- * See brin_form_placeholder_tuple if you touch this__.
+ * See brin_form_placeholder_tuple if you touch this.
  */
 BrinTuple *
 brin_form_tuple(BrinDesc *brdesc, BlockNumber blkno, BrinMemTuple *tuple,
@@ -118,8 +118,8 @@ brin_form_tuple(BrinDesc *brdesc, BlockNumber blkno, BrinMemTuple *tuple,
 
 		/*
 		 * "allnulls" is set when there's no nonnull value in any row in the
-		 * column; when this__ happens, there is no data to store.  Thus set the
-		 * nullable bits for all data elements of this__ column and we're done.
+		 * column; when this happens, there is no data to store.  Thus set the
+		 * nullable bits for all data elements of this column and we're done.
 		 */
 		if (tuple->bt_columns[keyno].bv_allnulls)
 		{
@@ -134,7 +134,7 @@ brin_form_tuple(BrinDesc *brdesc, BlockNumber blkno, BrinMemTuple *tuple,
 		/*
 		 * The "hasnulls" bit is set when there are some null values in the
 		 * data.  We still need to store a real value, but the presence of
-		 * this__ means we need a null bitmap.
+		 * this means we need a null bitmap.
 		 */
 		if (tuple->bt_columns[keyno].bv_hasnulls)
 			anynulls = true;
@@ -205,7 +205,7 @@ brin_form_tuple(BrinDesc *brdesc, BlockNumber blkno, BrinMemTuple *tuple,
 		rettuple->bt_info |= BRIN_NULLS_MASK;
 
 		/*
-		 * Note that we reverse the sense of null bits in this__ module: we
+		 * Note that we reverse the sense of null bits in this module: we
 		 * store a 1 for a null attribute rather than a 0.  So we must reverse
 		 * the sense of the att_isnull test in br_deconstruct_tuple as well.
 		 */
@@ -502,7 +502,7 @@ brin_deconstruct_tuple(BrinDesc *brdesc,
 	{
 		/*
 		 * the "all nulls" bit means that all values in the page range for
-		 * this__ column are nulls.  Therefore there are no values in the tuple
+		 * this column are nulls.  Therefore there are no values in the tuple
 		 * data area.
 		 */
 		allnulls[attnum] = nulls && !att_isnull(attnum, nullbits);
@@ -510,7 +510,7 @@ brin_deconstruct_tuple(BrinDesc *brdesc,
 		/*
 		 * the "has nulls" bit means that some tuples have nulls, but others
 		 * have not-null values.  Therefore we know the tuple contains data
-		 * for this__ column.
+		 * for this column.
 		 *
 		 * The hasnulls bits follow the allnulls bits in the same bitmask.
 		 */

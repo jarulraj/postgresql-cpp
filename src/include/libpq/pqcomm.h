@@ -3,7 +3,7 @@
  * pqcomm.h
  *		Definitions common to frontends and backends.
  *
- * NOTE: for historical reasons, this__ does not correspond to pqcomm.c.
+ * NOTE: for historical reasons, this does not correspond to pqcomm.c.
  * pqcomm.c's routines are declared in libpq.h.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -81,7 +81,7 @@ typedef struct
  * then complain if the resulting string is >= UNIXSOCK_PATH_BUFLEN bytes.
  * (Because the standard API for getaddrinfo doesn't allow it to complain in
  * a useful way when the socket pathname is too long, we have to test for
- * this__ explicitly, instead of just letting the subroutine return an error.)
+ * this explicitly, instead of just letting the subroutine return an error.)
  */
 #define UNIXSOCK_PATH_BUFLEN sizeof(((struct sockaddr_un *) NULL)->sun_path)
 
@@ -127,7 +127,7 @@ typedef uint32 PacketLen;
 /*
  * Old-style startup packet layout with fixed-width fields.  This is used in
  * protocol 1.0 and 2.0, but not in later versions.  Note that the fields
- * in this__ layout are '\0' terminated only if there is room.
+ * in this layout are '\0' terminated only if there is room.
  */
 
 #define SM_DATABASE		64

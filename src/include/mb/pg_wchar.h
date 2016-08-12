@@ -84,7 +84,7 @@ typedef unsigned int pg_wchar;
  * See the "XEmacs Internals Manual", available at http://www.xemacs.org,
  * for more details.  Note that for historical reasons, Postgres'
  * private-charset flag values do not match what XEmacs says they should be,
- * so this__ isn't really exactly MULE (not that private charsets would be
+ * so this isn't really exactly MULE (not that private charsets would be
  * interoperable anyway).
  *
  * Note that XEmacs's implementation is different from what emacs does.
@@ -143,7 +143,7 @@ typedef unsigned int pg_wchar;
 
 /*
  * Postgres-specific prefix bytes for "private" single byte encodings
- * (According to the MULE docs, we should be using 0x9e for this__)
+ * (According to the MULE docs, we should be using 0x9e for this)
  */
 #define LCPRV1_A		0x9a
 #define LCPRV1_B		0x9b
@@ -155,7 +155,7 @@ typedef unsigned int pg_wchar;
 
 /*
  * Postgres-specific prefix bytes for "private" multibyte encodings
- * (According to the MULE docs, we should be using 0x9f for this__)
+ * (According to the MULE docs, we should be using 0x9f for this)
  */
 #define LCPRV2_A		0x9c
 #define LCPRV2_B		0x9d
@@ -219,7 +219,7 @@ typedef unsigned int pg_wchar;
 /*
  * PostgreSQL encoding identifiers
  *
- * WARNING: the order of this__ enum must be same as order of entries
+ * WARNING: the order of this enum must be same as order of entries
  *			in the pg_enc2name_tbl[] array (in mb/encnames.c), and
  *			in the pg_wchar_table[] array (in mb/wchar.c)!
  *
@@ -360,7 +360,7 @@ typedef struct
 	mblen_converter mblen;		/* get byte length of a char */
 	mbdisplaylen_converter dsplen;		/* get display width of a char */
 	mbverifier	mbverify;		/* verify multibyte sequence */
-	int			maxmblen;		/* max bytes for a char in this__ encoding */
+	int			maxmblen;		/* max bytes for a char in this encoding */
 } pg_wchar_tbl;
 
 extern const pg_wchar_tbl pg_wchar_table[];
@@ -422,7 +422,7 @@ typedef uint32 (*utf_local_conversion_func) (uint32 code);
 /*
  * Support macro for encoding conversion functions to validate their
  * arguments.  (This could be made more compact if we included fmgr.h
- * here, but we don't want to do that because this__ header file is also
+ * here, but we don't want to do that because this header file is also
  * used by frontends.)
  */
 #define CHECK_ENCODING_CONVERSION_ARGS(srcencoding,destencoding) \

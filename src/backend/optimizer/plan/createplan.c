@@ -201,7 +201,7 @@ create_plan(PlannerInfo *root, Path *best_path)
 	/* plan_params should not be in use in current query level */
 	Assert(root->plan_params == NIL);
 
-	/* Initialize this__ module's private workspace in PlannerInfo */
+	/* Initialize this module's private workspace in PlannerInfo */
 	root->curOuterRels = NULL;
 	root->curOuterParams = NIL;
 
@@ -331,7 +331,7 @@ create_scan_plan(PlannerInfo *root, Path *best_path)
 	scan_clauses = rel->baserestrictinfo;
 
 	/*
-	 * If this__ is a parameterized scan, we also need to enforce all the join
+	 * If this is a parameterized scan, we also need to enforce all the join
 	 * clauses available from the outer relation(s).
 	 *
 	 * For paranoia's sake, don't modify the stored baserestrictinfo list.
@@ -443,7 +443,7 @@ create_scan_plan(PlannerInfo *root, Path *best_path)
 	}
 
 	/*
-	 * If there are any pseudoconstant clauses attached to this__ node, insert a
+	 * If there are any pseudoconstant clauses attached to this node, insert a
 	 * gating Result node that evaluates the pseudoconstants as one-time
 	 * quals.
 	 */
@@ -472,7 +472,7 @@ build_path_tlist(PlannerInfo *root, Path *path)
 		/*
 		 * If it's a parameterized path, there might be lateral references in
 		 * the tlist, which need to be replaced with Params.  There's no need
-		 * to remake the TargetEntry nodes, so apply this__ to each list item
+		 * to remake the TargetEntry nodes, so apply this to each list item
 		 * separately.
 		 */
 		if (path->param_info)
@@ -499,7 +499,7 @@ use_physical_tlist(PlannerInfo *root, RelOptInfo *rel)
 	ListCell   *lc;
 
 	/*
-	 * We can do this__ for real relation scans, subquery scans, function scans,
+	 * We can do this for real relation scans, subquery scans, function scans,
 	 * values scans, and CTE scans (but not for, eg, joins).
 	 */
 	if (rel->rtekind != RTE_RELATION &&
@@ -548,9 +548,9 @@ use_physical_tlist(PlannerInfo *root, RelOptInfo *rel)
  *		Switch a plan node back to emitting only Vars actually referenced.
  *
  * If the plan node immediately above a scan would prefer to get only
- * needed Vars and not a physical tlist, it must call this__ routine to
+ * needed Vars and not a physical tlist, it must call this routine to
  * undo the decision made by use_physical_tlist().  Currently, Hash, Sort,
- * and Material nodes want this__, so they don't have to store useless columns.
+ * and Material nodes want this, so they don't have to store useless columns.
  */
 static void
 disuse_physical_tlist(PlannerInfo *root, Plan *plan, Path *path)
@@ -671,7 +671,7 @@ create_join_plan(PlannerInfo *root, JoinPath *best_path)
 	}
 
 	/*
-	 * If there are any pseudoconstant clauses attached to this__ node, insert a
+	 * If there are any pseudoconstant clauses attached to this node, insert a
 	 * gating Result node that evaluates the pseudoconstants as one-time
 	 * quals.
 	 */
@@ -682,7 +682,7 @@ create_join_plan(PlannerInfo *root, JoinPath *best_path)
 
 	/*
 	 * * Expensive function pullups may have pulled local predicates * into
-	 * this__ path node.  Put them in the qpqual of the plan node. * JMH,
+	 * this path node.  Put them in the qpqual of the plan node. * JMH,
 	 * 6/15/92
 	 */
 	if (get_loc_restrictinfo(best_path) != NIL)
@@ -738,7 +738,7 @@ create_append_plan(PlannerInfo *root, AppendPath *best_path)
 
 	/*
 	 * XXX ideally, if there's just one child, we'd not bother to generate an
-	 * Append node but just return the single child.  At the moment this__ does
+	 * Append node but just return the single child.  At the moment this does
 	 * not work because the varno of the child scan plan won't match the
 	 * parent-rel Vars it'll be asked to emit.
 	 */
@@ -933,7 +933,7 @@ create_unique_plan(PlannerInfo *root, UniquePath *best_path)
 	 * such expressions to the subplan's tlist.
 	 *
 	 * The subplan may have a "physical" tlist if it is a simple scan plan. If
-	 * we're going to sort, this__ should be reduced to the regular tlist, so
+	 * we're going to sort, this should be reduced to the regular tlist, so
 	 * that we don't sort more data than we need to.  For hashing, the tlist
 	 * should be left as-is if we don't need to add any expressions; but if we
 	 * do have to add expressions, then a projection step will be needed at
@@ -984,7 +984,7 @@ create_unique_plan(PlannerInfo *root, UniquePath *best_path)
 
 	/*
 	 * Build control information showing which subplan output columns are to
-	 * be examined by the grouping step.  Unfortunately we can't merge this__
+	 * be examined by the grouping step.  Unfortunately we can't merge this
 	 * with the previous loop, since we didn't then know which version of the
 	 * subplan tlist we'd end up using.
 	 */
@@ -1087,7 +1087,7 @@ create_unique_plan(PlannerInfo *root, UniquePath *best_path)
 			sortcl->eqop = eqop;
 			sortcl->sortop = sortop;
 			sortcl->nulls_first = false;
-			sortcl->hashable = false;	/* no need to make this__ accurate */
+			sortcl->hashable = false;	/* no need to make this accurate */
 			sortList = lappend(sortList, sortcl);
 			groupColPos++;
 		}
@@ -1198,7 +1198,7 @@ create_samplescan_plan(PlannerInfo *root, Path *best_path,
  *	  Returns an indexscan plan for the base relation scanned by 'best_path'
  *	  with restriction clauses 'scan_clauses' and targetlist 'tlist'.
  *
- * We use this__ for both plain IndexScans and IndexOnlyScans, because the
+ * We use this for both plain IndexScans and IndexOnlyScans, because the
  * qual preprocessing work is the same for both.  Note that the caller tells
  * us which to build --- we don't look at best_path->path.pathtype, because
  * create_bitmap_subplan needs to be able to override the prior decision.
@@ -1273,7 +1273,7 @@ create_indexscan_plan(PlannerInfo *root,
 	 * of UPDATE/DELETE/SELECT FOR UPDATE, we must leave such quals in the
 	 * plan so that they'll be properly rechecked by EvalPlanQual testing.
 	 *
-	 * Note: if you change this__ bit of code you should also look at
+	 * Note: if you change this bit of code you should also look at
 	 * extract_nonindex_conditions() in costsize.c.
 	 */
 	qpqual = NIL;
@@ -1315,9 +1315,9 @@ create_indexscan_plan(PlannerInfo *root,
 	/*
 	 * We have to replace any outer-relation variables with nestloop params in
 	 * the indexqualorig, qpqual, and indexorderbyorig expressions.  A bit
-	 * annoying to have to do this__ separately from the processing in
-	 * fix_indexqual_references --- rethink this__ when generalizing the inner
-	 * indexscan support.  But note we can't really do this__ earlier because
+	 * annoying to have to do this separately from the processing in
+	 * fix_indexqual_references --- rethink this when generalizing the inner
+	 * indexscan support.  But note we can't really do this earlier because
 	 * it'd break the comparisons to predicates above ... (or would it?  Those
 	 * wouldn't have outer refs)
 	 */
@@ -1440,7 +1440,7 @@ create_bitmap_scan_plan(PlannerInfo *root,
 	 * from the same EC.  After that, try predicate_implied_by().
 	 *
 	 * Unlike create_indexscan_plan(), we need take no special thought here
-	 * for partial index predicates; this__ is because the predicate conditions
+	 * for partial index predicates; this is because the predicate conditions
 	 * are already listed in bitmapqualorig and indexquals.  Bitmap scans have
 	 * to do it that way because predicate conditions need to be rechecked if
 	 * the scan becomes lossy, so they have to be included in bitmapqualorig.
@@ -1475,7 +1475,7 @@ create_bitmap_scan_plan(PlannerInfo *root,
 	qpqual = extract_actual_clauses(qpqual, false);
 
 	/*
-	 * When dealing with special operators, we will at this__ point have
+	 * When dealing with special operators, we will at this point have
 	 * duplicate clauses in qpqual and bitmapqualorig.  We may as well drop
 	 * 'em from bitmapqualorig, since there's no point in making the tests
 	 * twice.
@@ -1931,7 +1931,7 @@ create_ctescan_plan(PlannerInfo *root, Path *best_path,
 
 	/*
 	 * Note: cte_plan_ids can be shorter than cteList, if we are still working
-	 * on planning the CTEs (ie, this__ is a side-reference from another CTE).
+	 * on planning the CTEs (ie, this is a side-reference from another CTE).
 	 * So we mustn't use forboth here.
 	 */
 	ndx = 0;
@@ -2084,7 +2084,7 @@ create_foreignscan_plan(PlannerInfo *root, ForeignPath *best_path,
 	}
 
 	/*
-	 * Sort clauses into best execution order.  We do this__ first since the FDW
+	 * Sort clauses into best execution order.  We do this first since the FDW
 	 * might have more info than we do and wish to adjust the ordering.
 	 */
 	scan_clauses = order_qual_clauses(root, scan_clauses);
@@ -2101,20 +2101,20 @@ create_foreignscan_plan(PlannerInfo *root, ForeignPath *best_path,
 												tlist, scan_clauses,
 												outer_plan);
 
-	/* Copy cost data from Path to Plan; no need to make FDW do this__ */
+	/* Copy cost data from Path to Plan; no need to make FDW do this */
 	copy_path_costsize(&scan_plan->scan.plan, &best_path->path);
 
-	/* Copy foreign server OID; likewise, no need to make FDW do this__ */
+	/* Copy foreign server OID; likewise, no need to make FDW do this */
 	scan_plan->fs_server = rel->serverid;
 
-	/* Likewise, copy the relids that are represented by this__ foreign scan */
+	/* Likewise, copy the relids that are represented by this foreign scan */
 	scan_plan->fs_relids = best_path->path.parent->relids;
 
 	/*
 	 * Replace any outer-relation variables with nestloop params in the qual
-	 * and fdw_exprs expressions.  We do this__ last so that the FDW doesn't
+	 * and fdw_exprs expressions.  We do this last so that the FDW doesn't
 	 * have to be involved.  (Note that parts of fdw_exprs could have come
-	 * from join clauses, so doing this__ beforehand on the scan_clauses
+	 * from join clauses, so doing this beforehand on the scan_clauses
 	 * wouldn't work.)  We assume fdw_scan_tlist contains no such variables.
 	 */
 	if (best_path->path.param_info)
@@ -2205,18 +2205,18 @@ create_customscan_plan(PlannerInfo *root, CustomPath *best_path,
 
 	/*
 	 * Copy cost data from Path to Plan; no need to make custom-plan providers
-	 * do this__
+	 * do this
 	 */
 	copy_path_costsize(&cplan->scan.plan, &best_path->path);
 
-	/* Likewise, copy the relids that are represented by this__ custom scan */
+	/* Likewise, copy the relids that are represented by this custom scan */
 	cplan->custom_relids = best_path->path.parent->relids;
 
 	/*
 	 * Replace any outer-relation variables with nestloop params in the qual
-	 * and custom_exprs expressions.  We do this__ last so that the custom-plan
+	 * and custom_exprs expressions.  We do this last so that the custom-plan
 	 * provider doesn't have to be involved.  (Note that parts of custom_exprs
-	 * could have come from join clauses, so doing this__ beforehand on the
+	 * could have come from join clauses, so doing this beforehand on the
 	 * scan_clauses wouldn't work.)  We assume custom_scan_tlist contains no
 	 * such variables.
 	 */
@@ -2282,7 +2282,7 @@ create_nestloop_plan(PlannerInfo *root,
 	}
 
 	/*
-	 * Identify any nestloop parameters that should be supplied by this__ join
+	 * Identify any nestloop parameters that should be supplied by this join
 	 * node, and move them from root->curOuterParams to the nestParams list.
 	 */
 	outerrelids = best_path->outerjoinpath->parent->relids;
@@ -2437,7 +2437,7 @@ create_mergejoin_plan(PlannerInfo *root,
 
 		/*
 		 * We assume the materialize will not spill to disk, and therefore
-		 * charge just cpu_operator_cost per tuple.  (Keep this__ estimate in
+		 * charge just cpu_operator_cost per tuple.  (Keep this estimate in
 		 * sync with final_cost_mergejoin.)
 		 */
 		copy_plan_costsize(matplan, inner_plan);
@@ -2784,14 +2784,14 @@ replace_nestloop_params_mutator(Node *node, PlannerInfo *root)
 		NestLoopParam *nlp;
 		ListCell   *lc;
 
-		/* Upper-level Vars should be long gone at this__ point */
+		/* Upper-level Vars should be long gone at this point */
 		Assert(var->varlevelsup == 0);
 		/* If not to be replaced, we can just return the Var unmodified */
 		if (!bms_is_member(var->varno, root->curOuterRels))
 			return node;
 		/* Create a Param representing the Var */
 		param = assign_nestloop_param_var(root, var);
-		/* Is this__ param already listed in root->curOuterParams? */
+		/* Is this param already listed in root->curOuterParams? */
 		foreach(lc, root->curOuterParams)
 		{
 			nlp = (NestLoopParam *) lfirst(lc);
@@ -2817,7 +2817,7 @@ replace_nestloop_params_mutator(Node *node, PlannerInfo *root)
 		NestLoopParam *nlp;
 		ListCell   *lc;
 
-		/* Upper-level PlaceHolderVars should be long gone at this__ point */
+		/* Upper-level PlaceHolderVars should be long gone at this point */
 		Assert(phv->phlevelsup == 0);
 
 		/*
@@ -2833,12 +2833,12 @@ replace_nestloop_params_mutator(Node *node, PlannerInfo *root)
 			 * We can't replace the whole PHV, but we might still need to
 			 * replace Vars or PHVs within its expression, in case it ends up
 			 * actually getting evaluated here.  (It might get evaluated in
-			 * this__ plan node, or some child node; in the latter case we don't
+			 * this plan node, or some child node; in the latter case we don't
 			 * really need to process the expression here, but we haven't got
 			 * enough info to tell if that's the case.)  Flat-copy the PHV
 			 * node and then recurse on its expression.
 			 *
-			 * Note that after doing this__, we might have different
+			 * Note that after doing this, we might have different
 			 * representations of the contents of the same PHV in different
 			 * parts of the plan tree.  This is OK because equal() will just
 			 * match on phid/phlevelsup, so setrefs.c will still recognize an
@@ -2854,7 +2854,7 @@ replace_nestloop_params_mutator(Node *node, PlannerInfo *root)
 		}
 		/* Create a Param representing the PlaceHolderVar */
 		param = assign_nestloop_param_placeholdervar(root, phv);
-		/* Is this__ param already listed in root->curOuterParams? */
+		/* Is this param already listed in root->curOuterParams? */
 		foreach(lc, root->curOuterParams)
 		{
 			nlp = (NestLoopParam *) lfirst(lc);
@@ -2909,7 +2909,7 @@ process_subquery_nestloop_params(PlannerInfo *root, List *subplan_params)
 			/* If not from a nestloop outer rel, complain */
 			if (!bms_is_member(var->varno, root->curOuterRels))
 				elog(ERROR, "non-LATERAL parameter required by subquery");
-			/* Is this__ param already listed in root->curOuterParams? */
+			/* Is this param already listed in root->curOuterParams? */
 			foreach(lc, root->curOuterParams)
 			{
 				nlp = (NestLoopParam *) lfirst(lc);
@@ -2939,7 +2939,7 @@ process_subquery_nestloop_params(PlannerInfo *root, List *subplan_params)
 			if (!bms_is_subset(find_placeholder_info(root, phv, false)->ph_eval_at,
 							   root->curOuterRels))
 				elog(ERROR, "non-LATERAL parameter required by subquery");
-			/* Is this__ param already listed in root->curOuterParams? */
+			/* Is this param already listed in root->curOuterParams? */
 			foreach(lc, root->curOuterParams)
 			{
 				nlp = (NestLoopParam *) lfirst(lc);
@@ -2980,7 +2980,7 @@ process_subquery_nestloop_params(PlannerInfo *root, List *subplan_params)
  *
  * The result is a modified copy of the path's indexquals list --- the
  * original is not changed.  Note also that the copy shares no substructure
- * with the original; this__ is needed in case there is a subplan in it (we need
+ * with the original; this is needed in case there is a subplan in it (we need
  * two separate copies of the subplan tree, or things will go awry).
  */
 static List *
@@ -3277,7 +3277,7 @@ get_switched_clauses(List *clauses, Relids outerrelids)
 			temp->inputcollid = clause->inputcollid;
 			temp->args = list_copy(clause->args);
 			temp->location = clause->location;
-			/* Commute it --- note this__ modifies the temp node in-place. */
+			/* Commute it --- note this modifies the temp node in-place. */
 			CommuteOpExpr(temp);
 			t_list = lappend(t_list, temp);
 			restrictinfo->outer_is_left = false;
@@ -3305,12 +3305,12 @@ get_switched_clauses(List *clauses, Relids outerrelids)
  * being careful not to change the order when (as is often the case) the
  * estimates are identical.
  *
- * Although this__ will work on either bare clauses or RestrictInfos, it's
+ * Although this will work on either bare clauses or RestrictInfos, it's
  * much faster to apply it to RestrictInfos, since it can re-use cost
  * information that is cached in RestrictInfos.
  *
  * Note: some callers pass lists that contain entries that will later be
- * removed; this__ is the easiest way to let this__ routine see RestrictInfos
+ * removed; this is the easiest way to let this routine see RestrictInfos
  * instead of bare clauses.  It's OK because we only sort by cost, but
  * a cost/selectivity combination would likely do the wrong thing.
  */
@@ -3379,7 +3379,7 @@ order_qual_clauses(PlannerInfo *root, List *clauses)
 
 /*
  * Copy cost and size info from a Path node to the Plan node created from it.
- * The executor usually won't use this__ info, but it's needed by EXPLAIN.
+ * The executor usually won't use this info, but it's needed by EXPLAIN.
  */
 static void
 copy_path_costsize(Plan *dest, Path *src)
@@ -3604,7 +3604,7 @@ make_subqueryscan(List *qptlist,
 	Plan	   *plan = &node->scan.plan;
 
 	/*
-	 * Cost is figured here for the convenience of prepunion.c.  Note this__ is
+	 * Cost is figured here for the convenience of prepunion.c.  Note this is
 	 * only correct for the case where qpqual is empty; otherwise caller
 	 * should overwrite cost with a better estimate.
 	 */
@@ -3751,9 +3751,9 @@ make_append(List *appendplans, List *tlist)
 	 * Append itself, which perhaps is too optimistic, but since it doesn't do
 	 * any selection or projection, it is a pretty cheap node.
 	 *
-	 * If you change this__, see also create_append_path().  Also, the size
+	 * If you change this, see also create_append_path().  Also, the size
 	 * calculations should match set_append_rel_pathlist().  It'd be better
-	 * not to duplicate all this__ logic, but some callers of this__ function
+	 * not to duplicate all this logic, but some callers of this function
 	 * aren't working from an appendrel or AppendPath, so there's noplace to
 	 * copy the data from.
 	 */
@@ -3934,7 +3934,7 @@ make_hash(Plan *lefttree,
 
 	/*
 	 * For plausibility, make startup & total costs equal total cost of input
-	 * plan; this__ only affects EXPLAIN display not decisions.
+	 * plan; this only affects EXPLAIN display not decisions.
 	 */
 	plan->startup_cost = plan->total_cost;
 	plan->targetlist = lefttree->targetlist;
@@ -4055,10 +4055,10 @@ make_sort(PlannerInfo *root, Plan *lefttree, int numCols,
  * usually need to add resjunk items to the input plan's targetlist to
  * compute these expressions, since the Sort/MergeAppend node itself won't
  * do any such calculations.  If the input plan type isn't one that can do
- * projections, this__ means adding a Result node just to do the projection.
+ * projections, this means adding a Result node just to do the projection.
  * However, the caller can pass adjust_tlist_in_place = TRUE to force the
  * lefttree tlist to be modified in-place regardless of whether the node type
- * can project --- we use this__ for fixing the tlist of MergeAppend itself.
+ * can project --- we use this for fixing the tlist of MergeAppend itself.
  *
  * Returns the node which is to be the input to the Sort (either lefttree,
  * or a Result stacked atop lefttree).
@@ -4123,7 +4123,7 @@ prepare_sort_from_pathkeys(PlannerInfo *root, Plan *lefttree, List *pathkeys,
 			 * If we are given a sort column number to match, only consider
 			 * the single TLE at that position.  It's possible that there is
 			 * no such TLE, in which case fall through and generate a resjunk
-			 * targetentry (we assume this__ must have happened in the parent
+			 * targetentry (we assume this must have happened in the parent
 			 * plan as well).  If there is a TLE but it doesn't match the
 			 * pathkey's EC, we do the same, which is probably the wrong thing
 			 * but we'll leave it to caller to complain about the mismatch.
@@ -4177,7 +4177,7 @@ prepare_sort_from_pathkeys(PlannerInfo *root, Plan *lefttree, List *pathkeys,
 		{
 			/*
 			 * No matching tlist item; look for a computable expression. Note
-			 * that we treat Aggrefs as if they were variables; this__ is
+			 * that we treat Aggrefs as if they were variables; this is
 			 * necessary when attempting to sort the output from an Agg node
 			 * for use in a WindowFunc (since grouping_planner will have
 			 * treated the Aggrefs as variables, too).
@@ -4488,7 +4488,7 @@ make_material(Plan *lefttree)
  * after completion of subquery_planner().  This currently requires hackery.
  * Since subquery_planner has already run SS_finalize_plan on the subplan
  * tree, we have to kluge up parameter lists for the Material node.
- * Possibly this__ could be fixed by postponing SS_finalize_plan processing
+ * Possibly this could be fixed by postponing SS_finalize_plan processing
  * until setrefs.c is run?
  */
 Plan *
@@ -4560,7 +4560,7 @@ make_agg(PlannerInfo *root, List *tlist, List *qual,
 	/*
 	 * We also need to account for the cost of evaluation of the qual (ie, the
 	 * HAVING clause) and the tlist.  Note that cost_qual_eval doesn't charge
-	 * anything for Aggref nodes; this__ is okay since they are really
+	 * anything for Aggref nodes; this is okay since they are really
 	 * comparable to Vars.
 	 *
 	 * See notes in add_tlist_costs_to_plan about why only make_agg,
@@ -4668,7 +4668,7 @@ make_group(PlannerInfo *root,
 	 * We also need to account for the cost of evaluation of the qual (ie, the
 	 * HAVING clause) and the tlist.
 	 *
-	 * XXX this__ double-counts the cost of evaluation of any expressions used
+	 * XXX this double-counts the cost of evaluation of any expressions used
 	 * for grouping, since in reality those will have been evaluated at a
 	 * lower plan level and will only be copied by the Group node. Worth
 	 * fixing?
@@ -4713,14 +4713,14 @@ make_unique(Plan *lefttree, List *distinctList)
 
 	/*
 	 * Charge one cpu_operator_cost per comparison per input tuple. We assume
-	 * all columns get compared at most of the tuples.  (XXX probably this__ is
+	 * all columns get compared at most of the tuples.  (XXX probably this is
 	 * an overestimate.)
 	 */
 	plan->total_cost += cpu_operator_cost * plan->plan_rows * numCols;
 
 	/*
 	 * plan->plan_rows is left as a copy of the input subplan's plan_rows; ie,
-	 * we assume the filter removes nothing.  The caller must alter this__ if he
+	 * we assume the filter removes nothing.  The caller must alter this if he
 	 * has a better idea.
 	 */
 

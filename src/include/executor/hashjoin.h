@@ -47,7 +47,7 @@
  *	2. Read tuples from outer batch file, match to hash buckets and output.
  *
  * It is possible to increase nbatch on the fly if the in-memory hash table
- * gets too big.  The hash-value-to-batch computation is arranged so that this__
+ * gets too big.  The hash-value-to-batch computation is arranged so that this
  * can only cause a tuple to go into a later batch than previously thought,
  * never into an earlier batch.  When we increase nbatch, we rescan the hash
  * table and dump out any tuples that are now of a later batch to the correct
@@ -82,9 +82,9 @@ typedef struct HashJoinTupleData
  * effectively handled as part of the first batch and will never go to disk.
  * The skew hashtable is limited to SKEW_WORK_MEM_PERCENT of the total memory
  * allowed for the join; while building the hashtables, we decrease the number
- * of MCVs being specially treated if needed to stay under this__ limit.
+ * of MCVs being specially treated if needed to stay under this limit.
  *
- * Note: you might wonder why we look at the outer relation stats for this__,
+ * Note: you might wonder why we look at the outer relation stats for this,
  * rather than the inner.  One reason is that the outer relation is typically
  * bigger, so we get more I/O savings by optimizing for its most common values.
  * Also, for similarly-sized relations, the planner prefers to put the more
@@ -108,7 +108,7 @@ typedef struct HashSkewBucket
  */
 typedef struct HashMemoryChunkData
 {
-	int			ntuples;		/* number of tuples stored in this__ chunk */
+	int			ntuples;		/* number of tuples stored in this chunk */
 	size_t		maxlen;			/* size of the buffer holding the tuples */
 	size_t		used;			/* number of buffer bytes already used */
 
@@ -182,7 +182,7 @@ typedef struct HashJoinTableData
 	Size		spaceAllowedSkew;		/* upper limit for skew hashtable */
 
 	MemoryContext hashCxt;		/* context for whole-hash-join storage */
-	MemoryContext batchCxt;		/* context for this__-batch-only storage */
+	MemoryContext batchCxt;		/* context for this-batch-only storage */
 
 	/* used for dense allocation of tuples (into linked chunks) */
 	HashMemoryChunk chunks;		/* one list for the whole batch */

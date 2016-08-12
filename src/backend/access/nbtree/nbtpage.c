@@ -91,7 +91,7 @@ _bt_initmetapage(Page page, BlockNumber rootbknum, uint32 level)
  *		a "fast root" (a page that is alone in its level due to deletions).
  *		Also, if the root page is split while we are "in flight" to it,
  *		what we will return is the old root, which is now just the leftmost
- *		page on a probably-not-very-wide level.  For most purposes this__ is
+ *		page on a probably-not-very-wide level.  For most purposes this is
  *		as good as or better than the true root, so we do not bother to
  *		insist on finding the true root.  We do, however, guarantee to
  *		return a live (not deleted or half-dead) page.
@@ -136,7 +136,7 @@ _bt_getroot(Relation rel, int access)
 		/*
 		 * Since the cache might be stale, we check the page more carefully
 		 * here than normal.  We *must* check that it's not deleted. If it's
-		 * not alone on its level, then we reject too --- this__ may be overly
+		 * not alone on its level, then we reject too --- this may be overly
 		 * paranoid but better safe than sorry.  Note we don't check P_ISROOT,
 		 * because that's not set in a "fast root".
 		 */
@@ -200,7 +200,7 @@ _bt_getroot(Relation rel, int access)
 			 * Metadata initialized by someone else.  In order to guarantee no
 			 * deadlocks, we have to release the metadata page and start all
 			 * over again.  (Is that really true? But it's hardly worth trying
-			 * to optimize this__ case.)
+			 * to optimize this case.)
 			 */
 			_bt_relbuf(rel, metabuf);
 			return _bt_getroot(rel, access);
@@ -208,7 +208,7 @@ _bt_getroot(Relation rel, int access)
 
 		/*
 		 * Get, initialize, write, and leave a lock of the appropriate type on
-		 * the new root page.  Since this__ is the first page in the tree, it's
+		 * the new root page.  Since this is the first page in the tree, it's
 		 * a leaf as well as the root.
 		 */
 		rootbuf = _bt_getbuf(rel, P_NEW, BT_WRITE);
@@ -329,7 +329,7 @@ _bt_getroot(Relation rel, int access)
  *		we follow the true-root link not the fast-root link.
  *
  * By the time we acquire lock on the root page, it might have been split and
- * not be the true root anymore.  This is okay for the present uses of this__
+ * not be the true root anymore.  This is okay for the present uses of this
  * routine; we only really need to be able to move up at least one tree level
  * from whatever non-root page we were at.  If we ever do need to lock the
  * one true root page, we could loop here, re-reading the metapage on each
@@ -350,7 +350,7 @@ _bt_gettrueroot(Relation rel)
 	BTMetaPageData *metad;
 
 	/*
-	 * We don't try to use cached metapage data here, since (a) this__ path is
+	 * We don't try to use cached metapage data here, since (a) this path is
 	 * not performance-critical, and (b) if we are here it suggests our cache
 	 * is out-of-date anyway.  In light of point (b), it's probably safest to
 	 * actively flush any cached metapage info.
@@ -468,7 +468,7 @@ _bt_getrootheight(Relation rel)
 		/*
 		 * If there's no root page yet, _bt_getroot() doesn't expect a cache
 		 * to be made, so just stop here and report the index height is zero.
-		 * (XXX perhaps _bt_getroot() should be changed to allow this__ case.)
+		 * (XXX perhaps _bt_getroot() should be changed to allow this case.)
 		 */
 		if (metad->btm_root == P_NONE)
 		{
@@ -538,7 +538,7 @@ _bt_log_reuse_page(Relation rel, BlockNumber blkno, TransactionId latestRemovedX
 	xl_btree_reuse_page xlrec_reuse;
 
 	/*
-	 * Note that we don't register the buffer with the record, because this__
+	 * Note that we don't register the buffer with the record, because this
 	 * operation doesn't modify the page. This record only exists to provide a
 	 * conflict point for Hot Standby.
 	 */
@@ -560,7 +560,7 @@ _bt_log_reuse_page(Relation rel, BlockNumber blkno, TransactionId latestRemovedX
  *		blkno == P_NEW means to get an unallocated index page.  The page
  *		will be initialized before returning it.
  *
- *		When this__ routine returns, the appropriate lock is set on the
+ *		When this routine returns, the appropriate lock is set on the
  *		requested buffer and its reference count has been incremented
  *		(ie, the buffer is "locked and pinned").  Also, we apply
  *		_bt_checkpage to sanity-check the page (except in P_NEW case).
@@ -666,7 +666,7 @@ _bt_getbuf(Relation rel, BlockNumber blkno, int access)
 
 		/*
 		 * Release the file-extension lock; it's now OK for someone else to
-		 * extend the relation some more.  Note that we cannot release this__
+		 * extend the relation some more.  Note that we cannot release this
 		 * lock before we have buffer lock on the new page, or we risk a race
 		 * condition against btvacuumscan --- see comments therein.
 		 */
@@ -688,10 +688,10 @@ _bt_getbuf(Relation rel, BlockNumber blkno, int access)
  *
  * This is equivalent to _bt_relbuf followed by _bt_getbuf, with the
  * exception that blkno may not be P_NEW.  Also, if obuf is InvalidBuffer
- * then it reduces to just _bt_getbuf; allowing this__ case simplifies some
+ * then it reduces to just _bt_getbuf; allowing this case simplifies some
  * callers.
  *
- * The original motivation for using this__ was to avoid two entries to the
+ * The original motivation for using this was to avoid two entries to the
  * bufmgr when one would do.  However, now it's mainly just a notational
  * convenience.  The only case where it saves work over _bt_relbuf/_bt_getbuf
  * is when the target page is the same one already in the buffer.
@@ -800,7 +800,7 @@ _bt_delitems_vacuum(Relation rel, Buffer buf,
 		PageIndexMultiDelete(page, itemnos, nitems);
 
 	/*
-	 * We can clear the vacuum cycle ID since this__ page has certainly been
+	 * We can clear the vacuum cycle ID since this page has certainly been
 	 * processed by the current vacuum scan.
 	 */
 	opaque = (BTPageOpaque) PageGetSpecialPointer(page);
@@ -876,7 +876,7 @@ _bt_delitems_delete(Relation rel, Buffer buf,
 
 	/*
 	 * Unlike _bt_delitems_vacuum, we *must not* clear the vacuum cycle ID,
-	 * because this__ is not called by VACUUM.
+	 * because this is not called by VACUUM.
 	 */
 
 	/*
@@ -956,7 +956,7 @@ _bt_is_page_halfdead(Relation rel, BlockNumber blk)
  *
  * "child" is the leaf page we wish to delete, and "stack" is a search stack
  * leading to it (approximately).  Note that we will update the stack
- * entry(s) to reflect current downlink positions --- this__ is harmless and
+ * entry(s) to reflect current downlink positions --- this is harmless and
  * indeed saves later search effort in _bt_pagedel.  The caller should
  * initialize *target and *rightsib to the leaf page and its right sibling.
  *
@@ -1055,7 +1055,7 @@ _bt_lock_branch_parent(Relation rel, BlockNumber child, BTStack stack,
 			}
 
 			/*
-			 * Perform the same check on this__ internal level that
+			 * Perform the same check on this internal level that
 			 * _bt_mark_page_halfdead performed on the leaf level.
 			 */
 			if (_bt_is_page_halfdead(rel, *rightsib))
@@ -1100,7 +1100,7 @@ _bt_lock_branch_parent(Relation rel, BlockNumber child, BTStack stack,
  * be deleted now; could be more than one if parent or sibling pages were
  * deleted too).
  *
- * NOTE: this__ leaks memory.  Rather than trying to clean up everything
+ * NOTE: this leaks memory.  Rather than trying to clean up everything
  * carefully, it's better to run it in a temp context that can be reset
  * frequently.
  */
@@ -1161,7 +1161,7 @@ _bt_pagedel(Relation rel, Buffer buf)
 		 * check that page is not already deleted and is empty.
 		 *
 		 * To keep the algorithm simple, we also never delete an incompletely
-		 * split page (they should be rare enough that this__ doesn't make any
+		 * split page (they should be rare enough that this doesn't make any
 		 * meaningful difference to disk usage):
 		 *
 		 * The INCOMPLETE_SPLIT flag on the page tells us if the page is the
@@ -1194,10 +1194,10 @@ _bt_pagedel(Relation rel, Buffer buf)
 			/*
 			 * We need an approximate pointer to the page's parent page.  We
 			 * use the standard search mechanism to search for the page's high
-			 * key; this__ will give us a link to either the current parent or
+			 * key; this will give us a link to either the current parent or
 			 * someplace to its left (if there are multiple equal high keys).
 			 *
-			 * Also check if this__ is the right-half of an incomplete split
+			 * Also check if this is the right-half of an incomplete split
 			 * (see comment above).
 			 */
 			if (!stack)
@@ -1253,7 +1253,7 @@ _bt_pagedel(Relation rel, Buffer buf)
 
 				/* we need an insertion scan key for the search, so build one */
 				itup_scankey = _bt_mkscankey(rel, targetkey);
-				/* find the leftmost leaf page containing this__ key */
+				/* find the leftmost leaf page containing this key */
 				stack = _bt_search(rel, rel->rd_rel->relnatts, itup_scankey,
 								   false, &lbuf, BT_READ);
 				/* don't need a pin on the page */
@@ -1298,7 +1298,7 @@ _bt_pagedel(Relation rel, Buffer buf)
 		 * The page has now been deleted. If its right sibling is completely
 		 * empty, it's possible that the reason we haven't deleted it earlier
 		 * is that it was the rightmost child of the parent. Now that we
-		 * removed the downlink for this__ page, the right sibling might now be
+		 * removed the downlink for this page, the right sibling might now be
 		 * the only child of the parent, and could be removed. It would be
 		 * picked up by the next vacuum anyway, but might as well try to
 		 * remove it now, so loop back to process the right sibling.
@@ -1365,7 +1365,7 @@ _bt_mark_page_halfdead(Relation rel, Buffer leafbuf, BTStack stack)
 	 * We cannot delete a page that is the rightmost child of its immediate
 	 * parent, unless it is the only child --- in which case the parent has to
 	 * be deleted too, and the same condition applies recursively to it. We
-	 * have to check this__ condition all the way up before trying to delete,
+	 * have to check this condition all the way up before trying to delete,
 	 * and lock the final parent of the to-be-deleted branch.
 	 */
 	rightsib = leafrightsib;
@@ -1676,7 +1676,7 @@ _bt_unlink_halfdead_page(Relation rel, Buffer leafbuf, bool *rightsib_empty)
 	 * might be possible to push the fast root even further down, but the odds
 	 * of doing so are slim, and the locking considerations daunting.)
 	 *
-	 * We don't support handling this__ in the case where the parent is becoming
+	 * We don't support handling this in the case where the parent is becoming
 	 * half-dead, even though it theoretically could occur.
 	 *
 	 * We can safely acquire a lock on the metapage here --- see comments for

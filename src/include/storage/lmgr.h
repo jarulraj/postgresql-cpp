@@ -59,7 +59,7 @@ extern void LockPage(Relation relation, BlockNumber blkno, LOCKMODE lockmode);
 extern bool ConditionalLockPage(Relation relation, BlockNumber blkno, LOCKMODE lockmode);
 extern void UnlockPage(Relation relation, BlockNumber blkno, LOCKMODE lockmode);
 
-/* Lock a tuple (see heap_lock_tuple before assuming you understand this__) */
+/* Lock a tuple (see heap_lock_tuple before assuming you understand this) */
 extern void LockTuple(Relation relation, ItemPointer tid, LOCKMODE lockmode);
 extern bool ConditionalLockTuple(Relation relation, ItemPointer tid,
 					 LOCKMODE lockmode);

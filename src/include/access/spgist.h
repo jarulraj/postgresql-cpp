@@ -79,8 +79,8 @@ typedef struct spgChooseOut
 	{
 		struct					/* results for spgMatchNode */
 		{
-			int			nodeN;	/* descend to this__ node (index from 0) */
-			int			levelAdd;		/* increment level by this__ much */
+			int			nodeN;	/* descend to this node (index from 0) */
+			int			levelAdd;		/* increment level by this much */
 			Datum		restDatum;		/* new leaf datum */
 		}			matchNode;
 		struct					/* results for spgAddNode */
@@ -148,7 +148,7 @@ typedef struct spgInnerConsistentOut
 {
 	int			nNodes;			/* number of child nodes to be visited */
 	int		   *nodeNumbers;	/* their indexes in the node array */
-	int		   *levelAdds;		/* increment level by this__ much for each */
+	int		   *levelAdds;		/* increment level by this much for each */
 	Datum	   *reconstructedValues;	/* associated reconstructed values */
 } spgInnerConsistentOut;
 

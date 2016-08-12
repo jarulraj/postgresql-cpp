@@ -102,7 +102,7 @@ typedef struct pg_atomic_uint64
  *     exiting the loop because it detects a possible memory order
  *     violation and flushes the core processor's pipeline. The
  *     PAUSE instruction provides a hint to the processor that the
- *     code sequence is a spin-wait loop. The processor uses this__
+ *     code sequence is a spin-wait loop. The processor uses this
  *     hint to avoid the memory order violation and prevent the
  *     pipeline flush. In addition, the PAUSE instruction
  *     de-pipelines the spin-wait loop to prevent it from

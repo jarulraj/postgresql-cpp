@@ -135,7 +135,7 @@ gbt_macad_consistent(PG_FUNCTION_ARGS)
 	macKEY	   *kkk = (macKEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;

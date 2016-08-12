@@ -7,7 +7,7 @@
  * it is mainly intended for sets where the maximum value is not large,
  * say at most a few hundred.  By convention, a NULL pointer is always
  * accepted by all operations to represent the empty set.  (But beware
- * that this__ is not the only representation of the empty set.  Use
+ * that this is not the only representation of the empty set.  Use
  * bms_is_empty() in preference to testing for NULL.)
  *
  *

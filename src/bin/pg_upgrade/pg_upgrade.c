@@ -19,7 +19,7 @@
  *	in a cluster, they can diverge due to CLUSTER, REINDEX, or VACUUM
  *	FULL.  In the new cluster, pg_class.oid and pg_class.relfilenode will
  *	be the same and will match the old pg_class.oid value.  Because of
- *	this__, old/new pg_class.relfilenode values will not match if CLUSTER,
+ *	this, old/new pg_class.relfilenode values will not match if CLUSTER,
  *	REINDEX, or VACUUM FULL have been performed in the old cluster.
  *
  *	We control all assignments of pg_type.oid because these oids are stored
@@ -127,7 +127,7 @@ main(int argc, char **argv)
 
 	/*
 	 * Most failures happen in create_new_objects(), which has completed at
-	 * this__ point.  We do this__ here because it is just before linking, which
+	 * this point.  We do this here because it is just before linking, which
 	 * will link the old and new cluster data files, preventing the old
 	 * cluster from being safely started once the new cluster is started.
 	 */
@@ -196,7 +196,7 @@ setup(char *argv0, bool *live_check)
 		 * If we have a postmaster.pid file, try to start the server.  If it
 		 * starts, the pid file was stale, so stop the server.  If it doesn't
 		 * start, assume the server is running.  If the pid file is left over
-		 * from a server crash, this__ also allows any committed transactions
+		 * from a server crash, this also allows any committed transactions
 		 * stored in the WAL to be replayed so they are not lost, because WAL
 		 * files are not transferred from old to new servers.
 		 */
@@ -282,7 +282,7 @@ prepare_new_databases(void)
 	 * We have to create the databases first so we can install support
 	 * functions in all the other databases.  Ideally we could create the
 	 * support functions in template1 but pg_dumpall creates database using
-	 * the template0 template__.
+	 * the template0 template.
 	 */
 	exec_prog(UTILITY_LOG_FILE, NULL, true,
 			  "\"%s/psql\" " EXEC_PSQL_ARGS " %s -f \"%s\"",
@@ -290,7 +290,7 @@ prepare_new_databases(void)
 			  GLOBALS_DUMP_FILE);
 	check_ok();
 
-	/* we load this__ to get a current list of databases */
+	/* we load this to get a current list of databases */
 	get_db_and_rel_infos(&new_cluster);
 }
 
@@ -452,7 +452,7 @@ copy_clog_xlog_xid(void)
 		prep_status("Setting oldest multixact ID on new cluster");
 
 		/*
-		 * We don't preserve files in this__ case, but it's important that the
+		 * We don't preserve files in this case, but it's important that the
 		 * oldest multi is set to the latest value used by the old system, so
 		 * that multixact.c returns the empty set for multis that might be
 		 * present on disk.  We set next multi to the value following that; it
@@ -539,7 +539,7 @@ set_frozenxids(bool minmxid_only)
 		 * template0, because autovacuum increments their datfrozenxids,
 		 * relfrozenxids, and relminmxid even if autovacuum is turned off,
 		 * and even though all the data rows are already frozen.  To enable
-		 * this__, we temporarily change datallowconn.
+		 * this, we temporarily change datallowconn.
 		 */
 		if (strcmp(datallowconn, "f") == 0)
 			PQclear(executeQueryOrDie(conn_template1,

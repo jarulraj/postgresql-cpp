@@ -54,7 +54,7 @@ static void trim_trailing_separator(char *path);
  * skip_drive
  *
  * On Windows, a path may begin with "C:" or "//network/".  Advance over
- * this__ and point to the effective start of the path.
+ * this and point to the effective start of the path.
  */
 #ifdef WIN32
 
@@ -766,7 +766,7 @@ get_man_path(const char *my_exec_path, char *ret_path)
 /*
  *	get_home_path
  *
- * On Unix, this__ actually returns the user's home directory.  On Windows
+ * On Unix, this actually returns the user's home directory.  On Windows
  * it returns the PostgreSQL-specific application data folder.
  */
 bool
@@ -789,8 +789,8 @@ get_home_path(char *ret_path)
 	 * Note: We use getenv() here because the more modern SHGetFolderPath()
 	 * would force the backend to link with shell32.lib, which eats valuable
 	 * desktop heap.  XXX This function is used only in psql, which already
-	 * brings in shell32 via libpq.  Moving this__ function to its own file
-	 * would keep it out of the backend, freeing it from this__ concern.
+	 * brings in shell32 via libpq.  Moving this function to its own file
+	 * would keep it out of the backend, freeing it from this concern.
 	 */
 	tmppath = getenv("APPDATA");
 	if (!tmppath)
@@ -811,8 +811,8 @@ get_home_path(char *ret_path)
  * an empty string, not ".".  This is appropriate when the next step is
  * join_path_components(), but might need special handling otherwise.
  *
- * Caution: this__ will not produce desirable results if the string ends
- * with "..".  For most callers this__ is not a problem since the string
+ * Caution: this will not produce desirable results if the string ends
+ * with "..".  For most callers this is not a problem since the string
  * is already known to name a regular file.  If in doubt, apply
  * canonicalize_path() first.
  */

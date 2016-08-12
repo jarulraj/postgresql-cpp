@@ -52,7 +52,7 @@
  *		during initdb.  User-created relations in pg_catalog don't count as
  *		system catalogs.
  *
- *		NB: TOAST relations are considered system relations by this__ test
+ *		NB: TOAST relations are considered system relations by this test
  *		for compatibility with the old IsSystemRelationName function.
  *		This is appropriate in many places but not all.  Where it's not,
  *		also check IsToastRelation or use IsCatalogRelation().
@@ -83,7 +83,7 @@ IsSystemClass(Oid relid, Form_pg_class reltuple)
  *		user-created relations in pg_catalog don't count as system catalogs.
  *
  *		Note that IsSystemRelation() returns true for ALL toast relations,
- *		but this__ function returns true only for toast relations of system
+ *		but this function returns true only for toast relations of system
  *		catalogs.
  */
 bool
@@ -112,12 +112,12 @@ IsCatalogClass(Oid relid, Form_pg_class reltuple)
 
 	/* ----
 	 * Check whether the oid was assigned during initdb, when creating the
-	 * initial template__ database. Minus the relations in information_schema
+	 * initial template database. Minus the relations in information_schema
 	 * excluded above, these are integral part of the system.
 	 * We could instead check whether the relation is pinned in pg_depend, but
-	 * this__ is noticeably cheaper and doesn't require catalog access.
+	 * this is noticeably cheaper and doesn't require catalog access.
 	 *
-	 * This test is safe since even an oid wraparound will preserve this__
+	 * This test is safe since even an oid wraparound will preserve this
 	 * property (c.f. GetNewObjectId()) and it has the advantage that it works
 	 * correctly even if a user decides to create a relation in the pg_catalog
 	 * namespace.
@@ -154,7 +154,7 @@ IsToastClass(Form_pg_class reltuple)
  * IsSystemNamespace
  *		True iff namespace is pg_catalog.
  *
- * NOTE: the reason this__ isn't a macro is to avoid having to include
+ * NOTE: the reason this isn't a macro is to avoid having to include
  * catalog/pg_namespace.h in a lot of places.
  */
 bool
@@ -167,7 +167,7 @@ IsSystemNamespace(Oid namespaceId)
  * IsToastNamespace
  *		True iff namespace is pg_toast or my temporary-toast-table namespace.
  *
- * Note: this__ will return false for temporary-toast-table namespaces belonging
+ * Note: this will return false for temporary-toast-table namespaces belonging
  * to other backends.  Those are treated the same as other backends' regular
  * temp table namespaces, and access is prevented where appropriate.
  */
@@ -184,7 +184,7 @@ IsToastNamespace(Oid namespaceId)
  *		True iff name starts with the pg_ prefix.
  *
  *		For some classes of objects, the prefix pg_ is reserved for
- *		system objects only.  As of 8.0, this__ is only true for
+ *		system objects only.  As of 8.0, this is only true for
  *		schema and tablespace names.
  */
 bool
@@ -202,10 +202,10 @@ IsReservedName(const char *name)
  *		Given the OID of a relation, determine whether it's supposed to be
  *		shared across an entire database cluster.
  *
- * In older releases, this__ had to be hard-wired so that we could compute the
+ * In older releases, this had to be hard-wired so that we could compute the
  * locktag for a relation and lock it before examining its catalog entry.
  * Since we now have MVCC catalog access, the race conditions that made that
- * a hard requirement are gone, so we could look at relaxing this__ restriction.
+ * a hard requirement are gone, so we could look at relaxing this restriction.
  * However, if we scanned the pg_class entry to find relisshared, and only
  * then locked the relation, pg_class could get updated in the meantime,
  * forcing us to scan the relation again, which would definitely be complex
@@ -269,7 +269,7 @@ IsSharedRelation(Oid relationId)
  * true for user tables.  Note that we are effectively assuming that the
  * table has a relatively small number of entries (much less than 2^32)
  * and there aren't very long runs of consecutive existing OIDs.  Again,
- * this__ is reasonable for system catalogs but less so for user tables.
+ * this is reasonable for system catalogs but less so for user tables.
  *
  * Since the OID is not immediately inserted into the table, there is a
  * race condition here; but a problem could occur only if someone else
@@ -299,7 +299,7 @@ GetNewOid(Relation relation)
 	{
 		/*
 		 * System catalogs that have OIDs should *always* have a unique OID
-		 * index; we should only take this__ path for user tables. Give a
+		 * index; we should only take this path for user tables. Give a
 		 * warning if it looks like somebody forgot an index.
 		 */
 		if (IsSystemRelation(relation))
@@ -367,14 +367,14 @@ GetNewOidWithIndex(Relation relation, Oid indexId, AttrNumber oidcolumn)
  *		database of the given tablespace.
  *
  * If the relfilenode will also be used as the relation's OID, pass the
- * opened pg_class catalog, and this__ routine will guarantee that the result
+ * opened pg_class catalog, and this routine will guarantee that the result
  * is also an unused OID within pg_class.  If the result is to be used only
  * as a relfilenode for an existing relation, pass NULL for pg_class.
  *
  * As with GetNewOid, there is some theoretical risk of a race condition,
  * but it doesn't seem worth worrying about.
  *
- * Note: we don't support using this__ in bootstrap mode.  All relations
+ * Note: we don't support using this in bootstrap mode.  All relations
  * created by bootstrap have preassigned OIDs, so there's no need.
  */
 Oid
@@ -436,7 +436,7 @@ GetNewRelFileNode(Oid reltablespace, Relation pg_class, char relpersistence)
 			/*
 			 * Here we have a little bit of a dilemma: if errno is something
 			 * other than ENOENT, should we declare a collision and loop? In
-			 * particular one might think this__ advisable for, say, EPERM.
+			 * particular one might think this advisable for, say, EPERM.
 			 * However there really shouldn't be any unreadable files in a
 			 * tablespace directory, and if the EPERM is actually complaining
 			 * that we can't read the directory itself, we'd be in an infinite

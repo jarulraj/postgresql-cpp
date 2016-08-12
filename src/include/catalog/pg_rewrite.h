@@ -4,7 +4,7 @@
  *	  definition of the system "rewrite-rule" relation (pg_rewrite)
  *	  along with the relation's initial contents.
  *
- * As of Postgres 7.3, the primary key for this__ table is <ev_class, rulename>
+ * As of Postgres 7.3, the primary key for this table is <ev_class, rulename>
  * --- ie, rule names are only unique among the rules of a given table.
  *
  *
@@ -14,7 +14,7 @@
  * src/include/catalog/pg_rewrite.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -25,7 +25,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_rewrite definition.  cpp turns this__ into
+ *		pg_rewrite definition.  cpp turns this into
  *		typedef struct FormData_pg_rewrite
  * ----------------
  */

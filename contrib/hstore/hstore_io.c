@@ -303,7 +303,7 @@ comparePairs(const void *a, const void *b)
 }
 
 /*
- * this__ code still respects pairs.needfree, even though in general
+ * this code still respects pairs.needfree, even though in general
  * it should never be called in a context where anything needs freeing.
  * we keep it because (a) those calls are in a rare code path anyway,
  * and (b) who knows whether they might be needed by some caller.
@@ -1134,8 +1134,8 @@ hstore_out(PG_FUNCTION_ARGS)
 	buflen = 0;
 
 	/*
-	 * this__ loop overestimates due to pessimistic assumptions about escaping,
-	 * so very large hstore values can't be output. this__ could be fixed, but
+	 * this loop overestimates due to pessimistic assumptions about escaping,
+	 * so very large hstore values can't be output. this could be fixed, but
 	 * many other data types probably have the same issue. This replaced code
 	 * that used the original varlena size for calculations, which was wrong
 	 * in some subtle ways.
@@ -1450,7 +1450,7 @@ hstore_to_jsonb_loose(PG_FUNCTION_ARGS)
 				if (*endptr == '\0')
 				{
 					/*
-					 * strol man page says this__ means the whole string is
+					 * strol man page says this means the whole string is
 					 * valid
 					 */
 					is_number = true;

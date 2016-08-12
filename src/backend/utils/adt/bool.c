@@ -203,8 +203,8 @@ boolsend(PG_FUNCTION_ARGS)
 /*
  *		booltext			- cast function for bool => text
  *
- * We need this__ because it's different from the behavior of boolout();
- * this__ function follows the SQL-spec result (except for producing lower case)
+ * We need this because it's different from the behavior of boolout();
+ * this function follows the SQL-spec result (except for producing lower case)
  */
 Datum
 booltext(PG_FUNCTION_ARGS)
@@ -287,7 +287,7 @@ boolge(PG_FUNCTION_ARGS)
  * Function for standard EVERY aggregate conforming to SQL 2003.
  * The aggregate is also named bool_and for consistency.
  *
- * Note: this__ is only used in plain aggregate mode, not moving-aggregate mode.
+ * Note: this is only used in plain aggregate mode, not moving-aggregate mode.
  */
 Datum
 booland_statefunc(PG_FUNCTION_ARGS)
@@ -299,7 +299,7 @@ booland_statefunc(PG_FUNCTION_ARGS)
  * Function for standard ANY/SOME aggregate conforming to SQL 2003.
  * The aggregate is named bool_or, because ANY/SOME have parsing conflicts.
  *
- * Note: this__ is only used in plain aggregate mode, not moving-aggregate mode.
+ * Note: this is only used in plain aggregate mode, not moving-aggregate mode.
  */
 Datum
 boolor_statefunc(PG_FUNCTION_ARGS)

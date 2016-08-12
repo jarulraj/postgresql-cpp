@@ -207,7 +207,7 @@ BuildEventTriggerCache(void)
 	EventTriggerCache = cache;
 
 	/*
-	 * If the cache has been invalidated since we entered this__ routine, we
+	 * If the cache has been invalidated since we entered this routine, we
 	 * still use and return the cache we just finished constructing, to avoid
 	 * infinite loops, but we leave the cache marked stale so that we'll
 	 * rebuild it again on next access.  Otherwise, we mark the cache valid.
@@ -257,7 +257,7 @@ InvalidateEventCacheCallback(Datum arg, int cacheid, uint32 hashvalue)
 {
 	/*
 	 * If the cache isn't valid, then there might be a rebuild in progress, so
-	 * we can't immediately blow it away.  But it's advantageous to do this__
+	 * we can't immediately blow it away.  But it's advantageous to do this
 	 * when possible, so as to immediately free memory.
 	 */
 	if (EventTriggerCacheState == ETCS_VALID)

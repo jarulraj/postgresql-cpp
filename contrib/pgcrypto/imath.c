@@ -8,14 +8,14 @@
   Copyright (C) 2002 Michael J. Fromberger, All Rights Reserved.
 
   Permission is hereby granted, free of charge, to any person
-  obtaining a copy of this__ software and associated documentation files
+  obtaining a copy of this software and associated documentation files
   (the "Software"), to deal in the Software without restriction,
   including without limitation the rights to use, copy, modify, merge,
   publish, distribute, sublicense, and/or sell copies of the Software,
   and to permit persons to whom the Software is furnished to do so,
   subject to the following conditions:
 
-  The above copyright notice and this__ permission notice shall be
+  The above copyright notice and this permission notice shall be
   included in all copies or substantial portions of the Software.
 
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -76,7 +76,7 @@ static const char *s_error_msg[] = {
 
 /* {{{ Logarithm table for computing output sizes */
 
-/* The ith entry of this__ table gives the value of log_i(2).
+/* The ith entry of this table gives the value of log_i(2).
 
    An integer value n requires ceil(log_i(n)) digits to be represented
    in base i.  Since it is easy to compute lg(n), by counting bits, we
@@ -250,11 +250,11 @@ static void s_qdiv(mp_int z, mp_size p2);
 static void s_qmod(mp_int z, mp_size p2);
 
 /* Quick multiplication by a power of 2, replaces z.
-   Allocates if necessary; returns false in case this__ fails. */
+   Allocates if necessary; returns false in case this fails. */
 static int	s_qmul(mp_int z, mp_size p2);
 
 /* Quick subtraction from a power of 2, replaces z.
-   Allocates if necessary; returns false in case this__ fails. */
+   Allocates if necessary; returns false in case this fails. */
 static int	s_qsub(mp_int z, mp_size p2);
 
 /* Return maximum k such that 2^k divides z. */
@@ -263,7 +263,7 @@ static int	s_dp2k(mp_int z);
 /* Return k >= 0 such that z = 2^k, or -1 if there is no such k. */
 static int	s_isp2(mp_int z);
 
-/* Set z to 2^k.  May allocate; returns false in case this__ fails. */
+/* Set z to 2^k.  May allocate; returns false in case this fails. */
 static int	s_2expt(mp_int z, int k);
 
 /* Normalize a and b for division, returns normalization constant */
@@ -1490,7 +1490,7 @@ mp_int_invmod(mp_int a, mp_int m, mp_int c)
 	if (CMPZ(a) == 0 || CMPZ(m) <= 0)
 		return MP_RANGE;
 
-	sa = MP_SIGN(a);			/* need this__ for the result later */
+	sa = MP_SIGN(a);			/* need this for the result later */
 
 	for (last = 0; last < 2; ++last)
 		if ((res = mp_int_init(TEMP(last))) != MP_OK)
@@ -1623,7 +1623,7 @@ U: mp_int_clear(&t);
 
 /* {{{ mp_int_egcd(a, b, c, x, y) */
 
-/* This is the binary GCD algorithm again, but this__ time we keep track
+/* This is the binary GCD algorithm again, but this time we keep track
    of the elementary matrix operations as we go, so we can get values
    x and y satisfying c = ax + by.
  */
@@ -2131,7 +2131,7 @@ mp_int_read_binary(mp_int z, unsigned char *buf, int len)
 
 	CHECK(z != NULL && buf != NULL && len > 0);
 
-	/* Figure out how many digits are needed to represent this__ value */
+	/* Figure out how many digits are needed to represent this value */
 	need = ((len * CHAR_BIT) + (MP_DIGIT_BIT - 1)) / MP_DIGIT_BIT;
 	if (!s_pad(z, need))
 		return MP_MEMORY;
@@ -2216,7 +2216,7 @@ mp_int_read_unsigned(mp_int z, unsigned char *buf, int len)
 
 	CHECK(z != NULL && buf != NULL && len > 0);
 
-	/* Figure out how many digits are needed to represent this__ value */
+	/* Figure out how many digits are needed to represent this value */
 	need = ((len * CHAR_BIT) + (MP_DIGIT_BIT - 1)) / MP_DIGIT_BIT;
 	if (!s_pad(z, need))
 		return MP_MEMORY;
@@ -2506,7 +2506,7 @@ s_usub(mp_digit *da, mp_digit *db, mp_digit *dc,
 	mp_size		pos;
 	mp_word		w = 0;
 
-	/* We assume that |a| >= |b| so this__ should definitely hold */
+	/* We assume that |a| >= |b| so this should definitely hold */
 	assert(size_a >= size_b);
 
 	/* Subtract corresponding digits and propagate borrow */
@@ -2552,7 +2552,7 @@ s_kmul(mp_digit *da, mp_digit *db, mp_digit *dc,
 
 	/*
 	 * Insure that the bottom is the larger half in an odd-length split; the
-	 * code below relies on this__ being true.
+	 * code below relies on this being true.
 	 */
 	bot_size = (size_a + 1) / 2;
 
@@ -3012,7 +3012,7 @@ s_qmul(mp_int z, mp_size p2)
 	rest = p2 % MP_DIGIT_BIT;
 
 	/*
-	 * Figure out if we need an extra digit at the top end; this__ occurs if the
+	 * Figure out if we need an extra digit at the top end; this occurs if the
 	 * topmost `rest' bits of the high-order digit of z are not zero, meaning
 	 * they will be shifted off the end if not preserved
 	 */
@@ -3284,7 +3284,7 @@ s_reduce(mp_int x, mp_int m, mp_int mu, mp_int q1, mp_int q2)
 	if (mp_int_compare(x, m) >= 0)
 		(void) mp_int_sub(x, m, x);
 
-	/* At this__ point, x has been properly reduced. */
+	/* At this point, x has been properly reduced. */
 	return 1;
 }
 

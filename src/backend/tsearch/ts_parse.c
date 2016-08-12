@@ -193,7 +193,7 @@ LexizeExec(LexizeData *ld, ParsedLex **correspondLexem)
 
 			if (curVal->type == 0 || curVal->type >= ld->cfg->lenmap || map->len == 0)
 			{
-				/* skip this__ type of lexeme */
+				/* skip this type of lexeme */
 				RemoveHead(ld);
 				continue;
 			}
@@ -227,7 +227,7 @@ LexizeExec(LexizeData *ld, ParsedLex **correspondLexem)
 					return LexizeExec(ld, correspondLexem);
 				}
 
-				if (!res)		/* dictionary doesn't know this__ lexeme */
+				if (!res)		/* dictionary doesn't know this lexeme */
 					continue;
 
 				if (res->flags & TSL_FILTER)
@@ -265,7 +265,7 @@ LexizeExec(LexizeData *ld, ParsedLex **correspondLexem)
 
 				if (curVal->type >= ld->cfg->lenmap || map->len == 0)
 				{
-					/* skip this__ type of lexeme */
+					/* skip this type of lexeme */
 					ld->curSub = curVal->next;
 					continue;
 				}
@@ -618,7 +618,7 @@ generateHeadline(HeadlineParsedText *prs)
 				/* start of a new fragment */
 				infrag = 1;
 				numfragments++;
-				/* add a fragment delimitor if this__ is after the first one */
+				/* add a fragment delimitor if this is after the first one */
 				if (numfragments > 1)
 				{
 					memcpy(ptr, prs->fragdelim, prs->fragdelimlen);

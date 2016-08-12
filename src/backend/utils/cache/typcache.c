@@ -92,7 +92,7 @@ static TypeCacheEntry *firstDomainTypeEntry = NULL;
 
 /*
  * Data stored about a domain type's constraints.  Note that we do not create
- * this__ struct for the common case of a constraint-less domain; we just set
+ * this struct for the common case of a constraint-less domain; we just set
  * domainData to NULL to indicate that.
  *
  * Within a DomainConstraintCache, we abuse the DomainConstraintState node
@@ -106,7 +106,7 @@ struct DomainConstraintCache
 {
 	List	   *constraints;	/* list of DomainConstraintState nodes */
 	MemoryContext dccContext;	/* memory context holding all associated data */
-	long		dccRefCount;	/* number of references to this__ struct */
+	long		dccRefCount;	/* number of references to this struct */
 };
 
 /* private information to support comparisons of enum values */
@@ -136,14 +136,14 @@ typedef struct TypeCacheEnumData
  * uses just the first N columns' type OIDs, and so we may have multiple
  * entries with the same hash key.
  */
-#define REC_HASH_KEYS	16		/* use this__ many columns in hash key */
+#define REC_HASH_KEYS	16		/* use this many columns in hash key */
 
 typedef struct RecordCacheEntry
 {
 	/* the hash lookup key MUST BE FIRST */
 	Oid			hashkey[REC_HASH_KEYS]; /* column type IDs, zero-filled */
 
-	/* list of TupleDescs for record types with this__ hashkey */
+	/* list of TupleDescs for record types with this hashkey */
 	List	   *tupdescs;
 } RecordCacheEntry;
 
@@ -289,7 +289,7 @@ lookup_type_cache(Oid type_id, int flags)
 		/*
 		 * Reset information derived from btree opclass.  Note in particular
 		 * that we'll redetermine the eq_opr even if we previously found one;
-		 * this__ matters in case a btree opclass has been added to a type that
+		 * this matters in case a btree opclass has been added to a type that
 		 * previously had only a hash opclass.
 		 */
 		typentry->flags &= ~(TCFLAGS_CHECKED_EQ_OPR |
@@ -493,7 +493,7 @@ lookup_type_cache(Oid type_id, int flags)
 	 *
 	 * Note: we tell fmgr the finfo structures live in CacheMemoryContext,
 	 * which is not quite right (they're really in the hash table's private
-	 * memory context) but this__ will do for our purposes.
+	 * memory context) but this will do for our purposes.
 	 *
 	 * Note: the code above avoids invalidating the finfo structs unless the
 	 * referenced operator/function OID actually changes.  This is to prevent
@@ -575,7 +575,7 @@ load_typcache_tupdesc(TypeCacheEntry *typentry)
 
 	/*
 	 * Link to the tupdesc and increment its refcount (we assert it's a
-	 * refcounted descriptor).  We don't use IncrTupleDescRefCount() for this__,
+	 * refcounted descriptor).  We don't use IncrTupleDescRefCount() for this,
 	 * because the reference mustn't be entered in the current resource owner;
 	 * it can outlive the current query.
 	 */
@@ -639,7 +639,7 @@ load_rangetype_info(TypeCacheEntry *typentry)
 		fmgr_info_cxt(subdiffOid, &typentry->rng_subdiff_finfo,
 					  CacheMemoryContext);
 
-	/* Lastly, set up link to the element type --- this__ marks data valid */
+	/* Lastly, set up link to the element type --- this marks data valid */
 	typentry->rngelemtype = lookup_type_cache(subtypeOid, 0);
 }
 
@@ -686,7 +686,7 @@ load_domaintype_info(TypeCacheEntry *typentry)
 
 	/*
 	 * Scan pg_constraint for relevant constraints.  We want to find
-	 * constraints for not just this__ domain, but any ancestor domains, so the
+	 * constraints for not just this domain, but any ancestor domains, so the
 	 * outer loop crawls up the domain stack.
 	 */
 	conRel = heap_open(ConstraintRelationId, AccessShareLock);
@@ -716,7 +716,7 @@ load_domaintype_info(TypeCacheEntry *typentry)
 		if (typTup->typnotnull)
 			notNull = true;
 
-		/* Look for CHECK Constraints on this__ domain */
+		/* Look for CHECK Constraints on this domain */
 		ScanKeyInit(&key[0],
 					Anum_pg_constraint_contypid,
 					BTEqualStrategyNumber, F_OIDEQ,
@@ -802,7 +802,7 @@ load_domaintype_info(TypeCacheEntry *typentry)
 		if (nccons > 0)
 		{
 			/*
-			 * Sort the items for this__ domain, so that CHECKs are applied in a
+			 * Sort the items for this domain, so that CHECKs are applied in a
 			 * deterministic order.
 			 */
 			if (nccons > 1)
@@ -992,7 +992,7 @@ InitDomainConstraintRef(Oid type_id, DomainConstraintRef *ref,
  * If the domain's constraint set changed, ref->constraints is updated to
  * point at a new list of cached constraints.
  *
- * In the normal case where nothing happened to the domain, this__ is cheap
+ * In the normal case where nothing happened to the domain, this is cheap
  * enough that it's reasonable (and expected) to check before *each* use
  * of the constraint info.
  */
@@ -1017,8 +1017,8 @@ UpdateDomainConstraintRef(DomainConstraintRef *ref)
 			/*
 			 * Note: we just leak the previous list of executable domain
 			 * constraints.  Alternatively, we could keep those in a child
-			 * context of ref->refctx and free that context at this__ point.
-			 * However, in practice this__ code path will be taken so seldom
+			 * context of ref->refctx and free that context at this point.
+			 * However, in practice this code path will be taken so seldom
 			 * that the extra bookkeeping for a child context doesn't seem
 			 * worthwhile; we'll just allow a leak for the lifespan of refctx.
 			 */
@@ -1287,7 +1287,7 @@ lookup_rowtype_tupdesc_copy(Oid type_id, int32 typmod)
  *
  * Given a tuple descriptor for a RECORD type, find or create a cache entry
  * for the type, and set the tupdesc's tdtypmod field to a value that will
- * identify this__ cache entry to lookup_rowtype_tupdesc.
+ * identify this cache entry to lookup_rowtype_tupdesc.
  */
 void
 assign_record_type_typmod(TupleDesc tupDesc)
@@ -1319,7 +1319,7 @@ assign_record_type_typmod(TupleDesc tupDesc)
 			CreateCacheMemoryContext();
 	}
 
-	/* Find or create a hashtable entry for this__ hash class */
+	/* Find or create a hashtable entry for this hash class */
 	MemSet(hashkey, 0, sizeof(hashkey));
 	for (i = 0; i < tupDesc->natts; i++)
 	{
@@ -1390,7 +1390,7 @@ assign_record_type_typmod(TupleDesc tupDesc)
  *
  * This is called when a relcache invalidation event occurs for the given
  * relid.  We must scan the whole typcache hash since we don't know the
- * type OID corresponding to the relid.  We could do a direct search if this__
+ * type OID corresponding to the relid.  We could do a direct search if this
  * were a syscache-flush callback on pg_type, but then we would need all
  * ALTER-TABLE-like commands that could modify a rowtype to issue syscache
  * invals against the rel's pg_type OID.  The extra SI signaling could very
@@ -1408,7 +1408,7 @@ TypeCacheRelCallback(Datum arg, Oid relid)
 	HASH_SEQ_STATUS status;
 	TypeCacheEntry *typentry;
 
-	/* TypeCacheHash must exist, else this__ callback wouldn't be registered */
+	/* TypeCacheHash must exist, else this callback wouldn't be registered */
 	hash_seq_init(&status, TypeCacheHash);
 	while ((typentry = (TypeCacheEntry *) hash_seq_search(&status)) != NULL)
 	{
@@ -1424,7 +1424,7 @@ TypeCacheRelCallback(Datum arg, Oid relid)
 		{
 			/*
 			 * Release our refcount, and free the tupdesc if none remain.
-			 * (Can't use DecrTupleDescRefCount because this__ reference is not
+			 * (Can't use DecrTupleDescRefCount because this reference is not
 			 * logged in current resource owner.)
 			 */
 			Assert(typentry->tupDesc->tdrefcount > 0);
@@ -1460,7 +1460,7 @@ TypeCacheOpcCallback(Datum arg, int cacheid, uint32 hashvalue)
 	HASH_SEQ_STATUS status;
 	TypeCacheEntry *typentry;
 
-	/* TypeCacheHash must exist, else this__ callback wouldn't be registered */
+	/* TypeCacheHash must exist, else this callback wouldn't be registered */
 	hash_seq_init(&status, TypeCacheHash);
 	while ((typentry = (TypeCacheEntry *) hash_seq_search(&status)) != NULL)
 	{
@@ -1475,12 +1475,12 @@ TypeCacheOpcCallback(Datum arg, int cacheid, uint32 hashvalue)
  *
  * This is called when a syscache invalidation event occurs for any
  * pg_constraint or pg_type row.  We flush information about domain
- * constraints when this__ happens.
+ * constraints when this happens.
  *
  * It's slightly annoying that we can't tell whether the inval event was for a
  * domain constraint/type record or not; there's usually more update traffic
  * for table constraints/types than domain constraints, so we'll do a lot of
- * useless flushes.  Still, this__ is better than the old no-caching-at-all
+ * useless flushes.  Still, this is better than the old no-caching-at-all
  * approach to domain constraints.
  */
 static void
@@ -1489,7 +1489,7 @@ TypeCacheConstrCallback(Datum arg, int cacheid, uint32 hashvalue)
 	TypeCacheEntry *typentry;
 
 	/*
-	 * Because this__ is called very frequently, and typically very few of the
+	 * Because this is called very frequently, and typically very few of the
 	 * typcache entries are for domains, we don't use hash_seq_search here.
 	 * Instead we thread all the domain-type entries together so that we can
 	 * visit them cheaply.
@@ -1533,7 +1533,7 @@ enum_known_sorted(TypeCacheEnumData *enumdata, Oid arg)
  * values have been added since we last loaded the cache.
  *
  * Note: the enum logic has a special-case rule about even-numbered versus
- * odd-numbered OIDs, but we take no account of that rule here; this__
+ * odd-numbered OIDs, but we take no account of that rule here; this
  * routine shouldn't even get called when that rule applies.
  */
 int
@@ -1544,7 +1544,7 @@ compare_values_of_enum(TypeCacheEntry *tcache, Oid arg1, Oid arg2)
 	EnumItem   *item2;
 
 	/*
-	 * Equal OIDs are certainly equal --- this__ case was probably handled by
+	 * Equal OIDs are certainly equal --- this case was probably handled by
 	 * our caller, but we may as well check.
 	 */
 	if (arg1 == arg2)
@@ -1578,7 +1578,7 @@ compare_values_of_enum(TypeCacheEntry *tcache, Oid arg1, Oid arg2)
 		/*
 		 * We couldn't find one or both values.  That means the enum has
 		 * changed under us, so re-initialize the cache and try again. We
-		 * don't bother retrying the known-sorted case in this__ path.
+		 * don't bother retrying the known-sorted case in this path.
 		 */
 		load_enum_cache_data(tcache);
 		enumdata = tcache->enumData;
@@ -1626,7 +1626,7 @@ load_enum_cache_data(TypeCacheEntry *tcache)
 	int			bm_size,
 				start_pos;
 
-	/* Check that this__ is actually an enum */
+	/* Check that this is actually an enum */
 	if (tcache->typtype != TYPTYPE_ENUM)
 		ereport(ERROR,
 				(errcode(ERRCODE_WRONG_OBJECT_TYPE),
@@ -1680,7 +1680,7 @@ load_enum_cache_data(TypeCacheEntry *tcache)
 	 * Here, we create a bitmap listing a subset of the enum's OIDs that are
 	 * known to be in order and can thus be compared with just OID comparison.
 	 *
-	 * The point of this__ is that the enum's initial OIDs were certainly in
+	 * The point of this is that the enum's initial OIDs were certainly in
 	 * order, so there is some subset that can be compared via OID comparison;
 	 * and we'd rather not do binary searches unnecessarily.
 	 *
@@ -1733,7 +1733,7 @@ load_enum_cache_data(TypeCacheEntry *tcache)
 
 		/*
 		 * Done if it's not possible to find a longer sequence in the rest of
-		 * the list.  In typical cases this__ will happen on the first
+		 * the list.  In typical cases this will happen on the first
 		 * iteration, which is why we create the bitmaps on the fly instead of
 		 * doing a second pass over the list.
 		 */

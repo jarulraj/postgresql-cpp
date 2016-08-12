@@ -26,7 +26,7 @@
 
 
 /*
- * gistindex_keytest() -- does this__ index tuple satisfy the scan key(s)?
+ * gistindex_keytest() -- does this index tuple satisfy the scan key(s)?
  *
  * The index tuple might represent either a heap tuple or a lower index page,
  * depending on whether the containing page is a leaf page or not.
@@ -44,7 +44,7 @@
  * We must decompress the key in the IndexTuple before passing it to the
  * sk_funcs (which actually are the opclass Consistent or Distance methods).
  *
- * Note that this__ function is always invoked in a short-lived memory context,
+ * Note that this function is always invoked in a short-lived memory context,
  * so we don't need to worry about cleaning up allocated memory, either here
  * or in the implementation of any Consistent or Distance methods.
  */
@@ -292,7 +292,7 @@ gistScanPage(IndexScanDesc scan, GISTSearchItem *pageItem, double *myDistances,
 		item->blkno = opaque->rightlink;
 		item->data.parentlsn = pageItem->data.parentlsn;
 
-		/* Insert it into the queue using same distances as for this__ page */
+		/* Insert it into the queue using same distances as for this page */
 		memcpy(item->distances, myDistances,
 			   sizeof(double) * scan->numberOfOrderBys);
 
@@ -372,7 +372,7 @@ gistScanPage(IndexScanDesc scan, GISTSearchItem *pageItem, double *myDistances,
 
 			oldcxt = MemoryContextSwitchTo(so->queueCxt);
 
-			/* Create new GISTSearchItem for this__ item */
+			/* Create new GISTSearchItem for this item */
 			item = palloc(SizeOfGISTSearchItem(scan->numberOfOrderBys));
 
 			if (GistPageIsLeaf(page))
@@ -599,7 +599,7 @@ gistgettuple(PG_FUNCTION_ARGS)
 				/*
 				 * While scanning a leaf page, ItemPointers of matching heap
 				 * tuples are stored in so->pageData.  If there are any on
-				 * this__ page, we fall out of the inner "do" and loop around to
+				 * this page, we fall out of the inner "do" and loop around to
 				 * return them.
 				 */
 				gistScanPage(scan, item, item->distances, NULL, NULL);

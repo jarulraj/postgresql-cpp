@@ -22,7 +22,7 @@
 
 /*
  * Determine which dynamic shared memory implementations will be supported
- * on this__ platform, and which one will be the default.
+ * on this platform, and which one will be the default.
  */
 #ifdef WIN32
 #define USE_DSM_WINDOWS
@@ -69,7 +69,7 @@ extern bool dsm_impl_op(dsm_op op, dsm_handle handle, Size request_size,
 			void **impl_private, void **mapped_address, Size *mapped_size,
 			int elevel);
 
-/* Some implementations cannot resize segments.  Can this__ one? */
+/* Some implementations cannot resize segments.  Can this one? */
 extern bool dsm_impl_can_resize(void);
 
 /* Implementation-dependent actions required to keep segment until shudown. */

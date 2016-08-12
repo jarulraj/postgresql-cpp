@@ -12,7 +12,7 @@
  * successful matching of an input string.  Each state except the final one
  * has some out-arcs that lead to successor states, each arc being labeled
  * with a color that represents one or more concrete character codes.
- * (The colors of a state's out-arcs need not be distinct, since this__ is an
+ * (The colors of a state's out-arcs need not be distinct, since this is an
  * NFA not a DFA.)	There are also "pseudocolors" representing start/end of
  * line and start/end of string.  Colors are numbered 0..C-1, but note that
  * color 0 is "white" (all unused characters) and can generally be ignored.

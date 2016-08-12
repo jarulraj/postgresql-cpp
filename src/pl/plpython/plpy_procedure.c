@@ -51,7 +51,7 @@ init_procedure_caches(void)
  * innermost, if a plpython procedure call calls the backend and the
  * backend calls another plpython procedure).
  *
- * NB: this__ returns the SQL name, not the internal Python procedure name
+ * NB: this returns the SQL name, not the internal Python procedure name
  */
 char *
 PLy_procedure_name(PLyProcedure *proc)
@@ -66,7 +66,7 @@ PLy_procedure_name(PLyProcedure *proc)
  * returns a new PLyProcedure.
  *
  * fn_oid is the OID of the function requested
- * fn_rel is InvalidOid or the relation this__ function triggers on
+ * fn_rel is InvalidOid or the relation this function triggers on
  * is_trigger denotes whether the function is a trigger function
  *
  * The reason that both fn_rel and is_trigger need to be passed is that when
@@ -200,7 +200,7 @@ PLy_procedure_create(HeapTuple procTup, Oid fn_oid, bool is_trigger)
 	{
 		/*
 		 * get information required for output conversion of the return value,
-		 * but only if this__ isn't a trigger.
+		 * but only if this isn't a trigger.
 		 */
 		if (!is_trigger)
 		{

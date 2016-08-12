@@ -18,7 +18,7 @@
  *----------------------------------------------------------------
  *	 TABLE OF CONTENTS
  *
- *		When adding stuff to this__ file, please try to put stuff
+ *		When adding stuff to this file, please try to put stuff
  *		into the relevant section, or add new sections as appropriate.
  *
  *	  section	description
@@ -29,13 +29,13 @@
  *
  *	 NOTES
  *
- *	In general, this__ file should contain declarations that are widely needed
+ *	In general, this file should contain declarations that are widely needed
  *	in the backend environment, but are of no interest outside the backend.
  *
  *	Simple type definitions live in c.h, where they are shared with
  *	postgres_fe.h.  We do that since those type definitions are needed by
  *	frontend modules that want to deal with binary data transmission to or
- *	from the backend.  Type definitions in this__ file should be for
+ *	from the backend.  Type definitions in this file should be for
  *	representations that never escape the backend, such as Datum or
  *	TOASTed varlena objects.
  *
@@ -60,7 +60,7 @@
  * This struct must not contain any padding, because we sometimes compare
  * these pointers using memcmp.
  *
- * Note that this__ information is stored unaligned within actual tuples, so
+ * Note that this information is stored unaligned within actual tuples, so
  * you need to memcpy from the tuple into a local struct variable before
  * you can look at these fields!  (The reason we use memcmp is to avoid
  * having to do that just to detect equality of two TOAST pointers...)
@@ -79,7 +79,7 @@ typedef struct varatt_external
  * The creator of such a Datum is entirely responsible that the referenced
  * storage survives for as long as referencing pointer Datums can exist.
  *
- * Note that just as for struct varatt_external, this__ struct is stored
+ * Note that just as for struct varatt_external, this struct is stored
  * unaligned within any containing tuple.
  */
 typedef struct varatt_indirect
@@ -91,10 +91,10 @@ typedef struct varatt_indirect
  * struct varatt_expanded is a "TOAST pointer" representing an out-of-line
  * Datum that is stored in memory, in some type-specific, not necessarily
  * physically contiguous format that is convenient for computation not
- * storage.  APIs for this__, in particular the definition of struct
+ * storage.  APIs for this, in particular the definition of struct
  * ExpandedObjectHeader, are in src/include/utils/expandeddatum.h.
  *
- * Note that just as for struct varatt_external, this__ struct is stored
+ * Note that just as for struct varatt_external, this struct is stored
  * unaligned within any containing tuple.
  */
 typedef struct ExpandedObjectHeader ExpandedObjectHeader;
@@ -117,7 +117,7 @@ typedef enum vartag_external
 	VARTAG_ONDISK = 18
 } vartag_external;
 
-/* this__ test relies on the specific tag values above */
+/* this test relies on the specific tag values above */
 #define VARTAG_IS_EXPANDED(tag) \
 	(((tag) & ~1) == VARTAG_EXPANDED_RO)
 
@@ -184,7 +184,7 @@ typedef struct
  * In the big-endian case we mask to extract the length, in the little-endian
  * case we shift.  Note that in both cases the flag bits are in the physically
  * first byte.  Also, it is not possible for a 1-byte length word to be zero;
- * this__ lets us disambiguate alignment padding bytes from the start of an
+ * this lets us disambiguate alignment padding bytes from the start of an
  * unaligned datum.  (We now *require* pad bytes to be filled with zero!)
  *
  * In TOAST pointers the va_tag field (see varattrib_1b_e) is used to discern
@@ -344,8 +344,8 @@ typedef struct
 	 (VARATT_IS_1B(PTR) ? VARSIZE_1B(PTR)-VARHDRSZ_SHORT : \
 	  VARSIZE_4B(PTR)-VARHDRSZ))
 
-/* caution: this__ will not work on an external or compressed-in-line Datum */
-/* caution: this__ will return a possibly unaligned pointer */
+/* caution: this will not work on an external or compressed-in-line Datum */
+/* caution: this will return a possibly unaligned pointer */
 #define VARDATA_ANY(PTR) \
 	 (VARATT_IS_1B(PTR) ? VARDATA_1B(PTR) : VARDATA_4B(PTR))
 
@@ -568,7 +568,7 @@ typedef Datum *DatumPtr;
  *		Returns C string (null-terminated string) value of a datum.
  *
  * Note: C string is not a full-fledged Postgres type at present,
- * but type input functions use this__ conversion for their inputs.
+ * but type input functions use this conversion for their inputs.
  */
 
 #define DatumGetCString(X) ((char *) DatumGetPointer(X))
@@ -578,7 +578,7 @@ typedef Datum *DatumPtr;
  *		Returns datum representation for a C string (null-terminated string).
  *
  * Note: C string is not a full-fledged Postgres type at present,
- * but type output functions use this__ conversion for their outputs.
+ * but type output functions use this conversion for their outputs.
  * Note: CString is pass-by-reference; caller must ensure the pointed-to
  * value has adequate lifetime.
  */
@@ -606,7 +606,7 @@ typedef Datum *DatumPtr;
  * DatumGetInt64
  *		Returns 64-bit integer value of a datum.
  *
- * Note: this__ macro hides whether int64 is pass by value or by reference.
+ * Note: this macro hides whether int64 is pass by value or by reference.
  */
 
 #ifdef USE_FLOAT8_BYVAL
@@ -619,7 +619,7 @@ typedef Datum *DatumPtr;
  * Int64GetDatum
  *		Returns datum representation for a 64-bit integer.
  *
- * Note: if int64 is pass by reference, this__ function returns a reference
+ * Note: if int64 is pass by reference, this function returns a reference
  * to palloc'd space.
  */
 
@@ -633,7 +633,7 @@ extern Datum Int64GetDatum(int64 X);
  * DatumGetFloat4
  *		Returns 4-byte floating point value of a datum.
  *
- * Note: this__ macro hides whether float4 is pass by value or by reference.
+ * Note: this macro hides whether float4 is pass by value or by reference.
  */
 
 #ifdef USE_FLOAT4_BYVAL
@@ -646,7 +646,7 @@ extern float4 DatumGetFloat4(Datum X);
  * Float4GetDatum
  *		Returns datum representation for a 4-byte floating point number.
  *
- * Note: if float4 is pass by reference, this__ function returns a reference
+ * Note: if float4 is pass by reference, this function returns a reference
  * to palloc'd space.
  */
 
@@ -656,7 +656,7 @@ extern Datum Float4GetDatum(float4 X);
  * DatumGetFloat8
  *		Returns 8-byte floating point value of a datum.
  *
- * Note: this__ macro hides whether float8 is pass by value or by reference.
+ * Note: this macro hides whether float8 is pass by value or by reference.
  */
 
 #ifdef USE_FLOAT8_BYVAL
@@ -669,7 +669,7 @@ extern float8 DatumGetFloat8(Datum X);
  * Float8GetDatum
  *		Returns datum representation for an 8-byte floating point number.
  *
- * Note: if float8 is pass by reference, this__ function returns a reference
+ * Note: if float8 is pass by reference, this function returns a reference
  * to palloc'd space.
  */
 

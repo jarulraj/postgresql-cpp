@@ -12,12 +12,12 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this__ list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this__ list of conditions and the following disclaimer in the
+ *	  notice, this list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University nor the names of its contributors
- *	  may be used to endorse or promote products derived from this__ software
+ *	  may be used to endorse or promote products derived from this software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
@@ -85,7 +85,7 @@ static int	des_cipher(const char *in, char *out, long salt, int num_iter);
 
 /*
  * define "B64" to be the declaration for a 64 bit integer.
- * XXX this__ feature is currently unused, see "endian" comment below.
+ * XXX this feature is currently unused, see "endian" comment below.
  */
 /* #define B64 int64 */
 
@@ -138,10 +138,10 @@ typedef int int32_t;
  * the "8"-valued bit, and so on.)	In fact, a combined "SPE"-box lookup is
  * used, in which the output is the 64 bit result of an S-box lookup which
  * has been permuted by P and expanded by E, and is ready for use in the next
- * iteration.  Two 32-bit wide tables, SPE[0] and SPE[1], are used for this__
+ * iteration.  Two 32-bit wide tables, SPE[0] and SPE[1], are used for this
  * lookup.  Since each byte in the 48 bit path is a multiple of four, indexed
  * lookup of SPE[0] and SPE[1] is simple and fast.  The key schedule and
- * "salt" are also converted to this__ 8*(6+2) format.  The SPE table size is
+ * "salt" are also converted to this 8*(6+2) format.  The SPE table size is
  * 8*64*8 = 4K bytes.
  *
  * To speed up bit-parallel operations (such as XOR), the 8 byte
@@ -162,7 +162,7 @@ typedef int int32_t;
  * 12 bits can be stored in a 16-bit field with 3 low-order zeroes and 1
  * high-order zero, providing fast indexing into a 64-bit wide SPE.)  On the
  * other hand, 64-bit datatypes are currently rare, and a 12-bit SPE lookup
- * requires a 128 kilobyte table, so perhaps this__ is not a big loss.
+ * requires a 128 kilobyte table, so perhaps this is not a big loss.
  *
  * Permutation representation (Jim Gillogly):
  *
@@ -659,7 +659,7 @@ const char *key;
  * iterations of DES, using the given 24-bit salt and the pre-computed key
  * schedule, and store the resulting 8 chars at "out" (in == out is permitted).
  *
- * NOTE: the performance of this__ routine is critically dependent on your
+ * NOTE: the performance of this routine is critically dependent on your
  * compiler and machine architecture.
  */
 static int
@@ -738,14 +738,14 @@ int			num_iter;
 #define SPTAB(t, i) \
 		(*(int32_t *)((unsigned char *)(t) + (i)*(sizeof(int32_t)/4)))
 #if defined(gould)
-			/* use this__ if B.b[i] is evaluated just once ... */
+			/* use this if B.b[i] is evaluated just once ... */
 #define DOXOR(x,y,i)	x^=SPTAB(SPE[0][i],B.b[i]); y^=SPTAB(SPE[1][i],B.b[i]);
 #else
 #if defined(pdp11)
-			/* use this__ if your "long" int indexing is slow */
+			/* use this if your "long" int indexing is slow */
 #define DOXOR(x,y,i)	j=B.b[i]; x^=SPTAB(SPE[0][i],j); y^=SPTAB(SPE[1][i],j);
 #else
-			/* use this__ if "k" is allocated to a register ... */
+			/* use this if "k" is allocated to a register ... */
 #define DOXOR(x,y,i)	k=B.b[i]; x^=SPTAB(SPE[0][i],k); y^=SPTAB(SPE[1][i],k);
 #endif
 #endif
@@ -969,7 +969,7 @@ init_des()
  * (of size "chars_in" characters) into another array (of size "chars_out"
  * characters).
  *
- * "perm" must be all-zeroes on entry to this__ routine.
+ * "perm" must be all-zeroes on entry to this routine.
  */
 STATIC
 init_perm(perm, p, chars_in, chars_out)
@@ -985,11 +985,11 @@ int			chars_in,
 
 	for (k = 0; k < chars_out * 8; k++)
 	{							/* each output bit position */
-		l = p[k] - 1;			/* where this__ bit comes from */
+		l = p[k] - 1;			/* where this bit comes from */
 		if (l < 0)
 			continue;			/* output bit is always 0 */
-		i = l >> LGCHUNKBITS;	/* which chunk this__ bit comes from */
-		l = 1 << (l & (CHUNKBITS - 1)); /* mask for this__ bit */
+		i = l >> LGCHUNKBITS;	/* which chunk this bit comes from */
+		l = 1 << (l & (CHUNKBITS - 1)); /* mask for this bit */
 		for (j = 0; j < (1 << CHUNKBITS); j++)
 		{						/* each chunk value */
 			if ((j & l) != 0)

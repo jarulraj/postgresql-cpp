@@ -227,7 +227,7 @@ compute_range_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 			bound_hist_values = (Datum *) palloc(num_hist * sizeof(Datum));
 
 			/*
-			 * The object of this__ loop is to construct ranges from first and
+			 * The object of this loop is to construct ranges from first and
 			 * last entries in lowers[] and uppers[] along with evenly-spaced
 			 * values in between. So the i'th value is a range of lowers[(i *
 			 * (nvals - 1)) / (num_hist - 1)] and uppers[(i * (nvals - 1)) /
@@ -280,7 +280,7 @@ compute_range_stats(VacAttrStats *stats, AnalyzeAttrFetchFunc fetchfunc,
 			length_hist_values = (Datum *) palloc(num_hist * sizeof(Datum));
 
 			/*
-			 * The object of this__ loop is to copy the first and last lengths[]
+			 * The object of this loop is to copy the first and last lengths[]
 			 * entries along with evenly-spaced values in between. So the i'th
 			 * value is lengths[(i * (nvals - 1)) / (num_hist - 1)]. But
 			 * computing that subscript directly risks integer overflow when

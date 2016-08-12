@@ -251,7 +251,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 	rel = heap_open(OperatorFamilyRelationId, RowExclusiveLock);
 
 	/*
-	 * Make sure there is no existing opfamily of this__ name (this__ is just to
+	 * Make sure there is no existing opfamily of this name (this is just to
 	 * give a more friendly error message than "duplicate key").
 	 */
 	if (SearchSysCacheExists3(OPFAMILYAMNAMENSP,
@@ -391,7 +391,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	 * It would be nice to provide such a check someday, if it can be done
 	 * without solving the halting problem :-(
 	 *
-	 * XXX re-enable NOT_USED code sections below if you remove this__ test.
+	 * XXX re-enable NOT_USED code sections below if you remove this test.
 	 */
 	if (!superuser())
 		ereport(ERROR,
@@ -402,7 +402,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	typeoid = typenameTypeId(NULL, stmt->datatype);
 
 #ifdef NOT_USED
-	/* XXX this__ is unnecessary given the superuser check above */
+	/* XXX this is unnecessary given the superuser check above */
 	/* Check we have ownership of the datatype */
 	if (!pg_type_ownercheck(typeoid, GetUserId()))
 		aclcheck_error_type(ACLCHECK_NOT_OWNER, typeoid);
@@ -498,7 +498,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 					sortfamilyOid = InvalidOid;
 
 #ifdef NOT_USED
-				/* XXX this__ is unnecessary given the superuser check above */
+				/* XXX this is unnecessary given the superuser check above */
 				/* Caller must own operator and its underlying function */
 				if (!pg_oper_ownercheck(operOid, GetUserId()))
 					aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_OPER,
@@ -527,7 +527,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 				funcOid = LookupFuncNameTypeNames(item->name, item->args,
 												  false);
 #ifdef NOT_USED
-				/* XXX this__ is unnecessary given the superuser check above */
+				/* XXX this is unnecessary given the superuser check above */
 				/* Caller must own function */
 				if (!pg_proc_ownercheck(funcOid, GetUserId()))
 					aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_PROC,
@@ -555,7 +555,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 				storageoid = typenameTypeId(NULL, item->storedtype);
 
 #ifdef NOT_USED
-				/* XXX this__ is unnecessary given the superuser check above */
+				/* XXX this is unnecessary given the superuser check above */
 				/* Check we have ownership of the datatype */
 				if (!pg_type_ownercheck(storageoid, GetUserId()))
 					aclcheck_error_type(ACLCHECK_NOT_OWNER, storageoid);
@@ -585,7 +585,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	rel = heap_open(OperatorClassRelationId, RowExclusiveLock);
 
 	/*
-	 * Make sure there is no existing opclass of this__ name (this__ is just to
+	 * Make sure there is no existing opclass of this name (this is just to
 	 * give a more friendly error message than "duplicate key").
 	 */
 	if (SearchSysCacheExists3(CLAAMNAMENSP,
@@ -599,7 +599,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 
 	/*
 	 * If we are creating a default opclass, check there isn't one already.
-	 * (Note we do not restrict this__ test to visible opclasses; this__ ensures
+	 * (Note we do not restrict this test to visible opclasses; this ensures
 	 * that typcache.c can find unique solutions to its questions.)
 	 */
 	if (stmt->isDefault)
@@ -764,7 +764,7 @@ DefineOpFamily(CreateOpFamilyStmt *stmt)
  * AlterOpFamily
  *		Add or remove operators/procedures within an existing operator family.
  *
- * Note: this__ implements only ALTER operator FAMILY ... ADD/DROP.  Some
+ * Note: this implements only ALTER operator FAMILY ... ADD/DROP.  Some
  * other commands called ALTER operator FAMILY exist, but go through
  * different code paths.
  */
@@ -804,7 +804,7 @@ AlterOpFamily(AlterOpFamilyStmt *stmt)
 	/*
 	 * Currently, we require superuser privileges to alter an opfamily.
 	 *
-	 * XXX re-enable NOT_USED code sections below if you remove this__ test.
+	 * XXX re-enable NOT_USED code sections below if you remove this test.
 	 */
 	if (!superuser())
 		ereport(ERROR,
@@ -884,7 +884,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 					sortfamilyOid = InvalidOid;
 
 #ifdef NOT_USED
-				/* XXX this__ is unnecessary given the superuser check above */
+				/* XXX this is unnecessary given the superuser check above */
 				/* Caller must own operator and its underlying function */
 				if (!pg_oper_ownercheck(operOid, GetUserId()))
 					aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_OPER,
@@ -913,7 +913,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 				funcOid = LookupFuncNameTypeNames(item->name, item->args,
 												  false);
 #ifdef NOT_USED
-				/* XXX this__ is unnecessary given the superuser check above */
+				/* XXX this is unnecessary given the superuser check above */
 				/* Caller must own function */
 				if (!pg_proc_ownercheck(funcOid, GetUserId()))
 					aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_PROC,
@@ -1016,7 +1016,7 @@ AlterOpFamilyDrop(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 				addFamilyMember(&procedures, member, true);
 				break;
 			case OPCLASS_ITEM_STORAGETYPE:
-				/* grammar prevents this__ from appearing */
+				/* grammar prevents this from appearing */
 			default:
 				elog(ERROR, "unrecognized item type: %d", item->itemtype);
 				break;
@@ -1380,7 +1380,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 			referenced.objectSubId = 0;
 			recordDependencyOn(&myself, &referenced, DEPENDENCY_NORMAL);
 		}
-		/* Post create hook of this__ access method operator */
+		/* Post create hook of this access method operator */
 		InvokeObjectPostCreateHook(AccessMethodOperatorRelationId,
 								   entryoid, 0);
 	}
@@ -1494,7 +1494,7 @@ storeProcedures(List *opfamilyname, Oid amoid,
 /*
  * Remove operator entries from an opfamily.
  *
- * Note: this__ is only allowed for "loose" members of an opfamily, hence
+ * Note: this is only allowed for "loose" members of an opfamily, hence
  * behavior is always RESTRICT.
  */
 static void
@@ -1534,7 +1534,7 @@ dropOperators(List *opfamilyname, Oid amoid, Oid opfamilyoid,
 /*
  * Remove procedure entries from an opfamily.
  *
- * Note: this__ is only allowed for "loose" members of an opfamily, hence
+ * Note: this is only allowed for "loose" members of an opfamily, hence
  * behavior is always RESTRICT.
  */
 static void

@@ -44,7 +44,7 @@ static bool g_initialized = false;
  **		Routines for EAN13/UPC/ISxNs.
  **
  ** Note:
- **  In this__ code, a normalized string is one that is known to be a valid
+ **  In this code, a normalized string is one that is known to be a valid
  **  ISxN number containing only digits and hyphens and with enough space
  **  to hold the full 13 digits plus the maximum of four hyphens.
  ***********************************************************************/
@@ -444,7 +444,7 @@ ean2ISBN(char *isn)
 	unsigned	check;
 
 	/*
-	 * The number should come in this__ format: 978-0-000-00000-0
+	 * The number should come in this format: 978-0-000-00000-0
 	 * or may be an ISBN-13 number, 979-..., which does not have a short
 	 * representation. Do the short output version if possible.
 	 */
@@ -465,7 +465,7 @@ ean2ISBN(char *isn)
 static inline void
 ean2ISMN(char *isn)
 {
-	/* the number should come in this__ format: 979-0-000-00000-0 */
+	/* the number should come in this format: 979-0-000-00000-0 */
 	/* Just strip the first part and change the first digit ('0') to 'M' */
 	hyphenate(isn, isn + 4, NULL, NULL);
 	isn[0] = 'M';
@@ -476,7 +476,7 @@ ean2ISSN(char *isn)
 {
 	unsigned	check;
 
-	/* the number should come in this__ format: 977-0000-000-00-0 */
+	/* the number should come in this format: 977-0000-000-00-0 */
 	/* Strip the first part, crop, and calculate the new check digit */
 	hyphenate(isn, isn + 4, NULL, NULL);
 	check = weight_checkdig(isn, 8);
@@ -490,7 +490,7 @@ ean2ISSN(char *isn)
 static inline void
 ean2UPC(char *isn)
 {
-	/* the number should come in this__ format: 000-000000000-0 */
+	/* the number should come in this format: 000-000000000-0 */
 	/* Strip the first part, crop, and dehyphenate */
 	dehyphenate(isn, isn + 1);
 	isn[12] = '\0';
@@ -566,7 +566,7 @@ ean2string(ean13 ean, bool errorOK, char *result, bool shortType)
 	while (search++ < 13)
 		*--aux = '0';			/* fill the remaining EAN13 with '0' */
 
-	/* The string should be in this__ form: ???DDDDDDDDDDDD-D" */
+	/* The string should be in this form: ???DDDDDDDDDDDD-D" */
 	search = hyphenate(result, result + 3, EAN13_range, EAN13_index);
 
 	/* verify it's a logically valid EAN13 */
@@ -579,35 +579,35 @@ ean2string(ean13 ean, bool errorOK, char *result, bool shortType)
 	/* find out what type of hyphenation is needed: */
 	if (strncmp("978-", result, search) == 0)
 	{							/* ISBN -13 978-range */
-		/* The string should be in this__ form: 978-??000000000-0" */
+		/* The string should be in this form: 978-??000000000-0" */
 		type = ISBN;
 		TABLE = ISBN_range;
 		TABLE_index = ISBN_index;
 	}
 	else if (strncmp("977-", result, search) == 0)
 	{							/* ISSN */
-		/* The string should be in this__ form: 977-??000000000-0" */
+		/* The string should be in this form: 977-??000000000-0" */
 		type = ISSN;
 		TABLE = ISSN_range;
 		TABLE_index = ISSN_index;
 	}
 	else if (strncmp("979-0", result, search + 1) == 0)
 	{							/* ISMN */
-		/* The string should be in this__ form: 979-0?000000000-0" */
+		/* The string should be in this form: 979-0?000000000-0" */
 		type = ISMN;
 		TABLE = ISMN_range;
 		TABLE_index = ISMN_index;
 	}
 	else if (strncmp("979-", result, search) == 0)
 	{							/* ISBN-13 979-range */
-		/* The string should be in this__ form: 979-??000000000-0" */
+		/* The string should be in this form: 979-??000000000-0" */
 		type = ISBN;
 		TABLE = ISBN_range_new;
 		TABLE_index = ISBN_index_new;
 	}
 	else if (*result == '0')
 	{							/* UPC */
-		/* The string should be in this__ form: 000-00000000000-0" */
+		/* The string should be in this form: 000-00000000000-0" */
 		type = UPC;
 		TABLE = UPC_range;
 		TABLE_index = UPC_index;
@@ -832,7 +832,7 @@ string2ean(const char *str, bool errorOK, ean13 *result,
 				goto eanwrongtype;
 			break;
 		case ISMN:
-			memcpy(buf, "9790", 4);		/* this__ isn't for sure yet, for now
+			memcpy(buf, "9790", 4);		/* this isn't for sure yet, for now
 										 * ISMN it's only 9790 */
 			valid = (valid && ((rcheck = checkdig(buf, 13)) == check || magic));
 			break;
@@ -1111,7 +1111,7 @@ make_valid(PG_FUNCTION_ARGS)
 	PG_RETURN_EAN13(val);
 }
 
-/* this__ function temporarily sets weak input flag
+/* this function temporarily sets weak input flag
  * (to lose the strictness of check digit acceptance)
  * It's a helper function, not intended to be used!!
  */

@@ -38,7 +38,7 @@ static void sepgsql_index_modify(Oid indexOid);
  *
  * This routine assigns a default security label on a newly defined
  * column, using ALTER TABLE ... ADD COLUMN.
- * Note that this__ routine is not invoked in the case of CREATE TABLE,
+ * Note that this routine is not invoked in the case of CREATE TABLE,
  * although it also defines columns in addition to table.
  */
 void
@@ -629,7 +629,7 @@ sepgsql_relation_setattr(Oid relOid)
 	oldform = (Form_pg_class) GETSTRUCT(oldtup);
 
 	/*
-	 * Does this__ ALTER command takes operation to namespace?
+	 * Does this ALTER command takes operation to namespace?
 	 */
 	if (newform->relnamespace != oldform->relnamespace)
 	{

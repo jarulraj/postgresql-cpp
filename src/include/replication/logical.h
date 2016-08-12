@@ -28,7 +28,7 @@ typedef LogicalOutputPluginWriterWrite LogicalOutputPluginWriterPrepareWrite;
 
 typedef struct LogicalDecodingContext
 {
-	/* memory context this__ is all allocated in */
+	/* memory context this is all allocated in */
 	MemoryContext context;
 
 	/* infrastructure pieces */

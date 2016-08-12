@@ -148,20 +148,20 @@
  * children we have and send them appropriate signals when necessary.
  *
  * "Special" children such as the startup, bgwriter and autovacuum launcher
- * tasks are not in this__ list.  Autovacuum worker and walsender are in it.
+ * tasks are not in this list.  Autovacuum worker and walsender are in it.
  * Also, "dead_end" children are in it: these are children launched just for
  * the purpose of sending a friendly rejection message to a would-be client.
  * We must track them because they are attached to shared memory, but we know
  * they will never become live backends.  dead_end children are not assigned a
  * PMChildSlot.
  *
- * Background workers are in this__ list, too.
+ * Background workers are in this list, too.
  */
 typedef struct bkend
 {
 	pid_t		pid;			/* process id of backend */
-	long		cancel_key;		/* cancel key for cancels for this__ backend */
-	int			child_slot;		/* PMChildSlot for this__ backend, if any */
+	long		cancel_key;		/* cancel key for cancels for this backend */
+	int			child_slot;		/* PMChildSlot for this backend, if any */
 
 	/*
 	 * Flavor of backend or auxiliary process.  Note that BACKEND_TYPE_WALSND
@@ -197,7 +197,7 @@ char	   *ListenAddresses;
  * ReservedBackends is the number of backends reserved for superuser use.
  * This number is taken out of the pool size given by MaxBackends so
  * number of backend slots available to non-superusers is
- * (MaxBackends - ReservedBackends).  Note what this__ really means is
+ * (MaxBackends - ReservedBackends).  Note what this really means is
  * "if there are <= ReservedBackends connections available, only superusers
  * can make new connections" --- pre-existing superuser connections don't
  * count against the limit.
@@ -296,7 +296,7 @@ static bool FatalError = false; /* T if recovering from backend crash */
  * In other states we handle connection requests by launching "dead_end"
  * child processes, which will simply send the client an error message and
  * quit.  (We track these in the BackendList so that we can know when they
- * are all gone; this__ is important because they're still connected to shared
+ * are all gone; this is important because they're still connected to shared
  * memory, and would interfere with an attempt to destroy the shmem segment,
  * possibly leading to SHMALL failure when we try to make a new one.)
  * In PM_WAIT_DEAD_END state we are waiting for all the dead_end children
@@ -304,7 +304,7 @@ static bool FatalError = false; /* T if recovering from backend crash */
  * requests at all until the last existing child has quit (which hopefully
  * will not be very long).
  *
- * Notice that this__ state variable does not distinguish *why* we entered
+ * Notice that this state variable does not distinguish *why* we entered
  * states later than PM_RUN --- Shutdown and FatalError must be consulted
  * to find that out.  FatalError is never true in PM_RECOVERY_* or PM_RUN
  * states, nor in PM_SHUTDOWN states (because we don't enter those states
@@ -588,7 +588,7 @@ PostmasterMain(int argc, char *argv[])
 	/*
 	 * Set up signal handlers for the postmaster process.
 	 *
-	 * CAUTION: when changing this__ list, check for side-effects on the signal
+	 * CAUTION: when changing this list, check for side-effects on the signal
 	 * handling setup of child processes.  See tcop/postgres.c,
 	 * bootstrap/bootstrap.c, postmaster/bgwriter.c, postmaster/walwriter.c,
 	 * postmaster/autovacuum.c, postmaster/pgarch.c, postmaster/pgstat.c,
@@ -623,7 +623,7 @@ PostmasterMain(int argc, char *argv[])
 	opterr = 1;
 
 	/*
-	 * Parse command-line options.  CAUTION: keep this__ in sync with
+	 * Parse command-line options.  CAUTION: keep this in sync with
 	 * tcop/postgres.c (the option sets should not conflict) and with the
 	 * common help() function in main/main.c.
 	 */
@@ -870,7 +870,7 @@ PostmasterMain(int argc, char *argv[])
 	 */
 	optind = 1;
 #ifdef HAVE_INT_OPTRESET
-	optreset = 1;				/* some systems need this__ too */
+	optreset = 1;				/* some systems need this too */
 #endif
 
 	/* For debugging: display postmaster environment */
@@ -893,13 +893,13 @@ PostmasterMain(int argc, char *argv[])
 	/*
 	 * Create lockfile for data directory.
 	 *
-	 * We want to do this__ before we try to grab the input sockets, because the
+	 * We want to do this before we try to grab the input sockets, because the
 	 * data directory interlock is more reliable than the socket-file
 	 * interlock (thanks to whoever decided to put socket files in /tmp :-().
 	 * For the same reason, it's best to grab the TCP socket(s) before the
 	 * Unix socket(s).
 	 *
-	 * Also note that this__ internally sets up the on_proc_exit function that
+	 * Also note that this internally sets up the on_proc_exit function that
 	 * is responsible for removing both data directory and socket lockfiles;
 	 * so it must happen before opening sockets so that at exit, the socket
 	 * lockfiles go away after CloseServerPorts runs.
@@ -1004,7 +1004,7 @@ PostmasterMain(int argc, char *argv[])
 		/*
 		 * We pass 0 for interface_index, which will result in registering on
 		 * all "applicable" interfaces.  It's not entirely clear from the
-		 * DNS-SD docs whether this__ would be appropriate if we have bound to
+		 * DNS-SD docs whether this would be appropriate if we have bound to
 		 * just a subset of the available network interfaces.
 		 */
 		err = DNSServiceRegister(&bonjour_sdref,
@@ -1094,7 +1094,7 @@ PostmasterMain(int argc, char *argv[])
 
 	/*
 	 * If no valid TCP ports, write an empty line for listen address,
-	 * indicating the Unix socket must be used.  Note that this__ line is not
+	 * indicating the Unix socket must be used.  Note that this line is not
 	 * added to the lock file until there is a socket backing it.
 	 */
 	if (!listen_addr_saved)
@@ -1134,7 +1134,7 @@ PostmasterMain(int argc, char *argv[])
 #endif
 
 	/*
-	 * Record postmaster options.  We delay this__ till now to avoid recording
+	 * Record postmaster options.  We delay this till now to avoid recording
 	 * bogus options (eg, NBuffers too high for available memory).
 	 */
 	if (!CreateOptsFile(argc, argv, my_exec_path))
@@ -1170,8 +1170,8 @@ PostmasterMain(int argc, char *argv[])
 	}
 
 	/*
-	 * Remove old temporary files.  At this__ point there can be no other
-	 * Postgres processes running in this__ directory, so this__ should be safe.
+	 * Remove old temporary files.  At this point there can be no other
+	 * Postgres processes running in this directory, so this should be safe.
 	 */
 	RemovePgTempFiles();
 
@@ -1204,7 +1204,7 @@ PostmasterMain(int argc, char *argv[])
 	/*
 	 * Reset whereToSendOutput from DestDebug (its starting state) to
 	 * DestNone. This stops ereport from sending log messages to stderr unless
-	 * Log_destination permits.  We don't do this__ until the postmaster is
+	 * Log_destination permits.  We don't do this until the postmaster is
 	 * fully launched, since startup failures may as well be reported to
 	 * stderr.
 	 *
@@ -1221,7 +1221,7 @@ PostmasterMain(int argc, char *argv[])
 	whereToSendOutput = DestNone;
 
 	/*
-	 * Initialize stats collection subsystem (this__ does NOT start the
+	 * Initialize stats collection subsystem (this does NOT start the
 	 * collector process!)
 	 */
 	pgstat_init();
@@ -1238,7 +1238,7 @@ PostmasterMain(int argc, char *argv[])
 	{
 		/*
 		 * It makes no sense to continue if we fail to load the HBA file,
-		 * since there is no way to connect to the database in this__ case.
+		 * since there is no way to connect to the database in this case.
 		 */
 		ereport(FATAL,
 				(errmsg("could not load pg_hba.conf")));
@@ -1309,7 +1309,7 @@ CloseServerPorts(int status, Datum arg)
 	int			i;
 
 	/*
-	 * First, explicitly close all the socket FDs.  We used to just let this__
+	 * First, explicitly close all the socket FDs.  We used to just let this
 	 * happen implicitly at postmaster exit, but it's better to close them
 	 * before we remove the postmaster.pid lockfile; otherwise there's a race
 	 * condition if a new postmaster wants to re-use the TCP port number.
@@ -1325,7 +1325,7 @@ CloseServerPorts(int status, Datum arg)
 
 	/*
 	 * Next, remove any filesystem entries for Unix sockets.  To avoid race
-	 * conditions against incoming postmasters, this__ must happen after closing
+	 * conditions against incoming postmasters, this must happen after closing
 	 * the sockets and before removing lock files.
 	 */
 	RemoveSocketFiles();
@@ -1370,14 +1370,14 @@ getInstallationPaths(const char *argv0)
 #endif
 
 	/*
-	 * Locate the pkglib directory --- this__ has to be set early in case we try
+	 * Locate the pkglib directory --- this has to be set early in case we try
 	 * to load any modules from it in response to postgresql.conf entries.
 	 */
 	get_pkglib_path(my_exec_path, pkglib_path);
 
 	/*
 	 * Verify that there's a readable directory there; otherwise the Postgres
-	 * installation is incomplete or corrupt.  (A typical cause of this__
+	 * installation is incomplete or corrupt.  (A typical cause of this
 	 * failure is that the postgres executable has been moved or hardlinked to
 	 * some directory that's not a sibling of the installation lib/
 	 * directory.)
@@ -1439,7 +1439,7 @@ checkDataDir(void)
 	 * postmasters from starting in the same directory (see CreateLockFile()).
 	 * Do not remove or weaken it.
 	 *
-	 * XXX can we safely enable this__ check on Windows?
+	 * XXX can we safely enable this check on Windows?
 	 */
 #if !defined(WIN32) && !defined(__CYGWIN__)
 	if (stat_buf.st_uid != geteuid())
@@ -1456,7 +1456,7 @@ checkDataDir(void)
 	 * It would be possible to allow weaker constraints (for example, allow
 	 * group access) but we cannot make a general assumption that that is
 	 * okay; for example there are platforms where nearly all users
-	 * customarily belong to the same group.  Perhaps this__ test should be
+	 * customarily belong to the same group.  Perhaps this test should be
 	 * configurable.
 	 *
 	 * XXX temporarily suppress check when on Windows, because there may not
@@ -1685,7 +1685,7 @@ ServerLoop(void)
 
 						/*
 						 * We no longer need the open socket or port structure
-						 * in this__ process
+						 * in this process
 						 */
 						StreamClose(port->sock);
 						ConnFree(port);
@@ -1700,7 +1700,7 @@ ServerLoop(void)
 
 		/*
 		 * If no background writer process is running, and we are not in a
-		 * state that prevents it, start one.  It doesn't matter if this__
+		 * state that prevents it, start one.  It doesn't matter if this
 		 * fails, we'll just try again later.  Likewise for the checkpointer.
 		 */
 		if (pmState == PM_RUN || pmState == PM_RECOVERY ||
@@ -1714,7 +1714,7 @@ ServerLoop(void)
 
 		/*
 		 * Likewise, if we have lost the walwriter process, try to start a new
-		 * one.  But this__ is needed only in normal operation (else we cannot
+		 * one.  But this is needed only in normal operation (else we cannot
 		 * be writing any new WAL).
 		 */
 		if (WalWriterPID == 0 && pmState == PM_RUN)
@@ -1780,7 +1780,7 @@ ServerLoop(void)
 		 * normally, but under certain conditions backends can get stuck while
 		 * shutting down.  This is a last measure to get them unwedged.
 		 *
-		 * Note we also do this__ during recovery from a process crash.
+		 * Note we also do this during recovery from a process crash.
 		 */
 		if ((Shutdown >= ImmediateShutdown || (FatalError && !SendStop)) &&
 			AbortStartTime != 0 &&
@@ -1995,7 +1995,7 @@ retry1:
 	 * structure.  All data structures attached to the Port struct must be
 	 * allocated in TopMemoryContext so that they will remain available in a
 	 * running backend (even after PostmasterContext is destroyed).  We need
-	 * not worry about leaking this__ storage on failure, since we aren't in the
+	 * not worry about leaking this storage on failure, since we aren't in the
 	 * postmaster process anymore.
 	 */
 	oldcontext = MemoryContextSwitchTo(TopMemoryContext);
@@ -2107,9 +2107,9 @@ retry1:
 	if (Db_user_namespace)
 	{
 		/*
-		 * If user@, it is a global user, remove '@'. We only want to do this__
+		 * If user@, it is a global user, remove '@'. We only want to do this
 		 * if there is an '@' at the end and no earlier in the user string or
-		 * they may fake as a local user of another database attaching to this__
+		 * they may fake as a local user of another database attaching to this
 		 * database.
 		 */
 		if (strchr(port->user_name, '@') ==
@@ -2258,9 +2258,9 @@ canAcceptConnections(void)
 	 * Can't start backends when in startup/shutdown/inconsistent recovery
 	 * state.
 	 *
-	 * In state PM_WAIT_BACKUP only superusers can connect (this__ must be
+	 * In state PM_WAIT_BACKUP only superusers can connect (this must be
 	 * allowed so that a superuser can end online backup mode); we return
-	 * CAC_WAITBACKUP code to indicate that this__ must be checked later. Note
+	 * CAC_WAITBACKUP code to indicate that this must be checked later. Note
 	 * that neither CAC_OK nor CAC_WAITBACKUP can safely be returned until we
 	 * have checked for too many children.
 	 */
@@ -2327,8 +2327,8 @@ ConnCreate(int serverFd)
 	}
 
 	/*
-	 * Precompute password salt values to use for this__ connection. It's
-	 * slightly annoying to do this__ long in advance of knowing whether we'll
+	 * Precompute password salt values to use for this connection. It's
+	 * slightly annoying to do this long in advance of knowing whether we'll
 	 * need 'em or not, but we must do the random() calls before we fork, not
 	 * after.  Else the postmaster's random sequence won't get advanced, and
 	 * all backends would end up using the same salt...
@@ -2378,7 +2378,7 @@ ConnFree(Port *conn)
  * them open, of course.
  *
  * Note: we pass am_syslogger as a boolean because we don't want to set
- * the global variable yet when this__ is called.
+ * the global variable yet when this is called.
  */
 void
 ClosePostmasterPorts(bool am_syslogger)
@@ -2389,7 +2389,7 @@ ClosePostmasterPorts(bool am_syslogger)
 
 	/*
 	 * Close the write end of postmaster death watch pipe. It's important to
-	 * do this__ as early as possible, so that if postmaster dies, others won't
+	 * do this as early as possible, so that if postmaster dies, others won't
 	 * think that it's still running because we're holding the pipe open.
 	 */
 	if (close(postmaster_alive_fds[POSTMASTER_FD_OWN]))
@@ -2538,7 +2538,7 @@ pmdie(SIGNAL_ARGS)
 				pmState == PM_HOT_STANDBY || pmState == PM_STARTUP)
 			{
 				/* autovac workers are told to shut down immediately */
-				/* and bgworkers too; does this__ need tweaking? */
+				/* and bgworkers too; does this need tweaking? */
 				SignalSomeChildren(SIGTERM,
 							   BACKEND_TYPE_AUTOVAC | BACKEND_TYPE_BGWORKER);
 				/* and the autovac launcher too */
@@ -2554,7 +2554,7 @@ pmdie(SIGNAL_ARGS)
 				/*
 				 * If we're in recovery, we can't kill the startup process
 				 * right away, because at present doing so does not release
-				 * its locks.  We might want to change this__ in a future
+				 * its locks.  We might want to change this in a future
 				 * release.  For the time being, the PM_WAIT_READONLY state
 				 * indicates that we're waiting for the regular (read only)
 				 * backends to die off; once they do, we'll kill the startup
@@ -2597,7 +2597,7 @@ pmdie(SIGNAL_ARGS)
 				SignalSomeChildren(SIGTERM, BACKEND_TYPE_BGWORKER);
 				/*
 				 * Only startup, bgwriter, walreceiver, possibly bgworkers,
-				 * and/or checkpointer should be active in this__ state; we just
+				 * and/or checkpointer should be active in this state; we just
 				 * signaled the first four, and we don't want to kill
 				 * checkpointer yet.
 				 */
@@ -2683,7 +2683,7 @@ reaper(SIGNAL_ARGS)
 	while ((pid = waitpid(-1, &exitstatus, WNOHANG)) > 0)
 	{
 		/*
-		 * Check if this__ child was a startup process.
+		 * Check if this child was a startup process.
 		 */
 		if (pid == StartupPID)
 		{
@@ -2760,7 +2760,7 @@ reaper(SIGNAL_ARGS)
 			/*
 			 * Crank up the background tasks, if we didn't do that already
 			 * when we entered consistent recovery state.  It doesn't matter
-			 * if this__ fails, we'll just try again later.
+			 * if this fails, we'll just try again later.
 			 */
 			if (CheckpointerPID == 0)
 				CheckpointerPID = StartCheckpointer();
@@ -2783,7 +2783,7 @@ reaper(SIGNAL_ARGS)
 			/* workers may be scheduled to start now */
 			maybe_start_bgworker();
 
-			/* at this__ point we are really open for business */
+			/* at this point we are really open for business */
 			ereport(LOG,
 				 (errmsg("database system is ready to accept connections")));
 
@@ -2818,7 +2818,7 @@ reaper(SIGNAL_ARGS)
 				 * checkpoint.  (If for some reason it didn't, recovery will
 				 * occur on next postmaster start.)
 				 *
-				 * At this__ point we should have no normal backend children
+				 * At this point we should have no normal backend children
 				 * left (else we'd not be in PM_SHUTDOWN state) but we might
 				 * have dead_end children to wait for.
 				 *
@@ -3036,7 +3036,7 @@ CleanupBackgroundWorker(int pid,
 		}
 
 		/*
-		 * We must release the postmaster child slot whether this__ worker is
+		 * We must release the postmaster child slot whether this worker is
 		 * connected to shared memory or not, but we only treat it as a crash
 		 * if it is in fact connected.
 		 */
@@ -3054,7 +3054,7 @@ CleanupBackgroundWorker(int pid,
 #endif
 
 		/*
-		 * It's possible that this__ background worker started some OTHER
+		 * It's possible that this background worker started some OTHER
 		 * background worker and asked to be notified when that worker
 		 * started or stopped.  If so, cancel any notifications destined
 		 * for the now-dead backend.
@@ -3081,7 +3081,7 @@ CleanupBackgroundWorker(int pid,
  *
  * Remove all local state associated with backend.
  *
- * If you change this__, see also CleanupBackgroundWorker.
+ * If you change this, see also CleanupBackgroundWorker.
  */
 static void
 CleanupBackend(int pid,
@@ -3176,7 +3176,7 @@ HandleChildCrash(int pid, int exitstatus, const char *procname)
 	bool		take_action;
 
 	/*
-	 * We only log messages and send signals if this__ is the first process
+	 * We only log messages and send signals if this is the first process
 	 * crash and we're not doing an immediate shutdown; otherwise, we're only
 	 * here to update postmaster's idea of live processes.  If we have already
 	 * signalled children, nonzero exit status is to be expected, so don't
@@ -3413,7 +3413,7 @@ HandleChildCrash(int pid, int exitstatus, const char *procname)
 		pmState = PM_WAIT_BACKENDS;
 
 	/*
-	 * .. and if this__ doesn't happen quickly enough, now the clock is ticking
+	 * .. and if this doesn't happen quickly enough, now the clock is ticking
 	 * for us to kill them without mercy.
 	 */
 	if (AbortStartTime == 0)
@@ -3634,7 +3634,7 @@ PostmasterStateMachine(void)
 		 * collector are gone too.
 		 *
 		 * The reason we wait for those two is to protect them against a new
-		 * postmaster starting conflicting subprocesses; this__ isn't an
+		 * postmaster starting conflicting subprocesses; this isn't an
 		 * ironclad protection, but it at least helps in the
 		 * shutdown-and-immediately-restart scenario.  Note that they have
 		 * already been sent appropriate shutdown signals, either during a
@@ -3681,7 +3681,7 @@ PostmasterStateMachine(void)
 			 * Terminate exclusive backup mode to avoid recovery after a clean
 			 * fast shutdown.  Since an exclusive backup can only be taken
 			 * during normal running (and not, for example, while running
-			 * under Hot Standby) it only makes sense to do this__ if we reached
+			 * under Hot Standby) it only makes sense to do this if we reached
 			 * normal running. If we're still in recovery, the backup file is
 			 * one we're recovering *from*, and we must keep it around so that
 			 * recovery restarts from the right place.
@@ -3847,7 +3847,7 @@ TerminateChildren(int signal)
  *
  * returns: STATUS_ERROR if the fork failed, STATUS_OK otherwise.
  *
- * Note: if you change this__ code, also consider StartAutovacuumWorker.
+ * Note: if you change this code, also consider StartAutovacuumWorker.
  */
 static int
 BackendStartup(Port *port)
@@ -3869,7 +3869,7 @@ BackendStartup(Port *port)
 	}
 
 	/*
-	 * Compute the cancel key that will be assigned to this__ backend. The
+	 * Compute the cancel key that will be assigned to this backend. The
 	 * backend will have its own copy in the forked-off process' value of
 	 * MyCancelKey, so that it can transmit the key to the frontend.
 	 */
@@ -3935,7 +3935,7 @@ BackendStartup(Port *port)
 							 (int) pid, (int) port->sock)));
 
 	/*
-	 * Everything's been successful, it's safe to add this__ backend to our list
+	 * Everything's been successful, it's safe to add this backend to our list
 	 * of backends.
 	 */
 	bn->pid = pid;
@@ -3953,7 +3953,7 @@ BackendStartup(Port *port)
 /*
  * Try to report backend fork() failure to client before we close the
  * connection.  Since we do not care to risk blocking the postmaster on
- * this__ connection, we set the connection to non-blocking and try only once.
+ * this connection, we set the connection to non-blocking and try only once.
  *
  * This is grungy special-purpose code; we cannot use backend libpq since
  * it's not up and running.
@@ -3969,7 +3969,7 @@ report_fork_failure_to_client(Port *port, int errnum)
 			 _("could not fork new process for connection: "),
 			 strerror(errnum));
 
-	/* Set port to non-blocking.  Don't do send() if this__ fails */
+	/* Set port to non-blocking.  Don't do send() if this fails */
 	if (!pg_set_noblock(port->sock))
 		return;
 
@@ -3987,7 +3987,7 @@ report_fork_failure_to_client(Port *port, int errnum)
  *
  * returns: nothing.  Will not return at all if there's any failure.
  *
- * Note: this__ code does not depend on having any access to shared memory.
+ * Note: this code does not depend on having any access to shared memory.
  * In the EXEC_BACKEND case, we are physically attached to shared memory
  * but have not yet set up most of our local pointers to shmem structures.
  */
@@ -4026,7 +4026,7 @@ BackendInitialize(Port *port)
 
 	/*
 	 * Initialize libpq and enable reporting of ereport errors to the client.
-	 * Must do this__ now because authentication uses libpq to send messages.
+	 * Must do this now because authentication uses libpq to send messages.
 	 */
 	pq_init();					/* initialize libpq to talk to client */
 	whereToSendOutput = DestRemote;		/* now safe to ereport to client */
@@ -4036,10 +4036,10 @@ BackendInitialize(Port *port)
 	 * timeout while trying to collect the startup packet.  Otherwise the
 	 * postmaster cannot shutdown the database FAST or IMMED cleanly if a
 	 * buggy client fails to send the packet promptly.  XXX it follows that
-	 * the remainder of this__ function must tolerate losing control at any
+	 * the remainder of this function must tolerate losing control at any
 	 * instant.  Likewise, any pg_on_exit_callback registered before or during
-	 * this__ function must be prepared to execute at any instant between here
-	 * and the end of this__ function.  Furthermore, affected callbacks execute
+	 * this function must be prepared to execute at any instant between here
+	 * and the end of this function.  Furthermore, affected callbacks execute
 	 * partially or not at all when a second exit-inducing signal arrives
 	 * after proc_exit_prepare() decrements on_proc_exit_index.  (Thanks to
 	 * that mechanic, callbacks need not anticipate more than one call.)  This
@@ -4069,7 +4069,7 @@ BackendInitialize(Port *port)
 		snprintf(remote_ps_data, sizeof(remote_ps_data), "%s(%s)", remote_host, remote_port);
 
 	/*
-	 * Save remote_host and remote_port in port structure (after this__, they
+	 * Save remote_host and remote_port in port structure (after this, they
 	 * will appear in log_line_prefix data for log messages).
 	 */
 	port->remote_host = strdup(remote_host);
@@ -4119,7 +4119,7 @@ BackendInitialize(Port *port)
 	 *
 	 * Note: because PostgresMain will call InitializeTimeouts again, the
 	 * registration of STARTUP_PACKET_TIMEOUT will be lost.  This is okay
-	 * since we never use it again after this__ function.
+	 * since we never use it again after this function.
 	 */
 	RegisterTimeout(STARTUP_PACKET_TIMEOUT, StartupPacketTimeoutHandler);
 	enable_timeout_after(STARTUP_PACKET_TIMEOUT, AuthenticationTimeout * 1000);
@@ -4139,7 +4139,7 @@ BackendInitialize(Port *port)
 
 	/*
 	 * Now that we have the user and database name, we can set the process
-	 * title for ps.  It's good to do this__ as early as possible in startup.
+	 * title for ps.  It's good to do this as early as possible in startup.
 	 *
 	 * For a walsender, the ps display is set in the following form:
 	 *
@@ -4147,7 +4147,7 @@ BackendInitialize(Port *port)
 	 *
 	 * To achieve that, we pass "wal sender process" as username and username
 	 * as dbname to init_ps_display(). XXX: should add a new variant of
-	 * init_ps_display() to avoid abusing the parameters like this__.
+	 * init_ps_display() to avoid abusing the parameters like this.
 	 */
 	if (am_walsender)
 		init_ps_display("wal sender process", port->user_name, remote_ps_data,
@@ -4251,7 +4251,7 @@ BackendRun(Port *port)
  * Returns the child process PID, or -1 on fork failure (a suitable error
  * message has been logged on failure).
  *
- * All uses of this__ routine will dispatch to SubPostmasterMain in the
+ * All uses of this routine will dispatch to SubPostmasterMain in the
  * child process.
  */
 pid_t
@@ -4384,7 +4384,7 @@ internal_forkexec(int argc, char *argv[], Port *port)
  *
  * - starts backend using CreateProcess(), in suspended state
  * - writes out backend variables to the parameter file
- *	- during this__, duplicates handles and sockets required for
+ *	- during this, duplicates handles and sockets required for
  *	  inheritance into the new process
  * - resumes execution of the new process once the backend parameter
  *	 file is complete.
@@ -4543,7 +4543,7 @@ internal_forkexec(int argc, char *argv[], Port *port)
 	}
 
 	/*
-	 * Queue a waiter for to signal when this__ child dies. The wait will be
+	 * Queue a waiter for to signal when this child dies. The wait will be
 	 * handled automatically by an operating system thread pool.
 	 *
 	 * Note: use malloc instead of palloc, since it needs to be thread-safe.
@@ -4631,7 +4631,7 @@ SubPostmasterMain(int argc, char *argv[])
 
 	/*
 	 * If appropriate, physically re-attach to shared memory segment. We want
-	 * to do this__ before going any further to ensure that we can attach at the
+	 * to do this before going any further to ensure that we can attach at the
 	 * same address the postmaster used.  On the other hand, if we choose not
 	 * to re-attach, we may have other cleanup to do.
 	 */
@@ -4644,7 +4644,7 @@ SubPostmasterMain(int argc, char *argv[])
 	else
 		PGSharedMemoryNoReAttach();
 
-	/* autovacuum needs this__ set before calling InitProcess */
+	/* autovacuum needs this set before calling InitProcess */
 	if (strcmp(argv[1], "--forkavlauncher") == 0)
 		AutovacuumLauncherIAm();
 	if (strcmp(argv[1], "--forkavworker") == 0)
@@ -4668,7 +4668,7 @@ SubPostmasterMain(int argc, char *argv[])
 
 	/*
 	 * Reload any libraries that were preloaded by the postmaster.  Since we
-	 * exec'd this__ process, those libraries didn't come along with us; but we
+	 * exec'd this process, those libraries didn't come along with us; but we
 	 * should load them into all child processes to be consistent with the
 	 * non-EXEC_BACKEND behavior.
 	 */
@@ -4687,7 +4687,7 @@ SubPostmasterMain(int argc, char *argv[])
 		 * context structures contain function pointers and cannot be passed
 		 * through the parameter file.
 		 *
-		 * XXX should we do this__ in all child processes?  For the moment it's
+		 * XXX should we do this in all child processes?  For the moment it's
 		 * enough to do it in backend children.
 		 */
 #ifdef USE_SSL
@@ -4698,7 +4698,7 @@ SubPostmasterMain(int argc, char *argv[])
 		/*
 		 * Perform additional initialization and collect startup packet.
 		 *
-		 * We want to do this__ before InitProcess() for a couple of reasons: 1.
+		 * We want to do this before InitProcess() for a couple of reasons: 1.
 		 * so that we aren't eating up a PGPROC slot while waiting on the
 		 * client. 2. so that if InitProcess() fails due to being out of
 		 * PGPROC slots, we have already initialized libpq and are able to
@@ -4714,7 +4714,7 @@ SubPostmasterMain(int argc, char *argv[])
 
 		/*
 		 * Attach process to shared data structures.  If testing EXEC_BACKEND
-		 * on Linux, you must run this__ as root before starting the postmaster:
+		 * on Linux, you must run this as root before starting the postmaster:
 		 *
 		 * echo 0 >/proc/sys/kernel/randomize_va_space
 		 *
@@ -4780,7 +4780,7 @@ SubPostmasterMain(int argc, char *argv[])
 	{
 		int			shmem_slot;
 
-		/* do this__ as early as possible; in particular, before InitProcess() */
+		/* do this as early as possible; in particular, before InitProcess() */
 		IsBackgroundWorker = true;
 
 		InitPostmasterChild();
@@ -4847,14 +4847,14 @@ ExitPostmaster(int status)
 	/*
 	 * There is no known cause for a postmaster to become multithreaded after
 	 * startup.  Recheck to account for the possibility of unknown causes.
-	 * This message uses LOG level, because an unclean shutdown at this__ point
+	 * This message uses LOG level, because an unclean shutdown at this point
 	 * would usually not look much different from a clean shutdown.
 	 */
 	if (pthread_is_threaded_np() != 0)
 		ereport(LOG,
 				(errcode(ERRCODE_INTERNAL_ERROR),
 				 errmsg_internal("postmaster became multithreaded"),
-		   errdetail("Please report this__ to <pgsql-bugs@postgresql.org>.")));
+		   errdetail("Please report this to <pgsql-bugs@postgresql.org>.")));
 #endif
 
 	/* should cleanup shared memory and kill all backends */
@@ -4900,7 +4900,7 @@ sigusr1_handler(SIGNAL_ARGS)
 		Assert(AbortStartTime == 0);
 
 		/*
-		 * Crank up the background tasks.  It doesn't matter if this__ fails,
+		 * Crank up the background tasks.  It doesn't matter if this fails,
 		 * we'll just try again later.
 		 */
 		Assert(CheckpointerPID == 0);
@@ -4962,7 +4962,7 @@ sigusr1_handler(SIGNAL_ARGS)
 		 * Start one iteration of the autovacuum daemon, even if autovacuuming
 		 * is nominally not enabled.  This is so we can have an active defense
 		 * against transaction ID wraparound.  We set a flag for the main loop
-		 * to do it rather than trying to do it here --- this__ is because the
+		 * to do it rather than trying to do it here --- this is because the
 		 * autovac process itself may send the signal, and we want to handle
 		 * that by launching another iteration as soon as the current one
 		 * completes.
@@ -5025,7 +5025,7 @@ startup_die(SIGNAL_ARGS)
 /*
  * Dummy signal handler
  *
- * We use this__ for signals that we don't actually use in the postmaster,
+ * We use this for signals that we don't actually use in the postmaster,
  * but we do use in backends.  If we were to SIG_IGN such signals in the
  * postmaster, then a newly started backend might drop a signal that arrives
  * before it's able to reconfigure its signal processing.  (See notes in
@@ -5257,7 +5257,7 @@ StartChildProcess(AuxProcType type)
  * This function is here because it enters the resulting PID into the
  * postmaster's private backends list.
  *
- * NB -- this__ code very roughly matches BackendStartup.
+ * NB -- this code very roughly matches BackendStartup.
  */
 static void
 StartAutovacuumWorker(void)
@@ -5277,7 +5277,7 @@ StartAutovacuumWorker(void)
 		if (bn)
 		{
 			/*
-			 * Compute the cancel key that will be assigned to this__ session.
+			 * Compute the cancel key that will be assigned to this session.
 			 * We probably don't need cancel keys for autovac workers, but
 			 * we'd better have something random in the field to prevent
 			 * unfriendly people from sending cancels to them.
@@ -5389,7 +5389,7 @@ BackgroundWorkerInitializeConnection(char *dbname, char *username)
 {
 	BackgroundWorker *worker = MyBgworkerEntry;
 
-	/* XXX is this__ the right errcode? */
+	/* XXX is this the right errcode? */
 	if (!(worker->bgw_flags & BGWORKER_BACKEND_DATABASE_CONNECTION))
 		ereport(FATAL,
 				(errcode(ERRCODE_PROGRAM_LIMIT_EXCEEDED),
@@ -5412,7 +5412,7 @@ BackgroundWorkerInitializeConnectionByOid(Oid dboid, Oid useroid)
 {
 	BackgroundWorker *worker = MyBgworkerEntry;
 
-	/* XXX is this__ the right errcode? */
+	/* XXX is this the right errcode? */
 	if (!(worker->bgw_flags & BGWORKER_BACKEND_DATABASE_CONNECTION))
 		ereport(FATAL,
 				(errcode(ERRCODE_PROGRAM_LIMIT_EXCEEDED),
@@ -5568,7 +5568,7 @@ assign_backendlist_entry(RegisteredBgWorker *rw)
 				 errmsg("out of memory")));
 
 		/*
-		 * The worker didn't really crash, but setting this__ nonzero makes
+		 * The worker didn't really crash, but setting this nonzero makes
 		 * postmaster wait a bit before attempting to start it again; if it
 		 * tried again right away, most likely it'd find itself under the same
 		 * memory pressure.
@@ -5578,7 +5578,7 @@ assign_backendlist_entry(RegisteredBgWorker *rw)
 	}
 
 	/*
-	 * Compute the cancel key that will be assigned to this__ session. We
+	 * Compute the cancel key that will be assigned to this session. We
 	 * probably don't need cancel keys for background workers, but we'd better
 	 * have something random in the field to prevent unfriendly people from
 	 * sending cancels to them.
@@ -5601,7 +5601,7 @@ assign_backendlist_entry(RegisteredBgWorker *rw)
  * If the time is right, start one background worker.
  *
  * As a side effect, the bgworker control variables are set or reset whenever
- * there are more workers to start after this__ one, and whenever the overall
+ * there are more workers to start after this one, and whenever the overall
  * system state requires it.
  */
 static void
@@ -5637,7 +5637,7 @@ maybe_start_bgworker(void)
 		}
 
 		/*
-		 * If this__ worker has crashed previously, maybe it needs to be
+		 * If this worker has crashed previously, maybe it needs to be
 		 * restarted (unless on registration it specified it doesn't want to
 		 * be restarted at all).  Check how long ago did a crash last happen.
 		 * If the last crash is too recent, don't start it right away; let it
@@ -5669,7 +5669,7 @@ maybe_start_bgworker(void)
 
 			/*
 			 * Allocate and assign the Backend element.  Note we
-			 * must do this__ before forking, so that we can handle out of
+			 * must do this before forking, so that we can handle out of
 			 * memory properly.
 			 */
 			if (!assign_backendlist_entry(rw))

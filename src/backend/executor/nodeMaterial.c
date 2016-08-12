@@ -223,7 +223,7 @@ ExecInitMaterial(Material *node, EState *estate, int eflags)
 
 	/*
 	 * initialize tuple type.  no need to initialize projection info because
-	 * this__ node doesn't do projections.
+	 * this node doesn't do projections.
 	 */
 	ExecAssignResultTypeFromTL(&matstate->ss.ps);
 	ExecAssignScanTypeFromOuterPlan(&matstate->ss);
@@ -355,7 +355,7 @@ ExecReScanMaterial(MaterialState *node)
 	}
 	else
 	{
-		/* In this__ case we are just passing on the subquery's output */
+		/* In this case we are just passing on the subquery's output */
 
 		/*
 		 * if chgParam of subnode is not null then plan will be re-scanned by

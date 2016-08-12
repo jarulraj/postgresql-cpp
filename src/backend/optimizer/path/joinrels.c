@@ -42,7 +42,7 @@ static bool restriction_is_constant_false(List *restrictlist,
  *	  combination of lower-level rels are created and returned in a list.
  *	  Implementation paths are created for each such joinrel, too.
  *
- * level: level of rels we want to make this__ time
+ * level: level of rels we want to make this time
  * root->join_rel_level[j], 1 <= j < level, is a list of rels containing j items
  *
  * The result is returned in root->join_rel_level[level].
@@ -75,11 +75,11 @@ join_search_one_level(PlannerInfo *root, int level)
 		{
 			/*
 			 * There are join clauses or join order restrictions relevant to
-			 * this__ rel, so consider joins between this__ rel and (only) those
+			 * this rel, so consider joins between this rel and (only) those
 			 * initial rels it is linked to by a clause or restriction.
 			 *
-			 * At level 2 this__ condition is symmetric, so there is no need to
-			 * look at initial rels before this__ one in the list; we already
+			 * At level 2 this condition is symmetric, so there is no need to
+			 * look at initial rels before this one in the list; we already
 			 * considered such joins when we were at the earlier rel.  (The
 			 * mirror-image joins are handled automatically by make_join_rel.)
 			 * In later passes (level > 2), we join rels of the previous level
@@ -163,7 +163,7 @@ join_search_one_level(PlannerInfo *root, int level)
 				if (!bms_overlap(old_rel->relids, new_rel->relids))
 				{
 					/*
-					 * OK, we can build a rel of the right level from this__
+					 * OK, we can build a rel of the right level from this
 					 * pair of rels.  Do so if there is at least one relevant
 					 * join clause or join order restriction.
 					 */
@@ -193,7 +193,7 @@ join_search_one_level(PlannerInfo *root, int level)
 	 * upper level, we must be willing to make a cartesian join of a and b;
 	 * but the code above will not have done so, because it thought that both
 	 * a and b have joinclauses.  We consider only left-sided and right-sided
-	 * cartesian joins in this__ case (no bushy).
+	 * cartesian joins in this case (no bushy).
 	 *----------
 	 */
 	if (joinrels[level] == NIL)
@@ -219,7 +219,7 @@ join_search_one_level(PlannerInfo *root, int level)
 		 *	 x IN (SELECT ... FROM t2,t3 WHERE ...) AND
 		 *	 y IN (SELECT ... FROM t4,t5 WHERE ...)
 		 *
-		 * We will flatten this__ query to a 5-way join problem, but there are
+		 * We will flatten this query to a 5-way join problem, but there are
 		 * no 4-way joins that join_is_legal() will consider legal.  We have
 		 * to accept failure at level 4 and go on to discover a workable
 		 * bushy plan at level 5.
@@ -253,7 +253,7 @@ join_search_one_level(PlannerInfo *root, int level)
  * 'other_rels': the first cell in a linked list containing the other
  * rels to be considered for joining
  *
- * Currently, this__ is only used with initial rels in other_rels, but it
+ * Currently, this is only used with initial rels in other_rels, but it
  * will work for joining to joinrels too.
  */
 static void
@@ -287,7 +287,7 @@ make_rels_by_clause_joins(PlannerInfo *root,
  * 'other_rels': the first cell of a linked list containing the
  * other rels to be considered for joining
  *
- * Currently, this__ is only used with initial rels in other_rels, but it would
+ * Currently, this is only used with initial rels in other_rels, but it would
  * work for joining to joinrels too.
  */
 static void
@@ -315,10 +315,10 @@ make_rels_by_clauseless_joins(PlannerInfo *root,
  *	   join order constraints; and if it is, determine the join type.
  *
  * Caller must supply not only the two rels, but the union of their relids.
- * (We could simplify the API by computing joinrelids locally, but this__
+ * (We could simplify the API by computing joinrelids locally, but this
  * would be redundant work in the normal path through make_join_rel.)
  *
- * On success, *sjinfo_p is set to NULL if this__ is to be a plain inner join,
+ * On success, *sjinfo_p is set to NULL if this is to be a plain inner join,
  * else it's set to point to the associated SpecialJoinInfo node.  Also,
  * *reversed_p is set TRUE if the given relations need to be swapped to
  * match the SpecialJoinInfo node.
@@ -357,7 +357,7 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 
 		/*
 		 * This special join is not relevant unless its RHS overlaps the
-		 * proposed join.  (Check this__ first as a fast path for dismissing
+		 * proposed join.  (Check this first as a fast path for dismissing
 		 * most irrelevant SJs quickly.)
 		 */
 		if (!bms_overlap(sjinfo->min_righthand, joinrelids))
@@ -384,7 +384,7 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 		 * If it's a semijoin and we already joined the RHS to any other rels
 		 * within either input, then we must have unique-ified the RHS at that
 		 * point (see below).  Therefore the semijoin is no longer relevant in
-		 * this__ join path.
+		 * this join path.
 		 */
 		if (sjinfo->jointype == JOIN_SEMI)
 		{
@@ -398,7 +398,7 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 
 		/*
 		 * If one input contains min_lefthand and the other contains
-		 * min_righthand, then we can perform the SJ at this__ join.
+		 * min_righthand, then we can perform the SJ at this join.
 		 *
 		 * Reject if we get matches to more than one SJ; that implies we're
 		 * considering something that's not really valid.
@@ -432,17 +432,17 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 			 *
 			 * The reason to consider such a join path is exemplified by
 			 *	SELECT ... FROM a,b WHERE (a.x,b.y) IN (SELECT c1,c2 FROM c)
-			 * If we insist on doing this__ as a semijoin we will first have
+			 * If we insist on doing this as a semijoin we will first have
 			 * to form the cartesian product of A*B.  But if we unique-ify
 			 * C then the semijoin becomes a plain innerjoin and we can join
 			 * in any order, eg C to A and then to B.  When C is much smaller
-			 * than A and B this__ can be a huge win.  So we allow C to be
+			 * than A and B this can be a huge win.  So we allow C to be
 			 * joined to just A or just B here, and then make_join_rel has
 			 * to handle the case properly.
 			 *
 			 * Note that actually we'll allow unique-ified C to be joined to
 			 * some other relation D here, too.  That is legal, if usually not
-			 * very sane, and this__ routine is only concerned with legality not
+			 * very sane, and this routine is only concerned with legality not
 			 * with whether the join is good strategy.
 			 *----------
 			 */
@@ -468,13 +468,13 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 		{
 			/*
 			 * Otherwise, the proposed join overlaps the RHS but isn't a valid
-			 * implementation of this__ SJ.  But don't panic quite yet: the RHS
+			 * implementation of this SJ.  But don't panic quite yet: the RHS
 			 * violation might have occurred previously, in one or both input
 			 * relations, in which case we must have previously decided that
-			 * it was OK to commute some other SJ with this__ one.  If we need
-			 * to perform this__ join to finish building up the RHS, rejecting
+			 * it was OK to commute some other SJ with this one.  If we need
+			 * to perform this join to finish building up the RHS, rejecting
 			 * it could lead to not finding any plan at all.  (This can occur
-			 * because of the heuristics elsewhere in this__ file that postpone
+			 * because of the heuristics elsewhere in this file that postpone
 			 * clauseless joins: we might not consider doing a clauseless join
 			 * within the RHS until after we've performed other, validly
 			 * commutable SJs with one or both sides of the clauseless join.)
@@ -489,8 +489,8 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 
 			/*
 			 * The proposed join could still be legal, but only if we're
-			 * allowed to associate it into the RHS of this__ SJ.  That means
-			 * this__ SJ must be a LEFT join (not SEMI or ANTI, and certainly
+			 * allowed to associate it into the RHS of this SJ.  That means
+			 * this SJ must be a LEFT join (not SEMI or ANTI, and certainly
 			 * not FULL) and the proposed join must not overlap the LHS.
 			 */
 			if (sjinfo->jointype != JOIN_LEFT ||
@@ -499,7 +499,7 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 
 			/*
 			 * To be valid, the proposed join must be a LEFT join; otherwise
-			 * it can't associate into this__ SJ's RHS.  But we may not yet have
+			 * it can't associate into this SJ's RHS.  But we may not yet have
 			 * found the SpecialJoinInfo matching the proposed join, so we
 			 * can't test that yet.  Remember the requirement for later.
 			 */
@@ -583,12 +583,12 @@ join_is_legal(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2,
 
 		/*
 		 * LATERAL references could also cause problems later on if we accept
-		 * this__ join: if the join's minimum parameterization includes any rels
-		 * that would have to be on the inside of an outer join with this__ join
+		 * this join: if the join's minimum parameterization includes any rels
+		 * that would have to be on the inside of an outer join with this join
 		 * rel, then it's never going to be possible to build the complete
-		 * query using this__ join.  We should reject this__ join not only because
+		 * query using this join.  We should reject this join not only because
 		 * it'll save work, but because if we don't, the clauseless-join
-		 * heuristics might think that legality of this__ join means that some
+		 * heuristics might think that legality of this join means that some
 		 * other join rel need not be formed, and that could lead to failure
 		 * to find any plan at all.  We have to consider not only rels that
 		 * are directly on the inner side of an OJ with the joinrel, but also
@@ -709,13 +709,13 @@ make_join_rel(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2)
 
 	/*
 	 * Find or build the join RelOptInfo, and compute the restrictlist that
-	 * goes with this__ particular joining.
+	 * goes with this particular joining.
 	 */
 	joinrel = build_join_rel(root, joinrelids, rel1, rel2, sjinfo,
 							 &restrictlist);
 
 	/*
-	 * If we've already proven this__ join is empty, we needn't consider any
+	 * If we've already proven this join is empty, we needn't consider any
 	 * more paths for it.
 	 */
 	if (is_dummy_rel(joinrel))
@@ -728,12 +728,12 @@ make_join_rel(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2)
 	 * Consider paths using each rel as both outer and inner.  Depending on
 	 * the join type, a provably empty outer or inner rel might mean the join
 	 * is provably empty too; in which case throw away any previously computed
-	 * paths and mark the join as dummy.  (We do it this__ way since it's
+	 * paths and mark the join as dummy.  (We do it this way since it's
 	 * conceivable that dummy-ness of a multi-element join might only be
 	 * noticeable for certain construction paths.)
 	 *
 	 * Also, a provably constant-false join restriction typically means that
-	 * we can skip evaluating one or both sides of the join.  We do this__ by
+	 * we can skip evaluating one or both sides of the join.  We do this by
 	 * marking the appropriate rel as dummy.  For outer joins, a
 	 * constant-false restriction that is pushed down still means the whole
 	 * join is dummy, while a non-pushed-down one means that no inner rows
@@ -880,18 +880,18 @@ make_join_rel(PlannerInfo *root, RelOptInfo *rel1, RelOptInfo *rel2)
  *		Detect whether the two relations should be joined to satisfy
  *		a join-order restriction arising from special or lateral joins.
  *
- * In practice this__ is always used with have_relevant_joinclause(), and so
+ * In practice this is always used with have_relevant_joinclause(), and so
  * could be merged with that function, but it seems clearer to separate the
- * two concerns.  We need this__ test because there are degenerate cases where
+ * two concerns.  We need this test because there are degenerate cases where
  * a clauseless join must be performed to satisfy join-order restrictions.
  * Also, if one rel has a lateral reference to the other, or both are needed
  * to compute some PHV, we should consider joining them even if the join would
  * be clauseless.
  *
- * Note: this__ is only a problem if one side of a degenerate outer join
+ * Note: this is only a problem if one side of a degenerate outer join
  * contains multiple rels, or a clauseless join is required within an
  * IN/EXISTS RHS; else we will find a join path via the "last ditch" case in
- * join_search_one_level().  We could dispense with this__ test if we were
+ * join_search_one_level().  We could dispense with this test if we were
  * willing to try bushy plans in the "last ditch" case, but that seems much
  * less efficient.
  */
@@ -914,7 +914,7 @@ have_join_order_restriction(PlannerInfo *root,
 	 * Likewise, if both rels are needed to compute some PlaceHolderVar,
 	 * attempt the join regardless of outer-join considerations.  (This is not
 	 * very desirable, because a PHV with a large eval_at set will cause a lot
-	 * of probably-useless joins to be considered, but failing to do this__ can
+	 * of probably-useless joins to be considered, but failing to do this can
 	 * cause us to fail to construct a plan at all.)
 	 */
 	foreach(l, root->placeholder_list)
@@ -959,7 +959,7 @@ have_join_order_restriction(PlannerInfo *root,
 		/*
 		 * Might we need to join these rels to complete the RHS?  We have to
 		 * use "overlap" tests since either rel might include a lower SJ that
-		 * has been proven to commute with this__ one.
+		 * has been proven to commute with this one.
 		 */
 		if (bms_overlap(sjinfo->min_righthand, rel1->relids) &&
 			bms_overlap(sjinfo->min_righthand, rel2->relids))
@@ -1003,8 +1003,8 @@ have_join_order_restriction(PlannerInfo *root,
  *		due to being inside an outer join or an IN (sub-SELECT),
  *		or participating in any LATERAL references or multi-rel PHVs.
  *
- * Essentially, this__ tests whether have_join_order_restriction() could
- * succeed with this__ rel and some other one.  It's OK if we sometimes
+ * Essentially, this tests whether have_join_order_restriction() could
+ * succeed with this rel and some other one.  It's OK if we sometimes
  * say "true" incorrectly.  (Therefore, we don't bother with the relatively
  * expensive has_legal_joinclause test.)
  */
@@ -1056,7 +1056,7 @@ has_join_restriction(PlannerInfo *root, RelOptInfo *rel)
  * We consider only joins to single other relations in the current
  * initial_rels list.  This is sufficient to get a "true" result in most real
  * queries, and an occasional erroneous "false" will only cost a bit more
- * planning time.  The reason for this__ limitation is that considering joins to
+ * planning time.  The reason for this limitation is that considering joins to
  * other joins would require proving that the other join rel can legally be
  * formed, which seems like too much trouble for something that's only a
  * heuristic to save planning time.  (Note: we must look at initial_rels
@@ -1089,7 +1089,7 @@ has_legal_joinclause(PlannerInfo *root, RelOptInfo *rel)
 			if (join_is_legal(root, rel, rel2, joinrelids,
 							  &sjinfo, &reversed))
 			{
-				/* Yes, this__ will work */
+				/* Yes, this will work */
 				bms_free(joinrelids);
 				return true;
 			}
@@ -1141,7 +1141,7 @@ have_dangerous_phv(PlannerInfo *root,
 		if (!bms_is_subset(phinfo->ph_eval_at, inner_params))
 			continue;			/* ignore, could not be a nestloop param */
 		if (!bms_overlap(phinfo->ph_eval_at, outer_relids))
-			continue;			/* ignore, not relevant to this__ join */
+			continue;			/* ignore, not relevant to this join */
 		if (bms_is_subset(phinfo->ph_eval_at, outer_relids))
 			continue;			/* safe, it can be eval'd within outerrel */
 		/* Otherwise, it's potentially unsafe, so reject the join */
@@ -1165,7 +1165,7 @@ is_dummy_rel(RelOptInfo *rel)
 /*
  * Mark a relation as proven empty.
  *
- * During GEQO planning, this__ can get invoked more than once on the same
+ * During GEQO planning, this can get invoked more than once on the same
  * baserel struct, so it's worth checking to see if the rel is already marked
  * dummy.
  *
@@ -1210,7 +1210,7 @@ mark_dummy_rel(RelOptInfo *rel)
  *
  * In cases where a qual is provably constant FALSE, eval_const_expressions
  * will generally have thrown away anything that's ANDed with it.  In outer
- * join situations this__ will leave us computing cartesian products only to
+ * join situations this will leave us computing cartesian products only to
  * decide there's no match for an outer row, which is pretty stupid.  So,
  * we need to detect the case.
  *

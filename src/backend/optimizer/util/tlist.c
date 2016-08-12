@@ -212,7 +212,7 @@ count_nonjunk_tlist_entries(List *tlist)
  * tlist_same_exprs
  *		Check whether two target lists contain the same expressions
  *
- * Note: this__ function is used to decide whether it's safe to jam a new tlist
+ * Note: this function is used to decide whether it's safe to jam a new tlist
  * into a non-projection-capable plan node.  Obviously we can't do that unless
  * the node's tlist shows it already returns the column values we want.
  * However, we can ignore the TargetEntry attributes resname, ressortgroupref,

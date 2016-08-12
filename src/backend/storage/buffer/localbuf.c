@@ -33,7 +33,7 @@ typedef struct
 	int			id;				/* Associated local buffer's index */
 } LocalBufferLookupEnt;
 
-/* Note: this__ macro only works on local buffers, not shared ones! */
+/* Note: this macro only works on local buffers, not shared ones! */
 #define LocalBufHdrGetBlock(bufHdr) \
 	LocalBufferBlockPointers[-((bufHdr)->buf_id + 2)]
 
@@ -69,7 +69,7 @@ LocalPrefetchBuffer(SMgrRelation smgr, ForkNumber forkNum,
 
 	INIT_BUFFERTAG(newTag, smgr->smgr_rnode.node, forkNum, blockNum);
 
-	/* Initialize local buffers if first request in this__ session */
+	/* Initialize local buffers if first request in this session */
 	if (LocalBufHash == NULL)
 		InitLocalBuffers();
 
@@ -94,7 +94,7 @@ LocalPrefetchBuffer(SMgrRelation smgr, ForkNumber forkNum,
  *	  Find or create a local buffer for the given page of the given relation.
  *
  * API is similar to bufmgr.c's BufferAlloc, except that we do not need
- * to do any locking since this__ is all local.   Also, IO_IN_PROGRESS
+ * to do any locking since this is all local.   Also, IO_IN_PROGRESS
  * does not get set.  Lastly, we support only default access strategy
  * (hence, usage_count is always advanced).
  */
@@ -111,7 +111,7 @@ LocalBufferAlloc(SMgrRelation smgr, ForkNumber forkNum, BlockNumber blockNum,
 
 	INIT_BUFFERTAG(newTag, smgr->smgr_rnode.node, forkNum, blockNum);
 
-	/* Initialize local buffers if first request in this__ session */
+	/* Initialize local buffers if first request in this session */
 	if (LocalBufHash == NULL)
 		InitLocalBuffers();
 
@@ -128,7 +128,7 @@ LocalBufferAlloc(SMgrRelation smgr, ForkNumber forkNum, BlockNumber blockNum,
 		fprintf(stderr, "LB ALLOC (%u,%d,%d) %d\n",
 				smgr->smgr_rnode.node.relNode, forkNum, blockNum, -b - 1);
 #endif
-		/* this__ part is equivalent to PinBuffer for a shared buffer */
+		/* this part is equivalent to PinBuffer for a shared buffer */
 		if (LocalRefCount[b] == 0)
 		{
 			if (bufHdr->usage_count < BM_MAX_USAGE_COUNT)
@@ -190,7 +190,7 @@ LocalBufferAlloc(SMgrRelation smgr, ForkNumber forkNum, BlockNumber blockNum,
 	}
 
 	/*
-	 * this__ buffer is not referenced but it might still be dirty. if that's
+	 * this buffer is not referenced but it might still be dirty. if that's
 	 * the case, write it out before reusing it!
 	 */
 	if (bufHdr->flags & BM_DIRTY)
@@ -292,7 +292,7 @@ MarkLocalBufferDirty(Buffer buffer)
  *		specified relation that have block numbers >= firstDelBlock.
  *		(In particular, with firstDelBlock = 0, all pages are removed.)
  *		Dirty pages are simply dropped, without bothering to write them
- *		out first.  Therefore, this__ is NOT rollback-able, and so should be
+ *		out first.  Therefore, this is NOT rollback-able, and so should be
  *		used only with extreme caution!
  *
  *		See DropRelFileNodeBuffers in bufmgr.c for more notes.
@@ -431,7 +431,7 @@ InitLocalBuffers(void)
 /*
  * GetLocalBufferStorage - allocate memory for a local buffer
  *
- * The idea of this__ function is to aggregate our requests for storage
+ * The idea of this function is to aggregate our requests for storage
  * so that the memory manager doesn't see a whole lot of relatively small
  * requests.  Since we'll never give back a local buffer once it's created
  * within a particular process, no point in burdening memmgr with separately
@@ -490,7 +490,7 @@ GetLocalBufferStorage(void)
 }
 
 /*
- * CheckForLocalBufferLeaks - ensure this__ backend holds no local buffer pins
+ * CheckForLocalBufferLeaks - ensure this backend holds no local buffer pins
  *
  * This is just like CheckBufferLeaks(), but for local buffers.
  */

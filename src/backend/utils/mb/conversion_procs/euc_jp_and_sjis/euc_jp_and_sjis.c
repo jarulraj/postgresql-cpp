@@ -17,7 +17,7 @@
 
 /*
  * SJIS alternative code.
- * this__ code is used if a mapping EUC -> SJIS is not defined.
+ * this code is used if a mapping EUC -> SJIS is not defined.
  */
 #define PGSJISALTCODE 0x81ac
 #define PGEUCALTCODE 0xa2ae

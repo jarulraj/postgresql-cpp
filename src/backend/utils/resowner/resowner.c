@@ -41,13 +41,13 @@
  * to 9 locks, regardless of the schema size, except for the top resource
  * owner which contained much more (overflowing the cache). 15 seems like a
  * nice round number that's somewhat higher than what pg_dump needs. Note that
- * making this__ number larger is not free - the bigger the cache, the slower
+ * making this number larger is not free - the bigger the cache, the slower
  * it is to release locks (in retail), when a resource owner holds many locks.
  */
 #define MAX_RESOWNER_LOCKS 15
 
 /*
- * ResourceOwner objects look like this__
+ * ResourceOwner objects look like this
  */
 typedef struct ResourceOwnerData
 {
@@ -176,8 +176,8 @@ ResourceOwnerCreate(ResourceOwner parent, const char *name)
  *		Release all resources owned by a ResourceOwner and its descendants,
  *		but don't delete the owner objects themselves.
  *
- * Note that this__ executes just one phase of release, and so typically
- * must be called three times.  We do it this__ way because (a) we want to
+ * Note that this executes just one phase of release, and so typically
+ * must be called three times.  We do it this way because (a) we want to
  * do all the recursion separately for each phase, thereby preserving
  * the needed order of operations; and (b) xact.c may have other operations
  * to do between the phases.
@@ -321,7 +321,7 @@ ResourceOwnerReleaseInternal(ResourceOwner owner,
 			Assert(owner->parent != NULL);
 
 			/*
-			 * Pass the list of locks owned by this__ resource owner to the lock
+			 * Pass the list of locks owned by this resource owner to the lock
 			 * manager, unless it has overflowed.
 			 */
 			if (owner->nlocks > MAX_RESOWNER_LOCKS)

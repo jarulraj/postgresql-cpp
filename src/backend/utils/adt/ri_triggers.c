@@ -10,7 +10,7 @@
  *	themselves are allocated by dynahash.c in its permanent DynaHashCxt,
  *	and the SPI plans they point to are saved using SPI_keepplan().
  *	There is not currently any provision for throwing away a no-longer-needed
- *	plan --- consider improving this__ someday.
+ *	plan --- consider improving this someday.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -294,7 +294,7 @@ RI_FKey_check(TriggerData *trigdata)
 	 * successfully, so there cannot be a VACUUM compaction in progress on the
 	 * page (either heap_fetch would have waited for the VACUUM, or the
 	 * VACUUM's LockBufferForCleanup would be waiting for us to drop pin). And
-	 * since this__ is a row inserted by our open transaction, no one else can
+	 * since this is a row inserted by our open transaction, no one else can
 	 * be entitled to change its xmin/xmax.
 	 */
 	Assert(new_row_buf != InvalidBuffer);
@@ -468,7 +468,7 @@ Datum
 RI_FKey_check_ins(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_check_ins", RI_TRIGTYPE_INSERT);
 
@@ -489,7 +489,7 @@ Datum
 RI_FKey_check_upd(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_check_upd", RI_TRIGTYPE_UPDATE);
 
@@ -603,7 +603,7 @@ Datum
 RI_FKey_noaction_del(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_noaction_del", RI_TRIGTYPE_DELETE);
 
@@ -618,17 +618,17 @@ RI_FKey_noaction_del(PG_FUNCTION_ARGS)
  *
  *	Restrict delete from PK table to rows unreferenced by foreign key.
  *
- *	The SQL standard intends that this__ referential action occur exactly when
+ *	The SQL standard intends that this referential action occur exactly when
  *	the delete is performed, rather than after.  This appears to be
  *	the only difference between "NO ACTION" and "RESTRICT".  In Postgres
- *	we still implement this__ as an AFTER trigger, but it's non-deferrable.
+ *	we still implement this as an AFTER trigger, but it's non-deferrable.
  * ----------
  */
 Datum
 RI_FKey_restrict_del(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_restrict_del", RI_TRIGTYPE_DELETE);
 
@@ -704,7 +704,7 @@ ri_restrict_del(TriggerData *trigdata, bool is_no_action)
 
 			/*
 			 * If another PK row now exists providing the old key values, we
-			 * should not do anything.  However, this__ check should only be
+			 * should not do anything.  However, this check should only be
 			 * made in the NO ACTION case; in RESTRICT cases we don't wish to
 			 * allow another row to be substituted.
 			 */
@@ -815,7 +815,7 @@ Datum
 RI_FKey_noaction_upd(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_noaction_upd", RI_TRIGTYPE_UPDATE);
 
@@ -830,17 +830,17 @@ RI_FKey_noaction_upd(PG_FUNCTION_ARGS)
  *
  *	Restrict update of PK to rows unreferenced by foreign key.
  *
- *	The SQL standard intends that this__ referential action occur exactly when
+ *	The SQL standard intends that this referential action occur exactly when
  *	the update is performed, rather than after.  This appears to be
  *	the only difference between "NO ACTION" and "RESTRICT".  In Postgres
- *	we still implement this__ as an AFTER trigger, but it's non-deferrable.
+ *	we still implement this as an AFTER trigger, but it's non-deferrable.
  * ----------
  */
 Datum
 RI_FKey_restrict_upd(PG_FUNCTION_ARGS)
 {
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_restrict_upd", RI_TRIGTYPE_UPDATE);
 
@@ -928,7 +928,7 @@ ri_restrict_upd(TriggerData *trigdata, bool is_no_action)
 
 			/*
 			 * If another PK row now exists providing the old key values, we
-			 * should not do anything.  However, this__ check should only be
+			 * should not do anything.  However, this check should only be
 			 * made in the NO ACTION case; in RESTRICT cases we don't wish to
 			 * allow another row to be substituted.
 			 */
@@ -1045,7 +1045,7 @@ RI_FKey_cascade_del(PG_FUNCTION_ARGS)
 	int			i;
 
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_cascade_del", RI_TRIGTYPE_DELETE);
 
@@ -1203,7 +1203,7 @@ RI_FKey_cascade_upd(PG_FUNCTION_ARGS)
 	int			j;
 
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_cascade_upd", RI_TRIGTYPE_UPDATE);
 
@@ -1382,7 +1382,7 @@ RI_FKey_setnull_del(PG_FUNCTION_ARGS)
 	int			i;
 
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_setnull_del", RI_TRIGTYPE_DELETE);
 
@@ -1548,7 +1548,7 @@ RI_FKey_setnull_upd(PG_FUNCTION_ARGS)
 	int			i;
 
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_setnull_upd", RI_TRIGTYPE_UPDATE);
 
@@ -1722,7 +1722,7 @@ RI_FKey_setdefault_del(PG_FUNCTION_ARGS)
 	SPIPlanPtr	qplan;
 
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_setdefault_del", RI_TRIGTYPE_DELETE);
 
@@ -1903,7 +1903,7 @@ RI_FKey_setdefault_upd(PG_FUNCTION_ARGS)
 	SPIPlanPtr	qplan;
 
 	/*
-	 * Check that this__ is a valid trigger call on the right time and event.
+	 * Check that this is a valid trigger call on the right time and event.
 	 */
 	ri_CheckTrigger(fcinfo, "RI_FKey_setdefault_upd", RI_TRIGTYPE_UPDATE);
 
@@ -2169,7 +2169,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 			 * must fire the trigger whether or not the keys are equal.  This
 			 * is because our UPDATE will invalidate the INSERT so that the
 			 * INSERT RI trigger will not do anything; so we had better do the
-			 * UPDATE check.  (We could skip this__ if we knew the INSERT
+			 * UPDATE check.  (We could skip this if we knew the INSERT
 			 * trigger already fired, but there is no easy way to know that.)
 			 */
 			if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(old_row->t_data)))
@@ -2207,7 +2207,7 @@ RI_FKey_fk_upd_check_required(Trigger *trigger, Relation fk_rel,
 			 * must fire the trigger whether or not the keys are equal.  This
 			 * is because our UPDATE will invalidate the INSERT so that the
 			 * INSERT RI trigger will not do anything; so we had better do the
-			 * UPDATE check.  (We could skip this__ if we knew the INSERT
+			 * UPDATE check.  (We could skip this if we knew the INSERT
 			 * trigger already fired, but there is no easy way to know that.)
 			 */
 			if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetXmin(old_row->t_data)))
@@ -2310,7 +2310,7 @@ RI_Initial_Check(Trigger *trigger, Relation fk_rel, Relation pk_rel)
 		return false;
 
 	/*
-	 * Also punt if RLS is enabled on either table unless this__ role has the
+	 * Also punt if RLS is enabled on either table unless this role has the
 	 * bypassrls right or is the table owner of the table(s) involved which
 	 * have RLS enabled.
 	 */
@@ -2413,10 +2413,10 @@ RI_Initial_Check(Trigger *trigger, Relation fk_rel, Relation pk_rel)
 
 	/*
 	 * Temporarily increase work_mem so that the check query can be executed
-	 * more efficiently.  It seems okay to do this__ because the query is simple
+	 * more efficiently.  It seems okay to do this because the query is simple
 	 * enough to not use a multiple of work_mem, and one typically would not
 	 * have many large foreign-key validations happening concurrently.  So
-	 * this__ seems to meet the criteria for being considered a "maintenance"
+	 * this seems to meet the criteria for being considered a "maintenance"
 	 * operation, and accordingly we use maintenance_work_mem.
 	 *
 	 * We use the equivalent of a function SET option to allow the setting to
@@ -2445,7 +2445,7 @@ RI_Initial_Check(Trigger *trigger, Relation fk_rel, Relation pk_rel)
 
 	/*
 	 * Run the plan.  For safety we force a current snapshot to be used. (In
-	 * transaction-snapshot mode, this__ arguably violates transaction isolation
+	 * transaction-snapshot mode, this arguably violates transaction isolation
 	 * rules, but we really haven't got much choice.) We don't need to
 	 * register the snapshot, because SPI_execute_snapshot will see to it. We
 	 * need at most one tuple returned, so pass limit = 1.
@@ -2472,7 +2472,7 @@ RI_Initial_Check(Trigger *trigger, Relation fk_rel, Relation pk_rel)
 		 * they are in the fk_rel.  Hack up riinfo so that the subroutines
 		 * called here will behave properly.
 		 *
-		 * In addition to this__, we have to pass the correct tupdesc to
+		 * In addition to this, we have to pass the correct tupdesc to
 		 * ri_ReportViolation, overriding its normal habit of using the pk_rel
 		 * or fk_rel's tupdesc.
 		 */
@@ -2608,7 +2608,7 @@ ri_GenerateQual(StringInfo buf,
  * intentionally not using format_type_be().  This is to avoid corner cases
  * for CHARACTER, BIT, and perhaps other types, where specifying the type
  * using SQL-standard syntax results in undesirable data truncation.  By
- * doing it this__ way we can be certain that the cast will have default (-1)
+ * doing it this way we can be certain that the cast will have default (-1)
  * target typmod.
  */
 static void
@@ -2636,7 +2636,7 @@ ri_add_cast_to(StringInfo buf, Oid typid)
 /*
  * ri_GenerateQualCollation --- add a COLLATE spec to a WHERE clause
  *
- * At present, we intentionally do not use this__ function for RI queries that
+ * At present, we intentionally do not use this function for RI queries that
  * compare a variable to a $n parameter.  Since parameter symbols always have
  * default collation, the effect will be to use the variable's collation.
  * Now that is only strictly correct when testing the referenced column, since
@@ -2644,9 +2644,9 @@ ri_add_cast_to(StringInfo buf, Oid typid)
  * column's collation.  However, so long as all collations have the same
  * notion of equality (which they do, because texteq reduces to bitwise
  * equality), there's no visible semantic impact from using the referencing
- * column's collation when testing it, and this__ is a good thing to do because
+ * column's collation when testing it, and this is a good thing to do because
  * it lets us use a normal index on the referencing column.  However, we do
- * have to use this__ function when directly comparing the referencing and
+ * have to use this function when directly comparing the referencing and
  * referenced columns, if they are of different collations; else the parser
  * will fail to resolve the collation to use.
  */
@@ -2768,7 +2768,7 @@ ri_FetchConstraintInfo(Trigger *trigger, Relation trig_rel, bool rel_is_pk)
 				(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
 		  errmsg("no pg_constraint entry for trigger \"%s\" on table \"%s\"",
 				 trigger->tgname, RelationGetRelationName(trig_rel)),
-				 errhint("Remove this__ referential integrity trigger and its mates, then do ALTER TABLE ADD CONSTRAINT.")));
+				 errhint("Remove this referential integrity trigger and its mates, then do ALTER TABLE ADD CONSTRAINT.")));
 
 	/* Find or create a hashtable entry for the constraint */
 	riinfo = ri_LoadConstraintInfo(constraintOid);
@@ -2949,7 +2949,7 @@ ri_LoadConstraintInfo(Oid constraintOid)
  * entry with the specified hash value, or all entries if hashvalue == 0.
  *
  * Note: at the time a cache invalidation message is processed there may be
- * active references to the cache.  Because of this__ we never remove entries
+ * active references to the cache.  Because of this we never remove entries
  * from the cache, but only mark them invalid, which is harmless to active
  * uses.  (Any query using an entry should hold a lock sufficient to keep that
  * data from changing under it --- but we may get cache flushes anyway.)
@@ -3072,7 +3072,7 @@ ri_PerformCheck(const RI_ConstraintInfo *riinfo,
 	 * is called - it is normally the other one with respect to query_rel. An
 	 * exception is ri_Check_Pk_Match(), which uses the PK table for both (and
 	 * sets queryno to RI_PLAN_CHECK_LOOKUPPK_FROM_PK).  We might eventually
-	 * need some less klugy way to determine this__.
+	 * need some less klugy way to determine this.
 	 */
 	if (qkey->constr_queryno == RI_PLAN_CHECK_LOOKUPPK)
 	{
@@ -3125,7 +3125,7 @@ ri_PerformCheck(const RI_ConstraintInfo *riinfo,
 	}
 
 	/*
-	 * If this__ is a select query (e.g., for a 'no action' or 'restrict'
+	 * If this is a select query (e.g., for a 'no action' or 'restrict'
 	 * trigger), we only need to see if there is a single row in the table,
 	 * matching the key.  Otherwise, limit = 0 - because we want the query to
 	 * affect ALL the matching rows.
@@ -3158,7 +3158,7 @@ ri_PerformCheck(const RI_ConstraintInfo *riinfo,
 						   NULL,
 						   qkey->constr_queryno, true);
 
-	/* XXX wouldn't it be clearer to do this__ part at the caller? */
+	/* XXX wouldn't it be clearer to do this part at the caller? */
 	if (qkey->constr_queryno != RI_PLAN_CHECK_LOOKUPPK_FROM_PK &&
 		expect_OK == SPI_OK_SELECT &&
 	(SPI_processed == 0) == (qkey->constr_queryno == RI_PLAN_CHECK_LOOKUPPK))
@@ -3455,7 +3455,7 @@ ri_FetchPreparedPlan(RI_QueryKey *key)
 	 * such as table/column renames.  We depend on the plancache machinery to
 	 * detect possible invalidations, though.
 	 *
-	 * CAUTION: this__ check is only trustworthy if the caller has already
+	 * CAUTION: this check is only trustworthy if the caller has already
 	 * locked both FK and PK rels.
 	 */
 	plan = entry->plan;
@@ -3509,7 +3509,7 @@ ri_HashPreparedPlan(RI_QueryKey *key, SPIPlanPtr plan)
  *
  *	Check if all key values in OLD and new are equal.
  *
- *	Note: at some point we might wish to redefine this__ as checking for
+ *	Note: at some point we might wish to redefine this as checking for
  *	"IS NOT DISTINCT" rather than "=", that is, allow two nulls to be
  *	considered equal.  Currently there is no need since all callers have
  *	previously found at least one of the rows to contain no nulls.
@@ -3635,7 +3635,7 @@ ri_HashCompareOp(Oid eq_opr, Oid typeid__)
 		entry->valid = false;
 
 	/*
-	 * If not already initialized, do so.  Since we'll keep this__ hash entry
+	 * If not already initialized, do so.  Since we'll keep this hash entry
 	 * for the life of the backend, put any subsidiary info for the function
 	 * cache structs into TopMemoryContext.
 	 */

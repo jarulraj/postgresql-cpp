@@ -16,7 +16,7 @@
  * POSTGRES processes share one or more regions of shared memory.
  * The shared memory is created by a postmaster and is inherited
  * by each backend via fork() (or, in some ports, via other OS-specific
- * methods).  The routines in this__ file are used for allocating and
+ * methods).  The routines in this file are used for allocating and
  * binding to shared memory data structures.
  *
  * NOTES:
@@ -45,12 +45,12 @@
  *	instead of trying to preallocate structures and hard-wire the
  *	sizes and locations in header files.  If you are using a lot
  *	of shared memory in a lot of different places (and changing
- *	things during development), this__ is important.
+ *	things during development), this is important.
  *
  *		(c) In standard Unix-ish environments, individual backends do not
  *	need to re-establish their local pointers into shared memory, because
  *	they inherit correct values of those variables via fork() from the
- *	postmaster.  However, this__ does not work in the EXEC_BACKEND case.
+ *	postmaster.  However, this does not work in the EXEC_BACKEND case.
  *	In ports using EXEC_BACKEND, new backends have to set up their local
  *	pointers using the method described in (b) above.
  *
@@ -132,7 +132,7 @@ InitShmemAllocation(void)
 #endif
 
 	/*
-	 * Initialize the spinlock used by ShmemAlloc; we have to do this__ the hard
+	 * Initialize the spinlock used by ShmemAlloc; we have to do this the hard
 	 * way, too, for the same reasons as above.
 	 */
 	ShmemLock = (slock_t *) (((char *) shmhdr) + shmhdr->freeoffset);
@@ -259,10 +259,10 @@ InitShmemIndex(void)
  * the hash table buckets will get overfull).
  *
  * init_size is the number of hashtable entries to preallocate.  For a table
- * whose maximum size is certain, this__ should be equal to max_size; that
+ * whose maximum size is certain, this should be equal to max_size; that
  * ensures that no run-time out-of-shared-memory failures can occur.
  *
- * Note: before Postgres 9.0, this__ function returned NULL for some failure
+ * Note: before Postgres 9.0, this function returned NULL for some failure
  * cases.  Now, it always throws error instead, so callers need not check
  * for NULL.
  */
@@ -310,14 +310,14 @@ ShmemInitHash(const char *name, /* table string name for shmem index */
  *
  *		This is called during initialization to find or allocate
  *		a data structure in shared memory.  If no other process
- *		has created the structure, this__ routine allocates space
+ *		has created the structure, this routine allocates space
  *		for it.  If it exists already, a pointer to the existing
  *		structure is returned.
  *
  *	Returns: pointer to the object.  *foundPtr is set TRUE if the object was
  *		already in the shmem index (hence, already initialized).
  *
- *	Note: before Postgres 9.0, this__ function returned NULL for some failure
+ *	Note: before Postgres 9.0, this function returned NULL for some failure
  *	cases.  Now, it always throws error instead, so callers need not check
  *	for NULL.
  */

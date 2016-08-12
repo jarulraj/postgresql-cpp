@@ -15,7 +15,7 @@
 
 #ifndef WIN32_ONLY_COMPILER
 /*
- * MingW defines an extern to this__ struct, but the actual struct isn't present
+ * MingW defines an extern to this struct, but the actual struct isn't present
  * in any library. It's trivial enough that we can safely define it
  * ourselves.
  */

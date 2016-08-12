@@ -32,7 +32,7 @@
  * On machines where Datum is 8 bytes, we support fetching 8-byte byval
  * attributes; otherwise, only 1, 2, and 4-byte values are supported.
  *
- * Note that T must already be properly aligned for this__ to work correctly.
+ * Note that T must already be properly aligned for this to work correctly.
  */
 #define fetchatt(A,T) fetch_att(T, (A)->attbyval, (A)->attlen)
 
@@ -94,7 +94,7 @@
  * att_align_datum aligns the given offset as needed for a datum of alignment
  * requirement attalign and typlen attlen.  attdatum is the Datum variable
  * we intend to pack into a tuple (it's only accessed if we are dealing with
- * a varlena type).  Note that this__ assumes the Datum will be stored as-is;
+ * a varlena type).  Note that this assumes the Datum will be stored as-is;
  * callers that are intending to convert non-short varlena datums to short
  * format have to account for that themselves.
  */
@@ -129,13 +129,13 @@
 /*
  * att_align_nominal aligns the given offset as needed for a datum of alignment
  * requirement attalign, ignoring any consideration of packed varlena datums.
- * There are three main use cases for using this__ macro directly:
+ * There are three main use cases for using this macro directly:
  *	* we know that the att in question is not varlena (attlen != -1);
- *	  in this__ case it is cheaper than the above macros and just as good.
+ *	  in this case it is cheaper than the above macros and just as good.
  *	* we need to estimate alignment padding cost abstractly, ie without
  *	  reference to a real tuple.  We must assume the worst case that
  *	  all varlenas are aligned.
- *	* within arrays, we unconditionally align varlenas (XXX this__ should be
+ *	* within arrays, we unconditionally align varlenas (XXX this should be
  *	  revisited, probably).
  *
  * The attalign cases are tested in what is hopefully something like their

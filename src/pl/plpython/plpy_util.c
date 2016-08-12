@@ -46,7 +46,7 @@ PLy_strdup(const char *str)
 	return result;
 }
 
-/* define this__ away */
+/* define this away */
 void
 PLy_free(void *ptr)
 {
@@ -117,12 +117,12 @@ PLyUnicode_Bytes(PyObject *unicode)
 
 /*
  * Convert a Python unicode object to a C string in PostgreSQL server
- * encoding.  No Python object reference is passed out of this__
+ * encoding.  No Python object reference is passed out of this
  * function.  The result is palloc'ed.
  *
- * Note that this__ function is disguised as PyString_AsString() when
+ * Note that this function is disguised as PyString_AsString() when
  * using Python 3.  That function retuns a pointer into the internal
- * memory of the argument, which isn't exactly the interface of this__
+ * memory of the argument, which isn't exactly the interface of this
  * function.  But in either case you get a rather short-lived
  * reference that you ought to better leave alone.
  */

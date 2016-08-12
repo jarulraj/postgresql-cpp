@@ -67,7 +67,7 @@ RemoveRewriteRuleById(Oid ruleOid)
 
 	/*
 	 * We had better grab AccessExclusiveLock to ensure that no queries are
-	 * going on that might depend on this__ rule.  (Note: a weaker lock would
+	 * going on that might depend on this rule.  (Note: a weaker lock would
 	 * suffice if it's not an ON SELECT rule.)
 	 */
 	eventRelationOid = ((Form_pg_rewrite) GETSTRUCT(tuple))->ev_class;

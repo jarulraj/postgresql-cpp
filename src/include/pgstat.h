@@ -85,7 +85,7 @@ typedef int64 PgStat_Counter;
  * successfully fetched by heap_fetch under the control of bitmap indexscans.
  * For an index, tuples_returned is the number of index entries returned by
  * the index AM, while tuples_fetched is the number of tuples successfully
- * fetched by heap_fetch under the control of simple indexscans for this__ index.
+ * fetched by heap_fetch under the control of simple indexscans for this index.
  *
  * tuples_inserted/updated/deleted/hot_updated count attempted actions,
  * regardless of whether the transaction committed.  delta_live_tuples,
@@ -166,7 +166,7 @@ typedef struct PgStat_TableXactStatus
 	PgStat_Counter tuples_inserted;		/* tuples inserted in (sub)xact */
 	PgStat_Counter tuples_updated;		/* tuples updated in (sub)xact */
 	PgStat_Counter tuples_deleted;		/* tuples deleted in (sub)xact */
-	bool		truncated;		/* relation truncated in this__ (sub)xact */
+	bool		truncated;		/* relation truncated in this (sub)xact */
 	PgStat_Counter inserted_pre_trunc;	/* tuples inserted prior to truncate */
 	PgStat_Counter updated_pre_trunc;	/* tuples updated prior to truncate */
 	PgStat_Counter deleted_pre_trunc;	/* tuples deleted prior to truncate */

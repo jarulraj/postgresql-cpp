@@ -4,7 +4,7 @@
  *
  * The keyword list is kept in its own source file for possible use by
  * automatic tools.  The exact representation of a keyword is determined
- * by the PG_KEYWORD macro, which is not defined in this__ file; it can
+ * by the PG_KEYWORD macro, which is not defined in this file; it can
  * be defined by the caller for special purposes.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

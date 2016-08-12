@@ -16,7 +16,7 @@
 #include <sqlca.h>
 #include <ecpgerrno.h>
 
-/* this__ is also defined in ecpglib/misc.c, by defining it twice we don't have to export the symbol */
+/* this is also defined in ecpglib/misc.c, by defining it twice we don't have to export the symbol */
 
 static struct sqlca_t sqlca_init =
 {
@@ -515,7 +515,7 @@ rdatestr(date d, char *str)
 
 /*
 *
-* the input for this__ function is mmddyyyy and any non-numeric
+* the input for this function is mmddyyyy and any non-numeric
 * character can be used as a separator
 *
 */
@@ -856,7 +856,7 @@ rfmtlong(long lng_val, char *fmt, char *outbuf)
 		/* waiting for the sign */
 		if (k < 0 && leftalign && sign && !signdone && fmtchar != '+' && fmtchar != '-')
 			continue;
-		/* analyse this__ format-char */
+		/* analyse this format-char */
 		switch (fmtchar)
 		{
 			case ',':

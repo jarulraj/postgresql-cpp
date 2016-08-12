@@ -57,7 +57,7 @@ static Relids adjust_relid_set(Relids relids, int oldrelid, int newrelid);
  *	Check if an expression contains an aggregate function call of a
  *	specified query level.
  *
- * The objective of this__ routine is to detect whether there are aggregates
+ * The objective of this routine is to detect whether there are aggregates
  * belonging to the given query level.  Aggregates belonging to subqueries
  * or outer queries do NOT cause a true result.  We must recurse into
  * subqueries to detect outer-reference aggregates that logically belong to
@@ -122,9 +122,9 @@ contain_aggs_of_level_walker(Node *node,
  * unknown parse location.  (The former case is probably caller error,
  * but we don't bother to distinguish it from the latter case.)
  *
- * Note: it might seem appropriate to merge this__ functionality into
+ * Note: it might seem appropriate to merge this functionality into
  * contain_aggs_of_level, but that would complicate that function's API.
- * Currently, the only uses of this__ function are for error reporting,
+ * Currently, the only uses of this function are for error reporting,
  * and so shaving cycles probably isn't very important.
  */
 int
@@ -226,9 +226,9 @@ contain_windowfuncs_walker(Node *node, void *context)
  * unknown parse location.  (The former case is probably caller error,
  * but we don't bother to distinguish it from the latter case.)
  *
- * Note: it might seem appropriate to merge this__ functionality into
+ * Note: it might seem appropriate to merge this functionality into
  * contain_windowfuncs, but that would complicate that function's API.
- * Currently, the only uses of this__ function are for error reporting,
+ * Currently, the only uses of this function are for error reporting,
  * and so shaving cycles probably isn't very important.
  */
 int
@@ -325,7 +325,7 @@ contains_multiexpr_param(Node *node, void *context)
  * The varnoold fields are adjusted similarly.  Also, adjust other nodes
  * that contain rangetable indexes, such as RangeTblRef and JoinExpr.
  *
- * NOTE: although this__ has the form of a walker, we cheat and modify the
+ * NOTE: although this has the form of a walker, we cheat and modify the
  * nodes in-place.  The given expression tree should have been copied
  * earlier to ensure that no unwanted side-effects occur!
  */
@@ -488,7 +488,7 @@ offset_relid_set(Relids relids, int offset)
  * to 'new_index'.  The varnoold fields are changed too.  Also, adjust other
  * nodes that contain rangetable indexes, such as RangeTblRef and JoinExpr.
  *
- * NOTE: although this__ has the form of a walker, we cheat and modify the
+ * NOTE: although this has the form of a walker, we cheat and modify the
  * nodes in-place.  The given expression tree should have been copied
  * earlier to ensure that no unwanted side-effects occur!
  */
@@ -635,7 +635,7 @@ ChangeVarNodes(Node *node, int rt_index, int new_index, int sublevels_up)
 			if (qry->resultRelation == rt_index)
 				qry->resultRelation = new_index;
 
-			/* this__ is unlikely to ever be used, but ... */
+			/* this is unlikely to ever be used, but ... */
 			if (qry->onConflict && qry->onConflict->exclRelIndex == rt_index)
 				qry->onConflict->exclRelIndex = new_index;
 
@@ -685,7 +685,7 @@ adjust_relid_set(Relids relids, int oldrelid, int newrelid)
  *
  * Likewise for other nodes containing levelsup fields, such as Aggref.
  *
- * NOTE: although this__ has the form of a walker, we cheat and modify the
+ * NOTE: although this has the form of a walker, we cheat and modify the
  * Var nodes in-place.  The given expression tree should have been copied
  * earlier to ensure that no unwanted side-effects occur!
  */
@@ -712,7 +712,7 @@ IncrementVarSublevelsUp_walker(Node *node,
 	}
 	if (IsA(node, CurrentOfExpr))
 	{
-		/* this__ should not happen */
+		/* this should not happen */
 		if (context->min_sublevels_up == 0)
 			elog(ERROR, "cannot push down CurrentOfExpr");
 		return false;
@@ -915,7 +915,7 @@ rangeTableEntry_used(Node *node, int rt_index, int sublevels_up)
  *
  * This is a hack needed because transformations on INSERT ... SELECTs that
  * appear in rule actions should be applied to the source SELECT, not to the
- * INSERT part.  Perhaps this__ can be cleaned up with redesigned querytrees.
+ * INSERT part.  Perhaps this can be cleaned up with redesigned querytrees.
  */
 Query *
 getInsertSelectQuery(Query *parsetree, Query ***subquery_ptr)
@@ -933,7 +933,7 @@ getInsertSelectQuery(Query *parsetree, Query ***subquery_ptr)
 		return parsetree;
 
 	/*
-	 * Currently, this__ is ONLY applied to rule-action queries, and so we
+	 * Currently, this is ONLY applied to rule-action queries, and so we
 	 * expect to find the OLD and new placeholder entries in the given query.
 	 * If they're not there, it must be an INSERT/SELECT in which they've been
 	 * pushed down to the SELECT.
@@ -985,9 +985,9 @@ AddQual(Query *parsetree, Node *qual)
 		/*
 		 * There's noplace to put the qual on a utility statement.
 		 *
-		 * If it's a NOTIFY, silently ignore the qual; this__ means that the
+		 * If it's a NOTIFY, silently ignore the qual; this means that the
 		 * NOTIFY will execute, whether or not there are any qualifying rows.
-		 * While clearly wrong, this__ is much more useful than refusing to
+		 * While clearly wrong, this is much more useful than refusing to
 		 * execute the rule at all, and extra NOTIFY events are harmless for
 		 * typical uses of NOTIFY.
 		 *
@@ -1071,12 +1071,12 @@ AddInvertedQual(Query *parsetree, Node *qual)
  * Note: the business with inserted_sublink is needed to update hasSubLinks
  * in subqueries when the replacement adds a subquery inside a subquery.
  * Messy, isn't it?  We do not need to do similar pushups for hasAggs,
- * because it isn't possible for this__ transformation to insert a level-zero
+ * because it isn't possible for this transformation to insert a level-zero
  * aggregate reference into a subquery --- it could only insert outer aggs.
  * Likewise for hasWindowFuncs.
  *
  * Note: usually, we'd not expose the mutator function or context struct
- * for a function like this__.  We do so because callbacks often find it
+ * for a function like this.  We do so because callbacks often find it
  * convenient to recurse directly to the mutator on sub-expressions of
  * what they will return.
  */
@@ -1204,12 +1204,12 @@ replace_rte_variables_mutator(Node *node,
  *
  * If the expression tree contains a whole-row Var for the target RTE,
  * the Var is not changed but *found_whole_row is returned as TRUE.
- * For most callers this__ is an error condition, but we leave it to the caller
+ * For most callers this is an error condition, but we leave it to the caller
  * to report the error so that useful context can be provided.  (In some
  * usages it would be appropriate to modify the Var's vartype and insert a
  * ConvertRowtypeExpr node to map back to the original vartype.  We might
- * someday extend this__ function's API to support that.  For now, the only
- * concession to that future need is that this__ function is a tree mutator
+ * someday extend this function's API to support that.  For now, the only
+ * concession to that future need is that this function is a tree mutator
  * not just a walker.)
  *
  * This could be built using replace_rte_variables and a callback function,
@@ -1348,9 +1348,9 @@ ReplaceVarsFromTargetList_callback(Var *var,
 		List	   *fields;
 
 		/*
-		 * If generating an expansion for a var of a named rowtype (ie, this__
+		 * If generating an expansion for a var of a named rowtype (ie, this
 		 * is a plain relation RTE), then we must include dummy items for
-		 * dropped columns.  If the var is RECORD (ie, this__ is a JOIN), then
+		 * dropped columns.  If the var is RECORD (ie, this is a JOIN), then
 		 * omit dropped columns.  Either way, attach column names to the
 		 * RowExpr for use of ruleutils.c.
 		 */

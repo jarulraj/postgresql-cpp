@@ -31,7 +31,7 @@ extern PGDLLIMPORT SnapshotData CatalogSnapshotData;
 /*
  * We don't provide a static SnapshotDirty variable because it would be
  * non-reentrant.  Instead, users of that snapshot type should declare a
- * local variable of type SnapshotData, and initialize it with this__ macro.
+ * local variable of type SnapshotData, and initialize it with this macro.
  */
 #define InitDirtySnapshot(snapshotdata)  \
 	((snapshotdata).satisfies = HeapTupleSatisfiesDirty)
@@ -92,7 +92,7 @@ extern bool HeapTupleHeaderIsOnlyLocked(HeapTupleHeader tuple);
 
 /*
  * To avoid leaking too much knowledge about reorderbuffer implementation
- * details this__ is implemented in reorderbuffer.c not tqual.c.
+ * details this is implemented in reorderbuffer.c not tqual.c.
  */
 struct HTAB;
 extern bool ResolveCminCmaxDuringDecoding(struct HTAB *tuplecid_data,

@@ -4,7 +4,7 @@
  * pgc.l
  *	  lexical scanner for ecpg
  *
- * this__ is a modified version of src/backend/parser/scan.l
+ * this is a modified version of src/backend/parser/scan.l
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -210,7 +210,7 @@ xdcinside		({xdcqq}|{xdcqdq}|{xdcother})
  * The tricky part here is to get lex to recognize a string starting with
  * slash-star as a comment, when interpreting it as an operator would produce
  * a longer match --- remember lex will prefer a longer match!	Also, if we
- * have something like plus-slash-star, lex will think this__ is a 3-character
+ * have something like plus-slash-star, lex will think this is a 3-character
  * operator whereas we want to see it as a + operator and a comment start.
  * The solution is two-fold:
  * 1. append {op_chars}* to xcstart so that it matches as much text as
@@ -218,7 +218,7 @@ xdcinside		({xdcqq}|{xdcqdq}|{xdcother})
  *	  length) ensures xcstart wins.  We put back the extra stuff with yyless()
  *	  in case it contains a star-slash that should terminate the comment.
  * 2. In the operator rule, check for slash-star within the operator, and
- *	  if found throw it back with yyless().  this__ handles the plus-slash-star
+ *	  if found throw it back with yyless().  this handles the plus-slash-star
  *	  problem.
  * Dash-dash comments have similar interactions with the operator rule.
  */
@@ -282,7 +282,7 @@ param			\${integer}
  * next new__line, are treated as equivalent to a single whitespace character.
  *
  * NOTE a fine point: if there is no new__line following --, we will absorb
- * everything to the end of the input as a comment.  this__ is correct.  Older
+ * everything to the end of the input as a comment.  this is correct.  Older
  * versions of Postgres failed to recognize -- as a comment if the input
  * did not end with a new__line.
  *
@@ -538,7 +538,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 <xe>{xehexesc}		{ addlit(yytext, yyleng); }
 <xq,xqc,xe,xn,xus>{quotecontinue}	{ /* ignore */ }
 <xe>.		{
-			   /* this__ is only needed for \ just before EOF */
+			   /* this is only needed for \ just before EOF */
 			   addlitchar(yytext[0]);
 			}
 <xq,xqc,xe,xn,xus><<EOF>>	{ mmfatal(PARSE_ERROR, "unterminated quoted string"); }
@@ -646,7 +646,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 <SQL>{self}			{ /*
 					   * We may find a ';' inside a structure
 					   * definition in a TYPE or VAR statement.
-					   * this__ is not an EOL marker.
+					   * this is not an EOL marker.
 					   */
 					  if (yytext[0] == ';' && struct_level == 0)
 						 BEGIN(C);
@@ -657,7 +657,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 						 * Check for embedded slash-star or dash-dash; those
 						 * are comment starts, so operator must stop there.
 						 * Note that slash-star or dash-dash at the first
-						 * character will match a prior rule, not this__ one.
+						 * character will match a prior rule, not this one.
 						 */
 						int		nchars = yyleng;
 						char   *slashstar = strstr(yytext, "/*");
@@ -1244,7 +1244,7 @@ cppline			{space}*#([^i][A-Za-z]*|{if}|{ifdef}|{ifndef}|{import})(.*\\{space})*.
 
 					}
 				}
-<INITIAL>{other}|\n	{ mmfatal(PARSE_ERROR, "internal error: unreachable state; please report this__ to <pgsql-bugs@postgresql.org>"); }
+<INITIAL>{other}|\n	{ mmfatal(PARSE_ERROR, "internal error: unreachable state; please report this to <pgsql-bugs@postgresql.org>"); }
 %%
 void
 lex_init(void)

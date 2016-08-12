@@ -12,7 +12,7 @@
  *
  *	  - a remote process is the destination when we are
  *		running a backend with a frontend and the frontend executes
- *		PQexec() or PQfn().  In this__ case, the results are sent
+ *		PQexec() or PQfn().  In this case, the results are sent
  *		to the frontend via the functions in backend/libpq.
  *
  *	  - DestNone is the destination when the system executes
@@ -37,8 +37,8 @@
  *
  * In some cases, receiver objects require additional parameters that must
  * be passed to them after calling CreateDestReceiver.  Since the set of
- * parameters varies for different receiver types, this__ is not handled by
- * this__ module, but by direct calls from the calling code to receiver type
+ * parameters varies for different receiver types, this is not handled by
+ * this module, but by direct calls from the calling code to receiver type
  * specific functions.
  *
  * The DestReceiver object returned by CreateDestReceiver may be a statically
@@ -76,7 +76,7 @@
 
 /* ----------------
  *		CommandDest is a simplistic means of identifying the desired
- *		destination.  Someday this__ will probably need to be improved.
+ *		destination.  Someday this will probably need to be improved.
  *
  * Note: only the values DestNone, DestDebug, DestRemote are legal for the
  * global variable whereToSendOutput.   The other values may be used
@@ -120,9 +120,9 @@ struct _DestReceiver
 	void		(*rShutdown) (DestReceiver *self);
 	/* Destroy the receiver object itself (if dynamically allocated) */
 	void		(*rDestroy) (DestReceiver *self);
-	/* CommandDest code for this__ receiver */
+	/* CommandDest code for this receiver */
 	CommandDest mydest;
-	/* private fields might appear beyond this__ point... */
+	/* private fields might appear beyond this point... */
 };
 
 extern DestReceiver *None_Receiver;		/* permanent receiver for DestNone */

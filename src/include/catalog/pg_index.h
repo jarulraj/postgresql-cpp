@@ -11,7 +11,7 @@
  * src/include/catalog/pg_index.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_index definition.  cpp turns this__ into
+ *		pg_index definition.  cpp turns this into
  *		typedef struct FormData_pg_index.
  * ----------------
  */
@@ -33,16 +33,16 @@ CATALOG(pg_index,2610) BKI_WITHOUT_OIDS BKI_SCHEMA_MACRO
 	Oid			indexrelid;		/* OID of the index */
 	Oid			indrelid;		/* OID of the relation it indexes */
 	int16		indnatts;		/* number of columns in index */
-	bool		indisunique;	/* is this__ a unique index? */
-	bool		indisprimary;	/* is this__ index for primary key? */
-	bool		indisexclusion; /* is this__ index for exclusion constraint? */
+	bool		indisunique;	/* is this a unique index? */
+	bool		indisprimary;	/* is this index for primary key? */
+	bool		indisexclusion; /* is this index for exclusion constraint? */
 	bool		indimmediate;	/* is uniqueness enforced immediately? */
-	bool		indisclustered; /* is this__ the index last clustered by? */
-	bool		indisvalid;		/* is this__ index valid for use by queries? */
+	bool		indisclustered; /* is this the index last clustered by? */
+	bool		indisvalid;		/* is this index valid for use by queries? */
 	bool		indcheckxmin;	/* must we wait for xmin to be old? */
-	bool		indisready;		/* is this__ index ready for inserts? */
-	bool		indislive;		/* is this__ index alive at all? */
-	bool		indisreplident; /* is this__ index the identity for replication? */
+	bool		indisready;		/* is this index ready for inserts? */
+	bool		indislive;		/* is this index alive at all? */
+	bool		indisreplident; /* is this index the identity for replication? */
 
 	/* variable-length fields start here, but we allow direct access to indkey */
 	int2vector	indkey;			/* column numbers of indexed cols, or 0 */
@@ -101,7 +101,7 @@ typedef FormData_pg_index *Form_pg_index;
 
 /*
  * Use of these macros is recommended over direct examination of the state
- * flag columns where possible; this__ allows source code compatibility with
+ * flag columns where possible; this allows source code compatibility with
  * the hacky representation used in 9.2.
  */
 #define IndexIsValid(indexForm) ((indexForm)->indisvalid)

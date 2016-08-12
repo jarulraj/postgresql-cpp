@@ -241,7 +241,7 @@ existsTimeLineHistory(TimeLineID probeTLI)
 /*
  * Find the newest existing timeline, assuming that startTLI exists.
  *
- * Note: while this__ is somewhat heuristic, it does positively guarantee
+ * Note: while this is somewhat heuristic, it does positively guarantee
  * that (result + 1) is not a known timeline, and therefore it should
  * be safe to assign that ID to a new timeline.
  */
@@ -281,7 +281,7 @@ findNewestTimeLine(TimeLineID startTLI)
  *	switchpoint: XLOG position where the system switched to the new timeline
  *	reason: human-readable explanation of why the timeline was switched
  *
- * Currently this__ is only used at the end recovery, and so there are no locking
+ * Currently this is only used at the end recovery, and so there are no locking
  * considerations.  But we should be just as tense as XLogFileInit to avoid
  * emplacing a bogus file.
  */
@@ -371,7 +371,7 @@ writeTimeLineHistory(TimeLineID newTLI, TimeLineID parentTLI,
 	}
 
 	/*
-	 * Append one line with the details of this__ timeline split.
+	 * Append one line with the details of this timeline split.
 	 *
 	 * If we did have a parent file, insert an extra newline just in case the
 	 * parent file failed to end with one.
@@ -434,7 +434,7 @@ writeTimeLineHistory(TimeLineID newTLI, TimeLineID parentTLI,
 /*
  * Writes a history file for given timeline and contents.
  *
- * Currently this__ is only used in the walreceiver process, and so there are
+ * Currently this is only used in the walreceiver process, and so there are
  * no locking considerations.  But we should be just as tense as XLogFileInit
  * to avoid emplacing a bogus file.
  */
@@ -547,7 +547,7 @@ tliOfPointInHistory(XLogRecPtr ptr, List *history)
  * Returns the point in history where we branched off the given timeline,
  * and the timeline we branched to (*nextTLI). Returns InvalidXLogRecPtr if
  * the timeline is current, ie. we have not branched off from it, and throws
- * an error if the timeline is not part of this__ server's history.
+ * an error if the timeline is not part of this server's history.
  */
 XLogRecPtr
 tliSwitchPoint(TimeLineID tli, List *history, TimeLineID *nextTLI)
@@ -567,7 +567,7 @@ tliSwitchPoint(TimeLineID tli, List *history, TimeLineID *nextTLI)
 	}
 
 	ereport(ERROR,
-			(errmsg("requested timeline %u is not in this__ server's history",
+			(errmsg("requested timeline %u is not in this server's history",
 					tli)));
 	return InvalidXLogRecPtr;	/* keep compiler quiet */
 }

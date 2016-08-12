@@ -3,7 +3,7 @@
  * timer.c
  *	  Microsoft Windows Win32 Timer Implementation
  *
- *	  Limitations of this__ implementation:
+ *	  Limitations of this implementation:
  *
  *	  - Does not support interval timer (value->it_interval)
  *	  - Only supports ITIMER_REAL
@@ -91,7 +91,7 @@ setitimer(int which, const struct itimerval * value, struct itimerval * ovalue)
 
 	if (timerThreadHandle == INVALID_HANDLE_VALUE)
 	{
-		/* First call in this__ backend, create event and the timer thread */
+		/* First call in this backend, create event and the timer thread */
 		timerCommArea.event = CreateEvent(NULL, TRUE, FALSE, NULL);
 		if (timerCommArea.event == NULL)
 			ereport(FATAL,

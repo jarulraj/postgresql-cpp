@@ -44,9 +44,9 @@ typedef struct XLogRecord
 	TransactionId xl_xid;		/* xact id */
 	XLogRecPtr	xl_prev;		/* ptr to previous record in log */
 	uint8		xl_info;		/* flag bits, see below */
-	RmgrId		xl_rmid;		/* resource manager for this__ record */
+	RmgrId		xl_rmid;		/* resource manager for this record */
 	/* 2 bytes of padding here, initialize to zero */
-	pg_crc32c	xl_crc;			/* CRC for this__ record */
+	pg_crc32c	xl_crc;			/* CRC for this record */
 
 	/* XLogRecordBlockHeaders and XLogRecordDataHeader follow, no padding */
 
@@ -64,7 +64,7 @@ typedef struct XLogRecord
 
 /*
  * If a WAL record modifies any relation files, in ways not covered by the
- * usual block references, this__ flag is set. This is not used for anything
+ * usual block references, this flag is set. This is not used for anything
  * by PostgreSQL itself, but it allows external tools that read WAL and keep
  * track of modified blocks to recognize such special record types.
  */
@@ -74,7 +74,7 @@ typedef struct XLogRecord
  * Header info for block data appended to an XLOG record.
  *
  * 'data_length' is the length of the rmgr-specific payload data associated
- * with this__ block. It does not include the possible full page image, nor
+ * with this block. It does not include the possible full page image, nor
  * XLogRecordBlockHeader struct itself.
  *
  * Note that we don't attempt to align the XLogRecordBlockHeader struct!
@@ -108,7 +108,7 @@ typedef struct XLogRecordBlockHeader
  * When wal_compression is enabled, a full page image which "hole" was
  * removed is additionally compressed using PGLZ compression algorithm.
  * This can reduce the WAL volume, but at some extra cost of CPU spent
- * on the compression during WAL logging. In this__ case, since the "hole"
+ * on the compression during WAL logging. In this case, since the "hole"
  * length cannot be calculated by subtracting the number of page image bytes
  * from BLCKSZ, basically it needs to be stored as an extra information.
  * But when no "hole" exists, we can assume that the "hole" length is zero

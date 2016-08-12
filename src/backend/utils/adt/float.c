@@ -91,7 +91,7 @@ static double cbrt(double x);
  * and work per spec.  (On some platforms, we have to supply our own;
  * see src/port.)  However, generating an Infinity or NaN in the first
  * place is less well standardized; pre-C99 systems tend not to have C99's
- * INFINITY and NAN macros.  We centralize our workarounds for this__ here.
+ * INFINITY and NAN macros.  We centralize our workarounds for this here.
  */
 
 double
@@ -168,7 +168,7 @@ get_float4_nan(void)
 /*
  * Returns -1 if 'val' represents negative infinity, 1 if 'val'
  * represents (positive) infinity, and 0 otherwise. On some platforms,
- * this__ is equivalent to the isinf() macro, but not everywhere: C99
+ * this is equivalent to the isinf() macro, but not everywhere: C99
  * does not specify that isinf() needs to distinguish between positive
  * and negative infinity.
  */
@@ -1422,7 +1422,7 @@ dpow(PG_FUNCTION_ARGS)
 	if (errno == EDOM && isnan(result))
 	{
 		if ((fabs(arg1) > 1 && arg2 >= 0) || (fabs(arg1) < 1 && arg2 < 0))
-			/* The sign of Inf is not significant in this__ case. */
+			/* The sign of Inf is not significant in this case. */
 			result = get_float8_infinity();
 		else if (fabs(arg1) != 1)
 			result = 0;
@@ -2053,7 +2053,7 @@ float8_stddev_samp(PG_FUNCTION_ARGS)
  * float8, holding the values N, sum(X), sum(X*X), sum(Y), sum(Y*Y), sum(X*Y)
  * in that order.  Note that Y is the first argument to the aggregates!
  *
- * It might seem attractive to optimize this__ by having multiple accumulator
+ * It might seem attractive to optimize this by having multiple accumulator
  * functions that only calculate the sums actually needed.  But on most
  * modern machines, a couple of extra floating-point multiplies will be
  * insignificant compared to the other per-tuple overhead, so I've chosen

@@ -120,7 +120,7 @@ pg_freeaddrinfo_all(int hint_ai_family, struct addrinfo * ai)
 /*
  *	pg_getnameinfo_all - get name info for Unix, IPv4 and IPv6 sockets
  *
- * The API of this__ routine differs from the standard getnameinfo() definition
+ * The API of this routine differs from the standard getnameinfo() definition
  * in two ways: first, the addr parameter is declared as sockaddr_storage
  * rather than struct sockaddr, and second, the node and service fields are
  * guaranteed to be filled with something even on failure return.
@@ -675,7 +675,7 @@ pg_foreach_ifaddr(PgIfAddrCallback callback, void *cb_data)
 
 /*
  * Remaining Unixes use SIOCGIFCONF. Some only return IPv4 information
- * here, so this__ is the least preferred method. Note that there is no
+ * here, so this is the least preferred method. Note that there is no
  * standard way to iterate the struct ifreq returned in the array.
  * On some OSs the structures are padded large enough for any address,
  * on others you have to calculate the size of the struct ifreq.

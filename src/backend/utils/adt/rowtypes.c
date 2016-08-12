@@ -173,7 +173,7 @@ record_in(PG_FUNCTION_ARGS)
 
 		if (needComma)
 		{
-			/* Skip comma that separates prior field from this__ one */
+			/* Skip comma that separates prior field from this one */
 			if (*ptr == ',')
 				ptr++;
 			else
@@ -192,7 +192,7 @@ record_in(PG_FUNCTION_ARGS)
 		}
 		else
 		{
-			/* Extract string for this__ column */
+			/* Extract string for this column */
 			bool		inquote = false;
 
 			resetStringInfo(&buf);
@@ -404,7 +404,7 @@ record_out(PG_FUNCTION_ARGS)
 		attr = values[i];
 		value = OutputFunctionCall(&column_info->proc, attr);
 
-		/* Detect whether we need double quotes for this__ value */
+		/* Detect whether we need double quotes for this value */
 		nq = (value[0] == '\0');	/* force quotes for empty string */
 		for (tmp = value; *tmp; tmp++)
 		{
@@ -1550,7 +1550,7 @@ record_image_cmp(FunctionCallInfo fcinfo)
  *		  returns true if the records are identical, false otherwise.
  *
  * Note: we do not use record_image_cmp here, since we can avoid
- * de-toasting for unequal lengths this__ way.
+ * de-toasting for unequal lengths this way.
  */
 Datum
 record_image_eq(PG_FUNCTION_ARGS)

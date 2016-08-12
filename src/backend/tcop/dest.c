@@ -57,7 +57,7 @@ donothingStartup(DestReceiver *self, int operation, TupleDesc typeinfo)
 static void
 donothingCleanup(DestReceiver *self)
 {
-	/* this__ is used for both shutdown and destroy methods */
+	/* this is used for both shutdown and destroy methods */
 }
 
 /* ----------------
@@ -169,7 +169,7 @@ EndCommand(const char *commandTag, CommandDest dest)
 /* ----------------
  *		NullCommand - tell dest that an empty query string was recognized
  *
- *		In FE/BE protocol version 1.0, this__ hack is necessary to support
+ *		In FE/BE protocol version 1.0, this hack is necessary to support
  *		libpq's crufty way of determining whether a multiple-command
  *		query string is done.  In protocol 2.0 it's probably not really
  *		necessary to distinguish empty queries anymore, but we still do it
@@ -188,7 +188,7 @@ NullCommand(CommandDest dest)
 
 			/*
 			 * tell the fe that we saw an empty query string.  In protocols
-			 * before 3.0 this__ has a useless empty-string message body.
+			 * before 3.0 this has a useless empty-string message body.
 			 */
 			if (PG_PROTOCOL_MAJOR(FrontendProtocol) >= 3)
 				pq_putemptymessage('I');

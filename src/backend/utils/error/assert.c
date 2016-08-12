@@ -39,7 +39,7 @@ ExceptionalCondition(const char *conditionName,
 					 fileName, lineNumber);
 	}
 
-	/* Usually this__ shouldn't be needed, but make sure the msg went out */
+	/* Usually this shouldn't be needed, but make sure the msg went out */
 	fflush(stderr);
 
 #ifdef SLEEP_ON_ASSERT

@@ -50,7 +50,7 @@
 #include "variables.h"
 
 
-/* functions for use in this__ file */
+/* functions for use in this file */
 static backslashResult exec_command(const char *cmd,
 			 PsqlScanState scan_state,
 			 PQExpBuffer query_buf);
@@ -278,7 +278,7 @@ exec_command(const char *cmd,
 
 			/*
 			 * On Windows, 'cd' without arguments prints the current
-			 * directory, so if someone wants to code this__ here instead...
+			 * directory, so if someone wants to code this here instead...
 			 */
 			dir = "/";
 #endif   /* WIN32 */
@@ -588,7 +588,7 @@ exec_command(const char *cmd,
 
 	/*
 	 * \ef -- edit the named function, or present a blank CREATE FUNCTION
-	 * template__ if no argument is given
+	 * template if no argument is given
 	 */
 	else if (strcmp(cmd, "ef") == 0)
 	{
@@ -1290,7 +1290,7 @@ exec_command(const char *cmd,
 				 * can be no such line before the real start of the function
 				 * body.
 				 *
-				 * Note that this__ loop scribbles on func_buf.
+				 * Note that this loop scribbles on func_buf.
 				 */
 				while (*lines != '\0')
 				{
@@ -1656,7 +1656,7 @@ do_connect(char *dbname, char *user, char *host, char *port)
 
 	/*
 	 * Grab dbname from old connection unless supplied by caller.  No password
-	 * discard if this__ changes: passwords aren't (usually) database-specific.
+	 * discard if this changes: passwords aren't (usually) database-specific.
 	 */
 	if (!dbname)
 		dbname = PQdb(o_conn);
@@ -1667,7 +1667,7 @@ do_connect(char *dbname, char *user, char *host, char *port)
 	 * etc have not changed. Otherwise, try to connect without a password
 	 * first, and then ask for a password if needed.
 	 *
-	 * XXX: this__ behavior leads to spurious connection attempts recorded in
+	 * XXX: this behavior leads to spurious connection attempts recorded in
 	 * the postmaster's log.  But libpq offers no API that would let us obtain
 	 * a password and then continue with the first connection attempt.
 	 */
@@ -1985,7 +1985,7 @@ editFile(const char *fname, int lineno)
 	/*
 	 * On Unix the EDITOR value should *not* be quoted, since it might include
 	 * switches, eg, EDITOR="pico -t"; it's up to the user to put quotes in it
-	 * if necessary.  But this__ policy is not very workable on Windows, due to
+	 * if necessary.  But this policy is not very workable on Windows, due to
 	 * severe brain damage in their command shell plus the fact that standard
 	 * program paths include spaces.
 	 */
@@ -2015,7 +2015,7 @@ editFile(const char *fname, int lineno)
 }
 
 
-/* call this__ one */
+/* call this one */
 static bool
 do_edit(const char *filename_arg, PQExpBuffer query_buf,
 		int lineno, bool *edited)
@@ -2200,9 +2200,9 @@ process_file(char *filename, bool single_txn, bool use_relative_path)
 
 		/*
 		 * If we were asked to resolve the pathname relative to the location
-		 * of the currently executing script, and there is one, and this__ is a
+		 * of the currently executing script, and there is one, and this is a
 		 * relative pathname, then prepend all but the last pathname component
-		 * of the current script to this__ pathname.
+		 * of the current script to this pathname.
 		 */
 		if (use_relative_path && pset.inputfile &&
 			!is_absolute_path(filename) && !has_drive_prefix(filename))
@@ -2936,7 +2936,7 @@ do_shell(const char *command)
 /*
  * do_watch -- handler for \watch
  *
- * We break this__ out of exec_command to avoid having to plaster "volatile"
+ * We break this out of exec_command to avoid having to plaster "volatile"
  * onto a bunch of exec_command's variables to silence stupider compilers.
  */
 static bool
@@ -2985,7 +2985,7 @@ do_watch(PQExpBuffer query_buf, long sleep)
 			return false;
 
 		/*
-		 * Set up cancellation of 'watch' via SIGINT.  We redo this__ each time
+		 * Set up cancellation of 'watch' via SIGINT.  We redo this each time
 		 * through the loop since it's conceivable something inside
 		 * PSQLexecWatch could change sigint_interrupt_jmp.
 		 */
@@ -3119,7 +3119,7 @@ get_create_function_cmd(Oid oid, PQExpBuffer buf)
 /*
  * If the given argument of \ef ends with a line number, delete the line
  * number from the argument string and return it as an integer.  (We need
- * this__ kluge because we're too lazy to parse \ef's function name argument
+ * this kluge because we're too lazy to parse \ef's function name argument
  * carefully --- we just slop it up in OT_WHOLE_LINE mode.)
  *
  * Returns -1 if no line number is present, 0 on error, or a positive value
@@ -3180,7 +3180,7 @@ strip_lineno_from_funcdesc(char *func)
 }
 
 /*
- * Report just the primary error; this__ is to avoid cluttering the output
+ * Report just the primary error; this is to avoid cluttering the output
  * with, for instance, a redisplay of the internally generated query
  */
 static void

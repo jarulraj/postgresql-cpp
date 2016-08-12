@@ -726,7 +726,7 @@ sepgsql_audit_log(bool denied,
  *
  * The access control decision shall be set on the given av_decision.
  * The av_decision.allowed has a bitmask of SEPG_<class>__<perms>
- * to suggest a set of allowed actions in this__ object class.
+ * to suggest a set of allowed actions in this object class.
  */
 void
 sepgsql_compute_avd(const char *scontext,

@@ -66,7 +66,7 @@
 
 typedef struct
 {
-	Oid			src_dboid;		/* source (template__) DB */
+	Oid			src_dboid;		/* source (template) DB */
 	Oid			dest_dboid;		/* DB we are trying to create */
 } createdb_failure_params;
 
@@ -287,7 +287,7 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * To create a database, must have createdb privilege and must be able to
-	 * become the target role (this__ does not imply that the target role itself
+	 * become the target role (this does not imply that the target role itself
 	 * must have createdb privilege).  The latter provision guards against
 	 * "giveaway" attacks.  Note that a superuser will always have both of
 	 * these privileges a fortiori.
@@ -300,8 +300,8 @@ createdb(const CreatedbStmt *stmt)
 	check_is_member_of_role(GetUserId(), datdba);
 
 	/*
-	 * Lookup database (template__) to be cloned, and obtain share lock on it.
-	 * ShareLock allows two CREATE DATABASEs to work from the same template__
+	 * Lookup database (template) to be cloned, and obtain share lock on it.
+	 * ShareLock allows two CREATE DATABASEs to work from the same template
 	 * concurrently, while ensuring no one is busy dropping it in parallel
 	 * (which would be Very Bad since we'd likely get an incomplete copy
 	 * without knowing it).  This also prevents any new connections from being
@@ -309,7 +309,7 @@ createdb(const CreatedbStmt *stmt)
 	 * won't change underneath us.
 	 */
 	if (!dbtemplate)
-		dbtemplate = "template1";		/* Default template__ database name */
+		dbtemplate = "template1";		/* Default template database name */
 
 	if (!get_db_info(dbtemplate, ShareLock,
 					 &src_dboid, &src_owner, &src_encoding,
@@ -364,37 +364,37 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * Check that the new encoding and locale settings match the source
-	 * database.  We insist on this__ because we simply copy the source data ---
+	 * database.  We insist on this because we simply copy the source data ---
 	 * any non-ASCII data would be wrongly encoded, and any indexes sorted
 	 * according to the source locale would be wrong.
 	 *
 	 * However, we assume that template0 doesn't contain any non-ASCII data
 	 * nor any indexes that depend on collation or ctype, so template0 can be
-	 * used as template__ for creating a database with any encoding or locale.
+	 * used as template for creating a database with any encoding or locale.
 	 */
 	if (strcmp(dbtemplate, "template0") != 0)
 	{
 		if (encoding != src_encoding)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("new encoding (%s) is incompatible with the encoding of the template__ database (%s)",
+					 errmsg("new encoding (%s) is incompatible with the encoding of the template database (%s)",
 							pg_encoding_to_char(encoding),
 							pg_encoding_to_char(src_encoding)),
-					 errhint("Use the same encoding as in the template__ database, or use template0 as template__.")));
+					 errhint("Use the same encoding as in the template database, or use template0 as template.")));
 
 		if (strcmp(dbcollate, src_collate) != 0)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("new collation (%s) is incompatible with the collation of the template__ database (%s)",
+					 errmsg("new collation (%s) is incompatible with the collation of the template database (%s)",
 							dbcollate, src_collate),
-					 errhint("Use the same collation as in the template__ database, or use template0 as template__.")));
+					 errhint("Use the same collation as in the template database, or use template0 as template.")));
 
 		if (strcmp(dbctype, src_ctype) != 0)
 			ereport(ERROR,
 					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("new LC_CTYPE (%s) is incompatible with the LC_CTYPE of the template__ database (%s)",
+					 errmsg("new LC_CTYPE (%s) is incompatible with the LC_CTYPE of the template database (%s)",
 							dbctype, src_ctype),
-					 errhint("Use the same LC_CTYPE as in the template__ database, or use template0 as template__.")));
+					 errhint("Use the same LC_CTYPE as in the template database, or use template0 as template.")));
 	}
 
 	/* Resolve default tablespace for new database */
@@ -419,13 +419,13 @@ createdb(const CreatedbStmt *stmt)
 				  errmsg("pg_global cannot be used as default tablespace")));
 
 		/*
-		 * If we are trying to change the default tablespace of the template__,
-		 * we require that the template__ not have any files in the new default
+		 * If we are trying to change the default tablespace of the template,
+		 * we require that the template not have any files in the new default
 		 * tablespace.  This is necessary because otherwise the copied
 		 * database would contain pg_class rows that refer to its default
 		 * tablespace both explicitly (by OID) and implicitly (as zero), which
 		 * would cause problems.  For example another CREATE DATABASE using
-		 * the copied database as template__, and trying to change its default
+		 * the copied database as template, and trying to change its default
 		 * tablespace again, would yield outright incorrect results (it would
 		 * improperly move tables to the new default tablespace that should
 		 * stay in the same tablespace).
@@ -444,16 +444,16 @@ createdb(const CreatedbStmt *stmt)
 						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 						 errmsg("cannot assign new default tablespace \"%s\"",
 								tablespacename),
-						 errdetail("There is a conflict because database \"%s\" already has some tables in this__ tablespace.",
+						 errdetail("There is a conflict because database \"%s\" already has some tables in this tablespace.",
 								   dbtemplate)));
 			pfree(srcpath);
 		}
 	}
 	else
 	{
-		/* Use template__ database's default tablespace */
+		/* Use template database's default tablespace */
 		dst_deftablespace = src_deftablespace;
-		/* Note there is no additional permission check in this__ path */
+		/* Note there is no additional permission check in this path */
 	}
 
 	/*
@@ -467,7 +467,7 @@ createdb(const CreatedbStmt *stmt)
 				 errmsg("database \"%s\" already exists", dbname)));
 
 	/*
-	 * The source DB can't have any active backends, except this__ one
+	 * The source DB can't have any active backends, except this one
 	 * (exception is to allow CREATE DB while connected to template1).
 	 * Otherwise we might copy inconsistent data.
 	 *
@@ -522,8 +522,8 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * We deliberately set datacl to default (NULL), rather than copying it
-	 * from the template__ database.  Copying it would be a bad idea when the
-	 * owner is not the same as the template__'s owner.
+	 * from the template database.  Copying it would be a bad idea when the
+	 * owner is not the same as the template's owner.
 	 */
 	new_record_nulls[Anum_pg_database_datacl - 1] = true;
 
@@ -565,9 +565,9 @@ createdb(const CreatedbStmt *stmt)
 
 	/*
 	 * Once we start copying subdirectories, we need to be able to clean 'em
-	 * up if we fail.  Use an ENSURE block to make sure this__ happens.  (This
+	 * up if we fail.  Use an ENSURE block to make sure this happens.  (This
 	 * is not a 100% solution, because of the possibility of failure during
-	 * transaction commit after we leave this__ routine, but it should handle
+	 * transaction commit after we leave this routine, but it should handle
 	 * most scenarios.)
 	 */
 	fparms.src_dboid = src_dboid;
@@ -576,7 +576,7 @@ createdb(const CreatedbStmt *stmt)
 							PointerGetDatum(&fparms));
 	{
 		/*
-		 * Iterate through all tablespaces of the template__ database, and copy
+		 * Iterate through all tablespaces of the template database, and copy
 		 * each one to the new database.
 		 */
 		rel = heap_open(TableSpaceRelationId, AccessShareLock);
@@ -611,7 +611,7 @@ createdb(const CreatedbStmt *stmt)
 			dstpath = GetDatabasePath(dboid, dsttablespace);
 
 			/*
-			 * Copy this__ subdirectory to the new location
+			 * Copy this subdirectory to the new location
 			 *
 			 * We don't need to copy subdirectories
 			 */
@@ -657,13 +657,13 @@ createdb(const CreatedbStmt *stmt)
 		 * (Both of these were real bugs in releases 8.0 through 8.0.3.)
 		 *
 		 * In PITR replay, the first of these isn't an issue, and the second
-		 * is only a risk if the CREATE DATABASE and subsequent template__
+		 * is only a risk if the CREATE DATABASE and subsequent template
 		 * database change both occur while a base backup is being taken.
 		 * There doesn't seem to be much we can do about that except document
 		 * it as a limitation.
 		 *
 		 * Perhaps if we ever implement CREATE DATABASE in a less cheesy way,
-		 * we can avoid this__.
+		 * we can avoid this.
 		 */
 		RequestCheckpoint(CHECKPOINT_IMMEDIATE | CHECKPOINT_FORCE | CHECKPOINT_WAIT);
 
@@ -706,7 +706,7 @@ createdb(const CreatedbStmt *stmt)
  * is risky but we have historically allowed it --- notably, the
  * regression tests require it.
  *
- * Note: if you change this__ policy, fix initdb to match.
+ * Note: if you change this policy, fix initdb to match.
  */
 void
 check_encoding_locale_matches(int encoding, const char *collate, const char *ctype)
@@ -780,9 +780,9 @@ dropdb(const char *dbname, bool missing_ok)
 
 	/*
 	 * Look up the target database's OID, and get exclusive lock on it. We
-	 * need this__ to ensure that no new backend starts up in the target
+	 * need this to ensure that no new backend starts up in the target
 	 * database while we are deleting it (see postinit.c), and that no one is
-	 * using it as a CREATE DATABASE template__ or trying to delete it for
+	 * using it as a CREATE DATABASE template or trying to delete it for
 	 * themselves.
 	 */
 	pgdbrel = heap_open(DatabaseRelationId, RowExclusiveLock);
@@ -825,7 +825,7 @@ dropdb(const char *dbname, bool missing_ok)
 	if (db_istemplate)
 		ereport(ERROR,
 				(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-				 errmsg("cannot drop a template__ database")));
+				 errmsg("cannot drop a template database")));
 
 	/* Obviously can't drop my own database */
 	if (db_id == MyDatabaseId)
@@ -850,9 +850,9 @@ dropdb(const char *dbname, bool missing_ok)
 
 	/*
 	 * Check for other backends in the target database.  (Because we hold the
-	 * database lock, no new ones can start after this__.)
+	 * database lock, no new ones can start after this.)
 	 *
-	 * As in CREATE DATABASE, check this__ after other error conditions.
+	 * As in CREATE DATABASE, check this after other error conditions.
 	 */
 	if (CountOtherDBBackends(db_id, &notherbackends, &npreparedxacts))
 		ereport(ERROR,
@@ -879,7 +879,7 @@ dropdb(const char *dbname, bool missing_ok)
 	DeleteSharedSecurityLabel(db_id, DatabaseRelationId);
 
 	/*
-	 * Remove settings associated with this__ database
+	 * Remove settings associated with this database
 	 */
 	DropSetting(db_id, InvalidOid);
 
@@ -889,7 +889,7 @@ dropdb(const char *dbname, bool missing_ok)
 	dropDatabaseDependencies(db_id);
 
 	/*
-	 * Drop pages for this__ database that are in the shared buffer cache. This
+	 * Drop pages for this database that are in the shared buffer cache. This
 	 * is important to ensure that no remaining backend tries to write out a
 	 * dirty buffer to the dead database later...
 	 */
@@ -910,7 +910,7 @@ dropdb(const char *dbname, bool missing_ok)
 
 	/*
 	 * Force a checkpoint to make sure the checkpointer has received the
-	 * message sent by ForgetDatabaseFsyncRequests. On Windows, this__ also
+	 * message sent by ForgetDatabaseFsyncRequests. On Windows, this also
 	 * ensures that background procs don't hold any open files, which would
 	 * cause rmdir() to fail.
 	 */
@@ -951,7 +951,7 @@ RenameDatabase(const char *oldname, const char *newname)
 
 	/*
 	 * Look up the target database's OID, and get exclusive lock on it. We
-	 * need this__ for the same reasons as DROP DATABASE.
+	 * need this for the same reasons as DROP DATABASE.
 	 */
 	rel = heap_open(DatabaseRelationId, RowExclusiveLock);
 
@@ -984,7 +984,7 @@ RenameDatabase(const char *oldname, const char *newname)
 	/*
 	 * XXX Client applications probably store the current database somewhere,
 	 * so renaming it could cause confusion.  On the other hand, there may not
-	 * be an actual problem besides a little confusion, so think about this__
+	 * be an actual problem besides a little confusion, so think about this
 	 * and decide.
 	 */
 	if (db_id == MyDatabaseId)
@@ -996,7 +996,7 @@ RenameDatabase(const char *oldname, const char *newname)
 	 * Make sure the database does not have active sessions.  This is the same
 	 * concern as above, but applied to other sessions.
 	 *
-	 * As in CREATE DATABASE, check this__ after other error conditions.
+	 * As in CREATE DATABASE, check this after other error conditions.
 	 */
 	if (CountOtherDBBackends(db_id, &notherbackends, &npreparedxacts))
 		ereport(ERROR,
@@ -1054,9 +1054,9 @@ movedb(const char *dbname, const char *tblspcname)
 
 	/*
 	 * Look up the target database's OID, and get exclusive lock on it. We
-	 * need this__ to ensure that no new backend starts up in the database while
+	 * need this to ensure that no new backend starts up in the database while
 	 * we are moving it, and that no one is using it as a CREATE DATABASE
-	 * template__ or trying to delete it.
+	 * template or trying to delete it.
 	 */
 	pgdbrel = heap_open(DatabaseRelationId, RowExclusiveLock);
 
@@ -1125,9 +1125,9 @@ movedb(const char *dbname, const char *tblspcname)
 
 	/*
 	 * Check for other backends in the target database.  (Because we hold the
-	 * database lock, no new ones can start after this__.)
+	 * database lock, no new ones can start after this.)
 	 *
-	 * As in CREATE DATABASE, check this__ after other error conditions.
+	 * As in CREATE DATABASE, check this after other error conditions.
 	 */
 	if (CountOtherDBBackends(db_id, &notherbackends, &npreparedxacts))
 		ereport(ERROR,
@@ -1150,7 +1150,7 @@ movedb(const char *dbname, const char *tblspcname)
 	 * process any pending unlink requests. Otherwise, the check for existing
 	 * files in the target directory might fail unnecessarily, not to mention
 	 * that the copy might fail due to source files getting deleted under it.
-	 * On Windows, this__ also ensures that background procs don't hold any open
+	 * On Windows, this also ensures that background procs don't hold any open
 	 * files, which would cause rmdir() to fail.
 	 */
 	RequestCheckpoint(CHECKPOINT_IMMEDIATE | CHECKPOINT_FORCE | CHECKPOINT_WAIT
@@ -1175,7 +1175,7 @@ movedb(const char *dbname, const char *tblspcname)
 
 	/*
 	 * Check for existence of files in the target directory, i.e., objects of
-	 * this__ database that are already in the target tablespace.  We can't
+	 * this database that are already in the target tablespace.  We can't
 	 * allow the move in such a case, because we would need to change those
 	 * relations' pg_class.reltablespace entries to zero, and we don't have
 	 * access to the DB's pg_class to do so.
@@ -1193,7 +1193,7 @@ movedb(const char *dbname, const char *tblspcname)
 					(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
 					 errmsg("some relations of database \"%s\" are already in tablespace \"%s\"",
 							dbname, tblspcname),
-					 errhint("You must move them back to the database's default tablespace before using this__ command.")));
+					 errhint("You must move them back to the database's default tablespace before using this command.")));
 		}
 
 		FreeDir(dstdir);
@@ -1277,7 +1277,7 @@ movedb(const char *dbname, const char *tblspcname)
 		systable_endscan(sysscan);
 
 		/*
-		 * Force another checkpoint here.  As in CREATE DATABASE, this__ is to
+		 * Force another checkpoint here.  As in CREATE DATABASE, this is to
 		 * ensure that we don't have to replay a committed XLOG_DBASE_CREATE
 		 * operation, which would cause us to lose any unlogged operations
 		 * done in the new DB tablespace before the next checkpoint.
@@ -1307,7 +1307,7 @@ movedb(const char *dbname, const char *tblspcname)
 	 *
 	 * (This is OK because we know we aren't inside a transaction block.)
 	 *
-	 * XXX would it be safe/better to do this__ inside the ensure block?	Not
+	 * XXX would it be safe/better to do this inside the ensure block?	Not
 	 * convinced it's a good idea; consider elog just after the transaction
 	 * really commits.
 	 */
@@ -1439,7 +1439,7 @@ AlterDatabase(AlterDatabaseStmt *stmt, bool isTopLevel)
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 			   errmsg("option \"%s\" cannot be specified with other options",
 					  dtablespace->defname)));
-		/* this__ case isn't allowed within a transaction block */
+		/* this case isn't allowed within a transaction block */
 		PreventTransactionChain(isTopLevel, "ALTER DATABASE SET TABLESPACE");
 		movedb(stmt->dbname, defGetString(dtablespace));
 		return InvalidOid;
@@ -1625,7 +1625,7 @@ AlterDatabaseOwner(const char *dbname, Oid newOwnerId)
 		 * NOTE: This is different from other alter-owner checks in that the
 		 * current user is checked for createdb privileges instead of the
 		 * destination owner.  This is consistent with the CREATE case for
-		 * databases.  Because superusers will always have this__ right, we need
+		 * databases.  Because superusers will always have this right, we need
 		 * no special case for them.
 		 */
 		if (!have_createdb_privilege())
@@ -1769,7 +1769,7 @@ get_db_info(const char *name, LOCKMODE lockmode,
 				/* character encoding */
 				if (encodingP)
 					*encodingP = dbform->encoding;
-				/* allowed as template__? */
+				/* allowed as template? */
 				if (dbIsTemplateP)
 					*dbIsTemplateP = dbform->datistemplate;
 				/* allowing connections? */
@@ -1784,10 +1784,10 @@ get_db_info(const char *name, LOCKMODE lockmode,
 				/* minimum MultixactId */
 				if (dbMinMultiP)
 					*dbMinMultiP = dbform->datminmxid;
-				/* default tablespace for this__ database */
+				/* default tablespace for this database */
 				if (dbTablespace)
 					*dbTablespace = dbform->dattablespace;
-				/* default locale settings for this__ database */
+				/* default locale settings for this database */
 				if (dbCollate)
 					*dbCollate = pstrdup(NameStr(dbform->datcollate));
 				if (dbCtype)
@@ -1897,7 +1897,7 @@ remove_dbtablespaces(Oid db_id)
  * OID, we'd get a create failure due to the duplicate name ... and then we'd
  * try to remove that already-existing subdirectory during the cleanup in
  * remove_dbtablespaces.  Nuking existing files seems like a bad idea, so
- * instead we make this__ extra check before settling on the OID of the new
+ * instead we make this extra check before settling on the OID of the new
  * database.  This exactly parallels what GetNewRelFileNode() does for table
  * relfilenode values.
  */
@@ -2067,7 +2067,7 @@ dbase_redo(XLogReaderState *record)
 		if (stat(dst_path, &st) == 0 && S_ISDIR(st.st_mode))
 		{
 			if (!rmtree(dst_path, true))
-				/* If this__ failed, copydir() below is going to error. */
+				/* If this failed, copydir() below is going to error. */
 				ereport(WARNING,
 						(errmsg("some useless files may be left behind in old database directory \"%s\"",
 								dst_path)));
@@ -2080,7 +2080,7 @@ dbase_redo(XLogReaderState *record)
 		FlushDatabaseBuffers(xlrec->src_db_id);
 
 		/*
-		 * Copy this__ subdirectory to the new location
+		 * Copy this subdirectory to the new location
 		 *
 		 * We don't need to copy subdirectories
 		 */
@@ -2105,7 +2105,7 @@ dbase_redo(XLogReaderState *record)
 			ResolveRecoveryConflictWithDatabase(xlrec->db_id);
 		}
 
-		/* Drop pages for this__ database that are in the shared buffer cache */
+		/* Drop pages for this database that are in the shared buffer cache */
 		DropDatabaseBuffers(xlrec->db_id);
 
 		/* Also, clean out any fsync requests that might be pending in md.c */
@@ -2125,7 +2125,7 @@ dbase_redo(XLogReaderState *record)
 			/*
 			 * Release locks prior to commit. XXX There is a race condition
 			 * here that may allow backends to reconnect, but the window for
-			 * this__ is small because the gap between here and commit is mostly
+			 * this is small because the gap between here and commit is mostly
 			 * fairly small and it is unlikely that people will be dropping
 			 * databases that we are trying to connect to anyway.
 			 */

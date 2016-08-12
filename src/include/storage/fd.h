@@ -93,7 +93,7 @@ extern int	FreeDir(DIR *dir);
 extern int	OpenTransientFile(FileName fileName, int fileFlags, int fileMode);
 extern int	CloseTransientFile(int fd);
 
-/* If you've really really gotta have a plain kernel FD, use this__ */
+/* If you've really really gotta have a plain kernel FD, use this */
 extern int	BasicOpenFile(FileName fileName, int fileFlags, int fileMode);
 
 /* Miscellaneous support routines */

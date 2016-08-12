@@ -103,7 +103,7 @@ enum FdwScanPrivateIndex
 };
 
 /*
- * Similarly, this__ enum describes what's kept in the fdw_private list for
+ * Similarly, this enum describes what's kept in the fdw_private list for
  * a ModifyTable node referencing a postgres_fdw foreign table.  We store:
  *
  * 1) INSERT/UPDATE/DELETE statement text to be sent to the remote server
@@ -553,7 +553,7 @@ postgresGetForeignPaths(PlannerInfo *root,
 	 * corresponds to SeqScan path of regular tables (though depending on what
 	 * baserestrict conditions we were able to send to remote, there might
 	 * actually be an indexscan happening there).  We already did all the work
-	 * to estimate cost and size of this__ path.
+	 * to estimate cost and size of this path.
 	 */
 	path = create_foreignscan_path(root, baserel,
 								   fpinfo->rows,
@@ -578,7 +578,7 @@ postgresGetForeignPaths(PlannerInfo *root,
 	 * relations could supply one or more safe-to-send-to-remote join clauses.
 	 * We'll build a parameterized path for each such outer relation.
 	 *
-	 * It's convenient to manage this__ by representing each candidate outer
+	 * It's convenient to manage this by representing each candidate outer
 	 * relation by the ParamPathInfo node for it.  We can then use the
 	 * ppi_clauses list in the ParamPathInfo node directly as a list of the
 	 * interesting join clauses for that rel.  This takes care of the
@@ -594,7 +594,7 @@ postgresGetForeignPaths(PlannerInfo *root,
 		Relids		required_outer;
 		ParamPathInfo *param_info;
 
-		/* Check if clause can be moved to this__ rel */
+		/* Check if clause can be moved to this rel */
 		if (!join_clause_is_movable_to(rinfo, baserel))
 			continue;
 
@@ -670,7 +670,7 @@ postgresGetForeignPaths(PlannerInfo *root,
 				Relids		required_outer;
 				ParamPathInfo *param_info;
 
-				/* Check if clause can be moved to this__ rel */
+				/* Check if clause can be moved to this rel */
 				if (!join_clause_is_movable_to(rinfo, baserel))
 					continue;
 
@@ -694,7 +694,7 @@ postgresGetForeignPaths(PlannerInfo *root,
 				ppi_list = list_append_unique_ptr(ppi_list, param_info);
 			}
 
-			/* Try again, now ignoring the expression we found this__ time */
+			/* Try again, now ignoring the expression we found this time */
 			arg.already_used = lappend(arg.already_used, arg.current);
 		}
 	}
@@ -822,7 +822,7 @@ postgresGetForeignPlan(PlannerInfo *root,
 	 * semantics exactly don't seem worthwhile (see also comments for
 	 * RowMarkType).
 	 *
-	 * Note: because we actually run the query as a cursor, this__ assumes that
+	 * Note: because we actually run the query as a cursor, this assumes that
 	 * DECLARE CURSOR ... FOR UPDATE is supported, which it isn't before 8.3.
 	 */
 	if (baserel->relid == root->parse->resultRelation &&
@@ -840,7 +840,7 @@ postgresGetForeignPlan(PlannerInfo *root,
 		{
 			/*
 			 * Relation is specified as a FOR UPDATE/SHARE target, so handle
-			 * that.  (But we could also see LCS_NONE, meaning this__ isn't a
+			 * that.  (But we could also see LCS_NONE, meaning this isn't a
 			 * target relation after all.)
 			 *
 			 * For now, just ignore any [NO] KEY specification, since (a) it's
@@ -986,7 +986,7 @@ postgresBeginForeignScan(ForeignScanState *node, int eflags)
 	 * Prepare remote-parameter expressions for evaluation.  (Note: in
 	 * practice, we expect that all these expressions will be just Params, so
 	 * we could possibly do something more efficient than using the full
-	 * expression-eval machinery for this__.  But probably there would be little
+	 * expression-eval machinery for this.  But probably there would be little
 	 * benefit, and it'd require postgres_fdw to know more than is desirable
 	 * about Param evaluation.)
 	 */
@@ -1015,7 +1015,7 @@ postgresIterateForeignScan(ForeignScanState *node)
 	TupleTableSlot *slot = node->ss.ss_ScanTupleSlot;
 
 	/*
-	 * If this__ is the first call after Begin or ReScan, we need to create the
+	 * If this is the first call after Begin or ReScan, we need to create the
 	 * cursor on the remote side.
 	 */
 	if (!fsstate->cursor_exists)
@@ -1061,7 +1061,7 @@ postgresReScanForeignScan(ForeignScanState *node)
 		return;
 
 	/*
-	 * If any internal parameters affecting this__ node have changed, we'd
+	 * If any internal parameters affecting this node have changed, we'd
 	 * better destroy and recreate the cursor.  Otherwise, rewinding it should
 	 * be good enough.  If we've only fetched zero or one batch, we needn't
 	 * even rewind the cursor, just rescan what we have.
@@ -1103,7 +1103,7 @@ postgresReScanForeignScan(ForeignScanState *node)
 
 /*
  * postgresEndForeignScan
- *		Finish scanning foreign table and dispose objects used for this__ scan
+ *		Finish scanning foreign table and dispose objects used for this scan
  */
 static void
 postgresEndForeignScan(ForeignScanState *node)
@@ -1813,7 +1813,7 @@ estimate_path_cost_size(PlannerInfo *root,
 	else
 	{
 		/*
-		 * We don't support join conditions in this__ mode (hence, no
+		 * We don't support join conditions in this mode (hence, no
 		 * parameterized paths can be made).
 		 */
 		Assert(join_conds == NIL);
@@ -1824,13 +1824,13 @@ estimate_path_cost_size(PlannerInfo *root,
 
 		/*
 		 * Back into an estimate of the number of retrieved rows.  Just in
-		 * case this__ is nuts, clamp to at most baserel->tuples.
+		 * case this is nuts, clamp to at most baserel->tuples.
 		 */
 		retrieved_rows = clamp_row_est(rows / fpinfo->local_conds_sel);
 		retrieved_rows = Min(retrieved_rows, baserel->tuples);
 
 		/*
-		 * Cost as though this__ were a seqscan, which is pessimistic.  We
+		 * Cost as though this were a seqscan, which is pessimistic.  We
 		 * effectively imagine the local_conds are being evaluated remotely,
 		 * too.
 		 */
@@ -1874,7 +1874,7 @@ get_remote_estimate(const char *sql, PGconn *conn,
 {
 	PGresult   *volatile res = NULL;
 
-	/* PGresult must be released before leaving this__ function. */
+	/* PGresult must be released before leaving this function. */
 	PG_TRY();
 	{
 		char	   *line;
@@ -2053,7 +2053,7 @@ fetch_more_data(ForeignScanState *node)
 	MemoryContextReset(fsstate->batch_cxt);
 	oldcontext = MemoryContextSwitchTo(fsstate->batch_cxt);
 
-	/* PGresult must be released before leaving this__ function. */
+	/* PGresult must be released before leaving this function. */
 	PG_TRY();
 	{
 		PGconn	   *conn = fsstate->conn;
@@ -2201,7 +2201,7 @@ prepare_foreign_modify(PgFdwModifyState *fmstate)
 	 * We intentionally do not specify parameter types here, but leave the
 	 * remote server to derive them by default.  This avoids possible problems
 	 * with the remote server using different type OIDs than we do.  All of
-	 * the prepared statements we use in this__ module are simple enough that
+	 * the prepared statements we use in this module are simple enough that
 	 * the remote server will make the right choices.
 	 *
 	 * We don't use a PG_TRY block here, so be careful not to throw error
@@ -2290,7 +2290,7 @@ convert_prep_stmt_params(PgFdwModifyState *fmstate,
  *		Store the result of a RETURNING clause
  *
  * On error, be sure to release the PGresult on the way out.  Callers do not
- * have PG_TRY blocks to ensure this__ happens.
+ * have PG_TRY blocks to ensure this happens.
  */
 static void
 store_returning_result(PgFdwModifyState *fmstate,
@@ -2319,7 +2319,7 @@ store_returning_result(PgFdwModifyState *fmstate,
 
 /*
  * postgresAnalyzeForeignTable
- *		Test whether analyzing this__ foreign table is supported
+ *		Test whether analyzing this foreign table is supported
  */
 static bool
 postgresAnalyzeForeignTable(Relation relation,
@@ -2339,8 +2339,8 @@ postgresAnalyzeForeignTable(Relation relation,
 	/*
 	 * Now we have to get the number of pages.  It's annoying that the ANALYZE
 	 * API requires us to return that now, because it forces some duplication
-	 * of effort between this__ routine and postgresAcquireSampleRowsFunc.  But
-	 * it's probably not worth redefining that API at this__ point.
+	 * of effort between this routine and postgresAcquireSampleRowsFunc.  But
+	 * it's probably not worth redefining that API at this point.
 	 */
 
 	/*
@@ -2549,7 +2549,7 @@ analyze_row_processor(PGresult *res, int row, PgFdwAnalyzeState *astate)
 	astate->samplerows += 1;
 
 	/*
-	 * Determine the slot where this__ sample row should be stored.  Set pos to
+	 * Determine the slot where this sample row should be stored.  Set pos to
 	 * negative value to indicate the row should be skipped.
 	 */
 	if (astate->numrows < targrows)
@@ -2576,7 +2576,7 @@ analyze_row_processor(PGresult *res, int row, PgFdwAnalyzeState *astate)
 		}
 		else
 		{
-			/* Skip this__ tuple. */
+			/* Skip this tuple. */
 			pos = -1;
 		}
 
@@ -2674,7 +2674,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 		resetStringInfo(&buf);
 
 		/*
-		 * Fetch all table data from this__ schema, possibly restricted by
+		 * Fetch all table data from this schema, possibly restricted by
 		 * EXCEPT or LIMIT TO.  (We don't actually need to pay any attention
 		 * to EXCEPT/LIMIT TO here, because the core code will filter the
 		 * statements we return according to those lists anyway.  But it
@@ -2774,7 +2774,7 @@ postgresImportForeignSchema(ImportForeignSchemaStmt *stmt, Oid serverOid)
 			appendStringInfo(&buf, "CREATE FOREIGN TABLE %s (\n",
 							 quote_identifier(tablename));
 
-			/* Scan all rows for this__ table */
+			/* Scan all rows for this table */
 			do
 			{
 				char	   *attname;

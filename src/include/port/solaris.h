@@ -1,7 +1,7 @@
 /* src/include/port/solaris.h */
 
 /*
- * Sort this__ out for all operating systems some time.  The __xxx
+ * Sort this out for all operating systems some time.  The __xxx
  * symbols are defined on both GCC and Solaris CC, although GCC
  * doesn't document them.  The __xxx__ symbols are only on GCC.
  */

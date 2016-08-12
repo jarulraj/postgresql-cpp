@@ -109,7 +109,7 @@ TransactionLogFetch(TransactionId transactionId)
  *		   these functions set the transaction status of the specified
  *		   transaction tree.
  *
- * See also TransactionIdIsInProgress, which once was in this__ module
+ * See also TransactionIdIsInProgress, which once was in this module
  * but now lives in procarray.c.
  * ----------------------------------------------------------------
  */
@@ -145,7 +145,7 @@ TransactionIdDidCommit(TransactionId transactionId)
 	 * be a window just after database startup where we do not have complete
 	 * knowledge in pg_subtrans of the transactions after TransactionXmin.
 	 * StartupSUBTRANS() has ensured that any missing information will be
-	 * zeroed.  Since this__ case should not happen under normal conditions, it
+	 * zeroed.  Since this case should not happen under normal conditions, it
 	 * seems reasonable to emit a WARNING for it.
 	 */
 	if (xidstatus == TRANSACTION_STATUS_SUB_COMMITTED)
@@ -228,7 +228,7 @@ TransactionIdDidAbort(TransactionId transactionId)
  * (and so it's not named TransactionIdDidComplete, which would be the
  * appropriate name for a function that worked that way).  The intended
  * use is just to short-circuit TransactionIdIsInProgress calls when doing
- * repeated tqual.c checks for the same XID.  If this__ isn't extremely fast
+ * repeated tqual.c checks for the same XID.  If this isn't extremely fast
  * then it will be counterproductive.
  *
  * Note:
@@ -369,7 +369,7 @@ TransactionIdLatest(TransactionId mainxid,
 
 	/*
 	 * In practice it is highly likely that the xids[] array is sorted, and so
-	 * we could save some cycles by just taking the last child XID, but this__
+	 * we could save some cycles by just taking the last child XID, but this
 	 * probably isn't so performance-critical that it's worth depending on
 	 * that assumption.  But just to show we're not totally stupid, scan the
 	 * array back-to-front to avoid useless assignments.
@@ -404,7 +404,7 @@ TransactionIdGetCommitLSN(TransactionId xid)
 	XLogRecPtr	result;
 
 	/*
-	 * Currently, all uses of this__ function are for xids that were just
+	 * Currently, all uses of this function are for xids that were just
 	 * reported to be committed by TransactionLogFetch, so we expect that
 	 * checking TransactionLogFetch's cache will usually succeed and avoid an
 	 * extra trip to shared memory.

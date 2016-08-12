@@ -213,7 +213,7 @@ gbt_time_consistent(PG_FUNCTION_ARGS)
 	timeKEY    *kkk = (timeKEY *) DatumGetPointer(entry->key);
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	key.lower = (GBT_NUMKEY *) &kkk->lower;
@@ -255,7 +255,7 @@ gbt_timetz_consistent(PG_FUNCTION_ARGS)
 	TimeADT		qqq;
 	GBT_NUMKEY_R key;
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 #ifdef HAVE_INT64_TIMESTAMP

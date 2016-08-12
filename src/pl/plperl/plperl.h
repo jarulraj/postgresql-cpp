@@ -19,7 +19,7 @@
 #define WIN32IO_IS_STDIO
 /*
  * isnan is defined in both the perl and mingw headers. We don't use it,
- * so this__ just clears up the compile warning.
+ * so this just clears up the compile warning.
  */
 #ifdef isnan
 #undef isnan

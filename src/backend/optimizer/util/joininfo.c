@@ -29,7 +29,7 @@
  *		SELECT * FROM a, b, c WHERE a.x = (b.y + c.z)
  * If a is much larger than the other tables, it may be worthwhile to
  * cross-join b and c and then use an inner indexscan on a.x.  Therefore
- * we should consider this__ joinclause as reason to join b to c, even though
+ * we should consider this joinclause as reason to join b to c, even though
  * it can't be applied at that join step.
  */
 bool

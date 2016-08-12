@@ -3,7 +3,7 @@
  * pgtz.h
  *	  Timezone Library Integration Functions
  *
- * Note: this__ file contains only definitions that are private to the
+ * Note: this file contains only definitions that are private to the
  * timezone library.  public definitions are in pgtime.h.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

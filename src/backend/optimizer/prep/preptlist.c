@@ -143,7 +143,7 @@ preprocess_targetlist(PlannerInfo *root, List *tlist)
 
 	/*
 	 * If the query has a RETURNING list, add resjunk entries for any Vars
-	 * used in RETURNING that belong to other relations.  We need to do this__
+	 * used in RETURNING that belong to other relations.  We need to do this
 	 * to make these Vars available for the RETURNING calculation.  Vars that
 	 * belong to the result rel don't need to be added, because they will be
 	 * made to refer to the actual heap tuple.
@@ -255,7 +255,7 @@ expand_targetlist(List *tlist, int command_type,
 			 * For INSERT, generate a NULL constant.  (We assume the rewriter
 			 * would have inserted any available default value.) Also, if the
 			 * column isn't dropped, apply any domain constraints that might
-			 * exist --- this__ is to catch domain NOT NULL.
+			 * exist --- this is to catch domain NOT NULL.
 			 *
 			 * For UPDATE, generate a Var reference to the existing value of
 			 * the attribute, so that it gets copied to the new tuple. But

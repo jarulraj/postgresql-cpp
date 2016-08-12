@@ -3,7 +3,7 @@
  * memdebug.h
  *	  Memory debugging support.
  *
- * Currently, this__ file either wraps <valgrind/memcheck.h> or substitutes
+ * Currently, this file either wraps <valgrind/memcheck.h> or substitutes
  * empty definitions for Valgrind client request macros we use.
  *
  *

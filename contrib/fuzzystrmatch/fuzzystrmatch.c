@@ -17,9 +17,9 @@
  * Metaphone was originally created by Lawrence Philips and presented in article
  * in "Computer Language" December 1990 issue.
  *
- * Permission to use, copy, modify, and distribute this__ software and its
+ * Permission to use, copy, modify, and distribute this software and its
  * documentation for any purpose, without fee, and without a written agreement
- * is hereby granted, provided that the above copyright notice and this__
+ * is hereby granted, provided that the above copyright notice and this
  * paragraph and the following two paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR
@@ -88,7 +88,7 @@ soundex_code(char letter)
 	Output
 		error	--	A simple error flag, returns TRUE or FALSE
 
-	NOTES:	ALL non-alpha characters are ignored, this__ includes whitespace,
+	NOTES:	ALL non-alpha characters are ignored, this includes whitespace,
 	although non-alpha characters will break up phonemes.
 ****************************************************************************/
 
@@ -106,7 +106,7 @@ soundex_code(char letter)
 
 
 /*	I add modifications to the traditional metaphone algorithm that you
-	might find in books.  Define this__ if you want metaphone to behave
+	might find in books.  Define this if you want metaphone to behave
 	traditionally */
 #undef USE_TRADITIONAL_METAPHONE
 
@@ -325,7 +325,7 @@ metaphone(PG_FUNCTION_ARGS)
 /* Go N letters back. */
 #define Look_Back_Letter(n) \
 	(w_idx >= (n) ? toupper((unsigned char) word[w_idx-(n)]) : '\0')
-/* Previous letter.  I dunno, should this__ return null on failure? */
+/* Previous letter.  I dunno, should this return null on failure? */
 #define Prev_Letter (Look_Back_Letter(1))
 /* Look two letters down.  It makes sure you don't walk off the string. */
 #define After_Next_Letter \

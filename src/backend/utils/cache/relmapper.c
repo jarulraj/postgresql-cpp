@@ -191,7 +191,7 @@ RelationMapOidToFilenode(Oid relationId, bool shared)
  * This is not supposed to be used during normal running but rather for
  * information purposes when looking at the filesystem or xlog.
  *
- * Returns InvalidOid if the OID is not known; this__ can easily happen if the
+ * Returns InvalidOid if the OID is not known; this can easily happen if the
  * relfilenode doesn't pertain to a mapped relation.
  */
 Oid
@@ -442,7 +442,7 @@ AtCCI_RelationMap(void)
  *
  * Handle relation mapping at main-transaction commit or abort.
  *
- * During commit, this__ must be called as late as possible before the actual
+ * During commit, this must be called as late as possible before the actual
  * transaction commit, so as to minimize the window where the transaction
  * could still roll back after committing map changes.  Although nothing
  * critically bad happens in such a case, we still would prefer that it
@@ -460,7 +460,7 @@ AtEOXact_RelationMap(bool isCommit)
 		/*
 		 * We should not get here with any "pending" updates.  (We could
 		 * logically choose to treat such as committed, but in the current
-		 * code this__ should never happen.)
+		 * code this should never happen.)
 		 */
 		Assert(pending_shared_updates.num_mappings == 0);
 		Assert(pending_local_updates.num_mappings == 0);
@@ -596,7 +596,7 @@ RelationMapInitializePhase2(void)
  * RelationMapInitializePhase3
  *
  * This is called as soon as we have determined MyDatabaseId and set up
- * DatabasePath.  At this__ point we should be able to read the local map file.
+ * DatabasePath.  At this point we should be able to read the local map file.
  */
 void
 RelationMapInitializePhase3(void)
@@ -700,7 +700,7 @@ load_relmap_file(bool shared)
  * If preserve_files is TRUE then the storage manager is warned not to
  * delete the files listed in the map.
  *
- * Because this__ may be called during WAL replay when MyDatabaseId,
+ * Because this may be called during WAL replay when MyDatabaseId,
  * DatabasePath, etc aren't valid, we require the caller to pass in suitable
  * values.  The caller is also responsible for being sure no concurrent
  * map update could be happening.
@@ -726,7 +726,7 @@ write_relmap_file(bool shared, RelMapFile *newmap,
 	FIN_CRC32C(newmap->crc);
 
 	/*
-	 * Open the target file.  We prefer to do this__ before entering the
+	 * Open the target file.  We prefer to do this before entering the
 	 * critical section, so that an open() failure need not force PANIC.
 	 */
 	if (shared)
@@ -787,7 +787,7 @@ write_relmap_file(bool shared, RelMapFile *newmap,
 
 	/*
 	 * We choose to fsync the data to disk before considering the task done.
-	 * It would be possible to relax this__ if it turns out to be a performance
+	 * It would be possible to relax this if it turns out to be a performance
 	 * issue, but it would complicate checkpointing --- see notes for
 	 * CheckPointRelationMap.
 	 */
@@ -805,7 +805,7 @@ write_relmap_file(bool shared, RelMapFile *newmap,
 
 	/*
 	 * Now that the file is safely on disk, send sinval message to let other
-	 * backends know to re-read it.  We must do this__ inside the critical
+	 * backends know to re-read it.  We must do this inside the critical
 	 * section: if for some reason we fail to send the message, we have to
 	 * force a database-wide PANIC.  Otherwise other backends might continue
 	 * execution with stale mapping information, which would be catastrophic
@@ -919,7 +919,7 @@ relmap_redo(XLogReaderState *record)
 				 xlrec->nbytes);
 		memcpy(&newmap, xlrec->data, sizeof(newmap));
 
-		/* We need to construct the pathname for this__ database */
+		/* We need to construct the pathname for this database */
 		dbpath = GetDatabasePath(xlrec->dbid, xlrec->tsid);
 
 		/*

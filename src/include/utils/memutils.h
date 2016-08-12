@@ -153,7 +153,7 @@ extern MemoryContext AllocSetContextCreate(MemoryContext parent,
 /*
  * Threshold above which a request in an AllocSet context is certain to be
  * allocated separately (and thereby have constant allocation overhead).
- * Few callers should be interested in this__, but tuplesort/tuplestore need
+ * Few callers should be interested in this, but tuplesort/tuplestore need
  * to know it.
  */
 #define ALLOCSET_SEPARATE_THRESHOLD  8192

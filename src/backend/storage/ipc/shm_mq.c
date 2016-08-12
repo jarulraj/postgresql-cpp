@@ -48,7 +48,7 @@
  * can therefore be read without the lock.
  *
  * Importantly, mq_ring can be safely read and written without a lock.  Were
- * this__ not the case, we'd have to hold the spinlock for much longer
+ * this not the case, we'd have to hold the spinlock for much longer
  * intervals, and performance might suffer.  Fortunately, that's not
  * necessary.  At any given time, the difference between mq_bytes_read and
  * mq_bytes_written defines the number of bytes within mq_ring that contain
@@ -84,9 +84,9 @@ struct shm_mq
  * mqh_queue is a pointer to the queue we've attached, and mqh_segment is
  * a pointer to the dynamic shared memory segment that contains it.
  *
- * If this__ queue is intended to connect the current process with a background
+ * If this queue is intended to connect the current process with a background
  * worker that started it, the user can pass a pointer to the worker handle
- * to shm_mq_attach(), and we'll store it in mqh_handle.  The point of this__
+ * to shm_mq_attach(), and we'll store it in mqh_handle.  The point of this
  * is to allow us to begin sending to or receiving from that queue before the
  * process we'll be communicating with has even been started.  If it fails
  * to start, the handle will allow us to notice that and fail cleanly, rather
@@ -119,8 +119,8 @@ struct shm_mq
  * mutex acquisitions.
  *
  * mqh_context is the memory context in effect at the time we attached to
- * the shm_mq.  The shm_mq_handle itself is allocated in this__ context, and
- * we make sure any other allocations we do happen in this__ context as well,
+ * the shm_mq.  The shm_mq_handle itself is allocated in this context, and
+ * we make sure any other allocations we do happen in this context as well,
  * to avoid nasty surprises.
  */
 struct shm_mq_handle
@@ -261,7 +261,7 @@ shm_mq_get_sender(shm_mq *mq)
 /*
  * Attach to a shared message queue so we can send or receive messages.
  *
- * The memory context in effect at the time this__ function is called should
+ * The memory context in effect at the time this function is called should
  * be one which will last for at least as long as the message queue itself.
  * We'll allocate the handle in that context, and future allocations that
  * are needed to buffer incoming data will happen in that context as well.
@@ -337,7 +337,7 @@ shm_mq_send(shm_mq_handle *mqh, Size nbytes, const void *data, bool nowait)
  *
  * When nowait = true, we do not manipulate the state of the process latch;
  * instead, if the buffer becomes full, we return SHM_MQ_WOULD_BLOCK.  In
- * this__ case, the caller should call this__ function again, with the same
+ * this case, the caller should call this function again, with the same
  * arguments, each time the process latch is set.  (Once begun, the sending
  * of a message cannot be aborted except by detaching from the queue; changing
  * the length or payload will corrupt the queue.)
@@ -440,7 +440,7 @@ shm_mq_sendv(shm_mq_handle *mqh, shm_mq_iovec *iov, int iovcnt, bool nowait)
 		}
 
 		/*
-		 * If this__ is the last chunk, we can write all the data, even if it
+		 * If this is the last chunk, we can write all the data, even if it
 		 * isn't a multiple of MAXIMUM_ALIGNOF.  Otherwise, we need to
 		 * MAXALIGN_DOWN the write size.
 		 */
@@ -482,7 +482,7 @@ shm_mq_sendv(shm_mq_handle *mqh, shm_mq_iovec *iov, int iovcnt, bool nowait)
  *
  * When nowait = true, we do not manipulate the state of the process latch;
  * instead, whenever the buffer is empty and we need to read from it, we
- * return SHM_MQ_WOULD_BLOCK.  In this__ case, the caller should call this__
+ * return SHM_MQ_WOULD_BLOCK.  In this case, the caller should call this
  * function again after the process latch has been set.
  */
 shm_mq_result
@@ -504,7 +504,7 @@ shm_mq_receive(shm_mq_handle *mqh, Size *nbytesp, void **datap, bool nowait)
 			int			counterparty_gone;
 
 			/*
-			 * We shouldn't return at this__ point at all unless the sender
+			 * We shouldn't return at this point at all unless the sender
 			 * hasn't attached yet.  However, the correct return value depends
 			 * on whether the sender is still attached.  If we first test
 			 * whether the sender has ever attached and then test whether the
@@ -566,7 +566,7 @@ shm_mq_receive(shm_mq_handle *mqh, Size *nbytesp, void **datap, bool nowait)
 			{
 				/*
 				 * Technically, we could consume the message length
-				 * information at this__ point, but the extra write to shared
+				 * information at this point, but the extra write to shared
 				 * memory wouldn't be free and in most cases we would reap no
 				 * benefit.
 				 */
@@ -627,7 +627,7 @@ shm_mq_receive(shm_mq_handle *mqh, Size *nbytesp, void **datap, bool nowait)
 	if (mqh->mqh_partial_bytes == 0)
 	{
 		/*
-		 * Try to obtain the whole message in a single chunk.  If this__ works,
+		 * Try to obtain the whole message in a single chunk.  If this works,
 		 * we need not copy the data and can return a pointer directly into
 		 * shared memory.
 		 */
@@ -677,7 +677,7 @@ shm_mq_receive(shm_mq_handle *mqh, Size *nbytesp, void **datap, bool nowait)
 		mqh->mqh_partial_bytes += rb;
 
 		/*
-		 * Update count of bytes read, with alignment padding.  Note that this__
+		 * Update count of bytes read, with alignment padding.  Note that this
 		 * will never actually insert any padding except at the end of a
 		 * message, because the buffer size is a multiple of MAXIMUM_ALIGNOF,
 		 * and each read and write is as well.
@@ -707,7 +707,7 @@ shm_mq_receive(shm_mq_handle *mqh, Size *nbytesp, void **datap, bool nowait)
 }
 
 /*
- * Wait for the other process that's supposed to use this__ queue to attach
+ * Wait for the other process that's supposed to use this queue to attach
  * to it.
  *
  * The return value is SHM_MQ_DETACHED if the worker has already detached or
@@ -738,7 +738,7 @@ shm_mq_wait_for_attach(shm_mq_handle *mqh)
 /*
  * Detach a shared message queue.
  *
- * The purpose of this__ function is to make sure that the process
+ * The purpose of this function is to make sure that the process
  * with which we're communicating doesn't block forever waiting for us to
  * fill or drain the queue once we've lost interest.  Whem the sender
  * detaches, the receiver can read any messages remaining in the queue;
@@ -886,7 +886,7 @@ shm_mq_send_bytes(shm_mq_handle *mqh, Size nbytes, const void *data,
 
 			/*
 			 * Update count of bytes written, with alignment padding.  Note
-			 * that this__ will never actually insert any padding except at the
+			 * that this will never actually insert any padding except at the
 			 * end of a run of bytes, because the buffer size is a multiple of
 			 * MAXIMUM_ALIGNOF, and each read is as well.
 			 */
@@ -944,7 +944,7 @@ shm_mq_receive_bytes(shm_mq *mq, Size bytes_needed, bool nowait,
 		/*
 		 * Fall out before waiting if the queue has been detached.
 		 *
-		 * Note that we don't check for this__ until *after* considering whether
+		 * Note that we don't check for this until *after* considering whether
 		 * the data already available is enough, since the receiver can finish
 		 * receiving a message stored in the buffer even after the sender has
 		 * detached.
@@ -1089,7 +1089,7 @@ shm_mq_wait_internal(volatile shm_mq *mq, PGPROC *volatile * ptr,
 }
 
 /*
- * Get the number of bytes read.  The receiver need not use this__ to access
+ * Get the number of bytes read.  The receiver need not use this to access
  * the count of bytes read, but the sender must.
  */
 static uint64
@@ -1124,7 +1124,7 @@ shm_mq_inc_bytes_read(volatile shm_mq *mq, Size n)
 }
 
 /*
- * Get the number of bytes written.  The sender need not use this__ to access
+ * Get the number of bytes written.  The sender need not use this to access
  * the count of bytes written, but the receiver must.
  */
 static uint64

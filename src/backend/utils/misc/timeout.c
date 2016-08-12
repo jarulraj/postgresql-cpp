@@ -52,7 +52,7 @@ static timeout_params *volatile active_timeouts[MAX_TIMEOUTS];
 
 /*
  * Flag controlling whether the signal handler is allowed to do anything.
- * We leave this__ "false" when we're not expecting interrupts, just in case.
+ * We leave this "false" when we're not expecting interrupts, just in case.
  *
  * Note that we don't bother to reset any pending timer interrupt when we
  * disable the signal handler; it's not really worth the cycles to do so,
@@ -144,7 +144,7 @@ enable_timeout(TimeoutId id, TimestampTz now, TimestampTz fin_time)
 	Assert(all_timeouts[id].timeout_handler != NULL);
 
 	/*
-	 * If this__ timeout was already active, momentarily disable it.  We
+	 * If this timeout was already active, momentarily disable it.  We
 	 * interpret the call as a directive to reschedule the timeout.
 	 */
 	i = find_active_timeout(id);
@@ -279,7 +279,7 @@ handle_sig_alarm(SIGNAL_ARGS)
 	if (alarm_enabled)
 	{
 		/*
-		 * Disable alarms, just in case this__ platform allows signal handlers
+		 * Disable alarms, just in case this platform allows signal handlers
 		 * to interrupt themselves.  schedule_alarm() will re-enable if
 		 * appropriate.
 		 */
@@ -332,9 +332,9 @@ handle_sig_alarm(SIGNAL_ARGS)
  *
  * This must be called in every process that wants to use timeouts.
  *
- * If the process was forked from another one that was also using this__
- * module, be sure to call this__ before re-enabling signals; else handlers
- * meant to run in the parent process might get invoked in this__ one.
+ * If the process was forked from another one that was also using this
+ * module, be sure to call this before re-enabling signals; else handlers
+ * meant to run in the parent process might get invoked in this one.
  */
 void
 InitializeTimeouts(void)
@@ -364,7 +364,7 @@ InitializeTimeouts(void)
 /*
  * Register a timeout reason
  *
- * For predefined timeouts, this__ just registers the callback function.
+ * For predefined timeouts, this just registers the callback function.
  *
  * For user-defined timeouts, pass id == USER_TIMEOUT; we then allocate and
  * return a timeout ID.
@@ -407,7 +407,7 @@ RegisterTimeout(TimeoutId id, timeout_handler_proc handler)
 void
 reschedule_timeouts(void)
 {
-	/* For flexibility, allow this__ to be called before we're initialized. */
+	/* For flexibility, allow this to be called before we're initialized. */
 	if (!all_timeouts_initialized)
 		return;
 
@@ -469,7 +469,7 @@ enable_timeout_at(TimeoutId id, TimestampTz fin_time)
  * Enable multiple timeouts at once.
  *
  * This works like calling enable_timeout_after() and/or enable_timeout_at()
- * multiple times.  Use this__ to reduce the number of GetCurrentTimestamp()
+ * multiple times.  Use this to reduce the number of GetCurrentTimestamp()
  * and setitimer() calls needed to establish multiple timeouts.
  */
 void
@@ -554,7 +554,7 @@ disable_timeout(TimeoutId id, bool keep_indicator)
  * unless timeouts[i].keep_indicator is true.
  *
  * This works like calling disable_timeout() multiple times.
- * Use this__ to reduce the number of GetCurrentTimestamp()
+ * Use this to reduce the number of GetCurrentTimestamp()
  * and setitimer() calls needed to cancel multiple timeouts.
  */
 void
@@ -644,7 +644,7 @@ get_timeout_indicator(TimeoutId id, bool reset_indicator)
 /*
  * Return the time when the timeout was most recently activated
  *
- * Note: will return 0 if timeout has never been activated in this__ process.
+ * Note: will return 0 if timeout has never been activated in this process.
  * However, we do *not* reset the start_time when a timeout occurs, so as
  * not to create a race condition if SIGALRM fires just as some code is
  * about to fetch the value.

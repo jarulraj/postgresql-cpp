@@ -111,7 +111,7 @@ check_and_dump_old_cluster(bool live_check)
 		new_9_0_populate_pg_largeobject_metadata(&old_cluster, true);
 
 	/*
-	 * While not a check option, we do this__ now because this__ is the only time
+	 * While not a check option, we do this now because this is the only time
 	 * the old server is running.
 	 */
 	if (!user_opts.check)
@@ -153,7 +153,7 @@ report_clusters_compatible(void)
 	}
 
 	pg_log(PG_REPORT, "\n"
-		   "If pg_upgrade fails after this__ point, you must re-initdb the\n"
+		   "If pg_upgrade fails after this point, you must re-initdb the\n"
 		   "new cluster before continuing.\n");
 }
 
@@ -190,7 +190,7 @@ output_completion_banner(char *analyze_script_file_name,
 
 	if (deletion_script_file_name)
 		pg_log(PG_REPORT,
-			"Running this__ script will delete the old cluster's data files:\n"
+			"Running this script will delete the old cluster's data files:\n"
 			   "    %s\n",
 			   deletion_script_file_name);
 	else
@@ -318,7 +318,7 @@ equivalent_locale(int category, const char *loca, const char *locb)
 	int			lenb;
 
 	/*
-	 * If the names are equal, the locales are equivalent. Checking this__ first
+	 * If the names are equal, the locales are equivalent. Checking this first
 	 * avoids calling setlocale() in the common case that the names are equal.
 	 * That's a good thing, if setlocale() is buggy, for example.
 	 */
@@ -440,7 +440,7 @@ create_script_for_cluster_analyze(char **analyze_script_file_name)
 			ECHO_QUOTE, ECHO_QUOTE);
 	fprintf(script, "echo %sany tables, you might want to remove them and restore them after%s\n",
 			ECHO_QUOTE, ECHO_QUOTE);
-	fprintf(script, "echo %srunning this__ script because they will delay fast statistics generation.%s\n",
+	fprintf(script, "echo %srunning this script because they will delay fast statistics generation.%s\n",
 			ECHO_QUOTE, ECHO_QUOTE);
 	fprintf(script, "echo%s\n\n", ECHO_BLANK);
 
@@ -629,7 +629,7 @@ check_is_install_user(ClusterInfo *cluster)
 
 	/*
 	 * We only allow the install user in the new cluster (see comment below)
-	 * and we preserve pg_authid.oid, so this__ must be the install user in the
+	 * and we preserve pg_authid.oid, so this must be the install user in the
 	 * old cluster too.
 	 */
 	if (PQntuples(res) != 1 ||
@@ -826,7 +826,7 @@ check_for_isn_and_int8_passing_mismatch(ClusterInfo *cluster)
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation contains \"contrib/isn\" functions which rely on the\n"
 		  "bigint data type.  Your old and new clusters pass bigint values\n"
-		"differently so this__ cluster cannot currently be upgraded.  You can\n"
+		"differently so this cluster cannot currently be upgraded.  You can\n"
 				 "manually upgrade databases that use \"contrib/isn\" facilities and remove\n"
 				 "\"contrib/isn\" from the old cluster and restart the upgrade.  A list of\n"
 				 "the problem functions is in the file:\n"
@@ -930,7 +930,7 @@ check_for_reg_data_type_usage(ClusterInfo *cluster)
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation contains one of the reg* data types in user tables.\n"
 		 "These data types reference system OIDs that are not preserved by\n"
-		"pg_upgrade, so this__ cluster cannot currently be upgraded.  You can\n"
+		"pg_upgrade, so this cluster cannot currently be upgraded.  You can\n"
 				 "remove the problem tables and restart the upgrade.  A list of the problem\n"
 				 "columns is in the file:\n"
 				 "    %s\n\n", output_path);
@@ -1020,7 +1020,7 @@ check_for_jsonb_9_4_usage(ClusterInfo *cluster)
 	{
 		pg_log(PG_REPORT, "fatal\n");
 		pg_fatal("Your installation contains one of the JSONB data types in user tables.\n"
-				 "The internal format of JSONB changed during 9.4 beta so this__ cluster cannot currently\n"
+				 "The internal format of JSONB changed during 9.4 beta so this cluster cannot currently\n"
 				 "be upgraded.  You can remove the problem tables and restart the upgrade.  A list\n"
 				 "of the problem columns is in the file:\n"
 				 "    %s\n\n", output_path);

@@ -20,20 +20,20 @@
 #include "port/pg_crc32c.h"
 
 
-/* Version identifier for this__ pg_control format */
+/* Version identifier for this pg_control format */
 #define PG_CONTROL_VERSION	942
 
 /*
  * Body of CheckPoint XLOG records.  This is declared here because we keep
  * a copy of the latest one in pg_control for possible disaster recovery.
- * Changing this__ struct requires a PG_CONTROL_VERSION bump.
+ * Changing this struct requires a PG_CONTROL_VERSION bump.
  */
 typedef struct CheckPoint
 {
 	XLogRecPtr	redo;			/* next RecPtr available when we began to
 								 * create CheckPoint (i.e. REDO start point) */
 	TimeLineID	ThisTimeLineID; /* current TLI */
-	TimeLineID	PrevTimeLineID; /* previous TLI, if this__ record begins a new
+	TimeLineID	PrevTimeLineID; /* previous TLI, if this record begins a new
 								 * timeline (equals ThisTimeLineID otherwise) */
 	bool		fullPageWrites; /* current full_page_writes */
 	uint32		nextXidEpoch;	/* higher-order bits of nextXid */
@@ -53,7 +53,7 @@ typedef struct CheckPoint
 
 	/*
 	 * Oldest XID still running. This is only needed to initialize hot standby
-	 * mode from an online checkpoint, so we only bother calculating this__ for
+	 * mode from an online checkpoint, so we only bother calculating this for
 	 * online checkpoints and only when wal_level is hot_standby. Otherwise
 	 * it's set to InvalidTransactionId.
 	 */
@@ -76,7 +76,7 @@ typedef struct CheckPoint
 
 
 /*
- * System status indicator.  Note this__ is stored in pg_control; if you change
+ * System status indicator.  Note this is stored in pg_control; if you change
  * it, you must bump PG_CONTROL_VERSION
  */
 typedef enum DBState
@@ -93,7 +93,7 @@ typedef enum DBState
 /*
  * Contents of pg_control.
  *
- * NOTE: try to keep this__ under 512 bytes so that it will fit on one physical
+ * NOTE: try to keep this under 512 bytes so that it will fit on one physical
  * sector of typical disk drives.  This reduces the odds of corruption due to
  * power failure midway through a write.
  */
@@ -200,10 +200,10 @@ typedef struct ControlFileData
 #define FLOATFORMAT_VALUE	1234567.0
 
 	/*
-	 * This data is used to make sure that configuration of this__ database is
+	 * This data is used to make sure that configuration of this database is
 	 * compatible with the backend executable.
 	 */
-	uint32		blcksz;			/* data block size for this__ DB */
+	uint32		blcksz;			/* data block size for this DB */
 	uint32		relseg_size;	/* blocks per segment of large relation */
 
 	uint32		xlog_blcksz;	/* block size within WAL files */
@@ -230,7 +230,7 @@ typedef struct ControlFileData
 } ControlFileData;
 
 /*
- * Physical size of the pg_control file.  Note that this__ is considerably
+ * Physical size of the pg_control file.  Note that this is considerably
  * bigger than the actually used size (ie, sizeof(ControlFileData)).
  * The idea is to keep the physical size constant independent of format
  * changes, so that ReadControlFile will deliver a suitable wrong-version

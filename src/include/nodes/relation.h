@@ -28,7 +28,7 @@
 typedef Bitmapset *Relids;
 
 /*
- * When looking for a "cheapest path", this__ enum specifies whether we want
+ * When looking for a "cheapest path", this enum specifies whether we want
  * cheapest startup cost or cheapest total cost.
  */
 typedef enum CostSelector
@@ -66,7 +66,7 @@ typedef struct AggClauseCosts
  * PlannerGlobal
  *		Global information for planning/optimization
  *
- * PlannerGlobal holds state for an entire planner invocation; this__ state
+ * PlannerGlobal holds state for an entire planner invocation; this state
  * is shared across all levels of sub-Queries that exist in the command being
  * planned.
  *----------
@@ -169,11 +169,11 @@ typedef struct PlannerInfo
 
 	/*
 	 * join_rel_list is a list of all join-relation RelOptInfos we have
-	 * considered in this__ planning run.  For small problems we just scan the
+	 * considered in this planning run.  For small problems we just scan the
 	 * list to do lookups, but when there are many join relations we build a
 	 * hash table for faster lookups.  The hash table is present and valid
 	 * when join_rel_hash is not NULL.  Note that we still maintain the list
-	 * even when using the hash table for lookups; this__ simplifies life for
+	 * even when using the hash table for lookups; this simplifies life for
 	 * GEQO.
 	 */
 	List	   *join_rel_list;	/* list of join-relation RelOptInfos */
@@ -267,7 +267,7 @@ typedef struct PlannerInfo
 /*
  * In places where it's known that simple_rte_array[] must have been prepared
  * already, we just index into it to fetch RTEs.  In code that might be
- * executed before or after entering query_planner(), use this__ macro.
+ * executed before or after entering query_planner(), use this macro.
  */
 #define planner_rt_fetch(rti, root) \
 	((root)->simple_rte_array ? (root)->simple_rte_array[rti] : \
@@ -307,10 +307,10 @@ typedef struct PlannerInfo
  * member rels.  (See comments for AppendRelInfo for more information.)
  *
  * At one time we also made otherrels to represent join RTEs, for use in
- * handling join alias Vars.  Currently this__ is not needed because all join
+ * handling join alias Vars.  Currently this is not needed because all join
  * alias Vars are expanded to non-aliased form during preprocess_expression.
  *
- * Parts of this__ data structure are specific to various scan and join
+ * Parts of this data structure are specific to various scan and join
  * mechanisms.  It didn't seem worth creating new node types for them.
  *
  *		relids - Set of base-relation identifiers; it is a base relation
@@ -320,10 +320,10 @@ typedef struct PlannerInfo
  *		width - avg. number of bytes per tuple in the relation after the
  *				appropriate projections have been done (ie, output width)
  *		consider_startup - true if there is any value in keeping plain paths for
- *						   this__ rel on the basis of having cheap startup cost
+ *						   this rel on the basis of having cheap startup cost
  *		consider_param_startup - the same for parameterized paths
  *		reltargetlist - List of Var and PlaceHolderVar nodes for the values
- *						we need to output from this__ relation.
+ *						we need to output from this relation.
  *						List is in no particular order, but all rels of an
  *						appendrel set must use corresponding orders.
  *						NOTE: in an appendrel child relation, may contain
@@ -342,13 +342,13 @@ typedef struct PlannerInfo
  *			(no duplicates) output from relation; NULL if not yet requested
  *		cheapest_parameterized_paths - best paths for their parameterizations;
  *			always includes cheapest_total_path, even if that's unparameterized
- *		direct_lateral_relids - rels this__ rel has direct LATERAL references to
+ *		direct_lateral_relids - rels this rel has direct LATERAL references to
  *		lateral_relids - required outer rels for LATERAL, as a Relids set
  *			(includes both direct and indirect lateral references)
  *
  * If the relation is a base relation it will have these fields set:
  *
- *		relid - RTE index (this__ is redundant with the relids field, but
+ *		relid - RTE index (this is redundant with the relids field, but
  *				is provided for convenience of access)
  *		rtekind - distinguishes plain relation, subquery, or function RTE
  *		min_attr, max_attr - range of valid AttrNumbers for rel
@@ -359,7 +359,7 @@ typedef struct PlannerInfo
  *					  zero means not computed yet
  *		lateral_vars - lateral cross-references of rel, if any (list of
  *					   Vars and PlaceHolderVars)
- *		lateral_referencers - relids of rels that reference this__ one laterally
+ *		lateral_referencers - relids of rels that reference this one laterally
  *				(includes both direct and indirect lateral references)
  *		indexlist - list of IndexOptInfo nodes for relation's indexes
  *					(always NIL if it's not a table)
@@ -388,13 +388,13 @@ typedef struct PlannerInfo
  * and joins that the relation participates in:
  *
  *		baserestrictinfo - List of RestrictInfo nodes, containing info about
- *					each non-join qualification clause in which this__ relation
+ *					each non-join qualification clause in which this relation
  *					participates (only used for base rels)
  *		baserestrictcost - Estimated cost of evaluating the baserestrictinfo
  *					clauses at a single tuple (only used for base rels)
  *		joininfo  - List of RestrictInfo nodes, containing info about each
- *					join clause in which this__ relation participates (but
- *					note this__ excludes clauses that might be derivable from
+ *					join clause in which this relation participates (but
+ *					note this excludes clauses that might be derivable from
  *					EquivalenceClasses)
  *		has_eclass_joins - flag that EquivalenceClass joins are possible
  *
@@ -429,7 +429,7 @@ typedef struct RelOptInfo
 
 	RelOptKind	reloptkind;
 
-	/* all relations included in this__ RelOptInfo */
+	/* all relations included in this RelOptInfo */
 	Relids		relids;			/* set of base relids (rangetable indexes) */
 
 	/* size estimates generated by planner */
@@ -484,7 +484,7 @@ typedef struct RelOptInfo
 										 * rel) */
 	QualCost	baserestrictcost;		/* cost of evaluating the above */
 	List	   *joininfo;		/* RestrictInfo structures for join clauses
-								 * involving this__ rel */
+								 * involving this rel */
 	bool		has_eclass_joins;		/* T means joininfo is incomplete */
 } RelOptInfo;
 
@@ -565,8 +565,8 @@ typedef struct IndexOptInfo
  *
  * Whenever we can determine that a mergejoinable equality clause A = B is
  * not delayed by any outer join, we create an EquivalenceClass containing
- * the expressions A and B to record this__ knowledge.  If we later find another
- * equivalence B = C, we add C to the existing EquivalenceClass; this__ may
+ * the expressions A and B to record this knowledge.  If we later find another
+ * equivalence B = C, we add C to the existing EquivalenceClass; this may
  * require merging two existing EquivalenceClasses.  At the end of the qual
  * distribution process, we have sets of values that are known all transitively
  * equal to each other, where "equal" is according to the rules of the btree
@@ -597,7 +597,7 @@ typedef struct IndexOptInfo
  * the included values might be all NULL rather than all the same non-null
  * values.  See src/backend/optimizer/README for more on that point.
  *
- * NB: if ec_merged isn't NULL, this__ class has been merged into another, and
+ * NB: if ec_merged isn't NULL, this class has been merged into another, and
  * should be ignored in favor of using the pointed-to class.
  */
 typedef struct EquivalenceClass
@@ -629,7 +629,7 @@ typedef struct EquivalenceClass
 /*
  * EquivalenceMember - one member expression of an EquivalenceClass
  *
- * em_is_child signifies that this__ element was built by transposing a member
+ * em_is_child signifies that this element was built by transposing a member
  * for an appendrel parent relation to represent the corresponding expression
  * for an appendrel child.  These members are used for determining the
  * pathkeys of scans on the child relation and for explicitly sorting the
@@ -645,8 +645,8 @@ typedef struct EquivalenceClass
  *
  * em_datatype is usually the same as exprType(em_expr), but can be
  * different when dealing with a binary-compatible opfamily; in particular
- * anyarray_ops would never work without this__.  Use em_datatype when
- * looking up a specific btree operator to work with this__ expression.
+ * anyarray_ops would never work without this.  Use em_datatype when
+ * looking up a specific btree operator to work with this expression.
  */
 typedef struct EquivalenceMember
 {
@@ -693,7 +693,7 @@ typedef struct PathKey
  *
  * All parameterized paths for a given relation with given required outer rels
  * link to a single ParamPathInfo, which stores common information such as
- * the estimated rowcount for this__ parameterization.  We do this__ partly to
+ * the estimated rowcount for this parameterization.  We do this partly to
  * avoid recalculations, but mostly to ensure that the estimated rowcount
  * is in fact the same for every such path.
  *
@@ -717,16 +717,16 @@ typedef struct ParamPathInfo
  * simple plan types that we don't need any extra information in the path for.
  * For other path types it is the first component of a larger struct.
  *
- * "pathtype" is the NodeTag of the Plan node we could build from this__ Path.
+ * "pathtype" is the NodeTag of the Plan node we could build from this Path.
  * It is partially redundant with the Path's NodeTag, but allows us to use
  * the same Path type for multiple Plan types when there is no need to
  * distinguish the Plan type during path processing.
  *
  * "param_info", if not NULL, links to a ParamPathInfo that identifies outer
- * relation(s) that provide parameter values to each scan of this__ path.
- * That means this__ path can only be joined to those rels by means of nestloop
- * joins with this__ path on the inside.  Also note that a parameterized path
- * is responsible for testing all "movable" joinclauses involving this__ rel
+ * relation(s) that provide parameter values to each scan of this path.
+ * That means this path can only be joined to those rels by means of nestloop
+ * joins with this path on the inside.  Also note that a parameterized path
+ * is responsible for testing all "movable" joinclauses involving this rel
  * and the specified outer rel(s).
  *
  * "rows" is the same as parent->rows in simple paths, but in parameterized
@@ -742,7 +742,7 @@ typedef struct Path
 
 	NodeTag		pathtype;		/* tag identifying scan/join method */
 
-	RelOptInfo *parent;			/* the relation this__ path can build */
+	RelOptInfo *parent;			/* the relation this path can build */
 	ParamPathInfo *param_info;	/* parameterization info, or NULL if none */
 
 	/* estimated size/costs for path (see costsize.c for more info) */
@@ -773,7 +773,7 @@ typedef struct Path
  *
  * 'indexquals' has the same structure as 'indexclauses', but it contains
  * the actual index qual conditions that can be used with the index.
- * In simple cases this__ is identical to 'indexclauses', but when special
+ * In simple cases this is identical to 'indexclauses', but when special
  * indexable operators appear in 'indexclauses', they are replaced by the
  * derived indexscannable conditions in 'indexquals'.
  *
@@ -850,7 +850,7 @@ typedef struct BitmapHeapPath
 /*
  * BitmapAndPath represents a BitmapAnd plan node; it can only appear as
  * part of the substructure of a BitmapHeapPath.  The Path structure is
- * a bit more heavyweight than we really need for this__, but for simplicity
+ * a bit more heavyweight than we really need for this, but for simplicity
  * we make it a derivative of Path anyway.
  */
 typedef struct BitmapAndPath
@@ -863,7 +863,7 @@ typedef struct BitmapAndPath
 /*
  * BitmapOrPath represents a BitmapOr plan node; it can only appear as
  * part of the substructure of a BitmapHeapPath.  The Path structure is
- * a bit more heavyweight than we really need for this__, but for simplicity
+ * a bit more heavyweight than we really need for this, but for simplicity
  * we make it a derivative of Path anyway.
  */
 typedef struct BitmapOrPath
@@ -916,7 +916,7 @@ typedef struct ForeignPath
  * Core code must avoid assuming that the CustomPath is only as large as
  * the structure declared here; providers are allowed to make it the first
  * element in a larger structure.  (Since the planner never copies Paths,
- * this__ doesn't add any complication.)  However, for consistency with the
+ * this doesn't add any complication.)  However, for consistency with the
  * FDW case, we provide a "custom_private" field in CustomPath; providers
  * may prefer to use that rather than define another struct type.
  */
@@ -1158,7 +1158,7 @@ typedef struct HashPath
  * Initially we attach them to the EquivalenceClasses that are derived from
  * them.  When we construct a scan or join path, we look through all the
  * EquivalenceClasses and generate derived RestrictInfos representing the
- * minimal set of conditions that need to be checked for this__ particular scan
+ * minimal set of conditions that need to be checked for this particular scan
  * or join to enforce that all members of each EquivalenceClass are in fact
  * equal in all rows emitted by the scan or join.
  *
@@ -1244,7 +1244,7 @@ typedef struct HashPath
  *
  * When join clauses are generated from EquivalenceClasses, there may be
  * several equally valid ways to enforce join equivalence, of which we need
- * apply only one.  We mark clauses of this__ kind by setting parent_ec to
+ * apply only one.  We mark clauses of this kind by setting parent_ec to
  * point to the generating EquivalenceClass.  Multiple clauses with the same
  * parent_ec in the same join are redundant.
  */
@@ -1344,7 +1344,7 @@ typedef struct MergeScanSelCache
  * join, and Var references above the outer join might thereby yield NULL
  * instead of the expression value.
  *
- * Although the planner treats this__ as an expression node type, it is not
+ * Although the planner treats this as an expression node type, it is not
  * recognized by the parser or executor, so we declare it here rather than
  * in primnodes.h.
  */
@@ -1372,33 +1372,33 @@ typedef struct PlaceHolderVar
  * These are likewise recorded in SpecialJoinInfo structs.
  *
  * We make SpecialJoinInfos for FULL JOINs even though there is no flexibility
- * of planning for them, because this__ simplifies make_join_rel()'s API.
+ * of planning for them, because this simplifies make_join_rel()'s API.
  *
  * min_lefthand and min_righthand are the sets of base relids that must be
  * available on each side when performing the special join.  lhs_strict is
  * true if the special join's condition cannot succeed when the LHS variables
- * are all NULL (this__ means that an outer join can commute with upper-level
+ * are all NULL (this means that an outer join can commute with upper-level
  * outer joins even if it appears in their RHS).  We don't bother to set
  * lhs_strict for FULL JOINs, however.
  *
  * It is not valid for either min_lefthand or min_righthand to be empty sets;
- * if they were, this__ would break the logic that enforces join order.
+ * if they were, this would break the logic that enforces join order.
  *
  * syn_lefthand and syn_righthand are the sets of base relids that are
- * syntactically below this__ special join.  (These are needed to help compute
+ * syntactically below this special join.  (These are needed to help compute
  * min_lefthand and min_righthand for higher joins.)
  *
  * delay_upper_joins is set TRUE if we detect a pushed-down clause that has
- * to be evaluated after this__ join is formed (because it references the RHS).
- * Any outer joins that have such a clause and this__ join in their RHS cannot
- * commute with this__ join, because that would leave noplace to check the
- * pushed-down clause.  (We don't track this__ for FULL JOINs, either.)
+ * to be evaluated after this join is formed (because it references the RHS).
+ * Any outer joins that have such a clause and this join in their RHS cannot
+ * commute with this join, because that would leave noplace to check the
+ * pushed-down clause.  (We don't track this for FULL JOINs, either.)
  *
  * For a semijoin, we also extract the join operators and their RHS arguments
  * and set semi_operators, semi_rhs_exprs, semi_can_btree, and semi_can_hash.
  * This is done in support of possibly unique-ifying the RHS, so we don't
  * bother unless at least one of semi_can_btree and semi_can_hash can be set
- * true.  (You might expect that this__ information would be computed during
+ * true.  (You might expect that this information would be computed during
  * join planning; but it's helpful to have it available during planning of
  * parameterized table scans, so we store it in the SpecialJoinInfo structs.)
  *
@@ -1408,7 +1408,7 @@ typedef struct PlaceHolderVar
  *
  * For purposes of join selectivity estimation, we create transient
  * SpecialJoinInfo structures for regular inner joins; so it is possible
- * to have jointype == JOIN_INNER in such a structure, even though this__ is
+ * to have jointype == JOIN_INNER in such a structure, even though this is
  * not allowed within join_info_list.  We also create transient
  * SpecialJoinInfos with jointype == JOIN_INNER for outer joins, since for
  * cost estimation purposes it is sometimes useful to know the join size under
@@ -1446,7 +1446,7 @@ typedef struct SpecialJoinInfo
  * These structs are kept in the PlannerInfo node's append_rel_list.
  * Note that we just throw all the structs into one list, and scan the
  * whole list when desiring to expand any one parent.  We could have used
- * a more complex data structure (eg, one list per parent), but this__ would
+ * a more complex data structure (eg, one list per parent), but this would
  * be harder to update during operations such as pulling up subqueries,
  * and not really any easier to scan.  Considering that typical queries
  * will not have many different append parents, it doesn't seem worthwhile
@@ -1472,7 +1472,7 @@ typedef struct AppendRelInfo
 	NodeTag		type;
 
 	/*
-	 * These fields uniquely identify this__ append relationship.  There can be
+	 * These fields uniquely identify this append relationship.  There can be
 	 * (in fact, always should be) multiple AppendRelInfos for the same
 	 * parent_relid, but never more than one per child_relid, since a given
 	 * RTE cannot be a child of more than one append parent.
@@ -1490,11 +1490,11 @@ typedef struct AppendRelInfo
 	Oid			child_reltype;	/* OID of child's composite type */
 
 	/*
-	 * The N'th element of this__ list is a Var or expression representing the
+	 * The N'th element of this list is a Var or expression representing the
 	 * child column corresponding to the N'th column of the parent. This is
 	 * used to translate Vars referencing the parent rel into references to
 	 * the child.  A list element is NULL if it corresponds to a dropped
-	 * column of the parent (this__ is only possible for inheritance cases, not
+	 * column of the parent (this is only possible for inheritance cases, not
 	 * UNION ALL).  The list elements are always simple Vars for inheritance
 	 * cases, but can be arbitrary expressions in UNION ALL cases.
 	 *
@@ -1521,7 +1521,7 @@ typedef struct AppendRelInfo
  * This stores info that is needed centrally rather than in each copy of the
  * PlaceHolderVar.  The phid fields identify which PlaceHolderInfo goes with
  * each PlaceHolderVar.  Note that phid is unique throughout a planner run,
- * not just within a query level --- this__ is so that we need not reassign ID's
+ * not just within a query level --- this is so that we need not reassign ID's
  * when pulling a subquery into its parent.
  *
  * The idea is to evaluate the expression at (only) the ph_eval_at join level,
@@ -1587,12 +1587,12 @@ typedef struct MinMaxAggInfo
  *
  * The item a PlannerParamItem represents can be one of three kinds:
  *
- * A Var: the slot represents a variable of this__ level that must be passed
+ * A Var: the slot represents a variable of this level that must be passed
  * down because subqueries have outer references to it, or must be passed
  * from a NestLoop node to its inner scan.  The varlevelsup value in the Var
  * will always be zero.
  *
- * A PlaceHolderVar: this__ works much like the Var case, except that the
+ * A PlaceHolderVar: this works much like the Var case, except that the
  * entry is a PlaceHolderVar node with a contained expression.  The PHV
  * will have phlevelsup = 0, and the contained expression is adjusted
  * to match in level.
@@ -1651,9 +1651,9 @@ typedef struct SemiAntiJoinFactors
  * Struct for extra information passed to subroutines of add_paths_to_joinrel
  *
  * restrictlist contains all of the RestrictInfo nodes for restriction
- *		clauses that apply to this__ join
+ *		clauses that apply to this join
  * mergeclause_list is a list of RestrictInfo nodes for available
- *		mergejoin clauses in this__ join
+ *		mergejoin clauses in this join
  * sjinfo is extra info about special joins for selectivity estimation
  * semifactors is as shown above (only valid for SEMI or ANTI joins)
  * param_source_rels are OK targets for parameterization of result paths
@@ -1676,7 +1676,7 @@ typedef struct JoinPathExtraData
  * and possibly additional intermediate values.  The second phase takes
  * these values as inputs to avoid repeating work.
  *
- * (Ideally we'd declare this__ in cost.h, but it's also needed in pathnode.h,
+ * (Ideally we'd declare this in cost.h, but it's also needed in pathnode.h,
  * so seems best to put it here.)
  */
 typedef struct JoinCostWorkspace

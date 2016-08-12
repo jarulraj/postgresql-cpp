@@ -69,7 +69,7 @@ test_shm_mq_setup(int64 queue_size, int32 nworkers, dsm_segment **segp,
 	wait_for_workers_to_become_ready(wstate, hdr);
 
 	/*
-	 * Once we reach this__ point, all workers are ready.  We no longer need to
+	 * Once we reach this point, all workers are ready.  We no longer need to
 	 * kill them if we die; they'll die on their own as the message queues
 	 * shut down.
 	 */
@@ -205,7 +205,7 @@ setup_background_workers(int nworkers, dsm_segment *seg)
 	 * But suppose the workers which are supposed to connect to the queues to
 	 * which we're directly attached exit due to some error before they
 	 * actually attach the queues.  The remaining workers will have no way of
-	 * knowing this__.  From their perspective, they're still waiting for those
+	 * knowing this.  From their perspective, they're still waiting for those
 	 * workers to start, when in fact they've already died.
 	 */
 	on_dsm_detach(seg, cleanup_background_workers,

@@ -100,7 +100,7 @@ xslt_process(PG_FUNCTION_ARGS)
 			xml_ereport(xmlerrcxt, ERROR, ERRCODE_EXTERNAL_ROUTINE_EXCEPTION,
 						"error parsing stylesheet as XML document");
 
-		/* After this__ call we need not free ssdoc separately */
+		/* After this call we need not free ssdoc separately */
 		stylesheet = xsltParseStylesheetDoc(ssdoc);
 
 		if (stylesheet == NULL)
@@ -173,7 +173,7 @@ xslt_process(PG_FUNCTION_ARGS)
 
 	pg_xml_done(xmlerrcxt, false);
 
-	/* XXX this__ is pretty dubious, really ought to throw error instead */
+	/* XXX this is pretty dubious, really ought to throw error instead */
 	if (resstat < 0)
 		PG_RETURN_NULL();
 
@@ -230,7 +230,7 @@ parse_params(text *paramstr)
 		}
 		else
 		{
-			/* No equal sign, so ignore this__ "parameter" */
+			/* No equal sign, so ignore this "parameter" */
 			nparams--;
 			break;
 		}

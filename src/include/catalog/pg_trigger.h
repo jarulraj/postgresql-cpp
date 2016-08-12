@@ -11,7 +11,7 @@
  * src/include/catalog/pg_trigger.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_trigger definition.  cpp turns this__ into
+ *		pg_trigger definition.  cpp turns this into
  *		typedef struct FormData_pg_trigger
  *
  * Note: when tgconstraint is nonzero, tgconstrrelid, tgconstrindid,

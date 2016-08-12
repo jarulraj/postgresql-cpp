@@ -21,7 +21,7 @@
  *	 NOTES
  *		Each ModifyTable node contains a list of one or more subplans,
  *		much like an Append node.  There is one subplan per result relation.
- *		The key reason for this__ is that in an inherited UPDATE command, each
+ *		The key reason for this is that in an inherited UPDATE command, each
  *		result relation could have a different schema (more or different
  *		columns) requiring a different plan tree to produce it.  In an
  *		inherited DELETE, all the subplans should produce the same output
@@ -66,9 +66,9 @@ static bool ExecOnConflictUpdate(ModifyTableState *mtstate,
  * Verify that the tuples to be produced by INSERT or UPDATE match the
  * target relation's rowtype
  *
- * We do this__ to guard against stale plans.  If plan invalidation is
+ * We do this to guard against stale plans.  If plan invalidation is
  * functioning properly then we should never get a failure here, but better
- * safe than sorry.  Note that this__ is called after we have obtained lock
+ * safe than sorry.  Note that this is called after we have obtained lock
  * on the target rel, so the rowtype can't change underneath us.
  *
  * The plan output is represented by its targetlist, because that makes
@@ -245,13 +245,13 @@ ExecInsert(ModifyTableState *mtstate,
 	/*
 	 * If the result relation has OIDs, force the tuple's OID to zero so that
 	 * heap_insert will assign a fresh OID.  Usually the OID already will be
-	 * zero at this__ point, but there are corner cases where the plan tree can
+	 * zero at this point, but there are corner cases where the plan tree can
 	 * return a tuple extracted literally from some table with the same
 	 * rowtype.
 	 *
 	 * XXX if we ever wanted to allow users to assign their own OIDs to new
-	 * rows, this__'d be the place to do it.  For the moment, we make a point of
-	 * doing this__ before calling triggers, so that a user-supplied trigger
+	 * rows, this'd be the place to do it.  For the moment, we make a point of
+	 * doing this before calling triggers, so that a user-supplied trigger
 	 * could hack the OID if desired.
 	 */
 	if (resultRelationDesc->rd_rel->relhasoids)
@@ -328,7 +328,7 @@ ExecInsert(ModifyTableState *mtstate,
 		 * Check any RLS INSERT WITH CHECK policies
 		 *
 		 * ExecWithCheckOptions() will skip any WCOs which are not of the kind
-		 * we are looking for at this__ point.
+		 * we are looking for at this point.
 		 */
 		if (resultRelInfo->ri_WithCheckOptions != NIL)
 			ExecWithCheckOptions(WCO_RLS_INSERT_CHECK,
@@ -350,7 +350,7 @@ ExecInsert(ModifyTableState *mtstate,
 			/*
 			 * Do a non-conclusive check for conflicts first.
 			 *
-			 * We're not holding any locks yet, so this__ doesn't guarantee that
+			 * We're not holding any locks yet, so this doesn't guarantee that
 			 * the later insert won't conflict.  But it avoids leaving behind
 			 * a lot of canceled speculative insertions, if you run a lot of
 			 * INSERT ON CONFLICT statements that do conflict.
@@ -428,7 +428,7 @@ ExecInsert(ModifyTableState *mtstate,
 			/*
 			 * Wake up anyone waiting for our decision.  They will re-check
 			 * the tuple, see that it's no longer speculative, and wait on our
-			 * XID as if this__ was a regularly inserted tuple all along.  Or if
+			 * XID as if this was a regularly inserted tuple all along.  Or if
 			 * we killed the tuple, they will see it's dead, and proceed as if
 			 * the tuple never existed.
 			 */
@@ -481,7 +481,7 @@ ExecInsert(ModifyTableState *mtstate,
 
 	/*
 	 * Check any WITH CHECK OPTION constraints from parent views.  We are
-	 * required to do this__ after testing all constraints and uniqueness
+	 * required to do this after testing all constraints and uniqueness
 	 * violations per the SQL spec, so we do it after actually inserting the
 	 * record into the heap and all indexes.
 	 *
@@ -489,7 +489,7 @@ ExecInsert(ModifyTableState *mtstate,
 	 * tuple will never be seen, if it violates the WITH CHECK OPTION.
 	 *
 	 * ExecWithCheckOptions() will skip any WCOs which are not of the kind we
-	 * are looking for at this__ point.
+	 * are looking for at this point.
 	 */
 	if (resultRelInfo->ri_WithCheckOptions != NIL)
 		ExecWithCheckOptions(WCO_VIEW_CHECK, resultRelInfo, slot, estate);
@@ -638,7 +638,7 @@ ldelete:;
 				 * to business rules; so throwing an error is the only safe
 				 * course.
 				 *
-				 * If a trigger actually intends this__ type of interaction, it
+				 * If a trigger actually intends this type of interaction, it
 				 * can re-execute the DELETE and then return NULL to cancel
 				 * the outer delete.
 				 */
@@ -688,7 +688,7 @@ ldelete:;
 		 * Note: Normally one would think that we have to delete index tuples
 		 * associated with the heap tuple now...
 		 *
-		 * ... but in POSTGRES, we have no need to do this__ because VACUUM will
+		 * ... but in POSTGRES, we have no need to do this because VACUUM will
 		 * take care of it later.  We can't delete index tuples immediately
 		 * anyway, since the tuple is still visible to other transactions.
 		 */
@@ -882,7 +882,7 @@ ExecUpdate(ItemPointer tupleid,
 		 * correct tuple, so there's no need to do them again.)
 		 *
 		 * ExecWithCheckOptions() will skip any WCOs which are not of the kind
-		 * we are looking for at this__ point.
+		 * we are looking for at this point.
 		 */
 lreplace:;
 		if (resultRelInfo->ri_WithCheckOptions != NIL)
@@ -928,11 +928,11 @@ lreplace:;
 				 * should not ignore the update, but it is equally unsafe to
 				 * proceed.  We don't want to discard the original UPDATE
 				 * while keeping the triggered actions based on it; and we
-				 * have no principled way to merge this__ update with the
+				 * have no principled way to merge this update with the
 				 * previous ones.  So throwing an error is the only safe
 				 * course.
 				 *
-				 * If a trigger actually intends this__ type of interaction, it
+				 * If a trigger actually intends this type of interaction, it
 				 * can re-execute the UPDATE (assuming it can figure out how)
 				 * and then return NULL to cancel the outer update.
 				 */
@@ -1012,12 +1012,12 @@ lreplace:;
 
 	/*
 	 * Check any WITH CHECK OPTION constraints from parent views.  We are
-	 * required to do this__ after testing all constraints and uniqueness
+	 * required to do this after testing all constraints and uniqueness
 	 * violations per the SQL spec, so we do it after actually updating the
 	 * record in the heap and all indexes.
 	 *
 	 * ExecWithCheckOptions() will skip any WCOs which are not of the kind we
-	 * are looking for at this__ point.
+	 * are looking for at this point.
 	 */
 	if (resultRelInfo->ri_WithCheckOptions != NIL)
 		ExecWithCheckOptions(WCO_VIEW_CHECK, resultRelInfo, slot, estate);
@@ -1092,7 +1092,7 @@ ExecOnConflictUpdate(ModifyTableState *mtstate,
 			 * some unspecified order, and in contrast to plain UPDATEs
 			 * there's no historical behavior to break.
 			 *
-			 * It is the user's responsibility to prevent this__ situation from
+			 * It is the user's responsibility to prevent this situation from
 			 * occurring.  These problems are why SQL-2003 similarly specifies
 			 * that for SQL MERGE, an exception must be raised in the event of
 			 * an attempt to update the same row twice.
@@ -1111,7 +1111,7 @@ ExecOnConflictUpdate(ModifyTableState *mtstate,
 			/*
 			 * This state should never be reached. As a dirty snapshot is used
 			 * to find conflicting tuples, speculative insertion wouldn't have
-			 * seen this__ row to conflict with.
+			 * seen this row to conflict with.
 			 */
 			elog(ERROR, "unexpected self-updated tuple");
 
@@ -1206,7 +1206,7 @@ ExecOnConflictUpdate(ModifyTableState *mtstate,
 
 	/*
 	 * Note that it is possible that the target tuple has been modified in
-	 * this__ session, after the above heap_lock_tuple. We choose to not error
+	 * this session, after the above heap_lock_tuple. We choose to not error
 	 * out in that case, in line with ExecUpdate's treatment of similar
 	 * cases. This can happen if an UPDATE is triggered from within
 	 * ExecQual(), ExecWithCheckOptions() or ExecProject() above, e.g. by
@@ -1303,10 +1303,10 @@ ExecModifyTable(ModifyTableState *node)
 	/*
 	 * This should NOT get called during EvalPlanQual; we should have passed a
 	 * subplan tree to EvalPlanQual, instead.  Use a runtime test not just
-	 * Assert because this__ condition is easy to miss in testing.  (Note:
+	 * Assert because this condition is easy to miss in testing.  (Note:
 	 * although ModifyTable should not get executed within an EvalPlanQual
 	 * operation, we do have to allow it to be initialized and shut down in
-	 * case it is within a CTE subplan.  Hence this__ test must be here, not in
+	 * case it is within a CTE subplan.  Hence this test must be here, not in
 	 * ExecInitModifyTable.)
 	 */
 	if (estate->es_epqTuple != NULL)
@@ -1314,7 +1314,7 @@ ExecModifyTable(ModifyTableState *node)
 
 	/*
 	 * If we've already completed processing, don't try to do more.  We need
-	 * this__ test because ExecPostprocessPlan might call us an extra time, and
+	 * this test because ExecPostprocessPlan might call us an extra time, and
 	 * our subplan's nodes aren't necessarily robust against being called
 	 * extra times.
 	 */
@@ -1337,7 +1337,7 @@ ExecModifyTable(ModifyTableState *node)
 
 	/*
 	 * es_result_relation_info must point to the currently active result
-	 * relation while we are within this__ ModifyTable node.  Even though
+	 * relation while we are within this ModifyTable node.  Even though
 	 * ModifyTable nodes can't be nested statically, they can be nested
 	 * dynamically (since our subplan could include a reference to a modifying
 	 * CTE).  So we have to save and restore the caller's value.
@@ -1355,8 +1355,8 @@ ExecModifyTable(ModifyTableState *node)
 		/*
 		 * Reset the per-output-tuple exprcontext.  This is needed because
 		 * triggers expect to use that context as workspace.  It's a bit ugly
-		 * to do this__ below the top level of the plan, however.  We might need
-		 * to rethink this__ later.
+		 * to do this below the top level of the plan, however.  We might need
+		 * to rethink this later.
 		 */
 		ResetPerTupleExprContext(estate);
 
@@ -1419,7 +1419,7 @@ ExecModifyTable(ModifyTableState *node)
 				 * relation has an AFTER ROW trigger.  Note that the wholerow
 				 * attribute does not carry system columns.  Foreign table
 				 * triggers miss seeing those, except that we know enough here
-				 * to set t_tableOid.  Quite separately from this__, the FDW may
+				 * to set t_tableOid.  Quite separately from this, the FDW may
 				 * fetch its own junk attrs to identify the row.
 				 *
 				 * Other relevant relkinds, currently limited to views, always
@@ -1567,7 +1567,7 @@ ExecInitModifyTable(ModifyTable *node, EState *estate, int eflags)
 		/*
 		 * If there are indices on the result relation, open them and save
 		 * descriptors in the result relation info, so that we can add new
-		 * index entries for the tuples we add/update.  We need not do this__
+		 * index entries for the tuples we add/update.  We need not do this
 		 * for a DELETE, however, since deletion doesn't affect indexes. Also,
 		 * inside an EvalPlanQual operation, the indexes might be open
 		 * already, since we share the resultrel state with the original
@@ -1578,7 +1578,7 @@ ExecInitModifyTable(ModifyTable *node, EState *estate, int eflags)
 			resultRelInfo->ri_IndexRelationDescs == NULL)
 			ExecOpenIndices(resultRelInfo, mtstate->mt_onconflict != ONCONFLICT_NONE);
 
-		/* Now init the plan for this__ result rel */
+		/* Now init the plan for this result rel */
 		estate->es_result_relation_info = resultRelInfo;
 		mtstate->mt_plans[i] = ExecInitNode(subplan, estate, eflags);
 
@@ -1875,7 +1875,7 @@ ExecInitModifyTable(ModifyTable *node, EState *estate, int eflags)
 		estate->es_trig_tuple_slot = ExecInitExtraTupleSlot(estate);
 
 	/*
-	 * Lastly, if this__ is not the primary (canSetTag) ModifyTable node, add it
+	 * Lastly, if this is not the primary (canSetTag) ModifyTable node, add it
 	 * to estate->es_auxmodifytables so that it will be run to completion by
 	 * ExecPostprocessPlan.  (It'd actually work fine to add the primary
 	 * ModifyTable node too, but there's no need.)  Note the use of lcons not

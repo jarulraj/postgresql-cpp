@@ -11,7 +11,7 @@
  * src/include/catalog/pg_operator.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *	  XXX do NOT break up DATA() statements into multiple lines!
@@ -25,7 +25,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_operator definition.  cpp turns this__ into
+ *		pg_operator definition.  cpp turns this into
  *		typedef struct FormData_pg_operator
  * ----------------
  */
@@ -34,7 +34,7 @@
 CATALOG(pg_operator,2617)
 {
 	NameData	oprname;		/* name of operator */
-	Oid			oprnamespace;	/* OID of namespace containing this__ oper */
+	Oid			oprnamespace;	/* OID of namespace containing this oper */
 	Oid			oprowner;		/* operator owner */
 	char		oprkind;		/* 'l', 'r', or 'b' */
 	bool		oprcanmerge;	/* can be used in merge join? */

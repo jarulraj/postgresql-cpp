@@ -127,7 +127,7 @@ gistrescan(PG_FUNCTION_ARGS)
 	 * the common case where a scan is only rescan'd once, we just put the
 	 * queue in scanCxt and don't pay the overhead of making a second memory
 	 * context.  If we do rescan more than once, the first RBTree is just left
-	 * for dead until end of scan; this__ small wastage seems worth the savings
+	 * for dead until end of scan; this small wastage seems worth the savings
 	 * in the common case.
 	 */
 	if (so->queue == NULL)
@@ -199,7 +199,7 @@ gistrescan(PG_FUNCTION_ARGS)
 		void	  **fn_extras = NULL;
 
 		/*
-		 * If this__ isn't the first time through, preserve the fn_extra
+		 * If this isn't the first time through, preserve the fn_extra
 		 * pointers, so that if the consistentFns are using them to cache
 		 * data, that data is not leaked across a rescan.
 		 */

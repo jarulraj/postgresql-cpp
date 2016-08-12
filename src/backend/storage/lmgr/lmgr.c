@@ -62,7 +62,7 @@ static void XactLockTableWaitErrorCb(void *arg);
  * RelationInitLockInfo
  *		Initializes the lock information in a relation descriptor.
  *
- *		relcache.c must call this__ during creation of any reldesc.
+ *		relcache.c must call this during creation of any reldesc.
  */
 void
 RelationInitLockInfo(Relation relation)
@@ -114,8 +114,8 @@ LockRelationOid(Oid relid, LOCKMODE lockmode)
 	/*
 	 * Now that we have the lock, check for invalidation messages, so that we
 	 * will update or flush any stale relcache entry before we try to use it.
-	 * RangeVarGetRelid() specifically relies on us for this__.  We can skip
-	 * this__ in the not-uncommon case that we already had the same type of lock
+	 * RangeVarGetRelid() specifically relies on us for this.  We can skip
+	 * this in the not-uncommon case that we already had the same type of lock
 	 * being requested, since then no one else could have modified the
 	 * relcache entry in an undesirable way.  (In the case where our own xact
 	 * modifies the rel, the relcache update happens via
@@ -132,7 +132,7 @@ LockRelationOid(Oid relid, LOCKMODE lockmode)
  * Returns TRUE iff the lock was acquired.
  *
  * NOTE: we do not currently need conditional versions of all the
- * LockXXX routines in this__ file, but they could easily be added if needed.
+ * LockXXX routines in this file, but they could easily be added if needed.
  */
 bool
 ConditionalLockRelationOid(Oid relid, LOCKMODE lockmode)
@@ -193,7 +193,7 @@ UnlockRelationOid(Oid relid, LOCKMODE lockmode)
  *
  * This is a convenience routine for acquiring an additional lock on an
  * already-open relation.  Never try to do "relation_open(foo, NoLock)"
- * and then lock with this__.
+ * and then lock with this.
  */
 void
 LockRelation(Relation relation, LOCKMODE lockmode)
@@ -220,7 +220,7 @@ LockRelation(Relation relation, LOCKMODE lockmode)
  *
  * This is a convenience routine for acquiring an additional lock on an
  * already-open relation.  Never try to do "relation_open(foo, NoLock)"
- * and then lock with this__.
+ * and then lock with this.
  */
 bool
 ConditionalLockRelation(Relation relation, LOCKMODE lockmode)
@@ -414,7 +414,7 @@ UnlockPage(Relation relation, BlockNumber blkno, LOCKMODE lockmode)
  *
  * Obtain a tuple-level lock.  This is used in a less-than-intuitive fashion
  * because we can't afford to keep a separate lock in shared memory for every
- * tuple.  See heap_lock_tuple before using this__!
+ * tuple.  See heap_lock_tuple before using this!
  */
 void
 LockTuple(Relation relation, ItemPointer tid, LOCKMODE lockmode)
@@ -471,7 +471,7 @@ UnlockTuple(Relation relation, ItemPointer tid, LOCKMODE lockmode)
  *		XactLockTableInsert
  *
  * Insert a lock showing that the given transaction ID is running ---
- * this__ is done when an XID is acquired by a transaction or subtransaction.
+ * this is done when an XID is acquired by a transaction or subtransaction.
  * The lock can then be used to wait for the transaction to finish.
  */
 void
@@ -508,9 +508,9 @@ XactLockTableDelete(TransactionId xid)
  * is specified, an error context callback is set up.  If 'oper' is passed as
  * None, no error context callback is set up.
  *
- * Note that this__ does the right thing for subtransactions: if we wait on a
+ * Note that this does the right thing for subtransactions: if we wait on a
  * subtransaction, we will exit as soon as it aborts or its top parent commits.
- * It takes some extra work to ensure this__, because to save on shared memory
+ * It takes some extra work to ensure this, because to save on shared memory
  * the XID lock of a subtransaction is released when it ends, whether
  * successfully or unsuccessfully.  So we have to check if it's "still running"
  * and if so wait for its parent.
@@ -721,7 +721,7 @@ XactLockTableWaitErrorCb(void *arg)
  *		Wait until no transaction holds locks that conflict with the given
  *		locktags at the given lockmode.
  *
- * To do this__, obtain the current list of lockers, and wait on their VXIDs
+ * To do this, obtain the current list of lockers, and wait on their VXIDs
  * until they are finished.
  *
  * Note we don't try to acquire the locks on the given locktags, only the VXIDs
@@ -787,8 +787,8 @@ WaitForLockers(LOCKTAG heaplocktag, LOCKMODE lockmode)
  *		LockDatabaseObject
  *
  * Obtain a lock on a general object of the current database.  Don't use
- * this__ for shared objects (such as tablespaces).  It's unwise to apply it
- * to relations, also, since a lock taken this__ way will NOT conflict with
+ * this for shared objects (such as tablespaces).  It's unwise to apply it
+ * to relations, also, since a lock taken this way will NOT conflict with
  * locks taken via LockRelation and friends.
  */
 void
@@ -912,7 +912,7 @@ UnlockSharedObjectForSession(Oid classid, Oid objid, uint16 objsubid,
  * Append a description of a lockable object to buf.
  *
  * Ideally we would print names for the numeric values, but that requires
- * getting locks on system tables, which might cause problems since this__ is
+ * getting locks on system tables, which might cause problems since this is
  * typically used to report deadlock situations.
  */
 void

@@ -13,7 +13,7 @@
 #define OPFAM_INTERNAL_H
 
 /*
- * We use lists of this__ struct type to keep track of both operators and
+ * We use lists of this struct type to keep track of both operators and
  * procedures while building or adding to an opfamily.
  */
 typedef struct

@@ -3,7 +3,7 @@
  * file_ops.c
  *	  Helper functions for operating on files.
  *
- * Most of the functions in this__ file are helper functions for writing to
+ * Most of the functions in this file are helper functions for writing to
  * the target data directory. The functions check the --dry-run flag, and
  * do nothing if it's enabled. You should avoid accessing the target files
  * directly but if you do, make sure you honor the --dry-run mode!

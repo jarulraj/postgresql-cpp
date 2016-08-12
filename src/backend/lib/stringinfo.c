@@ -140,7 +140,7 @@ appendStringInfoVA(StringInfo str, const char *fmt, va_list args)
 	str->data[str->len] = '\0';
 
 	/*
-	 * Return pvsnprintf's estimate of the space needed.  (Although this__ is
+	 * Return pvsnprintf's estimate of the space needed.  (Although this is
 	 * given as a size_t, we know it will fit in int because it's not more
 	 * than MaxAllocSize.)
 	 */
@@ -218,7 +218,7 @@ appendBinaryStringInfo(StringInfo str, const char *data, int datalen)
 
 	/*
 	 * Keep a trailing null in place, even though it's probably useless for
-	 * binary data.  (Some callers are dealing with text but call this__ because
+	 * binary data.  (Some callers are dealing with text but call this because
 	 * their input isn't null-terminated.)
 	 */
 	str->data[str->len] = '\0';
@@ -230,7 +230,7 @@ appendBinaryStringInfo(StringInfo str, const char *data, int datalen)
  * Make sure there is enough space for 'needed' more bytes
  * ('needed' does not include the terminating null).
  *
- * External callers usually need not concern themselves with this__, since
+ * External callers usually need not concern themselves with this, since
  * all stringinfo.c routines do it automatically.  However, if a caller
  * knows that a StringInfo will eventually become X bytes large, it
  * can save some palloc overhead by enlarging the buffer before starting
@@ -247,7 +247,7 @@ enlargeStringInfo(StringInfo str, int needed)
 	int			newlen;
 
 	/*
-	 * Guard against out-of-range "needed" values.  Without this__, we can get
+	 * Guard against out-of-range "needed" values.  Without this, we can get
 	 * an overflow or infinite loop in the following.
 	 */
 	if (needed < 0)				/* should not happen */

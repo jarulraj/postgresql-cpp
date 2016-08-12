@@ -3,7 +3,7 @@
  * nodeBitmapHeapscan.c
  *	  Routines to support bitmapped scans of relations
  *
- * NOTE: it is critical that this__ plan type only be used with MVCC-compliant
+ * NOTE: it is critical that this plan type only be used with MVCC-compliant
  * snapshots (ie, regular snapshots, not SnapshotAny or one of the other
  * special snapshots).  The reason is that since index and heap scans are
  * decoupled, there can be no assurance that the index tuple prompting a
@@ -217,7 +217,7 @@ BitmapHeapNext(BitmapHeapScanState *node)
 		}
 
 		/*
-		 * Out of range?  If so, nothing more to look at on this__ page
+		 * Out of range?  If so, nothing more to look at on this page
 		 */
 		if (scan->rs_cindex < 0 || scan->rs_cindex >= scan->rs_ntuples)
 		{
@@ -229,7 +229,7 @@ BitmapHeapNext(BitmapHeapScanState *node)
 
 		/*
 		 * We issue prefetch requests *after* fetching the current page to try
-		 * to avoid having prefetching interfere with the main I/O. Also, this__
+		 * to avoid having prefetching interfere with the main I/O. Also, this
 		 * should happen only when we have determined there is still something
 		 * to do on the current page, else we may uselessly prefetch the same
 		 * page we are just about to request for real.
@@ -269,7 +269,7 @@ BitmapHeapNext(BitmapHeapScanState *node)
 		pgstat_count_heap_fetch(scan->rs_rd);
 
 		/*
-		 * Set up the result slot to point to this__ tuple. Note that the slot
+		 * Set up the result slot to point to this tuple. Note that the slot
 		 * acquires a pin on the buffer.
 		 */
 		ExecStoreTuple(&scan->rs_ctup,
@@ -295,7 +295,7 @@ BitmapHeapNext(BitmapHeapScanState *node)
 			}
 		}
 
-		/* OK to return this__ tuple */
+		/* OK to return this tuple */
 		return slot;
 	}
 
@@ -623,7 +623,7 @@ ExecInitBitmapHeapScan(BitmapHeapScan *node, EState *estate, int eflags)
 	/*
 	 * initialize child nodes
 	 *
-	 * We do this__ last because the child nodes will open indexscans on our
+	 * We do this last because the child nodes will open indexscans on our
 	 * relation's indexes, and we want to be sure we have acquired a lock on
 	 * the relation first.
 	 */

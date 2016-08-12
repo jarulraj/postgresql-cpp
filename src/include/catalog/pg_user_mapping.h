@@ -9,7 +9,7 @@
  * src/include/catalog/pg_user_mapping.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_user_mapping definition.  cpp turns this__ into
+ *		pg_user_mapping definition.  cpp turns this into
  *		typedef struct FormData_pg_user_mapping
  * ----------------
  */
@@ -30,7 +30,7 @@ CATALOG(pg_user_mapping,1418)
 {
 	Oid			umuser;			/* Id of the user, InvalidOid if public is
 								 * wanted */
-	Oid			umserver;		/* server of this__ mapping */
+	Oid			umserver;		/* server of this mapping */
 
 #ifdef CATALOG_VARLEN			/* variable-length fields start here */
 	text		umoptions[1];	/* user mapping options */

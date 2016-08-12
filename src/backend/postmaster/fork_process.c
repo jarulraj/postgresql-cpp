@@ -74,9 +74,9 @@ fork_process(void)
 		 * Therefore it's often a good idea to protect the postmaster by
 		 * setting its OOM score adjustment negative (which has to be done in
 		 * a root-owned startup script).  Since the adjustment is inherited by
-		 * child processes, this__ would ordinarily mean that all the
+		 * child processes, this would ordinarily mean that all the
 		 * postmaster's children are equally protected against OOM kill, which
-		 * is not such a good idea.  So we provide this__ code to allow the
+		 * is not such a good idea.  So we provide this code to allow the
 		 * children to change their OOM score adjustments again.  Both the
 		 * file name to write to and the value to write are controlled by
 		 * environment variables, which can be set by the same startup script

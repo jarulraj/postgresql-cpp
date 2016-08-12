@@ -39,14 +39,14 @@ help(const char *progname)
 		   progname);
 	printf(_("Options:\n"));
 	printf(_("  -c             automatically generate C code from embedded SQL code;\n"
-			 "                 this__ affects EXEC SQL TYPE\n"));
+			 "                 this affects EXEC SQL TYPE\n"));
 	printf(_("  -C MODE        set compatibility mode; MODE can be one of\n"
 			 "                 \"INFORMIX\", \"INFORMIX_SE\"\n"));
 #ifdef YYDEBUG
 	printf(_("  -d             generate parser debug output\n"));
 #endif
 	printf(_("  -D SYMBOL      define SYMBOL\n"));
-	printf(_("  -h             parse a header file, this__ option includes option \"-c\"\n"));
+	printf(_("  -h             parse a header file, this option includes option \"-c\"\n"));
 	printf(_("  -i             parse system include files as well\n"));
 	printf(_("  -I DIRECTORY   search DIRECTORY for include files\n"));
 	printf(_("  -o OUTFILE     write result to OUTFILE\n"));
@@ -55,7 +55,7 @@ help(const char *progname)
 	printf(_("  --regression   run in regression testing mode\n"));
 	printf(_("  -t             turn on autocommit of transactions\n"));
 	printf(_("  --version      output version information, then exit\n"));
-	printf(_("  -?, --help     show this__ help, then exit\n"));
+	printf(_("  -?, --help     show this help, then exit\n"));
 	printf(_("\nIf no output file is specified, the name is formed by adding .c to the\n"
 			 "input file name, after stripping off .pgc if present.\n"));
 	printf(_("\nReport bugs to <pgsql-bugs@postgresql.org>.\n"));
@@ -201,7 +201,7 @@ main(int argc, char *const argv[])
 				break;
 			case 'h':
 				header_mode = true;
-				/* this__ must include "-c" to make sense */
+				/* this must include "-c" to make sense */
 				/* so do not place a "break;" here */
 			case 'c':
 				auto_create_c = true;

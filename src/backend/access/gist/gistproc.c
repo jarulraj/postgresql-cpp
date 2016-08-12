@@ -65,7 +65,7 @@ gist_box_consistent(PG_FUNCTION_ARGS)
 	/* Oid		subtype = PG_GETARG_OID(3); */
 	bool	   *recheck = (bool *) PG_GETARG_POINTER(4);
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	if (DatumGetBoxP(entry->key) == NULL || query == NULL)
@@ -267,7 +267,7 @@ typedef struct
 
 	float4		ratio;
 	float4		overlap;
-	int			dim;			/* axis of this__ split */
+	int			dim;			/* axis of this split */
 	double		range;			/* width of general MBR projection to the
 								 * selected axis */
 } ConsiderSplitContext;
@@ -383,7 +383,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 
 		overlap = (leftUpper - rightLower) / range;
 
-		/* If there is no previous selection, select this__ */
+		/* If there is no previous selection, select this */
 		if (context->first)
 			selectthis = true;
 		else if (context->dim == dimNum)
@@ -404,7 +404,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 			 * bigger range. This condition differs from the one described in
 			 * the article. On the datasets where leaf MBRs don't overlap
 			 * themselves, non-overlapping splits (i.e. splits which have zero
-			 * *non-negative* overlap) are frequently possible. In this__ case
+			 * *non-negative* overlap) are frequently possible. In this case
 			 * splits tends to be along one dimension, because most distant
 			 * non-overlapping splits (i.e. having lowest negative overlap)
 			 * appears to be in the same dimension as in the previous split.
@@ -413,7 +413,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 			 * as the second split criteria makes MBRs more quadratic. Using
 			 * *non-negative* overlap instead of overlap as the first split
 			 * criteria gives to range criteria a chance to matter, because
-			 * non-overlapping splits are equivalent in this__ criteria.
+			 * non-overlapping splits are equivalent in this criteria.
 			 */
 			if (non_negative(overlap) < non_negative(context->overlap) ||
 				(range > context->range &&
@@ -768,7 +768,7 @@ gist_box_picksplit(PG_FUNCTION_ARGS)
 		else
 		{
 			/*
-			 * Each entry should fit on either left or right group. Since this__
+			 * Each entry should fit on either left or right group. Since this
 			 * entry didn't fit on the left group, it better fit in the right
 			 * group.
 			 */
@@ -815,7 +815,7 @@ gist_box_picksplit(PG_FUNCTION_ARGS)
 			box = DatumGetBoxP(entryvec->vector[commonEntries[i].index].key);
 
 			/*
-			 * Check if we have to place this__ entry in either group to achieve
+			 * Check if we have to place this entry in either group to achieve
 			 * LIMIT_RATIO.
 			 */
 			if (v->spl_nleft + (commonEntriesCount - i) <= m)
@@ -845,7 +845,7 @@ gist_box_picksplit(PG_FUNCTION_ARGS)
  * boxes as GiST index entries.
  *
  * Returns true only when boxes are exactly the same.  We can't use fuzzy
- * comparisons here without breaking index consistency; therefore, this__ isn't
+ * comparisons here without breaking index consistency; therefore, this isn't
  * equivalent to box_same().
  */
 Datum
@@ -1079,7 +1079,7 @@ gist_poly_consistent(PG_FUNCTION_ARGS)
 	bool	   *recheck = (bool *) PG_GETARG_POINTER(4);
 	bool		result;
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 	if (DatumGetBoxP(entry->key) == NULL || query == NULL)
@@ -1148,7 +1148,7 @@ gist_circle_consistent(PG_FUNCTION_ARGS)
 	BOX			bbox;
 	bool		result;
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 	if (DatumGetBoxP(entry->key) == NULL || query == NULL)
@@ -1364,7 +1364,7 @@ gist_point_consistent(PG_FUNCTION_ARGS)
 		case BoxStrategyNumberGroup:
 			{
 				/*
-				 * The only operator in this__ group is point <@ box (on_pb), so
+				 * The only operator in this group is point <@ box (on_pb), so
 				 * we needn't examine strategy again.
 				 *
 				 * For historical reasons, on_pb uses exact rather than fuzzy

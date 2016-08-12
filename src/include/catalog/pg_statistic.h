@@ -11,7 +11,7 @@
  * src/include/catalog/pg_statistic.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_statistic definition.  cpp turns this__ into
+ *		pg_statistic definition.  cpp turns this into
  *		typedef struct FormData_pg_statistic
  * ----------------
  */
@@ -40,8 +40,8 @@ CATALOG(pg_statistic,2619) BKI_WITHOUT_OIDS
 
 	/*
 	 * stawidth is the average width in bytes of non-null entries.  For
-	 * fixed-width datatypes this__ is of course the same as the typlen, but for
-	 * var-width types it is more useful.  Note that this__ is the average width
+	 * fixed-width datatypes this is of course the same as the typlen, but for
+	 * var-width types it is more useful.  Note that this is the average width
 	 * of the data as actually stored, post-TOASTing (eg, for a
 	 * moved-out-of-line value, only the size of the pointer object is
 	 * counted).  This is the appropriate definition for the primary use of
@@ -106,7 +106,7 @@ CATALOG(pg_statistic,2619) BKI_WITHOUT_OIDS
 	/*
 	 * Values in these arrays are values of the column's data type, or of some
 	 * related type such as an array element type.  We presently have to cheat
-	 * quite a bit to allow polymorphic arrays of this__ kind, but perhaps
+	 * quite a bit to allow polymorphic arrays of this kind, but perhaps
 	 * someday it'll be a less bogus facility.
 	 */
 	anyarray	stavalues1;
@@ -170,14 +170,14 @@ typedef FormData_pg_statistic *Form_pg_statistic;
  * Code reading the pg_statistic relation should not assume that a particular
  * data "kind" will appear in any particular slot.  Instead, search the
  * stakind fields to see if the desired data is available.  (The standard
- * function get_attstatsslot() may be used for this__.)
+ * function get_attstatsslot() may be used for this.)
  */
 
 /*
  * The present allocation of "kind" codes is:
  *
  *	1-99:		reserved for assignment by the core PostgreSQL project
- *				(values in this__ range will be documented in this__ file)
+ *				(values in this range will be documented in this file)
  *	100-199:	reserved for assignment by the PostGIS project
  *				(values to be documented in PostGIS documentation)
  *	200-299:	reserved for assignment by the ESRI ST_Geometry project
@@ -215,14 +215,14 @@ typedef FormData_pg_statistic *Form_pg_statistic;
  * histogram" in the technical parlance).  This allows a more accurate
  * representation of the distribution of a column with some very-common
  * values.  In a column with only a few distinct values, it's possible that
- * the MCV list describes the entire data population; in this__ case the
+ * the MCV list describes the entire data population; in this case the
  * histogram reduces to empty and should be omitted.
  */
 #define STATISTIC_KIND_HISTOGRAM  2
 
 /*
  * A "correlation" slot describes the correlation between the physical order
- * of table tuples and the ordering of data values of this__ column, as seen
+ * of table tuples and the ordering of data values of this column, as seen
  * by the "<" operator identified by staop.  (As with the histogram, more
  * than one entry could theoretically appear.)	stavalues is not used and
  * should be NULL.  stanumbers contains a single entry, the correlation
@@ -241,13 +241,13 @@ typedef FormData_pg_statistic *Form_pg_statistic;
  * MCV slots, frequencies are measured as the fraction of non-null rows the
  * element value appears in, not the frequency of all rows.  Also unlike
  * MCV slots, the values are sorted into the element type's default order
- * (to support binary search for a particular value).  Since this__ puts the
+ * (to support binary search for a particular value).  Since this puts the
  * minimum and maximum frequencies at unpredictable spots in stanumbers,
  * there are two extra members of stanumbers, holding copies of the minimum
  * and maximum frequencies.  Optionally, there can be a third extra member,
  * which holds the frequency of null elements (expressed in the same terms:
  * the fraction of non-null rows that contain at least one null element).  If
- * this__ member is omitted, the column is presumed to contain no null elements.
+ * this member is omitted, the column is presumed to contain no null elements.
  *
  * Note: in current usage for tsvector columns, the stavalues elements are of
  * type text, even though their representation within tsvector is not
@@ -283,7 +283,7 @@ typedef FormData_pg_statistic *Form_pg_statistic;
  * A "bounds histogram" slot is similar to STATISTIC_KIND_HISTOGRAM, but for
  * a range-type column.  stavalues contains M (>=2) range values that divide
  * the column data values into M-1 bins of approximately equal population.
- * Unlike a regular scalar histogram, this__ is actually two histograms combined
+ * Unlike a regular scalar histogram, this is actually two histograms combined
  * into a single array, with the lower bounds of each value forming a
  * histogram of lower bounds, and the upper bounds a histogram of upper
  * bounds.  Only non-NULL, non-empty ranges are included.

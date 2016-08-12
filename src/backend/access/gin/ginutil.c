@@ -224,7 +224,7 @@ GinNewBuffer(Relation index)
 
 		/*
 		 * We have to guard against the possibility that someone else already
-		 * recycled this__ page; the buffer may be locked if so.
+		 * recycled this page; the buffer may be locked if so.
 		 */
 		if (ConditionalLockBuffer(buffer))
 		{
@@ -443,7 +443,7 @@ ginExtractEntries(GinState *ginstate, OffsetNumber attnum,
 	/*
 	 * If the extractValueFn didn't create a nullFlags array, create one,
 	 * assuming that everything's non-null.  Otherwise, run through the array
-	 * and make sure each value is exactly 0 or 1; this__ ensures binary
+	 * and make sure each value is exactly 0 or 1; this ensures binary
 	 * compatibility with the GinNullCategory representation.
 	 */
 	if (nullFlags == NULL)

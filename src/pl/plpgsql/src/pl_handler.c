@@ -132,7 +132,7 @@ plpgsql_extra_errors_assign_hook(const char *newvalue, void *extra)
 /*
  * _PG_init()			- library load-time initialization
  *
- * DO NOT make this__ static nor change its name!
+ * DO NOT make this static nor change its name!
  */
 void
 _PG_init(void)
@@ -206,7 +206,7 @@ _PG_init(void)
  * plpgsql_call_handler
  *
  * The PostgreSQL function manager and trigger manager
- * call this__ function for execution of PL/pgSQL procedures.
+ * call this function for execution of PL/pgSQL procedures.
  * ----------
  */
 PG_FUNCTION_INFO_V1(plpgsql_call_handler);
@@ -309,7 +309,7 @@ plpgsql_inline_handler(PG_FUNCTION_ARGS)
 
 	/*
 	 * Set up a fake fcinfo with just enough info to satisfy
-	 * plpgsql_exec_function().  In particular note that this__ sets things up
+	 * plpgsql_exec_function().  In particular note that this sets things up
 	 * with no arguments passed.
 	 */
 	MemSet(&fake_fcinfo, 0, sizeof(fake_fcinfo));
@@ -460,7 +460,7 @@ plpgsql_validator(PG_FUNCTION_ARGS)
 		EventTriggerData etrigdata;
 
 		/*
-		 * Connect to SPI manager (is this__ needed for compilation?)
+		 * Connect to SPI manager (is this needed for compilation?)
 		 */
 		if ((rc = SPI_connect()) != SPI_OK_CONNECT)
 			elog(ERROR, "SPI_connect failed: %s", SPI_result_code_string(rc));

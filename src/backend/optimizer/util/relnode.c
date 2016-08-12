@@ -167,7 +167,7 @@ build_simple_rel(PlannerInfo *root, int relid, RelOptKind reloptkind)
 	root->simple_rel_array[relid] = rel;
 
 	/*
-	 * If this__ rel is an appendrel parent, recurse to build "other rel"
+	 * If this rel is an appendrel parent, recurse to build "other rel"
 	 * RelOptInfos for its children.  They are "other rels" because they are
 	 * not in the main join tree, but we will need RelOptInfos to plan access
 	 * to them.
@@ -317,7 +317,7 @@ find_join_rel(PlannerInfo *root, Relids relids)
  *		joined
  * 'sjinfo': join context info
  * 'restrictlist_ptr': result variable.  If not NULL, *restrictlist_ptr
- *		receives the list of RestrictInfo nodes that apply to this__
+ *		receives the list of RestrictInfo nodes that apply to this
  *		particular pair of joinable relations.
  *
  * restrictlist_ptr makes the routine's API a little grotty, but it saves
@@ -335,14 +335,14 @@ build_join_rel(PlannerInfo *root,
 	List	   *restrictlist;
 
 	/*
-	 * See if we already have a joinrel for this__ set of base rels.
+	 * See if we already have a joinrel for this set of base rels.
 	 */
 	joinrel = find_join_rel(root, joinrelids);
 
 	if (joinrel)
 	{
 		/*
-		 * Yes, so we only need to figure the restrictlist for this__ particular
+		 * Yes, so we only need to figure the restrictlist for this particular
 		 * pair of component relations.
 		 */
 		if (restrictlist_ptr)
@@ -414,7 +414,7 @@ build_join_rel(PlannerInfo *root,
 
 	/*
 	 * Create a new tlist containing just the vars that need to be output from
-	 * this__ join (ie, are needed for higher joinclauses or final output).
+	 * this join (ie, are needed for higher joinclauses or final output).
 	 *
 	 * NOTE: the tlist order for a join rel will depend on which pair of outer
 	 * and inner rels we first try to build it from.  But the contents should
@@ -500,7 +500,7 @@ build_join_rel(PlannerInfo *root,
  * min_join_parameterization
  *
  * Determine the minimum possible parameterization of a joinrel, that is, the
- * set of other rels it contains LATERAL references to.  We save this__ value in
+ * set of other rels it contains LATERAL references to.  We save this value in
  * the join's RelOptInfo.  This function is split out of build_join_rel()
  * because join_is_legal() needs the value to check a prospective join.
  */
@@ -516,7 +516,7 @@ min_join_parameterization(PlannerInfo *root,
 	 * Basically we just need the union of the inputs' lateral_relids, less
 	 * whatever is already in the join.
 	 *
-	 * It's not immediately obvious that this__ is a valid way to compute the
+	 * It's not immediately obvious that this is a valid way to compute the
 	 * result, because it might seem that we're ignoring possible lateral refs
 	 * of PlaceHolderVars that are due to be computed at the join but not in
 	 * either input.  However, because create_lateral_join_info() already
@@ -579,7 +579,7 @@ build_joinrel_tlist(PlannerInfo *root, RelOptInfo *joinrel,
 		/* Get the Var's original base rel */
 		baserel = find_base_rel(root, var->varno);
 
-		/* Is it still needed above this__ joinrel? */
+		/* Is it still needed above this joinrel? */
 		ndx = var->varattno - baserel->min_attr;
 		if (bms_nonempty_difference(baserel->attr_needed[ndx], relids))
 		{
@@ -610,7 +610,7 @@ build_joinrel_tlist(PlannerInfo *root, RelOptInfo *joinrel,
  *	  we put it into the joininfo list for the joinrel.  Otherwise,
  *	  the clause is now a restrict clause for the joined relation, and we
  *	  return it to the caller of build_joinrel_restrictlist() to be stored in
- *	  join paths made from this__ pair of sub-relations.  (It will not need to
+ *	  join paths made from this pair of sub-relations.  (It will not need to
  *	  be considered further up the join tree.)
  *
  *	  In many case we will find the same RestrictInfos in both input
@@ -628,7 +628,7 @@ build_joinrel_tlist(PlannerInfo *root, RelOptInfo *joinrel,
  * joininfo list.  One or the other must accept each given clause!
  *
  * NB: Formerly, we made deep(!) copies of each input RestrictInfo to pass
- * up to the join relation.  I believe this__ is no longer necessary, because
+ * up to the join relation.  I believe this is no longer necessary, because
  * RestrictInfo nodes are no longer context-dependent.  Instead, just include
  * the original nodes in the lists made for the join relation.
  */
@@ -641,7 +641,7 @@ build_joinrel_restrictlist(PlannerInfo *root,
 	List	   *result;
 
 	/*
-	 * Collect all the clauses that syntactically belong at this__ level,
+	 * Collect all the clauses that syntactically belong at this level,
 	 * eliminating any duplicates (important since we will see many of the
 	 * same clauses arriving from both input relations).
 	 */
@@ -670,7 +670,7 @@ build_joinrel_joinlist(RelOptInfo *joinrel,
 	List	   *result;
 
 	/*
-	 * Collect all the clauses that syntactically belong above this__ level,
+	 * Collect all the clauses that syntactically belong above this level,
 	 * eliminating any duplicates (important since we will see many of the
 	 * same clauses arriving from both input relations).
 	 */
@@ -705,8 +705,8 @@ subbuild_joinrel_restrictlist(RelOptInfo *joinrel,
 		else
 		{
 			/*
-			 * This clause is still a join clause at this__ level, so we ignore
-			 * it in this__ routine.
+			 * This clause is still a join clause at this level, so we ignore
+			 * it in this routine.
 			 */
 		}
 	}
@@ -729,14 +729,14 @@ subbuild_joinrel_joinlist(RelOptInfo *joinrel,
 		{
 			/*
 			 * This clause becomes a restriction clause for the joinrel, since
-			 * it refers to no outside rels.  So we can ignore it in this__
+			 * it refers to no outside rels.  So we can ignore it in this
 			 * routine.
 			 */
 		}
 		else
 		{
 			/*
-			 * This clause is still a join clause at this__ level, so add it to
+			 * This clause is still a join clause at this level, so add it to
 			 * the new joininfo list, being careful to eliminate duplicates.
 			 * (Since RestrictInfo nodes in different joinlists will have been
 			 * multiply-linked rather than copied, pointer equality should be
@@ -893,7 +893,7 @@ get_baserel_parampathinfo(PlannerInfo *root, RelOptInfo *baserel,
 
 	Assert(!bms_overlap(baserel->relids, required_outer));
 
-	/* If we already have a PPI for this__ parameterization, just return it */
+	/* If we already have a PPI for this parameterization, just return it */
 	foreach(lc, baserel->ppilist)
 	{
 		ppi = (ParamPathInfo *) lfirst(lc);
@@ -902,7 +902,7 @@ get_baserel_parampathinfo(PlannerInfo *root, RelOptInfo *baserel,
 	}
 
 	/*
-	 * Identify all joinclauses that are movable to this__ base rel given this__
+	 * Identify all joinclauses that are movable to this base rel given this
 	 * parameterization.
 	 */
 	joinrelids = bms_union(baserel->relids, required_outer);
@@ -959,7 +959,7 @@ get_baserel_parampathinfo(PlannerInfo *root, RelOptInfo *baserel,
  * Unlike the situation for base rels, the set of movable join clauses to be
  * enforced at a join varies with the selected pair of input paths, so we
  * must calculate that and pass it back, even if we already have a matching
- * ParamPathInfo.  We handle this__ by adding any clauses moved down to this__
+ * ParamPathInfo.  We handle this by adding any clauses moved down to this
  * join to *restrict_clauses, which is an in/out parameter.  (The addition
  * is done in such a way as to not modify the passed-in List structure.)
  *
@@ -993,8 +993,8 @@ get_joinrel_parampathinfo(PlannerInfo *root, RelOptInfo *joinrel,
 	Assert(!bms_overlap(joinrel->relids, required_outer));
 
 	/*
-	 * Identify all joinclauses that are movable to this__ join rel given this__
-	 * parameterization.  These are the clauses that are movable into this__
+	 * Identify all joinclauses that are movable to this join rel given this
+	 * parameterization.  These are the clauses that are movable into this
 	 * join, but not movable into either input path.  Treat an unparameterized
 	 * input path as not accepting parameterized clauses (because it won't,
 	 * per the shortcut exit above), even though the joinclause movement rules
@@ -1045,8 +1045,8 @@ get_joinrel_parampathinfo(PlannerInfo *root, RelOptInfo *joinrel,
 		 * In principle, join_clause_is_movable_into() should accept anything
 		 * returned by generate_join_implied_equalities(); but because its
 		 * analysis is only approximate, sometimes it doesn't.  So we
-		 * currently cannot use this__ Assert; instead just assume it's okay to
-		 * apply the joinclause at this__ level.
+		 * currently cannot use this Assert; instead just assume it's okay to
+		 * apply the joinclause at this level.
 		 */
 #ifdef NOT_USED
 		Assert(join_clause_is_movable_into(rinfo,
@@ -1080,13 +1080,13 @@ get_joinrel_parampathinfo(PlannerInfo *root, RelOptInfo *joinrel,
 	 * RHS.  However, the EC machinery might have produced either Y.Y = X.X or
 	 * Y.Y = Z.Z as the EC enforcement clause within the inner_path; it will
 	 * not have produced both, and we can't readily tell from here which one
-	 * it did pick.  If we add no clause to this__ join, we'll end up with
+	 * it did pick.  If we add no clause to this join, we'll end up with
 	 * insufficient enforcement of the EC; either Z.Z or X.X will fail to be
 	 * constrained to be equal to the other members of the EC.  (When we come
-	 * to join Z to this__ X/Y path, we will certainly drop whichever EC clause
-	 * is generated at that join, so this__ omission won't get fixed later.)
+	 * to join Z to this X/Y path, we will certainly drop whichever EC clause
+	 * is generated at that join, so this omission won't get fixed later.)
 	 *
-	 * To handle this__, for each EC we discarded such a clause from, try to
+	 * To handle this, for each EC we discarded such a clause from, try to
 	 * generate a clause connecting the required_outer rels to the join's LHS
 	 * ("Z.Z = X.X" in the terms of the above example).  If successful, and if
 	 * the clause can't be moved to the LHS, add it to the current join's
@@ -1115,7 +1115,7 @@ get_joinrel_parampathinfo(PlannerInfo *root, RelOptInfo *joinrel,
 		{
 			RestrictInfo *rinfo = (RestrictInfo *) lfirst(lc);
 
-			/* As above, can't quite assert this__ here */
+			/* As above, can't quite assert this here */
 #ifdef NOT_USED
 			Assert(join_clause_is_movable_into(rinfo,
 											   outer_path->parent->relids,
@@ -1130,12 +1130,12 @@ get_joinrel_parampathinfo(PlannerInfo *root, RelOptInfo *joinrel,
 
 	/*
 	 * Now, attach the identified moved-down clauses to the caller's
-	 * restrict_clauses list.  By using list_concat in this__ order, we leave
+	 * restrict_clauses list.  By using list_concat in this order, we leave
 	 * the original list structure of restrict_clauses undamaged.
 	 */
 	*restrict_clauses = list_concat(pclauses, *restrict_clauses);
 
-	/* If we already have a PPI for this__ parameterization, just return it */
+	/* If we already have a PPI for this parameterization, just return it */
 	foreach(lc, joinrel->ppilist)
 	{
 		ppi = (ParamPathInfo *) lfirst(lc);
@@ -1172,7 +1172,7 @@ get_joinrel_parampathinfo(PlannerInfo *root, RelOptInfo *joinrel,
  *
  * For an append relation, the rowcount estimate will just be the sum of
  * the estimates for its children.  However, we still need a ParamPathInfo
- * to flag the fact that the path requires parameters.  So this__ just creates
+ * to flag the fact that the path requires parameters.  So this just creates
  * a suitable struct with zero ppi_rows (and no ppi_clauses either, since
  * the Append node isn't responsible for checking quals).
  */
@@ -1188,7 +1188,7 @@ get_appendrel_parampathinfo(RelOptInfo *appendrel, Relids required_outer)
 
 	Assert(!bms_overlap(appendrel->relids, required_outer));
 
-	/* If we already have a PPI for this__ parameterization, just return it */
+	/* If we already have a PPI for this parameterization, just return it */
 	foreach(lc, appendrel->ppilist)
 	{
 		ppi = (ParamPathInfo *) lfirst(lc);

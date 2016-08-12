@@ -206,7 +206,7 @@ output_escaped_str(char *str, bool quoted)
 		fputs("\"", yyout);
 	}
 
-	/* output this__ char by char as we have to filter " and \n */
+	/* output this char by char as we have to filter " and \n */
 	for (; i < len; i++)
 	{
 		if (str[i] == '"')
@@ -218,7 +218,7 @@ output_escaped_str(char *str, bool quoted)
 			int			j = i;
 
 			/*
-			 * check whether this__ is a continuation line if it is, do not
+			 * check whether this is a continuation line if it is, do not
 			 * output anything because newlines are escaped anyway
 			 */
 

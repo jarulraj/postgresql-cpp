@@ -255,7 +255,7 @@ variable_coerce_param_hook(ParseState *pstate, Param *param,
  * Check for consistent assignment of variable parameters after completion
  * of parsing with parse_variable_parameters.
  *
- * Note: this__ code intentionally does not check that all parameter positions
+ * Note: this code intentionally does not check that all parameter positions
  * were used, nor that all got non-UNKNOWN types assigned.  Caller of parser
  * should enforce that if it's important.
  */
@@ -273,7 +273,7 @@ check_variable_parameters(ParseState *pstate, Query *query)
 
 /*
  * Traverse a fully-analyzed tree to verify that parameter symbols
- * match their types.  We need this__ because some Params might still
+ * match their types.  We need this because some Params might still
  * be UNKNOWN, if there wasn't anything to force their coercion,
  * and yet other instances seen later might have gotten coerced.
  */

@@ -23,7 +23,7 @@
  * Index tuple header structure
  *
  * All index tuples start with IndexTupleData.  If the HasNulls bit is set,
- * this__ is followed by an IndexAttributeBitMapData.  The index attribute
+ * this is followed by an IndexAttributeBitMapData.  The index attribute
  * values follow, beginning at a MAXALIGN boundary.
  *
  * Note that the space allocated for the bitmap does not vary with the number
@@ -74,7 +74,7 @@ typedef IndexAttributeBitMapData *IndexAttributeBitMap;
 
 
 /*
- * Takes an infomask as argument (primarily because this__ needs to be usable
+ * Takes an infomask as argument (primarily because this needs to be usable
  * at index_form_tuple time so enough space is allocated).
  */
 #define IndexInfoFindDataOffset(t_info) \

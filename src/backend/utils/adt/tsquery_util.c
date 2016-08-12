@@ -22,7 +22,7 @@ QT2QTN(QueryItem *in, char *operand)
 {
 	QTNode	   *node = (QTNode *) palloc0(sizeof(QTNode));
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	node->valnode = in;
@@ -56,7 +56,7 @@ QTNFree(QTNode *in)
 	if (!in)
 		return;
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->valnode->type == QI_VAL && in->word && (in->flags & QTN_WORDFREE) != 0)
@@ -85,7 +85,7 @@ QTNFree(QTNode *in)
 int
 QTNodeCompare(QTNode *an, QTNode *bn)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (an->valnode->type != bn->valnode->type)
@@ -142,7 +142,7 @@ QTNSort(QTNode *in)
 {
 	int			i;
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->valnode->type != QI_OPR)
@@ -177,7 +177,7 @@ QTNTernary(QTNode *in)
 {
 	int			i;
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->valnode->type != QI_OPR)
@@ -220,7 +220,7 @@ QTNBinary(QTNode *in)
 {
 	int			i;
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->valnode->type != QI_OPR)
@@ -262,7 +262,7 @@ QTNBinary(QTNode *in)
 static void
 cntsize(QTNode *in, int *sumlen, int *nnode)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	*nnode += 1;
@@ -289,7 +289,7 @@ typedef struct
 static void
 fillQT(QTN2QTState *state, QTNode *in)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	if (in->valnode->type == QI_VAL)
@@ -356,7 +356,7 @@ QTNCopy(QTNode *in)
 {
 	QTNode	   *out;
 
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	out = (QTNode *) palloc(sizeof(QTNode));
@@ -389,7 +389,7 @@ QTNCopy(QTNode *in)
 void
 QTNClearFlags(QTNode *in, uint32 flags)
 {
-	/* since this__ function recurses, it could be driven to stack overflow. */
+	/* since this function recurses, it could be driven to stack overflow. */
 	check_stack_depth();
 
 	in->flags &= ~flags;

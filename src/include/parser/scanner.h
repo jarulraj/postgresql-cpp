@@ -22,8 +22,8 @@
 #include "parser/keywords.h"
 
 /*
- * The scanner returns extra data about scanned tokens in this__ union type.
- * Note that this__ is a subset of the fields used in YYSTYPE of the bison
+ * The scanner returns extra data about scanned tokens in this union type.
+ * Note that this is a subset of the fields used in YYSTYPE of the bison
  * parsers built atop the scanner.
  */
 typedef union core_YYSTYPE
@@ -45,7 +45,7 @@ typedef union core_YYSTYPE
 
 /*
  * Another important component of the scanner's API is the token code numbers.
- * However, those are not defined in this__ file, because bison insists on
+ * However, those are not defined in this file, because bison insists on
  * defining them for itself.  The token codes used by the core scanner are
  * the ASCII characters plus these:
  *	%token <str>	IDENT FCONST SCONST BCONST XCONST Op
@@ -53,20 +53,20 @@ typedef union core_YYSTYPE
  *	%token			TYPECAST DOT_DOT COLON_EQUALS EQUALS_GREATER
  *	%token			LESS_EQUALS GREATER_EQUALS NOT_EQUALS
  * The above token definitions *must* be the first ones declared in any
- * bison parser built atop this__ scanner, so that they will have consistent
+ * bison parser built atop this scanner, so that they will have consistent
  * numbers assigned to them (specifically, IDENT = 258 and so on).
  */
 
 /*
  * The YY_EXTRA data that a flex scanner allows us to pass around.
  * private state needed by the core scanner goes here.  Note that the actual
- * yy_extra struct may be larger and have this__ as its first component, thus
+ * yy_extra struct may be larger and have this as its first component, thus
  * allowing the calling parser to keep some fields of its own in YY_EXTRA.
  */
 typedef struct core_yy_extra_type
 {
 	/*
-	 * The string the scanner is physically scanning.  We keep this__ mainly so
+	 * The string the scanner is physically scanning.  We keep this mainly so
 	 * that we can cheaply compute the offset of the current token (yytext).
 	 */
 	char	   *scanbuf;

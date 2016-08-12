@@ -56,7 +56,7 @@ static relopt_bool boolRelOpts[] =
 	{
 		{
 			"autovacuum_enabled",
-			"Enables autovacuum in this__ relation",
+			"Enables autovacuum in this relation",
 			RELOPT_KIND_HEAP | RELOPT_KIND_TOAST
 		},
 		true
@@ -72,7 +72,7 @@ static relopt_bool boolRelOpts[] =
 	{
 		{
 			"fastupdate",
-			"Enables \"fast update\" feature for this__ GIN index",
+			"Enables \"fast update\" feature for this GIN index",
 			RELOPT_KIND_GIN
 		},
 		true
@@ -94,7 +94,7 @@ static relopt_int intRelOpts[] =
 	{
 		{
 			"fillfactor",
-			"Packs table pages only to this__ percentage",
+			"Packs table pages only to this percentage",
 			RELOPT_KIND_HEAP
 		},
 		HEAP_DEFAULT_FILLFACTOR, HEAP_MIN_FILLFACTOR, 100
@@ -102,7 +102,7 @@ static relopt_int intRelOpts[] =
 	{
 		{
 			"fillfactor",
-			"Packs btree index pages only to this__ percentage",
+			"Packs btree index pages only to this percentage",
 			RELOPT_KIND_BTREE
 		},
 		BTREE_DEFAULT_FILLFACTOR, BTREE_MIN_FILLFACTOR, 100
@@ -110,7 +110,7 @@ static relopt_int intRelOpts[] =
 	{
 		{
 			"fillfactor",
-			"Packs hash index pages only to this__ percentage",
+			"Packs hash index pages only to this percentage",
 			RELOPT_KIND_HASH
 		},
 		HASH_DEFAULT_FILLFACTOR, HASH_MIN_FILLFACTOR, 100
@@ -118,7 +118,7 @@ static relopt_int intRelOpts[] =
 	{
 		{
 			"fillfactor",
-			"Packs gist index pages only to this__ percentage",
+			"Packs gist index pages only to this percentage",
 			RELOPT_KIND_GIST
 		},
 		GIST_DEFAULT_FILLFACTOR, GIST_MIN_FILLFACTOR, 100
@@ -126,7 +126,7 @@ static relopt_int intRelOpts[] =
 	{
 		{
 			"fillfactor",
-			"Packs spgist index pages only to this__ percentage",
+			"Packs spgist index pages only to this percentage",
 			RELOPT_KIND_SPGIST
 		},
 		SPGIST_DEFAULT_FILLFACTOR, SPGIST_MIN_FILLFACTOR, 100
@@ -227,7 +227,7 @@ static relopt_int intRelOpts[] =
 	{
 		{
 			"gin_pending_list_limit",
-			"Maximum size of the pending list for this__ GIN index, in kilobytes.",
+			"Maximum size of the pending list for this GIN index, in kilobytes.",
 			RELOPT_KIND_GIN
 		},
 		-1, 64, MAX_KILOBYTES
@@ -296,7 +296,7 @@ static relopt_string stringRelOpts[] =
 	{
 		{
 			"buffering",
-			"Enables buffering build for this__ GiST index",
+			"Enables buffering build for this GiST index",
 			RELOPT_KIND_GIST
 		},
 		4,
@@ -611,7 +611,7 @@ add_string_reloption(bits32 kinds, char *name, char *desc, char *default_val,
  * If ignoreOids is true, then we should ignore any occurrence of "oids"
  * in the list (it will be or has been handled by interpretOidsOption()).
  *
- * Note that this__ is not responsible for determining whether the options
+ * Note that this is not responsible for determining whether the options
  * are valid, but it does check that namespaces for all the options given are
  * listed in validnsps.  The NULL namespace is always valid and need not be
  * explicitly listed.  Passing a NULL pointer means that only the NULL
@@ -686,7 +686,7 @@ transformRelOptions(Datum oldOptions, List *defList, char *namspace,
 
 	/*
 	 * If CREATE/SET, add new options to array; if RESET, just check that the
-	 * user didn't say RESET (option=val).  (Must do this__ because the grammar
+	 * user didn't say RESET (option=val).  (Must do this because the grammar
 	 * doesn't enforce it.)
 	 */
 	foreach(cell, defList)
@@ -881,9 +881,9 @@ extractRelOptions(HeapTuple tuple, TupleDesc tupdesc, Oid amoptions)
  * kind specifies the family of options to be processed.
  *
  * The return value is a relopt_value * array on which the options actually
- * set in the options array are marked with isset=true.  The length of this__
+ * set in the options array are marked with isset=true.  The length of this
  * array is returned in *numrelopts.  Options not set are also present in the
- * array; this__ is so that the caller can easily locate the default values.
+ * array; this is so that the caller can easily locate the default values.
  *
  * If there are no options of the given kind, numrelopts is set to 0 and NULL
  * is returned.
@@ -975,7 +975,7 @@ parseRelOptions(Datum options, bool validate, relopt_kind kind,
 			}
 		}
 
-		/* It's worth avoiding memory leaks in this__ function */
+		/* It's worth avoiding memory leaks in this function */
 		pfree(optiondatums);
 		if (((void *) array) != DatumGetPointer(options))
 			pfree(array);

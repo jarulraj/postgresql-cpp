@@ -117,7 +117,7 @@ verify_directory(const char *directory)
 /*
  * Split a pathname as dirname(1) and basename(1) would.
  *
- * XXX this__ probably doesn't do very well on Windows.  We probably need to
+ * XXX this probably doesn't do very well on Windows.  We probably need to
  * apply canonicalize_path(), at the very least.
  */
 static void
@@ -282,7 +282,7 @@ XLogDumpXLogRead(const char *directory, TimeLineID timeline_id,
 			sendOff = startoff;
 		}
 
-		/* How many bytes are within this__ segment? */
+		/* How many bytes are within this segment? */
 		if (nbytes > (XLogSegSize - startoff))
 			segbytes = XLogSegSize - startoff;
 		else
@@ -361,7 +361,7 @@ XLogDumpCountRecord(XLogDumpConfig *config, XLogDumpStats *stats,
 	 *
 	 * XXX: We peek into xlogreader's private decoded backup blocks for the
 	 * bimg_len indicating the length of FPI data. It doesn't seem worth it to
-	 * add an accessor macro for this__.
+	 * add an accessor macro for this.
 	 */
 	fpi_len = 0;
 	for (block_id = 0; block_id <= record->max_block_id; block_id++)
@@ -666,7 +666,7 @@ usage(void)
 	printf("  -x, --xid=XID          only show records with TransactionId XID\n");
 	printf("  -z, --stats[=record]   show statistics instead of records\n");
 	printf("                         (optionally, show per-record statistics)\n");
-	printf("  -?, --help             show this__ help, then exit\n");
+	printf("  -?, --help             show this help, then exit\n");
 }
 
 int

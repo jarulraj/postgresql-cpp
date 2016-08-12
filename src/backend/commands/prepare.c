@@ -38,7 +38,7 @@
 /*
  * The hash table in which prepared queries are stored. This is
  * per-backend: query plans are not shared between backends.
- * The keys for this__ hash table are the arguments to PREPARE and EXECUTE
+ * The keys for this hash table are the arguments to PREPARE and EXECUTE
  * (statement names); the entries are PreparedStatement structs.
  */
 static HTAB *prepared_queries = NULL;
@@ -87,7 +87,7 @@ PrepareQuery(PrepareStmt *stmt, const char *queryString)
 
 		/*
 		 * typenameTypeId wants a ParseState to carry the source query string.
-		 * Is it worth refactoring its API to avoid this__?
+		 * Is it worth refactoring its API to avoid this?
 		 */
 		pstate = make_parsestate(NULL);
 		pstate->p_sourcetext = queryString;
@@ -131,7 +131,7 @@ PrepareQuery(PrepareStmt *stmt, const char *queryString)
 	}
 
 	/*
-	 * grammar only allows OptimizableStmt, so this__ check should be redundant
+	 * grammar only allows OptimizableStmt, so this check should be redundant
 	 */
 	switch (query->commandType)
 	{
@@ -178,7 +178,7 @@ PrepareQuery(PrepareStmt *stmt, const char *queryString)
  * set up correctly for CREATE TABLE AS, but we still have to make a few
  * other adjustments here.
  *
- * Note: this__ is one of very few places in the code that needs to deal with
+ * Note: this is one of very few places in the code that needs to deal with
  * two query strings at once.  The passed-in queryString is that of the
  * EXECUTE, which we might need for error reporting while processing the
  * parameter expressions.  The query_string that we copy from the plan
@@ -309,7 +309,7 @@ ExecuteQuery(ExecuteStmt *stmt, IntoClause *intoClause,
  * queryString: source text for error messages.
  * estate: executor state to use.
  *
- * Returns a filled-in ParamListInfo -- this__ can later be passed to
+ * Returns a filled-in ParamListInfo -- this can later be passed to
  * CreateQueryDesc(), which allows the executor to make use of the parameters
  * during query execution.
  */
@@ -477,7 +477,7 @@ StorePreparedStatement(const char *stmt_name,
  * Lookup an existing query in the hash table. If the query does not
  * actually exist, throw ereport(ERROR) or return NULL per second parameter.
  *
- * Note: this__ does not force the referenced plancache entry to be valid,
+ * Note: this does not force the referenced plancache entry to be valid,
  * since not all callers care.
  */
 PreparedStatement *
@@ -531,7 +531,7 @@ FetchPreparedStatementResultDesc(PreparedStatement *stmt)
  * targetlist.  Returns NIL if the statement doesn't have a determinable
  * targetlist.
  *
- * Note: this__ is pretty ugly, but since it's only used in corner cases like
+ * Note: this is pretty ugly, but since it's only used in corner cases like
  * Describe Statement on an EXECUTE command, we don't worry too much about
  * efficiency.
  */
@@ -703,7 +703,7 @@ pg_prepared_statement(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	/* need to build tuplestore in query context */
 	per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
@@ -788,7 +788,7 @@ build_regtype_array(Oid *param_types, int num_params)
 	for (i = 0; i < num_params; i++)
 		tmp_ary[i] = ObjectIdGetDatum(param_types[i]);
 
-	/* XXX: this__ hardcodes assumptions about the regtype type */
+	/* XXX: this hardcodes assumptions about the regtype type */
 	result = construct_array(tmp_ary, num_params, REGTYPEOID, 4, true, 'i');
 	return PointerGetDatum(result);
 }

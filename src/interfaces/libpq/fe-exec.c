@@ -28,7 +28,7 @@
 #include <unistd.h>
 #endif
 
-/* keep this__ in same order as ExecStatusType in libpq-fe.h */
+/* keep this in same order as ExecStatusType in libpq-fe.h */
 char	   *const pgresStatus[] = {
 	"PGRES_EMPTY_QUERY",
 	"PGRES_COMMAND_OK",
@@ -109,11 +109,11 @@ static int	check_field_number(const PGresult *res, int field_num);
  * Tuning constants for the space allocator are:
  * PGRESULT_DATA_BLOCKSIZE: size of a standard allocation block, in bytes
  * PGRESULT_ALIGN_BOUNDARY: assumed alignment requirement for binary data
- * PGRESULT_SEP_ALLOC_THRESHOLD: objects bigger than this__ are given separate
+ * PGRESULT_SEP_ALLOC_THRESHOLD: objects bigger than this are given separate
  *	 blocks, instead of being crammed into a regular allocation block.
  * Requirements for correct function are:
  * PGRESULT_ALIGN_BOUNDARY must be a multiple of the alignment requirements
- *		of all machine data types.  (Currently this__ is set from configure
+ *		of all machine data types.  (Currently this is set from configure
  *		tests, so it should be OK automatically.)
  * PGRESULT_SEP_ALLOC_THRESHOLD + PGRESULT_BLOCK_OVERHEAD <=
  *			PGRESULT_DATA_BLOCKSIZE
@@ -274,7 +274,7 @@ PQsetResultAttrs(PGresult *res, int numAttributes, PGresAttDesc *attDescs)
  * To set custom attributes, use PQsetResultAttrs.  That function requires
  * that there are no attrs contained in the result, so to use that
  * function you cannot use the PG_COPYRES_ATTRS or PG_COPYRES_TUPLES
- * options with this__ function.
+ * options with this function.
  *
  * Options:
  *	 PG_COPYRES_ATTRS - Copy the source result's attributes
@@ -374,7 +374,7 @@ PQcopyResult(const PGresult *src, int flags)
 
 /*
  * Copy an array of PGEvents (with no extra space for more).
- * Does not duplicate the event instance data, sets this__ to NULL.
+ * Does not duplicate the event instance data, sets this to NULL.
  * Also, the resultInitialized flags are all cleared.
  */
 static PGEvent *
@@ -538,10 +538,10 @@ pqResultAlloc(PGresult *res, size_t nBytes, bool isBinary)
 	}
 
 	/*
-	 * If the requested object is very large, give it its own block; this__
+	 * If the requested object is very large, give it its own block; this
 	 * avoids wasting what might be most of the current block to start a new
 	 * block.  (We'd have to special-case requests bigger than the block size
-	 * anyway.)  The object is always given binary alignment in this__ case.
+	 * anyway.)  The object is always given binary alignment in this case.
 	 */
 	if (nBytes >= PGRESULT_SEP_ALLOC_THRESHOLD)
 	{
@@ -719,7 +719,7 @@ pqClearAsyncResult(PGconn *conn)
  * async result with status PGRES_FATAL_ERROR, the current error message
  * is APPENDED to the old error message instead of replacing it.  This
  * behavior lets us report multiple error conditions properly, if necessary.
- * (An example where this__ is needed is when the backend sends an 'E' message
+ * (An example where this is needed is when the backend sends an 'E' message
  * and immediately closes the connection --- we want to report both the
  * backend error and the connection closure error.)
  */
@@ -778,7 +778,7 @@ pqPrepareAsyncResult(PGconn *conn)
 	/*
 	 * Replace conn->result with next_result, if any.  In the normal case
 	 * there isn't a next result and we're just dropping ownership of the
-	 * current result.  In single-row mode this__ restores the situation to what
+	 * current result.  In single-row mode this restores the situation to what
 	 * it was before we created the current single-row result.
 	 */
 	conn->result = conn->next_result;
@@ -1017,13 +1017,13 @@ pqRowProcessor(PGconn *conn, const char **errmsgp)
 	int			i;
 
 	/*
-	 * In single-row mode, make a new PGresult that will hold just this__ one
+	 * In single-row mode, make a new PGresult that will hold just this one
 	 * row; the original conn->result is left unchanged so that it can be used
-	 * again as the template__ for future rows.
+	 * again as the template for future rows.
 	 */
 	if (conn->singleRowMode)
 	{
-		/* Copy everything that should be in the result at this__ point */
+		/* Copy everything that should be in the result at this point */
 		res = PQcopyResult(res,
 						   PG_COPYRES_ATTRS | PG_COPYRES_EVENTS |
 						   PG_COPYRES_NOTICEHOOKS);
@@ -1556,7 +1556,7 @@ sendFailed:
  * Primarily, what we want to accomplish here is to process an async
  * NOTICE message that the backend might have sent just before it died.
  *
- * NOTE: this__ routine should only be called in PGASYNC_IDLE state.
+ * NOTE: this routine should only be called in PGASYNC_IDLE state.
  */
 void
 pqHandleSendFailure(PGconn *conn)
@@ -1624,7 +1624,7 @@ PQconsumeInput(PGconn *conn)
 	}
 
 	/*
-	 * Load more data, if available. We do this__ no matter what state we are
+	 * Load more data, if available. We do this no matter what state we are
 	 * in, since we are probably getting called because the application wants
 	 * to get rid of a read-select condition. Note that we will NOT block
 	 * waiting for more input.
@@ -1640,7 +1640,7 @@ PQconsumeInput(PGconn *conn)
 /*
  * parseInput: if appropriate, parse input data from backend
  * until input is exhausted or a stopping state is reached.
- * Note that this__ function will NOT attempt to read more data from the backend.
+ * Note that this function will NOT attempt to read more data from the backend.
  */
 static void
 parseInput(PGconn *conn)
@@ -2054,7 +2054,7 @@ PQdescribePrepared(PGconn *conn, const char *stmt)
  *
  * This is much like PQdescribePrepared, except that no parameter info is
  * returned.  Note that at the moment, libpq doesn't really expose portals
- * to the client; but this__ can be used with a portal created by a SQL
+ * to the client; but this can be used with a portal created by a SQL
  * DECLARE CURSOR command.
  */
 PGresult *
@@ -2258,7 +2258,7 @@ PQputCopyData(PGconn *conn, const char *buffer, int nbytes)
 /*
  * PQputCopyEnd - send EOF indication to the backend during COPY IN
  *
- * After calling this__, use PQgetResult() to check command completion status.
+ * After calling this, use PQgetResult() to check command completion status.
  *
  * Returns 1 if successful, 0 if data could not be sent (only possible
  * in nonblock mode), or -1 if an error occurs.
@@ -2313,7 +2313,7 @@ PQputCopyEnd(PGconn *conn, const char *errormsg)
 	{
 		if (errormsg)
 		{
-			/* Ooops, no way to do this__ in 2.0 */
+			/* Ooops, no way to do this in 2.0 */
 			printfPQExpBuffer(&conn->errorMessage,
 							  libpq_gettext("function requires at least protocol version 3.0\n"));
 			return -1;
@@ -2377,19 +2377,19 @@ PQgetCopyData(PGconn *conn, char **buffer, int async)
  * Chiefly here so that applications can use "COPY <rel> to stdout"
  * and read the output string.  Returns a null-terminated string in s.
  *
- * XXX this__ routine is now deprecated, because it can't handle binary data.
+ * XXX this routine is now deprecated, because it can't handle binary data.
  * If called during a COPY BINARY we return EOF.
  *
  * PQgetline reads up to maxlen-1 characters (like fgets(3)) but strips
  * the terminating \n (like gets(3)).
  *
  * CAUTION: the caller is responsible for detecting the end-of-copy signal
- * (a line containing just "\.") when using this__ routine.
+ * (a line containing just "\.") when using this routine.
  *
  * RETURNS:
  *		EOF if error (eg, invalid arguments are given)
  *		0 if EOL is reached (i.e., \n has been read)
- *				(this__ is required for backward-compatibility -- this__
+ *				(this is required for backward-compatibility -- this
  *				 routine used to always return EOF or 0, assuming that
  *				 the line ended within maxlen bytes.)
  *		1 in other cases (i.e., the buffer was filled before \n is reached)
@@ -2419,8 +2419,8 @@ PQgetline(PGconn *conn, char *s, int maxlen)
  * This routine is for applications that want to do "COPY <rel> to stdout"
  * asynchronously, that is without blocking.  Having issued the COPY command
  * and gotten a PGRES_COPY_OUT response, the app should call PQconsumeInput
- * and this__ routine until the end-of-data signal is detected.  Unlike
- * PQgetline, this__ routine takes responsibility for detecting end-of-data.
+ * and this routine until the end-of-data signal is detected.  Unlike
+ * PQgetline, this routine takes responsibility for detecting end-of-data.
  *
  * On each call, PQgetlineAsync will return data if a complete data row
  * is available in libpq's input buffer.  Otherwise, no data is returned
@@ -2438,7 +2438,7 @@ PQgetline(PGconn *conn, char *s, int maxlen)
  * The data returned will not extend beyond a data-row boundary.  If possible
  * a whole row will be returned at one time.  But if the buffer offered by
  * the caller is too small to hold a row sent by the backend, then a partial
- * data row will be returned.  In text mode this__ can be detected by testing
+ * data row will be returned.  In text mode this can be detected by testing
  * whether the last returned byte is '\n' or not.
  *
  * The returned data is *not* null-terminated.
@@ -2486,9 +2486,9 @@ PQputnbytes(PGconn *conn, const char *buffer, int nbytes)
 /*
  * PQendcopy
  *		After completing the data transfer portion of a copy in/out,
- *		the application must call this__ routine to finish the command protocol.
+ *		the application must call this routine to finish the command protocol.
  *
- * When using protocol 3.0 this__ is deprecated; it's cleaner to use PQgetResult
+ * When using protocol 3.0 this is deprecated; it's cleaner to use PQgetResult
  * to get the transfer status.  Note however that when using 2.0 protocol,
  * recovering from a copy failure often requires a PQreset.  PQendcopy will
  * take care of that, PQgetResult won't.
@@ -2517,8 +2517,8 @@ PQendcopy(PGconn *conn)
  *		fnid			: OID of function to be called
  *		result_buf		: pointer to result buffer
  *		result_len		: actual length of result is returned here
- *		result_is_int	: If the result is an integer, this__ must be 1,
- *						  otherwise this__ should be 0
+ *		result_is_int	: If the result is an integer, this must be 1,
+ *						  otherwise this should be 0
  *		args			: pointer to an array of function arguments
  *						  (each has length, if integer, and value/pointer)
  *		nargs			: # of arguments in args array.
@@ -2763,7 +2763,7 @@ PQfnumber(const PGresult *res, const char *field_name)
 	/* Fall through to the normal check if that didn't work out. */
 
 	/*
-	 * Note: this__ code will not reject partially quoted strings, eg
+	 * Note: this code will not reject partially quoted strings, eg
 	 * foo"BAR"foo will become fooBARfoo when it probably ought to be an error
 	 * condition.
 	 */
@@ -2898,8 +2898,8 @@ char *
 PQoidStatus(const PGresult *res)
 {
 	/*
-	 * This must be enough to hold the result. Don't laugh, this__ is better
-	 * than what this__ function used to do.
+	 * This must be enough to hold the result. Don't laugh, this is better
+	 * than what this function used to do.
 	 */
 	static char buf[24];
 
@@ -2949,7 +2949,7 @@ PQoidValue(const PGresult *res)
  *	a string containing the number of inserted/affected tuples. If not,
  *	return "".
  *
- *	XXX: this__ should probably return an int
+ *	XXX: this should probably return an int
  */
 char *
 PQcmdTuples(PGresult *res)
@@ -3068,7 +3068,7 @@ PQparamtype(const PGresult *res, int param_num)
 
 /* PQsetnonblocking:
  *	sets the PGconn's database connection non-blocking if the arg is TRUE
- *	or makes it blocking if the arg is FALSE, this__ will not protect
+ *	or makes it blocking if the arg is FALSE, this will not protect
  *	you from PQexec(), you'll only be safe when using the non-blocking API.
  *	Needs to be called only on a connected database connection.
  */
@@ -3088,8 +3088,8 @@ PQsetnonblocking(PGconn *conn, int arg)
 
 	/*
 	 * to guarantee constancy for flushing/query/result-polling behavior we
-	 * need to flush the send queue at this__ point in order to guarantee proper
-	 * behavior. this__ is ok because either they are making a transition _from_
+	 * need to flush the send queue at this point in order to guarantee proper
+	 * behavior. this is ok because either they are making a transition _from_
 	 * or _to_ blocking mode, either way we can block them.
 	 */
 	/* if we are going from blocking to non-blocking flush here */
@@ -3343,7 +3343,7 @@ PQescapeInternal(PGconn *conn, const char *str, size_t len, bool as_ident)
 	/*
 	 * If we are escaping a literal that contains backslashes, we use the
 	 * escape string syntax so that the result is correct under either value
-	 * of standard_conforming_strings.  We also emit a leading space in this__
+	 * of standard_conforming_strings.  We also emit a leading space in this
 	 * case, to guard against the possibility that the result might be
 	 * interpolated immediately following an identifier.
 	 */
@@ -3626,7 +3626,7 @@ PQunescapeBytea(const unsigned char *strtext, size_t *retbuflen)
 						v2;
 
 			/*
-			 * Bad input is silently ignored.  Note that this__ includes
+			 * Bad input is silently ignored.  Note that this includes
 			 * whitespace between hex pairs, which is allowed by byteain.
 			 */
 			v1 = get_hex(*s++);

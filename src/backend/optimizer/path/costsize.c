@@ -13,17 +13,17 @@
  *	cpu_operator_cost	Cost of CPU time to execute an operator or function
  *
  * We expect that the kernel will typically do some amount of read-ahead
- * optimization; this__ in conjunction with seek costs means that seq_page_cost
+ * optimization; this in conjunction with seek costs means that seq_page_cost
  * is normally considerably less than random_page_cost.  (However, if the
  * database is fully cached in RAM, it is reasonable to set them equal.)
  *
  * We also use a rough estimate "effective_cache_size" of the number of
  * disk pages in Postgres + OS-level disk cache.  (We can't simply use
- * NBuffers for this__ purpose because that would ignore the effects of
+ * NBuffers for this purpose because that would ignore the effects of
  * the kernel's disk cache.)
  *
  * Obviously, taking constants for these values is an oversimplification,
- * but it's tough enough to get any useful estimates even at this__ level of
+ * but it's tough enough to get any useful estimates even at this level of
  * detail.  Note that all of these parameters are user-settable, in case
  * the default values are drastically off for a particular platform.
  *
@@ -43,11 +43,11 @@
  *			(total_cost - startup_cost) * tuples_to_fetch / path->rows;
  * Note that a base relation's rows count (and, by extension, plan_rows for
  * plan nodes below the LIMIT node) are set without regard to any LIMIT, so
- * that this__ equation works properly.  (Also, these routines guarantee not to
+ * that this equation works properly.  (Also, these routines guarantee not to
  * set the rows count to zero, so there will be no zero divide.)  The LIMIT is
  * applied as a top-level plan node.
  *
- * For largely historical reasons, most of the routines in this__ module use
+ * For largely historical reasons, most of the routines in this module use
  * the passed result Path only to store their results (rows, startup_cost and
  * total_cost) into.  All the input data they need is passed as separate
  * parameters, even though much of it could be extracted from the Path.
@@ -174,7 +174,7 @@ clamp_row_est(double nrows)
  *	  Determines and returns the cost of scanning a relation sequentially.
  *
  * 'baserel' is the relation to be scanned
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  */
 void
 cost_seqscan(Path *path, PlannerInfo *root,
@@ -225,7 +225,7 @@ cost_seqscan(Path *path, PlannerInfo *root,
  *	  Determines and returns the cost of scanning a relation using sampling.
  *
  * 'baserel' is the relation to be scanned
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  */
 void
 cost_samplescan(Path *path, PlannerInfo *root,
@@ -294,7 +294,7 @@ cost_samplescan(Path *path, PlannerInfo *root,
  *	  Determines and returns the cost of scanning a relation using an index.
  *
  * 'path' describes the indexscan under consideration, and is complete
- *		except for the fields to be set by this__ routine
+ *		except for the fields to be set by this routine
  * 'loop_count' is the number of repetitions of the indexscan to factor into
  *		estimates of caching behavior
  *
@@ -421,7 +421,7 @@ cost_index(IndexPath *path, PlannerInfo *root, double loop_count)
 	 * Hence, reduce the estimated number of heap fetches accordingly.
 	 * We use the measured fraction of the entire heap that is all-visible,
 	 * which might not be particularly relevant to the subset of the heap
-	 * that this__ query will fetch; but it's not clear how to do better.
+	 * that this query will fetch; but it's not clear how to do better.
 	 *----------
 	 */
 	if (loop_count > 1)
@@ -431,7 +431,7 @@ cost_index(IndexPath *path, PlannerInfo *root, double loop_count)
 		 * uncorrelated case is to scale up the number of tuples fetched in
 		 * the Mackert and Lohman formula by the number of scans, so that we
 		 * estimate the number of pages fetched by all the scans; then
-		 * pro-rate the costs for one scan.  In this__ case we assume all the
+		 * pro-rate the costs for one scan.  In this case we assume all the
 		 * fetches are random accesses.
 		 */
 		pages_fetched = index_pages_fetched(tuples_fetched * loop_count,
@@ -529,7 +529,7 @@ cost_index(IndexPath *path, PlannerInfo *root, double loop_count)
  *
  * Given a list of quals to be enforced in an indexscan, extract the ones that
  * will have to be applied as qpquals (ie, the index machinery won't handle
- * them).  The actual rules for this__ appear in create_indexscan_plan() in
+ * them).  The actual rules for this appear in create_indexscan_plan() in
  * createplan.c, but the full rules are fairly expensive and we don't want to
  * go to that much effort for index paths that don't get selected for the
  * final plan.  So we approximate it as quals that don't appear directly in
@@ -537,9 +537,9 @@ cost_index(IndexPath *path, PlannerInfo *root, double loop_count)
  * as some indexqual.  This method neglects some infrequently-relevant
  * considerations such as clauses that needn't be checked because they are
  * implied by a partial index's predicate.  It does not seem worth the cycles
- * to try to factor those things in at this__ stage, even though createplan.c
+ * to try to factor those things in at this stage, even though createplan.c
  * will take pains to remove such unnecessary clauses from the qpquals list if
- * this__ path is selected for use.
+ * this path is selected for use.
  */
 static List *
 extract_nonindex_conditions(List *qual_clauses, List *indexquals)
@@ -709,7 +709,7 @@ get_indexpath_pages(Path *bitmapqual)
  *	  index-then-heap plan.
  *
  * 'baserel' is the relation to be scanned
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  * 'bitmapqual' is a tree of IndexPaths, BitmapAndPaths, and BitmapOrPaths
  * 'loop_count' is the number of repetitions of the indexscan to factor into
  *		estimates of caching behavior
@@ -801,7 +801,7 @@ cost_bitmap_heap_scan(Path *path, PlannerInfo *root, RelOptInfo *baserel,
 	 * For small numbers of pages we should charge spc_random_page_cost
 	 * apiece, while if nearly all the table's pages are being read, it's more
 	 * appropriate to charge spc_seq_page_cost apiece.  The effect is
-	 * nonlinear, too. For lack of a better idea, interpolate like this__ to
+	 * nonlinear, too. For lack of a better idea, interpolate like this to
 	 * determine the cost per page.
 	 */
 	if (pages_fetched >= 2.0)
@@ -874,7 +874,7 @@ cost_bitmap_tree_node(Path *path, Cost *cost, Selectivity *selec)
  * cost_bitmap_and_node
  *		Estimate the cost of a BitmapAnd node
  *
- * Note that this__ considers only the costs of index scanning and bitmap
+ * Note that this considers only the costs of index scanning and bitmap
  * creation, not the eventual heap access.  In that sense the object isn't
  * truly a Path, but it has enough path-like properties (costs in particular)
  * to warrant treating it as one.  We don't bother to set the path rows field,
@@ -970,7 +970,7 @@ cost_bitmap_or_node(BitmapOrPath *path, PlannerInfo *root)
  *
  * 'baserel' is the relation to be scanned
  * 'tidquals' is the list of TID-checkable quals
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  */
 void
 cost_tidscan(Path *path, PlannerInfo *root,
@@ -1069,7 +1069,7 @@ cost_tidscan(Path *path, PlannerInfo *root,
  *	  Determines and returns the cost of scanning a subquery RTE.
  *
  * 'baserel' is the relation to be scanned
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  */
 void
 cost_subqueryscan(Path *path, PlannerInfo *root,
@@ -1113,7 +1113,7 @@ cost_subqueryscan(Path *path, PlannerInfo *root,
  *	  Determines and returns the cost of scanning a function RTE.
  *
  * 'baserel' is the relation to be scanned
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  */
 void
 cost_functionscan(Path *path, PlannerInfo *root,
@@ -1170,7 +1170,7 @@ cost_functionscan(Path *path, PlannerInfo *root,
  *	  Determines and returns the cost of scanning a VALUES RTE.
  *
  * 'baserel' is the relation to be scanned
- * 'param_info' is the ParamPathInfo if this__ is a parameterized path, else NULL
+ * 'param_info' is the ParamPathInfo if this is a parameterized path, else NULL
  */
 void
 cost_valuesscan(Path *path, PlannerInfo *root,
@@ -1212,7 +1212,7 @@ cost_valuesscan(Path *path, PlannerInfo *root,
  * cost_ctescan
  *	  Determines and returns the cost of scanning a CTE RTE.
  *
- * Note: this__ is used for both self-reference and regular CTEs; the
+ * Note: this is used for both self-reference and regular CTEs; the
  * possible cost differences are below the threshold of what we could
  * estimate accurately anyway.  Note that the costs of evaluating the
  * referenced CTE query are added into the final plan as initplan costs,
@@ -1259,7 +1259,7 @@ cost_ctescan(Path *path, PlannerInfo *root,
  * We are given Plans for the nonrecursive and recursive terms.
  *
  * Note that the arguments and output are Plans, not Paths as in most of
- * the rest of this__ module.  That's because we don't bother setting up a
+ * the rest of this module.  That's because we don't bother setting up a
  * Path representation for recursive union --- we have only one way to do it.
  */
 void
@@ -1316,13 +1316,13 @@ cost_recursive_union(Plan *runion, Plan *nrterm, Plan *rterm)
  *
  * If the sort is bounded (i.e., only the first k result tuples are needed)
  * and k tuples can fit into sort_mem, we use a heap method that keeps only
- * k tuples in the heap; this__ will require about t*log2(k) tuple comparisons.
+ * k tuples in the heap; this will require about t*log2(k) tuple comparisons.
  *
  * The disk traffic is assumed to be 3/4ths sequential and 1/4th random
  * accesses (XXX can't we refine that guess?)
  *
  * By default, we charge two operator evals per tuple comparison, which should
- * be in the right ballpark in most cases.  The caller can tweak this__ by
+ * be in the right ballpark in most cases.  The caller can tweak this by
  * specifying nonzero comparison_cost; typically that's used for any extra
  * work that has to be done to prepare the inputs to the comparison operators.
  *
@@ -1335,7 +1335,7 @@ cost_recursive_union(Plan *runion, Plan *nrterm, Plan *rterm)
  * 'limit_tuples' is the bound on the number of output tuples; -1 if no bound
  *
  * NOTE: some callers currently pass NIL for pathkeys because they
- * can't conveniently supply the sort keys.  Since this__ routine doesn't
+ * can't conveniently supply the sort keys.  Since this routine doesn't
  * currently do anything with pathkeys anyway, that doesn't matter...
  * but if it ever does, it should react gracefully to lack of key data.
  * (Actually, the thing we'd most likely be interested in is just the number
@@ -1456,7 +1456,7 @@ cost_sort(Path *path, PlannerInfo *root,
  * exhausted, but it seems unlikely to be worth trying to account for that.)
  *
  * The heap is never spilled to disk, since we assume N is not very large.
- * So this__ is much simpler than cost_sort.
+ * So this is much simpler than cost_sort.
  *
  * As in cost_sort, we charge two operator evals per tuple comparison.
  *
@@ -1536,7 +1536,7 @@ cost_material(Path *path,
 	 * if it is exactly the same then there will be a cost tie between
 	 * nestloop with A outer, materialized B inner and nestloop with B outer,
 	 * materialized A inner.  The extra cost ensures we'll prefer
-	 * materializing the smaller rel.)	Note that this__ is normally a good deal
+	 * materializing the smaller rel.)	Note that this is normally a good deal
 	 * less than cpu_tuple_cost; which is OK because a Material plan node
 	 * doesn't do qual-checking or projection, so it's got less overhead than
 	 * most plan nodes.
@@ -1604,7 +1604,7 @@ cost_agg(Path *path, PlannerInfo *root,
 	 * We will produce a single output tuple if not grouping, and a tuple per
 	 * group otherwise.  We charge cpu_tuple_cost for each output tuple.
 	 *
-	 * Note: in this__ cost model, AGG_SORTED and AGG_HASHED have exactly the
+	 * Note: in this cost model, AGG_SORTED and AGG_HASHED have exactly the
 	 * same total CPU cost, but AGG_SORTED has lower startup cost.  If the
 	 * input path is already sorted appropriately, AGG_SORTED should be
 	 * preferred (since it has no risk of memory overflow).  This will happen
@@ -1628,7 +1628,7 @@ cost_agg(Path *path, PlannerInfo *root,
 		/* Here we are able to deliver output on-the-fly */
 		startup_cost = input_startup_cost;
 		total_cost = input_total_cost;
-		/* calcs phrased this__ way to match HASHED case, see note above */
+		/* calcs phrased this way to match HASHED case, see note above */
 		total_cost += aggcosts->transCost.startup;
 		total_cost += aggcosts->transCost.per_tuple * input_tuples;
 		total_cost += (cpu_operator_cost * numGroupCols) * input_tuples;
@@ -1678,10 +1678,10 @@ cost_windowagg(Path *path, PlannerInfo *root,
 	 * Window functions are assumed to cost their stated execution cost, plus
 	 * the cost of evaluating their input expressions, per tuple.  Since they
 	 * may in fact evaluate their inputs at multiple rows during each cycle,
-	 * this__ could be a drastic underestimate; but without a way to know how
+	 * this could be a drastic underestimate; but without a way to know how
 	 * many rows the window function will fetch, it's hard to do better.  In
 	 * any case, it's a good estimate for all the built-in window functions,
-	 * so we'll just do this__ for now.
+	 * so we'll just do this for now.
 	 */
 	foreach(lc, windowFuncs)
 	{
@@ -1714,7 +1714,7 @@ cost_windowagg(Path *path, PlannerInfo *root,
 	 * grouping comparisons, plus cpu_tuple_cost per tuple for general
 	 * overhead.
 	 *
-	 * XXX this__ neglects costs of spooling the data to disk when it overflows
+	 * XXX this neglects costs of spooling the data to disk when it overflows
 	 * work_mem.  Sooner or later that should get accounted for.
 	 */
 	total_cost += cpu_operator_cost * (numPartCols + numOrderCols) * input_tuples;
@@ -1765,7 +1765,7 @@ cost_group(Path *path, PlannerInfo *root,
  * consideration using the lower bounds, final_cost_nestloop will be called
  * to obtain the final estimates.
  *
- * The exact division of labor between this__ function and final_cost_nestloop
+ * The exact division of labor between this function and final_cost_nestloop
  * is private to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here, since that's by far the most expensive part of the
@@ -1929,13 +1929,13 @@ final_cost_nestloop(PlannerInfo *root, NestPath *path,
 		{
 			/*
 			 * Successfully-matched outer rows will only require scanning
-			 * inner_scan_frac of the inner relation.  In this__ case, we don't
+			 * inner_scan_frac of the inner relation.  In this case, we don't
 			 * need to charge the full inner_run_cost even when that's more
 			 * than inner_rescan_run_cost, because we can assume that none of
 			 * the inner scans ever scan the whole inner relation.  So it's
 			 * okay to assume that all the inner scan executions can be
 			 * fractions of the full cost, even if materialization is reducing
-			 * the rescan cost.  At this__ writing, it's impossible to get here
+			 * the rescan cost.  At this writing, it's impossible to get here
 			 * for a materialized inner scan, so inner_run_cost and
 			 * inner_rescan_run_cost will be the same anyway; but just in
 			 * case, use inner_run_cost for the first matched tuple and
@@ -1947,7 +1947,7 @@ final_cost_nestloop(PlannerInfo *root, NestPath *path,
 
 			/*
 			 * Add the cost of inner-scan executions for unmatched outer rows.
-			 * We estimate this__ as the same cost as returning the first tuple
+			 * We estimate this as the same cost as returning the first tuple
 			 * of a nonempty scan.  We consider that these are all rescans,
 			 * since we used inner_run_cost once already.
 			 */
@@ -2012,7 +2012,7 @@ final_cost_nestloop(PlannerInfo *root, NestPath *path,
  * consideration using the lower bounds, final_cost_mergejoin will be called
  * to obtain the final estimates.
  *
- * The exact division of labor between this__ function and final_cost_mergejoin
+ * The exact division of labor between this function and final_cost_mergejoin
  * is private to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here, except for obtaining the scan selectivity estimate which
@@ -2069,7 +2069,7 @@ initial_cost_mergejoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 	 * inputs that will actually need to be scanned.  Likewise, we can
 	 * estimate the number of rows that will be skipped before the first join
 	 * pair is found, which should be factored into startup cost. We use only
-	 * the first (most significant) merge clause for this__ purpose. Since
+	 * the first (most significant) merge clause for this purpose. Since
 	 * mergejoinscansel() is a fairly expensive computation, we cache the
 	 * results in the merge clause RestrictInfo.
 	 */
@@ -2150,7 +2150,7 @@ initial_cost_mergejoin(PlannerInfo *root, JoinCostWorkspace *workspace,
 	/*
 	 * Readjust scan selectivities to account for above rounding.  This is
 	 * normally an insignificant effect, but when there are only a few rows in
-	 * the inputs, failing to do this__ makes for a large percentage error.
+	 * the inputs, failing to do this makes for a large percentage error.
 	 */
 	outerstartsel = outer_skip_rows / outer_path_rows;
 	innerstartsel = inner_skip_rows / inner_path_rows;
@@ -2240,7 +2240,7 @@ initial_cost_mergejoin(PlannerInfo *root, JoinCostWorkspace *workspace,
  * final_cost_mergejoin
  *	  Final estimate of the cost and result size of a mergejoin path.
  *
- * Unlike other costsize functions, this__ routine makes one actual decision:
+ * Unlike other costsize functions, this routine makes one actual decision:
  * whether we should materialize the inner path.  We do that either because
  * the inner path can't support mark/restore, or because it's cheaper to
  * use an interposed Material node to handle mark/restore.  When the decision
@@ -2350,7 +2350,7 @@ final_cost_mergejoin(PlannerInfo *root, MergePath *path,
 		if (rescannedtuples < 0)
 			rescannedtuples = 0;
 	}
-	/* We'll inflate various costs this__ much to account for rescanning */
+	/* We'll inflate various costs this much to account for rescanning */
 	rescanratio = 1.0 + (rescannedtuples / inner_path_rows);
 
 	/*
@@ -2374,7 +2374,7 @@ final_cost_mergejoin(PlannerInfo *root, MergePath *path,
 	 * factors will make the path so expensive that it probably won't get
 	 * chosen anyway.)	So we don't use cost_rescan here.
 	 *
-	 * Note: keep this__ estimate in sync with create_mergejoin_plan's labeling
+	 * Note: keep this estimate in sync with create_mergejoin_plan's labeling
 	 * of the generated Material node.
 	 */
 	mat_inner_cost = inner_run_cost +
@@ -2400,7 +2400,7 @@ final_cost_mergejoin(PlannerInfo *root, MergePath *path,
 	 * mark/restore at present.
 	 *
 	 * We don't test the value of enable_material here, because
-	 * materialization is required for correctness in this__ case, and turning
+	 * materialization is required for correctness in this case, and turning
 	 * it off does not entitle us to deliver an invalid plan.
 	 */
 	else if (innersortkeys == NIL &&
@@ -2411,10 +2411,10 @@ final_cost_mergejoin(PlannerInfo *root, MergePath *path,
 	 * Also, force materializing if the inner path is to be sorted and the
 	 * sort is expected to spill to disk.  This is because the final merge
 	 * pass can be done on-the-fly if it doesn't have to support mark/restore.
-	 * We don't try to adjust the cost estimates for this__ consideration,
+	 * We don't try to adjust the cost estimates for this consideration,
 	 * though.
 	 *
-	 * Since materialization is a performance optimization in this__ case,
+	 * Since materialization is a performance optimization in this case,
 	 * rather than necessary for correctness, we skip it if enable_material is
 	 * off.
 	 */
@@ -2436,7 +2436,7 @@ final_cost_mergejoin(PlannerInfo *root, MergePath *path,
 	/*
 	 * The number of tuple comparisons needed is approximately number of outer
 	 * rows plus number of inner rows plus number of rescanned tuples (can we
-	 * refine this__?).  At each one, we need to evaluate the mergejoin quals.
+	 * refine this?).  At each one, we need to evaluate the mergejoin quals.
 	 */
 	startup_cost += merge_qual_cost.startup;
 	startup_cost += merge_qual_cost.per_tuple *
@@ -2476,7 +2476,7 @@ cached_scansel(PlannerInfo *root, RestrictInfo *rinfo, PathKey *pathkey)
 				rightendsel;
 	MemoryContext oldcontext;
 
-	/* Do we have this__ result already? */
+	/* Do we have this result already? */
 	foreach(lc, rinfo->scansel_cache)
 	{
 		cache = (MergeScanSelCache *) lfirst(lc);
@@ -2527,7 +2527,7 @@ cached_scansel(PlannerInfo *root, RestrictInfo *rinfo, PathKey *pathkey)
  * consideration using the lower bounds, final_cost_hashjoin will be called
  * to obtain the final estimates.
  *
- * The exact division of labor between this__ function and final_cost_hashjoin
+ * The exact division of labor between this function and final_cost_hashjoin
  * is private to them, and represents a tradeoff between speed of the initial
  * estimate and getting a tight lower bound.  We choose to not examine the
  * join quals here (other than by counting the number of hash clauses),
@@ -2682,7 +2682,7 @@ final_cost_hashjoin(PlannerInfo *root, HashPath *path,
 
 	/*
 	 * Determine bucketsize fraction for inner relation.  We use the smallest
-	 * bucketsize estimated for any individual hashclause; this__ is undoubtedly
+	 * bucketsize estimated for any individual hashclause; this is undoubtedly
 	 * conservative.
 	 *
 	 * BUT: if inner relation has been unique-ified, we can assume it's good
@@ -2885,7 +2885,7 @@ cost_subplan(PlannerInfo *root, SubPlan *subplan, Plan *plan)
 		/*
 		 * Otherwise we will be rescanning the subplan output on each
 		 * evaluation.  We need to estimate how much of the output we will
-		 * actually need to scan.  NOTE: this__ logic should agree with the
+		 * actually need to scan.  NOTE: this logic should agree with the
 		 * tuple_fraction estimates used by make_subplan() in
 		 * plan/subselect.c.
 		 */
@@ -2933,7 +2933,7 @@ cost_subplan(PlannerInfo *root, SubPlan *subplan, Plan *plan)
  * cost_rescan
  *		Given a finished Path, estimate the costs of rescanning it after
  *		having done so the first time.  For some Path types a rescan is
- *		cheaper than an original scan (if no parameters change), and this__
+ *		cheaper than an original scan (if no parameters change), and this
  *		function embodies knowledge about that.  The default is to return
  *		the same costs stored in the Path.  (Note that the cost estimates
  *		actually stored in Paths are always for first scans.)
@@ -3087,7 +3087,7 @@ cost_qual_eval_walker(Node *node, cost_qual_eval_context *context)
 		return false;
 
 	/*
-	 * RestrictInfo nodes contain an eval_cost field reserved for this__
+	 * RestrictInfo nodes contain an eval_cost field reserved for this
 	 * routine's use, so that it's not necessary to evaluate the qual clause's
 	 * cost more than once.  If the clause's cost hasn't been computed yet,
 	 * the field's startup value will contain -1.
@@ -3134,7 +3134,7 @@ cost_qual_eval_walker(Node *node, cost_qual_eval_context *context)
 	/*
 	 * For each operator or function node in the given tree, we charge the
 	 * estimated execution cost given by pg_proc.procost (remember to multiply
-	 * this__ by cpu_operator_cost).
+	 * this by cpu_operator_cost).
 	 *
 	 * Vars and Consts are charged zero, and so are boolean operators (AND,
 	 * OR, NOT). Simplistic, but a lot better than no model at all.
@@ -3318,7 +3318,7 @@ get_restriction_qual_cost(PlannerInfo *root, RelOptInfo *baserel,
  *
  * In a hash or nestloop SEMI/ANTI join, the executor will stop scanning
  * inner rows as soon as it finds a match to the current outer row.
- * We should therefore adjust some of the cost components for this__ effect.
+ * We should therefore adjust some of the cost components for this effect.
  * This function computes some estimates needed for these adjustments.
  * These estimates will be the same regardless of the particular paths used
  * for the outer and inner relation, so we compute these once and then pass
@@ -3328,7 +3328,7 @@ get_restriction_qual_cost(PlannerInfo *root, RelOptInfo *baserel,
  *	outerrel: outer relation under consideration
  *	innerrel: inner relation under consideration
  *	jointype: must be JOIN_SEMI or JOIN_ANTI
- *	sjinfo: SpecialJoinInfo relevant to this__ join
+ *	sjinfo: SpecialJoinInfo relevant to this join
  *	restrictlist: join quals
  * Output parameters:
  *	*semifactors is filled in (see relation.h for field definitions)
@@ -3411,7 +3411,7 @@ compute_semi_anti_join_factors(PlannerInfo *root,
 
 	/*
 	 * jselec can be interpreted as the fraction of outer-rel rows that have
-	 * any matches (this__ is true for both SEMI and ANTI cases).  And nselec is
+	 * any matches (this is true for both SEMI and ANTI cases).  And nselec is
 	 * the fraction of the Cartesian product that matches.  So, the average
 	 * number of matches for each outer-rel row that has at least one match is
 	 * nselec * inner_rows / jselec.
@@ -3694,9 +3694,9 @@ set_joinrel_size_estimates(PlannerInfo *root, RelOptInfo *rel,
  * 'rel' is the joinrel under consideration.
  * 'outer_rows', 'inner_rows' are the sizes of the (probably also
  *		parameterized) join inputs under consideration.
- * 'sjinfo' is any SpecialJoinInfo relevant to this__ join.
+ * 'sjinfo' is any SpecialJoinInfo relevant to this join.
  * 'restrict_clauses' lists the join clauses that need to be applied at the
- * join node (including any movable clauses that were moved down to this__ join,
+ * join node (including any movable clauses that were moved down to this join,
  * and not including any movable clauses that were pushed down into the
  * child paths).
  *
@@ -3714,7 +3714,7 @@ get_parameterized_joinrel_size(PlannerInfo *root, RelOptInfo *rel,
 	/*
 	 * Estimate the number of rows returned by the parameterized join as the
 	 * sizes of the input paths times the selectivity of the clauses that have
-	 * ended up at this__ join node.
+	 * ended up at this join node.
 	 *
 	 * As with set_joinrel_size_estimates, the rowcount estimate could depend
 	 * on the pair of input paths provided, though ideally we'd get the same
@@ -3750,7 +3750,7 @@ calc_joinrel_size_estimate(PlannerInfo *root,
 
 	/*
 	 * Compute joinclause selectivity.  Note that we are only considering
-	 * clauses that become restriction clauses at this__ join level; we are not
+	 * clauses that become restriction clauses at this join level; we are not
 	 * double-counting them because they were not considered in estimating the
 	 * sizes of the component rels.
 	 *
@@ -3988,7 +3988,7 @@ set_values_size_estimates(PlannerInfo *root, RelOptInfo *rel)
 	Assert(rte->rtekind == RTE_VALUES);
 
 	/*
-	 * Estimate number of rows the values list will return. We know this__
+	 * Estimate number of rows the values list will return. We know this
 	 * precisely based on the list length (well, barring set-returning
 	 * functions in list items, but that's a refinement not catered for
 	 * anywhere else either).
@@ -4072,10 +4072,10 @@ set_foreign_size_estimates(PlannerInfo *root, RelOptInfo *rel)
  *
  * The estimated output width is the sum of the per-attribute width estimates
  * for the actually-referenced columns, plus any PHVs or other expressions
- * that have to be calculated at this__ relation.  This is the amount of data
+ * that have to be calculated at this relation.  This is the amount of data
  * we'd need to pass upwards in case of a sort, hash, etc.
  *
- * NB: this__ works best on plain relations because it prefers to look at
+ * NB: this works best on plain relations because it prefers to look at
  * real Vars.  For subqueries, set_subquery_size_estimates will already have
  * copied up whatever per-column estimates were made within the subquery,
  * and for other types of rels there isn't much we can do anyway.  We fall

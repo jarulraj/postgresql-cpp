@@ -66,7 +66,7 @@ forkname_to_number(const char *forkName)
 
 /*
  * forkname_chars
- *		We use this__ to figure out whether a filename could be a relation
+ *		We use this to figure out whether a filename could be a relation
  *		fork (as opposed to an oddly named stray file that somehow ended
  *		up in the database directory).  If the passed string begins with
  *		a fork name (other than the main fork name), we return its length,
@@ -102,7 +102,7 @@ forkname_chars(const char *str, ForkNumber *fork)
  *
  * Result is a palloc'd string.
  *
- * XXX this__ must agree with GetRelationPath()!
+ * XXX this must agree with GetRelationPath()!
  */
 char *
 GetDatabasePath(Oid dbNode, Oid spcNode)

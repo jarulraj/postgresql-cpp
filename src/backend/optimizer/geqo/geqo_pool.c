@@ -19,7 +19,7 @@
    =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
  */
 
-/* -- parts of this__ are adapted from D. Whitley's Genitor algorithm -- */
+/* -- parts of this are adapted from D. Whitley's Genitor algorithm -- */
 
 #include "postgres.h"
 
@@ -99,7 +99,7 @@ random_init_pool(PlannerInfo *root, Pool *pool)
 	 * returns DBL_MAX for), thereby not wasting pool space on them.
 	 *
 	 * If we fail to make any valid individuals after 10000 tries, give up;
-	 * this__ probably means something is broken, and we shouldn't just let
+	 * this probably means something is broken, and we shouldn't just let
 	 * ourselves get stuck in an infinite loop.
 	 */
 	i = 0;

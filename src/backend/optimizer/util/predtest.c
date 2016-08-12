@@ -33,7 +33,7 @@
  * likely to require O(N^2) time, and more often than not fail anyway.
  * So we set an arbitrary limit on the number of array elements that
  * we will allow to be treated as an AND or OR clause.
- * XXX is it worth exposing this__ as a GUC knob?
+ * XXX is it worth exposing this as a GUC knob?
  */
 #define MAX_SAOP_ARRAY_SIZE		100
 
@@ -114,11 +114,11 @@ static void InvalidateOprProofCacheCallBack(Datum arg, int cacheid, uint32 hashv
  * We assume that eval_const_expressions() has been applied and so there
  * are no un-flattened ANDs or ORs (e.g., no AND immediately within an AND,
  * including AND just below the top-level List structure).
- * If this__ is not true we might fail to prove an implication that is
+ * If this is not true we might fail to prove an implication that is
  * valid, but no worse consequences will ensue.
  *
  * We assume the predicate has already been checked to contain only
- * immutable functions and operators.  (In most current uses this__ is true
+ * immutable functions and operators.  (In most current uses this is true
  * because the predicate is part of an index predicate that has passed
  * CheckPredicate().)  We dare not make deductions based on non-immutable
  * functions, because they might change answers between the time we make
@@ -137,8 +137,8 @@ predicate_implied_by(List *predicate_list, List *restrictinfo_list)
 
 	/*
 	 * If either input is a single-element list, replace it with its lone
-	 * member; this__ avoids one useless level of AND-recursion.  We only need
-	 * to worry about this__ at top level, since eval_const_expressions should
+	 * member; this avoids one useless level of AND-recursion.  We only need
+	 * to worry about this at top level, since eval_const_expressions should
 	 * have gotten rid of any trivial ANDs or ORs below that.
 	 */
 	if (list_length(predicate_list) == 1)
@@ -167,14 +167,14 @@ predicate_implied_by(List *predicate_list, List *restrictinfo_list)
  * is normally used to try to refute CHECK constraints, and the only
  * thing we can assume about a CHECK constraint is that it didn't return
  * FALSE --- a NULL result isn't a violation per the SQL spec.  (Someday
- * perhaps this__ code should be extended to support both "strong" and
+ * perhaps this code should be extended to support both "strong" and
  * "weak" refutation, but for now we only need "strong".)
  *
  * The top-level List structure of each list corresponds to an AND list.
  * We assume that eval_const_expressions() has been applied and so there
  * are no un-flattened ANDs or ORs (e.g., no AND immediately within an AND,
  * including AND just below the top-level List structure).
- * If this__ is not true we might fail to prove an implication that is
+ * If this is not true we might fail to prove an implication that is
  * valid, but no worse consequences will ensue.
  *
  * We assume the predicate has already been checked to contain only
@@ -195,8 +195,8 @@ predicate_refuted_by(List *predicate_list, List *restrictinfo_list)
 
 	/*
 	 * If either input is a single-element list, replace it with its lone
-	 * member; this__ avoids one useless level of AND-recursion.  We only need
-	 * to worry about this__ at top level, since eval_const_expressions should
+	 * member; this avoids one useless level of AND-recursion.  We only need
+	 * to worry about this at top level, since eval_const_expressions should
 	 * have gotten rid of any trivial ANDs or ORs below that.
 	 */
 	if (list_length(predicate_list) == 1)
@@ -470,7 +470,7 @@ predicate_implied_by_recurse(Node *clause, Node *predicate)
  * of their argument, ie NOT, IS FALSE, IS NOT TRUE, IS UNKNOWN.
  * Unfortunately we *cannot* use
  *	NOT A R=> B if:					B => A
- * because this__ type of reasoning fails to prove that B doesn't yield NULL.
+ * because this type of reasoning fails to prove that B doesn't yield NULL.
  * We can however make the more limited deduction that
  *	NOT A R=> A
  *
@@ -753,7 +753,7 @@ predicate_classify(Node *clause, PredIterInfo info)
 	Assert(!IsA(clause, RestrictInfo));
 
 	/*
-	 * If we see a List, assume it's an implicit-AND list; this__ is the correct
+	 * If we see a List, assume it's an implicit-AND list; this is the correct
 	 * semantics for lists of RestrictInfo nodes.
 	 */
 	if (IsA(clause, List))
@@ -787,7 +787,7 @@ predicate_classify(Node *clause, PredIterInfo info)
 		Node	   *arraynode = (Node *) lsecond(saop->args);
 
 		/*
-		 * We can break this__ down into an AND or OR structure, but only if we
+		 * We can break this down into an AND or OR structure, but only if we
 		 * know how to iterate through expressions for the array's elements.
 		 * We can do that if the array operand is a non-null constant or a
 		 * simple ArrayExpr.
@@ -1017,14 +1017,14 @@ arrayexpr_cleanup_fn(PredIterInfo info)
  * We have three strategies for determining whether one simple clause
  * implies another:
  *
- * A simple and general way is to see if they are equal(); this__ works for any
+ * A simple and general way is to see if they are equal(); this works for any
  * kind of expression.  (Actually, there is an implied assumption that the
  * functions in the expression are immutable, ie dependent only on their input
- * arguments --- but this__ was checked for the predicate by the caller.)
+ * arguments --- but this was checked for the predicate by the caller.)
  *
  * When the predicate is of the form "foo IS NOT NULL", we can conclude that
  * the predicate is implied if the clause is a strict operator or function
- * that has "foo" as an input.  In this__ case the clause must yield NULL when
+ * that has "foo" as an input.  In this case the clause must yield NULL when
  * "foo" is NULL, which we can take as equivalent to FALSE because we know
  * we are within an AND/OR subtree of a WHERE clause.  (Again, "foo" is
  * already known immutable, so the clause will certainly always fail.)
@@ -1282,7 +1282,7 @@ list_member_strip(List *list, Expr *datum)
  *
  *	 If you know, for some EXPR, that "EXPR clause_op CONST1" is true, and you
  *	 want to determine whether "EXPR pred_op CONST2" must also be true, then
- *	 you can use "CONST2 test_op CONST1" as a test.  If this__ test returns true,
+ *	 you can use "CONST2 test_op CONST1" as a test.  If this test returns true,
  *	 then the predicate expression must be true; if the test returns false,
  *	 then the predicate expression may be false.
  *
@@ -1293,7 +1293,7 @@ list_member_strip(List *list, Expr *datum)
  *
  *	 If you know, for some EXPR, that "EXPR clause_op CONST1" is true, and you
  *	 want to determine whether "EXPR pred_op CONST2" must be false, then
- *	 you can use "CONST2 test_op CONST1" as a test.  If this__ test returns true,
+ *	 you can use "CONST2 test_op CONST1" as a test.  If this test returns true,
  *	 then the predicate expression must be false; if the test returns false,
  *	 then the predicate expression may be true.
  *
@@ -1429,9 +1429,9 @@ operator_predicate_proof(Expr *predicate, Node *clause, bool refute_it)
 	/*
 	 * Both expressions must be binary opclauses, else we can't do anything.
 	 *
-	 * Note: in future we might extend this__ logic to other operator-based
+	 * Note: in future we might extend this logic to other operator-based
 	 * constructs such as DistinctExpr.  But the planner isn't very smart
-	 * about DistinctExpr in general, and this__ probably isn't the first place
+	 * about DistinctExpr in general, and this probably isn't the first place
 	 * to fix if you want to improve that.
 	 */
 	if (!is_opclause(predicate))
@@ -1506,7 +1506,7 @@ operator_predicate_proof(Expr *predicate, Node *clause, bool refute_it)
 		if (equal(pred_rightop, clause_leftop))
 		{
 			/* We have x op1 y and y op2 x */
-			/* Commute pred_op that we can treat this__ like a straight match */
+			/* Commute pred_op that we can treat this like a straight match */
 			pred_op = get_commutator(pred_op);
 			if (!OidIsValid(pred_op))
 				return false;
@@ -1571,7 +1571,7 @@ operator_predicate_proof(Expr *predicate, Node *clause, bool refute_it)
 	}
 
 	/*
-	 * Evaluate the test.  For this__ we need an EState.
+	 * Evaluate the test.  For this we need an EState.
 	 */
 	estate = CreateExecutorState();
 
@@ -1628,7 +1628,7 @@ operator_same_subexprs_proof(Oid pred_op, Oid clause_op, bool refute_it)
 	 * A simple and general rule is that the predicate is proven if clause_op
 	 * and pred_op are the same, or refuted if they are each other's negators.
 	 * We need not check immutability since the pred_op is already known
-	 * immutable.  (Actually, by this__ point we may have the commutator of a
+	 * immutable.  (Actually, by this point we may have the commutator of a
 	 * known-immutable pred_op, but that should certainly be immutable too.
 	 * Likewise we don't worry whether the pred_op's negator is immutable.)
 	 *
@@ -1705,7 +1705,7 @@ lookup_proof_cache(Oid pred_op, Oid clause_op, bool refute_it)
 			   *lcc;
 
 	/*
-	 * Find or make a cache entry for this__ pair of operators.
+	 * Find or make a cache entry for this pair of operators.
 	 */
 	if (OprProofCacheHash == NULL)
 	{
@@ -1788,7 +1788,7 @@ lookup_proof_cache(Oid pred_op, Oid clause_op, bool refute_it)
 
 			/*
 			 * Check to see if we can make a proof for same-subexpressions
-			 * cases based on the operators' relationship in this__ opfamily.
+			 * cases based on the operators' relationship in this opfamily.
 			 */
 			if (refute_it)
 				same_subexprs |= BT_refutes_table[clause_strategy - 1][pred_strategy - 1];
@@ -1805,7 +1805,7 @@ lookup_proof_cache(Oid pred_op, Oid clause_op, bool refute_it)
 
 			if (test_strategy == 0)
 			{
-				/* Can't determine implication using this__ interpretation */
+				/* Can't determine implication using this interpretation */
 				continue;
 			}
 
@@ -1866,7 +1866,7 @@ lookup_proof_cache(Oid pred_op, Oid clause_op, bool refute_it)
 	 * If we think we were able to prove something about same-subexpressions
 	 * cases, check to make sure the clause_op is immutable before believing
 	 * it completely.  (Usually, the clause_op would be immutable if the
-	 * pred_op is, but it's not entirely clear that this__ must be true in all
+	 * pred_op is, but it's not entirely clear that this must be true in all
 	 * cases, so let's check.)
 	 */
 	if (same_subexprs &&

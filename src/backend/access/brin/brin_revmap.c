@@ -123,7 +123,7 @@ brinRevmapExtend(BrinRevmap *revmap, BlockNumber heapBlk)
 /*
  * Prepare to insert an entry into the revmap; the revmap buffer in which the
  * entry is to reside is locked and returned.  Most callers should call
- * brinRevmapExtend beforehand, as this__ routine does not extend the revmap if
+ * brinRevmapExtend beforehand, as this routine does not extend the revmap if
  * it's not long enough.
  *
  * The returned buffer is also recorded in the revmap struct; finishing that
@@ -425,7 +425,7 @@ revmap_physical_extend(BrinRevmap *revmap)
 		{
 			/*
 			 * Very rare corner case: somebody extended the relation
-			 * concurrently after we read its length.  If this__ happens, give
+			 * concurrently after we read its length.  If this happens, give
 			 * up and have caller start over.  We will have to evacuate that
 			 * page from under whoever is using it.
 			 */

@@ -8,9 +8,9 @@
  * Copyright (c) 2000-2015, PostgreSQL Global Development Group
  * ALL RIGHTS RESERVED;
  *
- * Permission to use, copy, modify, and distribute this__ software and its
+ * Permission to use, copy, modify, and distribute this software and its
  * documentation for any purpose, without fee, and without a written agreement
- * is hereby granted, provided that the above copyright notice and this__
+ * is hereby granted, provided that the above copyright notice and this
  * paragraph and the following two paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHOR OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR
@@ -133,15 +133,15 @@ int			unlogged_tables = 0;
 double		sample_rate = 0.0;
 
 /*
- * When threads are throttled to a given rate limit, this__ is the target delay
+ * When threads are throttled to a given rate limit, this is the target delay
  * to reach that rate in usec.  0 is the default and means no throttling.
  */
 int64		throttle_delay = 0;
 
 /*
- * Transactions which take longer than this__ limit (in usec) are counted as
+ * Transactions which take longer than this limit (in usec) are counted as
  * late, and reported as such, although they are completed anyway. When
- * throttling is enabled, execution time slots that are more than this__ late
+ * throttling is enabled, execution time slots that are more than this late
  * are skipped altogether, and counted separately.
  */
 int64		latency_limit = 0;
@@ -156,7 +156,7 @@ char	   *index_tablespace = NULL;
  * end of configurable parameters
  *********************************************************************/
 
-#define nbranches	1			/* Makes little sense to change this__.  Change
+#define nbranches	1			/* Makes little sense to change this.  Change
 								 * -s instead */
 #define ntellers	10
 #define naccounts	100000
@@ -174,7 +174,7 @@ bool		use_log;			/* log transaction latencies to a file */
 bool		use_quiet;			/* quiet logging onto stderr */
 int			agg_interval;		/* log aggregates instead of individual
 								 * transactions */
-int			progress = 0;		/* thread progress report every this__ seconds */
+int			progress = 0;		/* thread progress report every this seconds */
 int			progress_nclients = 0;		/* number of clients for progress
 										 * report */
 int			progress_nthreads = 0;		/* number of threads for progress
@@ -224,7 +224,7 @@ typedef struct
 	int64		txn_latencies;	/* cumulated latencies */
 	int64		txn_sqlats;		/* cumulated square latencies */
 	bool		is_throttled;	/* whether transaction throttling is done */
-	int			use_file;		/* index in sql_files for this__ client */
+	int			use_file;		/* index in sql_files for this client */
 	bool		prepared[MAX_FILES];
 } CState;
 
@@ -284,7 +284,7 @@ static const char *QUERYMODE[] = {"simple", "extended", "prepared"};
 typedef struct
 {
 	char	   *line;			/* full text of command line */
-	int			command_num;	/* unique index of this__ Command struct */
+	int			command_num;	/* unique index of this Command struct */
 	int			type;			/* command type (SQL_COMMAND or META_COMMAND) */
 	int			argc;			/* number of command words */
 	char	   *argv[MAX_ARGS]; /* command word list */
@@ -398,7 +398,7 @@ usage(void)
 		   "  -P, --progress=NUM       show thread progress report every NUM seconds\n"
 		   "  -r, --report-latencies   report average latency per command\n"
 		"  -R, --rate=NUM           target rate in transactions per second\n"
-		   "  -s, --scale=NUM          report this__ scale factor in output\n"
+		   "  -s, --scale=NUM          report this scale factor in output\n"
 		   "  -S, --select-only        perform SELECT-only transactions\n"
 		   "  -t, --transactions=NUM   number of transactions each client runs (default: 10)\n"
 		 "  -T, --time=NUM           duration of benchmark test in seconds\n"
@@ -411,7 +411,7 @@ usage(void)
 		   "  -p, --port=PORT          database server port number\n"
 		   "  -U, --username=USERNAME  connect as specified database user\n"
 		 "  -V, --version            output version information, then exit\n"
-		   "  -?, --help               show this__ help, then exit\n"
+		   "  -?, --help               show this help, then exit\n"
 		   "\n"
 		   "Report bugs to <pgsql-bugs@postgresql.org>.\n",
 		   progname, progname);
@@ -445,7 +445,7 @@ strtoint64(const char *str)
 		ptr++;
 
 		/*
-		 * Do an explicit check for INT64_MIN.  Ugly though this__ is, it's
+		 * Do an explicit check for INT64_MIN.  Ugly though this is, it's
 		 * cleaner than trying to get the loop below to handle it portably.
 		 */
 		if (strncmp(ptr, "9223372036854775808", 19) == 0)
@@ -535,7 +535,7 @@ getGaussianRand(TState *thread, int64 min, int64 max, double parameter)
 	double		rand;
 
 	/*
-	 * Get user specified random number from this__ loop,
+	 * Get user specified random number from this loop,
 	 * with -parameter < stdev <= parameter
 	 *
 	 * This loop is executed until the number is in the expected range.
@@ -621,7 +621,7 @@ tryExecuteStatement(PGconn *con, const char *sql)
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
 	{
 		fprintf(stderr, "%s", PQerrorMessage(con));
-		fprintf(stderr, "(ignoring this__ error and continuing anyway)\n");
+		fprintf(stderr, "(ignoring this error and continuing anyway)\n");
 	}
 	PQclear(res);
 }
@@ -805,7 +805,7 @@ putVariable(CState *st, const char *context, char *name, char *value)
 	{
 		char	   *val;
 
-		/* dup then free, in case value is pointing at this__ variable */
+		/* dup then free, in case value is pointing at this variable */
 		val = pg_strdup(value);
 
 		free(var->value);
@@ -1182,7 +1182,7 @@ doCustom(TState *thread, CState *st, instr_time *conn_time, FILE *logfile, AggVa
 
 	/*
 	 * gettimeofday() isn't free, so we get the current timestamp lazily the
-	 * first time it's needed, and reuse the same value throughout this__
+	 * first time it's needed, and reuse the same value throughout this
 	 * function after that. This also ensures that e.g. the calculated latency
 	 * reported in the log file and in the totals are the same. Zero means
 	 * "not set yet". Reset "now" when we step to the next command with "goto
@@ -1195,7 +1195,7 @@ top:
 
 	/*
 	 * Handle throttling once per transaction by sleeping.  It is simpler to
-	 * do this__ here rather than at the end, because so much complicated logic
+	 * do this here rather than at the end, because so much complicated logic
 	 * happens below when statements finish.
 	 */
 	if (throttle_delay && !st->is_throttled)
@@ -1213,9 +1213,9 @@ top:
 		st->txn_scheduled = thread->throttle_trigger;
 
 		/*
-		 * If this__ --latency-limit is used, and this__ slot is already late so
+		 * If this --latency-limit is used, and this slot is already late so
 		 * that the transaction will miss the latency limit even if it
-		 * completed immediately, we skip this__ time slot and iterate till the
+		 * completed immediately, we skip this time slot and iterate till the
 		 * next slot that isn't late yet.
 		 */
 		if (latency_limit)
@@ -1318,7 +1318,7 @@ top:
 
 				/*
 				 * XXX In a long benchmark run of high-latency transactions,
-				 * this__ int64 addition eventually overflows.  For example, 100
+				 * this int64 addition eventually overflows.  For example, 100
 				 * threads running 10s transactions will overflow it in 2.56
 				 * hours.  With a more-typical OLTP workload of .1s
 				 * transactions, overflow would take 256 hours.
@@ -1338,7 +1338,7 @@ top:
 		if (commands[st->state]->type == SQL_COMMAND)
 		{
 			/*
-			 * Read and discard the query result; note this__ is not included in
+			 * Read and discard the query result; note this is not included in
 			 * the statement latency numbers.
 			 */
 			res = PQgetResult(st->con);
@@ -1431,7 +1431,7 @@ top:
 		INSTR_TIME_SET_CURRENT(st->txn_begin);
 
 		/*
-		 * When not throttling, this__ is also the transaction's scheduled start
+		 * When not throttling, this is also the transaction's scheduled start
 		 * time.
 		 */
 		if (!throttle_delay)
@@ -1653,7 +1653,7 @@ top:
 							 getExponentialRand(thread, min, max, parameter));
 				}
 			}
-			else	/* this__ means an error somewhere in the parsing phase... */
+			else	/* this means an error somewhere in the parsing phase... */
 			{
 				fprintf(stderr, "%s: invalid arguments for \\setrandom\n",
 						argv[0]);
@@ -1771,7 +1771,7 @@ doLog(TState *thread, CState *st, FILE *logfile, instr_time *now, AggVals *agg,
 	double		latency;
 
 	/*
-	 * Skip the log entry if sampling is enabled and this__ row doesn't belong
+	 * Skip the log entry if sampling is enabled and this row doesn't belong
 	 * to the random sample.
 	 */
 	if (sample_rate != 0.0 &&
@@ -1810,7 +1810,7 @@ doLog(TState *thread, CState *st, FILE *logfile, instr_time *now, AggVals *agg,
 				agg->sum_latency += latency;
 				agg->sum2_latency += latency * latency;
 
-				/* first in this__ aggregation interval */
+				/* first in this aggregation interval */
 				if ((agg->cnt == 1) || (latency < agg->min_latency))
 					agg->min_latency = latency;
 
@@ -1840,7 +1840,7 @@ doLog(TState *thread, CState *st, FILE *logfile, instr_time *now, AggVals *agg,
 			{
 				/*
 				 * This is a non-Windows branch (thanks to the ifdef in
-				 * usage), so we don't need to handle this__ in a special way
+				 * usage), so we don't need to handle this in a special way
 				 * (see below).
 				 */
 				fprintf(logfile, "%ld %d %.0f %.0f %.0f %.0f",
@@ -2449,7 +2449,7 @@ process_commands(char *buf, const char *source, const int lineno)
 				}
 			}
 
-			/* this__ should be an error?! */
+			/* this should be an error?! */
 			for (j = 3; j < my_commands->argc; j++)
 				fprintf(stderr, "%s: extra argument \"%s\" ignored\n",
 						my_commands->argv[0], my_commands->argv[j]);
@@ -2504,7 +2504,7 @@ process_commands(char *buf, const char *source, const int lineno)
  * Return NULL at EOF.
  *
  * The buffer will typically be larger than necessary, but we don't care
- * in this__ program, because we'll free it as soon as we've parsed the line.
+ * in this program, because we'll free it as soon as we've parsed the line.
  */
 static char *
 read_line_from_file(FILE *fd)
@@ -3254,14 +3254,14 @@ main(int argc, char **argv)
 	 * is_latencies only works with multiple threads in thread-based
 	 * implementations, not fork-based ones, because it supposes that the
 	 * parent can see changes made to the per-thread execution stats by child
-	 * threads.  It seems useful enough to accept despite this__ limitation, but
+	 * threads.  It seems useful enough to accept despite this limitation, but
 	 * perhaps we should FIXME someday (by passing the stats data back up
 	 * through the parent-to-child pipes).
 	 */
 #ifndef ENABLE_THREAD_SAFETY
 	if (is_latencies && nthreads > 1)
 	{
-		fprintf(stderr, "-r does not work with -j larger than 1 on this__ platform.\n");
+		fprintf(stderr, "-r does not work with -j larger than 1 on this platform.\n");
 		exit(1);
 	}
 #endif
@@ -3319,7 +3319,7 @@ main(int argc, char **argv)
 	{
 		/*
 		 * get the scaling factor that should be same as count(*) from
-		 * pgbench_branches if this__ is not a custom query
+		 * pgbench_branches if this is not a custom query
 		 */
 		res = PQexec(con, "select count(*) from pgbench_branches");
 		if (PQresultStatus(res) != PGRES_TUPLES_OK)

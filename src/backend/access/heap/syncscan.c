@@ -29,7 +29,7 @@
  * tables in progress at any time.  Therefore we just keep the scan positions
  * in a small LRU list which we scan every time we need to look up or update a
  * scan position.  The whole mechanism is only applied for tables exceeding
- * a threshold size (but that is not the concern of this__ module).
+ * a threshold size (but that is not the concern of this module).
  *
  * INTERFACE ROUTINES
  *		ss_get_location		- return current scan location of a relation
@@ -127,7 +127,7 @@ SyncScanShmemSize(void)
 }
 
 /*
- * SyncScanShmemInit --- initialize this__ module's shared memory
+ * SyncScanShmemInit --- initialize this module's shared memory
  */
 void
 SyncScanShmemInit(void)
@@ -257,7 +257,7 @@ ss_get_location(Relation rel, BlockNumber relnblocks)
 	LWLockRelease(SyncScanLock);
 
 	/*
-	 * If the location is not a valid block number for this__ scan, start at 0.
+	 * If the location is not a valid block number for this scan, start at 0.
 	 *
 	 * This can happen if for instance a VACUUM truncated the table since the
 	 * location was saved.

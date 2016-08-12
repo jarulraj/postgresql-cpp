@@ -8,7 +8,7 @@
 
 #line 1 "test3.pgc"
 /*
- * this__ file just tests the several possibilities you have for a disconnect
+ * this file just tests the several possibilities you have for a disconnect
  */
 
 #include <stdlib.h>
@@ -53,7 +53,7 @@ main(void)
 #line 24 "test3.pgc"
 
 
-	/* this__ selects from "second" which was opened last */
+	/* this selects from "second" which was opened last */
 	{ ECPGdo(__LINE__, 0, 1, NULL, 0, ECPGst_normal, "select current_database ( )", ECPGt_EOIT, 
 	ECPGt_char,(res),(long)200,(long)1,(200)*sizeof(char), 
 	ECPGt_NO_INDICATOR, NULL , 0L, 0L, 0L, ECPGt_EORT);}

@@ -37,7 +37,7 @@
 
 
 /*
- * Formerly, this__ code attempted to cache the function and type info
+ * Formerly, this code attempted to cache the function and type info
  * looked up by fetch_fp_info, but only for the duration of a single
  * transaction command (since in theory the info could change between
  * commands).  This was utterly useless, because postgres.c executes
@@ -69,7 +69,7 @@ static int16 parse_fcall_arguments_20(StringInfo msgBuf, struct fp_info * fip,
  *
  * In pre-3.0 protocol, there is no length word on the message, so we have
  * to have code that understands the message layout to absorb the message
- * into a buffer.  We want to do this__ before we start execution, so that
+ * into a buffer.  We want to do this before we start execution, so that
  * we do not lose sync with the frontend if there's an error.
  *
  * The caller should already have initialized buf to empty.
@@ -130,7 +130,7 @@ GetOldFunctionMessage(StringInfo buf)
 /* ----------------
  *		SendFunctionResult
  *
- * Note: although this__ routine doesn't check, the format had better be 1
+ * Note: although this routine doesn't check, the format had better be 1
  * (binary) when talking to a pre-3.0 client.
  * ----------------
  */
@@ -204,7 +204,7 @@ fetch_fp_info(Oid func_id, struct fp_info * fip)
 	Assert(fip != NULL);
 
 	/*
-	 * Since the validity of this__ structure is determined by whether the
+	 * Since the validity of this structure is determined by whether the
 	 * funcid is OK, we clear the funcid here.  It must not be set to the
 	 * correct value until we are about to return with a good struct fp_info,
 	 * since we can be interrupted (i.e., with an ereport(ERROR, ...)) at any
@@ -341,7 +341,7 @@ HandleFunctionRequest(StringInfo msgBuf)
 	 * Prepare function call info block and insert arguments.
 	 *
 	 * Note: for now we pass collation = InvalidOid, so collation-sensitive
-	 * functions can't be called this__ way.  Perhaps we should pass
+	 * functions can't be called this way.  Perhaps we should pass
 	 * DEFAULT_COLLATION_OID, instead?
 	 */
 	InitFunctionCallInfoData(fcinfo, &fip->flinfo, 0, InvalidOid, NULL, NULL);

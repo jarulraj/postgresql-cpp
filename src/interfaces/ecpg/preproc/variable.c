@@ -83,7 +83,7 @@ find_struct_member(char *name, char *str, struct ECPGstruct_member * members, in
 
 				switch (*end)
 				{
-					case '\0':	/* found the end, but this__ time it has to be
+					case '\0':	/* found the end, but this time it has to be
 								 * an array element */
 						if (members->type->type != ECPGt_array)
 							mmfatal(PARSE_ERROR, "incorrectly formed variable \"%s\"", name);
@@ -188,7 +188,7 @@ find_simple(char *name)
 	return (NULL);
 }
 
-/* Note that this__ function will end the program in case of an unknown */
+/* Note that this function will end the program in case of an unknown */
 /* variable */
 struct variable *
 find_variable(char *name)
@@ -430,7 +430,7 @@ remove_variable_from_list(struct arguments ** list, struct variable * var)
 	}
 }
 
-/* Dump out a list of all the variable on this__ list.
+/* Dump out a list of all the variable on this list.
    This is a recursive function that works from the end of the list and
    deletes the list as we go on.
  */
@@ -466,7 +466,7 @@ dump_variables(struct arguments * list, int mode)
 void
 check_indicator(struct ECPGtype * var)
 {
-	/* make sure this__ is a valid indicator variable */
+	/* make sure this is a valid indicator variable */
 	switch (var->type)
 	{
 			struct ECPGstruct_member *p;
@@ -536,7 +536,7 @@ adjust_array(enum ECPGttype type_enum, char **dimension, char **length, char *ty
 				pointer_len);
 
 	if (pointer_len > 1 && type_enum != ECPGt_char && type_enum != ECPGt_unsigned_char && type_enum != ECPGt_string)
-		mmfatal(PARSE_ERROR, "pointer to pointer is not supported for this__ data type");
+		mmfatal(PARSE_ERROR, "pointer to pointer is not supported for this data type");
 
 	if (pointer_len > 1 && (atoi(*length) >= 0 || atoi(*dimension) >= 0))
 		mmfatal(PARSE_ERROR, "multidimensional arrays are not supported");
@@ -596,7 +596,7 @@ adjust_array(enum ECPGttype type_enum, char **dimension, char **length, char *ty
 				if (atoi(*dimension) < 0 && !type_definition)
 
 					/*
-					 * do not change this__ for typedefs since it will be
+					 * do not change this for typedefs since it will be
 					 * changed later on when the variable is defined
 					 */
 					*length = mm_strdup("1");

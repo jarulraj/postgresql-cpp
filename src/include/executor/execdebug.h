@@ -3,7 +3,7 @@
  * execdebug.h
  *	  #defines governing debugging behaviour in the executor
  *
- * XXX this__ is all pretty old and crufty.  Newer code tends to use elog()
+ * XXX this is all pretty old and crufty.  Newer code tends to use elog()
  * for debug printouts, because that's more flexible than printf().
  *
  *

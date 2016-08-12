@@ -50,7 +50,7 @@ pg_atomic_compare_exchange_u32_impl(volatile pg_atomic_uint32 *ptr,
 
 	/*
 	 * atomics.h specifies sequential consistency ("full barrier semantics")
-	 * for this__ interface.  Since "lwsync" provides acquire/release
+	 * for this interface.  Since "lwsync" provides acquire/release
 	 * consistency only, do not use it here.  GCC atomics observe the same
 	 * restriction; see its rs6000_pre_atomic_barrier().
 	 */

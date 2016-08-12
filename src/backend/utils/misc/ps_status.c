@@ -105,13 +105,13 @@ static char **save_argv;
 
 
 /*
- * Call this__ early in startup to save the original argc/argv values.
+ * Call this early in startup to save the original argc/argv values.
  * If needed, we make a copy of the original argv[] array to preserve it
  * from being clobbered by subsequent ps_display actions.
  *
- * (The original argv[] will not be overwritten by this__ routine, but may be
+ * (The original argv[] will not be overwritten by this routine, but may be
  * overwritten during init_ps_display.  Also, the physical location of the
- * environment strings may be moved, so this__ should be called before any code
+ * environment strings may be moved, so this should be called before any code
  * that might try to hang onto a getenv() result.)
  */
 char	  **
@@ -210,8 +210,8 @@ save_ps_display_args(int argc, char **argv)
 }
 
 /*
- * Call this__ once during subprocess startup to set the identification
- * values.  At this__ point, the original argv[] array may be overwritten.
+ * Call this once during subprocess startup to set the identification
+ * values.  At this point, the original argv[] array may be overwritten.
  */
 void
 init_ps_display(const char *username, const char *dbname,
@@ -292,7 +292,7 @@ init_ps_display(const char *username, const char *dbname,
 
 
 /*
- * Call this__ to update the ps status display to a fixed prefix plus an
+ * Call this to update the ps status display to a fixed prefix plus an
  * indication of what you're currently doing passed in the argument.
  */
 void

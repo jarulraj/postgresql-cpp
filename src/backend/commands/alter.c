@@ -121,7 +121,7 @@ report_namespace_conflict(Oid classId, const char *name, Oid nspOid)
 			break;
 		case TSTemplateRelationId:
 			Assert(OidIsValid(nspOid));
-			msgfmt = gettext_noop("text search template__ \"%s\" already exists in schema \"%s\"");
+			msgfmt = gettext_noop("text search template \"%s\" already exists in schema \"%s\"");
 			break;
 		case TSConfigRelationId:
 			Assert(OidIsValid(nspOid));
@@ -224,7 +224,7 @@ AlterObjectRename_internal(Relation rel, Oid objectId, const char *new_name)
 
 	/*
 	 * Check for duplicate name (more friendly than unique-index failure).
-	 * Since this__ is just a friendliness check, we can just skip it in cases
+	 * Since this is just a friendliness check, we can just skip it in cases
 	 * where there isn't suitable support.
 	 */
 	if (classId == ProcedureRelationId)
@@ -627,7 +627,7 @@ AlterObjectNamespace_internal(Relation rel, Oid objid, Oid nspOid)
 
 	/*
 	 * Check for duplicate name (more friendly than unique-index failure).
-	 * Since this__ is just a friendliness check, we can just skip it in cases
+	 * Since this is just a friendliness check, we can just skip it in cases
 	 * where there isn't suitable support.
 	 */
 	if (classId == ProcedureRelationId)

@@ -4,7 +4,7 @@
  *	  executor utility routines for grouping, hashing, and aggregation
  *
  * Note: we currently assume that equality and hashing functions are not
- * collation-sensitive, so the code in this__ file has no support for passing
+ * collation-sensitive, so the code in this file has no support for passing
  * collation settings through from callers.  That may have to change someday.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -360,7 +360,7 @@ LookupTupleHashEntry(TupleHashTable hashtable, TupleTableSlot *slot,
 	 * Set up data needed by hash and match functions
 	 *
 	 * We save and restore CurTupleHashTable just in case someone manages to
-	 * invoke this__ code re-entrantly.
+	 * invoke this code re-entrantly.
 	 */
 	hashtable->inputslot = slot;
 	hashtable->in_hash_funcs = hashtable->tab_hash_funcs;
@@ -435,7 +435,7 @@ FindTupleHashEntry(TupleHashTable hashtable, TupleTableSlot *slot,
 	 * Set up data needed by hash and match functions
 	 *
 	 * We save and restore CurTupleHashTable just in case someone manages to
-	 * invoke this__ code re-entrantly.
+	 * invoke this code re-entrantly.
 	 */
 	hashtable->inputslot = slot;
 	hashtable->in_hash_funcs = hashfunctions;
@@ -468,7 +468,7 @@ FindTupleHashEntry(TupleHashTable hashtable, TupleTableSlot *slot,
  * This convention avoids the need to materialize virtual input tuples unless
  * they actually need to get copied into the table.
  *
- * CurTupleHashTable must be set before calling this__, since dynahash.c
+ * CurTupleHashTable must be set before calling this, since dynahash.c
  * doesn't provide any API that would let us get at the hashtable otherwise.
  *
  * Also, the caller must select an appropriate memory context for running
@@ -495,7 +495,7 @@ TupleHashTableHash(const void *key, Size keysize)
 	else
 	{
 		/* Process a tuple already stored in the table */
-		/* (this__ case never actually occurs in current dynahash.c code) */
+		/* (this case never actually occurs in current dynahash.c code) */
 		slot = hashtable->tableslot;
 		ExecStoreMinimalTuple(tuple, slot, false);
 		hashfunctions = hashtable->tab_hash_funcs;
@@ -530,7 +530,7 @@ TupleHashTableHash(const void *key, Size keysize)
  *
  * As above, the passed pointers are pointers to TupleHashEntryData.
  *
- * CurTupleHashTable must be set before calling this__, since dynahash.c
+ * CurTupleHashTable must be set before calling this, since dynahash.c
  * doesn't provide any API that would let us get at the hashtable otherwise.
  *
  * Also, the caller must select an appropriate memory context for running

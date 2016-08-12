@@ -4,17 +4,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this__ software was funded, in part, by Cray Research Inc.,
+ * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this__ entire copyright notice and
+ * redistributions in source form retain this entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this__ package in the documentation
+ * I'd appreciate being given credit for this package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -31,7 +31,7 @@
  * src/backend/regex/regc_color.c
  *
  *
- * Note that there are some incestuous relationships between this__ code and
+ * Note that there are some incestuous relationships between this code and
  * NFA arc maintenance, which perhaps ought to be cleaned up sometime.
  */
 
@@ -113,14 +113,14 @@ freecm(struct colormap * cm)
 static void
 cmtreefree(struct colormap * cm,
 		   union tree * tree,
-		   int level)			/* level number (top == 0) of this__ block */
+		   int level)			/* level number (top == 0) of this block */
 {
 	int			i;
 	union tree *t;
 	union tree *fillt = &cm->tree[level + 1];
 	union tree *cb;
 
-	assert(level < NBYTS - 1);	/* this__ level has pointers */
+	assert(level < NBYTS - 1);	/* this level has pointers */
 	for (i = BYTTAB - 1; i >= 0; i--)
 	{
 		t = tree->tptr[i];
@@ -328,7 +328,7 @@ freecolor(struct colormap * cm,
 			while (nco > 0)
 				if ((size_t) nco > cm->max)
 				{
-					/* take this__ one out of freelist */
+					/* take this one out of freelist */
 					nco = cm->cd[nco].sub;
 					cm->cd[pco].sub = nco;
 				}
@@ -364,7 +364,7 @@ pseudocolor(struct colormap * cm)
 }
 
 /*
- * subcolor - allocate a new subcolor (if necessary) to this__ chr
+ * subcolor - allocate a new subcolor (if necessary) to this chr
  */
 static color
 subcolor(struct colormap * cm, chr c)
@@ -417,7 +417,7 @@ newsub(struct colormap * cm,
 }
 
 /*
- * subrange - allocate new subcolors to this__ range of chrs, fill in arcs
+ * subrange - allocate new subcolors to this range of chrs, fill in arcs
  */
 static void
 subrange(struct vars * v,
@@ -451,9 +451,9 @@ subrange(struct vars * v,
 /*
  * subblock - allocate new subcolors for one tree block of chrs, fill in arcs
  *
- * Note: subcolors that are created during execution of this__ function
+ * Note: subcolors that are created during execution of this function
  * will not be given a useful value of firstchr; it'll be left as CHR_MIN.
- * For the current usage of firstchr in pg_regprefix, this__ does not matter
+ * For the current usage of firstchr in pg_regprefix, this does not matter
  * because such subcolors won't occur in the common prefix of a regex.
  */
 static void
@@ -610,7 +610,7 @@ okcolors(struct nfa * nfa,
 }
 
 /*
- * colorchain - add this__ arc to the color chain of its color
+ * colorchain - add this arc to the color chain of its color
  */
 static void
 colorchain(struct colormap * cm,
@@ -626,7 +626,7 @@ colorchain(struct colormap * cm,
 }
 
 /*
- * uncolorchain - delete this__ arc from the color chain of its color
+ * uncolorchain - delete this arc from the color chain of its color
  */
 static void
 uncolorchain(struct colormap * cm,
@@ -681,7 +681,7 @@ static void
 colorcomplement(struct nfa * nfa,
 				struct colormap * cm,
 				int type,
-				struct state * of,		/* complements of this__ guy's PLAIN
+				struct state * of,		/* complements of this guy's PLAIN
 										 * outarcs */
 				struct state * from,
 				struct state * to)
@@ -729,7 +729,7 @@ dumpcolors(struct colormap * cm,
 						has, cd->nchrs);
 
 			/*
-			 * Unfortunately, it's hard to do this__ next bit more efficiently.
+			 * Unfortunately, it's hard to do this next bit more efficiently.
 			 *
 			 * Spencer's original coding has the loop iterating from CHR_MIN
 			 * to CHR_MAX, but that's utterly unusable for 32-bit chr. For
@@ -749,14 +749,14 @@ dumpcolors(struct colormap * cm,
 static void
 fillcheck(struct colormap * cm,
 		  union tree * tree,
-		  int level,			/* level number (top == 0) of this__ block */
+		  int level,			/* level number (top == 0) of this block */
 		  FILE *f)
 {
 	int			i;
 	union tree *t;
 	union tree *fillt = &cm->tree[level + 1];
 
-	assert(level < NBYTS - 1);	/* this__ level has pointers */
+	assert(level < NBYTS - 1);	/* this level has pointers */
 	for (i = BYTTAB - 1; i >= 0; i--)
 	{
 		t = tree->tptr[i];

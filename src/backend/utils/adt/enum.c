@@ -508,7 +508,7 @@ enum_range_internal(Oid enumtypoid, Oid lower, Oid upper)
 	heap_close(enum_rel, AccessShareLock);
 
 	/* and build the result array */
-	/* note this__ hardwires some details about the representation of Oid */
+	/* note this hardwires some details about the representation of Oid */
 	result = construct_array(elems, cnt, enumtypoid, sizeof(Oid), true, 'i');
 
 	pfree(elems);

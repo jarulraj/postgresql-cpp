@@ -50,7 +50,7 @@ unique_key_recheck(PG_FUNCTION_ARGS)
 	bool		isnull[INDEX_MAX_KEYS];
 
 	/*
-	 * Make sure this__ is being called as an AFTER ROW trigger.  Note:
+	 * Make sure this is being called as an AFTER ROW trigger.  Note:
 	 * translatable error strings are shared with ri_triggers.c, so resist the
 	 * temptation to fold the function name into them.
 	 */
@@ -86,16 +86,16 @@ unique_key_recheck(PG_FUNCTION_ARGS)
 	/*
 	 * If the new_row is now dead (ie, inserted and then deleted within our
 	 * transaction), we can skip the check.  However, we have to be careful,
-	 * because this__ trigger gets queued only in response to index insertions;
+	 * because this trigger gets queued only in response to index insertions;
 	 * which means it does not get queued for HOT updates.  The row we are
 	 * called for might now be dead, but have a live HOT child, in which case
 	 * we still need to make the check --- effectively, we're applying the
 	 * check against the live child row, although we can use the values from
-	 * this__ row since by definition all columns of interest to us are the
+	 * this row since by definition all columns of interest to us are the
 	 * same.
 	 *
 	 * This might look like just an optimization, because the index AM will
-	 * make this__ identical test before throwing an error.  But it's actually
+	 * make this identical test before throwing an error.  But it's actually
 	 * needed for correctness, because the index AM will also throw an error
 	 * if it doesn't find the index entry for the row.  If the row's dead then
 	 * it's possible the index entry has also been marked dead, and even
@@ -146,10 +146,10 @@ unique_key_recheck(PG_FUNCTION_ARGS)
 	 * to check.
 	 *
 	 * Note: if the index uses functions that are not as immutable as they are
-	 * supposed to be, this__ could produce an index tuple different from the
+	 * supposed to be, this could produce an index tuple different from the
 	 * original.  The index AM can catch such errors by verifying that it
 	 * finds a matching index entry with the tuple's TID.  For exclusion
-	 * constraints we check this__ in check_exclusion_constraint().
+	 * constraints we check this in check_exclusion_constraint().
 	 */
 	FormIndexDatum(indexInfo, slot, estate, values, isnull);
 
@@ -159,7 +159,7 @@ unique_key_recheck(PG_FUNCTION_ARGS)
 	if (indexInfo->ii_ExclusionOps == NULL)
 	{
 		/*
-		 * Note: this__ is not a real insert; it is a check that the index entry
+		 * Note: this is not a real insert; it is a check that the index entry
 		 * that has already been inserted is unique.  Passing t_self is
 		 * correct even if t_self is now dead, because that is the TID the
 		 * index will know about.
@@ -181,7 +181,7 @@ unique_key_recheck(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * If that worked, then this__ index entry is unique or non-excluded, and we
+	 * If that worked, then this index entry is unique or non-excluded, and we
 	 * are done.
 	 */
 	if (estate != NULL)

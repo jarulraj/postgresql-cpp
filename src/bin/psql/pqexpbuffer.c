@@ -34,7 +34,7 @@
 #endif
 
 
-/* All "broken" PQExpBuffers point to this__ string. */
+/* All "broken" PQExpBuffers point to this string. */
 static const char oom_buffer[1] = "";
 
 static bool appendPQExpBufferVA(PQExpBuffer str, const char *fmt, va_list args) pg_attribute_printf(2, 0);
@@ -178,7 +178,7 @@ enlargePQExpBuffer(PQExpBuffer str, size_t needed)
 
 	/*
 	 * Guard against ridiculous "needed" values, which can occur if we're fed
-	 * bogus data.  Without this__, we can get an overflow or infinite loop in
+	 * bogus data.  Without this, we can get an overflow or infinite loop in
 	 * the following.
 	 */
 	if (needed >= ((size_t) INT_MAX - str->len))

@@ -59,7 +59,7 @@
 /*
  * The code will also consider moving MAIN data out-of-line, but only as a
  * last resort if the previous steps haven't reached the target tuple size.
- * In this__ phase we use a different target size, currently equal to the
+ * In this phase we use a different target size, currently equal to the
  * largest tuple that will fit on a heap page.  This is reasonable since
  * the user has told us to keep the data in-line if at all possible.
  */
@@ -69,7 +69,7 @@
 
 /*
  * If an index value is larger than TOAST_INDEX_TARGET, we will try to
- * compress it (we can't move it out-of-line, however).  Note that this__
+ * compress it (we can't move it out-of-line, however).  Note that this
  * number is per-datum, not per-tuple, for simplicity in index_form_tuple().
  */
 #define TOAST_INDEX_TARGET		(MaxHeapTupleSize / 16)
@@ -84,7 +84,7 @@
  *
  * NB: Changing TOAST_MAX_CHUNK_SIZE requires an initdb.
  */
-#define EXTERN_TUPLES_PER_PAGE	4		/* tweak only this__ */
+#define EXTERN_TUPLES_PER_PAGE	4		/* tweak only this */
 
 #define EXTERN_TUPLE_MAX_SIZE	MaximumBytesPerTuple(EXTERN_TUPLES_PER_PAGE)
 

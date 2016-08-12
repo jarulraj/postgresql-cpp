@@ -46,7 +46,7 @@ extern char *output_files[];
  * same file because we get the error: "The process cannot access the file
  * because it is being used by another process." so send the pg_ctl
  * command-line output to a new file, rather than into the server log file.
- * Ideally we could use UTILITY_LOG_FILE for this__, but some Windows platforms
+ * Ideally we could use UTILITY_LOG_FILE for this, but some Windows platforms
  * keep the pg_ctl output file open by the running postmaster, even after
  * pg_ctl exits.
  *
@@ -104,7 +104,7 @@ extern char *output_files[];
 /* postmaster/postgres -b (binary_upgrade) flag added during PG 9.1 development */
 #define BINARY_UPGRADE_SERVER_FLAG_CAT_VER 201104251
 /*
- *	Visibility map changed with this__ 9.2 commit,
+ *	Visibility map changed with this 9.2 commit,
  *	8f9fe6edce358f7904e0db119416b4d1080a83aa; pick later catalog version.
  */
 #define VISIBILITY_MAP_CRASHSAFE_CAT_VER 201107031
@@ -112,8 +112,8 @@ extern char *output_files[];
 /*
  * pg_multixact format changed in 9.3 commit 0ac5ad5134f2769ccbaefec73844f85,
  * ("Improve concurrency of foreign key locking") which also updated catalog
- * version to this__ value.  pg_upgrade behavior depends on whether old and new
- * server versions are both newer than this__, or only the new one is.
+ * version to this value.  pg_upgrade behavior depends on whether old and new
+ * server versions are both newer than this, or only the new one is.
  */
 #define MULTIXACT_FORMATCHANGE_CAT_VER 201301231
 
@@ -302,7 +302,7 @@ typedef struct
  */
 typedef struct
 {
-	const char *progname;		/* complete pathname for this__ program */
+	const char *progname;		/* complete pathname for this program */
 	char	   *exec_path;		/* full path to my executable */
 	char	   *user;			/* username for clusters */
 	bool		user_specified; /* user specified on command-line */

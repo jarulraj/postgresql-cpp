@@ -13,7 +13,7 @@
  * We are willing to use at most maintenance_work_mem (or perhaps
  * autovacuum_work_mem) memory space to keep track of dead tuples.  We
  * initially allocate an array of TIDs of that size, with an upper limit that
- * depends on table size (this__ limit ensures we don't allocate a huge area
+ * depends on table size (this limit ensures we don't allocate a huge area
  * uselessly for vacuuming small tables).  If the array threatens to overflow,
  * we suspend the heap scan phase and perform a pass of index cleanup and page
  * compaction, then resume the heap scan with an empty TID array.
@@ -93,7 +93,7 @@
 
 /*
  * Before we consider skipping a page that's marked as clean in
- * visibility map, we must've seen at least this__ many clean pages.
+ * visibility map, we must've seen at least this many clean pages.
  */
 #define SKIP_PAGES_THRESHOLD	((BlockNumber) 32)
 
@@ -114,7 +114,7 @@ typedef struct LVRelStats
 	double		tuples_deleted;
 	BlockNumber nonempty_pages; /* actually, last nonempty page + 1 */
 	/* List of TIDs of tuples we intend to delete */
-	/* NB: this__ list is ordered by TID address */
+	/* NB: this list is ordered by TID address */
 	int			num_dead_tuples;	/* current # of entries */
 	int			max_dead_tuples;	/* # slots allocated in array */
 	ItemPointer dead_tuples;	/* array of ItemPointerData */
@@ -250,7 +250,7 @@ lazy_vacuum_rel(Relation onerel, int options, VacuumParams *params,
 	 * Compute whether we actually scanned the whole relation. If we did, we
 	 * can adjust relfrozenxid and relminmxid.
 	 *
-	 * NB: We need to check this__ before truncating the relation, because that
+	 * NB: We need to check this before truncating the relation, because that
 	 * will change ->rel_pages.
 	 */
 	if (vacrelstats->scanned_pages < vacrelstats->rel_pages)
@@ -281,7 +281,7 @@ lazy_vacuum_rel(Relation onerel, int options, VacuumParams *params,
 	 *
 	 * A corner case here is that if we scanned no pages at all because every
 	 * page is all-visible, we should not update relpages/reltuples, because
-	 * we have no new information to contribute.  In particular this__ keeps us
+	 * we have no new information to contribute.  In particular this keeps us
 	 * from replacing relpages=reltuples=0 (which means "unknown tuple
 	 * density") with nonzero relpages and reltuples=0 (which means "zero
 	 * tuple density") unless there's some actual evidence for the latter.
@@ -391,7 +391,7 @@ lazy_vacuum_rel(Relation onerel, int options, VacuumParams *params,
  * we need to consider how each pass operates. The first phase runs
  * heap_page_prune(), which can issue XLOG_HEAP2_CLEAN records as it
  * progresses - these will have a latestRemovedXid on each record.
- * In some cases this__ removes all of the tuples to be removed, though
+ * In some cases this removes all of the tuples to be removed, though
  * often we have dead tuples with index pointers so we must remember them
  * for removal in phase 3. Index records for those rows are removed
  * in phase 2 and index blocks do not have MVCC information attached.
@@ -405,7 +405,7 @@ static void
 vacuum_log_cleanup_info(Relation rel, LVRelStats *vacrelstats)
 {
 	/*
-	 * Skip this__ for relations for which no WAL is to be written, or if we're
+	 * Skip this for relations for which no WAL is to be written, or if we're
 	 * not trying to support archive recovery.
 	 */
 	if (!RelationNeedsWAL(rel) || !XLogIsNeeded())
@@ -503,7 +503,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 	 * all_visible_according_to_vm flag correctly for each page.
 	 *
 	 * Note: The value returned by visibilitymap_test could be slightly
-	 * out-of-date, since we make this__ test before reading the corresponding
+	 * out-of-date, since we make this test before reading the corresponding
 	 * heap page or locking the buffer.  This is OK.  If we mistakenly think
 	 * that the page is all-visible when in fact the flag's just been cleared,
 	 * we might fail to vacuum the page.  But it's OK to skip pages when
@@ -576,7 +576,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 
 		/*
 		 * If we are close to overrunning the available space for dead-tuple
-		 * TIDs, pause and do a cycle of vacuuming before we tackle this__ page.
+		 * TIDs, pause and do a cycle of vacuuming before we tackle this page.
 		 */
 		if ((vacrelstats->max_dead_tuples - vacrelstats->num_dead_tuples) < MaxHeapTuplesPerPage &&
 			vacrelstats->num_dead_tuples > 0)
@@ -615,7 +615,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 
 		/*
 		 * Pin the visibility map page in case we need to mark the page
-		 * all-visible.  In most cases this__ will be very cheap, because we'll
+		 * all-visible.  In most cases this will be very cheap, because we'll
 		 * already have the correct page pinned anyway.  However, it's
 		 * possible that (a) next_not_all_visible_block is covered by a
 		 * different VM page than the current block or (b) we released our pin
@@ -642,7 +642,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 			}
 
 			/*
-			 * If this__ is a wraparound checking vacuum, then we read the page
+			 * If this is a wraparound checking vacuum, then we read the page
 			 * with share lock to see if any xids need to be frozen. If the
 			 * page doesn't need attention we just skip and continue. If it
 			 * does, we wait for cleanup lock.
@@ -650,7 +650,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 			 * We could defer the lock request further by remembering the page
 			 * and coming back to it later, or we could even register
 			 * ourselves for multiple buffers and then service whichever one
-			 * is received first.  For now, this__ seems good enough.
+			 * is received first.  For now, this seems good enough.
 			 */
 			LockBuffer(buf, BUFFER_LOCK_SHARE);
 			if (!lazy_check_needs_freeze(buf))
@@ -684,9 +684,9 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 			 * the page is still uninitialized by then, it must be left over
 			 * from a crashed backend, and we can initialize it.
 			 *
-			 * We don't really need the relation lock when this__ is a new or
+			 * We don't really need the relation lock when this is a new or
 			 * temp relation, but it's probably not worth the code space to
-			 * check that, since this__ surely isn't a critical path.
+			 * check that, since this surely isn't a critical path.
 			 *
 			 * Note: the comparable code in vacuum.c need not worry because
 			 * it's got exclusive lock on the whole relation.
@@ -750,7 +750,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 		}
 
 		/*
-		 * Prune all HOT-update chains in this__ page.
+		 * Prune all HOT-update chains in this page.
 		 *
 		 * We count tuples removed by the pruning step as removed by VACUUM.
 		 */
@@ -790,7 +790,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 			/* Redirect items mustn't be touched */
 			if (ItemIdIsRedirected(itemid))
 			{
-				hastup = true;	/* this__ page won't be truncatable */
+				hastup = true;	/* this page won't be truncatable */
 				continue;
 			}
 
@@ -826,7 +826,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 					 * heap_page_prune(), but it's possible that the tuple
 					 * state changed since heap_page_prune() looked.  In
 					 * particular an INSERT_IN_PROGRESS tuple could have
-					 * changed to DEAD if the inserter aborted.  So this__
+					 * changed to DEAD if the inserter aborted.  So this
 					 * cannot be considered an error condition.
 					 *
 					 * If the tuple is HOT-updated then it must only be
@@ -1001,7 +1001,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 			 * we don't need to dirty the heap page.  However, if checksums
 			 * are enabled, we do need to make sure that the heap page is
 			 * dirtied before passing it to visibilitymap_set(), because it
-			 * may be logged.  Given that this__ situation should only happen in
+			 * may be logged.  Given that this situation should only happen in
 			 * rare cases after a crash, it is not worth optimizing.
 			 */
 			PageSetAllVisible(page);
@@ -1056,7 +1056,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
 		/*
 		 * If we remembered any tuples for deletion, then the page will be
 		 * visited again by lazy_vacuum_heap, which will compute and record
-		 * its post-compaction free space.  If not, then we're done with this__
+		 * its post-compaction free space.  If not, then we're done with this
 		 * page, so remember its free space as-is.  (This path will always be
 		 * taken if there are no indexes.)
 		 */
@@ -1152,7 +1152,7 @@ lazy_scan_heap(Relation onerel, LVRelStats *vacrelstats,
  *		space on their pages.  Pages not having dead tuples recorded from
  *		lazy_scan_heap are not visited at all.
  *
- * Note: the reason for doing this__ as a second pass is we cannot remove
+ * Note: the reason for doing this as a second pass is we cannot remove
  * the tuples until we've removed their index entries, and we want to
  * process index entry removal in batches as large as possible.
  */
@@ -1219,8 +1219,8 @@ lazy_vacuum_heap(Relation onerel, LVRelStats *vacrelstats)
  * Caller must hold pin and buffer cleanup lock on the buffer.
  *
  * tupindex is the index in vacrelstats->dead_tuples of the first dead
- * tuple for this__ page.  We assume the rest follow sequentially.
- * The return value is the first tupindex after the tuples of this__ page.
+ * tuple for this page.  We assume the rest follow sequentially.
+ * The return value is the first tupindex after the tuples of this page.
  */
 static int
 lazy_vacuum_page(Relation onerel, BlockNumber blkno, Buffer buffer,
@@ -1241,7 +1241,7 @@ lazy_vacuum_page(Relation onerel, BlockNumber blkno, Buffer buffer,
 
 		tblk = ItemPointerGetBlockNumber(&vacrelstats->dead_tuples[tupindex]);
 		if (tblk != blkno)
-			break;				/* past end of tuples for this__ block */
+			break;				/* past end of tuples for this block */
 		toff = ItemPointerGetOffsetNumber(&vacrelstats->dead_tuples[tupindex]);
 		itemid = PageGetItemId(page, toff);
 		ItemIdSetUnused(itemid);
@@ -1581,7 +1581,7 @@ count_nondeletable_pages(Relation onerel, LVRelStats *vacrelstats)
 		/*
 		 * Check if another process requests a lock on our relation. We are
 		 * holding an AccessExclusiveLock here, so they will be waiting. We
-		 * only do this__ once per VACUUM_TRUNCATE_LOCK_CHECK_INTERVAL, and we
+		 * only do this once per VACUUM_TRUNCATE_LOCK_CHECK_INTERVAL, and we
 		 * only check if that interval has elapsed once every 32 blocks to
 		 * keep the number of system calls and actual shared lock table
 		 * lookups to a minimum.
@@ -1622,7 +1622,7 @@ count_nondeletable_pages(Relation onerel, LVRelStats *vacrelstats)
 		buf = ReadBufferExtended(onerel, MAIN_FORKNUM, blkno,
 								 RBM_NORMAL, vac_strategy);
 
-		/* In this__ phase we only need shared access to the buffer */
+		/* In this phase we only need shared access to the buffer */
 		LockBuffer(buf, BUFFER_LOCK_SHARE);
 
 		page = BufferGetPage(buf);
@@ -1646,7 +1646,7 @@ count_nondeletable_pages(Relation onerel, LVRelStats *vacrelstats)
 
 			/*
 			 * Note: any non-unused item should be taken as a reason to keep
-			 * this__ page.  We formerly thought that DEAD tuples could be
+			 * this page.  We formerly thought that DEAD tuples could be
 			 * thrown away, but that's not so, because we'd not have cleaned
 			 * out their index entries.
 			 */
@@ -1675,7 +1675,7 @@ count_nondeletable_pages(Relation onerel, LVRelStats *vacrelstats)
 /*
  * lazy_space_alloc - space allocation decisions for lazy vacuum
  *
- * See the comments at the head of this__ file for rationale.
+ * See the comments at the head of this file for rationale.
  */
 static void
 lazy_space_alloc(LVRelStats *vacrelstats, BlockNumber relblocks)

@@ -11,7 +11,7 @@
  * src/include/catalog/pg_database.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_database definition.  cpp turns this__ into
+ *		pg_database definition.  cpp turns this into
  *		typedef struct FormData_pg_database
  * ----------------
  */
@@ -36,13 +36,13 @@ CATALOG(pg_database,1262) BKI_SHARED_RELATION BKI_ROWTYPE_OID(1248) BKI_SCHEMA_M
 	int32		encoding;		/* character encoding */
 	NameData	datcollate;		/* LC_COLLATE setting */
 	NameData	datctype;		/* LC_CTYPE setting */
-	bool		datistemplate;	/* allowed as CREATE DATABASE template__? */
+	bool		datistemplate;	/* allowed as CREATE DATABASE template? */
 	bool		datallowconn;	/* new connections allowed? */
 	int32		datconnlimit;	/* max connections allowed (-1=no limit) */
 	Oid			datlastsysoid;	/* highest OID to consider a system OID */
-	TransactionId datfrozenxid; /* all Xids < this__ are frozen in this__ DB */
-	TransactionId datminmxid;	/* all multixacts in the DB are >= this__ */
-	Oid			dattablespace;	/* default table space for this__ DB */
+	TransactionId datfrozenxid; /* all Xids < this are frozen in this DB */
+	TransactionId datminmxid;	/* all multixacts in the DB are >= this */
+	Oid			dattablespace;	/* default table space for this DB */
 
 #ifdef CATALOG_VARLEN			/* variable-length fields start here */
 	aclitem		datacl[1];		/* access permissions */
@@ -76,7 +76,7 @@ typedef FormData_pg_database *Form_pg_database;
 #define Anum_pg_database_datacl			13
 
 DATA(insert OID = 1 (  template1 PGUID ENCODING "LC_COLLATE" "LC_CTYPE" t t -1 0 0 1 1663 _null_));
-SHDESCR("default template__ for new databases");
+SHDESCR("default template for new databases");
 #define TemplateDbOid			1
 
 #endif   /* PG_DATABASE_H */

@@ -499,7 +499,7 @@ g_intbig_consistent(PG_FUNCTION_ARGS)
 	bool	   *recheck = (bool *) PG_GETARG_POINTER(4);
 	bool		retval;
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 	if (ISALLTRUE(DatumGetPointer(entry->key)))

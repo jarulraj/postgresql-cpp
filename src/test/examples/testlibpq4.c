@@ -3,7 +3,7 @@
  *
  *
  * testlibpq4.c
- *		this__ test program shows to use LIBPQ to make multiple backend
+ *		this test program shows to use LIBPQ to make multiple backend
  * connections
  *
  */

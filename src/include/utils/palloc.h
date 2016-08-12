@@ -11,7 +11,7 @@
  * Memory allocation occurs within "contexts".  Every chunk obtained from
  * palloc()/MemoryContextAlloc() is allocated within a specific context.
  * The entire contents of a context can be freed easily and quickly by
- * resetting or deleting the context --- this__ is both faster and less
+ * resetting or deleting the context --- this is both faster and less
  * prone to memory-leakage bugs than releasing chunks individually.
  * We organize contexts into context trees to allow fine-grain control
  * over chunk lifetime while preserving the certainty that we will free
@@ -83,7 +83,7 @@ extern void pfree(void *pointer);
 /*
  * The result of palloc() is always word-aligned, so we can skip testing
  * alignment of the pointer when deciding which MemSet variant to use.
- * Note that this__ variant does not offer any advantage, and should not be
+ * Note that this variant does not offer any advantage, and should not be
  * used, unless its "sz" argument is a compile-time constant; therefore, the
  * issue that it evaluates the argument multiple times isn't a problem in
  * practice.
@@ -102,10 +102,10 @@ extern void *repalloc_huge(void *pointer, Size size);
  * But we can make it an inline function if the compiler supports it.
  * See STATIC_IF_INLINE in c.h.
  *
- * Although this__ header file is nominally backend-only, certain frontend
+ * Although this header file is nominally backend-only, certain frontend
  * programs like pg_controldata include it via postgres.h.  For some compilers
  * it's necessary to hide the inline definition of MemoryContextSwitchTo in
- * this__ scenario; hence the #ifndef FRONTEND.
+ * this scenario; hence the #ifndef FRONTEND.
  */
 
 #ifndef FRONTEND

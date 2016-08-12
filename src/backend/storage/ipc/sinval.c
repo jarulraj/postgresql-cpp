@@ -53,13 +53,13 @@ SendSharedInvalidMessages(const SharedInvalidationMessage *msgs, int n)
 
 /*
  * ReceiveSharedInvalidMessages
- *		Process shared-cache-invalidation messages waiting for this__ backend
+ *		Process shared-cache-invalidation messages waiting for this backend
  *
  * We guarantee to process all messages that had been queued before the
  * routine was entered.  It is of course possible for more messages to get
  * queued right after our last SIGetDataEntries call.
  *
- * NOTE: it is entirely possible for this__ routine to be invoked recursively
+ * NOTE: it is entirely possible for this routine to be invoked recursively
  * as a consequence of processing inside the invalFunction or resetFunction.
  * Furthermore, such a recursive call must guarantee that all outstanding
  * inval messages have been processed before it exits.  This is the reason
@@ -132,7 +132,7 @@ ReceiveSharedInvalidMessages(
 	 * flag, and call SICleanupQueue().  This is not so much because we need
 	 * to flush dead messages right now, as that we want to pass on the
 	 * catchup signal to the next slowest backend.  "Daisy chaining" the
-	 * catchup signal this__ way avoids creating spikes in system load for what
+	 * catchup signal this way avoids creating spikes in system load for what
 	 * should be just a background maintenance activity.
 	 */
 	if (catchupInterruptPending)
@@ -157,7 +157,7 @@ void
 HandleCatchupInterrupt(void)
 {
 	/*
-	 * Note: this__ is called by a SIGNAL HANDLER. You must be very wary what
+	 * Note: this is called by a SIGNAL HANDLER. You must be very wary what
 	 * you do here.
 	 */
 
@@ -182,7 +182,7 @@ ProcessCatchupInterrupt(void)
 		 * What we need to do here is cause ReceiveSharedInvalidMessages() to
 		 * run, which will do the necessary work and also reset the
 		 * catchupInterruptPending flag.  If we are inside a transaction we
-		 * can just call AcceptInvalidationMessages() to do this__.  If we
+		 * can just call AcceptInvalidationMessages() to do this.  If we
 		 * aren't, we start and immediately end a transaction; the call to
 		 * AcceptInvalidationMessages() happens down inside transaction start.
 		 *

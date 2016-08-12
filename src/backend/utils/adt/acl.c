@@ -54,7 +54,7 @@ typedef struct
  * (do not recurse where rolinherit isn't true) and one computed under
  * "is_member" rules (recurse regardless of rolinherit).
  *
- * Possibly this__ mechanism should be generalized to allow caching membership
+ * Possibly this mechanism should be generalized to allow caching membership
  * info for multiple roles?
  *
  * The has_privs cache is:
@@ -720,7 +720,7 @@ hash_aclitem(PG_FUNCTION_ARGS)
 /*
  * acldefault()  --- create an ACL describing default access permissions
  *
- * Change this__ routine if you want to alter the default access policy for
+ * Change this routine if you want to alter the default access policy for
  * newly-created objects (or any object with a NULL acl entry).
  *
  * Note that these are the hard-wired "defaults" that are used in the
@@ -819,7 +819,7 @@ acldefault(GrantObjectType objtype, Oid ownerId)
 	 * options.  This is because his grant options come "from the system" and
 	 * not from his own efforts.  (The SQL spec says that the owner's rights
 	 * come from a "_SYSTEM" authid.)  However, we do consider that the
-	 * owner's ordinary privileges are self-granted; this__ lets him revoke
+	 * owner's ordinary privileges are self-granted; this lets him revoke
 	 * them.  We implement the owner's grant options without any explicit
 	 * "_SYSTEM"-like ACL entry, by internally special-casing the owner
 	 * wherever we are testing grant options.
@@ -935,7 +935,7 @@ aclupdate(const Acl *old_acl, const AclItem *mod_aip,
 	old_aip = ACL_DAT(old_acl);
 
 	/*
-	 * Search the ACL for an existing entry for this__ grantee and grantor. If
+	 * Search the ACL for an existing entry for this grantee and grantor. If
 	 * one exists, just modify the entry in-place (well, in the same position,
 	 * since we actually return a copy); otherwise, insert the new entry at
 	 * the end.
@@ -1006,7 +1006,7 @@ aclupdate(const Acl *old_acl, const AclItem *mod_aip,
 
 	/*
 	 * Remove abandoned privileges (cascading revoke).  Currently we can only
-	 * handle this__ when the grantee is not public.
+	 * handle this when the grantee is not public.
 	 */
 	if ((old_goptions & ~new_goptions) != 0)
 	{
@@ -1078,7 +1078,7 @@ aclnewowner(const Acl *old_acl, Oid oldOwnerId, Oid newOwnerId)
 	 *
 	 * To simplify deletion of duplicate entries, we temporarily leave them in
 	 * the array but set their privilege masks to zero; when we reach such an
-	 * entry it's just skipped.  (Thus, a side effect of this__ code will be to
+	 * entry it's just skipped.  (Thus, a side effect of this code will be to
 	 * remove privilege-free entries, should there be any in the input.)  dst
 	 * is the next output slot, targ is the currently considered input slot
 	 * (always >= dst), and src scans entries to the right of targ looking for
@@ -1129,7 +1129,7 @@ aclnewowner(const Acl *old_acl, Oid oldOwnerId, Oid newOwnerId)
  * revoke the privileges from B, since recursive_revoke would consider that
  * B still has 'em from C.
  *
- * We check for this__ by recursively deleting all grant options belonging to
+ * We check for this by recursively deleting all grant options belonging to
  * the target grantee, and then seeing if the would-be grantor still has the
  * grant option or not.
  */
@@ -1279,7 +1279,7 @@ restart:
 /*
  * aclmask --- compute bitmask of all privileges held by roleid.
  *
- * When 'how' = ACLMASK_ALL, this__ simply returns the privilege bits
+ * When 'how' = ACLMASK_ALL, this simply returns the privilege bits
  * held by the given roleid according to the given ACL list, ANDed
  * with 'mask'.  (The point of passing 'mask' is to let the routine
  * exit early if all privileges of interest have been found.)
@@ -1353,7 +1353,7 @@ aclmask(const Acl *acl, Oid roleid, Oid ownerId,
 	}
 
 	/*
-	 * Check privileges granted indirectly via role memberships. We do this__ in
+	 * Check privileges granted indirectly via role memberships. We do this in
 	 * a separate pass to minimize expensive indirect membership tests.  In
 	 * particular, it's worth testing whether a given ACL entry grants any
 	 * privileges still of interest before we perform the has_privs_of_role
@@ -1663,7 +1663,7 @@ convert_any_priv_string(text *priv_type_text,
 		if (next_chunk)
 			*next_chunk++ = '\0';
 
-		/* Drop leading/trailing whitespace in this__ chunk */
+		/* Drop leading/trailing whitespace in this chunk */
 		while (*chunk && isspace((unsigned char) *chunk))
 			chunk++;
 		chunk_len = strlen(chunk);
@@ -2005,7 +2005,7 @@ convert_table_name(text *tablename)
 
 	relrv = makeRangeVarFromNameList(textToQualifiedNameList(tablename));
 
-	/* We might not even have permissions on this__ relation; don't lock it. */
+	/* We might not even have permissions on this relation; don't lock it. */
 	return RangeVarGetRelid(relrv, NoLock, false);
 }
 
@@ -4710,7 +4710,7 @@ roles_has_privs_of(Oid roleid)
 
 			/*
 			 * Even though there shouldn't be any loops in the membership
-			 * graph, we must test for having already seen this__ role. It is
+			 * graph, we must test for having already seen this role. It is
 			 * legal for instance to have both A->B and A->C->B.
 			 */
 			roles_list = list_append_unique_oid(roles_list, otherid);
@@ -4789,7 +4789,7 @@ roles_is_member_of(Oid roleid)
 
 			/*
 			 * Even though there shouldn't be any loops in the membership
-			 * graph, we must test for having already seen this__ role. It is
+			 * graph, we must test for having already seen this role. It is
 			 * legal for instance to have both A->B and A->C->B.
 			 */
 			roles_list = list_append_unique_oid(roles_list, otherid);
@@ -4998,7 +4998,7 @@ count_one_bits(AclMode mask)
 {
 	int			nbits = 0;
 
-	/* this__ code relies on AclMode being an unsigned type */
+	/* this code relies on AclMode being an unsigned type */
 	while (mask)
 	{
 		if (mask & 1)
@@ -5021,7 +5021,7 @@ count_one_bits(AclMode mask)
  *
  * It is possible that the would-be grantor is a member of several roles
  * that have different subsets of the desired grant options, but no one
- * role has 'em all.  In this__ case we pick a role with the largest number
+ * role has 'em all.  In this case we pick a role with the largest number
  * of desired options.  Ties are broken in favor of closer ancestors.
  *
  * roleId: the role attempting to do the GRANT/REVOKE
@@ -5059,7 +5059,7 @@ select_best_grantor(Oid roleId, AclMode privileges,
 	/*
 	 * Otherwise we have to do a careful search to see if roleId has the
 	 * privileges of any suitable role.  Note: we can hang onto the result of
-	 * roles_has_privs_of() throughout this__ loop, because aclmask_direct()
+	 * roles_has_privs_of() throughout this loop, because aclmask_direct()
 	 * doesn't query any role memberships.
 	 */
 	roles_list = roles_has_privs_of(roleId);

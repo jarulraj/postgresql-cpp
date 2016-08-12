@@ -103,7 +103,7 @@ verify_brin_page(bytea *raw_page, uint16 type, const char *strtype)
 
 	page = VARDATA(raw_page);
 
-	/* verify the special space says this__ page is what we want */
+	/* verify the special space says this page is what we want */
 	if (BrinPageType(page) != type)
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
@@ -152,7 +152,7 @@ brin_page_items(PG_FUNCTION_ARGS)
 		rsinfo->expectedDesc == NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("materialize mode required, but it is not allowed in this__ context")));
+				 errmsg("materialize mode required, but it is not allowed in this context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)

@@ -65,7 +65,7 @@ PLy_elog(int elevel, const char *fmt,...)
 			elevel = FATAL;
 	}
 
-	/* this__ releases our refcount on tb! */
+	/* this releases our refcount on tb! */
 	PLy_traceback(exc, val, tb,
 				  &xmsg, &tbmsg, &tb_depth);
 

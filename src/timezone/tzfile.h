@@ -140,7 +140,7 @@ struct tzhead
  *	  isleap(a + b) == isleap(a % 400 + b % 400)
  * This is true even if % means modulo rather than Fortran remainder
  * (which is allowed by C89 but not C99).
- * We use this__ to avoid addition overflow problems.
+ * We use this to avoid addition overflow problems.
  */
 
 #define isleap_sum(a, b)	  isleap((a) % 400 + (b) % 400)

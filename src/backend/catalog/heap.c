@@ -17,7 +17,7 @@
  *		heap_drop_with_catalog() - Removes named relation from catalogs
  *
  * NOTES
- *	  this__ code taken from access/heap/create.c, which contains
+ *	  this code taken from access/heap/create.c, which contains
  *	  the old heap_create_with_catalog, amcreate, and amdestroy.
  *	  those routines will soon call these routines using the function
  *	  manager,
@@ -171,7 +171,7 @@ static FormData_pg_attribute a6 = {
 };
 
 /*
- * We decided to call this__ attribute "tableoid" rather than say
+ * We decided to call this attribute "tableoid" rather than say
  * "classoid" on the basis that in the future there may be more than one
  * table of a particular class/type. In any case table is still the word
  * used in SQL.
@@ -325,7 +325,7 @@ heap_create(const char *relname,
 	 * tablespace, the pg_class entry will still match where CREATE DATABASE
 	 * will put the physically copied relation.
 	 *
-	 * Yes, this__ is a bit of a hack.
+	 * Yes, this is a bit of a hack.
 	 */
 	if (reltablespace == MyDatabaseTableSpace)
 		reltablespace = InvalidOid;
@@ -362,7 +362,7 @@ heap_create(const char *relname,
 /* ----------------------------------------------------------------
  *		heap_create_with_catalog		- Create a cataloged relation
  *
- *		this__ is done in multiple steps:
+ *		this is done in multiple steps:
  *
  *		1) CheckAttributeNamesTypes() is used to make certain the tuple
  *		   descriptor contains a valid set of attribute names and types
@@ -393,7 +393,7 @@ heap_create(const char *relname,
 /* --------------------------------
  *		CheckAttributeNamesTypes
  *
- *		this__ is used to make certain the tuple descriptor contains a
+ *		this is used to make certain the tuple descriptor contains a
  *		valid set of attribute names and datatypes.  a problem simply
  *		generates ereport(ERROR) which aborts the current transaction.
  * --------------------------------
@@ -416,7 +416,7 @@ CheckAttributeNamesTypes(TupleDesc tupdesc, char relkind,
 	/*
 	 * first check for collision with system attribute names
 	 *
-	 * Skip this__ for a view or type relation, since those don't have system
+	 * Skip this for a view or type relation, since those don't have system
 	 * attributes.
 	 */
 	if (relkind != RELKIND_VIEW && relkind != RELKIND_COMPOSITE_TYPE)
@@ -501,7 +501,7 @@ CheckAttributeType(const char *attname,
 		/*
 		 * Refuse any attempt to create a pseudo-type column, except for a
 		 * special hack for pg_statistic: allow ANYARRAY when modifying system
-		 * catalogs (this__ allows creating pg_statistic and cloning it during
+		 * catalogs (this allows creating pg_statistic and cloning it during
 		 * VACUUM FULL)
 		 */
 		if (atttypid != ANYARRAYOID || !allow_system_table_mods)
@@ -530,7 +530,7 @@ CheckAttributeType(const char *attname,
 
 		/*
 		 * Check for self-containment.  Eventually we might be able to allow
-		 * this__ (just return without complaint, if so) but it's not clear how
+		 * this (just return without complaint, if so) but it's not clear how
 		 * many other places would require anti-recursion defenses before it
 		 * would be safe to allow tables to contain their own rowtype.
 		 */
@@ -593,7 +593,7 @@ CheckAttributeType(const char *attname,
  * initialized to NULL).
  *
  * indstate is the index state for CatalogIndexInsert.  It can be passed as
- * NULL, in which case we'll fetch the necessary info.  (Don't do this__ when
+ * NULL, in which case we'll fetch the necessary info.  (Don't do this when
  * inserting multiple attributes, because it's a tad more expensive.)
  */
 void
@@ -649,7 +649,7 @@ InsertPgAttributeTuple(Relation pg_attribute_rel,
 /* --------------------------------
  *		AddNewAttributeTuples
  *
- *		this__ registers the new relation's schema by adding
+ *		this registers the new relation's schema by adding
  *		tuples to pg_attribute.
  * --------------------------------
  */
@@ -821,7 +821,7 @@ InsertPgClassTuple(Relation pg_class_desc,
 
 	/*
 	 * The new tuple must have the oid already chosen for the rel.  Sure would
-	 * be embarrassing to do this__ sort of thing in polite company.
+	 * be embarrassing to do this sort of thing in polite company.
 	 */
 	HeapTupleSetOid(tup, new_rel_oid);
 
@@ -836,7 +836,7 @@ InsertPgClassTuple(Relation pg_class_desc,
 /* --------------------------------
  *		AddNewRelationTuple
  *
- *		this__ registers the new relation in the catalogs by
+ *		this registers the new relation in the catalogs by
  *		adding a tuple to pg_class.
  * --------------------------------
  */
@@ -902,7 +902,7 @@ AddNewRelationTuple(Relation pg_class_desc,
 		 * transactions could reuse values from their local cache, so we are
 		 * careful to consider all currently running multis.
 		 *
-		 * XXX this__ could be refined further, but is it worth the hassle?
+		 * XXX this could be refined further, but is it worth the hassle?
 		 */
 		new_rel_reltup->relminmxid = GetOldestMultiXactId();
 	}
@@ -965,7 +965,7 @@ AddNewRelationType(const char *typename__,
 				   InvalidOid,	/* typmodout procedure - none */
 				   InvalidOid,	/* analyze procedure - default */
 				   InvalidOid,	/* array element type - irrelevant */
-				   false,		/* this__ is not an array type */
+				   false,		/* this is not an array type */
 				   new_array_type,		/* array type if any */
 				   InvalidOid,	/* domain base type - irrelevant */
 				   NULL,		/* default value - none */
@@ -1005,7 +1005,7 @@ AddNewRelationType(const char *typename__,
  *	use_user_acl: TRUE if should look for user-defined default permissions;
  *		if FALSE, relacl is always set NULL
  *	allow_system_table_mods: TRUE to allow creation in system namespaces
- *	is_internal: is this__ a system-generated catalog?
+ *	is_internal: is this a system-generated catalog?
  *
  * Output parameters:
  *	typaddress: if not null, gets the object address of the new pg_type entry
@@ -1152,7 +1152,7 @@ heap_create_with_catalog(const char *relname,
 		relacl = NULL;
 
 	/*
-	 * Create the relcache entry (mostly dummy at this__ point) and the physical
+	 * Create the relcache entry (mostly dummy at this point) and the physical
 	 * disk file.  (If we fail further down, it's the smgr's responsibility to
 	 * remove the disk file again.)
 	 */
@@ -1213,7 +1213,7 @@ heap_create_with_catalog(const char *relname,
 
 		relarrayname = makeArrayTypeName(relname, relnamespace);
 
-		TypeCreate(new_array_oid,		/* force the type's OID to this__ */
+		TypeCreate(new_array_oid,		/* force the type's OID to this */
 				   relarrayname,	/* Array type name */
 				   relnamespace,	/* Same namespace as parent */
 				   InvalidOid,	/* Not composite, no relationOid */
@@ -1232,8 +1232,8 @@ heap_create_with_catalog(const char *relname,
 				   InvalidOid,	/* typmodout procedure - none */
 				   F_ARRAY_TYPANALYZE,	/* array analyze procedure */
 				   new_type_oid,	/* array element type - the rowtype */
-				   true,		/* yes, this__ is an array type */
-				   InvalidOid,	/* this__ has no array type */
+				   true,		/* yes, this is an array type */
+				   InvalidOid,	/* this has no array type */
 				   InvalidOid,	/* domain base type - irrelevant */
 				   NULL,		/* default value - none */
 				   NULL,		/* default binary representation */
@@ -1283,11 +1283,11 @@ heap_create_with_catalog(const char *relname,
 	 * should they have any ACL entries.  The same applies for extension
 	 * dependencies.
 	 *
-	 * If it's a temp table, we do not make it an extension member; this__
+	 * If it's a temp table, we do not make it an extension member; this
 	 * prevents the unintuitive result that deletion of the temp table at
 	 * session end would make the whole extension go away.
 	 *
-	 * Also, skip this__ in bootstrap mode, since we don't make dependencies
+	 * Also, skip this in bootstrap mode, since we don't make dependencies
 	 * while bootstrapping.
 	 */
 	if (relkind != RELKIND_COMPOSITE_TYPE &&
@@ -1337,8 +1337,8 @@ heap_create_with_catalog(const char *relname,
 	/*
 	 * Store any supplied constraints and defaults.
 	 *
-	 * NB: this__ may do a CommandCounterIncrement and rebuild the relcache
-	 * entry, so the relation must be valid and self-consistent at this__ point.
+	 * NB: this may do a CommandCounterIncrement and rebuild the relcache
+	 * entry, so the relation must be valid and self-consistent at this point.
 	 * In particular, there are not yet constraints and defaults anywhere.
 	 */
 	StoreConstraints(new_rel_desc, cooked_constraints, is_internal);
@@ -1369,9 +1369,9 @@ heap_create_with_catalog(const char *relname,
 /*
  * Set up an init fork for an unlogged table so that it can be correctly
  * reinitialized on restart.  Since we're going to do an immediate sync, we
- * only need to xlog this__ if archiving or streaming is enabled.  And the
+ * only need to xlog this if archiving or streaming is enabled.  And the
  * immediate sync is required, because otherwise there's no guarantee that
- * this__ will hit the disk before the next checkpoint moves the redo pointer.
+ * this will hit the disk before the next checkpoint moves the redo pointer.
  */
 void
 heap_create_init_fork(Relation rel)
@@ -1386,11 +1386,11 @@ heap_create_init_fork(Relation rel)
 /*
  *		RelationRemoveInheritance
  *
- * Formerly, this__ routine checked for child relations and aborted the
+ * Formerly, this routine checked for child relations and aborted the
  * deletion if any were found.  Now we rely on the dependency mechanism
  * to check for or delete child relations.  By the time we get here,
  * there are no children and we need only remove any pg_inherits rows
- * linking this__ relation to its parent(s).
+ * linking this relation to its parent(s).
  */
 static void
 RelationRemoveInheritance(Oid relid)
@@ -1422,7 +1422,7 @@ RelationRemoveInheritance(Oid relid)
  *
  * Remove pg_class row for the given relid.
  *
- * Note: this__ is shared by relation deletion and index deletion.  It's
+ * Note: this is shared by relation deletion and index deletion.  It's
  * not intended for use anyplace else.
  */
 void
@@ -1451,7 +1451,7 @@ DeleteRelationTuple(Oid relid)
  *
  * Remove pg_attribute rows for the given relid.
  *
- * Note: this__ is shared by relation deletion and index deletion.  It's
+ * Note: this is shared by relation deletion and index deletion.  It's
  * not intended for use anyplace else.
  */
 void
@@ -1488,7 +1488,7 @@ DeleteAttributeTuples(Oid relid)
  *
  * Remove pg_attribute rows for system columns of the given relid.
  *
- * Note: this__ is only used when converting a table to a view.  Views don't
+ * Note: this is only used when converting a table to a view.  Views don't
  * have system columns, so we should remove them from pg_attribute.
  */
 void
@@ -1544,7 +1544,7 @@ RemoveAttributeById(Oid relid, AttrNumber attnum)
 	/*
 	 * Grab an exclusive lock on the target table, which we will NOT release
 	 * until end of transaction.  (In the simple case where we are directly
-	 * dropping this__ column, AlterTableDropColumn already did this__ ... but
+	 * dropping this column, AlterTableDropColumn already did this ... but
 	 * when cascading from a drop of some other object, we may not have any
 	 * lock.)
 	 */
@@ -1747,10 +1747,10 @@ RemoveAttrDefaultById(Oid attrdefId)
 /*
  * heap_drop_with_catalog	- removes specified relation from catalogs
  *
- * Note that this__ routine is not responsible for dropping objects that are
+ * Note that this routine is not responsible for dropping objects that are
  * linked to the pg_class entry via dependencies (for example, indexes and
  * constraints).  Those are deleted by the dependency-tracing logic in
- * dependency.c before control gets here.  In general, therefore, this__ routine
+ * dependency.c before control gets here.  In general, therefore, this routine
  * should never be called directly; go through performDeletion() instead.
  */
 void
@@ -1773,7 +1773,7 @@ heap_drop_with_catalog(Oid relid)
 	/*
 	 * This effectively deletes all rows in the table, and may be done in a
 	 * serializable transaction.  In that case we must record a rw-conflict in
-	 * to this__ transaction from each transaction holding a predicate lock on
+	 * to this transaction from each transaction holding a predicate lock on
 	 * the table.
 	 */
 	CheckTableForSerializableConflictIn(rel);
@@ -1821,7 +1821,7 @@ heap_drop_with_catalog(Oid relid)
 	remove_on_commit_action(relid);
 
 	/*
-	 * Flush the relation from the relcache.  We want to do this__ before
+	 * Flush the relation from the relcache.  We want to do this before
 	 * starting to remove catalog entries, just to be certain that no relcache
 	 * entry rebuild will happen partway through.  (That should not really
 	 * matter, since we don't do CommandCounterIncrement here, but let's be
@@ -1956,7 +1956,7 @@ StoreAttrDefault(Relation rel, AttrNumber attnum,
 	 *
 	 * XXX. ALTER TABLE ALTER COLUMN SET/DROP DEFAULT is implemented with a
 	 * couple of deletion/creation of the attribute's default entry, so the
-	 * callee should check existence of an older version of this__ entry if it
+	 * callee should check existence of an older version of this entry if it
 	 * needs to distinguish.
 	 */
 	InvokeObjectPostCreateHookArg(AttrDefaultRelationId,
@@ -2076,7 +2076,7 @@ StoreRelCheck(Relation rel, char *ccname, Node *expr,
  *
  * Each CookedConstraint struct is modified to store the new catalog tuple OID.
  *
- * NOTE: only pre-cooked expressions will be passed this__ way, which is to
+ * NOTE: only pre-cooked expressions will be passed this way, which is to
  * say expressions inherited from an existing relation.  Newly parsed
  * expressions can be added later, by direct calls to StoreAttrDefault
  * and StoreRelCheck (see AddRelationNewConstraints()).
@@ -2092,8 +2092,8 @@ StoreConstraints(Relation rel, List *cooked_constraints, bool is_internal)
 
 	/*
 	 * Deparsing of constraint expressions will fail unless the just-created
-	 * pg_attribute tuples for this__ relation are made visible.  So, bump the
-	 * command counter.  CAUTION: this__ will cause a relcache entry rebuild.
+	 * pg_attribute tuples for this relation are made visible.  So, bump the
+	 * command counter.  CAUTION: this will cause a relcache entry rebuild.
 	 */
 	CommandCounterIncrement();
 
@@ -2211,7 +2211,7 @@ AddRelationNewConstraints(Relation rel,
 		 * an explicit pg_attrdef entry, since the default behavior is
 		 * equivalent.
 		 *
-		 * Note a nonobvious property of this__ test: if the column is of a
+		 * Note a nonobvious property of this test: if the column is of a
 		 * domain type, what we'll get is not a bare null Const but a
 		 * CoerceToDomain expr, so we will not discard the default.  This is
 		 * critical because the column default needs to be retained to
@@ -2311,12 +2311,12 @@ AddRelationNewConstraints(Relation rel,
 			 * When generating a name, we want to create "tab_col_check" for a
 			 * column constraint and "tab_check" for a table constraint.  We
 			 * no longer have any info about the syntactic positioning of the
-			 * constraint phrase, so we approximate this__ by seeing whether the
+			 * constraint phrase, so we approximate this by seeing whether the
 			 * expression references more than one column.  (If the user
 			 * played by the rules, the result is the same...)
 			 *
 			 * Note: pull_var_clause() doesn't descend into sublinks, but we
-			 * eliminated those above; and anyway this__ only needs to be an
+			 * eliminated those above; and anyway this only needs to be an
 			 * approximate answer.
 			 */
 			List	   *vars;
@@ -2369,7 +2369,7 @@ AddRelationNewConstraints(Relation rel,
 
 	/*
 	 * Update the count of constraints in the relation's pg_class tuple. We do
-	 * this__ even if there was no change, in order to ensure that an SI update
+	 * this even if there was no change, in order to ensure that an SI update
 	 * message is sent out for the pg_class tuple, which will force other
 	 * backends to rebuild their relcache entries for the rel. (This is
 	 * critical if we added defaults but not constraints.)
@@ -2387,7 +2387,7 @@ AddRelationNewConstraints(Relation rel,
  * Returns TRUE if merged (constraint is a duplicate), or FALSE if it's
  * got a so-far-unique name, or throws error if conflict.
  *
- * XXX See MergeConstraintsIntoExisting too if you change this__ code.
+ * XXX See MergeConstraintsIntoExisting too if you change this code.
  */
 static bool
 MergeWithExistingConstraint(Relation rel, char *ccname, Node *expr,
@@ -2487,7 +2487,7 @@ MergeWithExistingConstraint(Relation rel, char *ccname, Node *expr,
  *
  * An important side effect is that a SI update message will be sent out for
  * the pg_class tuple, which will force other backends to rebuild their
- * relcache entries for the rel.  Also, this__ backend will rebuild its
+ * relcache entries for the rel.  Also, this backend will rebuild its
  * own relcache entry at the next CommandCounterIncrement.
  */
 static void
@@ -2533,7 +2533,7 @@ SetRelationNumChecks(Relation rel, int numchecks)
  * user-friendly to give the correct error message than "unknown var".)
  *
  * If atttypid is not InvalidOid, coerce the expression to the specified
- * type (and typmod atttypmod).   attname is only needed in this__ case:
+ * type (and typmod atttypmod).   attname is only needed in this case:
  * it is used in the error message, if any.
  */
 Node *
@@ -2553,7 +2553,7 @@ cookDefault(ParseState *pstate,
 	expr = transformExpr(pstate, raw_default, EXPR_KIND_COLUMN_DEFAULT);
 
 	/*
-	 * Make sure default expr does not refer to any vars (we need this__ check
+	 * Make sure default expr does not refer to any vars (we need this check
 	 * since the pstate includes the target table).
 	 */
 	if (contain_var_clause(expr))
@@ -2635,7 +2635,7 @@ cookConstraint(ParseState *pstate,
 	assign_expr_collations(pstate, expr);
 
 	/*
-	 * Make sure no outside relations are referred to (this__ is probably dead
+	 * Make sure no outside relations are referred to (this is probably dead
 	 * code now that add_missing_from is history).
 	 */
 	if (list_length(pstate->p_rtable) != 1)
@@ -2728,7 +2728,7 @@ RelationTruncateIndexes(Relation heapRelation)
 		/* Note: we do not need to re-establish pkey setting */
 		index_build(heapRelation, currentIndex, indexInfo, false, true);
 
-		/* We're done with this__ index */
+		/* We're done with this index */
 		index_close(currentIndex, NoLock);
 	}
 }
@@ -2739,7 +2739,7 @@ RelationTruncateIndexes(Relation heapRelation)
  *	 This routine deletes all data within all the specified relations.
  *
  * This is not transaction-safe!  There is another, transaction-safe
- * implementation in commands/tablecmds.c.  We now use this__ only for
+ * implementation in commands/tablecmds.c.  We now use this only for
  * ON COMMIT truncation of temporary tables, where it doesn't matter.
  */
 void
@@ -2849,7 +2849,7 @@ heap_truncate_check_FKs(List *relations, bool tempTables)
 
 	/*
 	 * Otherwise, must scan pg_constraint.  We make one pass with all the
-	 * relations considered; if this__ finds nothing, then all is well.
+	 * relations considered; if this finds nothing, then all is well.
 	 */
 	dependents = heap_truncate_find_FKs(oids);
 	if (dependents == NIL)
@@ -2859,7 +2859,7 @@ heap_truncate_check_FKs(List *relations, bool tempTables)
 	 * Otherwise we repeat the scan once per relation to identify a particular
 	 * pair of relations to complain about.  This is pretty slow, but
 	 * performance shouldn't matter much in a failure path.  The reason for
-	 * doing things this__ way is to ensure that the message produced is not
+	 * doing things this way is to ensure that the message produced is not
 	 * dependent on chance row locations within pg_constraint.
 	 */
 	foreach(cell, oids)
@@ -2910,7 +2910,7 @@ heap_truncate_check_FKs(List *relations, bool tempTables)
  *
  * Note: caller should already have appropriate lock on all rels mentioned
  * in relationIds.  Since adding or dropping an FK requires exclusive lock
- * on both rels, this__ ensures that the answer will be stable.
+ * on both rels, this ensures that the answer will be stable.
  */
 List *
 heap_truncate_find_FKs(List *relationIds)
@@ -2957,7 +2957,7 @@ heap_truncate_find_FKs(List *relationIds)
  *		Insert a new Oid into a sorted list of Oids, preserving ordering,
  *		and eliminating duplicates
  *
- * Building the ordered list this__ way is O(N^2), but with a pretty small
+ * Building the ordered list this way is O(N^2), but with a pretty small
  * constant, so for the number of entries we expect it will probably be
  * faster than trying to apply qsort().  It seems unlikely someone would be
  * trying to truncate a table with thousands of dependent tables ...

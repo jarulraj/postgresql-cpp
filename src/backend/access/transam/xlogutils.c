@@ -5,7 +5,7 @@
  * PostgreSQL transaction log manager utility routines
  *
  * This file contains support routines that are used by XLOG replay functions.
- * None of this__ code is used during normal system operation.
+ * None of this code is used during normal system operation.
  *
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
@@ -29,7 +29,7 @@
 /*
  * During XLOG replay, we may see XLOG records for incremental updates of
  * pages that no longer exist, because their relation was later dropped or
- * truncated.  (Note: this__ is only possible when full_page_writes = OFF,
+ * truncated.  (Note: this is only possible when full_page_writes = OFF,
  * since when it's ON, the first reference we see to a page should always
  * be a full-page rewrite not an incremental update.)  Rather than simply
  * ignoring such records, we make a note of the referenced page, and then
@@ -83,7 +83,7 @@ log_invalid_page(RelFileNode node, ForkNumber forkno, BlockNumber blkno,
 	 * found after consistency is reached, PANIC immediately. This might seem
 	 * aggressive, but it's better than letting the invalid reference linger
 	 * in the hash table until the end of recovery and PANIC there, which
-	 * might come only much later if this__ is a standby server.
+	 * might come only much later if this is a standby server.
 	 */
 	if (reachedConsistency)
 	{
@@ -409,8 +409,8 @@ XLogReadBufferForRedoExtended(XLogReaderState *record,
  * differences in the behavior wrt. the "mode" argument:
  *
  * In RBM_NORMAL mode, if the page doesn't exist, or contains all-zeroes, we
- * return InvalidBuffer. In this__ case the caller should silently skip the
- * update on this__ page. (In this__ situation, we expect that the page was later
+ * return InvalidBuffer. In this case the caller should silently skip the
+ * update on this page. (In this situation, we expect that the page was later
  * dropped or truncated. If we don't see evidence of that later in the WAL
  * sequence, we'll complain at the end of WAL replay.)
  *
@@ -421,7 +421,7 @@ XLogReadBufferForRedoExtended(XLogReaderState *record,
  * exist, and we don't check for all-zeroes.  Thus, no log entry is made
  * to imply that the page should be dropped or truncated later.
  *
- * NB: A redo function should normally not call this__ directly. To get a page
+ * NB: A redo function should normally not call this directly. To get a page
  * to modify, use XLogReplayBuffer instead. It is important that all pages
  * modified by a WAL record are registered in the WAL records, or they will be
  * invisible to tools that that need to know which pages are modified.
@@ -442,7 +442,7 @@ XLogReadBufferExtended(RelFileNode rnode, ForkNumber forknum,
 	/*
 	 * Create the target file if it doesn't already exist.  This lets us cope
 	 * if the replay sequence contains writes to a relation that is later
-	 * deleted.  (The original coding of this__ routine would instead suppress
+	 * deleted.  (The original coding of this routine would instead suppress
 	 * the writes, but that seems like it risks losing valuable data if the
 	 * filesystem loses an inode during a crash.  Better to write the data
 	 * until we are actually told to delete the file.)
@@ -468,7 +468,7 @@ XLogReadBufferExtended(RelFileNode rnode, ForkNumber forknum,
 		if (mode == RBM_NORMAL_NO_LOG)
 			return InvalidBuffer;
 		/* OK to extend the file */
-		/* we do this__ in recovery only - no rel-extension lock needed */
+		/* we do this in recovery only - no rel-extension lock needed */
 		Assert(InRecovery);
 		buffer = InvalidBuffer;
 		do
@@ -521,7 +521,7 @@ XLogReadBufferExtended(RelFileNode rnode, ForkNumber forknum,
  */
 typedef struct
 {
-	RelationData reldata;		/* Note: this__ must be first */
+	RelationData reldata;		/* Note: this must be first */
 	FormData_pg_class pgc;
 } FakeRelCacheEntryData;
 
@@ -532,7 +532,7 @@ typedef FakeRelCacheEntryData *FakeRelCacheEntry;
  *
  * It's often convenient to use the same functions in XLOG replay as in the
  * main codepath, but those functions typically work with a relcache entry.
- * We don't have a working relation cache during XLOG replay, but this__
+ * We don't have a working relation cache during XLOG replay, but this
  * function can be used to create a fake relcache entry instead. Only the
  * fields related to physical storage, like rd_rel, are initialized, so the
  * fake entry is only usable in low-level operations like ReadBuffer().
@@ -564,7 +564,7 @@ CreateFakeRelcacheEntry(RelFileNode rnode)
 
 	/*
 	 * We set up the lockRelId in case anything tries to lock the dummy
-	 * relation.  Note that this__ is fairly bogus since relNode may be
+	 * relation.  Note that this is fairly bogus since relNode may be
 	 * different from the relation's OID.  It shouldn't really matter though,
 	 * since we are presumably running by ourselves and can't have any lock
 	 * conflicts ...
@@ -612,7 +612,7 @@ XLogDropDatabase(Oid dbid)
 	/*
 	 * This is unnecessarily heavy-handed, as it will close SMgrRelation
 	 * objects for other databases as well. DROP DATABASE occurs seldom enough
-	 * that it's not worth introducing a variant of smgrclose for just this__
+	 * that it's not worth introducing a variant of smgrclose for just this
 	 * purpose. XXX: Or should we rather leave the smgr entries dangling?
 	 */
 	smgrcloseall();

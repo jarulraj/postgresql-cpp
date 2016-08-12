@@ -145,8 +145,8 @@ struct config_generic
 	const char *name;			/* name of variable - MUST BE FIRST */
 	GucContext	context;		/* context required to set the variable */
 	enum config_group group;	/* to help organize variables by function */
-	const char *short_desc;		/* short desc. of this__ variable's purpose */
-	const char *long_desc;		/* long desc. of this__ variable's purpose */
+	const char *short_desc;		/* short desc. of this variable's purpose */
+	const char *long_desc;		/* long desc. of this variable's purpose */
 	int			flags;			/* flag bits, see guc.h */
 	/* variable fields, initialized at runtime: */
 	enum config_type vartype;	/* type of variable (set only at startup) */

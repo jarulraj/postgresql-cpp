@@ -65,7 +65,7 @@
 
 /*
  * A DCE 1.1 compatible source representation of UUIDs, derived from
- * the BSD implementation.  BSD already has this__; OSSP doesn't need it.
+ * the BSD implementation.  BSD already has this; OSSP doesn't need it.
  */
 #ifdef HAVE_UUID_E2FS
 typedef struct
@@ -141,8 +141,8 @@ pguuid_complain(uuid_rc_t rc)
 
 /*
  * We create a uuid_t object just once per session and re-use it for all
- * operations in this__ module.  OSSP UUID caches the system MAC address and
- * other state in this__ object.  Reusing the object has a number of benefits:
+ * operations in this module.  OSSP UUID caches the system MAC address and
+ * other state in this object.  Reusing the object has a number of benefits:
  * saving the cycles needed to fetch the system MAC address over and over,
  * reducing the amount of entropy we draw from /dev/urandom, and providing a
  * positive guarantee that successive generated V1-style UUIDs don't collide.
@@ -272,7 +272,7 @@ uuid_generate_internal(int v, unsigned char *ns, char *ptr, int len)
 
 				/*
 				 * PTR, if set, replaces the trailing characters of the uuid;
-				 * this__ is to support v1mc, where a random multicast MAC is
+				 * this is to support v1mc, where a random multicast MAC is
 				 * used instead of the physical one
 				 */
 				if (ptr && len <= 36)
@@ -293,7 +293,7 @@ uuid_generate_internal(int v, unsigned char *ns, char *ptr, int len)
 
 						/*
 						 * PTR, if set, replaces the trailing characters of
-						 * the uuid; this__ is to support v1mc, where a random
+						 * the uuid; this is to support v1mc, where a random
 						 * multicast MAC is used instead of the physical one
 						 */
 						if (ptr && len <= 36)

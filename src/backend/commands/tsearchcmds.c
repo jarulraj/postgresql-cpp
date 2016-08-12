@@ -340,7 +340,7 @@ makeDictionaryDependencies(HeapTuple tuple)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* dependency on template__ */
+	/* dependency on template */
 	referenced.classId = TSTemplateRelationId;
 	referenced.objectId = dict->dicttemplate;
 	referenced.objectSubId = 0;
@@ -350,7 +350,7 @@ makeDictionaryDependencies(HeapTuple tuple)
 }
 
 /*
- * verify that a template__'s init method accepts a proposed option list
+ * verify that a template's init method accepts a proposed option list
  */
 static void
 verify_dictoptions(Oid tmplId, List *dictoptions)
@@ -360,7 +360,7 @@ verify_dictoptions(Oid tmplId, List *dictoptions)
 	Oid			initmethod;
 
 	/*
-	 * Suppress this__ test when running in a standalone backend.  This is a
+	 * Suppress this test when running in a standalone backend.  This is a
 	 * hack to allow initdb to create prefab dictionaries that might not
 	 * actually be usable in template1's encoding (due to using external files
 	 * that can't be translated into template1's encoding).  We want to create
@@ -371,7 +371,7 @@ verify_dictoptions(Oid tmplId, List *dictoptions)
 
 	tup = SearchSysCache1(TSTEMPLATEOID, ObjectIdGetDatum(tmplId));
 	if (!HeapTupleIsValid(tup)) /* should not happen */
-		elog(ERROR, "cache lookup failed for text search template__ %u",
+		elog(ERROR, "cache lookup failed for text search template %u",
 			 tmplId);
 	tform = (Form_pg_ts_template) GETSTRUCT(tup);
 
@@ -383,7 +383,7 @@ verify_dictoptions(Oid tmplId, List *dictoptions)
 		if (dictoptions)
 			ereport(ERROR,
 					(errcode(ERRCODE_SYNTAX_ERROR),
-				errmsg("text search template__ \"%s\" does not accept options",
+				errmsg("text search template \"%s\" does not accept options",
 					   NameStr(tform->tmplname))));
 	}
 	else
@@ -457,7 +457,7 @@ DefineTSDictionary(List *names, List *parameters)
 	if (!OidIsValid(templId))
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-				 errmsg("text search template__ is required")));
+				 errmsg("text search template is required")));
 
 	verify_dictoptions(templId, dictoptions);
 
@@ -629,7 +629,7 @@ AlterTSDictionary(AlterTSDictionaryStmt *stmt)
 	ObjectAddressSet(address, TSDictionaryRelationId, dictId);
 
 	/*
-	 * NOTE: because we only support altering the options, not the template__,
+	 * NOTE: because we only support altering the options, not the template,
 	 * there is no need to update dependencies.  This might have to change if
 	 * the options ever reference inside-the-database objects.
 	 */
@@ -645,7 +645,7 @@ AlterTSDictionary(AlterTSDictionaryStmt *stmt)
 /* ---------------------- TS Template commands -----------------------*/
 
 /*
- * lookup a template__ support function and return its OID (as a Datum)
+ * lookup a template support function and return its OID (as a Datum)
  *
  * attnum is the pg_ts_template column the function will go into
  */
@@ -673,7 +673,7 @@ get_ts_template_func(DefElem *defel, int attnum)
 			break;
 		default:
 			/* should not be here */
-			elog(ERROR, "unrecognized attribute for text search template__: %d",
+			elog(ERROR, "unrecognized attribute for text search template: %d",
 				 attnum);
 			nargs = 0;			/* keep compiler quiet */
 	}
@@ -786,7 +786,7 @@ DefineTSTemplate(List *names, List *parameters)
 		else
 			ereport(ERROR,
 					(errcode(ERRCODE_SYNTAX_ERROR),
-			   errmsg("text search template__ parameter \"%s\" not recognized",
+			   errmsg("text search template parameter \"%s\" not recognized",
 					  defel->defname)));
 	}
 
@@ -796,7 +796,7 @@ DefineTSTemplate(List *names, List *parameters)
 	if (!OidIsValid(DatumGetObjectId(values[Anum_pg_ts_template_tmpllexize - 1])))
 		ereport(ERROR,
 				(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-				 errmsg("text search template__ lexize method is required")));
+				 errmsg("text search template lexize method is required")));
 
 	/*
 	 * Looks good, insert
@@ -812,7 +812,7 @@ DefineTSTemplate(List *names, List *parameters)
 
 	address = makeTSTemplateDependencies(tup);
 
-	/* Post creation hook for new text search template__ */
+	/* Post creation hook for new text search template */
 	InvokeObjectPostCreateHook(TSTemplateRelationId, tmplOid, 0);
 
 	heap_freetuple(tup);
@@ -823,7 +823,7 @@ DefineTSTemplate(List *names, List *parameters)
 }
 
 /*
- * Guts of TS template__ deletion.
+ * Guts of TS template deletion.
  */
 void
 RemoveTSTemplateById(Oid tmplId)
@@ -836,7 +836,7 @@ RemoveTSTemplateById(Oid tmplId)
 	tup = SearchSysCache1(TSTEMPLATEOID, ObjectIdGetDatum(tmplId));
 
 	if (!HeapTupleIsValid(tup))
-		elog(ERROR, "cache lookup failed for text search template__ %u",
+		elog(ERROR, "cache lookup failed for text search template %u",
 			 tmplId);
 
 	simple_heap_delete(relation, &tup->t_self);
@@ -953,7 +953,7 @@ makeConfigurationDependencies(HeapTuple tuple, bool removeOld,
 		systable_endscan(scan);
 	}
 
-	/* Record 'em (this__ includes duplicate elimination) */
+	/* Record 'em (this includes duplicate elimination) */
 	record_object_address_dependencies(&myself, addrs, DEPENDENCY_NORMAL);
 
 	free_object_addresses(addrs);

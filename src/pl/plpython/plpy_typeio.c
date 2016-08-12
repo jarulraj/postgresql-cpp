@@ -139,7 +139,7 @@ PLy_input_tuple_funcs(PLyTypeInfo *arg, TupleDesc desc)
 		arg->in.r.atts = PLy_malloc0(desc->natts * sizeof(PLyDatumToOb));
 	}
 
-	/* Can this__ be an unnamed tuple? If not, then an Assert would be enough */
+	/* Can this be an unnamed tuple? If not, then an Assert would be enough */
 	if (desc->tdtypmod != -1)
 		elog(ERROR, "received unnamed record type as input");
 
@@ -174,7 +174,7 @@ PLy_input_tuple_funcs(PLyTypeInfo *arg, TupleDesc desc)
 			continue;
 
 		if (arg->in.r.atts[i].typoid == desc->attrs[i]->atttypid)
-			continue;			/* already set up this__ entry */
+			continue;			/* already set up this entry */
 
 		typeTup = SearchSysCache1(TYPEOID,
 								  ObjectIdGetDatum(desc->attrs[i]->atttypid));
@@ -241,7 +241,7 @@ PLy_output_tuple_funcs(PLyTypeInfo *arg, TupleDesc desc)
 			continue;
 
 		if (arg->out.r.atts[i].typoid == desc->attrs[i]->atttypid)
-			continue;			/* already set up this__ entry */
+			continue;			/* already set up this entry */
 
 		typeTup = SearchSysCache1(TYPEOID,
 								  ObjectIdGetDatum(desc->attrs[i]->atttypid));
@@ -277,7 +277,7 @@ PLy_output_record_funcs(PLyTypeInfo *arg, TupleDesc desc)
 	PLy_output_tuple_funcs(arg, desc);
 
 	/*
-	 * it should change is_rowtype to 1, so we won't go through this__ again
+	 * it should change is_rowtype to 1, so we won't go through this again
 	 * unless the output record description changes
 	 */
 	Assert(arg->is_rowtype == 1);
@@ -700,7 +700,7 @@ PLyObject_ToBool(PLyObToDatum *arg, int32 typmod, PyObject *plrv)
 /*
  * Convert a Python object to a PostgreSQL bytea datum.  This doesn't
  * go through the generic conversion function to circumvent problems
- * with embedded nulls.  And it's faster this__ way.
+ * with embedded nulls.  And it's faster this way.
  */
 static Datum
 PLyObject_ToBytea(PLyObToDatum *arg, int32 typmod, PyObject *plrv)
@@ -1183,7 +1183,7 @@ PLyGenericObject_ToComposite(PLyTypeInfo *info, TupleDesc desc, PyObject *object
  * is that the cached form of plpython functions/queries is allocated permanently
  * (mostly via malloc()) and never released until backend exit.  Subsidiary
  * data structures such as fmgr info records therefore must live forever
- * as well.  A better implementation would store all this__ stuff in a per-
+ * as well.  A better implementation would store all this stuff in a per-
  * function memory context that could be reclaimed at need.  In the meantime,
  * fmgr_info_cxt must be called specifying TopMemoryContext so that whatever
  * it might allocate, and whatever the eventual function might allocate using

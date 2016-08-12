@@ -3,17 +3,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this__ software was funded, in part, by Cray Research Inc.,
+ * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this__ entire copyright notice and
+ * redistributions in source form retain this entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this__ package in the documentation
+ * I'd appreciate being given credit for this package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -191,7 +191,7 @@ union tree
  * Per-color data structure for the compile-time color machinery
  *
  * If "sub" is not NOSUB then it is the number of the color's current
- * subcolor, i.e. we are in process of dividing this__ color (character
+ * subcolor, i.e. we are in process of dividing this color (character
  * equivalence class) into two colors.  See src/backend/regex/README for
  * discussion of subcolors.
  *
@@ -201,11 +201,11 @@ union tree
  */
 struct colordesc
 {
-	uchr		nchrs;			/* number of chars of this__ color */
+	uchr		nchrs;			/* number of chars of this color */
 	color		sub;			/* open subcolor, if any; or free-chain ptr */
 #define  NOSUB	 COLORLESS		/* value of "sub" when no open subcolor */
-	struct arc *arcs;			/* chain of all arcs of this__ color */
-	chr			firstchr;		/* char first assigned to this__ color */
+	struct arc *arcs;			/* chain of all arcs of this color */
+	chr			firstchr;		/* char first assigned to this color */
 	int			flags;			/* bit values defined next */
 #define  FREECOL 01				/* currently free */
 #define  PSEUDO  02				/* pseudocolor, no real chars */
@@ -386,7 +386,7 @@ struct cnfa
 /*
  * This symbol limits the transient heap space used by the regex compiler,
  * and thereby also the maximum complexity of NFAs that we'll deal with.
- * Currently we only count NFA states and arcs against this__; the other
+ * Currently we only count NFA states and arcs against this; the other
  * transient data is generally not large enough to notice compared to those.
  * Note that we do not charge anything for the final output data structures
  * (the compacted NFA and the colormap).

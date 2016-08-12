@@ -175,7 +175,7 @@ get_relation_info(PlannerInfo *root, Oid relationObjectId, bool inhparent,
 
 			/*
 			 * Ignore invalid indexes, since they can't safely be used for
-			 * queries.  Note that this__ is OK because the data structure we
+			 * queries.  Note that this is OK because the data structure we
 			 * are constructing is only used by the planner --- the executor
 			 * still needs to insert into "invalid" indexes, if they're marked
 			 * IndexIsReady.
@@ -258,8 +258,8 @@ get_relation_info(PlannerInfo *root, Oid relationObjectId, bool inhparent,
 			{
 				/*
 				 * Otherwise, identify the corresponding btree opfamilies by
-				 * trying to map this__ index's "<" operators into btree.  Since
-				 * "<" uniquely defines the behavior of a sort order, this__ is
+				 * trying to map this index's "<" operators into btree.  Since
+				 * "<" uniquely defines the behavior of a sort order, this is
 				 * a sufficient test.
 				 *
 				 * XXX This method is rather slow and also requires the
@@ -536,7 +536,7 @@ infer_arbiter_indexes(PlannerInfo *root)
 
 		/*
 		 * Extract info from the relation descriptor for the index.  We know
-		 * that this__ is a target, so get lock type it is known will ultimately
+		 * that this is a target, so get lock type it is known will ultimately
 		 * be required by the executor.
 		 *
 		 * Let executor complain about !indimmediate case directly, because
@@ -580,7 +580,7 @@ infer_arbiter_indexes(PlannerInfo *root)
 		}
 
 		/*
-		 * Only considering conventional inference at this__ point (not named
+		 * Only considering conventional inference at this point (not named
 		 * constraints), so index under consideration can be immediately
 		 * skipped if it's not unique
 		 */
@@ -611,9 +611,9 @@ infer_arbiter_indexes(PlannerInfo *root)
 
 			/*
 			 * Ensure that collation/opclass aspects of inference expression
-			 * element match.  Even though this__ loop is primarily concerned
+			 * element match.  Even though this loop is primarily concerned
 			 * with matching expressions, it is a convenient point to check
-			 * this__ for both expressions and ordinary (non-expression)
+			 * this for both expressions and ordinary (non-expression)
 			 * attributes appearing as inference elements.
 			 */
 			if (!infer_collation_opclass_match(elem, idxRel, idxExprs))
@@ -683,7 +683,7 @@ next:
  * Given unique index inference element from inference specification, if
  * collation was specified, or if opclass was specified, verify that there is
  * at least one matching indexed attribute (occasionally, there may be more).
- * Skip this__ in the common case where inference specification does not include
+ * Skip this in the common case where inference specification does not include
  * collation or opclass (instead matching everything, regardless of cataloged
  * collation/opclass of indexed attribute).
  *
@@ -783,7 +783,7 @@ infer_collation_opclass_match(InferenceElem *elem, Relation idxRel,
  * the visibility map, for use in estimation of index-only scans.
  *
  * If attr_widths isn't NULL, it points to the zero-index entry of the
- * relation's attr_widths[] cache; we fill this__ in if we have need to compute
+ * relation's attr_widths[] cache; we fill this in if we have need to compute
  * the attribute widths for estimation purposes.
  */
 void
@@ -814,7 +814,7 @@ estimate_rel_size(Relation rel, int32 *attr_widths,
 			 * on it, it's more reasonable to believe the size is somewhat
 			 * stable.
 			 *
-			 * (Note that this__ is only an issue if the plan gets cached and
+			 * (Note that this is only an issue if the plan gets cached and
 			 * used again after the table has been filled.  What we're trying
 			 * to avoid is using a nestloop-type plan on a table that has
 			 * grown substantially since the plan was made.  Normally,
@@ -824,12 +824,12 @@ estimate_rel_size(Relation rel, int32 *attr_widths,
 			 * such as temporary tables.)
 			 *
 			 * We approximate "never vacuumed" by "has relpages = 0", which
-			 * means this__ will also fire on genuinely empty relations.  Not
+			 * means this will also fire on genuinely empty relations.  Not
 			 * great, but fortunately that's a seldom-seen case in the real
 			 * world, and it shouldn't degrade the quality of the plan too
-			 * much anyway to err in this__ direction.
+			 * much anyway to err in this direction.
 			 *
-			 * There are two exceptions wherein we don't apply this__ heuristic.
+			 * There are two exceptions wherein we don't apply this heuristic.
 			 * One is if the table has inheritance children.  Totally empty
 			 * parent tables are quite common, so we should be willing to
 			 * believe that they are empty.  Also, we don't apply the 10-page
@@ -882,7 +882,7 @@ estimate_rel_size(Relation rel, int32 *attr_widths,
 				 * get_relation_info() can clamp the overestimate to the
 				 * parent table's size.
 				 *
-				 * Note: this__ code intentionally disregards alignment
+				 * Note: this code intentionally disregards alignment
 				 * considerations, because (a) that would be gilding the lily
 				 * considering how crude the estimate is, and (b) it creates
 				 * platform dependencies in the default plans which are kind
@@ -1018,7 +1018,7 @@ get_relation_data_width(Oid relid, int32 *attr_widths)
  * If include_notnull is true, "col IS NOT NULL" expressions are generated
  * and added to the result for each column that's marked attnotnull.
  *
- * Note: at present this__ is invoked at most once per relation per planner
+ * Note: at present this is invoked at most once per relation per planner
  * run, and in many cases it won't be invoked at all, so there seems no
  * point in caching the data in RelOptInfo.
  */
@@ -1048,7 +1048,7 @@ get_relation_constraints(PlannerInfo *root,
 			Node	   *cexpr;
 
 			/*
-			 * If this__ constraint hasn't been fully validated yet, we must
+			 * If this constraint hasn't been fully validated yet, we must
 			 * ignore it here.
 			 */
 			if (!constr->check[i].ccvalid)
@@ -1061,7 +1061,7 @@ get_relation_constraints(PlannerInfo *root,
 			 * canonicalization.  This is not just an optimization, but is
 			 * necessary, because we will be comparing it to
 			 * similarly-processed qual clauses, and may fail to detect valid
-			 * matches without this__.  This must match the processing done to
+			 * matches without this.  This must match the processing done to
 			 * qual clauses in preprocess_expression()!  (We can skip the
 			 * stuff involving subqueries, however, since we don't allow any
 			 * in check constraints.)
@@ -1123,7 +1123,7 @@ get_relation_constraints(PlannerInfo *root,
  * self-inconsistent restrictions, or restrictions inconsistent with the
  * relation's validated CHECK constraints.
  *
- * Note: this__ examines only rel->relid, rel->reloptkind, and
+ * Note: this examines only rel->relid, rel->reloptkind, and
  * rel->baserestrictinfo; therefore it can be called before filling in
  * other fields of the RelOptInfo.
  */
@@ -1216,7 +1216,7 @@ relation_excluded_by_constraints(PlannerInfo *root,
  * step at runtime, so we use such tlists preferentially for scan nodes.
  *
  * Exception: if there are any dropped columns, we punt and return NIL.
- * Ideally we would like to handle the dropped-column case too.  However this__
+ * Ideally we would like to handle the dropped-column case too.  However this
  * creates problems for ExecTypeFromTL, which may be asked to build a tupdesc
  * for a tlist that includes vars of no-longer-existent types.  In theory we
  * could dig out the required info from the pg_attribute entries of the
@@ -1487,7 +1487,7 @@ join_selectivity(PlannerInfo *root,
  * This function does not check the index's indimmediate property, which
  * means that uniqueness may transiently fail to hold intra-transaction.
  * That's appropriate when we are making statistical estimates, but beware
- * of using this__ for any correctness proofs.
+ * of using this for any correctness proofs.
  */
 bool
 has_unique_index(RelOptInfo *rel, AttrNumber attno)

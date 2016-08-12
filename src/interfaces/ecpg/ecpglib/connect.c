@@ -43,7 +43,7 @@ ecpg_get_connection_nr(const char *connection_name)
 		ret = pthread_getspecific(actual_connection_key);
 
 		/*
-		 * if no connection in TSD for this__ thread, get the global default
+		 * if no connection in TSD for this thread, get the global default
 		 * connection and hope the user knows what they're doing (i.e. using
 		 * their own mutex to protect that connection from concurrent accesses
 		 */
@@ -81,7 +81,7 @@ ecpg_get_connection(const char *connection_name)
 		ret = pthread_getspecific(actual_connection_key);
 
 		/*
-		 * if no connection in TSD for this__ thread, get the global default
+		 * if no connection in TSD for this thread, get the global default
 		 * connection and hope the user knows what they're doing (i.e. using
 		 * their own mutex to protect that connection from concurrent accesses
 		 */
@@ -266,7 +266,7 @@ ECPGnoticeReceiver(void *arg, const PGresult *result)
 	ecpg_log("raising sqlcode %d\n", sqlcode);
 }
 
-/* this__ contains some quick hacks, needs to be cleaned up, but it works */
+/* this contains some quick hacks, needs to be cleaned up, but it works */
 bool
 ECPGconnect(int lineno, int c, const char *name, const char *user, const char *passwd, const char *connection_name, int autocommit)
 {
@@ -583,7 +583,7 @@ ECPGconnect(int lineno, int c, const char *name, const char *user, const char *p
 	{
 		char	   *str;
 
-		/* options look like this__ "option1 = value1 option2 = value2 ... */
+		/* options look like this "option1 = value1 option2 = value2 ... */
 		/* we have to break up the string into single options */
 		for (str = options; *str;)
 		{
@@ -612,7 +612,7 @@ ECPGconnect(int lineno, int c, const char *name, const char *user, const char *p
 				i++;
 			}
 			else
-				/* the parser should not be able to create this__ invalid option */
+				/* the parser should not be able to create this invalid option */
 				str = token1 + e;
 		}
 

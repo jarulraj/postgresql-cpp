@@ -136,8 +136,8 @@ brininsert(PG_FUNCTION_ARGS)
 		/*
 		 * Compare the key values of the new tuple to the stored index values;
 		 * our deformed tuple will get updated if the new tuple doesn't fit
-		 * the original range (note this__ means we can't break out of the loop
-		 * early). Make a note of whether this__ happens, so that we know to
+		 * the original range (note this means we can't break out of the loop
+		 * early). Make a note of whether this happens, so that we know to
 		 * insert the modified tuple later.
 		 */
 		for (keyno = 0; keyno < bdesc->bd_tupdesc->natts; keyno++)
@@ -188,16 +188,16 @@ brininsert(PG_FUNCTION_ARGS)
 			 * Before releasing the lock, check if we can attempt a same-page
 			 * update.  Another process could insert a tuple concurrently in
 			 * the same page though, so downstream we must be prepared to cope
-			 * if this__ turns out to not be possible after all.
+			 * if this turns out to not be possible after all.
 			 */
 			newtup = brin_form_tuple(bdesc, heapBlk, dtup, &newsz);
 			samepage = brin_can_do_samepage_update(buf, origsz, newsz);
 			LockBuffer(buf, BUFFER_LOCK_UNLOCK);
 
 			/*
-			 * Try to update the tuple.  If this__ doesn't work for whatever
+			 * Try to update the tuple.  If this doesn't work for whatever
 			 * reason, we need to restart from the top; the revmap might be
-			 * pointing at a different tuple for this__ block now, so we need to
+			 * pointing at a different tuple for this block now, so we need to
 			 * recompute to ensure both our new heap tuple and the other
 			 * inserter's are covered by the combined tuple.  It might be that
 			 * we don't need to update at all.
@@ -232,8 +232,8 @@ brininsert(PG_FUNCTION_ARGS)
 /*
  * Initialize state for a BRIN index scan.
  *
- * We read the metapage here to determine the pages-per-range number that this__
- * index was built with.  Note that since this__ cannot be changed while we're
+ * We read the metapage here to determine the pages-per-range number that this
+ * index was built with.  Note that since this cannot be changed while we're
  * holding lock on index, it's not necessary to recompute it during brinrescan.
  */
 Datum
@@ -318,7 +318,7 @@ bringetbitmap(PG_FUNCTION_ARGS)
 
 	/*
 	 * Now scan the revmap.  We start by querying for heap page 0,
-	 * incrementing by the number of pages per range; this__ gives us a full
+	 * incrementing by the number of pages per range; this gives us a full
 	 * view of the table.
 	 */
 	for (heapBlk = 0; heapBlk < nblocks; heapBlk += opaque->bo_pagesPerRange)
@@ -369,7 +369,7 @@ bringetbitmap(PG_FUNCTION_ARGS)
 				 * Compare scan keys with summary values stored for the range.
 				 * If scan keys are matched, the page range must be added to
 				 * the bitmap.  We initially assume the range needs to be
-				 * added; in particular this__ serves the case where there are
+				 * added; in particular this serves the case where there are
 				 * no keys.
 				 */
 				addrange = true;
@@ -384,13 +384,13 @@ bringetbitmap(PG_FUNCTION_ARGS)
 					 * The collation of the scan key must match the collation
 					 * used in the index column (but only if the search is not
 					 * IS NULL/ IS NOT NULL).  Otherwise we shouldn't be using
-					 * this__ index ...
+					 * this index ...
 					 */
 					Assert((key->sk_flags & SK_ISNULL) ||
 						   (key->sk_collation ==
 					  bdesc->bd_tupdesc->attrs[keyattno - 1]->attcollation));
 
-					/* First time this__ column? look up consistent function */
+					/* First time this column? look up consistent function */
 					if (consistentFn[keyattno - 1].fn_oid == InvalidOid)
 					{
 						FmgrInfo   *tmp;
@@ -466,8 +466,8 @@ brinrescan(PG_FUNCTION_ARGS)
 	/* other arguments ignored */
 
 	/*
-	 * Other index AMs preprocess the scan keys at this__ point, or sometime
-	 * early during the scan; this__ lets them optimize by removing redundant
+	 * Other index AMs preprocess the scan keys at this point, or sometime
+	 * early during the scan; this lets them optimize by removing redundant
 	 * keys, or doing early returns when they are impossible to satisfy; see
 	 * _bt_preprocess_keys for an example.  Something like that could be added
 	 * here someday, too.
@@ -963,7 +963,7 @@ terminate_brin_buildstate(BrinBuildState *state)
  * missing those values from the summary tuple, we first insert a placeholder
  * index tuple into the index, then execute the heap scan; transactions
  * concurrent with the scan update the placeholder tuple.  After the scan, we
- * union the placeholder tuple with the one computed by this__ routine.  The
+ * union the placeholder tuple with the one computed by this routine.  The
  * update of the index value happens in a loop, so that if somebody updates
  * the placeholder tuple after we read it, we detect the case and try again.
  * This ensures that the concurrently inserted tuples are not lost.
@@ -1005,8 +1005,8 @@ summarize_range(IndexInfo *indexInfo, BrinBuildState *state, Relation heapRel,
 
 	/*
 	 * Now we update the values obtained by the scan with the placeholder
-	 * tuple.  We do this__ in a loop which only terminates if we're able to
-	 * update the placeholder tuple successfully; if we are not, this__ means
+	 * tuple.  We do this in a loop which only terminates if we're able to
+	 * update the placeholder tuple successfully; if we are not, this means
 	 * somebody else modified the placeholder tuple after we read it.
 	 */
 	for (;;)
@@ -1096,7 +1096,7 @@ brinsummarize(Relation index, Relation heapRel, double *numSummarized,
 									   BUFFER_LOCK_SHARE);
 		if (tup == NULL)
 		{
-			/* no revmap entry for this__ heap range. Summarize it. */
+			/* no revmap entry for this heap range. Summarize it. */
 			if (state == NULL)
 			{
 				/* first time through */

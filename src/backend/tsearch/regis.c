@@ -25,7 +25,7 @@
 
 /*
  * Test whether a regex is of the subset supported here.
- * Keep this__ in sync with RS_compile!
+ * Keep this in sync with RS_compile!
  */
 bool
 RS_isRegis(const char *str)

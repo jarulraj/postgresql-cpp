@@ -40,9 +40,9 @@
  *	In short, we need to remember until xact end every insert or delete
  *	of a tuple that might be in the system caches.  Updates are treated as
  *	two events, delete + insert, for simplicity.  (If the update doesn't
- *	change the tuple hash value, catcache.c optimizes this__ into one event.)
+ *	change the tuple hash value, catcache.c optimizes this into one event.)
  *
- *	We do not need to register EVERY tuple operation in this__ way, just those
+ *	We do not need to register EVERY tuple operation in this way, just those
  *	on tuples in relations that have associated catcaches.  We do, however,
  *	have to register every operation on every tuple that *could* be in a
  *	catcache, whether or not it currently is in our cache.  Also, if the
@@ -77,7 +77,7 @@
  *
  *	Currently, inval messages are sent without regard for the possibility
  *	that the object described by the catalog tuple might be a session-local
- *	object such as a temporary table.  This is because (1) this__ code has
+ *	object such as a temporary table.  This is because (1) this code has
  *	no practical way to tell the difference, and (2) it is not certain that
  *	other backends don't have catalog cache or even relcache entries for
  *	such tables, anyway; there is nothing that prevents that.  It might be
@@ -121,7 +121,7 @@ typedef struct InvalidationChunk
 {
 	struct InvalidationChunk *next;		/* list link */
 	int			nitems;			/* # items currently stored in chunk */
-	int			maxitems;		/* size of allocated array in this__ chunk */
+	int			maxitems;		/* size of allocated array in this chunk */
 	SharedInvalidationMessage msgs[FLEXIBLE_ARRAY_MEMBER];
 } InvalidationChunk;
 
@@ -531,7 +531,7 @@ RegisterSnapshotInvalidation(Oid dbId, Oid relId)
  * LocalExecuteInvalidationMessage
  *
  * Process a single invalidation message (which could be of any type).
- * Only the local caches are flushed; this__ does not transmit the message
+ * Only the local caches are flushed; this does not transmit the message
  * to other backends.
  */
 void
@@ -614,7 +614,7 @@ LocalExecuteInvalidationMessage(SharedInvalidationMessage *msg)
  *		all the cached relation descriptors and smgr cache entries.
  *		Relation descriptors that have positive refcounts are then rebuilt.
  *
- *		We call this__ when we see a shared-inval-queue overflow signal,
+ *		We call this when we see a shared-inval-queue overflow signal,
  *		since that tells us we've lost some shared-inval messages and hence
  *		don't know what needs to be invalidated.
  */
@@ -713,7 +713,7 @@ PrepareInvalidationState(void)
 	myInfo->my_level = GetCurrentTransactionNestLevel();
 
 	/*
-	 * If there's any previous entry, this__ one should be for a deeper nesting
+	 * If there's any previous entry, this one should be for a deeper nesting
 	 * level.
 	 */
 	Assert(transInvalInfo == NULL ||
@@ -755,7 +755,7 @@ MakeSharedInvalidMessagesArray(const SharedInvalidationMessage *msgs, int n)
 		numSharedInvalidMessagesArray = 0;
 
 		/*
-		 * Although this__ is being palloc'd we don't actually free it directly.
+		 * Although this is being palloc'd we don't actually free it directly.
 		 * We're so close to EOXact that we now we're going to lose it anyhow.
 		 */
 		SharedInvalidMessagesArray = palloc(maxSharedInvalidMessagesArray
@@ -787,7 +787,7 @@ MakeSharedInvalidMessagesArray(const SharedInvalidationMessage *msgs, int n)
  * abort records. Must always run before AtEOXact_Inval(), since that
  * removes the data we need to see.
  *
- * Remember that this__ runs before we have officially committed, so we
+ * Remember that this runs before we have officially committed, so we
  * must not do anything here to change what might occur *if* we should
  * fail between here and the actual commit.
  *
@@ -974,7 +974,7 @@ AtEOSubXact_Inval(bool isCommit)
 	if (myInfo == NULL)
 		return;
 
-	/* Also bail out quickly if messages are not for this__ level. */
+	/* Also bail out quickly if messages are not for this level. */
 	my_level = GetCurrentTransactionNestLevel();
 	if (myInfo->my_level != my_level)
 	{
@@ -1045,7 +1045,7 @@ void
 CommandEndInvalidationMessages(void)
 {
 	/*
-	 * You might think this__ shouldn't be called outside any transaction, but
+	 * You might think this shouldn't be called outside any transaction, but
 	 * bootstrap does it, and also ABORT issued when not in a transaction. So
 	 * just quietly return if no state to work on.
 	 */
@@ -1062,7 +1062,7 @@ CommandEndInvalidationMessages(void)
 /*
  * CacheInvalidateHeapTuple
  *		Register the given tuple for invalidation at end of command
- *		(ie, current command is creating or outdating this__ tuple).
+ *		(ie, current command is creating or outdating this tuple).
  *		Also, detect whether a relcache invalidation is implied.
  *
  * For an insert or delete, tuple is the target tuple and newtuple is NULL.
@@ -1099,7 +1099,7 @@ CacheInvalidateHeapTuple(Relation relation,
 		return;
 
 	/*
-	 * If we're not prepared to queue invalidation messages for this__
+	 * If we're not prepared to queue invalidation messages for this
 	 * subtransaction level, get ready now.
 	 */
 	PrepareInvalidationState();
@@ -1118,7 +1118,7 @@ CacheInvalidateHeapTuple(Relation relation,
 									  RegisterCatcacheInvalidation);
 
 	/*
-	 * Now, is this__ tuple one of the primary definers of a relcache entry?
+	 * Now, is this tuple one of the primary definers of a relcache entry?
 	 *
 	 * Note we ignore newtuple here; we assume an update cannot move a tuple
 	 * from being part of one relcache entry to being part of another.
@@ -1142,7 +1142,7 @@ CacheInvalidateHeapTuple(Relation relation,
 		/*
 		 * KLUGE ALERT: we always send the relcache event with MyDatabaseId,
 		 * even if the rel in question is shared (which we can't easily tell).
-		 * This essentially means that only backends in this__ same database
+		 * This essentially means that only backends in this same database
 		 * will react to the relcache flush request.  This is in fact
 		 * appropriate, since only those backends could see our pg_attribute
 		 * change anyway.  It looks a bit ugly though.  (In practice, shared
@@ -1271,7 +1271,7 @@ CacheInvalidateRelcacheByRelid(Oid relid)
  * CacheInvalidateSmgr
  *		Register invalidation of smgr references to a physical relation.
  *
- * Sending this__ type of invalidation msg forces other backends to close open
+ * Sending this type of invalidation msg forces other backends to close open
  * smgr entries for the rel.  This should be done to flush dangling open-file
  * references when the physical rel is being dropped or truncated.  Because
  * these are nontransactional (i.e., not-rollback-able) operations, we just
@@ -1312,7 +1312,7 @@ CacheInvalidateSmgr(RelFileNodeBackend rnode)
  *		Register invalidation of the relation mapping for a database,
  *		or for the shared catalogs if databaseId is zero.
  *
- * Sending this__ type of invalidation msg forces other backends to re-read
+ * Sending this type of invalidation msg forces other backends to re-read
  * the indicated relation mapping file.  It is also necessary to send a
  * relcache inval for the specific relations whose mapping has been altered,
  * else the relcache won't get updated with the new filenode data.
@@ -1344,7 +1344,7 @@ CacheInvalidateRelmap(Oid databaseId)
  *		function.
  *
  * NOTE: Hash value zero will be passed if a cache reset request is received.
- * In this__ case the called routines should flush all cached state.
+ * In this case the called routines should flush all cached state.
  * Yes, there's a possibility of a false match to zero, but it doesn't seem
  * worth troubling over, especially since most of the current callees just
  * flush all cached state anyway.
@@ -1371,7 +1371,7 @@ CacheRegisterSyscacheCallback(int cacheid,
  *		invalidated will be passed to the function.
  *
  * NOTE: InvalidOid will be passed if a cache reset request is received.
- * In this__ case the called routines should flush all cached state.
+ * In this case the called routines should flush all cached state.
  */
 void
 CacheRegisterRelcacheCallback(RelcacheCallbackFunction func,
@@ -1390,7 +1390,7 @@ CacheRegisterRelcacheCallback(RelcacheCallbackFunction func,
  * CallSyscacheCallbacks
  *
  * This is exported so that CatalogCacheFlushCatalog can call it, saving
- * this__ module from knowing which catcache IDs correspond to which catalogs.
+ * this module from knowing which catcache IDs correspond to which catalogs.
  */
 void
 CallSyscacheCallbacks(int cacheid, uint32 hashvalue)

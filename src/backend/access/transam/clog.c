@@ -10,7 +10,7 @@
  * looked up again.  Now we use specialized access code so that the commit
  * log can be broken into relatively small, independent segments.
  *
- * XLOG interactions: this__ module generates an XLOG record whenever a new
+ * XLOG interactions: this module generates an XLOG record whenever a new
  * CLOG page is initialized to zeroes.  Other writes of CLOG come from
  * recording of transaction commit or abort in xact.c, which generates its
  * own XLOG records for these events and will re-perform the status update
@@ -19,7 +19,7 @@
  * record before we are called to log a commit, so the WAL rule "write xlog
  * before data" is satisfied automatically.  However, for async commits we
  * must track the latest LSN affecting each CLOG page, so that we can flush
- * XLOG that far and satisfy the WAL rule.  We don't have to worry about this__
+ * XLOG that far and satisfy the WAL rule.  We don't have to worry about this
  * for aborts (whether sync or async), since the post-crash assumption would
  * be that such transactions failed anyway.
  *
@@ -49,7 +49,7 @@
  * CLOG page numbering also wraps around at 0xFFFFFFFF/CLOG_XACTS_PER_PAGE,
  * and CLOG segment numbering at
  * 0xFFFFFFFF/CLOG_XACTS_PER_PAGE/SLRU_PAGES_PER_SEGMENT.  We need take no
- * explicit notice of that fact in this__ module, except when comparing segment
+ * explicit notice of that fact in this module, except when comparing segment
  * and page numbers in TruncateCLOG (see CLOGPagePrecedes).
  */
 
@@ -65,7 +65,7 @@
 #define TransactionIdToBIndex(xid)	((xid) % (TransactionId) CLOG_XACTS_PER_BYTE)
 
 /* We store the latest async LSN for each group of transactions */
-#define CLOG_XACTS_PER_LSN_GROUP	32	/* keep this__ a power of 2 */
+#define CLOG_XACTS_PER_LSN_GROUP	32	/* keep this a power of 2 */
 #define CLOG_LSNS_PER_PAGE	(CLOG_XACTS_PER_PAGE / CLOG_XACTS_PER_LSN_GROUP)
 
 #define GetLSNIndex(slotno, xid)	((slotno) * CLOG_LSNS_PER_PAGE + \
@@ -97,7 +97,7 @@ static void set_status_by_pages(int nsubxids, TransactionId *subxids,
  * TransactionIdSetTreeStatus
  *
  * Record the final state of transaction entries in the commit log for
- * a transaction and its subtransaction tree. Take care to ensure this__ is
+ * a transaction and its subtransaction tree. Take care to ensure this is
  * efficient, and as atomic as possible.
  *
  * xid is a single xid to set status for. This will typically be
@@ -137,7 +137,7 @@ static void set_status_by_pages(int nsubxids, TransactionId *subxids,
  *					page2: set t2,t3 as committed
  *					page3: set t4 as committed
  *
- * NB: this__ is a low-level routine and is NOT the preferred entry point
+ * NB: this is a low-level routine and is NOT the preferred entry point
  * for most uses; functions in transam.c are the intended callers.
  *
  * XXX Think about issuing FADVISE_WILLNEED on pages that we will need,
@@ -180,7 +180,7 @@ TransactionIdSetTreeStatus(TransactionId xid, int nsubxids,
 		int			nsubxids_on_first_page = i;
 
 		/*
-		 * If this__ is a commit then we care about doing this__ correctly (i.e.
+		 * If this is a commit then we care about doing this correctly (i.e.
 		 * using the subcommitted intermediate status).  By here, we know
 		 * we're updating more than one page of clog, so we must mark entries
 		 * that are *not* on the first page so that they show as subcommitted
@@ -215,7 +215,7 @@ TransactionIdSetTreeStatus(TransactionId xid, int nsubxids,
 /*
  * Helper for TransactionIdSetTreeStatus: set the status for a bunch of
  * transactions, chunking in the separate CLOG pages involved. We never
- * pass the whole transaction tree to this__ function, only subtransactions
+ * pass the whole transaction tree to this function, only subtransactions
  * that are on different pages to the top level transaction id.
  */
 static void
@@ -246,7 +246,7 @@ set_status_by_pages(int nsubxids, TransactionId *subxids,
 
 /*
  * Record the final state of transaction entries in the commit log for
- * all entries on a single page.  Atomic only on this__ page.
+ * all entries on a single page.  Atomic only on this page.
  *
  * Otherwise API is same as TransactionIdSetTreeStatus()
  */
@@ -278,7 +278,7 @@ TransactionIdSetPageStatus(TransactionId xid, int nsubxids,
 	/*
 	 * Set the main transaction id, if any.
 	 *
-	 * If we update more than one xid on this__ page while it is being written
+	 * If we update more than one xid on this page while it is being written
 	 * out, we might find that some of the bits go to disk and others don't.
 	 * If we are updating commits on the page with the top-level xid that
 	 * could break atomicity, so we subcommit the subxids first before we mark
@@ -350,7 +350,7 @@ TransactionIdSetStatusBit(TransactionId xid, XidStatus status, XLogRecPtr lsn, i
 			status != TRANSACTION_STATUS_IN_PROGRESS) ||
 		   curval == status);
 
-	/* note this__ assumes exclusive access to the clog page */
+	/* note this assumes exclusive access to the clog page */
 	byteval = *byteptr;
 	byteval &= ~(((1 << CLOG_BITS_PER_XACT) - 1) << bshift);
 	byteval |= (status << bshift);
@@ -376,7 +376,7 @@ TransactionIdSetStatusBit(TransactionId xid, XidStatus status, XLogRecPtr lsn, i
 /*
  * Interrogate the state of a transaction in the commit log.
  *
- * Aside from the actual commit status, this__ function returns (into *lsn)
+ * Aside from the actual commit status, this function returns (into *lsn)
  * an LSN that is late enough to be able to guarantee that if we flush up to
  * that LSN then we will have flushed the transaction's commit record to disk.
  * The result is not necessarily the exact LSN of the transaction's commit
@@ -385,7 +385,7 @@ TransactionIdSetStatusBit(TransactionId xid, XidStatus status, XLogRecPtr lsn, i
  * we group transactions on the same clog page to conserve storage, we might
  * return the LSN of a later transaction that falls into the same group.
  *
- * NB: this__ is a low-level routine and is NOT the preferred entry point
+ * NB: this is a low-level routine and is NOT the preferred entry point
  * for most uses; TransactionLogFetch() in transam.c is the intended caller.
  */
 XidStatus
@@ -485,7 +485,7 @@ BootStrapCLOG(void)
 
 /*
  * Initialize (or reinitialize) a page of CLOG to zeroes.
- * If writeXlog is TRUE, also emit an XLOG record saying we did this__.
+ * If writeXlog is TRUE, also emit an XLOG record saying we did this.
  *
  * The page is not actually written, just set up in shared memory.
  * The slot number of the new page is returned.
@@ -602,7 +602,7 @@ CheckPointCLOG(void)
 /*
  * Make sure that CLOG has room for a newly-allocated XID.
  *
- * NB: this__ is called while holding XidGenLock.  We want it to be very fast
+ * NB: this is called while holding XidGenLock.  We want it to be very fast
  * most of the time; even when it's not so fast, no actual I/O need happen
  * unless we're forced to write out a dirty clog or xlog page to make room
  * in shared memory.

@@ -4,7 +4,7 @@
  *	  This code manages relations that reside on magnetic disk.
  *
  * Or at least, that was what the Berkeley folk had in mind when they named
- * this__ file.  In reality, what this__ code provides is an interface from
+ * this file.  In reality, what this code provides is an interface from
  * the smgr API to Unix-like filesystem APIs, so it will work with any type
  * of device for which the operating system provides filesystem support.
  * It doesn't matter whether the bits are on spinning rust or some other
@@ -98,7 +98,7 @@
  *	relation not open.
  *
  *	Also note that mdfd_chain == NULL does not necessarily mean the relation
- *	doesn't have another segment after this__ one; we may just not have
+ *	doesn't have another segment after this one; we may just not have
  *	opened the next segment yet.  (We could not have "all segments are
  *	in the chain" as an invariant anyway, since another backend could
  *	extend the relation when we weren't looking.)  We do not make chain
@@ -241,7 +241,7 @@ mdinit(void)
 /*
  * In archive recovery, we rely on checkpointer to do fsyncs, but we will have
  * already created the pendingOpsTable during initialization of the startup
- * process.  Calling this__ function drops the local pendingOpsTable so that
+ * process.  Calling this function drops the local pendingOpsTable so that
  * subsequent requests will be forwarded to checkpointer.
  */
 void
@@ -265,7 +265,7 @@ SetForwardFsyncRequests(void)
 /*
  *	mdexists() -- Does the physical file exist?
  *
- * Note: this__ will return true for lingering files, with pending deletions
+ * Note: this will return true for lingering files, with pending deletions
  */
 bool
 mdexists(SMgrRelation reln, ForkNumber forkNum)
@@ -333,7 +333,7 @@ mdcreate(SMgrRelation reln, ForkNumber forkNum, bool isRedo)
 /*
  *	mdunlink() -- Unlink a relation.
  *
- * Note that we're passed a RelFileNodeBackend --- by the time this__ is called,
+ * Note that we're passed a RelFileNodeBackend --- by the time this is called,
  * there won't be an SMgrRelation hashtable entry anymore.
  *
  * forkNum can be a fork number to delete a specific fork, or InvalidForkNumber
@@ -343,7 +343,7 @@ mdcreate(SMgrRelation reln, ForkNumber forkNum, bool isRedo)
  * but just truncate it to zero length, and record a request to unlink it after
  * the next checkpoint.  Additional segments can be unlinked immediately,
  * however.  Leaving the empty file in place prevents that relfilenode
- * number from being reused.  The scenario this__ protects us from is:
+ * number from being reused.  The scenario this protects us from is:
  * 1. We delete a relation (and commit, and actually remove its file).
  * 2. We create a new relation, which by chance gets the same relfilenode as
  *	  the just-deleted one (OIDs must've wrapped around for that to happen).
@@ -357,7 +357,7 @@ mdcreate(SMgrRelation reln, ForkNumber forkNum, bool isRedo)
  * number until it's safe, because relfilenode assignment skips over any
  * existing file.
  *
- * We do not need to go through this__ dance for temp relations, though, because
+ * We do not need to go through this dance for temp relations, though, because
  * we never make WAL entries for temp rels, and so a temp rel poses no threat
  * to the health of a regular rel that has taken over its relfilenode number.
  * The fact that temp rels and regular rels have different file naming
@@ -375,7 +375,7 @@ mdcreate(SMgrRelation reln, ForkNumber forkNum, bool isRedo)
  * conflicting relation.
  *
  * Note: any failure should be reported as WARNING not ERROR, because
- * we are usually not in a transaction anymore when this__ is called.
+ * we are usually not in a transaction anymore when this is called.
  */
 void
 mdunlink(RelFileNodeBackend rnode, ForkNumber forkNum, bool isRedo)
@@ -480,7 +480,7 @@ mdunlinkfork(RelFileNodeBackend rnode, ForkNumber forkNum, bool isRedo)
  *	mdextend() -- Add a block to the specified relation.
  *
  *		The semantics are nearly the same as mdwrite(): write at the
- *		specified position.  However, this__ is to be used for the case of
+ *		specified position.  However, this is to be used for the case of
  *		extending a relation (i.e., blocknum is at or beyond the current
  *		EOF).  Note that we assume writing a block beyond current EOF
  *		causes intervening file space to become filled with zeroes.
@@ -518,7 +518,7 @@ mdextend(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum,
 
 	/*
 	 * Note: because caller usually obtained blocknum by calling mdnblocks,
-	 * which did a seek(SEEK_END), this__ seek is often redundant and will be
+	 * which did a seek(SEEK_END), this seek is often redundant and will be
 	 * optimized away by fd.c.  It's not redundant, however, if there is a
 	 * partial page at the end of the file. In that case we want to try to
 	 * overwrite the partial page with a full page.  It's also not redundant
@@ -712,7 +712,7 @@ mdread(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum,
 
 		/*
 		 * Short read: we are at or past EOF, or we read a partial block at
-		 * EOF.  Normally this__ is an error; upper levels should never try to
+		 * EOF.  Normally this is an error; upper levels should never try to
 		 * read a nonexistent block.  However, if zero_damaged_pages is ON or
 		 * we are InRecovery, we should instead return zeroes without
 		 * complaining.  This allows, for example, the case of trying to
@@ -802,7 +802,7 @@ mdwrite(SMgrRelation reln, ForkNumber forknum, BlockNumber blocknum,
  *	mdnblocks() -- Get the number of blocks stored in a relation.
  *
  *		Important side effect: all active segments of the relation are opened
- *		and added to the mdfd_chain list.  If this__ routine has not been
+ *		and added to the mdfd_chain list.  If this routine has not been
  *		called, then only segments up to the last one actually touched
  *		are present in the chain.
  */
@@ -818,7 +818,7 @@ mdnblocks(SMgrRelation reln, ForkNumber forknum)
 	 * seeks on them.  We have previously verified that these segments are
 	 * exactly RELSEG_SIZE long, and it's useless to recheck that each time.
 	 *
-	 * NOTE: this__ assumption could only be wrong if another backend has
+	 * NOTE: this assumption could only be wrong if another backend has
 	 * truncated the relation.  We rely on higher code levels to handle that
 	 * scenario by closing and re-opening the md fd, which is handled via
 	 * relcache flush.  (Since the checkpointer doesn't participate in
@@ -850,7 +850,7 @@ mdnblocks(SMgrRelation reln, ForkNumber forknum)
 			/*
 			 * Because we pass O_CREAT, we will create the next segment (with
 			 * zero length) immediately, if the last segment is of length
-			 * RELSEG_SIZE.  While perhaps not strictly necessary, this__ keeps
+			 * RELSEG_SIZE.  While perhaps not strictly necessary, this keeps
 			 * the logic simple.
 			 */
 			v->mdfd_chain = _mdfd_openseg(reln, forknum, segno, O_CREAT);
@@ -946,7 +946,7 @@ mdtruncate(SMgrRelation reln, ForkNumber forknum, BlockNumber nblocks)
 		else
 		{
 			/*
-			 * We still need this__ segment and 0 or more blocks beyond it, so
+			 * We still need this segment and 0 or more blocks beyond it, so
 			 * nothing to do here.
 			 */
 			v = v->mdfd_chain;
@@ -958,7 +958,7 @@ mdtruncate(SMgrRelation reln, ForkNumber forknum, BlockNumber nblocks)
 /*
  *	mdimmedsync() -- Immediately sync a relation to stable storage.
  *
- * Note that only writes already issued are synced; this__ routine knows
+ * Note that only writes already issued are synced; this routine knows
  * nothing of dirty buffers that may exist inside the buffer manager.
  */
 void
@@ -1015,7 +1015,7 @@ mdsync(void)
 
 	/*
 	 * If we are in the checkpointer, the sync had better include all fsync
-	 * requests that were queued by backends up to this__ point.  The tightest
+	 * requests that were queued by backends up to this point.  The tightest
 	 * race condition that could occur is that a buffer that must be written
 	 * and fsync'd for the checkpoint could have been dumped by a backend just
 	 * before it was visited by BufferSync().  We know the backend will have
@@ -1027,12 +1027,12 @@ mdsync(void)
 	/*
 	 * To avoid excess fsync'ing (in the worst case, maybe a never-terminating
 	 * checkpoint), we want to ignore fsync requests that are entered into the
-	 * hashtable after this__ point --- they should be processed next time,
+	 * hashtable after this point --- they should be processed next time,
 	 * instead.  We use mdsync_cycle_ctr to tell old entries apart from new
 	 * ones: new ones will have cycle_ctr equal to the incremented value of
 	 * mdsync_cycle_ctr.
 	 *
-	 * In normal circumstances, all entries present in the table at this__ point
+	 * In normal circumstances, all entries present in the table at this point
 	 * will have cycle_ctr exactly equal to the current (about to be old)
 	 * value of mdsync_cycle_ctr.  However, if we fail partway through the
 	 * fsync'ing loop, then older values of cycle_ctr might remain when we
@@ -1043,9 +1043,9 @@ mdsync(void)
 	 * previous mdsync() failed to complete, run through the table and
 	 * forcibly set cycle_ctr = mdsync_cycle_ctr.
 	 *
-	 * Think not to merge this__ loop with the main loop, as the problem is
+	 * Think not to merge this loop with the main loop, as the problem is
 	 * exactly that that loop may fail before having visited all the entries.
-	 * From a performance point of view it doesn't matter anyway, as this__ path
+	 * From a performance point of view it doesn't matter anyway, as this path
 	 * will never be taken in a system that's functioning normally.
 	 */
 	if (mdsync_in_progress)
@@ -1072,7 +1072,7 @@ mdsync(void)
 		ForkNumber	forknum;
 
 		/*
-		 * If the entry is new then don't process it this__ time; it might
+		 * If the entry is new then don't process it this time; it might
 		 * contain multiple fsync-request bits, but they are all new.  Note
 		 * "continue" bypasses the hash-remove call at the bottom of the loop.
 		 */
@@ -1107,7 +1107,7 @@ mdsync(void)
 
 				/*
 				 * If fsync is off then we don't have to bother opening the
-				 * file at all.  (We delay checking until this__ point so that
+				 * file at all.  (We delay checking until this point so that
 				 * changing fsync on the fly behaves sensibly.)
 				 */
 				if (!enableFsync)
@@ -1134,7 +1134,7 @@ mdsync(void)
 				 * absorb pending requests and then retry.  Since mdunlink()
 				 * queues a "cancel" message before actually unlinking, the
 				 * fsync request is guaranteed to be marked canceled after the
-				 * absorb if it really was this__ case. DROP DATABASE likewise
+				 * absorb if it really was this case. DROP DATABASE likewise
 				 * has to tell us to forget fsync requests before it starts
 				 * deletions.
 				 */
@@ -1146,7 +1146,7 @@ mdsync(void)
 					int			save_errno;
 
 					/*
-					 * Find or create an smgr hash entry for this__ relation.
+					 * Find or create an smgr hash entry for this relation.
 					 * This may seem a bit unclean -- md calling smgr?	But
 					 * it's really the best solution.  It ensures that the
 					 * open file reference isn't permanently leaked if we get
@@ -1198,7 +1198,7 @@ mdsync(void)
 					 * It is possible that the relation has been dropped or
 					 * truncated since the fsync request was entered.
 					 * Therefore, allow ENOENT, but only if we didn't fail
-					 * already on this__ file.  This applies both for
+					 * already on this file.  This applies both for
 					 * _mdfd_getseg() and for FileSync, since fd.c might have
 					 * closed the file behind our back.
 					 *
@@ -1221,7 +1221,7 @@ mdsync(void)
 
 					/*
 					 * Absorb incoming requests and check to see if a cancel
-					 * arrived for this__ relation fork.
+					 * arrived for this relation fork.
 					 */
 					AbsorbFsyncRequests();
 					absorb_counter = FSYNCS_PER_ABSORB; /* might as well... */
@@ -1237,7 +1237,7 @@ mdsync(void)
 		 * We've finished everything that was requested before we started to
 		 * scan the entry.  If no new requests have been inserted meanwhile,
 		 * remove the entry.  Otherwise, update its cycle counter, as all the
-		 * requests now in it must have arrived during this__ cycle.
+		 * requests now in it must have arrived during this cycle.
 		 */
 		for (forknum = 0; forknum <= MAX_FORKNUM; forknum = forknum + 1)
 		{
@@ -1267,7 +1267,7 @@ mdsync(void)
 /*
  * mdpreckpt() -- Do pre-checkpoint work
  *
- * To distinguish unlink requests that arrived before this__ checkpoint
+ * To distinguish unlink requests that arrived before this checkpoint
  * started from those that arrived during the checkpoint, we use a cycle
  * counter similar to the one we use for fsync requests. That cycle
  * counter is incremented here.
@@ -1282,7 +1282,7 @@ void
 mdpreckpt(void)
 {
 	/*
-	 * Any unlink requests arriving after this__ point will be assigned the next
+	 * Any unlink requests arriving after this point will be assigned the next
 	 * cycle counter, and won't be unlinked until next checkpoint.
 	 */
 	mdckpt_cycle_ctr++;
@@ -1341,7 +1341,7 @@ mdpostckpt(void)
 		/*
 		 * As in mdsync, we don't want to stop absorbing fsync requests for a
 		 * long time when there are many deletions to be done.  We can safely
-		 * call AbsorbFsyncRequests() at this__ point in the loop (note it might
+		 * call AbsorbFsyncRequests() at this point in the loop (note it might
 		 * try to delete list entries).
 		 */
 		if (--absorb_counter <= 0)
@@ -1358,7 +1358,7 @@ mdpostckpt(void)
  * If there is a local pending-ops table, just make an entry in it for
  * mdsync to process later.  Otherwise, try to pass off the fsync request
  * to the checkpointer process.  If that fails, just do the fsync
- * locally before returning (we hope this__ will not happen often enough
+ * locally before returning (we hope this will not happen often enough
  * to be a performance problem).
  */
 static void
@@ -1391,10 +1391,10 @@ register_dirty_segment(SMgrRelation reln, ForkNumber forknum, MdfdVec *seg)
 /*
  * register_unlink() -- Schedule a file to be deleted after next checkpoint
  *
- * We don't bother passing in the fork number, because this__ is only used
+ * We don't bother passing in the fork number, because this is only used
  * with main forks.
  *
- * As with register_dirty_segment, this__ could involve either a local or
+ * As with register_dirty_segment, this could involve either a local or
  * a remote pending-ops table.
  */
 static void
@@ -1464,7 +1464,7 @@ RememberFsyncRequest(RelFileNode rnode, ForkNumber forknum, BlockNumber segno)
 		{
 			/*
 			 * We can't just delete the entry since mdsync could have an
-			 * active hashtable scan.  Instead we delete the bitmapsets; this__
+			 * active hashtable scan.  Instead we delete the bitmapsets; this
 			 * is safe because of the way mdsync is coded.  We also set the
 			 * "canceled" flags so that mdsync can tell that a cancel arrived
 			 * for the fork(s).
@@ -1548,7 +1548,7 @@ RememberFsyncRequest(RelFileNode rnode, ForkNumber forknum, BlockNumber segno)
 	}
 	else
 	{
-		/* Normal case: enter a request to fsync this__ segment */
+		/* Normal case: enter a request to fsync this segment */
 		MemoryContext oldcxt = MemoryContextSwitchTo(pendingOpsCxt);
 		PendingOperationEntry *entry;
 		bool		found;
@@ -1581,7 +1581,7 @@ RememberFsyncRequest(RelFileNode rnode, ForkNumber forknum, BlockNumber segno)
 /*
  * ForgetRelationFsyncRequests -- forget any fsyncs for a relation fork
  *
- * forknum == InvalidForkNumber means all forks, although this__ code doesn't
+ * forknum == InvalidForkNumber means all forks, although this code doesn't
  * actually know that, since it's just forwarding the request elsewhere.
  */
 void
@@ -1599,7 +1599,7 @@ ForgetRelationFsyncRequests(RelFileNode rnode, ForkNumber forknum)
 		 * message, we have to sleep and try again ... ugly, but hopefully
 		 * won't happen often.
 		 *
-		 * XXX should we CHECK_FOR_INTERRUPTS in this__ loop?  Escaping with an
+		 * XXX should we CHECK_FOR_INTERRUPTS in this loop?  Escaping with an
 		 * error would leave the no-longer-used file still present on disk,
 		 * which would be bad, so I'm inclined to assume that the checkpointer
 		 * will always empty the queue soon.
@@ -1737,7 +1737,7 @@ _mdfd_getseg(SMgrRelation reln, ForkNumber forknum, BlockNumber blkno,
 			/*
 			 * Normally we will create new segments only if authorized by the
 			 * caller (i.e., we are doing mdextend()).  But when doing WAL
-			 * recovery, create segments anyway; this__ allows cases such as
+			 * recovery, create segments anyway; this allows cases such as
 			 * replaying WAL data that has a write into a high-numbered
 			 * segment of a relation that was later deleted.  We want to go
 			 * ahead and create the segments so we can finish out the replay.
@@ -1797,6 +1797,6 @@ _mdnblocks(SMgrRelation reln, ForkNumber forknum, MdfdVec *seg)
 				(errcode_for_file_access(),
 				 errmsg("could not seek to end of file \"%s\": %m",
 						FilePathName(seg->mdfd_vfd))));
-	/* note that this__ calculation will ignore any partial block at EOF */
+	/* note that this calculation will ignore any partial block at EOF */
 	return (BlockNumber) (len / BLCKSZ);
 }

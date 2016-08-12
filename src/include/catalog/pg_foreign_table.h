@@ -9,7 +9,7 @@
  * src/include/catalog/pg_foreign_table.h
  *
  * NOTES
- *	  the genbki.sh script reads this__ file and generates .bki
+ *	  the genbki.sh script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_foreign_table definition.  cpp turns this__ into
+ *		pg_foreign_table definition.  cpp turns this into
  *		typedef struct FormData_pg_foreign_table
  * ----------------
  */

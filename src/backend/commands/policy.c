@@ -195,7 +195,7 @@ RelationBuildRowSecurity(Relation relation)
 	RowSecurityDesc *volatile rsdesc = NULL;
 
 	/*
-	 * Create a memory context to hold everything associated with this__
+	 * Create a memory context to hold everything associated with this
 	 * relation's row security policy.  This makes it easy to clean up during
 	 * a relcache flush.
 	 */
@@ -230,7 +230,7 @@ RelationBuildRowSecurity(Relation relation)
 								   NULL, 1, &skey);
 
 		/*
-		 * Loop through the row level security policies for this__ relation, if
+		 * Loop through the row level security policies for this relation, if
 		 * any.
 		 */
 		while (HeapTupleIsValid(tuple = systable_getnext(sscan)))
@@ -496,7 +496,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 
 	/* Must own relation. */
 	if (pg_class_ownercheck(relid, GetUserId()))
-		noperm = false; /* user is allowed to modify this__ policy */
+		noperm = false; /* user is allowed to modify this policy */
 	else
 		ereport(WARNING,
 				(errcode(ERRCODE_WARNING_PRIVILEGE_NOT_REVOKED),
@@ -506,7 +506,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 						RelationGetRelationName(rel))));
 
 	/*
-	 * If multiple roles exist on this__ policy, then remove the one we were
+	 * If multiple roles exist on this policy, then remove the one we were
 	 * asked to and leave the rest.
 	 */
 	if (!noperm && num_roles > 0)
@@ -555,7 +555,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 			qual_value = TextDatumGetCString(value_datum);
 			qual_expr = stringToNode(qual_value);
 
-			/* Add this__ rel to the parsestate's rangetable, for dependencies */
+			/* Add this rel to the parsestate's rangetable, for dependencies */
 			addRangeTableEntryForRelation(qual_pstate, rel, NULL, false, false);
 
 			qual_parse_rtable = qual_pstate->p_rtable;
@@ -577,7 +577,7 @@ RemoveRoleFromObjectPolicy(Oid roleid, Oid classid, Oid policy_id)
 			with_check_value = TextDatumGetCString(value_datum);
 			with_check_qual = stringToNode(with_check_value);
 
-			/* Add this__ rel to the parsestate's rangetable, for dependencies */
+			/* Add this rel to the parsestate's rangetable, for dependencies */
 			addRangeTableEntryForRelation(with_check_pstate, rel, NULL, false,
 										  false);
 
@@ -1035,7 +1035,7 @@ AlterPolicy(AlterPolicyStmt *stmt)
 		ArrayType  *policy_roles;
 
 		/*
-		 * We need to pull the set of roles this__ policy applies to from
+		 * We need to pull the set of roles this policy applies to from
 		 * what's in the catalog, so that we can recreate the dependencies
 		 * correctly for the policy.
 		 */
@@ -1089,7 +1089,7 @@ AlterPolicy(AlterPolicyStmt *stmt)
 			qual_value = TextDatumGetCString(value_datum);
 			qual = stringToNode(qual_value);
 
-			/* Add this__ rel to the parsestate's rangetable, for dependencies */
+			/* Add this rel to the parsestate's rangetable, for dependencies */
 			addRangeTableEntryForRelation(qual_pstate, target_table, NULL,
 										  false, false);
 
@@ -1130,7 +1130,7 @@ AlterPolicy(AlterPolicyStmt *stmt)
 			with_check_value = TextDatumGetCString(value_datum);
 			with_check_qual = stringToNode(with_check_value);
 
-			/* Add this__ rel to the parsestate's rangetable, for dependencies */
+			/* Add this rel to the parsestate's rangetable, for dependencies */
 			addRangeTableEntryForRelation(with_check_pstate, target_table, NULL,
 										  false, false);
 
@@ -1290,9 +1290,9 @@ rename_policy(RenameStmt *stmt)
 	ObjectAddressSet(address, PolicyRelationId, opoloid);
 
 	/*
-	 * Invalidate relation's relcache entry so that other backends (and this__
+	 * Invalidate relation's relcache entry so that other backends (and this
 	 * one too!) are sent SI message to make them rebuild relcache entries.
-	 * (Ideally this__ should happen automatically...)
+	 * (Ideally this should happen automatically...)
 	 */
 	CacheInvalidateRelcache(target_table);
 

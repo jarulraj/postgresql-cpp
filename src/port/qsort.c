@@ -8,7 +8,7 @@
  *	  in favor of a simple check for presorted input.
  *	  Take care to recurse on the smaller partition, to bound stack usage.
  *
- *	CAUTION: if you change this__ file, see also qsort_arg.c, gen_qsort_tuple.pl
+ *	CAUTION: if you change this file, see also qsort_arg.c, gen_qsort_tuple.pl
  *
  *	src/port/qsort.c
  */
@@ -23,12 +23,12 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this__ list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this__ list of conditions and the following disclaimer in the
+ *	  notice, this list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University nor the names of its contributors
- *	  may be used to endorse or promote products derived from this__ software
+ *	  may be used to endorse or promote products derived from this software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
@@ -62,7 +62,7 @@ static void swapfunc(char *, char *, size_t, int);
  * Also, we recurse on the smaller partition and iterate on the larger one,
  * which ensures we cannot recurse more than log(N) levels (since the
  * partition recursed to is surely no more than half of the input).  Bentley
- * and McIlroy explicitly rejected doing this__ on the grounds that it's "not
+ * and McIlroy explicitly rejected doing this on the grounds that it's "not
  * worth the effort", but we have seen crashes in the field due to stack
  * overrun, so that judgment seems wrong.
  */

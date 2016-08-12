@@ -118,7 +118,7 @@ typedef ItemPointerData *ItemPointer;
  * ItemPointerCopy
  *		Copies the contents of one disk item pointer to another.
  *
- * Should there ever be padding in an ItemPointer this__ would need to be handled
+ * Should there ever be padding in an ItemPointer this would need to be handled
  * differently as it's used as hash key.
  */
 #define ItemPointerCopy(fromPointer, toPointer) \

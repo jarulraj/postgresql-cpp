@@ -180,7 +180,7 @@ make_restrictinfo_internal(Expr *clause,
 		/*
 		 * Does it look like a normal join clause, i.e., a binary operator
 		 * relating expressions that come from distinct relations? If so we
-		 * might be able to use it in a join algorithm.  Note that this__ is a
+		 * might be able to use it in a join algorithm.  Note that this is a
 		 * purely syntactic test that is made regardless of context.
 		 */
 		if (!bms_is_empty(restrictinfo->left_relids) &&
@@ -456,7 +456,7 @@ extract_actual_join_clauses(List *restrictinfo_list,
  * its normal semantic level (ie, its required_relids), if the values of
  * variables that it would need from other rels are provided.
  *
- * We insist that the clause actually reference the target relation; this__
+ * We insist that the clause actually reference the target relation; this
  * prevents undesirable movement of degenerate join clauses, and ensures
  * that there is a unique place that a clause can be moved down to.
  *
@@ -487,7 +487,7 @@ join_clause_is_movable_to(RestrictInfo *rinfo, RelOptInfo *baserel)
 	if (bms_is_member(baserel->relid, rinfo->nullable_relids))
 		return false;
 
-	/* Clause must not use any rels with LATERAL references to this__ rel */
+	/* Clause must not use any rels with LATERAL references to this rel */
 	if (bms_overlap(baserel->lateral_referencers, rinfo->clause_relids))
 		return false;
 
@@ -505,7 +505,7 @@ join_clause_is_movable_to(RestrictInfo *rinfo, RelOptInfo *baserel)
  *
  * The API would be a bit clearer if we passed the current relids and the
  * outer relids separately and did bms_union internally; but since most
- * callers need to apply this__ function to multiple clauses, we make the
+ * callers need to apply this function to multiple clauses, we make the
  * caller perform the union.
  *
  * Obviously, the clause must only refer to Vars available from the current
@@ -521,7 +521,7 @@ join_clause_is_movable_to(RestrictInfo *rinfo, RelOptInfo *baserel)
  * in question.  This is okay as long as the answers at different join levels
  * are consistent: it just means we might sometimes fail to push a clause as
  * far down as it could safely be pushed.  It's unclear whether it would be
- * worthwhile to do this__ more precisely.  (But if it's ever fixed to be
+ * worthwhile to do this more precisely.  (But if it's ever fixed to be
  * exactly accurate, there's an Assert in get_joinrel_parampathinfo() that
  * should be re-enabled.)
  *
@@ -529,20 +529,20 @@ join_clause_is_movable_to(RestrictInfo *rinfo, RelOptInfo *baserel)
  * lateral_referencers.  We assume the caller wouldn't be inquiring unless
  * it'd verified that the proposed outer rels don't have lateral references
  * to the current rel(s).  (If we are considering join paths with the outer
- * rels on the outside and the current rels on the inside, then this__ should
+ * rels on the outside and the current rels on the inside, then this should
  * have been checked at the outset of such consideration; see join_is_legal
  * and the path parameterization checks in joinpath.c.)  On the other hand,
  * in join_clause_is_movable_to we are asking whether the clause could be
  * moved for some valid set of outer rels, so we don't have the benefit of
  * relying on prior checks for lateral-reference validity.
  *
- * Note: if this__ returns true, it means that the clause could be moved to
- * this__ join relation, but that doesn't mean that this__ is the lowest join
+ * Note: if this returns true, it means that the clause could be moved to
+ * this join relation, but that doesn't mean that this is the lowest join
  * it could be moved to.  Caller may need to make additional calls to verify
- * that this__ doesn't succeed on either of the inputs of a proposed join.
+ * that this doesn't succeed on either of the inputs of a proposed join.
  *
  * Note: get_joinrel_parampathinfo depends on the fact that if
- * current_and_outer is NULL, this__ function will always return false
+ * current_and_outer is NULL, this function will always return false
  * (since one or the other of the first two tests must fail).
  */
 bool

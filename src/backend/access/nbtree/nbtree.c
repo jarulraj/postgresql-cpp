@@ -263,7 +263,7 @@ btgettuple(PG_FUNCTION_ARGS)
 
 	/*
 	 * If we have any array keys, initialize them during first call for a
-	 * scan.  We can't do this__ in btrescan because we don't know the scan
+	 * scan.  We can't do this in btrescan because we don't know the scan
 	 * direction at that time.
 	 */
 	if (so->numArrayKeys && !BTScanPosIsValid(so->currPos))
@@ -279,7 +279,7 @@ btgettuple(PG_FUNCTION_ARGS)
 	do
 	{
 		/*
-		 * If we've already initialized this__ scan, we can just advance it in
+		 * If we've already initialized this scan, we can just advance it in
 		 * the appropriate direction.  If we haven't done so yet, we call
 		 * _bt_first() to get the first item in the scan.
 		 */
@@ -461,17 +461,17 @@ btrescan(PG_FUNCTION_ARGS)
 	/*
 	 * Allocate tuple workspace arrays, if needed for an index-only scan and
 	 * not already done in a previous rescan call.  To save on palloc
-	 * overhead, both workspaces are allocated as one palloc block; only this__
+	 * overhead, both workspaces are allocated as one palloc block; only this
 	 * function and btendscan know that.
 	 *
-	 * NOTE: this__ data structure also makes it safe to return data from a
+	 * NOTE: this data structure also makes it safe to return data from a
 	 * "name" column, even though btree name_ops uses an underlying storage
 	 * datatype of cstring.  The risk there is that "name" is supposed to be
 	 * padded to NAMEDATALEN, but the actual index tuple is probably shorter.
 	 * However, since we only return data out of tuples sitting in the
 	 * currTuples array, a fetch of NAMEDATALEN bytes can at worst pull some
 	 * data out of the markTuples array --- running off the end of memory for
-	 * a SIGSEGV is not possible.  Yeah, this__ is ugly as sin, but it beats
+	 * a SIGSEGV is not possible.  Yeah, this is ugly as sin, but it beats
 	 * adding special-case treatment for name_ops elsewhere.
 	 */
 	if (scan->xs_want_itup && so->currTuples == NULL)
@@ -587,7 +587,7 @@ btrestrpos(PG_FUNCTION_ARGS)
 		 * The scan has never moved to a new page since the last mark.  Just
 		 * restore the itemIndex.
 		 *
-		 * NB: In this__ case we can't count on anything in so->markPos to be
+		 * NB: In this case we can't count on anything in so->markPos to be
 		 * accurate.
 		 */
 		so->currPos.itemIndex = so->markItemIndex;
@@ -598,15 +598,15 @@ btrestrpos(PG_FUNCTION_ARGS)
 		 * so->markItemIndex < 0 but mark and current positions are on the
 		 * same page.  This would be an unusual case, where the scan moved to
 		 * a new index page after the mark, restored, and later restored again
-		 * without moving off the marked page.  It is not clear that this__ code
-		 * can currently be reached, but it seems better to make this__ function
-		 * robust for this__ case than to Assert() or elog() that it can't
+		 * without moving off the marked page.  It is not clear that this code
+		 * can currently be reached, but it seems better to make this function
+		 * robust for this case than to Assert() or elog() that it can't
 		 * happen.
 		 *
 		 * We neither want to set so->markItemIndex >= 0 (because that could
 		 * cause a later move to a new page to redo the memcpy() executions)
 		 * nor re-execute the memcpy() functions for a restore within the same
-		 * page.  The previous restore to this__ page already set everything
+		 * page.  The previous restore to this page already set everything
 		 * except markPos as it should be.
 		 */
 		so->currPos.itemIndex = so->markPos.itemIndex;
@@ -667,7 +667,7 @@ btbulkdelete(PG_FUNCTION_ARGS)
 	if (stats == NULL)
 		stats = (IndexBulkDeleteResult *) palloc0(sizeof(IndexBulkDeleteResult));
 
-	/* Establish the vacuum cycle ID to use for this__ scan */
+	/* Establish the vacuum cycle ID to use for this scan */
 	/* The ENSURE stuff ensures we clean up shared memory on failure */
 	PG_ENSURE_ERROR_CLEANUP(_bt_end_vacuum_callback, PointerGetDatum(rel));
 	{
@@ -718,7 +718,7 @@ btvacuumcleanup(PG_FUNCTION_ARGS)
 	 * It's quite possible for us to be fooled by concurrent page splits into
 	 * double-counting some index tuples, so disbelieve any total that exceeds
 	 * the underlying heap's count ... if we know that accurately.  Otherwise
-	 * this__ might just make matters worse.
+	 * this might just make matters worse.
 	 */
 	if (!info->estimated_count)
 	{
@@ -735,7 +735,7 @@ btvacuumcleanup(PG_FUNCTION_ARGS)
  * This combines the functions of looking for leaf tuples that are deletable
  * according to the vacuum callback, looking for empty pages that can be
  * deleted, and looking for old deleted pages that can be recycled.  Both
- * btbulkdelete and btvacuumcleanup invoke this__ (the latter only if no
+ * btbulkdelete and btvacuumcleanup invoke this (the latter only if no
  * btbulkdelete call occurred).
  *
  * The caller is responsible for initially allocating/zeroing a stats struct
@@ -862,7 +862,7 @@ btvacuumscan(IndexVacuumInfo *info, IndexBulkDeleteResult *stats,
  * btvacuumpage --- VACUUM one page
  *
  * This processes a single page for btvacuumscan().  In some cases we
- * must go back and re-examine previously-scanned pages; this__ routine
+ * must go back and re-examine previously-scanned pages; this routine
  * recurses when necessary to handle that case.
  *
  * blkno is the page to process.  orig_blkno is the highest block number
@@ -926,7 +926,7 @@ restart:
 	/* Page is valid, see what to do with it */
 	if (_bt_page_recyclable(page))
 	{
-		/* Okay to recycle this__ page */
+		/* Okay to recycle this page */
 		RecordFreeIndexPage(rel, blkno);
 		vstate->totFreePages++;
 		stats->pages_deleted++;
@@ -951,7 +951,7 @@ restart:
 
 		/*
 		 * Trade in the initial read lock for a super-exclusive write lock on
-		 * this__ page.  We must get such a lock on every leaf page over the
+		 * this page.  We must get such a lock on every leaf page over the
 		 * course of the vacuum scan, whether or not it actually contains any
 		 * deletable tuples --- see nbtree/README.
 		 */
@@ -970,7 +970,7 @@ restart:
 		 * are concerned about is a page split that happened since we started
 		 * the vacuum scan.  If the split moved some tuples to a lower page
 		 * then we might have missed 'em.  If so, set up for tail recursion.
-		 * (Must do this__ before possibly clearing btpo_cycleid below!)
+		 * (Must do this before possibly clearing btpo_cycleid below!)
 		 */
 		if (vstate->cycleid != 0 &&
 			opaque->btpo_cycleid == vstate->cycleid &&
@@ -1034,7 +1034,7 @@ restart:
 			/*
 			 * Notice that the issued XLOG_BTREE_VACUUM WAL record includes an
 			 * instruction to the replay code to get cleanup lock on all pages
-			 * between the previous lastBlockVacuumed and this__ page.  This
+			 * between the previous lastBlockVacuumed and this page.  This
 			 * ensures that WAL replay locks all leaf pages at some point.
 			 *
 			 * Since we can visit leaf pages out-of-order when recursing,
@@ -1059,12 +1059,12 @@ restart:
 		else
 		{
 			/*
-			 * If the page has been split during this__ vacuum cycle, it seems
+			 * If the page has been split during this vacuum cycle, it seems
 			 * worth expending a write to clear btpo_cycleid even if we don't
 			 * have any deletions to do.  (If we do, _bt_delitems_vacuum takes
-			 * care of this__.)  This ensures we won't process the page again.
+			 * care of this.)  This ensures we won't process the page again.
 			 *
-			 * We treat this__ like a hint-bit update because there's no need to
+			 * We treat this like a hint-bit update because there's no need to
 			 * WAL-log it.
 			 */
 			if (vstate->cycleid != 0 &&
@@ -1098,7 +1098,7 @@ restart:
 
 		ndel = _bt_pagedel(rel, buf);
 
-		/* count only this__ page, else may double-count parent */
+		/* count only this page, else may double-count parent */
 		if (ndel)
 			stats->pages_deleted++;
 
@@ -1125,7 +1125,7 @@ restart:
 /*
  *	btcanreturn() -- Check whether btree indexes support index-only scans.
  *
- * btrees always do, so this__ is trivial.
+ * btrees always do, so this is trivial.
  */
 Datum
 btcanreturn(PG_FUNCTION_ARGS)

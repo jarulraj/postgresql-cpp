@@ -87,7 +87,7 @@ CheckLogicalDecodingRequirements(void)
 	/* ----
 	 * TODO: We got to change that someday soon...
 	 *
-	 * There's basically three things missing to allow this__:
+	 * There's basically three things missing to allow this:
 	 * 1) We need to be able to correctly and quickly identify the timeline a
 	 *	  LSN belongs to
 	 * 2) We need to force hot_standby_feedback to be enabled at all times so
@@ -236,7 +236,7 @@ CreateInitDecodingContext(char *plugin,
 	if (slot->data.database != MyDatabaseId)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-		   errmsg("replication slot \"%s\" was not created in this__ database",
+		   errmsg("replication slot \"%s\" was not created in this database",
 				  NameStr(slot->data.name))));
 
 	if (IsTransactionState() &&
@@ -252,9 +252,9 @@ CreateInitDecodingContext(char *plugin,
 
 	/*
 	 * The replication slot mechanism is used to prevent removal of required
-	 * WAL. As there is no interlock between this__ and checkpoints required WAL
+	 * WAL. As there is no interlock between this and checkpoints required WAL
 	 * could be removed before ReplicationSlotsComputeRequiredLSN() has been
-	 * called to prevent that. In the very unlikely case that this__ happens
+	 * called to prevent that. In the very unlikely case that this happens
 	 * we'll just retry.
 	 */
 	while (true)
@@ -385,7 +385,7 @@ CreateDecodingContext(XLogRecPtr start_lsn,
 	if (slot->data.database != MyDatabaseId)
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
-		  (errmsg("replication slot \"%s\" was not created in this__ database",
+		  (errmsg("replication slot \"%s\" was not created in this database",
 				  NameStr(slot->data.name)))));
 
 	if (start_lsn == InvalidXLogRecPtr)
@@ -396,7 +396,7 @@ CreateDecodingContext(XLogRecPtr start_lsn,
 	else if (start_lsn < slot->data.confirmed_flush)
 	{
 		/*
-		 * It might seem like we should error out in this__ case, but it's
+		 * It might seem like we should error out in this case, but it's
 		 * pretty common for a client to acknowledge a LSN it doesn't have to
 		 * do anything for, and thus didn't store persistently, because the
 		 * xlog records didn't result in anything relevant for logical
@@ -706,9 +706,9 @@ change_cb_wrapper(ReorderBuffer *cache, ReorderBufferTXN *txn,
 	ctx->write_xid = txn->xid;
 
 	/*
-	 * report this__ change's lsn so replies from clients can give an up2date
+	 * report this change's lsn so replies from clients can give an up2date
 	 * answer. This won't ever be enough (and shouldn't be!) to confirm
-	 * receipt of this__ transaction, but it might allow another transaction's
+	 * receipt of this transaction, but it might allow another transaction's
 	 * commit to be confirmed with one message.
 	 */
 	ctx->write_location = change->lsn;
@@ -776,8 +776,8 @@ LogicalIncreaseXminForSlot(XLogRecPtr current_lsn, TransactionId xmin)
 	}
 
 	/*
-	 * If the client has already confirmed up to this__ lsn, we directly can
-	 * mark this__ as accepted. This can happen if we restart decoding in a
+	 * If the client has already confirmed up to this lsn, we directly can
+	 * mark this as accepted. This can happen if we restart decoding in a
 	 * slot.
 	 */
 	else if (current_lsn <= slot->data.confirmed_flush)
@@ -809,7 +809,7 @@ LogicalIncreaseXminForSlot(XLogRecPtr current_lsn, TransactionId xmin)
  * Mark the minimal LSN (restart_lsn) we need to read to replay all
  * transactions that have not yet committed at current_lsn.
  *
- * Just like IncreaseRestartDecodingForSlot this__ only takes effect when the
+ * Just like IncreaseRestartDecodingForSlot this only takes effect when the
  * client has confirmed to have received current_lsn.
  */
 void
@@ -832,8 +832,8 @@ LogicalIncreaseRestartDecodingForSlot(XLogRecPtr current_lsn, XLogRecPtr restart
 	}
 
 	/*
-	 * We might have already flushed far enough to directly accept this__ lsn,
-	 * in this__ case there is no need to check for existing candidate LSNs
+	 * We might have already flushed far enough to directly accept this lsn,
+	 * in this case there is no need to check for existing candidate LSNs
 	 */
 	else if (current_lsn <= slot->data.confirmed_flush)
 	{

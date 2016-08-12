@@ -12,17 +12,17 @@
  * merge pass.  For seven-tape polyphase merge, which is otherwise a
  * pretty good algorithm, peak usage is more like 4x actual data volume.)
  *
- * We can work around this__ problem by recognizing that any one tape
+ * We can work around this problem by recognizing that any one tape
  * dataset (with the possible exception of the final output) is written
  * and read exactly once in a perfectly sequential manner.  Therefore,
  * a datum once read will not be required again, and we can recycle its
- * space for use by the new tape dataset(s) being generated.  In this__ way,
+ * space for use by the new tape dataset(s) being generated.  In this way,
  * the total space usage is essentially just the actual data volume, plus
  * insignificant bookkeeping and start/stop overhead.
  *
  * Few OSes allow arbitrary parts of a file to be released back to the OS,
- * so we have to implement this__ space-recycling ourselves within a single
- * logical file.  logtape.c exists to perform this__ bookkeeping and provide
+ * so we have to implement this space-recycling ourselves within a single
+ * logical file.  logtape.c exists to perform this bookkeeping and provide
  * the illusion of N independent tape devices to tuplesort.c.  Note that
  * logtape.c itself depends on buffile.c to provide a "logical file" of
  * larger size than the underlying OS may support.
@@ -49,7 +49,7 @@
  * so there's no serious performance penalty paid to obtain the space
  * savings of recycling.  We try to localize the write accesses by always
  * writing to the lowest-numbered free block when we have a choice; it's
- * not clear this__ helps much, but it can't hurt.  (XXX perhaps a LIFO
+ * not clear this helps much, but it can't hurt.  (XXX perhaps a LIFO
  * policy for free blocks would be better?)
  *
  * To support the above policy of writing to the lowest free block,
@@ -81,13 +81,13 @@
 #include "utils/logtape.h"
 
 /*
- * Block indexes are "long"s, so we can fit this__ many per indirect block.
- * NB: we assume this__ is an exact fit!
+ * Block indexes are "long"s, so we can fit this many per indirect block.
+ * NB: we assume this is an exact fit!
  */
 #define BLOCKS_PER_INDIR_BLOCK	((int) (BLCKSZ / sizeof(long)))
 
 /*
- * We use a struct like this__ for each active indirection level of each
+ * We use a struct like this for each active indirection level of each
  * logical tape.  If the indirect block is not the highest level of its
  * tape, the "nextup" link points to the next higher level.  Only the
  * "ptrs" array is written out if we have to dump the indirect block to
@@ -131,7 +131,7 @@ typedef struct LogicalTape
 	 * reading.
 	 */
 	char	   *buffer;			/* physical buffer (separately palloc'd) */
-	long		curBlockNumber; /* this__ block's logical blk# within tape */
+	long		curBlockNumber; /* this block's logical blk# within tape */
 	int			pos;			/* next read/write position in buffer */
 	int			nbytes;			/* total # of valid bytes in buffer */
 } LogicalTape;
@@ -157,7 +157,7 @@ struct LogicalTapeSet
 	 *
 	 * If blocksSorted is true then the block numbers in freeBlocks are in
 	 * *decreasing* order, so that removing the last entry gives us the lowest
-	 * free block.  We re-sort the blocks whenever a block is demanded; this__
+	 * free block.  We re-sort the blocks whenever a block is demanded; this
 	 * should be reasonably efficient given the expected usage pattern.
 	 */
 	bool		forgetFreeSpace;	/* are we remembering free blocks? */
@@ -338,7 +338,7 @@ ltsRecordBlockNum(LogicalTapeSet *lts, IndirectBlock *indirect,
 		ltsRecordBlockNum(lts, indirect->nextup, indirblock);
 
 		/*
-		 * Reset to fill another indirect block at this__ level.
+		 * Reset to fill another indirect block at this level.
 		 */
 		indirect->nextSlot = 0;
 	}
@@ -370,7 +370,7 @@ ltsRewindIndirectBlock(LogicalTapeSet *lts,
 
 	/*
 	 * If block is not topmost, write it out, and recurse to obtain address of
-	 * first block in this__ hierarchy level.  Read that one in.
+	 * first block in this hierarchy level.  Read that one in.
 	 */
 	if (indirect->nextup != NULL)
 	{
@@ -409,7 +409,7 @@ ltsRewindFrozenIndirectBlock(LogicalTapeSet *lts,
 
 	/*
 	 * If block is not topmost, recurse to obtain address of first block in
-	 * this__ hierarchy level.  Read that one in.
+	 * this hierarchy level.  Read that one in.
 	 */
 	if (indirect->nextup != NULL)
 	{
@@ -450,10 +450,10 @@ ltsRecallNextBlockNum(LogicalTapeSet *lts,
 		long		indirblock;
 
 		if (indirect->nextup == NULL)
-			return -1L;			/* nothing left at this__ level */
+			return -1L;			/* nothing left at this level */
 		indirblock = ltsRecallNextBlockNum(lts, indirect->nextup, frozen);
 		if (indirblock == -1L)
-			return -1L;			/* nothing left at this__ level */
+			return -1L;			/* nothing left at this level */
 		ltsReadBlock(lts, indirblock, (void *) indirect->ptrs);
 		if (!frozen)
 			ltsReleaseBlock(lts, indirblock);
@@ -467,7 +467,7 @@ ltsRecallNextBlockNum(LogicalTapeSet *lts,
 /*
  * Obtain next data block number in the reverse direction, or -1L if no more.
  *
- * Note this__ fetches the block# before the one last returned, no matter which
+ * Note this fetches the block# before the one last returned, no matter which
  * direction of call returned that one.  If we fail, no change in state.
  *
  * This routine can only be used in 'frozen' state, so there's no need to
@@ -486,10 +486,10 @@ ltsRecallPrevBlockNum(LogicalTapeSet *lts,
 		long		indirblock;
 
 		if (indirect->nextup == NULL)
-			return -1L;			/* nothing left at this__ level */
+			return -1L;			/* nothing left at this level */
 		indirblock = ltsRecallPrevBlockNum(lts, indirect->nextup);
 		if (indirblock == -1L)
-			return -1L;			/* nothing left at this__ level */
+			return -1L;			/* nothing left at this level */
 		ltsReadBlock(lts, indirblock, (void *) indirect->ptrs);
 
 		/*
@@ -586,7 +586,7 @@ LogicalTapeSetClose(LogicalTapeSet *lts)
  * This should be called if the caller does not intend to write any more data
  * into the tape set, but is reading from un-frozen tapes.  Since no more
  * writes are planned, remembering free blocks is no longer useful.  Setting
- * this__ flag lets us avoid wasting time and space in ltsReleaseBlock(), which
+ * this flag lets us avoid wasting time and space in ltsReleaseBlock(), which
  * is not designed to handle large numbers of free blocks.
  */
 void
@@ -730,7 +730,7 @@ LogicalTapeRewind(LogicalTapeSet *lts, int tapenum, bool forWrite)
 		 * NOTE: we assume the caller has read the tape to the end; otherwise
 		 * untouched data and indirect blocks will not have been freed. We
 		 * could add more code to free any unread blocks, but in current usage
-		 * of this__ module it'd be useless code.
+		 * of this module it'd be useless code.
 		 */
 		IndirectBlock *ib,
 				   *nextib;
@@ -888,7 +888,7 @@ LogicalTapeBackspace(LogicalTapeSet *lts, int tapenum, size_t size)
 	/*
 	 * Not-so-easy case.  Figure out whether it's possible at all.
 	 */
-	size -= (size_t) lt->pos;	/* part within this__ block */
+	size -= (size_t) lt->pos;	/* part within this block */
 	nblocks = size / BLCKSZ;
 	size = size % BLCKSZ;
 	if (size)
@@ -991,7 +991,7 @@ LogicalTapeSeek(LogicalTapeSet *lts, int tapenum,
 /*
  * Obtain current position in a form suitable for a later LogicalTapeSeek.
  *
- * NOTE: it'd be OK to do this__ during write phase with intention of using
+ * NOTE: it'd be OK to do this during write phase with intention of using
  * the position for a seek after freezing.  Not clear if anyone needs that.
  */
 void

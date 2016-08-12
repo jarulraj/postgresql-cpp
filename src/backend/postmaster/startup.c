@@ -76,7 +76,7 @@ startupproc_quickdie(SIGNAL_ARGS)
 	 * transaction.  Just nail the windows shut and get out of town.  Now that
 	 * there's an atexit callback to prevent third-party code from breaking
 	 * things by calling exit() directly, we have to reset the callbacks
-	 * explicitly to make this__ work as intended.
+	 * explicitly to make this work as intended.
 	 */
 	on_exit_reset();
 
@@ -85,7 +85,7 @@ startupproc_quickdie(SIGNAL_ARGS)
 	 * system reset cycle if some idiot DBA sends a manual SIGQUIT to a random
 	 * backend.  This is necessary precisely because we don't clean up our
 	 * shared memory state.  (The "dead man switch" mechanism in pmsignal.c
-	 * should ensure the postmaster sees this__ as a crash, too, but no harm in
+	 * should ensure the postmaster sees this as a crash, too, but no harm in
 	 * being doubly sure.)
 	 */
 	exit(2);
@@ -228,7 +228,7 @@ PreRestoreCommand(void)
 	 * Set in_restore_command to tell the signal handler that we should exit
 	 * right away on SIGTERM. We know that we're at a safe point to do that.
 	 * Check if we had already received the signal, so that we don't miss a
-	 * shutdown request received just before this__.
+	 * shutdown request received just before this.
 	 */
 	in_restore_command = true;
 	if (shutdown_requested)

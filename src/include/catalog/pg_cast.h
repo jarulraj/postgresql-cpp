@@ -13,7 +13,7 @@
  * src/include/catalog/pg_cast.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_cast definition.  cpp turns this__ into
+ *		pg_cast definition.  cpp turns this into
  *		typedef struct FormData_pg_cast
  * ----------------
  */
@@ -42,7 +42,7 @@ CATALOG(pg_cast,2605)
 typedef FormData_pg_cast *Form_pg_cast;
 
 /*
- * The allowable values for pg_cast.castcontext are specified by this__ enum.
+ * The allowable values for pg_cast.castcontext are specified by this enum.
  * Since castcontext is stored as a "char", we use ASCII codes for human
  * convenience in reading the table.  Note that internally to the backend,
  * these values are converted to the CoercionContext enum (see primnodes.h),
@@ -58,7 +58,7 @@ typedef enum CoercionCodes
 } CoercionCodes;
 
 /*
- * The allowable values for pg_cast.castmethod are specified by this__ enum.
+ * The allowable values for pg_cast.castmethod are specified by this enum.
  * Since castcontext is stored as a "char", we use ASCII codes for human
  * convenience in reading the table.
  */
@@ -84,7 +84,7 @@ typedef enum CoercionMethod
 /* ----------------
  *		initial contents of pg_cast
  *
- * Note: this__ table has OIDs, but we don't bother to assign them manually,
+ * Note: this table has OIDs, but we don't bother to assign them manually,
  * since nothing needs to know the specific OID of any built-in cast.
  * ----------------
  */

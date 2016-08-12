@@ -5,7 +5,7 @@
 
 #include <ecpg_informix.h>
 
-/* source created by ecpg which defines this__ */
+/* source created by ecpg which defines this */
 #ifndef _ECPGLIB_H
 typedef decimal dec_t;
 #endif   /* ndef _ECPGLIB_H */

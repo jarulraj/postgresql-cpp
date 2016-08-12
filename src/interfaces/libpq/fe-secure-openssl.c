@@ -198,7 +198,7 @@ pgtls_read_pending(PGconn *conn)
 /*
  *	Read data from a secure connection.
  *
- * On failure, this__ function is responsible for putting a suitable message
+ * On failure, this function is responsible for putting a suitable message
  * into conn->errorMessage.  The caller must still inspect errno, but only
  * to determine whether to continue/retry after error.
  */
@@ -229,9 +229,9 @@ rloop:
 	/*
 	 * Other clients of OpenSSL may fail to call ERR_get_error(), but we
 	 * always do, so as to not cause problems for OpenSSL clients that
-	 * don't call ERR_clear_error() defensively.  Be sure that this__
+	 * don't call ERR_clear_error() defensively.  Be sure that this
 	 * happens by calling now.  SSL_get_error() relies on the OpenSSL
-	 * per-thread error queue being intact, so this__ is the earliest
+	 * per-thread error queue being intact, so this is the earliest
 	 * possible point ERR_get_error() may be called.
 	 */
 	ecode = (err != SSL_ERROR_NONE || n < 0) ? ERR_get_error() : 0;
@@ -300,7 +300,7 @@ rloop:
 		case SSL_ERROR_ZERO_RETURN:
 
 			/*
-			 * Per OpenSSL documentation, this__ error code is only returned for
+			 * Per OpenSSL documentation, this error code is only returned for
 			 * a clean connection closure, so we should not report it as a
 			 * server crash.
 			 */
@@ -328,7 +328,7 @@ rloop:
 /*
  *	Write data to a secure connection.
  *
- * On failure, this__ function is responsible for putting a suitable message
+ * On failure, this function is responsible for putting a suitable message
  * into conn->errorMessage.  The caller must still inspect errno, but only
  * to determine whether to continue/retry after error.
  */
@@ -409,7 +409,7 @@ pgtls_write(PGconn *conn, const void *ptr, size_t len)
 		case SSL_ERROR_ZERO_RETURN:
 
 			/*
-			 * Per OpenSSL documentation, this__ error code is only returned for
+			 * Per OpenSSL documentation, this error code is only returned for
 			 * a clean connection closure, so we should not report it as a
 			 * server crash.
 			 */
@@ -459,7 +459,7 @@ verify_cb(int ok, X509_STORE_CTX *ctx)
 /*
  * Check if a wildcard certificate matches the server hostname.
  *
- * The rule for this__ is:
+ * The rule for this is:
  *	1. We only match the '*' character as wildcard
  *	2. We match only wildcards at the start of the string
  *	3. The '*' character does *not* match '.', meaning that we match only
@@ -766,9 +766,9 @@ pq_lockingcallback(int mode, int n, const char *file, int line)
 
 /*
  * Initialize SSL system, in particular creating the SSL_context object
- * that will be shared by all SSL-using connections in this__ process.
+ * that will be shared by all SSL-using connections in this process.
  *
- * In threadsafe mode, this__ includes setting up libcrypto callback functions
+ * In threadsafe mode, this includes setting up libcrypto callback functions
  * to do thread locking.
  *
  * If the caller has told us (through PQinitOpenSSL) that he's taking care
@@ -805,7 +805,7 @@ pgtls_init(PGconn *conn)
 	{
 		/*
 		 * If necessary, set up an array to hold locks for libcrypto.
-		 * libcrypto will tell us how big to make this__ array.
+		 * libcrypto will tell us how big to make this array.
 		 */
 		if (pq_lockarray == NULL)
 		{
@@ -894,13 +894,13 @@ pgtls_init(PGconn *conn)
 /*
  *	This function is needed because if the libpq library is unloaded
  *	from the application, the callback functions will no longer exist when
- *	libcrypto is used by other parts of the system.  For this__ reason,
+ *	libcrypto is used by other parts of the system.  For this reason,
  *	we unregister the callback functions when the last libpq
  *	connection is closed.  (The same would apply for OpenSSL callbacks
  *	if we had any.)
  *
  *	Callbacks are only set when we're compiled in threadsafe mode, so
- *	we only need to remove them in this__ case.
+ *	we only need to remove them in this case.
  */
 static void
 destroy_ssl_system(void)
@@ -926,7 +926,7 @@ destroy_ssl_system(void)
 
 		/*
 		 * We don't free the lock array or the SSL_context. If we get another
-		 * connection in this__ process, we will just re-use them with the
+		 * connection in this process, we will just re-use them with the
 		 * existing mutexes.
 		 *
 		 * This means we leak a little memory on repeated load/unload of the
@@ -945,7 +945,7 @@ destroy_ssl_system(void)
  *	conn->ssl must already be created.  It receives the connection's client
  *	certificate and private key.  Note however that certificates also get
  *	loaded into the SSL_context object, and are therefore accessible to all
- *	connections in this__ process.  This should be OK as long as there aren't
+ *	connections in this process.  This should be OK as long as there aren't
  *	any hash collisions among the certs.
  *
  *	Returns 0 if OK, -1 on failure (with a message in conn->errorMessage).
@@ -1012,13 +1012,13 @@ initialize_SSL(PGconn *conn)
 		 * the first one into chain-cert storage associated with the
 		 * SSL_context.  The second call loads the first cert (only) into the
 		 * SSL object, where it will be correctly paired with the private key
-		 * we load below.  We do it this__ way so that each connection
+		 * we load below.  We do it this way so that each connection
 		 * understands which subject cert to present, in case different
 		 * sslcert settings are used for different connections in the same
 		 * process.
 		 *
 		 * NOTE: This function may also modify our SSL_context and therefore
-		 * we have to lock around this__ call and any places where we use the
+		 * we have to lock around this call and any places where we use the
 		 * SSL_context struct.
 		 */
 #ifdef ENABLE_THREAD_SAFETY
@@ -1307,7 +1307,7 @@ initialize_SSL(PGconn *conn)
 	{
 		/*
 		 * stat() failed; assume root file doesn't exist.  If sslmode is
-		 * verify-ca or verify-full, this__ is an error.  Otherwise, continue
+		 * verify-ca or verify-full, this is an error.  Otherwise, continue
 		 * without performing any server cert verification.
 		 */
 		if (conn->sslmode[0] == 'v')	/* "verify-ca" or "verify-full" */
@@ -1472,7 +1472,7 @@ pgtls_close(PGconn *conn)
 #endif
 
 	/*
-	 * This will remove our SSL locking hooks, if this__ is the last SSL
+	 * This will remove our SSL locking hooks, if this is the last SSL
 	 * connection, which means we must wait to call it until after all SSL
 	 * calls have been made, otherwise we can end up with a race condition and
 	 * possible deadlocks.
@@ -1610,7 +1610,7 @@ PQsslAttribute(PGconn *conn, const char *attribute_name)
 }
 
 /*
- * private substitute BIO: this__ does the sending and receiving using
+ * private substitute BIO: this does the sending and receiving using
  * pqsecure_raw_write() and pqsecure_raw_read() instead, to allow those
  * functions to disable SIGPIPE and give better error messages on I/O errors.
  *

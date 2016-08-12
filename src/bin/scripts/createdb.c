@@ -53,7 +53,7 @@ main(int argc, char *argv[])
 	bool		echo = false;
 	char	   *owner = NULL;
 	char	   *tablespace = NULL;
-	char	   *template__ = NULL;
+	char	   *template = NULL;
 	char	   *encoding = NULL;
 	char	   *lc_collate = NULL;
 	char	   *lc_ctype = NULL;
@@ -98,7 +98,7 @@ main(int argc, char *argv[])
 				tablespace = pg_strdup(optarg);
 				break;
 			case 'T':
-				template__ = pg_strdup(optarg);
+				template = pg_strdup(optarg);
 				break;
 			case 'E':
 				encoding = pg_strdup(optarg);
@@ -188,8 +188,8 @@ main(int argc, char *argv[])
 		appendPQExpBuffer(&sql, " TABLESPACE %s", fmtId(tablespace));
 	if (encoding)
 		appendPQExpBuffer(&sql, " ENCODING '%s'", encoding);
-	if (template__)
-		appendPQExpBuffer(&sql, " TEMPLATE %s", fmtId(template__));
+	if (template)
+		appendPQExpBuffer(&sql, " TEMPLATE %s", fmtId(template));
 	if (lc_collate)
 		appendPQExpBuffer(&sql, " LC_COLLATE '%s'", lc_collate);
 	if (lc_ctype)
@@ -259,9 +259,9 @@ help(const char *progname)
 	printf(_("      --lc-collate=LOCALE      LC_COLLATE setting for the database\n"));
 	printf(_("      --lc-ctype=LOCALE        LC_CTYPE setting for the database\n"));
 	printf(_("  -O, --owner=OWNER            database user to own the new database\n"));
-	printf(_("  -T, --template__=TEMPLATE      template__ database to copy\n"));
+	printf(_("  -T, --template=TEMPLATE      template database to copy\n"));
 	printf(_("  -V, --version                output version information, then exit\n"));
-	printf(_("  -?, --help                   show this__ help, then exit\n"));
+	printf(_("  -?, --help                   show this help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME          database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT              database server port\n"));

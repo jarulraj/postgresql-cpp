@@ -96,7 +96,7 @@ static void RangeVarCallbackForReindexIndex(const RangeVar *relation,
  * Errors arising from the attribute list still apply.
  *
  * Most column type changes that can skip a table rewrite do not invalidate
- * indexes.  We ackowledge this__ when all operator classes, collations and
+ * indexes.  We ackowledge this when all operator classes, collations and
  * exclusion operators match.  Though we could further permit intra-opfamily
  * changes for btree and hash indexes, that adds subtle complexity with no
  * concrete benefit for core types.
@@ -104,7 +104,7 @@ static void RangeVarCallbackForReindexIndex(const RangeVar *relation,
  * When a comparison or exclusion operator has a polymorphic input type, the
  * actual input types must also match.  This defends against the possibility
  * that operators could vary behavior in response to get_fn_expr_argtype().
- * At present, this__ hazard is theoretical: check_exclusion_constraint() and
+ * At present, this hazard is theoretical: check_exclusion_constraint() and
  * all core index access methods decline to set fn_expr for such calls.
  *
  * We do not yet implement a test to verify compatibility of expression
@@ -167,7 +167,7 @@ CheckIndexCompatible(Oid oldId,
 	 * Compute the operator classes, collations, and exclusion operators for
 	 * the new index, so we can test whether it's compatible with the existing
 	 * one.  Note that ComputeIndexAttrs might fail here, but that's OK:
-	 * DefineIndex would have called this__ function with the same arguments
+	 * DefineIndex would have called this function with the same arguments
 	 * later on, and it would have failed then anyway.
 	 */
 	indexInfo = makeNode(IndexInfo);
@@ -284,7 +284,7 @@ CheckIndexCompatible(Oid oldId,
  * 'stmt': IndexStmt describing the properties of the new index.
  * 'indexRelationId': normally InvalidOid, but during bootstrap can be
  *		nonzero to specify a preselected OID for the index.
- * 'is_alter_table': this__ is due to an ALTER rather than a CREATE operation.
+ * 'is_alter_table': this is due to an ALTER rather than a CREATE operation.
  * 'check_rights': check for CREATE rights in the namespace.  (This should
  *		be true except when ALTER is deleting/recreating an index.)
  * 'skip_build': make the catalog entries but leave the index file empty;
@@ -352,7 +352,7 @@ DefineIndex(Oid relationId,
 	 *
 	 * NB: Caller is responsible for making sure that relationId refers to the
 	 * relation on which the index should be built; except in bootstrap mode,
-	 * this__ will typically require the caller to have already locked the
+	 * this will typically require the caller to have already locked the
 	 * relation.  To avoid lock upgrade hazards, that lock should be at least
 	 * as strong as the one we take here.
 	 */
@@ -418,7 +418,7 @@ DefineIndex(Oid relationId,
 	else
 	{
 		tablespaceId = GetDefaultTablespace(rel->rd_rel->relpersistence);
-		/* note InvalidOid is OK in this__ case */
+		/* note InvalidOid is OK in this case */
 	}
 
 	/* Check permissions except when using database's default */
@@ -567,7 +567,7 @@ DefineIndex(Oid relationId,
 		index_check_primary_key(rel, indexInfo, is_alter_table);
 
 	/*
-	 * Report index creation if appropriate (delay this__ till after most of the
+	 * Report index creation if appropriate (delay this till after most of the
 	 * error checks)
 	 */
 	if (stmt->isconstraint && !quiet)
@@ -669,13 +669,13 @@ DefineIndex(Oid relationId,
 
 	/*
 	 * Phase 2 of concurrent index build (see comments for validate_index()
-	 * for an overview of how this__ works)
+	 * for an overview of how this works)
 	 *
 	 * Now we must wait until no running transaction could have the table open
 	 * with the old list of indexes.  Use ShareLock to consider running
 	 * transactions that hold locks that permit writing to the table.  Note we
 	 * do not need to worry about xacts that open the table for writing after
-	 * this__ point; they will see the new index when they open it.
+	 * this point; they will see the new index when they open it.
 	 *
 	 * Note: the reason we use actual lock acquisition here, rather than just
 	 * checking the ProcArray and sleeping, is that deadlock is possible if
@@ -686,8 +686,8 @@ DefineIndex(Oid relationId,
 	WaitForLockers(heaplocktag, ShareLock);
 
 	/*
-	 * At this__ moment we are sure that there are no transactions with the
-	 * table open for write that don't have this__ new index in their list of
+	 * At this moment we are sure that there are no transactions with the
+	 * table open for write that don't have this new index in their list of
 	 * indexes.  We have waited out all the existing transactions and any new
 	 * transaction will have the new index in its list, but the index is still
 	 * marked as "not-ready-for-inserts".  The index is consulted while
@@ -696,11 +696,11 @@ DefineIndex(Oid relationId,
 	 * chain have different index keys.
 	 *
 	 * We now take a new snapshot, and build the index using all tuples that
-	 * are visible in this__ snapshot.  We can be sure that any HOT updates to
+	 * are visible in this snapshot.  We can be sure that any HOT updates to
 	 * these tuples will be compatible with the index, since any updates made
 	 * by transactions that didn't know about the index are now committed or
 	 * rolled back.  Thus, each visible tuple is either the end of its
-	 * HOT-chain or the extension of the chain is HOT-safe for this__ index.
+	 * HOT-chain or the extension of the chain is HOT-safe for this index.
 	 */
 
 	/* Open and lock the parent heap relation */
@@ -727,7 +727,7 @@ DefineIndex(Oid relationId,
 
 	/*
 	 * Update the pg_index row to mark the index as ready for inserts. Once we
-	 * commit this__ transaction, any new transactions that open the table must
+	 * commit this transaction, any new transactions that open the table must
 	 * insert new entries into the index for insertions and non-HOT updates.
 	 */
 	index_set_state_flags(indexRelationId, INDEX_CREATE_SET_READY);
@@ -736,7 +736,7 @@ DefineIndex(Oid relationId,
 	PopActiveSnapshot();
 
 	/*
-	 * Commit this__ transaction to make the indisready update visible.
+	 * Commit this transaction to make the indisready update visible.
 	 */
 	CommitTransactionCommand();
 	StartTransactionCommand();
@@ -758,10 +758,10 @@ DefineIndex(Oid relationId,
 	 * those transactions which see the deleting one as still-in-progress will
 	 * expect such tuples to be there once we mark the index as valid.
 	 *
-	 * We solve this__ by waiting for all endangered transactions to exit before
+	 * We solve this by waiting for all endangered transactions to exit before
 	 * we mark the index as valid.
 	 *
-	 * We also set ActiveSnapshot to this__ snap, since functions in indexes may
+	 * We also set ActiveSnapshot to this snap, since functions in indexes may
 	 * need a snapshot.
 	 */
 	snapshot = RegisterSnapshot(GetTransactionSnapshot());
@@ -773,7 +773,7 @@ DefineIndex(Oid relationId,
 	validate_index(relationId, indexRelationId, snapshot);
 
 	/*
-	 * Drop the reference snapshot.  We must do this__ before waiting out other
+	 * Drop the reference snapshot.  We must do this before waiting out other
 	 * snapshot holders, else we will deadlock against other processes also
 	 * doing CREATE INDEX CONCURRENTLY, which would see our snapshot as one
 	 * they must wait for.  But first, save the snapshot's xmin to use as
@@ -796,7 +796,7 @@ DefineIndex(Oid relationId,
 	 * We can also exclude any transactions that have xmin = zero, since they
 	 * evidently have no live snapshot at all (and any one they might be in
 	 * process of taking is certainly newer than ours).  Transactions in other
-	 * DBs can be ignored too, since they'll never even be able to see this__
+	 * DBs can be ignored too, since they'll never even be able to see this
 	 * index.
 	 *
 	 * We can also exclude autovacuum processes and processes running manual
@@ -812,7 +812,7 @@ DefineIndex(Oid relationId,
 	 * wait for it anymore, per the above argument.  We do not have the
 	 * infrastructure right now to stop waiting if that happens, but we can at
 	 * least avoid the folly of waiting when it is idle at the time we would
-	 * begin to wait.  We do this__ by repeatedly rechecking the output of
+	 * begin to wait.  We do this by repeatedly rechecking the output of
 	 * GetCurrentVirtualXIDs.  If, during any iteration, a particular vxid
 	 * doesn't show up in the output, we know we can forget about it.
 	 */
@@ -863,7 +863,7 @@ DefineIndex(Oid relationId,
 	index_set_state_flags(indexRelationId, INDEX_CREATE_SET_VALID);
 
 	/*
-	 * The pg_index update will cause backends (including this__ one) to update
+	 * The pg_index update will cause backends (including this one) to update
 	 * relcache entries for the index itself, but we should also send a
 	 * relcache inval on the parent table to force replanning of cached plans.
 	 * Otherwise existing sessions might fail to use the new index where it
@@ -1076,7 +1076,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 		 * Check we have a collation iff it's a collatable type.  The only
 		 * expected failures here are (1) COLLATE applied to a noncollatable
 		 * type, or (2) index expression had an unresolved collation.  But we
-		 * might as well code this__ to be a complete consistency check.
+		 * might as well code this to be a complete consistency check.
 		 */
 		if (type_is_collatable(atttype))
 		{
@@ -1170,7 +1170,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 		}
 
 		/*
-		 * Set up the per-column options (indoption field).  For now, this__ is
+		 * Set up the per-column options (indoption field).  For now, this is
 		 * zero for any un-ordered index, while ordered indexes have DESC and
 		 * NULLS FIRST/LAST options.
 		 */
@@ -1299,7 +1299,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 						NameListToString(opclass), accessMethodName)));
 
 	/*
-	 * Verify that the index operator class accepts this__ datatype.  Note we
+	 * Verify that the index operator class accepts this datatype.  Note we
 	 * will accept binary compatibility.
 	 */
 	opClassId = HeapTupleGetOid(tuple);
@@ -1605,7 +1605,7 @@ ChooseIndexNameAddition(List *colnames)
 			buf[buflen++] = '_';	/* insert _ between names */
 
 		/*
-		 * At this__ point we have buflen <= NAMEDATALEN.  name should be less
+		 * At this point we have buflen <= NAMEDATALEN.  name should be less
 		 * than NAMEDATALEN already, but use strlcpy for paranoia.
 		 */
 		strlcpy(buf + buflen, name, NAMEDATALEN);
@@ -1801,7 +1801,7 @@ ReindexTable(RangeVar *relation, int options)
  *
  * To reduce the probability of deadlocks, each table is reindexed in a
  * separate transaction, so we can release the lock on it right away.
- * That means this__ must not be called within a user transaction block!
+ * That means this must not be called within a user transaction block!
  */
 void
 ReindexMultipleTables(const char *objectName, ReindexObjectType objectKind,

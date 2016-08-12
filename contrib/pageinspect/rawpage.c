@@ -104,7 +104,7 @@ get_raw_page_internal(text *relname, ForkNumber forknum, BlockNumber blkno)
 	relrv = makeRangeVarFromNameList(textToQualifiedNameList(relname));
 	rel = relation_openrv(relrv, AccessShareLock);
 
-	/* Check that this__ relation has storage */
+	/* Check that this relation has storage */
 	if (rel->rd_rel->relkind == RELKIND_VIEW)
 		ereport(ERROR,
 				(errcode(ERRCODE_WRONG_OBJECT_TYPE),

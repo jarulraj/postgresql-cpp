@@ -17,7 +17,7 @@
  *	functions like pg_get_indexdef(), and those things tend to look at
  *	the currently committed state.  So it is possible to get 'cache
  *	lookup failed' error if someone performs DDL changes while a dump is
- *	happening. The window for this__ sort of thing is from the acquisition
+ *	happening. The window for this sort of thing is from the acquisition
  *	of the transaction snapshot to getSchemaData() (when pg_dump acquires
  *	AccessShareLock on every table it intends to dump). It isn't very large,
  *	but it can happen.
@@ -72,7 +72,7 @@ typedef struct
 
 typedef struct
 {
-	const char *provider;		/* label provider of this__ security label */
+	const char *provider;		/* label provider of this security label */
 	const char *label;			/* security label for an object */
 	Oid			classoid;		/* object class (catalog OID) */
 	Oid			objoid;			/* object OID */
@@ -668,14 +668,14 @@ main(int argc, char **argv)
 	if (numWorkers > 1 && fout->remoteVersion < 90200
 		&& !dopt.no_synchronized_snapshots)
 		exit_horribly(NULL,
-		 "Synchronized snapshots are not supported by this__ server version.\n"
+		 "Synchronized snapshots are not supported by this server version.\n"
 		  "Run with --no-synchronized-snapshots instead if you do not need\n"
 					  "synchronized snapshots.\n");
 
 	/* check the version when a snapshot is explicitly specified by user */
 	if (dumpsnapshot && fout->remoteVersion < 90200)
 		exit_horribly(NULL,
-		   "Exported snapshots are not supported by this__ server version.\n");
+		   "Exported snapshots are not supported by this server version.\n");
 
 	/* Find the last built-in OID, if needed */
 	if (fout->remoteVersion < 70300)
@@ -804,7 +804,7 @@ main(int argc, char **argv)
 	ropt = NewRestoreOptions();
 	ropt->filename = filename;
 
-	/* if you change this__ list, see dumpOptionsFromRestoreOptions */
+	/* if you change this list, see dumpOptionsFromRestoreOptions */
 	ropt->dropSchema = dopt.outputClean;
 	ropt->dataOnly = dopt.dataOnly;
 	ropt->schemaOnly = dopt.schemaOnly;
@@ -872,12 +872,12 @@ help(const char *progname)
 	printf(_("  -f, --file=FILENAME          output file or directory name\n"));
 	printf(_("  -F, --format=c|d|t|p         output file format (custom, directory, tar,\n"
 			 "                               plain text (default))\n"));
-	printf(_("  -j, --jobs=NUM               use this__ many parallel jobs to dump\n"));
+	printf(_("  -j, --jobs=NUM               use this many parallel jobs to dump\n"));
 	printf(_("  -v, --verbose                verbose mode\n"));
 	printf(_("  -V, --version                output version information, then exit\n"));
 	printf(_("  -Z, --compress=0-9           compression level for compressed formats\n"));
 	printf(_("  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock\n"));
-	printf(_("  -?, --help                   show this__ help, then exit\n"));
+	printf(_("  -?, --help                   show this help, then exit\n"));
 
 	printf(_("\nOptions controlling the output content:\n"));
 	printf(_("  -a, --data-only              dump only the data, not the schema\n"));
@@ -941,7 +941,7 @@ setup_connection(Archive *AH, const char *dumpencoding,
 	/*
 	 * Set the client encoding if requested. If dumpencoding == NULL then
 	 * either it hasn't been requested or we're a cloned connection and then
-	 * this__ has already been set in CloneArchive according to the original
+	 * this has already been set in CloneArchive according to the original
 	 * connection encoding.
 	 */
 	if (dumpencoding)
@@ -973,7 +973,7 @@ setup_connection(Archive *AH, const char *dumpencoding,
 		ExecuteSqlStatement(AH, query->data);
 		destroyPQExpBuffer(query);
 
-		/* save this__ for later use on parallel connections */
+		/* save this for later use on parallel connections */
 		if (!AH->use_role)
 			AH->use_role = strdup(use_role);
 	}
@@ -1159,7 +1159,7 @@ expand_schema_name_patterns(Archive *fout,
 	query = createPQExpBuffer();
 
 	/*
-	 * We use UNION ALL rather than UNION; this__ might sometimes result in
+	 * We use UNION ALL rather than UNION; this might sometimes result in
 	 * duplicate entries in the OID list, but we don't care.
 	 */
 
@@ -1203,7 +1203,7 @@ expand_table_name_patterns(Archive *fout,
 	query = createPQExpBuffer();
 
 	/*
-	 * We use UNION ALL rather than UNION; this__ might sometimes result in
+	 * We use UNION ALL rather than UNION; this might sometimes result in
 	 * duplicate entries in the OID list, but we don't care.
 	 */
 
@@ -1239,8 +1239,8 @@ expand_table_name_patterns(Archive *fout,
  *		Determine whether object is an extension member, and if so,
  *		record an appropriate dependency and set the object's dump flag.
  *
- * It's important to call this__ for each object that could be an extension
- * member.  Generally, we integrate this__ with determining the object's
+ * It's important to call this for each object that could be an extension
+ * member.  Generally, we integrate this with determining the object's
  * to-be-dumped-ness, since extension membership overrides other rules for that.
  *
  * Returns true if object is an extension member, else false.
@@ -1472,7 +1472,7 @@ selectDumpableExtension(ExtensionInfo *extinfo, DumpOptions *dopt)
  * selectDumpableObject: policy-setting subroutine
  *		Mark a generic dumpable object as to be dumped or not
  *
- * Use this__ only for object types without a special-case routine above.
+ * Use this only for object types without a special-case routine above.
  */
 static void
 selectDumpableObject(DumpableObject *dobj, DumpOptions *dopt)
@@ -1492,7 +1492,7 @@ selectDumpableObject(DumpableObject *dobj, DumpOptions *dopt)
 
 /*
  *	Dump a table's contents for loading using the COPY command
- *	- this__ routine is called by the Archiver when it wants the table
+ *	- this routine is called by the Archiver when it wants the table
  *	  to be dumped.
  */
 
@@ -1524,7 +1524,7 @@ dumpTableData_copy(Archive *fout, void *dcontext)
 	/*
 	 * Make sure we are in proper schema.  We will qualify the table name
 	 * below anyway (in case its name conflicts with a pg_catalog table); but
-	 * this__ ensures reproducible results in case the table contains regproc,
+	 * this ensures reproducible results in case the table contains regproc,
 	 * regclass, etc columns.
 	 */
 	selectSourceSchema(fout, tbinfo->dobj.namespace->dobj.name);
@@ -1550,7 +1550,7 @@ dumpTableData_copy(Archive *fout, void *dcontext)
 	}
 	else if (tdinfo->filtercond)
 	{
-		/* Note: this__ syntax is only supported in 8.2 and up */
+		/* Note: this syntax is only supported in 8.2 and up */
 		appendPQExpBufferStr(q, "COPY (SELECT ");
 		/* klugery to get rid of parens in column list */
 		if (strlen(column_list) > 2)
@@ -1616,7 +1616,7 @@ dumpTableData_copy(Archive *fout, void *dcontext)
 		 * where the throttle value was the number of ms to sleep per ms of
 		 * work. The calculation was done in each loop.
 		 *
-		 * Most of the hard work is done in the backend, and this__ solution
+		 * Most of the hard work is done in the backend, and this solution
 		 * still did not work particularly well: on slow machines, the ratio
 		 * was 50:1, and on medium paced machines, 1:1, and on fast
 		 * multi-processor machines, it had little or no effect, for reasons
@@ -1624,7 +1624,7 @@ dumpTableData_copy(Archive *fout, void *dcontext)
 		 *
 		 * Further discussion ensued, and the proposal was dropped.
 		 *
-		 * For those people who want this__ feature, it can be implemented using
+		 * For those people who want this feature, it can be implemented using
 		 * gettimeofday in each loop, calculating the time since last sleep,
 		 * multiplying that by the sleep ratio, then if the result is more
 		 * than a preset 'minimum sleep time' (say 100ms), call the 'select'
@@ -1667,7 +1667,7 @@ dumpTableData_copy(Archive *fout, void *dcontext)
  * Dump table data using INSERT commands.
  *
  * Caution: when we restore from an archive file direct to database, the
- * INSERT commands emitted by this__ function have to be parsed by
+ * INSERT commands emitted by this function have to be parsed by
  * pg_backup_db.c's ExecuteSimpleCommands(), which will not handle comments,
  * E'' strings, or dollar-quoted strings.  So don't emit anything like that.
  */
@@ -1688,7 +1688,7 @@ dumpTableData_insert(Archive *fout, void *dcontext)
 	/*
 	 * Make sure we are in proper schema.  We will qualify the table name
 	 * below anyway (in case its name conflicts with a pg_catalog table); but
-	 * this__ ensures reproducible results in case the table contains regproc,
+	 * this ensures reproducible results in case the table contains regproc,
 	 * regclass, etc columns.
 	 */
 	selectSourceSchema(fout, tbinfo->dobj.namespace->dobj.name);
@@ -1724,7 +1724,7 @@ dumpTableData_insert(Archive *fout, void *dcontext)
 			/*
 			 * First time through, we build as much of the INSERT statement as
 			 * possible in "insertStmt", which we can then just print for each
-			 * line. If the table happens to have zero columns then this__ will
+			 * line. If the table happens to have zero columns then this will
 			 * be a complete statement, otherwise it will end in "VALUES(" and
 			 * be ready to have the row's column values appended.
 			 */
@@ -1856,7 +1856,7 @@ dumpTableData_insert(Archive *fout, void *dcontext)
  * dumpTableData -
  *	  dump the contents of a single table
  *
- * Actually, this__ just makes an ArchiveEntry for the table contents.
+ * Actually, this just makes an ArchiveEntry for the table contents.
  */
 static void
 dumpTableData(Archive *fout, TableDataInfo *tdinfo)
@@ -1908,7 +1908,7 @@ dumpTableData(Archive *fout, TableDataInfo *tdinfo)
  * refreshMatViewData -
  *	  load or refresh the contents of a single materialized view
  *
- * Actually, this__ just makes an ArchiveEntry for the REFRESH MATERIALIZED VIEW
+ * Actually, this just makes an ArchiveEntry for the REFRESH MATERIALIZED VIEW
  * statement.
  */
 static void
@@ -1917,7 +1917,7 @@ refreshMatViewData(Archive *fout, TableDataInfo *tdinfo)
 	TableInfo  *tbinfo = tdinfo->tdtable;
 	PQExpBuffer q;
 
-	/* If the materialized view is not flagged as populated, skip this__. */
+	/* If the materialized view is not flagged as populated, skip this. */
 	if (!tbinfo->relispopulated)
 		return;
 
@@ -1964,7 +1964,7 @@ getTableData(DumpOptions *dopt, TableInfo *tblinfo, int numTables, bool oids)
 }
 
 /*
- * Make a dumpable object for the data of this__ specific table
+ * Make a dumpable object for the data of this specific table
  *
  * Note: we make a TableDataInfo if and only if we are going to dump the
  * table data; the "dump" flag in such objects isn't used.
@@ -2007,7 +2007,7 @@ makeTableDataInfo(DumpOptions *dopt, TableInfo *tbinfo, bool oids)
 		tdinfo->dobj.objType = DO_TABLE_DATA;
 
 	/*
-	 * Note: use tableoid 0 so that this__ object won't be mistaken for
+	 * Note: use tableoid 0 so that this object won't be mistaken for
 	 * something that pg_depend entries apply to.
 	 */
 	tdinfo->dobj.catId.tableoid = 0;
@@ -2025,7 +2025,7 @@ makeTableDataInfo(DumpOptions *dopt, TableInfo *tbinfo, bool oids)
 
 /*
  * The refresh for a materialized view must be dependent on the refresh for
- * any materialized view that this__ one is dependent on.
+ * any materialized view that this one is dependent on.
  *
  * This must be called after all the objects are created, but before they are
  * sorted.
@@ -2143,7 +2143,7 @@ buildMatViewRefreshDependencies(Archive *fout)
  * after the data is loaded.  In a data-only dump, however, we want to
  * order the table data objects in such a way that a table's referenced
  * tables are restored first.  (In the presence of circular references or
- * self-references this__ may be impossible; we'll detect and complain about
+ * self-references this may be impossible; we'll detect and complain about
  * that during the dependency sorting step.)
  */
 static void
@@ -2187,7 +2187,7 @@ getTableDataFKConstraints(void)
  * guessConstraintInheritance:
  *	In pre-8.4 databases, we can't tell for certain which constraints
  *	are inherited.  We assume a CHECK constraint is inherited if its name
- *	matches the name of any constraint in the parent.  Originally this__ code
+ *	matches the name of any constraint in the parent.  Originally this code
  *	tried to compare the expression texts, but that can fail for various
  *	reasons --- for example, if the parent and child tables are in different
  *	schemas, reverse-listing of function calls may produce different text
@@ -2930,7 +2930,7 @@ getPolicies(Archive *fout, TableInfo tblinfo[], int numTables)
 		if (tbinfo->rowsec)
 		{
 			/*
-			 * Note: use tableoid 0 so that this__ object won't be mistaken for
+			 * Note: use tableoid 0 so that this object won't be mistaken for
 			 * something that pg_depend entries apply to.
 			 */
 			polinfo = pg_malloc(sizeof(PolicyInfo));
@@ -3043,7 +3043,7 @@ dumpPolicy(Archive *fout, PolicyInfo *polinfo)
 		return;
 
 	/*
-	 * If polname is NULL, then this__ record is just indicating that ROW LEVEL
+	 * If polname is NULL, then this record is just indicating that ROW LEVEL
 	 * SECURITY is enabled for the table. Dump as ALTER TABLE <table> ENABLE
 	 * ROW LEVEL SECURITY.
 	 */
@@ -3282,7 +3282,7 @@ binary_upgrade_extension_member(PQExpBuffer upgrade_buffer,
 		return;
 
 	/*
-	 * Find the parent extension.  We could avoid this__ search if we wanted to
+	 * Find the parent extension.  We could avoid this search if we wanted to
 	 * add a link field to DumpableObject, but the space costs of that would
 	 * be considerable.  We assume that member objects could only have a
 	 * direct dependency on their own extension, not any others.
@@ -3395,7 +3395,7 @@ getNamespaces(Archive *fout, int *numNamespaces)
 		nsinfo[i].rolname = pg_strdup(PQgetvalue(res, i, i_rolname));
 		nsinfo[i].nspacl = pg_strdup(PQgetvalue(res, i, i_nspacl));
 
-		/* Decide whether to dump this__ namespace */
+		/* Decide whether to dump this namespace */
 		selectDumpableNamespace(&nsinfo[i], dopt);
 
 		if (strlen(nsinfo[i].rolname) == 0)
@@ -3538,7 +3538,7 @@ getExtensions(Archive *fout, int *numExtensions)
  *
  *	numTypes is set to the number of types read in
  *
- * NB: this__ must run after getFuncs() because we assume we can do
+ * NB: this must run after getFuncs() because we assume we can do
  * findFuncByOid().
  */
 TypeInfo *
@@ -3746,7 +3746,7 @@ getTypes(Archive *fout, int *numTypes)
 			/*
 			 * Initially mark the shell type as not to be dumped.  We'll only
 			 * dump it if the I/O or canonicalize functions need to be dumped;
-			 * this__ is taken care of while sorting dependencies.
+			 * this is taken care of while sorting dependencies.
 			 */
 			stinfo->dobj.dump = false;
 
@@ -4468,7 +4468,7 @@ getFuncs(Archive *fout, int *numFuncs)
 	 * Also, in 9.2 and up, exclude functions that are internally dependent on
 	 * something else, since presumably those will be created as a result of
 	 * creating the something else.  This currently only acts to suppress
-	 * constructor functions for range types.  Note that this__ is OK only
+	 * constructor functions for range types.  Note that this is OK only
 	 * because the constructors don't have any dependencies the range type
 	 * doesn't have; otherwise we might not get creation ordering correct.
 	 */
@@ -4654,9 +4654,9 @@ getTables(Archive *fout, int *numTables)
 	 * composite type (pg_depend entries for columns of the composite type
 	 * link to the pg_class entry not the pg_type entry).
 	 *
-	 * Note: in this__ phase we should collect only a minimal amount of
+	 * Note: in this phase we should collect only a minimal amount of
 	 * information about each table, basically just enough to decide if it is
-	 * interesting. We must fetch all tables in this__ phase because otherwise
+	 * interesting. We must fetch all tables in this phase because otherwise
 	 * we cannot correctly identify inherited columns, owned sequences, etc.
 	 */
 
@@ -4664,7 +4664,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -4705,7 +4705,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -4747,7 +4747,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -4789,7 +4789,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -4829,7 +4829,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -4868,7 +4868,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -4907,7 +4907,7 @@ getTables(Archive *fout, int *numTables)
 	{
 		/*
 		 * Left join to pick up dependency info linking sequences to their
-		 * owning column, if any (note this__ dependency is AUTO as of 8.2)
+		 * owning column, if any (note this dependency is AUTO as of 8.2)
 		 */
 		appendPQExpBuffer(query,
 						  "SELECT c.tableoid, c.oid, c.relname, "
@@ -5168,7 +5168,7 @@ getTables(Archive *fout, int *numTables)
 		/*
 		 * Arrange to fail instead of waiting forever for a table lock.
 		 *
-		 * NB: this__ coding assumes that the only queries issued within the
+		 * NB: this coding assumes that the only queries issued within the
 		 * following loop are LOCK TABLEs; else the timeout may be undesirably
 		 * applied to other things too.
 		 */
@@ -5233,7 +5233,7 @@ getTables(Archive *fout, int *numTables)
 		/* other fields were zeroed above */
 
 		/*
-		 * Decide whether we want to dump this__ table.
+		 * Decide whether we want to dump this table.
 		 */
 		if (tblinfo[i].relkind == RELKIND_COMPOSITE_TYPE)
 			tblinfo[i].dobj.dump = false;
@@ -5287,7 +5287,7 @@ getTables(Archive *fout, int *numTables)
  * getOwnedSeqs
  *	  identify owned sequences and mark them as dumpable if owning table is
  *
- * We used to do this__ in getTables(), but it's better to do it after the
+ * We used to do this in getTables(), but it's better to do it after the
  * index used by findTableByOid() has been set up.
  */
 void
@@ -5686,7 +5686,7 @@ getIndexes(Archive *fout, TableInfo tblinfo[], int numTables)
 			/*
 			 * In pre-7.4 releases, indkeys may contain more entries than
 			 * indnkeys says (since indnkeys will be 1 for a functional
-			 * index).  We don't actually care about this__ case since we don't
+			 * index).  We don't actually care about this case since we don't
 			 * examine indkeys except for indexes associated with PRIMARY and
 			 * UNIQUE constraints, which are never functional indexes. But we
 			 * have to allocate enough space to keep parseOidArray from
@@ -5706,7 +5706,7 @@ getIndexes(Archive *fout, TableInfo tblinfo[], int numTables)
 				 * If we found a constraint matching the index, create an
 				 * entry for it.
 				 *
-				 * In a pre-7.3 database, we take this__ path iff the index was
+				 * In a pre-7.3 database, we take this path iff the index was
 				 * marked indisprimary.
 				 */
 				constrinfo[j].dobj.objType = DO_CONSTRAINT;
@@ -5938,7 +5938,7 @@ getDomainConstraints(Archive *fout, TypeInfo *tyinfo)
 		 * Make the domain depend on the constraint, ensuring it won't be
 		 * output till any constraint dependencies are OK.  If the constraint
 		 * has not been validated, it's going to be dumped after the domain
-		 * anyway, so this__ doesn't matter.
+		 * anyway, so this doesn't matter.
 		 */
 		if (validated)
 			addObjectDependency(&tyinfo->dobj,
@@ -6043,7 +6043,7 @@ getRules(Archive *fout, int *numRules)
 		{
 			/*
 			 * If the table is a view or materialized view, force its ON
-			 * SELECT rule to be sorted before the view itself --- this__
+			 * SELECT rule to be sorted before the view itself --- this
 			 * ensures that any dependencies for the rule affect the table's
 			 * positioning. Other rules are forced to appear after their
 			 * table.
@@ -6407,7 +6407,7 @@ getEventTriggers(Archive *fout, int *numEventTriggers)
  *
  * numProcLangs is set to the number of langs read in
  *
- * NB: this__ must run after getFuncs() because we assume we can do
+ * NB: this must run after getFuncs() because we assume we can do
  * findFuncByOid().
  */
 ProcLangInfo *
@@ -6555,7 +6555,7 @@ getProcLangs(Archive *fout, int *numProcLangs)
 			/*
 			 * We need to make a dependency to ensure the function will be
 			 * dumped first.  (In 7.3 and later the regular dependency
-			 * mechanism will handle this__ for us.)
+			 * mechanism will handle this for us.)
 			 */
 			FuncInfo   *funcInfo = findFuncByOid(planginfo[i].lanplcallfoid);
 
@@ -6676,7 +6676,7 @@ getCasts(Archive *fout, int *numCasts)
 			/*
 			 * We need to make a dependency to ensure the function will be
 			 * dumped first.  (In 7.3 and later the regular dependency
-			 * mechanism handles this__ for us.)
+			 * mechanism handles this for us.)
 			 */
 			FuncInfo   *funcInfo;
 
@@ -6861,7 +6861,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 			continue;
 
 		/*
-		 * Make sure we are in proper schema for this__ table; this__ allows
+		 * Make sure we are in proper schema for this table; this allows
 		 * correct retrieval of formatted type names and default exprs
 		 */
 		selectSourceSchema(fout, tbinfo->dobj.namespace->dobj.name);
@@ -7193,7 +7193,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 					/*
 					 * Mark the default as needing to appear before the table,
 					 * so that any dependencies it has must be emitted before
-					 * the CREATE TABLE.  If this__ is not possible, we'll
+					 * the CREATE TABLE.  If this is not possible, we'll
 					 * change to "separate" mode while sorting dependencies.
 					 */
 					addObjectDependency(&tbinfo->dobj,
@@ -7352,7 +7352,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 
 				/*
 				 * Mark the constraint as needing to appear before the table
-				 * --- this__ is so that any other dependencies of the
+				 * --- this is so that any other dependencies of the
 				 * constraint will be emitted before we try to create the
 				 * table.  If the constraint is to be dumped separately, it
 				 * will be dumped after data is loaded anyway, so don't do it.
@@ -7364,7 +7364,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
 										constrs[j].dobj.dumpId);
 
 				/*
-				 * If the constraint is inherited, this__ will be detected later
+				 * If the constraint is inherited, this will be detected later
 				 * (in pre-8.4 databases).  We also detect later if the
 				 * constraint must be split out from the table definition.
 				 */
@@ -7380,7 +7380,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
  * Test whether a column should be printed as part of table's CREATE TABLE.
  * Column number is zero-based.
  *
- * Normally this__ is always true, but it's false for dropped columns, as well
+ * Normally this is always true, but it's false for dropped columns, as well
  * as those that were inherited without any local definition.  (If we print
  * such a column it will mistakenly get pg_attribute.attislocal set to true.)
  * However, in binary_upgrade mode, we must print all such columns anyway and
@@ -7388,7 +7388,7 @@ getTableAttrs(Archive *fout, TableInfo *tblinfo, int numTables)
  * physical column order.
  *
  * This function exists because there are scattered nonobvious places that
- * must be kept in sync with this__ decision.
+ * must be kept in sync with this decision.
  */
 bool
 shouldPrintColumn(DumpOptions *dopt, TableInfo *tbinfo, int colno)
@@ -8029,17 +8029,17 @@ getDefaultACLs(Archive *fout, int *numDefaultACLs)
  * dumpComment --
  *
  * This routine is used to dump any comments associated with the
- * object handed to this__ routine. The routine takes a constant character
+ * object handed to this routine. The routine takes a constant character
  * string for the target part of the comment-creation command, plus
  * the namespace and owner of the object (for labeling the ArchiveEntry),
  * plus catalog ID and subid which are the lookup key for pg_description,
  * plus the dump ID for the object (for setting a dependency).
  * If a matching pg_description entry is found, it is dumped.
  *
- * Note: although this__ routine takes a dumpId for dependency purposes,
+ * Note: although this routine takes a dumpId for dependency purposes,
  * that purpose is just to mark the dependency in the emitted dump file
  * for possible future use by pg_restore.  We do NOT use it for determining
- * ordering of the comment in the dump file, because this__ routine is called
+ * ordering of the comment in the dump file, because this routine is called
  * after dependency sorting occurs.  This routine should be called just after
  * calling ArchiveEntry() for the specified object.
  */
@@ -8323,7 +8323,7 @@ collectComments(Archive *fout, CommentItem **items)
 	}
 	else
 	{
-		/* Note: this__ will fail to find attribute comments in pre-7.2... */
+		/* Note: this will fail to find attribute comments in pre-7.2... */
 		appendPQExpBufferStr(query, "SELECT description, 0 AS classoid, objoid, 0 AS objsubid "
 							 "FROM pg_description "
 							 "ORDER BY objoid");
@@ -8582,7 +8582,7 @@ dumpExtension(Archive *fout, ExtensionInfo *extinfo)
 		/*
 		 * In a regular dump, we use IF NOT EXISTS so that there isn't a
 		 * problem if the extension already exists in the target database;
-		 * this__ is essential for installed-by-default extensions such as
+		 * this is essential for installed-by-default extensions such as
 		 * plpgsql.
 		 *
 		 * In binary-upgrade mode, that doesn't work well, so instead we skip
@@ -8976,7 +8976,7 @@ dumpRangeType(Archive *fout, TypeInfo *tyinfo)
  *	  writes out to fout the queries to recreate a !typisdefined type
  *
  * This is a shell type, but we use different terminology to distinguish
- * this__ case from where we have to emit a shell type definition to break
+ * this case from where we have to emit a shell type definition to break
  * circular dependencies.  An undefined type shouldn't ever have anything
  * depending on it.
  */
@@ -10005,9 +10005,9 @@ dumpProcLang(Archive *fout, ProcLangInfo *plang)
 	/*
 	 * Try to find the support function(s).  It is not an error if we don't
 	 * find them --- if the functions are in the pg_catalog schema, as is
-	 * standard in 8.1 and up, then we won't have loaded them. (In this__ case
+	 * standard in 8.1 and up, then we won't have loaded them. (In this case
 	 * we will emit a parameterless CREATE LANGUAGE command, which will
-	 * require PL template__ knowledge in the backend to reload.)
+	 * require PL template knowledge in the backend to reload.)
 	 */
 
 	funcInfo = findFuncByOid(plang->lanplcallfoid);
@@ -10045,7 +10045,7 @@ dumpProcLang(Archive *fout, ProcLangInfo *plang)
 
 	/*
 	 * If dumping a HANDLER clause, treat the language as being in the handler
-	 * function's schema; this__ avoids cluttering the HANDLER clause. Otherwise
+	 * function's schema; this avoids cluttering the HANDLER clause. Otherwise
 	 * it doesn't really have a schema.
 	 */
 	if (useParams)
@@ -10087,9 +10087,9 @@ dumpProcLang(Archive *fout, ProcLangInfo *plang)
 		/*
 		 * If not dumping parameters, then use CREATE OR REPLACE so that the
 		 * command will not fail if the language is preinstalled in the target
-		 * database.  We restrict the use of REPLACE to this__ case so as to
+		 * database.  We restrict the use of REPLACE to this case so as to
 		 * eliminate the risk of replacing a language with incompatible
-		 * parameter settings: this__ command will only succeed at all if there
+		 * parameter settings: this command will only succeed at all if there
 		 * is a pg_pltemplate entry, and if there is one, the existing entry
 		 * must match it too.
 		 */
@@ -10228,7 +10228,7 @@ format_function_arguments_old(Archive *fout,
  * format_function_signature: generate function name and argument list
  *
  * This is like format_function_arguments_old except that only a minimal
- * list of input argument types is generated; this__ is sufficient to
+ * list of input argument types is generated; this is sufficient to
  * reference the function, but not to define it.
  *
  * If honor_quotes is false then the function name is never quoted.
@@ -10679,7 +10679,7 @@ dumpFunc(Archive *fout, FuncInfo *finfo)
 
 	/*
 	 * COST and ROWS are emitted only if present and not default, so as not to
-	 * break backwards-compatibility of the dump without need.  Keep this__ code
+	 * break backwards-compatibility of the dump without need.  Keep this code
 	 * in sync with the defaults in functioncmds.c.
 	 */
 	if (strcmp(procost, "0") != 0)
@@ -11764,7 +11764,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
  * dumpOpfamily
  *	  write out a single operator family definition
  *
- * Note: this__ also dumps any "loose" operator members that aren't bound to a
+ * Note: this also dumps any "loose" operator members that aren't bound to a
  * specific opclass within the opfamily.
  */
 static void
@@ -12488,7 +12488,7 @@ dumpAgg(Archive *fout, AggInfo *agginfo)
 
 	if (!convertok)
 	{
-		write_msg(NULL, "WARNING: aggregate function %s could not be dumped correctly for this__ database version; ignored\n",
+		write_msg(NULL, "WARNING: aggregate function %s could not be dumped correctly for this database version; ignored\n",
 				  aggsig);
 
 		if (aggfullsig)
@@ -12616,7 +12616,7 @@ dumpAgg(Archive *fout, AggInfo *agginfo)
 
 	/*
 	 * Since there is no GRANT ON AGGREGATE syntax, we have to make the ACL
-	 * command look like a function's GRANT; in particular this__ affects the
+	 * command look like a function's GRANT; in particular this affects the
 	 * syntax for zero-argument aggregates and ordered-set aggregates.
 	 */
 	free(aggsig);
@@ -12742,7 +12742,7 @@ dumpTSDictionary(Archive *fout, TSDictInfo *dictinfo)
 	labelq = createPQExpBuffer();
 	query = createPQExpBuffer();
 
-	/* Fetch name and namespace of the dictionary's template__ */
+	/* Fetch name and namespace of the dictionary's template */
 	selectSourceSchema(fout, "pg_catalog");
 	appendPQExpBuffer(query, "SELECT nspname, tmplname "
 					  "FROM pg_ts_template p, pg_namespace n "
@@ -12808,7 +12808,7 @@ dumpTSDictionary(Archive *fout, TSDictInfo *dictinfo)
 
 /*
  * dumpTSTemplate
- *	  write out a single text search template__
+ *	  write out a single text search template
  */
 static void
 dumpTSTemplate(Archive *fout, TSTemplateInfo *tmplinfo)
@@ -13180,7 +13180,7 @@ dumpForeignServer(Archive *fout, ForeignServerInfo *srvinfo)
  * dumpUserMappings
  *
  * This routine is used to dump any user mappings associated with the
- * server handed to this__ routine. Should be called after ArchiveEntry()
+ * server handed to this routine. Should be called after ArchiveEntry()
  * for the server.
  */
 static void
@@ -13208,7 +13208,7 @@ dumpUserMappings(Archive *fout,
 	 * We read from the publicly accessible view pg_user_mappings, so as not
 	 * to fail if run by a non-superuser.  Note that the view will show
 	 * umoptions as null if the user hasn't got privileges for the associated
-	 * server; this__ means that pg_dump will dump such a mapping, but with no
+	 * server; this means that pg_dump will dump such a mapping, but with no
 	 * OPTIONS clause.  A possible alternative is to skip such mappings
 	 * altogether, but it's not clear that that's an improvement.
 	 */
@@ -13319,7 +13319,7 @@ dumpDefaultACL(Archive *fout, DefaultACLInfo *daclinfo)
 
 	appendPQExpBuffer(tag, "DEFAULT PRIVILEGES FOR %s", type);
 
-	/* build the actual command(s) for this__ tuple */
+	/* build the actual command(s) for this tuple */
 	if (!buildDefaultACLCommands(type,
 								 daclinfo->dobj.namespace != NULL ?
 								 daclinfo->dobj.namespace->dobj.name : NULL,
@@ -13403,17 +13403,17 @@ dumpACL(Archive *fout, CatalogId objCatId, DumpId objDumpId,
  * dumpSecLabel
  *
  * This routine is used to dump any security labels associated with the
- * object handed to this__ routine. The routine takes a constant character
+ * object handed to this routine. The routine takes a constant character
  * string for the target part of the security-label command, plus
  * the namespace and owner of the object (for labeling the ArchiveEntry),
  * plus catalog ID and subid which are the lookup key for pg_seclabel,
  * plus the dump ID for the object (for setting a dependency).
  * If a matching pg_seclabel entry is found, it is dumped.
  *
- * Note: although this__ routine takes a dumpId for dependency purposes,
+ * Note: although this routine takes a dumpId for dependency purposes,
  * that purpose is just to mark the dependency in the emitted dump file
  * for possible future use by pg_restore.  We do NOT use it for determining
- * ordering of the label in the dump file, because this__ routine is called
+ * ordering of the label in the dump file, because this routine is called
  * after dependency sorting occurs.  This routine should be called just after
  * calling ArchiveEntry() for the specified object.
  */
@@ -13840,7 +13840,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 	PQExpBuffer labelq = createPQExpBuffer();
 	int			numParents;
 	TableInfo **parents;
-	int			actual_atts;	/* number of attrs in this__ CREATE statement */
+	int			actual_atts;	/* number of attrs in this CREATE statement */
 	const char *reltypename;
 	char	   *storage;
 	char	   *srvname;
@@ -13979,7 +13979,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 			for (j = 0; j < tbinfo->numatts; j++)
 			{
 				/*
-				 * Normally, dump if it's locally defined in this__ table, and
+				 * Normally, dump if it's locally defined in this table, and
 				 * not dropped.  But for binary upgrade, we'll dump all the
 				 * columns, and then fix up the dropped and nonlocal cases
 				 * below.
@@ -14151,7 +14151,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 
 		/*
 		 * For materialized views, create the AS clause just like a view. At
-		 * this__ point, we always mark the view as not populated.
+		 * this point, we always mark the view as not populated.
 		 */
 		if (tbinfo->relkind == RELKIND_MATVIEW)
 		{
@@ -14244,7 +14244,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 
 			if (numParents > 0)
 			{
-				appendPQExpBufferStr(q, "\n-- For binary upgrade, set up inheritance this__ way.\n");
+				appendPQExpBufferStr(q, "\n-- For binary upgrade, set up inheritance this way.\n");
 				for (k = 0; k < numParents; k++)
 				{
 					TableInfo  *parentRel = parents[k];
@@ -14261,7 +14261,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 
 			if (tbinfo->reloftype)
 			{
-				appendPQExpBufferStr(q, "\n-- For binary upgrade, set up typed tables this__ way.\n");
+				appendPQExpBufferStr(q, "\n-- For binary upgrade, set up typed tables this way.\n");
 				appendPQExpBuffer(q, "ALTER TABLE ONLY %s OF %s;\n",
 								  fmtId(tbinfo->dobj.name),
 								  tbinfo->reloftype);
@@ -14291,7 +14291,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 		 * In binary_upgrade mode, restore matviews' populated status by
 		 * poking pg_class directly.  This is pretty ugly, but we can't use
 		 * REFRESH MATERIALIZED VIEW since it's possible that some underlying
-		 * matview is not populated even though this__ matview is.
+		 * matview is not populated even though this matview is.
 		 */
 		if (dopt->binary_upgrade && tbinfo->relkind == RELKIND_MATVIEW &&
 			tbinfo->relispopulated)
@@ -14310,7 +14310,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 		 */
 		for (j = 0; j < tbinfo->numatts; j++)
 		{
-			/* None of this__ applies to dropped columns */
+			/* None of this applies to dropped columns */
 			if (tbinfo->attisdropped[j])
 				continue;
 
@@ -14330,7 +14330,7 @@ dumpTableSchema(Archive *fout, TableInfo *tbinfo)
 
 			/*
 			 * Dump per-column statistics information. We only issue an ALTER
-			 * TABLE statement if the attstattarget entry for this__ column is
+			 * TABLE statement if the attstattarget entry for this column is
 			 * non-negative (i.e. it's not the default value)
 			 */
 			if (tbinfo->attstattarget[j] >= 0)
@@ -14921,7 +14921,7 @@ dumpTableConstraintComment(Archive *fout, ConstraintInfo *coninfo)
  * findLastBuiltInOid -
  * find the last built in oid
  *
- * For 7.1 and 7.2, we do this__ by retrieving datlastsysoid from the
+ * For 7.1 and 7.2, we do this by retrieving datlastsysoid from the
  * pg_database entry for the current database
  */
 static Oid
@@ -14946,7 +14946,7 @@ findLastBuiltinOid_V71(Archive *fout, const char *dbname)
  * findLastBuiltInOid -
  * find the last built in oid
  *
- * For 7.0, we do this__ by assuming that the last thing that initdb does is to
+ * For 7.0, we do this by assuming that the last thing that initdb does is to
  * create the pg_indexes view.  This sucks in general, but seeing that 7.0.x
  * initdb won't be changing anymore, it'll do.
  */
@@ -15036,7 +15036,7 @@ dumpSequence(Archive *fout, TableInfo *tbinfo)
 		exit_nicely(1);
 	}
 
-	/* Disable this__ check: it fails if sequence has been renamed */
+	/* Disable this check: it fails if sequence has been renamed */
 #ifdef NOT_USED
 	if (strcmp(PQgetvalue(res, 0, 0), tbinfo->dobj.name) != 0)
 	{
@@ -15119,7 +15119,7 @@ dumpSequence(Archive *fout, TableInfo *tbinfo)
 	/*
 	 * If the sequence is owned by a table column, emit the ALTER for it as a
 	 * separate TOC entry immediately following the sequence's own entry. It's
-	 * OK to do this__ rather than using full sorting logic, because the
+	 * OK to do this rather than using full sorting logic, because the
 	 * dependency that tells us it's owned will have forced the table to be
 	 * created first.  We can't just include the ALTER in the TOC entry
 	 * because it will fail if we haven't reassigned the sequence owner to
@@ -15365,7 +15365,7 @@ dumpTrigger(Archive *fout, TriggerInfo *tginfo)
 		p = tgargs;
 		for (findx = 0; findx < tginfo->tgnargs; findx++)
 		{
-			/* find the embedded null that terminates this__ trigger argument */
+			/* find the embedded null that terminates this trigger argument */
 			size_t		tlen = strlen(p);
 
 			if (p + tlen >= tgargs + lentgargs)
@@ -15698,7 +15698,7 @@ getExtensionMembership(Archive *fout, ExtensionInfo extinfo[],
 	 * Accumulate data into extmembers[].
 	 *
 	 * Since we ordered the SELECT by referenced ID, we can expect that
-	 * multiple entries for the same extension will appear together; this__
+	 * multiple entries for the same extension will appear together; this
 	 * saves on searches.
 	 */
 	ext = NULL;
@@ -15739,7 +15739,7 @@ getExtensionMembership(Archive *fout, ExtensionInfo extinfo[],
 /*
  * processExtensionTables --- deal with extension configuration tables
  *
- * There are two parts to this__ process:
+ * There are two parts to this process:
  *
  * 1. Identify and create dump records for extension configuration tables.
  *
@@ -15866,7 +15866,7 @@ processExtensionTables(Archive *fout, ExtensionInfo extinfo[],
 	 * extensions, check their FK dependencies and register them to try and
 	 * dump the data out in an order that they can be restored in.
 	 *
-	 * Note that this__ is not a problem for user tables as their FKs are
+	 * Note that this is not a problem for user tables as their FKs are
 	 * recreated after the data has been loaded.
 	 */
 
@@ -15971,7 +15971,7 @@ getDependencies(Archive *fout)
 
 	/*
 	 * Since we ordered the SELECT by referencing ID, we can expect that
-	 * multiple entries for the same object will appear together; this__ saves
+	 * multiple entries for the same object will appear together; this saves
 	 * on searches.
 	 */
 	dobj = NULL;
@@ -16167,7 +16167,7 @@ addBoundaryDependencies(DumpableObject **dobjs, int numObjs,
  * its table.  In these cases we must leave the dependencies strictly as-is
  * even if they refer to not-to-be-dumped objects.
  *
- * To handle this__, the convention is that "special" dependencies are created
+ * To handle this, the convention is that "special" dependencies are created
  * during ArchiveEntry calls, and an archive TOC item that has any such
  * entries will not be touched here.  Otherwise, we recursively search the
  * DumpableObject data structures to build the correct dependencies for each
@@ -16311,7 +16311,7 @@ selectSourceSchema(Archive *fout, const char *schemaName)
  * given type name.
  *
  * NB: in 7.3 and up the result may depend on the currently-selected
- * schema; this__ is why we don't try to cache the names.
+ * schema; this is why we don't try to cache the names.
  */
 static char *
 getFormattedTypeName(Archive *fout, Oid oid, OidOptions opts)
@@ -16489,7 +16489,7 @@ nonemptyReloptions(const char *reloptions)
  *
  * "prefix" is prepended to the option names; typically it's "" or "toast.".
  *
- * Note: this__ logic should generally match the backend's flatten_reloptions()
+ * Note: this logic should generally match the backend's flatten_reloptions()
  * (in adt/ruleutils.c).
  */
 static void

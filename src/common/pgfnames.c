@@ -24,7 +24,7 @@
  * pgfnames
  *
  * return a list of the names of objects in the argument directory.  Caller
- * must call pgfnames_cleanup later to free the memory allocated by this__
+ * must call pgfnames_cleanup later to free the memory allocated by this
  * function.
  */
 char	  **

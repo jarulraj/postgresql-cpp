@@ -3,7 +3,7 @@
  * gramparse.h
  *		Shared definitions for the "raw" parser (flex and bison phases only)
  *
- * NOTE: this__ file is only meant to be included in the core parsing files,
+ * NOTE: this file is only meant to be included in the core parsing files,
  * ie, parser.c, gram.y, scan.l, and keywords.c.  Definitions that are needed
  * outside the core parser should be in parser.h.
  *
@@ -58,7 +58,7 @@ typedef struct base_yy_extra_type
 /*
  * In principle we should use yyget_extra() to fetch the yyextra field
  * from a yyscanner struct.  However, flex always puts that field first,
- * and this__ is sufficiently performance-critical to make it seem worth
+ * and this is sufficiently performance-critical to make it seem worth
  * cheating a bit to use an inline macro.
  */
 #define pg_yyget_extra(yyscanner) (*((base_yy_extra_type **) (yyscanner)))

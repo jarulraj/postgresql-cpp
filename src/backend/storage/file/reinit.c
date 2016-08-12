@@ -61,7 +61,7 @@ ResetUnloggedRelations(int op)
 
 	/*
 	 * Just to be sure we don't leak any memory, let's create a temporary
-	 * memory context for this__ operation.
+	 * memory context for this operation.
 	 */
 	tmpctx = AllocSetContextCreate(CurrentMemoryContext,
 								   "ResetUnloggedRelations",
@@ -125,7 +125,7 @@ ResetUnloggedRelationsInTablespaceDir(const char *tsdirname, int op)
 
 		/*
 		 * We're only interested in the per-database directories, which have
-		 * numeric names.  Note that this__ code will also (properly) ignore "."
+		 * numeric names.  Note that this code will also (properly) ignore "."
 		 * and "..".
 		 */
 		while (isdigit((unsigned char) de->d_name[i]))
@@ -176,7 +176,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 		 * It's possible that someone could create a ton of unlogged relations
 		 * in the same database & tablespace, so we'd better use a hash table
 		 * rather than an array or linked list to keep track of which files
-		 * need to be reset.  Otherwise, this__ cleanup operation would be
+		 * need to be reset.  Otherwise, this cleanup operation would be
 		 * O(n^2).
 		 */
 		ctl.keysize = sizeof(unlogged_relation_entry);
@@ -195,7 +195,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 													 &forkNum))
 				continue;
 
-			/* Also skip it unless this__ is the init fork. */
+			/* Also skip it unless this is the init fork. */
 			if (forkNum != INIT_FORKNUM)
 				continue;
 
@@ -268,7 +268,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 
 				/*
 				 * It's tempting to actually throw an error here, but since
-				 * this__ code gets run during database startup, that could
+				 * this code gets run during database startup, that could
 				 * result in the database failing to start.  (XXX Should we do
 				 * it anyway?)
 				 */
@@ -288,8 +288,8 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 	 * Initialization happens after cleanup is complete: we copy each init
 	 * fork file to the corresponding main fork file.  Note that if we are
 	 * asked to do both cleanup and init, we may never get here: if the
-	 * cleanup code determines that there are no init forks in this__ dbspace,
-	 * it will return before we get to this__ point.
+	 * cleanup code determines that there are no init forks in this dbspace,
+	 * it will return before we get to this point.
 	 */
 	if ((op & UNLOGGED_RELATION_INIT) != 0)
 	{
@@ -297,7 +297,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 		dbspace_dir = AllocateDir(dbspacedirname);
 		if (dbspace_dir == NULL)
 		{
-			/* we just saw this__ directory, so it really ought to be there */
+			/* we just saw this directory, so it really ought to be there */
 			elog(LOG,
 				 "could not open dbspace directory \"%s\": %m",
 				 dbspacedirname);
@@ -318,7 +318,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 													 &forkNum))
 				continue;
 
-			/* Also skip it unless this__ is the init fork. */
+			/* Also skip it unless this is the init fork. */
 			if (forkNum != INIT_FORKNUM)
 				continue;
 
@@ -343,14 +343,14 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 		/*
 		 * copy_file() above has already called pg_flush_data() on the files
 		 * it created. Now we need to fsync those files, because a checkpoint
-		 * won't do it for us while we're in recovery. We do this__ in a
+		 * won't do it for us while we're in recovery. We do this in a
 		 * separate pass to allow the kernel to perform all the flushes
 		 * (especially the metadata ones) at once.
 		 */
 		dbspace_dir = AllocateDir(dbspacedirname);
 		if (dbspace_dir == NULL)
 		{
-			/* we just saw this__ directory, so it really ought to be there */
+			/* we just saw this directory, so it really ought to be there */
 			elog(LOG,
 				 "could not open dbspace directory \"%s\": %m",
 				 dbspacedirname);
@@ -369,7 +369,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
 													 &forkNum))
 				continue;
 
-			/* Also skip it unless this__ is the init fork. */
+			/* Also skip it unless this is the init fork. */
 			if (forkNum != INIT_FORKNUM)
 				continue;
 
@@ -395,7 +395,7 @@ ResetUnloggedRelationsInDbspaceDir(const char *dbspacedirname, int op)
  * This function returns true if the file appears to be in the correct format
  * for a non-temporary relation and false otherwise.
  *
- * NB: If this__ function returns true, the caller is entitled to assume that
+ * NB: If this function returns true, the caller is entitled to assume that
  * *oidchars has been set to the a value no more than OIDCHARS, and thus
  * that a buffer of OIDCHARS+1 characters is sufficient to hold the OID
  * portion of the filename.  This is critical to protect against a possible

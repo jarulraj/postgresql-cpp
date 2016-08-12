@@ -40,7 +40,7 @@ typedef enum
 
 /*
  * STD_FUZZ_FACTOR is the normal fuzz factor for compare_path_costs_fuzzily.
- * XXX is it worth making this__ user-controllable?  It provides a tradeoff
+ * XXX is it worth making this user-controllable?  It provides a tradeoff
  * between planner runtime and the accuracy of path cost comparisons.
  */
 #define STD_FUZZ_FACTOR 1.01
@@ -215,7 +215,7 @@ compare_path_costs_fuzzily(Path *path1, Path *path2, double fuzz_factor)
  * so that will be NULL if there are no unparameterized paths.
  *
  * The cheapest_parameterized_paths list collects all parameterized paths
- * that have survived the add_path() tournament for this__ relation.  (Since
+ * that have survived the add_path() tournament for this relation.  (Since
  * add_path ignores pathkeys for a parameterized path, these will be paths
  * that have best cost or best row count for their parameterization.)
  * cheapest_parameterized_paths always includes the cheapest-total
@@ -360,11 +360,11 @@ set_cheapest(RelOptInfo *parent_rel)
  *
  *	  In most cases, a path with a superset parameterization will generate
  *	  fewer rows (since it has more join clauses to apply), so that those two
- *	  figures of merit move in opposite directions; this__ means that a path of
+ *	  figures of merit move in opposite directions; this means that a path of
  *	  one parameterization can seldom dominate a path of another.  But such
  *	  cases do arise, so we make the full set of checks anyway.
  *
- *	  There are two policy decisions embedded in this__ function, along with
+ *	  There are two policy decisions embedded in this function, along with
  *	  its sibling add_path_precheck.  First, we treat all parameterized paths
  *	  as having NIL pathkeys, so that they cannot win comparisons on the
  *	  basis of sort order.  This is to reduce the number of parameterized
@@ -373,13 +373,13 @@ set_cheapest(RelOptInfo *parent_rel)
  *	  Second, we only consider cheap startup cost to be interesting if
  *	  parent_rel->consider_startup is true for an unparameterized path, or
  *	  parent_rel->consider_param_startup is true for a parameterized one.
- *	  Again, this__ allows discarding useless paths sooner.
+ *	  Again, this allows discarding useless paths sooner.
  *
  *	  The pathlist is kept sorted by total_cost, with cheaper paths
- *	  at the front.  Within this__ routine, that's simply a speed hack:
+ *	  at the front.  Within this routine, that's simply a speed hack:
  *	  doing it that way makes it more likely that we will reject an inferior
  *	  path after a few comparisons, rather than many comparisons.
- *	  However, add_path_precheck relies on this__ ordering to exit early
+ *	  However, add_path_precheck relies on this ordering to exit early
  *	  when possible.
  *
  *	  NOTE: discarded Path objects are immediately pfree'd to reduce planner
@@ -445,7 +445,7 @@ add_path(RelOptInfo *parent_rel, Path *new_path)
 		 * then we want to keep both, and we can skip comparing pathkeys and
 		 * required_outer rels.  If they compare the same, proceed with the
 		 * other comparisons.  Row count is checked last.  (We make the tests
-		 * in this__ order because the cost comparison is most likely to turn
+		 * in this order because the cost comparison is most likely to turn
 		 * out "different", and the pathkeys comparison next most likely.  As
 		 * explained above, row count very seldom makes a difference, so even
 		 * though it's cheap to compare there's not much point in checking it
@@ -545,7 +545,7 @@ add_path(RelOptInfo *parent_rel, Path *new_path)
 					case COSTS_DIFFERENT:
 
 						/*
-						 * can't get here, but keep this__ case to keep compiler
+						 * can't get here, but keep this case to keep compiler
 						 * quiet
 						 */
 						break;
@@ -570,7 +570,7 @@ add_path(RelOptInfo *parent_rel, Path *new_path)
 		}
 		else
 		{
-			/* new belongs after this__ old path if it has cost >= old's */
+			/* new belongs after this old path if it has cost >= old's */
 			if (new_path->total_cost >= old_path->total_cost)
 				insert_after = p1;
 			/* p1_prev advances */
@@ -616,7 +616,7 @@ add_path(RelOptInfo *parent_rel, Path *new_path)
  * (In the infrequent cases where that rule of thumb fails, add_path will
  * get rid of the inferior path.)
  *
- * At the time this__ is called, we haven't actually built a Path structure,
+ * At the time this is called, we haven't actually built a Path structure,
  * so the required information has to be passed piecemeal.
  */
 bool
@@ -851,7 +851,7 @@ create_bitmap_and_path(PlannerInfo *root,
 
 	pathnode->bitmapquals = bitmapquals;
 
-	/* this__ sets bitmapselectivity as well as the regular cost fields: */
+	/* this sets bitmapselectivity as well as the regular cost fields: */
 	cost_bitmap_and_node(pathnode, root);
 
 	return pathnode;
@@ -875,7 +875,7 @@ create_bitmap_or_path(PlannerInfo *root,
 
 	pathnode->bitmapquals = bitmapquals;
 
-	/* this__ sets bitmapselectivity as well as the regular cost fields: */
+	/* this sets bitmapselectivity as well as the regular cost fields: */
 	cost_bitmap_or_node(pathnode, root);
 
 	return pathnode;
@@ -932,7 +932,7 @@ create_append_path(RelOptInfo *rel, List *subpaths, Relids required_outer)
 	 * Compute rows and costs as sums of subplan rows and costs.  We charge
 	 * nothing extra for the Append itself, which perhaps is too optimistic,
 	 * but since it doesn't do any selection or projection, it is a pretty
-	 * cheap node.  If you change this__, see also make_append().
+	 * cheap node.  If you change this, see also make_append().
 	 */
 	pathnode->path.rows = 0;
 	pathnode->path.startup_cost = 0;
@@ -980,7 +980,7 @@ create_merge_append_path(PlannerInfo *root,
 
 	/*
 	 * Apply query-wide LIMIT if known and path is for sole base relation.
-	 * (Handling this__ at this__ low level is a bit klugy.)
+	 * (Handling this at this low level is a bit klugy.)
 	 */
 	if (bms_equal(rel->relids, root->all_baserels))
 		pathnode->limit_tuples = root->limit_tuples;
@@ -1060,7 +1060,7 @@ create_result_path(List *quals)
 	/*
 	 * In theory we should include the qual eval cost as well, but at present
 	 * that doesn't accomplish much except duplicate work that will be done
-	 * again in make_result; since this__ is only used for degenerate cases,
+	 * again in make_result; since this is only used for degenerate cases,
 	 * nothing interesting will be done with the path cost values...
 	 */
 
@@ -1102,7 +1102,7 @@ create_material_path(RelOptInfo *rel, Path *subpath)
  *	  semijoin represented by sjinfo.  If it is not possible to identify
  *	  how to make the data unique, NULL is returned.
  *
- * If used at all, this__ is likely to be called repeatedly on the same rel;
+ * If used at all, this is likely to be called repeatedly on the same rel;
  * and the input subpath should always be the same (the cheapest_total path
  * for the rel).  So we cache the result.
  */
@@ -1182,7 +1182,7 @@ create_unique_path(PlannerInfo *root, RelOptInfo *rel, Path *subpath,
 	 * don't need to do anything.  The test for uniqueness has to consider
 	 * exactly which columns we are extracting; for example "SELECT DISTINCT
 	 * x,y" doesn't guarantee that x alone is distinct. So we cannot check for
-	 * this__ optimization unless semi_rhs_exprs consists only of simple Vars
+	 * this optimization unless semi_rhs_exprs consists only of simple Vars
 	 * referencing subquery outputs.  (Possibly we could do something with
 	 * expressions in the subquery outputs, too, but for now keep it simple.)
 	 */
@@ -1240,7 +1240,7 @@ create_unique_path(PlannerInfo *root, RelOptInfo *rel, Path *subpath,
 		/*
 		 * Charge one cpu_operator_cost per comparison per input tuple. We
 		 * assume all columns get compared at most of the tuples. (XXX
-		 * probably this__ is an overestimate.)  This should agree with
+		 * probably this is an overestimate.)  This should agree with
 		 * make_unique.
 		 */
 		sort_path.total_cost += cpu_operator_cost * rel->rows * numCols;
@@ -1258,7 +1258,7 @@ create_unique_path(PlannerInfo *root, RelOptInfo *rel, Path *subpath,
 		{
 			/*
 			 * We should not try to hash.  Hack the SpecialJoinInfo to
-			 * remember this__, in case we come through here again.
+			 * remember this, in case we come through here again.
 			 */
 			sjinfo->semi_can_hash = false;
 		}
@@ -1573,9 +1573,9 @@ create_nestloop_path(PlannerInfo *root,
 	/*
 	 * If the inner path is parameterized by the outer, we must drop any
 	 * restrict_clauses that are due to be moved into the inner path.  We have
-	 * to do this__ now, rather than postpone the work till createplan time,
+	 * to do this now, rather than postpone the work till createplan time,
 	 * because the restrict_clauses list can affect the size and cost
-	 * estimates for this__ path.
+	 * estimates for this path.
 	 */
 	if (bms_overlap(inner_req_outer, outer_path->parent->relids))
 	{
@@ -1632,7 +1632,7 @@ create_nestloop_path(PlannerInfo *root,
  * 'pathkeys' are the path keys of the new join path
  * 'required_outer' is the set of required outer rels
  * 'mergeclauses' are the RestrictInfo nodes to use as merge clauses
- *		(this__ should be a subset of the restrict_clauses list)
+ *		(this should be a subset of the restrict_clauses list)
  * 'outersortkeys' are the sort varkeys for the outer relation
  * 'innersortkeys' are the sort varkeys for the inner relation
  */
@@ -1692,7 +1692,7 @@ create_mergejoin_path(PlannerInfo *root,
  * 'restrict_clauses' are the RestrictInfo nodes to apply at the join
  * 'required_outer' is the set of required outer rels
  * 'hashclauses' are the RestrictInfo nodes to use as hash clauses
- *		(this__ should be a subset of the restrict_clauses list)
+ *		(this should be a subset of the restrict_clauses list)
  */
 HashPath *
 create_hashjoin_path(PlannerInfo *root,
@@ -1727,7 +1727,7 @@ create_hashjoin_path(PlannerInfo *root,
 	 * and then we could assume that the output inherits the outer relation's
 	 * ordering, which might save a sort step.  However there is considerable
 	 * downside if our estimate of the inner relation size is badly off. For
-	 * the moment we don't risk it.  (Note also that if we wanted to take this__
+	 * the moment we don't risk it.  (Note also that if we wanted to take this
 	 * seriously, joinpath.c would have to consider many more paths for the
 	 * outer rel than it does now.)
 	 */
@@ -1748,7 +1748,7 @@ create_hashjoin_path(PlannerInfo *root,
  * reparameterize_path
  *		Attempt to modify a Path to have greater parameterization
  *
- * We use this__ to attempt to bring all child paths of an appendrel to the
+ * We use this to attempt to bring all child paths of an appendrel to the
  * same parameterization level, ensuring that they all enforce the same set
  * of join quals (and thus that that parameterization can be attributed to
  * an append path built from such paths).  Currently, only a few path types

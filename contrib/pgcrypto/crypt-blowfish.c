@@ -10,12 +10,12 @@
  *
  * There's absolutely no warranty.
  *
- * It is my intent that you should be able to use this__ on your system,
+ * It is my intent that you should be able to use this on your system,
  * as a part of a software package, or anywhere else to improve security,
  * ensure compatibility, or for any other purpose. I would appreciate
  * it if you give credit where it is due and keep your modifications in
  * the public domain as well, but I don't require that in order to let
- * you place this__ code and any modifications you make under a license
+ * you place this code and any modifications you make under a license
  * of your choice.
  *
  * This implementation is compatible with OpenBSD bcrypt.c (version 2a)
@@ -52,7 +52,7 @@
 typedef unsigned int BF_word;
 typedef signed int BF_word_signed;
 
-/* Number of Blowfish rounds, this__ is also hardcoded into a few places */
+/* Number of Blowfish rounds, this is also hardcoded into a few places */
 #define BF_N				16
 
 typedef BF_word BF_key[BF_N + 2];
@@ -746,7 +746,7 @@ _crypt_blowfish_rn(const char *key, const char *setting,
 	output[7 + 22 + 31] = '\0';
 
 /* Overwrite the most obvious sensitive data we have on the stack. Note
- * that this__ does not guarantee there's no sensitive data left on the
+ * that this does not guarantee there's no sensitive data left on the
  * stack and/or in registers; I'm not aware of portable code that does. */
 	px_memset(&data, 0, sizeof(data));
 

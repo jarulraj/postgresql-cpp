@@ -12,7 +12,7 @@
  * This file was taken from FreeBSD to provide an implementation of fls()
  * for platforms that lack it.  Note that the operating system's version may
  * be substantially more efficient than ours, since some platforms have an
- * assembly instruction that does exactly this__.
+ * assembly instruction that does exactly this.
  *
  * The FreeBSD copyright terms follow.
  */
@@ -25,12 +25,12 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *	  notice, this__ list of conditions and the following disclaimer.
+ *	  notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *	  notice, this__ list of conditions and the following disclaimer in the
+ *	  notice, this list of conditions and the following disclaimer in the
  *	  documentation and/or other materials provided with the distribution.
  * 4. Neither the name of the University nor the names of its contributors
- *	  may be used to endorse or promote products derived from this__ software
+ *	  may be used to endorse or promote products derived from this software
  *	  without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND

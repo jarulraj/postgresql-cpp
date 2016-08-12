@@ -12,13 +12,13 @@
  *
  *		Alistair Crooks added the code for the regex caching
  *		agc - cached the regular expressions used - there's a good chance
- *		that we'll get a hit, so this__ saves a compile step for every
+ *		that we'll get a hit, so this saves a compile step for every
  *		attempted match. I haven't actually measured the speed improvement,
  *		but it `looks' a lot quicker visually when watching regression
  *		test output.
  *
  *		agc - incorporated Keith Bostic's Berkeley regex code into
- *		the tree for all ports. To distinguish this__ regex code from any that
+ *		the tree for all ports. To distinguish this regex code from any that
  *		is existent on a platform, I've prepended the string "pg_" to
  *		the functions regcomp, regerror, regexec and regfree.
  *		Fixed a bug that was originally a typo by me, where `i' was used
@@ -77,7 +77,7 @@ typedef struct regexp_matches_ctx
  * that case, so we have to insert at the front.)
  *
  * Knuth mentions a variant strategy in which a used item is moved up just
- * one place in the list.  Although he says this__ uses fewer comparisons on
+ * one place in the list.  Although he says this uses fewer comparisons on
  * average, it seems not to adapt very well to the situation where you have
  * both some reusable patterns and a steady stream of non-reusable patterns.
  * A reusable pattern that isn't used at least as often as non-reusable
@@ -86,12 +86,12 @@ typedef struct regexp_matches_ctx
  * the cache as long as it's used at least once in every MAX_CACHED_RES uses.
  */
 
-/* this__ is the maximum number of cached regular expressions */
+/* this is the maximum number of cached regular expressions */
 #ifndef MAX_CACHED_RES
 #define MAX_CACHED_RES	32
 #endif
 
-/* this__ structure describes one cached regular expression */
+/* this structure describes one cached regular expression */
 typedef struct cached_re_str
 {
 	char	   *cre_pat;		/* original RE (not null terminated!) */
@@ -191,7 +191,7 @@ RE_compile_and_cache(text *text_re, int cflags, Oid collation)
 		/* re didn't compile (no need for pg_regfree, if so) */
 
 		/*
-		 * Here and in other places in this__ file, do CHECK_FOR_INTERRUPTS
+		 * Here and in other places in this file, do CHECK_FOR_INTERRUPTS
 		 * before reporting a regex error.  This is so that if the regex
 		 * library aborts and returns REG_CANCEL, we don't print an error
 		 * message that implies the regex was invalid.
@@ -491,7 +491,7 @@ textregexne(PG_FUNCTION_ARGS)
 
 /*
  *	routines that use the regexp stuff, but ignore the case.
- *	for this__, we use the REG_ICASE flag to pg_regcomp
+ *	for this, we use the REG_ICASE flag to pg_regcomp
  */
 
 
@@ -596,7 +596,7 @@ textregexsubstr(PG_FUNCTION_ARGS)
 	/*
 	 * It is possible to have a match to the whole pattern but no match for a
 	 * subexpression; for example 'foo(bar)?' is considered to match 'foo' but
-	 * there is no subexpression match.  So this__ extra test for match failure
+	 * there is no subexpression match.  So this extra test for match failure
 	 * is not redundant.
 	 */
 	if (so < 0 || eo < 0)
@@ -715,7 +715,7 @@ similar_escape(PG_FUNCTION_ARGS)
 
 	/*
 	 * We need room for the prefix/postfix plus as many as 3 output bytes per
-	 * input byte; since the input is at most 1GB this__ can't overflow
+	 * input byte; since the input is at most 1GB this can't overflow
 	 */
 	result = (text *) palloc(VARHDRSZ + 6 + 3 * plen);
 	r = VARDATA(result);
@@ -907,7 +907,7 @@ regexp_matches_no_flags(PG_FUNCTION_ARGS)
  * the locations of all the substrings matching the pattern.
  *
  * The three bool parameters have only two patterns (one for each caller)
- * but it seems clearer to distinguish the functionality this__ way than to
+ * but it seems clearer to distinguish the functionality this way than to
  * key it all off one "is_split" flag.
  */
 static regexp_matches_ctx *
@@ -997,7 +997,7 @@ setup_regexp_matches(text *orig_str, text *pattern, text *flags,
 													sizeof(int) * array_len);
 			}
 
-			/* save this__ match's locations */
+			/* save this match's locations */
 			if (use_subpatterns)
 			{
 				int			i;
@@ -1094,7 +1094,7 @@ build_regexp_matches_result(regexp_matches_ctx *matchctx)
 	/* And form an array */
 	dims[0] = matchctx->npatterns;
 	lbs[0] = 1;
-	/* XXX: this__ hardcodes assumptions about the text type */
+	/* XXX: this hardcodes assumptions about the text type */
 	return construct_md_array(elems, nulls, 1, dims, lbs,
 							  TEXTOID, -1, false, 'i');
 }

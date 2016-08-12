@@ -549,7 +549,7 @@ Cover(DocRepresentation *doc, int len, QueryRepresentation *qr, CoverExt *ext)
 	bool		found = false;
 
 	/*
-	 * since this__ function recurses, it could be driven to stack overflow.
+	 * since this function recurses, it could be driven to stack overflow.
 	 * (though any decent compiler will optimize away the tail-recursion.
 	 */
 	check_stack_depth();
@@ -785,7 +785,7 @@ calc_rank_cd(const float4 *arrdata, TSVector txt, TSQuery query, int method)
 
 		/*
 		 * if doc are big enough then ext.q may be equal to ext.p due to limit
-		 * of posional information. In this__ case we approximate number of
+		 * of posional information. In this case we approximate number of
 		 * noise word as half cover's length
 		 */
 		nNoise = (ext.q - ext.p) - (ext.end - ext.begin);

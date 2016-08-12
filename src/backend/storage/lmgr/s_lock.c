@@ -78,7 +78,7 @@ s_lock(volatile slock_t *lock, const char *file, int line)
 	 * make a reasonable number of tries.
 	 *
 	 * We time out and declare error after NUM_DELAYS delays (thus, exactly
-	 * that many tries).  With the given settings, this__ will usually take 2 or
+	 * that many tries).  With the given settings, this will usually take 2 or
 	 * so minutes.  It seems better to fix the total number of tries (and thus
 	 * the probability of unintended failure) than to fix the total time
 	 * spent.
@@ -136,7 +136,7 @@ s_lock(volatile slock_t *lock, const char *file, int line)
 	 *
 	 * Note: spins_per_delay is local within our current process. We want to
 	 * average these observations across multiple backends, since it's
-	 * relatively rare for this__ function to even get entered, and so a single
+	 * relatively rare for this function to even get entered, and so a single
 	 * backend might not live long enough to converge on a good value.  That
 	 * is handled by the two routines below.
 	 */
@@ -170,7 +170,7 @@ s_unlock(volatile slock_t *lock)
 /*
  * Set local copy of spins_per_delay during backend startup.
  *
- * NB: this__ has to be pretty fast as it is called while holding a spinlock
+ * NB: this has to be pretty fast as it is called while holding a spinlock
  */
 void
 set_spins_per_delay(int shared_spins_per_delay)
@@ -181,7 +181,7 @@ set_spins_per_delay(int shared_spins_per_delay)
 /*
  * Update shared estimate of spins_per_delay during backend exit.
  *
- * NB: this__ has to be pretty fast as it is called while holding a spinlock
+ * NB: this has to be pretty fast as it is called while holding a spinlock
  */
 int
 update_spins_per_delay(int shared_spins_per_delay)
@@ -192,7 +192,7 @@ update_spins_per_delay(int shared_spins_per_delay)
 	 * value too much.  As long as both inputs are within the allowed range,
 	 * the result must be too, so we need not worry about clamping the result.
 	 *
-	 * We deliberately truncate rather than rounding; this__ is so that single
+	 * We deliberately truncate rather than rounding; this is so that single
 	 * adjustments inside a backend can affect the shared estimate (see the
 	 * asymmetric adjustment rules above).
 	 */
@@ -203,10 +203,10 @@ update_spins_per_delay(int shared_spins_per_delay)
 /*
  * Various TAS implementations that cannot live in s_lock.h as no inline
  * definition exists (yet).
- * In the future, get rid of tas.[cso] and fold it into this__ file.
+ * In the future, get rid of tas.[cso] and fold it into this file.
  *
  * If you change something here, you will likely need to modify s_lock.h too,
- * because the definitions for these are split between this__ file and s_lock.h.
+ * because the definitions for these are split between this file and s_lock.h.
  */
 
 
@@ -223,7 +223,7 @@ update_spins_per_delay(int shared_spins_per_delay)
 /*
  * Note: all the if-tests here probably ought to be testing gcc version
  * rather than platform, but I don't have adequate info to know what to
- * write.  Ideally we'd flush all this__ in favor of the inline version.
+ * write.  Ideally we'd flush all this in favor of the inline version.
  */
 #if defined(__m68k__) && !defined(__linux__)
 /* really means: extern int tas(slock_t* **lock); */
@@ -344,7 +344,7 @@ main()
 		return 1;
 	}
 
-	printf("S_LOCK_TEST: this__ will print %d stars and then\n", NUM_DELAYS);
+	printf("S_LOCK_TEST: this will print %d stars and then\n", NUM_DELAYS);
 	printf("             exit with a 'stuck spinlock' message\n");
 	printf("             if S_LOCK() and TAS() are working.\n");
 	fflush(stdout);

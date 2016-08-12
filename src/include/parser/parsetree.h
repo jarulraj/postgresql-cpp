@@ -26,7 +26,7 @@
 /*
  *		rt_fetch
  *
- * NB: this__ will crash and burn if handed an out-of-range RT index
+ * NB: this will crash and burn if handed an out-of-range RT index
  */
 #define rt_fetch(rangetable_index, rangetable) \
 	((RangeTblEntry *) list_nth(rangetable, (rangetable_index)-1))

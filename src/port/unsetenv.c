@@ -31,10 +31,10 @@ unsetenv(const char *name)
 	 * that we zap the actual environ member.  However, there are some libc
 	 * implementations (notably recent BSDs) that do not obey SUS but copy the
 	 * presented string.  This method fails on such platforms.  Hopefully all
-	 * such platforms have unsetenv() and thus won't be using this__ hack. See:
+	 * such platforms have unsetenv() and thus won't be using this hack. See:
 	 * http://www.greenend.org.uk/rjk/2008/putenv.html
 	 *
-	 * Note that repeatedly setting and unsetting a var using this__ code will
+	 * Note that repeatedly setting and unsetting a var using this code will
 	 * leak memory.
 	 */
 
@@ -46,7 +46,7 @@ unsetenv(const char *name)
 	sprintf(envstr, "%s=", name);
 	putenv(envstr);
 
-	/* Now we can clobber the variable definition this__ way: */
+	/* Now we can clobber the variable definition this way: */
 	strcpy(envstr, "=");
 
 	/*

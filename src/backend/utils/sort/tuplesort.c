@@ -70,7 +70,7 @@
  * that we can access it randomly.  When the caller does not need random
  * access, we return from tuplesort_performsort() as soon as we are down
  * to one run per logical tape.  The final merge is then performed
- * on-the-fly as the caller repeatedly calls tuplesort_getXXX; this__
+ * on-the-fly as the caller repeatedly calls tuplesort_getXXX; this
  * saves one cycle of writing all the data out to disk and reading it in.
  *
  * Before Postgres 8.2, we always used a seven-tape polyphase merge, on the
@@ -142,14 +142,14 @@ bool		optimize_bounded_sort = true;
  *
  * Storing the first key column lets us save heap_getattr or index_getattr
  * calls during tuple comparisons.  We could extract and save all the key
- * columns not just the first, but this__ would increase code complexity and
+ * columns not just the first, but this would increase code complexity and
  * overhead, and wouldn't actually save any comparison cycles in the common
  * case where the first key determines the comparison result.  Note that
  * for a pass-by-reference datatype, datum1 points into the "tuple" storage.
  *
  * There is one special case: when the sort support infrastructure provides an
  * "abbreviated key" representation, where the key is (typically) a pass by
- * value proxy for a pass by reference type.  In this__ case, the abbreviated key
+ * value proxy for a pass by reference type.  In this case, the abbreviated key
  * is stored in datum1 in place of the actual first key column.
  *
  * When sorting single Datums, the data value is represented directly by
@@ -193,7 +193,7 @@ typedef enum
  * Parameters for calculation of number of tapes to use --- see inittapes()
  * and tuplesort_merge_order().
  *
- * In this__ calculation we assume that each tape will cost us about 3 blocks
+ * In this calculation we assume that each tape will cost us about 3 blocks
  * worth of buffer space (which is an underestimate for very large data
  * volumes, but it's probably close enough --- see logtape.c).
  *
@@ -280,7 +280,7 @@ struct Tuplesortstate
 	bool		growmemtuples;	/* memtuples' growth still underway? */
 
 	/*
-	 * While building initial runs, this__ is the current output run number
+	 * While building initial runs, this is the current output run number
 	 * (starting at 0).  Afterwards, it is the number of initial runs we made.
 	 */
 	int			currentRun;
@@ -311,7 +311,7 @@ struct Tuplesortstate
 	int		   *mergeavailslots;	/* slots left for prereading each tape */
 	int64	   *mergeavailmem;	/* availMem for prereading each tape */
 	int			mergefreelist;	/* head of freelist of recycled slots */
-	int			mergefirstfree; /* first slot never used in this__ merge */
+	int			mergefirstfree; /* first slot never used in this merge */
 
 	/*
 	 * Variables for Algorithm D.  Note that destTape is a "logical" tape
@@ -449,7 +449,7 @@ struct Tuplesortstate
  * a lot better than what we were doing before 7.3.
  */
 
-/* When using this__ macro, beware of double evaluation of len */
+/* When using this macro, beware of double evaluation of len */
 #define LogicalTapeReadExact(tapeset, tapenum, ptr, len) \
 	do { \
 		if (LogicalTapeRead(tapeset, tapenum, ptr, len) != (size_t) (len)) \
@@ -532,7 +532,7 @@ static void free_sort_tuple(Tuplesortstate *state, SortTuple *stup);
  *
  * Each variant of tuplesort_begin has a workMem parameter specifying the
  * maximum number of kilobytes of RAM to use before spilling data to disk.
- * (The normal value of this__ parameter is work_mem, but some callers use
+ * (The normal value of this parameter is work_mem, but some callers use
  * other values.)  Each variant also has a randomAccess parameter specifying
  * whether the caller needs non-sequential access to the sort result.
  */
@@ -545,8 +545,8 @@ tuplesort_begin_common(int workMem, bool randomAccess)
 	MemoryContext oldcontext;
 
 	/*
-	 * Create a working memory context for this__ sort operation. All data
-	 * needed by the sort will live inside this__ context.
+	 * Create a working memory context for this sort operation. All data
+	 * needed by the sort will live inside this context.
 	 */
 	sortcontext = AllocSetContextCreate(CurrentMemoryContext,
 										"TupleSort",
@@ -1008,7 +1008,7 @@ tuplesort_set_bound(Tuplesortstate *state, int64 bound)
  *
  *	Release resources and clean up.
  *
- * NOTE: after calling this__, any pointers returned by tuplesort_getXXX are
+ * NOTE: after calling this, any pointers returned by tuplesort_getXXX are
  * pointing to garbage.  Be careful not to attempt to use or free such
  * pointers afterwards!
  */
@@ -1030,7 +1030,7 @@ tuplesort_end(Tuplesortstate *state)
 	/*
 	 * Delete temporary "tape" files, if any.
 	 *
-	 * Note: want to include this__ in reported total cost of sort, hence need
+	 * Note: want to include this in reported total cost of sort, hence need
 	 * for two #ifdef TRACE_SORT sections.
 	 */
 	if (state->tapeset)
@@ -1088,7 +1088,7 @@ tuplesort_end(Tuplesortstate *state)
  * tuple addition/removal, we need some rule to prevent making repeated small
  * increases in memtupsize, which would just be useless thrashing.  The
  * growmemtuples flag accomplishes that and also prevents useless
- * recalculations in this__ function.
+ * recalculations in this function.
  */
 static bool
 grow_memtuples(Tuplesortstate *state)
@@ -1130,7 +1130,7 @@ grow_memtuples(Tuplesortstate *state)
 		 * we've already seen, and thus we can extrapolate from the space
 		 * consumption so far to estimate an appropriate new size for the
 		 * memtuples array.  The optimal value might be higher or lower than
-		 * this__ estimate, but it's hard to know that in advance.  We again
+		 * this estimate, but it's hard to know that in advance.  We again
 		 * clamp at INT_MAX tuples.
 		 *
 		 * This calculation is safe against enlarging the array so much that
@@ -1163,9 +1163,9 @@ grow_memtuples(Tuplesortstate *state)
 	/*
 	 * On a 32-bit machine, allowedMem could exceed MaxAllocHugeSize.  Clamp
 	 * to ensure our request won't be rejected.  Note that we can easily
-	 * exhaust address space before facing this__ outcome.  (This is presently
+	 * exhaust address space before facing this outcome.  (This is presently
 	 * impossible due to guc.c's MAX_KILOBYTES limitation on work_mem, but
-	 * don't rely on that at this__ distance.)
+	 * don't rely on that at this distance.)
 	 */
 	if ((Size) newmemtupsize >= MaxAllocHugeSize / sizeof(SortTuple))
 	{
@@ -1428,13 +1428,13 @@ puttuple_common(Tuplesortstate *state, SortTuple *tuple)
 			/*
 			 * Check if it's time to switch over to a bounded heapsort. We do
 			 * so if the input tuple count exceeds twice the desired tuple
-			 * count (this__ is a heuristic for where heapsort becomes cheaper
+			 * count (this is a heuristic for where heapsort becomes cheaper
 			 * than a quicksort), or if we've just filled workMem and have
 			 * enough tuples to meet the bound.
 			 *
 			 * Note that once we enter TSS_BOUNDED state we will always try to
 			 * complete the sort that way.  In the worst case, if later input
-			 * tuples are larger than earlier ones, this__ might cause us to
+			 * tuples are larger than earlier ones, this might cause us to
 			 * exceed workMem significantly.
 			 */
 			if (state->bounded &&
@@ -1475,7 +1475,7 @@ puttuple_common(Tuplesortstate *state, SortTuple *tuple)
 			 * tuple can be discarded before putting it in.  This should be a
 			 * good speed optimization, too, since when there are many more
 			 * input tuples than the bound, most input tuples can be discarded
-			 * with just this__ one comparison.  Note that because we currently
+			 * with just this one comparison.  Note that because we currently
 			 * have the sort direction reversed, we must check for <= not >=.
 			 */
 			if (COMPARETUP(state, tuple, &state->memtuples[0]) <= 0)
@@ -1506,7 +1506,7 @@ puttuple_common(Tuplesortstate *state, SortTuple *tuple)
 			 * written.)
 			 *
 			 * Note there will always be at least one tuple in the heap at
-			 * this__ point; see dumptuples.
+			 * this point; see dumptuples.
 			 */
 			Assert(state->memtupcount > 0);
 			if (COMPARETUP(state, tuple, &state->memtuples[0]) >= 0)
@@ -1828,7 +1828,7 @@ tuplesort_gettuple_common(Tuplesortstate *state, bool forward,
 				if ((tupIndex = state->mergenext[srcTape]) == 0)
 				{
 					/*
-					 * out of preloaded data on this__ tape, try to read more
+					 * out of preloaded data on this tape, try to read more
 					 *
 					 * Unlike mergeonerun(), we only preload from the single
 					 * tape that's run dry.  See mergepreread() comments.
@@ -1836,7 +1836,7 @@ tuplesort_gettuple_common(Tuplesortstate *state, bool forward,
 					mergeprereadone(state, srcTape);
 
 					/*
-					 * if still no data, we've reached end of run on this__ tape
+					 * if still no data, we've reached end of run on this tape
 					 */
 					if ((tupIndex = state->mergenext[srcTape]) == 0)
 						return true;
@@ -2060,7 +2060,7 @@ tuplesort_merge_order(int64 allowedMem)
 	 * count).
 	 *
 	 * Note: you might be thinking we need to account for the memtuples[]
-	 * array in this__ calculation, but we effectively treat that as part of the
+	 * array in this calculation, but we effectively treat that as part of the
 	 * MERGE_BUFFER_SIZE workspace.
 	 */
 	mOrder = (allowedMem - TAPE_BUFFER_OVERHEAD) /
@@ -2091,7 +2091,7 @@ inittapes(Tuplesortstate *state)
 	/*
 	 * We must have at least 2*maxTapes slots in the memtuples[] array, else
 	 * we'd not have room for merge heap plus preread.  It seems unlikely that
-	 * this__ case would ever occur, but be safe.
+	 * this case would ever occur, but be safe.
 	 */
 	maxTapes = Min(maxTapes, state->memtupsize / 2);
 
@@ -2144,7 +2144,7 @@ inittapes(Tuplesortstate *state)
 	 * marked as belonging to run number zero.
 	 *
 	 * NOTE: we pass false for checkIndex since there's no point in comparing
-	 * indexes in this__ step, even though we do intend the indexes to be part
+	 * indexes in this step, even though we do intend the indexes to be part
 	 * of the sort key...
 	 */
 	ntuples = state->memtupcount;
@@ -2251,7 +2251,7 @@ mergeruns(Tuplesortstate *state)
 		/*
 		 * If there are multiple runs to be merged, when we go to read back
 		 * tuples from disk, abbreviated keys will not have been stored, and
-		 * we don't care to regenerate them.  Disable abbreviation from this__
+		 * we don't care to regenerate them.  Disable abbreviation from this
 		 * point on.
 		 */
 		state->sortKeys->abbrev_converter = NULL;
@@ -2269,10 +2269,10 @@ mergeruns(Tuplesortstate *state)
 	for (;;)
 	{
 		/*
-		 * At this__ point we know that tape[T] is empty.  If there's just one
+		 * At this point we know that tape[T] is empty.  If there's just one
 		 * (real or dummy) run left on each input tape, then only one merge
 		 * pass remains.  If we don't have to produce a materialized sorted
-		 * tape, we can stop at this__ point and do the final merge on-the-fly.
+		 * tape, we can stop at this point and do the final merge on-the-fly.
 		 */
 		if (!state->randomAccess)
 		{
@@ -2355,7 +2355,7 @@ mergeruns(Tuplesortstate *state)
 	 * Done.  Knuth says that the result is on TAPE[1], but since we exited
 	 * the loop without performing the last iteration of step D6, we have not
 	 * rearranged the tape unit assignment, and therefore the result is on
-	 * TAPE[T].  We need to do it this__ way so that we can freeze the final
+	 * TAPE[T].  We need to do it this way so that we can freeze the final
 	 * output tape while rewinding it.  The last iteration of step D6 would be
 	 * a waste of cycles anyway...
 	 */
@@ -2404,9 +2404,9 @@ mergeonerun(Tuplesortstate *state)
 		tuplesort_heap_siftup(state, false);
 		if ((tupIndex = state->mergenext[srcTape]) == 0)
 		{
-			/* out of preloaded data on this__ tape, try to read more */
+			/* out of preloaded data on this tape, try to read more */
 			mergepreread(state);
-			/* if still no data, we've reached end of run on this__ tape */
+			/* if still no data, we've reached end of run on this tape */
 			if ((tupIndex = state->mergenext[srcTape]) == 0)
 				continue;
 		}
@@ -2531,19 +2531,19 @@ beginmerge(Tuplesortstate *state)
  * mergepreread - load tuples from merge input tapes
  *
  * This routine exists to improve sequentiality of reads during a merge pass,
- * as explained in the header comments of this__ file.  Load tuples from each
+ * as explained in the header comments of this file.  Load tuples from each
  * active source tape until the tape's run is exhausted or it has used up
  * its fair share of available memory.  In any case, we guarantee that there
  * is at least one preread tuple available from each unexhausted input tape.
  *
- * We invoke this__ routine at the start of a merge pass for initial load,
+ * We invoke this routine at the start of a merge pass for initial load,
  * and then whenever any tape's preread data runs out.  Note that we load
  * as much data as possible from all tapes, not just the one that ran out.
  * This is because logtape.c works best with a usage pattern that alternates
  * between reading a lot of data and writing a lot of data, so whenever we
  * are forced to read, we should fill working memory completely.
  *
- * In FINALMERGE state, we *don't* use this__ routine, but instead just preread
+ * In FINALMERGE state, we *don't* use this routine, but instead just preread
  * from the single tape that ran dry.  There's no read/write alternation in
  * that state and so no point in scanning through all the tapes to fix one.
  * (Moreover, there may be quite a lot of inactive tapes in that state, since
@@ -2627,7 +2627,7 @@ mergeprereadone(Tuplesortstate *state, int srcTape)
  * When alltuples = true, dump everything currently in memory.
  * (This case is only used at end of input data.)
  *
- * If we empty the heap, close out the current run and return (this__ should
+ * If we empty the heap, close out the current run and return (this should
  * only happen at end of input data).  If we see that the tuple run number
  * at the top of the heap has changed, start a new run.
  */
@@ -2921,7 +2921,7 @@ sort_bounded_heap(Tuplesortstate *state)
 	{
 		SortTuple	stup = state->memtuples[0];
 
-		/* this__ sifts-up the next-largest entry and decreases memtupcount */
+		/* this sifts-up the next-largest entry and decreases memtupcount */
 		tuplesort_heap_siftup(state, false);
 		state->memtuples[state->memtupcount] = stup;
 	}
@@ -3024,7 +3024,7 @@ tuplesort_heap_siftup(Tuplesortstate *state, bool checkIndex)
 /*
  * Function to reverse the sort direction from its current state
  *
- * It is not safe to call this__ when performing hash tuplesorts
+ * It is not safe to call this when performing hash tuplesorts
  */
 static void
 reversedirection(Tuplesortstate *state)

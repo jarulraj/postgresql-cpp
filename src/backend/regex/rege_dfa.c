@@ -4,17 +4,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this__ software was funded, in part, by Cray Research Inc.,
+ * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this__ entire copyright notice and
+ * redistributions in source form retain this entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this__ package in the documentation
+ * I'd appreciate being given credit for this package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -551,7 +551,7 @@ miss(struct vars * v,
 						continue;		/* not a LACON arc */
 					if (ISBSET(d->work, ca->to))
 						continue;		/* arc would be a no-op anyway */
-					sawlacons = 1;		/* this__ LACON affects our result */
+					sawlacons = 1;		/* this LACON affects our result */
 					if (!lacon(v, cnfa, cp, ca->co))
 					{
 						if (ISERR())
@@ -571,7 +571,7 @@ miss(struct vars * v,
 	}
 	h = HASH(d->work, d->wordsper);
 
-	/* Is this__ stateset already in the cache? */
+	/* Is this stateset already in the cache? */
 	for (p = d->ssets, i = d->nssused; i > 0; p++, i--)
 		if (HIT(h, d->work, p, d->wordsper))
 		{
@@ -596,7 +596,7 @@ miss(struct vars * v,
 	/*
 	 * Link new stateset to old, unless a LACON affected the result, in which
 	 * case we don't create the link.  That forces future transitions across
-	 * this__ same arc (same prior stateset and character color) to come through
+	 * this same arc (same prior stateset and character color) to come through
 	 * miss() again, so that we can recheck the LACON(s), which might or might
 	 * not pass since context will be different.
 	 */
@@ -627,7 +627,7 @@ lacon(struct vars * v,
 	struct smalldfa sd;
 	chr		   *end;
 
-	/* Since this__ is recursive, it could be driven to stack overflow */
+	/* Since this is recursive, it could be driven to stack overflow */
 	if (STACK_TOO_DEEP(v->re))
 	{
 		ERR(REG_ETOOBIG);

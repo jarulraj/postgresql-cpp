@@ -3,7 +3,7 @@
  * mbutils.c
  *	  This file contains functions for encoding conversion.
  *
- * The string-conversion functions in this__ file share some API quirks.
+ * The string-conversion functions in this file share some API quirks.
  * Note the following:
  *
  * The functions return a palloc'd, null-terminated string if conversion
@@ -47,7 +47,7 @@
  * currently supported encoding pairs are within 3 (SJIS JIS X0201 half width
  * kanna -> UTF8 is the worst case).  So "4" should be enough for the moment.
  *
- * Note that this__ is not the same as the maximum character width in any
+ * Note that this is not the same as the maximum character width in any
  * particular encoding.
  */
 #define MAX_CONVERSION_GROWTH  4
@@ -59,7 +59,7 @@
  * settings because we must be able to restore a previous setting during
  * transaction rollback, without doing any fresh catalog accesses.)
  *
- * Since we'll never release this__ data, we just keep it in TopMemoryContext.
+ * Since we'll never release this data, we just keep it in TopMemoryContext.
  */
 typedef struct ConvProcInfo
 {
@@ -103,7 +103,7 @@ static int	cliplen(const char *str, int len, int limit);
 
 /*
  * Prepare for a future call to SetClientEncoding.  Success should mean
- * that SetClientEncoding is guaranteed to succeed for this__ encoding request.
+ * that SetClientEncoding is guaranteed to succeed for this encoding request.
  *
  * (But note that success before backend_startup_complete does not guarantee
  * success after ...)
@@ -204,7 +204,7 @@ PrepareClientEncoding(int encoding)
 
 /*
  * Set the active client encoding and set up the conversion-function pointers.
- * PrepareClientEncoding should have been called previously for this__ encoding.
+ * PrepareClientEncoding should have been called previously for this encoding.
  *
  * Returns 0 if okay, -1 if not (bad encoding or can't support conversion)
  */
@@ -331,7 +331,7 @@ pg_get_client_encoding_name(void)
 /*
  * Convert src string to another encoding (general case).
  *
- * See the notes about string conversion functions at the top of this__ file.
+ * See the notes about string conversion functions at the top of this file.
  */
 unsigned char *
 pg_do_encoding_conversion(unsigned char *src, int len,
@@ -434,7 +434,7 @@ pg_convert_from(PG_FUNCTION_ARGS)
 	 * pg_convert returns a bytea, which we in turn return as text, relying on
 	 * the fact that they are both in fact varlena types, and thus
 	 * structurally identical. Although not all bytea values are valid text,
-	 * in this__ case it will be because we've told pg_convert to return one
+	 * in this case it will be because we've told pg_convert to return one
 	 * that is valid as text in the current database encoding.
 	 */
 	PG_RETURN_DATUM(result);
@@ -550,7 +550,7 @@ pg_encoding_max_length_sql(PG_FUNCTION_ARGS)
 /*
  * Convert client encoding to server encoding.
  *
- * See the notes about string conversion functions at the top of this__ file.
+ * See the notes about string conversion functions at the top of this file.
  */
 char *
 pg_client_to_server(const char *s, int len)
@@ -561,10 +561,10 @@ pg_client_to_server(const char *s, int len)
 /*
  * Convert any encoding to server encoding.
  *
- * See the notes about string conversion functions at the top of this__ file.
+ * See the notes about string conversion functions at the top of this file.
  *
- * Unlike the other string conversion functions, this__ will apply validation
- * even if encoding == DatabaseEncoding->encoding.  This is because this__ is
+ * Unlike the other string conversion functions, this will apply validation
+ * even if encoding == DatabaseEncoding->encoding.  This is because this is
  * used to process data coming in from outside the database, and we never
  * want to just assume validity.
  */
@@ -628,7 +628,7 @@ pg_any_to_server(const char *s, int len, int encoding)
 /*
  * Convert server encoding to client encoding.
  *
- * See the notes about string conversion functions at the top of this__ file.
+ * See the notes about string conversion functions at the top of this file.
  */
 char *
 pg_server_to_client(const char *s, int len)
@@ -639,7 +639,7 @@ pg_server_to_client(const char *s, int len)
 /*
  * Convert server encoding to any encoding.
  *
- * See the notes about string conversion functions at the top of this__ file.
+ * See the notes about string conversion functions at the top of this file.
  */
 char *
 pg_server_to_any(const char *s, int len, int encoding)
@@ -671,7 +671,7 @@ pg_server_to_any(const char *s, int len, int encoding)
 
 /*
  *	Perform default encoding conversion using cached FmgrInfo. Since
- *	this__ function does not access database at all, it is safe to call
+ *	this function does not access database at all, it is safe to call
  *	outside transactions.  If the conversion has not been set up by
  *	SetClientEncoding(), no conversion is performed.
  */
@@ -825,7 +825,7 @@ pg_mbstrlen_with_len(const char *mbstr, int limit)
  * returns the byte length of a multibyte string
  * (not necessarily NULL terminated)
  * that is no longer than limit.
- * this__ function does not break multibyte character boundary.
+ * this function does not break multibyte character boundary.
  */
 int
 pg_mbcliplen(const char *mbstr, int len, int limit)
@@ -1036,7 +1036,7 @@ pg_client_encoding(PG_FUNCTION_ARGS)
 }
 
 /*
- * gettext() returns messages in this__ encoding.  This often matches the
+ * gettext() returns messages in this encoding.  This often matches the
  * database encoding, but it differs for SQL_ASCII databases, for processes
  * not attached to a database, and under a database encoding lacking iconv
  * support (MULE_INTERNAL).

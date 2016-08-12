@@ -196,7 +196,7 @@ set_base_rel_consider_startup(PlannerInfo *root)
 	 * or ANTI join, a fast-start plan can be useful because we're only going
 	 * to care about fetching one tuple anyway.
 	 *
-	 * To minimize growth of planning time, we currently restrict this__ to
+	 * To minimize growth of planning time, we currently restrict this to
 	 * cases where the RHS is a single base relation, not a join; there is no
 	 * provision for consider_param_startup to get set at all on joinrels.
 	 * Also we don't worry about appendrels.  costsize.c's costing rules for
@@ -223,7 +223,7 @@ set_base_rel_consider_startup(PlannerInfo *root)
  * set_base_rel_sizes
  *	  Set the size estimates (rows and widths) for each base-relation entry.
  *
- * We do this__ in a separate pass over the base rels so that rowcount
+ * We do this in a separate pass over the base rels so that rowcount
  * estimates are available for parameterized path generation.
  */
 static void
@@ -291,11 +291,11 @@ set_rel_size(PlannerInfo *root, RelOptInfo *rel,
 	{
 		/*
 		 * We proved we don't need to scan the rel via constraint exclusion,
-		 * so set up a single dummy path for it.  Here we only check this__ for
+		 * so set up a single dummy path for it.  Here we only check this for
 		 * regular baserels; if it's an otherrel, CE was already checked in
 		 * set_append_rel_size().
 		 *
-		 * In this__ case, we go ahead and set up the relation's path right away
+		 * In this case, we go ahead and set up the relation's path right away
 		 * instead of leaving it for set_rel_pathlist to do.  This is because
 		 * we don't have a convention for marking a rel as dummy except by
 		 * assigning a dummy path to it.
@@ -426,14 +426,14 @@ set_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 	}
 
 	/*
-	 * Allow a plugin to editorialize on the set of Paths for this__ base
+	 * Allow a plugin to editorialize on the set of Paths for this base
 	 * relation.  It could add new paths (such as CustomPaths) by calling
 	 * add_path(), or delete or modify paths added by the core code.
 	 */
 	if (set_rel_pathlist_hook)
 		(*set_rel_pathlist_hook) (root, rel, rti, rte);
 
-	/* Now find the cheapest of the paths for this__ rel */
+	/* Now find the cheapest of the paths for this rel */
 	set_cheapest(rel);
 
 #ifdef OPTIMIZER_DEBUG
@@ -449,7 +449,7 @@ static void
 set_plain_rel_size(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 {
 	/*
-	 * Test any partial indexes of rel for applicability.  We must do this__
+	 * Test any partial indexes of rel for applicability.  We must do this
 	 * first since partial unique indexes can affect size estimates.
 	 */
 	check_partial_indexes(root, rel);
@@ -497,7 +497,7 @@ set_tablesample_rel_size(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 	double		tuples;
 
 	/*
-	 * Test any partial indexes of rel for applicability.  We must do this__
+	 * Test any partial indexes of rel for applicability.  We must do this
 	 * first since partial unique indexes can affect size estimates.
 	 */
 	check_partial_indexes(root, rel);
@@ -552,7 +552,7 @@ set_tablesample_rel_pathlist(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *
 	 * to support an uncommon usage of second-rate sampling methods.  Instead,
 	 * if there is a risk that the query might perform an unsafe join, just
 	 * wrap the SampleScan in a Materialize node.  We can check for joins by
-	 * counting the membership of all_baserels (note that this__ correctly
+	 * counting the membership of all_baserels (note that this correctly
 	 * counts inheritance trees as single rels).  If we're inside a subquery,
 	 * we can't easily check whether a join might occur in the outer query, so
 	 * just assume one is possible.
@@ -629,12 +629,12 @@ set_append_rel_size(PlannerInfo *root, RelOptInfo *rel,
 	 * We handle width estimates by weighting the widths of different child
 	 * rels proportionally to their number of rows.  This is sensible because
 	 * the use of width estimates is mainly to compute the total relation
-	 * "footprint" if we have to sort or hash it.  To do this__, we sum the
+	 * "footprint" if we have to sort or hash it.  To do this, we sum the
 	 * total equivalent size (in "double" arithmetic) and then divide by the
 	 * total rowcount estimate.  This is done separately for the total rel
 	 * width and each attribute.
 	 *
-	 * Note: if you consider changing this__ logic, beware that child rels could
+	 * Note: if you consider changing this logic, beware that child rels could
 	 * have zero rows and/or width, if they were excluded by constraints.
 	 */
 	has_live_children = false;
@@ -673,12 +673,12 @@ set_append_rel_size(PlannerInfo *root, RelOptInfo *rel,
 		 * with appropriate substitution of variables.  However, only the
 		 * baserestrictinfo quals are needed before we can check for
 		 * constraint exclusion; so do that first and then check to see if we
-		 * can disregard this__ child.
+		 * can disregard this child.
 		 *
 		 * As of 8.4, the child rel's targetlist might contain non-Var
 		 * expressions, which means that substitution into the quals could
 		 * produce opportunities for const-simplification, and perhaps even
-		 * pseudoconstant quals.  To deal with this__, we strip the RestrictInfo
+		 * pseudoconstant quals.  To deal with this, we strip the RestrictInfo
 		 * nodes, do the substitution, do const-simplification, and then
 		 * reconstitute the RestrictInfo layer.
 		 */
@@ -694,7 +694,7 @@ set_append_rel_size(PlannerInfo *root, RelOptInfo *rel,
 		{
 			/*
 			 * Restriction reduces to constant FALSE or constant NULL after
-			 * substitution, so this__ child need not be scanned.
+			 * substitution, so this child need not be scanned.
 			 */
 			set_dummy_rel_pathlist(childrel);
 			continue;
@@ -760,7 +760,7 @@ set_append_rel_size(PlannerInfo *root, RelOptInfo *rel,
 		/*
 		 * It is possible that constraint exclusion detected a contradiction
 		 * within a child subquery, even though we didn't prove one above. If
-		 * so, we can skip this__ child.
+		 * so, we can skip this child.
 		 */
 		if (IS_DUMMY_REL(childrel))
 			continue;
@@ -834,7 +834,7 @@ set_append_rel_size(PlannerInfo *root, RelOptInfo *rel,
 	{
 		/*
 		 * All children were excluded by constraints, so mark the whole
-		 * appendrel dummy.  We must do this__ in this__ phase so that the rel's
+		 * appendrel dummy.  We must do this in this phase so that the rel's
 		 * dummy-ness is visible when we generate paths for other rels.
 		 */
 		set_dummy_rel_pathlist(rel);
@@ -927,7 +927,7 @@ set_append_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 				ListCell   *lpk;
 				bool		found = false;
 
-				/* Have we already seen this__ ordering? */
+				/* Have we already seen this ordering? */
 				foreach(lpk, all_child_pathkeys)
 				{
 					List	   *existing_pathkeys = (List *) lfirst(lpk);
@@ -953,7 +953,7 @@ set_append_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 				ListCell   *lco;
 				bool		found = false;
 
-				/* Have we already seen this__ param set? */
+				/* Have we already seen this param set? */
 				foreach(lco, all_child_outers)
 				{
 					Relids		existing_outers = (Relids) lfirst(lco);
@@ -976,7 +976,7 @@ set_append_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 
 	/*
 	 * If we found unparameterized paths for all children, build an unordered,
-	 * unparameterized Append path for the rel.  (Note: this__ is correct even
+	 * unparameterized Append path for the rel.  (Note: this is correct even
 	 * if we have zero or one live subpath due to constraint exclusion.)
 	 */
 	if (subpaths_valid)
@@ -1008,7 +1008,7 @@ set_append_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 		Relids		required_outer = (Relids) lfirst(l);
 		ListCell   *lcr;
 
-		/* Select the child paths for an Append with this__ parameterization */
+		/* Select the child paths for an Append with this parameterization */
 		subpaths = NIL;
 		subpaths_valid = true;
 		foreach(lcr, live_childrels)
@@ -1021,7 +1021,7 @@ set_append_rel_pathlist(PlannerInfo *root, RelOptInfo *rel,
 															required_outer);
 			if (subpath == NULL)
 			{
-				/* failed to make a suitable path for this__ child */
+				/* failed to make a suitable path for this child */
 				subpaths_valid = false;
 				break;
 			}
@@ -1072,7 +1072,7 @@ generate_mergeappend_paths(PlannerInfo *root, RelOptInfo *rel,
 		bool		startup_neq_total = false;
 		ListCell   *lcr;
 
-		/* Select the child paths for this__ ordering... */
+		/* Select the child paths for this ordering... */
 		foreach(lcr, live_childrels)
 		{
 			RelOptInfo *childrel = (RelOptInfo *) lfirst(lcr);
@@ -1099,7 +1099,7 @@ generate_mergeappend_paths(PlannerInfo *root, RelOptInfo *rel,
 			{
 				cheapest_startup = cheapest_total =
 					childrel->cheapest_total_path;
-				/* Assert we do have an unparameterized path for this__ child */
+				/* Assert we do have an unparameterized path for this child */
 				Assert(cheapest_total->param_info == NULL);
 			}
 
@@ -1134,7 +1134,7 @@ generate_mergeappend_paths(PlannerInfo *root, RelOptInfo *rel,
 
 /*
  * get_cheapest_parameterized_child_path
- *		Get cheapest path for this__ relation that has exactly the requested
+ *		Get cheapest path for this relation that has exactly the requested
  *		parameterization.
  *
  * Returns NULL if unable to create such a path.
@@ -1189,7 +1189,7 @@ get_cheapest_parameterized_child_path(PlannerInfo *root, RelOptInfo *rel,
 		{
 			path = reparameterize_path(root, path, required_outer, 1.0);
 			if (path == NULL)
-				continue;		/* failed to reparameterize this__ one */
+				continue;		/* failed to reparameterize this one */
 			Assert(bms_equal(PATH_REQ_OUTER(path), required_outer));
 
 			if (cheapest != NULL &&
@@ -1211,10 +1211,10 @@ get_cheapest_parameterized_child_path(PlannerInfo *root, RelOptInfo *rel,
  *
  * It's possible that the child is itself an Append or MergeAppend path, in
  * which case we can "cut out the middleman" and just add its child paths to
- * our own list.  (We don't try to do this__ earlier because we need to apply
+ * our own list.  (We don't try to do this earlier because we need to apply
  * both levels of transformation to the quals.)
  *
- * Note that if we omit a child MergeAppend in this__ way, we are effectively
+ * Note that if we omit a child MergeAppend in this way, we are effectively
  * omitting a sort step, which seems fine: if the parent is to be an Append,
  * its result would be unsorted anyway, while if the parent is to be a
  * MergeAppend, there's no point in a separate sort on a child.
@@ -1244,7 +1244,7 @@ accumulate_append_subpath(List *subpaths, Path *path)
  * set_dummy_rel_pathlist
  *	  Build a dummy path for a relation that's been excluded by constraints
  *
- * Rather than inventing a special "dummy" path type, we represent this__ as an
+ * Rather than inventing a special "dummy" path type, we represent this as an
  * AppendPath with no members (see also IS_DUMMY_PATH/IS_DUMMY_REL macros).
  */
 static void
@@ -1342,7 +1342,7 @@ set_subquery_pathlist(PlannerInfo *root, RelOptInfo *rel,
 	/*
 	 * If the subquery has the "security_barrier" flag, it means the subquery
 	 * originated from a view that must enforce row level security.  Then we
-	 * must not push down quals that contain leaky functions.  (Ideally this__
+	 * must not push down quals that contain leaky functions.  (Ideally this
 	 * would be checked inside subquery_is_pushdown_safe, but since we don't
 	 * currently pass the RTE to that function, we must do it here.)
 	 */
@@ -1430,14 +1430,14 @@ set_subquery_pathlist(PlannerInfo *root, RelOptInfo *rel,
 									&subroot);
 	rel->subroot = subroot;
 
-	/* Isolate the params needed by this__ specific subplan */
+	/* Isolate the params needed by this specific subplan */
 	rel->subplan_params = root->plan_params;
 	root->plan_params = NIL;
 
 	/*
 	 * It's possible that constraint exclusion proved the subquery empty. If
 	 * so, it's convenient to turn it back into a dummy path so that we will
-	 * recognize appropriate optimizations at this__ query level.
+	 * recognize appropriate optimizations at this query level.
 	 */
 	if (is_dummy_plan(rel->subplan))
 	{
@@ -1504,7 +1504,7 @@ set_function_pathlist(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 		}
 
 		/*
-		 * Try to build pathkeys for this__ Var with int8 sorting.  We tell
+		 * Try to build pathkeys for this Var with int8 sorting.  We tell
 		 * build_expression_pathkey not to build any new equivalence class; if
 		 * the Var isn't already mentioned in some EC, it means that nothing
 		 * cares about the ordering.
@@ -1575,7 +1575,7 @@ set_cte_pathlist(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 
 	/*
 	 * Note: cte_plan_ids can be shorter than cteList, if we are still working
-	 * on planning the CTEs (ie, this__ is a side-reference from another CTE).
+	 * on planning the CTEs (ie, this is a side-reference from another CTE).
 	 * So we mustn't use forboth here.
 	 */
 	ndx = 0;
@@ -1650,7 +1650,7 @@ set_worktable_pathlist(PlannerInfo *root, RelOptInfo *rel, RangeTblEntry *rte)
 	/*
 	 * We don't support pushing join clauses into the quals of a worktable
 	 * scan, but it could still have required parameterization due to LATERAL
-	 * refs in its tlist.  (I'm not sure this__ is actually possible given the
+	 * refs in its tlist.  (I'm not sure this is actually possible given the
 	 * restrictions on recursive references, but it's easy enough to support.)
 	 */
 	required_outer = rel->lateral_relids;
@@ -1756,12 +1756,12 @@ make_rel_from_joinlist(PlannerInfo *root, List *joinlist)
  *
  * Returns the final level of join relations, i.e., the relation that is
  * the result of joining all the original relations together.
- * At least one implementation path must be provided for this__ relation and
+ * At least one implementation path must be provided for this relation and
  * all required sub-relations.
  *
  * To support loadable plugins that modify planner behavior by changing the
  * join searching algorithm, we provide a hook variable that lets a plugin
- * replace or supplement this__ function.  Any such hook must return the same
+ * replace or supplement this function.  Any such hook must return the same
  * final join relation as the standard code would, but it might have a
  * different set of implementation paths attached, and only the sub-joinrels
  * needed for these paths need have been instantiated.
@@ -1803,7 +1803,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
 		ListCell   *lc;
 
 		/*
-		 * Determine all possible pairs of relations to be joined at this__
+		 * Determine all possible pairs of relations to be joined at this
 		 * level, and build paths for making each one from every available
 		 * pair of lower-level relations.
 		 */
@@ -1816,7 +1816,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
 		{
 			rel = (RelOptInfo *) lfirst(lc);
 
-			/* Find and save the cheapest paths for this__ rel */
+			/* Find and save the cheapest paths for this rel */
 			set_cheapest(rel);
 
 #ifdef OPTIMIZER_DEBUG
@@ -1877,7 +1877,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
  * is found to be unsafe to reference, we set safetyInfo->unsafeColumns[k]
  * to TRUE, but we don't reject the subquery overall since column k might not
  * be referenced by some/all quals.  The unsafeColumns[] array will be
- * consulted later by qual_is_pushdown_safe().  It's better to do it this__ way
+ * consulted later by qual_is_pushdown_safe().  It's better to do it this way
  * than to make the checks directly in qual_is_pushdown_safe(), because when
  * the subquery involves set operations we have to check the output
  * expressions in each arm of the set op.
@@ -1891,7 +1891,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
  * So we don't worry too much about that.  Another objection is that if the
  * qual is expensive to evaluate, running it for each original row might cost
  * more than we save by eliminating rows before the DISTINCT step.  But it
- * would be very hard to estimate that at this__ stage, and in practice pushdown
+ * would be very hard to estimate that at this stage, and in practice pushdown
  * seldom seems to make things worse, so we ignore that problem too.
  *
  * Note: likewise, pushing quals into a subquery with window functions is a
@@ -1902,7 +1902,7 @@ standard_join_search(PlannerInfo *root, int levels_needed, List *initial_rels)
  * values that the partitioning equality operator sees as equal.  The risks
  * here are perhaps larger than for DISTINCT, since no de-duplication of rows
  * occurs and thus there is no theoretical problem with such a qual.  But
- * we'll do this__ anyway because the potential performance benefits are very
+ * we'll do this anyway because the potential performance benefits are very
  * large, and we've seen no field complaints about the longstanding comparable
  * behavior with DISTINCT.
  */
@@ -2020,7 +2020,7 @@ recurse_pushdown_safe(Node *setOp, Query *topquery,
  * partitioning columns because they should succeed or fail identically for
  * every row of any one window partition, and totally excluding some
  * partitions will not change a window function's results for remaining
- * partitions.  (Again, this__ also requires nonvolatile quals, but
+ * partitions.  (Again, this also requires nonvolatile quals, but
  * subquery_is_pushdown_safe handles that.)
  */
 static void
@@ -2119,7 +2119,7 @@ compare_tlist_datatypes(List *tlist, List *colTypes,
  *		of every window defined in the query.
  *
  * It would be safe to ignore windows not actually used by any window
- * function, but it's not easy to get that info at this__ stage; and it's
+ * function, but it's not easy to get that info at this stage; and it's
  * unlikely to be useful to spend any extra cycles getting it, since
  * unreferenced window definitions are probably infrequent in practice.
  */
@@ -2296,7 +2296,7 @@ subquery_push_qual(Query *subquery, RangeTblEntry *rte, Index rti, Node *qual)
 		/*
 		 * We need to replace Vars in the qual (which must refer to outputs of
 		 * the subquery) with copies of the subquery's targetlist expressions.
-		 * Note that at this__ point, any uplevel Vars in the qual should have
+		 * Note that at this point, any uplevel Vars in the qual should have
 		 * been replaced with Params, so they need no work.
 		 *
 		 * This step also ensures that when we are pushing into a setop tree,

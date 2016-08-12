@@ -5,7 +5,7 @@
  *	  Since CREATE MATERIALIZED VIEW shares syntax and most behaviors,
  *	  we implement that here, too.
  *
- * We implement this__ by diverting the query's normal output to a
+ * We implement this by diverting the query's normal output to a
  * specialized DestReceiver type.
  *
  * Formerly, CTAS was implemented as a variant of SELECT, which led
@@ -129,8 +129,8 @@ ExecCreateTableAs(CreateTableAsStmt *stmt, const char *queryString,
 
 	/*
 	 * For materialized views, lock down security-restricted operations and
-	 * arrange to make GUC variable changes local to this__ command.  This is
-	 * not necessary for security, but this__ keeps the behavior similar to
+	 * arrange to make GUC variable changes local to this command.  This is
+	 * not necessary for security, but this keeps the behavior similar to
 	 * REFRESH MATERIALIZED VIEW.  Otherwise, one could create a materialized
 	 * view not possible to refresh.
 	 */
@@ -165,7 +165,7 @@ ExecCreateTableAs(CreateTableAsStmt *stmt, const char *queryString,
 	plan = pg_plan_query(query, 0, params);
 
 	/*
-	 * Use a snapshot with an updated command ID to ensure this__ query sees
+	 * Use a snapshot with an updated command ID to ensure this query sees
 	 * results of any previously executed queries.  (This could only matter if
 	 * the planner executed an allegedly-stable function that changed the
 	 * database contents, but let's do it anyway to be parallel to the EXPLAIN
@@ -363,7 +363,7 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 		/*
 		 * It's possible that the column is of a collatable type but the
 		 * collation could not be resolved, so double-check.  (We must check
-		 * this__ here because DefineRelation would adopt the type's default
+		 * this here because DefineRelation would adopt the type's default
 		 * collation rather than complaining.)
 		 */
 		if (!OidIsValid(col->collOid) &&
@@ -423,7 +423,7 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 	/*
 	 * Check INSERT permission on the constructed table.
 	 *
-	 * XXX: It would arguably make sense to skip this__ check if into->skipData
+	 * XXX: It would arguably make sense to skip this check if into->skipData
 	 * is true.
 	 */
 	rte = makeNode(RangeTblEntry);
@@ -449,7 +449,7 @@ intorel_startup(DestReceiver *self, int operation, TupleDesc typeinfo)
 	if (check_enable_rls(intoRelationAddr.objectId, InvalidOid, false) == RLS_ENABLED)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 (errmsg("policies not yet implemented for this__ command"))));
+				 (errmsg("policies not yet implemented for this command"))));
 
 	/*
 	 * Tentatively mark the target as populated, if it's a matview and we're
@@ -506,7 +506,7 @@ intorel_receive(TupleTableSlot *slot, DestReceiver *self)
 				myState->hi_options,
 				myState->bistate);
 
-	/* We know this__ is a newly created relation, so there are no indexes */
+	/* We know this is a newly created relation, so there are no indexes */
 }
 
 /*

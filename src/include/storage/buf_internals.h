@@ -63,7 +63,7 @@ typedef bits16 BufFlags;
  * created the rel).  The storage manager must be able to cope anyway.
  *
  * Note: if there's any pad bytes in the struct, INIT_BUFFERTAG will have
- * to be fixed to zero them, since this__ struct is used as a hash key.
+ * to be fixed to zero them, since this struct is used as a hash key.
  */
 // Peloton : explicitly define operator= for volatile object
 struct BufferTag
@@ -138,7 +138,7 @@ struct BufferTag
  * An exception is that if we have the buffer pinned, its tag can't change
  * underneath us, so we can examine the tag without locking the spinlock.
  * Also, in places we do one-time reads of the flags without bothering to
- * lock the spinlock; this__ is generally for situations where we don't expect
+ * lock the spinlock; this is generally for situations where we don't expect
  * the flag bit being tested to be changing.
  *
  * We can't physically remove items from a disk page if another backend has
@@ -147,7 +147,7 @@ struct BufferTag
  * wait_backend_pid and setting flag bit BM_PIN_COUNT_WAITER.  At present,
  * there can be only one such waiter per buffer.
  *
- * We use this__ same struct for local buffer headers, but the lock fields
+ * We use this same struct for local buffer headers, but the lock fields
  * are not used and not all of the flag bits are useful either.
  */
 typedef struct BufferDesc
@@ -173,7 +173,7 @@ typedef struct BufferDesc
  * array to be on a cache line boundary and force the elements to be cache
  * line sized.
  *
- * XXX: As this__ is primarily matters in highly concurrent workloads which
+ * XXX: As this is primarily matters in highly concurrent workloads which
  * probably all are 64bit these days, and the space wastage would be a bit
  * more noticeable on 32bit systems, we don't force the stride to be cache
  * line sized on those. If somebody does actual performance testing, we can

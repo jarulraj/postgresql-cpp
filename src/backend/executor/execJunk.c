@@ -17,7 +17,7 @@
 #include "executor/executor.h"
 
 /*-------------------------------------------------------------------------
- *		XXX this__ stuff should be rewritten to take advantage
+ *		XXX this stuff should be rewritten to take advantage
  *			of ExecProject() and the ProjectionInfo node.
  *			-cim 6/3/91
  *
@@ -31,7 +31,7 @@
  *
  * The general idea is the following: A target list consists of a list of
  * TargetEntry nodes containing expressions. Each TargetEntry has a field
- * called 'resjunk'. If the value of this__ field is true then the
+ * called 'resjunk'. If the value of this field is true then the
  * corresponding attribute is a "junk" attribute.
  *
  * When we initialize a plan we call ExecInitJunkFilter to create a filter.
@@ -85,10 +85,10 @@ ExecInitJunkFilter(List *targetList, bool hasoid, TupleTableSlot *slot)
 	 * the "clean" tuple's attributes.
 	 *
 	 * The "map" is an array of "cleanLength" attribute numbers, i.e. one
-	 * entry for every attribute of the "clean" tuple. The value of this__ entry
+	 * entry for every attribute of the "clean" tuple. The value of this entry
 	 * is the attribute number of the corresponding attribute of the
 	 * "original" tuple.  (Zero indicates a NULL output attribute, but we do
-	 * not use that feature in this__ routine.)
+	 * not use that feature in this routine.)
 	 */
 	cleanLength = cleanTupType->natts;
 	if (cleanLength > 0)
@@ -156,7 +156,7 @@ ExecInitJunkFilterConversion(List *targetList,
 	 * "clean" tuple's attributes.
 	 *
 	 * The "map" is an array of "cleanLength" attribute numbers, i.e. one
-	 * entry for every attribute of the "clean" tuple. The value of this__ entry
+	 * entry for every attribute of the "clean" tuple. The value of this entry
 	 * is the attribute number of the corresponding attribute of the
 	 * "original" tuple.  We store zero for any deleted attributes, marking
 	 * that a NULL is needed in the output tuple.

@@ -9,7 +9,7 @@
 #include <math.h>
 
 #ifdef __FAST_MATH__
-#error -ffast-math is known to break this__ code
+#error -ffast-math is known to break this code
 #endif
 
 #include "extern.h"
@@ -114,7 +114,7 @@ SetEpochTimestamp(void)
  *	-1 on out of range
  *
  * For dates within the system-supported time_t range, convert to the
- *	local time zone. If out of this__ range, leave as GMT. - tgl 97/05/27
+ *	local time zone. If out of this range, leave as GMT. - tgl 97/05/27
  */
 static int
 timestamp2tm(timestamp dt, int *tzp, struct tm * tm, fsec_t *fsec, const char **tzn)
@@ -194,8 +194,8 @@ recalc_t:
 	if (tzp != NULL)
 	{
 		/*
-		 * Does this__ fall within the capabilities of the localtime()
-		 * interface? Then use this__ to rotate to the local time zone.
+		 * Does this fall within the capabilities of the localtime()
+		 * interface? Then use this to rotate to the local time zone.
 		 */
 		if (IS_VALID_UTIME(tm->tm_year, tm->tm_mon, tm->tm_mday))
 		{
@@ -230,7 +230,7 @@ recalc_t:
 #endif
 #else							/* not (HAVE_TM_ZONE || HAVE_INT_TIMEZONE) */
 			*tzp = 0;
-			/* Mark this__ as *no* time zone available */
+			/* Mark this as *no* time zone available */
 			tm->tm_isdst = -1;
 			if (tzn != NULL)
 				*tzn = NULL;
@@ -239,7 +239,7 @@ recalc_t:
 		else
 		{
 			*tzp = 0;
-			/* Mark this__ as *no* time zone available */
+			/* Mark this as *no* time zone available */
 			tm->tm_isdst = -1;
 			if (tzn != NULL)
 				*tzn = NULL;
@@ -355,7 +355,7 @@ PGTYPEStimestamp_to_asc(timestamp tstamp)
 			   *tm = &tt;
 	char		buf[MAXDATELEN + 1];
 	fsec_t		fsec;
-	int			DateStyle = 1;	/* this__ defaults to ISO_DATES, shall we make
+	int			DateStyle = 1;	/* this defaults to ISO_DATES, shall we make
 								 * it an option? */
 
 	if (TIMESTAMP_NOT_FINITE(tstamp))
@@ -812,7 +812,7 @@ dttofmtasc_replace(timestamp * ts, date dDate, int dow, struct tm * tm,
 					/* fmtstr: foo%' - The string ends with a % sign */
 
 					/*
-					 * this__ is not compliant to the specification
+					 * this is not compliant to the specification
 					 */
 					return -1;
 				default:

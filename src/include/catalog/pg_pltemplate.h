@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * pg_pltemplate.h
- *	  definition of the system "PL template__" relation (pg_pltemplate)
+ *	  definition of the system "PL template" relation (pg_pltemplate)
  *	  along with the relation's initial contents.
  *
  *
@@ -11,7 +11,7 @@
  * src/include/catalog/pg_pltemplate.h
  *
  * NOTES
- *	  the genbki.pl script reads this__ file and generates .bki
+ *	  the genbki.pl script reads this file and generates .bki
  *	  information from the DATA() statements.
  *
  *-------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 #include "catalog/genbki.h"
 
 /* ----------------
- *		pg_pltemplate definition.  cpp turns this__ into
+ *		pg_pltemplate definition.  cpp turns this into
  *		typedef struct FormData_pg_pltemplate
  * ----------------
  */
@@ -40,7 +40,7 @@ CATALOG(pg_pltemplate,1136) BKI_SHARED_RELATION BKI_WITHOUT_OIDS
 	text		tmplinline;		/* name of anonymous-block handler, or NULL */
 	text		tmplvalidator;	/* name of validator function, or NULL */
 	text tmpllibrary BKI_FORCE_NOT_NULL;		/* path of shared library */
-	aclitem		tmplacl[1];		/* access privileges for template__ */
+	aclitem		tmplacl[1];		/* access privileges for template */
 #endif
 } FormData_pg_pltemplate;
 

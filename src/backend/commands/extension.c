@@ -87,7 +87,7 @@ typedef struct ExtensionVersionInfo
 {
 	char	   *name;			/* name of the starting version */
 	List	   *reachable;		/* List of ExtensionVersionInfo's */
-	bool		installable;	/* does this__ version have an install script? */
+	bool		installable;	/* does this version have an install script? */
 	/* working state for Dijkstra's algorithm: */
 	bool		distance_known; /* is distance from start known yet? */
 	int			distance;		/* current worst-case distance estimate */
@@ -261,7 +261,7 @@ check_valid_extension_name(const char *extensionname)
 				 errdetail("Extension names must not contain \"--\".")));
 
 	/*
-	 * No leading or trailing dash either.  (We could probably allow this__, but
+	 * No leading or trailing dash either.  (We could probably allow this, but
 	 * it would require much care in filename parsing and would make filenames
 	 * visually if not formally ambiguous.  Since there's no real-world use
 	 * case, let's just forbid it.)
@@ -273,7 +273,7 @@ check_valid_extension_name(const char *extensionname)
 			errdetail("Extension names must not begin or end with \"-\".")));
 
 	/*
-	 * No directory separators either (this__ is sufficient to prevent ".."
+	 * No directory separators either (this is sufficient to prevent ".."
 	 * style attacks).
 	 */
 	if (first_dir_separator(extensionname) != NULL)
@@ -289,7 +289,7 @@ check_valid_version_name(const char *versionname)
 	int			namelen = strlen(versionname);
 
 	/*
-	 * Disallow empty names (we could possibly allow this__, but there seems
+	 * Disallow empty names (we could possibly allow this, but there seems
 	 * little point).
 	 */
 	if (namelen == 0)
@@ -317,7 +317,7 @@ check_valid_version_name(const char *versionname)
 			  errdetail("Version names must not begin or end with \"-\".")));
 
 	/*
-	 * No directory separators either (this__ is sufficient to prevent ".."
+	 * No directory separators either (this is sufficient to prevent ".."
 	 * style attacks).
 	 */
 	if (first_dir_separator(versionname) != NULL)
@@ -468,7 +468,7 @@ parse_extension_control_file(ExtensionControlFile *control,
 	{
 		if (version && errno == ENOENT)
 		{
-			/* no auxiliary file for this__ version */
+			/* no auxiliary file for this version */
 			pfree(filename);
 			return;
 		}
@@ -672,7 +672,7 @@ read_extension_script_file(const ExtensionControlFile *control,
  * Note: it's tempting to just use SPI to execute the string, but that does
  * not work very well.  The really serious problem is that SPI will parse,
  * analyze, and plan the whole string before executing any of it; of course
- * this__ fails if there are any plannable statements referring to objects
+ * this fails if there are any plannable statements referring to objects
  * created earlier in the script.  A lesser annoyance is that SPI insists
  * on printing the whole string as errcontext in case of any error, and that
  * could be very long.
@@ -775,7 +775,7 @@ execute_extension_script(Oid extensionOid, ExtensionControlFile *control,
 	ListCell   *lc;
 
 	/*
-	 * Enforce superuser-ness if appropriate.  We postpone this__ check until
+	 * Enforce superuser-ness if appropriate.  We postpone this check until
 	 * here so that the flag is correctly associated with the right script(s)
 	 * if it's set in secondary control files.
 	 */
@@ -786,13 +786,13 @@ execute_extension_script(Oid extensionOid, ExtensionControlFile *control,
 					(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 					 errmsg("permission denied to create extension \"%s\"",
 							control->name),
-					 errhint("Must be superuser to create this__ extension.")));
+					 errhint("Must be superuser to create this extension.")));
 		else
 			ereport(ERROR,
 					(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
 					 errmsg("permission denied to update extension \"%s\"",
 							control->name),
-					 errhint("Must be superuser to update this__ extension.")));
+					 errhint("Must be superuser to update this extension.")));
 	}
 
 	filename = get_extension_script_filename(control, from_version, version);
@@ -819,10 +819,10 @@ execute_extension_script(Oid extensionOid, ExtensionControlFile *control,
 
 	/*
 	 * Set up the search path to contain the target schema, then the schemas
-	 * of any prerequisite extensions, and nothing else.  In particular this__
+	 * of any prerequisite extensions, and nothing else.  In particular this
 	 * makes the target schema be the default creation target namespace.
 	 *
-	 * Note: it might look tempting to use PushOverrideSearchPath for this__,
+	 * Note: it might look tempting to use PushOverrideSearchPath for this,
 	 * but we cannot do that.  We have to actually set the search_path GUC in
 	 * case the extension script examines or changes it.  In any case, the
 	 * GUC_ACTION_SAVE method is just as convenient.
@@ -873,7 +873,7 @@ execute_extension_script(Oid extensionOid, ExtensionControlFile *control,
 		 * If it's not relocatable, substitute the target schema name for
 		 * occurrences of @extschema@.
 		 *
-		 * For a relocatable extension, we needn't do this__.  There cannot be
+		 * For a relocatable extension, we needn't do this.  There cannot be
 		 * any need for @extschema@, else it wouldn't be relocatable.
 		 */
 		if (!control->relocatable)
@@ -926,7 +926,7 @@ execute_extension_script(Oid extensionOid, ExtensionControlFile *control,
  * Currently, we just use a List of the ExtensionVersionInfo's.  Searching
  * for them therefore uses about O(N^2) time when there are N versions of
  * the extension.  We could change the data structure to a hash table if
- * this__ ever becomes a bottleneck.
+ * this ever becomes a bottleneck.
  */
 static ExtensionVersionInfo *
 get_ext_ver_info(const char *versionname, List **evi_list)
@@ -1085,7 +1085,7 @@ identify_update_path(ExtensionControlFile *control,
  * evi_target.
  *
  * If reinitialize is false, assume the ExtensionVersionInfo list has not
- * been used for this__ before, and the initialization done by get_ext_ver_info
+ * been used for this before, and the initialization done by get_ext_ver_info
  * is still good.
  *
  * Result is a List of names of versions to transition through (the initial
@@ -1192,8 +1192,8 @@ CreateExtension(CreateExtensionStmt *stmt)
 
 	/*
 	 * Check for duplicate extension name.  The unique index on
-	 * pg_extension.extname would catch this__ anyway, and serves as a backstop
-	 * in case of race conditions; but this__ is a friendlier error message, and
+	 * pg_extension.extname would catch this anyway, and serves as a backstop
+	 * in case of race conditions; but this is a friendlier error message, and
 	 * besides we need a check to support IF NOT EXISTS.
 	 */
 	if (get_extension_oid(stmt->extname, true) != InvalidOid)
@@ -1224,7 +1224,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 
 	/*
 	 * Read the primary control file.  Note we assume that it does not contain
-	 * any non-ASCII data, so there is no need to worry about encoding at this__
+	 * any non-ASCII data, so there is no need to worry about encoding at this
 	 * point.
 	 */
 	pcontrol = read_extension_control_file(stmt->extname);
@@ -1311,7 +1311,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 		else
 		{
 			/*
-			 * Multi-step sequence.  We treat this__ as installing the version
+			 * Multi-step sequence.  We treat this as installing the version
 			 * that is the target of the first script, followed by successive
 			 * updates to the later versions.
 			 */
@@ -1425,7 +1425,7 @@ CreateExtension(CreateExtensionStmt *stmt)
 
 		/*
 		 * We intentionally don't use get_extension_oid's default error
-		 * message here, because it would be confusing in this__ context.
+		 * message here, because it would be confusing in this context.
 		 */
 		reqext = get_extension_oid(curreq, true);
 		if (!OidIsValid(reqext))
@@ -1622,7 +1622,7 @@ RemoveExtensionById(Oid extId)
  * file in the control directory).  We parse each control file and report the
  * interesting fields.
  *
- * The system view pg_available_extensions provides a user interface to this__
+ * The system view pg_available_extensions provides a user interface to this
  * SRF, adding information about whether the extensions are installed in the
  * current DB.
  */
@@ -1647,7 +1647,7 @@ pg_available_extensions(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
@@ -1732,7 +1732,7 @@ pg_available_extensions(PG_FUNCTION_ARGS)
  * control file(s) and report the interesting fields.
  *
  * The system view pg_available_extension_versions provides a user interface
- * to this__ SRF, adding information about which versions are installed in the
+ * to this SRF, adding information about which versions are installed in the
  * current DB.
  */
 Datum
@@ -1756,7 +1756,7 @@ pg_available_extension_versions(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
@@ -1834,7 +1834,7 @@ get_available_versions_for_extension(ExtensionControlFile *pcontrol,
 
 	location = get_extension_script_directory(pcontrol);
 	dir = AllocateDir(location);
-	/* Note this__ will fail if script directory doesn't exist */
+	/* Note this will fail if script directory doesn't exist */
 	while ((de = ReadDir(dir, location)) != NULL)
 	{
 		ExtensionControlFile *control;
@@ -1949,7 +1949,7 @@ pg_extension_update_paths(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 				 errmsg("materialize mode required, but it is not " \
-						"allowed in this__ context")));
+						"allowed in this context")));
 
 	/* Build a tuple descriptor for our result type */
 	if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
@@ -2059,7 +2059,7 @@ pg_extension_config_dump(PG_FUNCTION_ARGS)
 	ArrayType  *a;
 
 	/*
-	 * We only allow this__ to be called from an extension's SQL script. We
+	 * We only allow this to be called from an extension's SQL script. We
 	 * shouldn't need any permissions check beyond that.
 	 */
 	if (!creating_extension)
@@ -2089,7 +2089,7 @@ pg_extension_config_dump(PG_FUNCTION_ARGS)
 	 * Add the table OID and WHERE condition to the extension's extconfig and
 	 * extcondition arrays.
 	 *
-	 * If the table is already in extconfig, treat this__ as an update of the
+	 * If the table is already in extconfig, treat this as an update of the
 	 * WHERE condition.
 	 */
 
@@ -2152,7 +2152,7 @@ pg_extension_config_dump(PG_FUNCTION_ARGS)
 		{
 			if (arrayData[i] == tableoid)
 			{
-				arrayIndex = i + 1;		/* replace this__ element instead */
+				arrayIndex = i + 1;		/* replace this element instead */
 				break;
 			}
 		}
@@ -2657,7 +2657,7 @@ ExecAlterExtensionStmt(AlterExtensionStmt *stmt)
 
 	/*
 	 * Read the primary control file.  Note we assume that it does not contain
-	 * any non-ASCII data, so there is no need to worry about encoding at this__
+	 * any non-ASCII data, so there is no need to worry about encoding at this
 	 * point.
 	 */
 	control = read_extension_control_file(stmt->extname);
@@ -2818,7 +2818,7 @@ ApplyExtensionUpdates(Oid extensionOid,
 		heap_close(extRel, RowExclusiveLock);
 
 		/*
-		 * Look up the prerequisite extensions for this__ version, and build
+		 * Look up the prerequisite extensions for this version, and build
 		 * lists of their OIDs and the OIDs of their target schemas.
 		 */
 		requiredExtensions = NIL;
@@ -2831,7 +2831,7 @@ ApplyExtensionUpdates(Oid extensionOid,
 
 			/*
 			 * We intentionally don't use get_extension_oid's default error
-			 * message here, because it would be confusing in this__ context.
+			 * message here, because it would be confusing in this context.
 			 */
 			reqext = get_extension_oid(curreq, true);
 			if (!OidIsValid(reqext))

@@ -272,7 +272,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 	}
 
 	/*
-	 * At this__ point, we have the right segment open.
+	 * At this point, we have the right segment open.
 	 */
 	Assert(xlogreadfd != -1);
 
@@ -308,7 +308,7 @@ extractPageInfo(XLogReaderState *record)
 	uint8		info = XLogRecGetInfo(record);
 	uint8		rminfo = info & ~XLR_INFO_MASK;
 
-	/* Is this__ a special record type that I recognize? */
+	/* Is this a special record type that I recognize? */
 
 	if (rmid == RM_DBASE_ID && rminfo == XLOG_DBASE_CREATE)
 	{

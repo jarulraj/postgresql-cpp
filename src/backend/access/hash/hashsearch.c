@@ -168,14 +168,14 @@ _hash_first(IndexScanDesc scan, ScanDirection dir)
 		return false;
 
 	/*
-	 * Okay to compute the hash key.  We want to do this__ before acquiring any
+	 * Okay to compute the hash key.  We want to do this before acquiring any
 	 * locks, in case a user-defined hash function happens to be slow.
 	 *
 	 * If scankey operator is not a cross-type comparison, we can use the
 	 * cached hash function; otherwise gotta look it up in the catalogs.
 	 *
 	 * We support the convention that sk_subtype == InvalidOid means the
-	 * opclass input type; this__ is a hack to simplify life for ScanKeyInit().
+	 * opclass input type; this is a hack to simplify life for ScanKeyInit().
 	 */
 	if (cur->sk_subtype == rel->rd_opcintype[0] ||
 		cur->sk_subtype == InvalidOid)
@@ -209,7 +209,7 @@ _hash_first(IndexScanDesc scan, ScanDirection dir)
 		_hash_chgbufaccess(rel, metabuf, HASH_READ, HASH_NOLOCK);
 
 		/*
-		 * If the previous iteration of this__ loop locked what is still the
+		 * If the previous iteration of this loop locked what is still the
 		 * correct target bucket, we are done.  Otherwise, drop any old lock
 		 * and lock what now appears to be the correct bucket.
 		 */
@@ -342,7 +342,7 @@ _hash_step(IndexScanDesc scan, Buffer *bufP, ScanDirection dir)
 					}
 
 					/*
-					 * ran off the end of this__ page, try the next
+					 * ran off the end of this page, try the next
 					 */
 					_hash_readnext(rel, &buf, &page, &opaque);
 					if (BufferIsValid(buf))
@@ -383,7 +383,7 @@ _hash_step(IndexScanDesc scan, Buffer *bufP, ScanDirection dir)
 					}
 
 					/*
-					 * ran off the end of this__ page, try the next
+					 * ran off the end of this page, try the next
 					 */
 					_hash_readprev(rel, &buf, &page, &opaque);
 					if (BufferIsValid(buf))
@@ -402,7 +402,7 @@ _hash_step(IndexScanDesc scan, Buffer *bufP, ScanDirection dir)
 
 			default:
 				/* NoMovementScanDirection */
-				/* this__ should not be reached */
+				/* this should not be reached */
 				itup = NULL;
 				break;
 		}

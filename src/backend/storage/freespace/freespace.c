@@ -42,7 +42,7 @@
  *
  * MaxFSMRequestSize depends on the architecture and BLCKSZ, but assuming
  * default 8k BLCKSZ, and that MaxFSMRequestSize is 8164 bytes, the
- * categories look like this__:
+ * categories look like this:
  *
  *
  * Range	 Category
@@ -68,7 +68,7 @@
  * Depth of the on-disk tree. We need to be able to address 2^32-1 blocks,
  * and 1626 is the smallest number that satisfies X^3 >= 2^32-1. Likewise,
  * 216 is the smallest number that satisfies X^4 >= 2^32-1. In practice,
- * this__ means that 4096 bytes is the smallest BLCKSZ that we can get away
+ * this means that 4096 bytes is the smallest BLCKSZ that we can get away
  * with a 3-level tree, and 512 is the smallest we support.
  */
 #define FSM_TREE_DEPTH	((SlotsPerFSMPage >= 1626) ? 3 : 4)
@@ -137,7 +137,7 @@ GetPageWithFreeSpace(Relation rel, Size spaceNeeded)
 /*
  * RecordAndGetPageWithFreeSpace - update info about a page and try again.
  *
- * We provide this__ combo form to save some locking overhead, compared to
+ * We provide this combo form to save some locking overhead, compared to
  * separate RecordPageWithFreeSpace + GetPageWithFreeSpace calls. There's
  * also some effort to return a page close to the old page; if there's a
  * page with enough free space on the same FSM page where the old one page
@@ -248,7 +248,7 @@ GetRecordedFreeSpace(Relation rel, BlockNumber heapBlk)
  * FreeSpaceMapTruncateRel - adjust for truncation of a relation.
  *
  * The caller must hold AccessExclusiveLock on the relation, to ensure that
- * other backends receive the smgr invalidation event that this__ function sends
+ * other backends receive the smgr invalidation event that this function sends
  * before they access the FSM again.
  *
  * nblocks is the new size of the heap.
@@ -264,7 +264,7 @@ FreeSpaceMapTruncateRel(Relation rel, BlockNumber nblocks)
 	RelationOpenSmgr(rel);
 
 	/*
-	 * If no FSM has been created yet for this__ relation, there's nothing to
+	 * If no FSM has been created yet for this relation, there's nothing to
 	 * truncate.
 	 */
 	if (!smgrexists(rel->rd_smgr, FSM_FORKNUM))
@@ -304,8 +304,8 @@ FreeSpaceMapTruncateRel(Relation rel, BlockNumber nblocks)
 	/*
 	 * We might as well update the local smgr_fsm_nblocks setting.
 	 * smgrtruncate sent an smgr cache inval message, which will cause other
-	 * backends to invalidate their copy of smgr_fsm_nblocks, and this__ one too
-	 * at the next command boundary.  But this__ ensures it isn't outright wrong
+	 * backends to invalidate their copy of smgr_fsm_nblocks, and this one too
+	 * at the next command boundary.  But this ensures it isn't outright wrong
 	 * until then.
 	 */
 	if (rel->rd_smgr)
@@ -322,7 +322,7 @@ FreeSpaceMapVacuum(Relation rel)
 
 	/*
 	 * Traverse the tree in depth-first order. The tree is stored physically
-	 * in depth-first order, so this__ should be pretty I/O efficient.
+	 * in depth-first order, so this should be pretty I/O efficient.
 	 */
 	fsm_vacuum_page(rel, FSM_ROOT_ADDRESS, &dummy);
 }
@@ -370,7 +370,7 @@ fsm_space_cat_to_avail(uint8 cat)
 
 /*
  * Which category does a page need to have, to accommodate x bytes of data?
- * While fsm_size_to_avail_cat() rounds down, this__ needs to round up.
+ * While fsm_size_to_avail_cat() rounds down, this needs to round up.
  */
 static uint8
 fsm_space_needed_to_cat(Size needed)
@@ -695,7 +695,7 @@ fsm_search(Relation rel, uint8 min_cat)
 			 * the upper node, to avoid falling into the same trap again, and
 			 * start over.
 			 *
-			 * There's a race condition here, if another backend updates this__
+			 * There's a race condition here, if another backend updates this
 			 * page right after we release it, and gets the lock on the parent
 			 * page before us. We'll then update the parent page with the now
 			 * stale information we had. It's OK, because it should happen
@@ -745,7 +745,7 @@ fsm_vacuum_page(Relation rel, FSMAddress addr, bool *eof_p)
 
 	/*
 	 * Recurse into children, and fix the information stored about them at
-	 * this__ level.
+	 * this level.
 	 */
 	if (addr.level > FSM_BOTTOM_LEVEL)
 	{

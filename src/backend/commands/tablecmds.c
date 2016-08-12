@@ -104,7 +104,7 @@ typedef struct OnCommitItem
 	OnCommitAction oncommit;	/* what to do at end of xact */
 
 	/*
-	 * If this__ entry was created during the current transaction,
+	 * If this entry was created during the current transaction,
 	 * creating_subid is the ID of the creating subxact; if created in a prior
 	 * transaction, creating_subid is zero.  If deleted during the current
 	 * transaction, deleting_subid is the ID of the deleting subxact; if no
@@ -123,7 +123,7 @@ static List *on_commits = NIL;
  * The pending-work queue for an ALTER TABLE is a List of AlteredTableInfo
  * structs, one for each table modified by the operation (the named table
  * plus any child tables that are affected).  We save lists of subcommands
- * to apply to this__ table (possibly modified by parse transformation steps);
+ * to apply to this table (possibly modified by parse transformation steps);
  * these lists will be executed in Phase 2.  If a Phase 3 step is needed,
  * necessary information is stored in the constraints and newvals lists.
  *
@@ -182,7 +182,7 @@ typedef struct NewConstraint
 
 /*
  * Struct describing one new column value that needs to be computed during
- * Phase 3 copy (this__ could be either a new column with a non-null default, or
+ * Phase 3 copy (this could be either a new column with a non-null default, or
  * a column that we're changing the type of).  Columns without such an entry
  * are just copied from the old table during ATRewriteTable.  Note that the
  * expr is an expression over *old* table values.
@@ -438,7 +438,7 @@ static void RangeVarCallbackForAlterRelation(const RangeVar *rv, Oid relid,
  * stmt carries parsetree information from an ordinary CREATE TABLE statement.
  * The other arguments are used to extend the behavior for other cases:
  * relkind: relkind to assign to the new relation
- * ownerId: if not InvalidOid, use this__ as the new relation's owner.
+ * ownerId: if not InvalidOid, use this as the new relation's owner.
  * typaddress: if not null, it's set to the pg_type entry's address.
  *
  * Note that permissions checks are done against current user regardless of
@@ -475,7 +475,7 @@ DefineRelation(CreateStmt *stmt, char relkind, Oid ownerId,
 
 	/*
 	 * Truncate relname to appropriate length (probably a waste of time, as
-	 * parser should have done this__ already).
+	 * parser should have done this already).
 	 */
 	StrNCpy(relname, stmt->relation->relname, NAMEDATALEN);
 
@@ -519,7 +519,7 @@ DefineRelation(CreateStmt *stmt, char relkind, Oid ownerId,
 	else
 	{
 		tablespaceId = GetDefaultTablespace(stmt->relation->relpersistence);
-		/* note InvalidOid is OK in this__ case */
+		/* note InvalidOid is OK in this case */
 	}
 
 	/* Check permissions except when using database's default */
@@ -577,7 +577,7 @@ DefineRelation(CreateStmt *stmt, char relkind, Oid ownerId,
 							 &inheritOids, &old_constraints, &parentOidCount);
 
 	/*
-	 * Create a tuple descriptor from the relation schema.  Note that this__
+	 * Create a tuple descriptor from the relation schema.  Note that this
 	 * deals with column names, types, and NOT NULL constraints, but not
 	 * default values or CHECK constraints; we handle those below.
 	 */
@@ -603,7 +603,7 @@ DefineRelation(CreateStmt *stmt, char relkind, Oid ownerId,
 	 * be processed by AddRelationNewConstraints.  (We can't deal with raw
 	 * expressions until we can do transformExpr.)
 	 *
-	 * We can set the atthasdef flags now in the tuple descriptor; this__ just
+	 * We can set the atthasdef flags now in the tuple descriptor; this just
 	 * saves StoreAttrDefault from having to do an immediate update of the
 	 * pg_attribute rows.
 	 */
@@ -700,7 +700,7 @@ DefineRelation(CreateStmt *stmt, char relkind, Oid ownerId,
 	 * before they can be added. The most convenient way to do that is to
 	 * apply the parser's transformExpr routine, but transformExpr doesn't
 	 * work unless we have a pre-existing relation. So, the transformation has
-	 * to be postponed to this__ final step of CREATE TABLE.
+	 * to be postponed to this final step of CREATE TABLE.
 	 */
 	if (rawDefaults || stmt->constraints)
 		AddRelationNewConstraints(rel, rawDefaults, stmt->constraints,
@@ -899,7 +899,7 @@ RemoveRelations(DropStmt *drop)
 			continue;
 		}
 
-		/* OK, we're ready to delete this__ one */
+		/* OK, we're ready to delete this one */
 		obj.classId = RelationRelationId;
 		obj.objectId = relOid;
 		obj.objectSubId = 0;
@@ -970,7 +970,7 @@ RangeVarCallbackForDropRelation(const RangeVar *rel, Oid relOid, Oid oldRelOid,
 
 	/*
 	 * In DROP INDEX, attempt to acquire lock on the parent table before
-	 * locking the index.  index_drop() will need this__ anyway, and since
+	 * locking the index.  index_drop() will need this anyway, and since
 	 * regular queries lock tables before their indexes, we risk deadlock if
 	 * we do it the other way around.  No error if we don't find a pg_index
 	 * entry, though --- the relation may have been dropped.
@@ -1087,7 +1087,7 @@ ExecuteTruncate(TruncateStmt *stmt)
 	}
 
 	/*
-	 * Check foreign key references.  In CASCADE mode, this__ should be
+	 * Check foreign key references.  In CASCADE mode, this should be
 	 * unnecessary since we just pulled in all the references; but as a
 	 * cross-check, do it anyway if in an Assert-enabled build.
 	 */
@@ -1101,7 +1101,7 @@ ExecuteTruncate(TruncateStmt *stmt)
 	/*
 	 * If we are asked to restart sequences, find all the sequences, lock them
 	 * (we need AccessExclusiveLock for ResetSequence), and check permissions.
-	 * We want to do this__ early since it's pointless to do all the truncation
+	 * We want to do this early since it's pointless to do all the truncation
 	 * work only to fail on sequence permissions.
 	 */
 	if (stmt->restart_seqs)
@@ -1157,7 +1157,7 @@ ExecuteTruncate(TruncateStmt *stmt)
 
 	/*
 	 * Process all BEFORE STATEMENT TRUNCATE triggers before we begin
-	 * truncating (this__ is because one of them might throw an error). Also, if
+	 * truncating (this is because one of them might throw an error). Also, if
 	 * we were to allow them to prevent statement execution, that would need
 	 * to be handled here.
 	 */
@@ -1200,7 +1200,7 @@ ExecuteTruncate(TruncateStmt *stmt)
 			/*
 			 * This effectively deletes all rows in the table, and may be done
 			 * in a serializable transaction.  In that case we must record a
-			 * rw-conflict in to this__ transaction from each transaction
+			 * rw-conflict in to this transaction from each transaction
 			 * holding a predicate lock on the table.
 			 */
 			CheckTableForSerializableConflictIn(rel);
@@ -1271,7 +1271,7 @@ ExecuteTruncate(TruncateStmt *stmt)
 	/* We can clean up the EState now */
 	FreeExecutorState(estate);
 
-	/* And close the rels (can't do this__ while EState still holds refs) */
+	/* And close the rels (can't do this while EState still holds refs) */
 	foreach(cell, rels)
 	{
 		Relation	rel = (Relation) lfirst(cell);
@@ -1418,14 +1418,14 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 	static Node bogus_marker = {0};		/* marks conflicting defaults */
 
 	/*
-	 * Check for and reject tables with too many columns. We perform this__
+	 * Check for and reject tables with too many columns. We perform this
 	 * check relatively early for two reasons: (a) we don't run the risk of
 	 * overflowing an AttrNumber in subsequent code (b) an O(n^2) algorithm is
 	 * okay if we're processing <= 1600 columns, but could take minutes to
 	 * execute if the user attempts to create a table with hundreds of
 	 * thousands of columns.
 	 *
-	 * Note that we also need to check that any we do not exceed this__ figure
+	 * Note that we also need to check that any we do not exceed this figure
 	 * after including columns from inherited relations.
 	 */
 	if (list_length(schema) > MaxHeapAttributeNumber)
@@ -1510,7 +1510,7 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 		 * add children to the same parent simultaneously, and that parent has
 		 * no pre-existing children, then both will attempt to update the
 		 * parent's relhassubclass field, leading to a "tuple concurrently
-		 * updated" error.  Also, this__ interlocks against a concurrent ANALYZE
+		 * updated" error.  Also, this interlocks against a concurrent ANALYZE
 		 * on the parent table, which might otherwise be attempting to clear
 		 * the parent's relhassubclass field, if its previous children were
 		 * recently dropped.
@@ -1531,7 +1531,7 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 					 errmsg("cannot inherit from temporary relation \"%s\"",
 							parent->relname)));
 
-		/* If existing rel is temp, it must belong to this__ session */
+		/* If existing rel is temp, it must belong to this session */
 		if (relation->rd_rel->relpersistence == RELPERSISTENCE_TEMP &&
 			!relation->rd_islocaltemp)
 			ereport(ERROR,
@@ -1539,7 +1539,7 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 					 errmsg("cannot inherit from temporary relation of another session")));
 
 		/*
-		 * We should have an UNDER permission flag for this__, but for now,
+		 * We should have an UNDER permission flag for this, but for now,
 		 * demand that creator of a child table own the parent.
 		 */
 		if (!pg_class_ownercheck(RelationGetRelid(relation), GetUserId()))
@@ -1565,7 +1565,7 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 
 		/*
 		 * newattno[] will contain the child-table attribute numbers for the
-		 * attributes of this__ parent table.  (They are not the same for
+		 * attributes of this parent table.  (They are not the same for
 		 * parents after the first one, nor if we have dropped columns.)
 		 */
 		newattno = (AttrNumber *)
@@ -1709,7 +1709,7 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 		}
 
 		/*
-		 * Now copy the CHECK constraints of this__ parent, adjusting attnos
+		 * Now copy the CHECK constraints of this parent, adjusting attnos
 		 * using the completed newattno[] map.  Identically named constraints
 		 * are merged if possible, else we throw error.
 		 */
@@ -1750,7 +1750,7 @@ MergeAttributes(List *schema, List *supers, char relpersistence,
 				/* check for duplicate */
 				if (!MergeCheckConstraint(constraints, name, expr))
 				{
-					/* nope, this__ is a new one */
+					/* nope, this is a new one */
 					CookedConstraint *cooked;
 
 					cooked = (CookedConstraint *) palloc(sizeof(CookedConstraint));
@@ -2047,7 +2047,7 @@ StoreCatalogInheritance1(Oid relationId, Oid parentOid,
 	recordDependencyOn(&childobject, &parentobject, DEPENDENCY_NORMAL);
 
 	/*
-	 * Post creation hook of this__ inheritance. Since object_access_hook
+	 * Post creation hook of this inheritance. Since object_access_hook
 	 * doesn't take multiple object identifiers, we relay oid of parent
 	 * relation using auxiliary_id argument.
 	 */
@@ -2093,7 +2093,7 @@ findAttrByName(const char *attributeName, List *schema)
  * NOTE: caller must be holding an appropriate lock on the relation.
  * ShareUpdateExclusiveLock is sufficient.
  *
- * NOTE: an important side-effect of this__ operation is that an SI invalidation
+ * NOTE: an important side-effect of this operation is that an SI invalidation
  * message is sent out to all backends --- including me --- causing plans
  * referencing the relation to be rebuilt with the new list of children.
  * This must happen even if we find that no change is needed in the pg_class
@@ -2205,7 +2205,7 @@ renameatt_internal(Oid myrelid,
 	renameatt_check(myrelid, RelationGetForm(targetrelation), recursing);
 
 	/*
-	 * if the 'recurse' flag is set then we are supposed to rename this__
+	 * if the 'recurse' flag is set then we are supposed to rename this
 	 * attribute in all classes that inherit from 'relname' (as well as in
 	 * 'relname').
 	 *
@@ -2291,10 +2291,10 @@ renameatt_internal(Oid myrelid,
 						oldattname)));
 
 	/*
-	 * if the attribute is inherited, forbid the renaming.  if this__ is a
+	 * if the attribute is inherited, forbid the renaming.  if this is a
 	 * top-level call to renameatt(), then expected_parents will be 0, so the
-	 * effect of this__ code will be to prohibit the renaming if the attribute
-	 * is inherited at all.  if this__ is a recursive call to renameatt(),
+	 * effect of this code will be to prohibit the renaming if the attribute
+	 * is inherited at all.  if this is a recursive call to renameatt(),
 	 * expected_parents will be the number of parents the current relation has
 	 * within the inheritance hierarchy being processed, so we'll prohibit the
 	 * renaming only if there are additional parents from elsewhere.
@@ -2472,7 +2472,7 @@ rename_constraint_internal(Oid myrelid,
 		&& (con->contype == CONSTRAINT_PRIMARY
 			|| con->contype == CONSTRAINT_UNIQUE
 			|| con->contype == CONSTRAINT_EXCLUSION))
-		/* rename the index; this__ renames the constraint as well */
+		/* rename the index; this renames the constraint as well */
 		RenameRelationInternal(con->conindid, newconname, false);
 	else
 		RenameConstraintById(constraintOid, newconname);
@@ -2577,7 +2577,7 @@ RenameRelation(RenameStmt *stmt)
  *
  *		XXX - When renaming sequences, we don't bother to modify the
  *			  sequence name that is stored within the sequence itself
- *			  (this__ would cause problems with MVCC). In the future,
+ *			  (this would cause problems with MVCC). In the future,
  *			  the sequence name should probably be removed from the
  *			  sequence, AFAIK there's no need for it to be there.
  */
@@ -2658,12 +2658,12 @@ RenameRelationInternal(Oid myrelid, const char *newrelname, bool is_internal)
 /*
  * Disallow ALTER TABLE (and similar commands) when the current backend has
  * any open reference to the target table besides the one just acquired by
- * the calling command; this__ implies there's an open cursor or active plan.
- * We need this__ check because our lock doesn't protect us against stomping
+ * the calling command; this implies there's an open cursor or active plan.
+ * We need this check because our lock doesn't protect us against stomping
  * on our own foot, only other people's feet!
  *
  * For ALTER TABLE, the only case known to cause serious trouble is ALTER
- * COLUMN TYPE, and some changes are obviously pretty benign, so this__ could
+ * COLUMN TYPE, and some changes are obviously pretty benign, so this could
  * possibly be relaxed to only error out for certain types of alterations.
  * But the use-case for allowing any of these things is not obvious, so we
  * won't work hard at it for now.
@@ -2674,7 +2674,7 @@ RenameRelationInternal(Oid myrelid, const char *newrelname, bool is_internal)
  * events would try to fetch the wrong tuples.  It might be overly cautious
  * in other cases, but again it seems better to err on the side of paranoia.
  *
- * REINDEX calls this__ with "rel" referencing the index to be rebuilt; here
+ * REINDEX calls this with "rel" referencing the index to be rebuilt; here
  * we are worried about active indexscans on the index.  The trigger-event
  * check can be skipped, since we are doing no damage to the parent table.
  *
@@ -2691,7 +2691,7 @@ CheckTableNotInUse(Relation rel, const char *stmt)
 				(errcode(ERRCODE_OBJECT_IN_USE),
 		/* translator: first %s is a SQL command, eg ALTER TABLE */
 				 errmsg("cannot %s \"%s\" because "
-						"it is being used by active queries in this__ session",
+						"it is being used by active queries in this session",
 						stmt, RelationGetRelationName(rel))));
 
 	if (rel->rd_rel->relkind != RELKIND_INDEX &&
@@ -2727,7 +2727,7 @@ AlterTableLookupRelation(AlterTableStmt *stmt, LOCKMODE lockmode)
  *		3. Scan table(s) to check new constraints, and optionally recopy
  *		   the data into new table(s).
  * Phase 3 is not performed unless one or more of the subcommands requires
- * it.  The intention of this__ design is to allow multiple independent
+ * it.  The intention of this design is to allow multiple independent
  * updates of the table schema to be performed with only one pass over the
  * data.
  *
@@ -2781,7 +2781,7 @@ AlterTable(Oid relid, LOCKMODE lockmode, AlterTableStmt *stmt)
  *
  * We do not reject if the relation is already open, because it's quite
  * likely that one or more layers of caller have it open.  That means it
- * is unsafe to use this__ entry point for alterations that could break
+ * is unsafe to use this entry point for alterations that could break
  * existing query plans.  On the assumption it's not used for such, we
  * don't have to reject pending AFTER triggers, either.
  */
@@ -2802,7 +2802,7 @@ AlterTableInternal(Oid relid, List *cmds, bool recurse)
  * AlterTableGetLockLevel
  *
  * Sets the overall lock level required for the supplied list of subcommands.
- * Policy for doing this__ set according to needs of AlterTable(), see
+ * Policy for doing this set according to needs of AlterTable(), see
  * comments there for overall explanation.
  *
  * Function is called before and after parsing, so it must give same
@@ -2810,13 +2810,13 @@ AlterTableInternal(Oid relid, List *cmds, bool recurse)
  * into other subcommand types, so the transform must never be made to a
  * lower lock level than previously assigned. All transforms are noted below.
  *
- * Since this__ is called before we lock the table we cannot use table metadata
+ * Since this is called before we lock the table we cannot use table metadata
  * to influence the type of lock we acquire.
  *
  * There should be no lockmodes hardcoded into the subcommand functions. All
  * lockmode decisions for ALTER TABLE are made here only. The one exception is
  * ALTER TABLE RENAME which is treated as a different statement type T_RenameStmt
- * and does not travel through this__ section of code and cannot be combined with
+ * and does not travel through this section of code and cannot be combined with
  * any of the subcommands given here.
  *
  * Note that Hot Standby only knows about AccessExclusiveLocks on the master
@@ -3014,7 +3014,7 @@ AlterTableGetLockLevel(List *cmds)
 				 * from normal data reads and writes. Delaying an ALTER TABLE
 				 * behind currently active writes only delays the point where
 				 * the new strategy begins to take effect, so there is no
-				 * benefit in waiting. In this__ case the minimum restriction
+				 * benefit in waiting. In this case the minimum restriction
 				 * applies: we don't currently allow concurrent catalog
 				 * updates.
 				 */
@@ -3116,7 +3116,7 @@ ATPrepCmd(List **wqueue, Relation rel, AlterTableCmd *cmd,
 	AlteredTableInfo *tab;
 	int			pass = AT_PASS_UNSET;
 
-	/* Find or create work queue entry for this__ table */
+	/* Find or create work queue entry for this table */
 	tab = ATGetQueueEntry(wqueue, rel);
 
 	/*
@@ -3424,7 +3424,7 @@ ATRewriteCatalogs(List **wqueue, LOCKMODE lockmode)
 				ATExecCmd(wqueue, tab, rel, (AlterTableCmd *) lfirst(lcmd), lockmode);
 
 			/*
-			 * After the ALTER TYPE pass, do cleanup work (this__ is not done in
+			 * After the ALTER TYPE pass, do cleanup work (this is not done in
 			 * ATExecAlterColumnType since it should be done only once if
 			 * multiple columns of a table are altered).
 			 */
@@ -3722,7 +3722,7 @@ ATRewriteTables(AlterTableStmt *parsetree, List **wqueue, LOCKMODE lockmode)
 
 		/*
 		 * If we change column data types or add/remove OIDs, the operation
-		 * has to be propagated to tables that use this__ table's rowtype as a
+		 * has to be propagated to tables that use this table's rowtype as a
 		 * column type.  tab->newvals will also be non-NULL in the case where
 		 * we're adding a column with a default.  We choose to forbid that
 		 * case as well, since composite types might eventually support
@@ -3767,7 +3767,7 @@ ATRewriteTables(AlterTableStmt *parsetree, List **wqueue, LOCKMODE lockmode)
 
 			/*
 			 * We don't support rewriting of system catalogs; there are too
-			 * many corner cases and too little benefit.  In particular this__
+			 * many corner cases and too little benefit.  In particular this
 			 * is certainly not going to work for mapped catalogs.
 			 */
 			if (IsSystemRelation(OldHeap))
@@ -3828,7 +3828,7 @@ ATRewriteTables(AlterTableStmt *parsetree, List **wqueue, LOCKMODE lockmode)
 			 * Create transient table that will receive the modified data.
 			 *
 			 * Ensure it is marked correctly as logged or unlogged.  We have
-			 * to do this__ here so that buffers for the new relfilenode will
+			 * to do this here so that buffers for the new relfilenode will
 			 * have the right persistence set, and at the same time ensure
 			 * that the original filenode's buffers will get read in with the
 			 * correct setting (i.e. the original one).  Otherwise a rollback
@@ -3855,7 +3855,7 @@ ATRewriteTables(AlterTableStmt *parsetree, List **wqueue, LOCKMODE lockmode)
 			 * the table's new relfrozenxid because we rewrote all the tuples
 			 * in ATRewriteTable, so no older Xid remains in the table.  Also,
 			 * we never try to swap toast tables by content, since we have no
-			 * interest in letting this__ code work on system catalogs.
+			 * interest in letting this code work on system catalogs.
 			 */
 			finish_heap_swap(tab->relid, OIDNewHeap,
 							 false, false, true,
@@ -4272,7 +4272,7 @@ ATGetQueueEntry(List **wqueue, Relation rel)
  * ATSimplePermissions
  *
  * - Ensure that it is a relation (or possibly a view)
- * - Ensure this__ user is the owner
+ * - Ensure this user is the owner
  * - Ensure that it is not a system table
  */
 static void
@@ -4473,7 +4473,7 @@ ATTypedTableRecursion(List **wqueue, Relation rel, AlterTableCmd *cmd,
  * report in the error message, if any.
  *
  * We assume that functions and views depending on the type are not reasons
- * to reject the ALTER.  (How safe is this__ really?)
+ * to reject the ALTER.  (How safe is this really?)
  */
 void
 find_composite_type_dependencies(Oid typeOid, Relation origRelation,
@@ -4669,7 +4669,7 @@ check_of_type(HeapTuple typetuple)
  * ADD COLUMN cannot use the normal ALTER TABLE recursion mechanism, because we
  * have to decide at runtime whether to recurse or not depending on whether we
  * actually add a column or merely merge with an existing column.  (We can't
- * check this__ in a static pre-pass because it won't handle multiple inheritance
+ * check this in a static pre-pass because it won't handle multiple inheritance
  * situations correctly.)
  */
 static void
@@ -4689,7 +4689,7 @@ ATPrepAddColumn(List **wqueue, Relation rel, bool recurse, bool recursing,
 }
 
 /*
- * Add a column to a table; this__ handles the AT_AddOids cases as well.  The
+ * Add a column to a table; this handles the AT_AddOids cases as well.  The
  * return value is the address of the new column in the parent relation.
  */
 static ObjectAddress
@@ -4731,7 +4731,7 @@ ATExecAddColumn(List **wqueue, AlteredTableInfo *tab, Relation rel,
 	{
 		HeapTuple	tuple;
 
-		/* Does child already have a column by this__ name? */
+		/* Does child already have a column by this name? */
 		tuple = SearchSysCacheCopyAttName(myrelid, colDef->colname);
 		if (HeapTupleIsValid(tuple))
 		{
@@ -4914,7 +4914,7 @@ ATExecAddColumn(List **wqueue, AlteredTableInfo *tab, Relation rel,
 	 * returned by AddRelationNewConstraints, so that the right thing happens
 	 * when a datatype's default applies.
 	 *
-	 * We skip this__ step completely for views and foreign tables.  For a view,
+	 * We skip this step completely for views and foreign tables.  For a view,
 	 * we can only get here from CREATE OR REPLACE VIEW, which historically
 	 * doesn't set up defaults, not even for domain-typed columns.  And in any
 	 * case we mustn't invoke Phase 3 on a view or foreign table, since they
@@ -4961,7 +4961,7 @@ ATExecAddColumn(List **wqueue, AlteredTableInfo *tab, Relation rel,
 
 		/*
 		 * If the new column is NOT NULL, tell Phase 3 it needs to test that.
-		 * (Note we don't do this__ for an OID column.  OID will be marked not
+		 * (Note we don't do this for an OID column.  OID will be marked not
 		 * null, but since it's filled specially, there's no need to test
 		 * anything.)
 		 */
@@ -4983,7 +4983,7 @@ ATExecAddColumn(List **wqueue, AlteredTableInfo *tab, Relation rel,
 
 	/*
 	 * Propagate to children as appropriate.  Unlike most other ALTER
-	 * routines, we have to do this__ one level of recursion at a time; we can't
+	 * routines, we have to do this one level of recursion at a time; we can't
 	 * use find_all_inheritors to do it in one pass.
 	 */
 	children = find_inheritance_children(RelationGetRelid(rel), lockmode);
@@ -5015,7 +5015,7 @@ ATExecAddColumn(List **wqueue, AlteredTableInfo *tab, Relation rel,
 		childrel = heap_open(childrelid, NoLock);
 		CheckTableNotInUse(childrel, "ALTER TABLE");
 
-		/* Find or create work queue entry for this__ table */
+		/* Find or create work queue entry for this table */
 		childtab = ATGetQueueEntry(wqueue, childrel);
 
 		/* Recurse to child; return value is ignored */
@@ -5040,7 +5040,7 @@ check_for_column_name_collision(Relation rel, const char *colname)
 	int			attnum;
 
 	/*
-	 * this__ test is deliberately not attisdropped-aware, since if one tries to
+	 * this test is deliberately not attisdropped-aware, since if one tries to
 	 * add a column matching a dropped column name, it's gonna fail anyway.
 	 */
 	attTuple = SearchSysCache2(ATTNAME,
@@ -5112,7 +5112,7 @@ add_column_collation_dependency(Oid relid, int32 attnum, Oid collid)
 /*
  * ALTER TABLE SET WITH OIDS
  *
- * Basically this__ is an ADD COLUMN for the special OID column.  We have
+ * Basically this is an ADD COLUMN for the special OID column.  We have
  * to cons up a ColumnDef node because the ADD COLUMN code needs one.
  */
 static void
@@ -5641,7 +5641,7 @@ ATExecSetStorage(Relation rel, const char *colName, Node *newValue, LOCKMODE loc
  *
  * DROP COLUMN cannot use the normal ALTER TABLE recursion mechanism,
  * because we have to decide at runtime whether to recurse or not depending
- * on whether attinhcount goes to zero or not.  (We can't check this__ in a
+ * on whether attinhcount goes to zero or not.  (We can't check this in a
  * static pre-pass because it won't handle multiple inheritance situations
  * correctly.)
  */
@@ -5723,7 +5723,7 @@ ATExecDropColumn(List **wqueue, Relation rel, const char *colName,
 
 	/*
 	 * Propagate to children as appropriate.  Unlike most other ALTER
-	 * routines, we have to do this__ one level of recursion at a time; we can't
+	 * routines, we have to do this one level of recursion at a time; we can't
 	 * use find_all_inheritors to do it in one pass.
 	 */
 	children = find_inheritance_children(RelationGetRelid(rel), lockmode);
@@ -5763,7 +5763,7 @@ ATExecDropColumn(List **wqueue, Relation rel, const char *colName,
 				 */
 				if (childatt->attinhcount == 1 && !childatt->attislocal)
 				{
-					/* Time to delete this__ child column, too */
+					/* Time to delete this child column, too */
 					ATExecDropColumn(wqueue, childrel, colName,
 									 behavior, true, true,
 									 false, lockmode);
@@ -5785,7 +5785,7 @@ ATExecDropColumn(List **wqueue, Relation rel, const char *colName,
 			else
 			{
 				/*
-				 * If we were told to drop ONLY in this__ table (no recursion),
+				 * If we were told to drop ONLY in this table (no recursion),
 				 * we need to mark the inheritors' attributes as locally
 				 * defined rather than inherited.
 				 */
@@ -5820,7 +5820,7 @@ ATExecDropColumn(List **wqueue, Relation rel, const char *colName,
 	/*
 	 * If we dropped the OID column, must adjust pg_class.relhasoids and tell
 	 * Phase 3 to physically get rid of the column.  We formerly left the
-	 * column in place physically, but this__ caused subtle problems.  See
+	 * column in place physically, but this caused subtle problems.  See
 	 * http://archives.postgresql.org/pgsql-hackers/2009-02/msg00363.php
 	 */
 	if (attnum == ObjectIdAttributeNumber)
@@ -5846,7 +5846,7 @@ ATExecDropColumn(List **wqueue, Relation rel, const char *colName,
 
 		heap_close(class_rel, RowExclusiveLock);
 
-		/* Find or create work queue entry for this__ table */
+		/* Find or create work queue entry for this table */
 		tab = ATGetQueueEntry(wqueue, rel);
 
 		/* Tell Phase 3 to physically remove the OID column */
@@ -5898,7 +5898,7 @@ ATExecAddIndex(AlteredTableInfo *tab, Relation rel,
 	/*
 	 * If TryReuseIndex() stashed a relfilenode for us, we used it for the new
 	 * index instead of building from scratch.  The DROP of the old edition of
-	 * this__ index will have scheduled the storage for deletion at commit, so
+	 * this index will have scheduled the storage for deletion at commit, so
 	 * cancel that pending deletion.
 	 */
 	if (OidIsValid(stmt->oldNode))
@@ -5939,7 +5939,7 @@ ATExecAddIndexConstraint(AlteredTableInfo *tab, Relation rel,
 
 	indexInfo = BuildIndexInfo(indexRel);
 
-	/* this__ should have been checked at parse time */
+	/* this should have been checked at parse time */
 	if (!indexInfo->ii_Unique)
 		elog(ERROR, "index \"%s\" is not unique", indexName);
 
@@ -6133,7 +6133,7 @@ ATAddCheckConstraint(List **wqueue, AlteredTableInfo *tab, Relation rel,
 		ObjectAddressSet(address, ConstraintRelationId, ccon->conoid);
 	}
 
-	/* At this__ point we must have a locked-down name to use */
+	/* At this point we must have a locked-down name to use */
 	Assert(constr->conname != NULL);
 
 	/* Advance command counter in case same table is visited multiple times */
@@ -6141,7 +6141,7 @@ ATAddCheckConstraint(List **wqueue, AlteredTableInfo *tab, Relation rel,
 
 	/*
 	 * If the constraint got merged with an existing constraint, we're done.
-	 * We mustn't recurse to child tables in this__ case, because they've
+	 * We mustn't recurse to child tables in this case, because they've
 	 * already got the constraint, and visiting them again would lead to an
 	 * incorrect value for coninhcount.
 	 */
@@ -6156,7 +6156,7 @@ ATAddCheckConstraint(List **wqueue, AlteredTableInfo *tab, Relation rel,
 
 	/*
 	 * Propagate to children as appropriate.  Unlike most other ALTER
-	 * routines, we have to do this__ one level of recursion at a time; we can't
+	 * routines, we have to do this one level of recursion at a time; we can't
 	 * use find_all_inheritors to do it in one pass.
 	 */
 	children = find_inheritance_children(RelationGetRelid(rel), lockmode);
@@ -6181,7 +6181,7 @@ ATAddCheckConstraint(List **wqueue, AlteredTableInfo *tab, Relation rel,
 		childrel = heap_open(childrelid, NoLock);
 		CheckTableNotInUse(childrel, "ALTER TABLE");
 
-		/* Find or create work queue entry for this__ table */
+		/* Find or create work queue entry for this table */
 		childtab = ATGetQueueEntry(wqueue, childrel);
 
 		/* Recurse to child */
@@ -6280,7 +6280,7 @@ ATAddForeignKeyConstraint(AlteredTableInfo *tab, Relation rel,
 			if (!pkrel->rd_islocaltemp || !rel->rd_islocaltemp)
 				ereport(ERROR,
 						(errcode(ERRCODE_INVALID_TABLE_DEFINITION),
-						 errmsg("constraints on temporary tables must involve temporary tables of this__ session")));
+						 errmsg("constraints on temporary tables must involve temporary tables of this session")));
 			break;
 	}
 
@@ -6345,7 +6345,7 @@ ATAddForeignKeyConstraint(AlteredTableInfo *tab, Relation rel,
 
 	/*
 	 * On the strength of a previous constraint, we might avoid scanning
-	 * tables to validate this__ one.  See below.
+	 * tables to validate this one.  See below.
 	 */
 	old_check_ok = (fkconstraint->old_conpfeqop != NIL);
 	Assert(!old_check_ok || numfks == list_length(fkconstraint->old_conpfeqop));
@@ -6377,7 +6377,7 @@ ATAddForeignKeyConstraint(AlteredTableInfo *tab, Relation rel,
 		ReleaseSysCache(cla_ht);
 
 		/*
-		 * Check it's a btree; currently this__ can never fail since no other
+		 * Check it's a btree; currently this can never fail since no other
 		 * index AMs support unique indexes.  If we ever did have other types
 		 * of unique indexes, we'd need a way to determine which operator
 		 * strategy number is equality.  (Is it reasonable to insist that
@@ -6492,7 +6492,7 @@ ATAddForeignKeyConstraint(AlteredTableInfo *tab, Relation rel,
 
 			/*
 			 * Upon a change to the cast from the FK column to its pfeqop
-			 * operand, revalidate the constraint.  For this__ evaluation, a
+			 * operand, revalidate the constraint.  For this evaluation, a
 			 * binary coercion cast is equivalent to no cast at all.  While
 			 * type implementors should design implicit casts with an eye
 			 * toward consistency of operations like equality, we cannot
@@ -6502,7 +6502,7 @@ ATAddForeignKeyConstraint(AlteredTableInfo *tab, Relation rel,
 			 * arbitrarily in response to get_fn_expr_argtype().  Therefore,
 			 * when the cast destination is polymorphic, we only avoid
 			 * revalidation if the input type has not changed at all.  Given
-			 * just the core data types and operator classes, this__ requirement
+			 * just the core data types and operator classes, this requirement
 			 * prevents no would-be optimizations.
 			 *
 			 * If the cast converts from a base type to a domain thereon, then
@@ -6576,7 +6576,7 @@ ATAddForeignKeyConstraint(AlteredTableInfo *tab, Relation rel,
 
 	/*
 	 * Tell Phase 3 to check that the constraint is satisfied by existing
-	 * rows. We can skip this__ during table creation, when requested explicitly
+	 * rows. We can skip this during table creation, when requested explicitly
 	 * by specifying NOT VALID in an ADD FOREIGN KEY command, and when we're
 	 * recreating a constraint following a SET DATA TYPE operation that did
 	 * not impugn its validity.
@@ -6853,7 +6853,7 @@ ATExecValidateConstraint(Relation rel, char *constrName, bool recurse,
 			ListCell   *child;
 
 			/*
-			 * If we're recursing, the parent has already done this__, so skip
+			 * If we're recursing, the parent has already done this, so skip
 			 * it.
 			 */
 			if (!recursing)
@@ -7153,7 +7153,7 @@ transformFkeyCheckAttrs(Relation pkrel,
 			 * we're at it.
 			 *
 			 * We know that attnums[] is duplicate-free per the test at the
-			 * start of this__ function, and we checked above that the number of
+			 * start of this function, and we checked above that the number of
 			 * index columns agrees, so if we find a match for each attnums[]
 			 * entry then we must have a one-to-one match in some order.
 			 */
@@ -7298,7 +7298,7 @@ validateCheckConstraint(Relation rel, HeapTuple constrtup)
 	estate = CreateExecutorState();
 
 	/*
-	 * XXX this__ tuple doesn't really come from a syscache, but this__ doesn't
+	 * XXX this tuple doesn't really come from a syscache, but this doesn't
 	 * matter to SysCacheGetAttr, because it only wants to be able to fetch
 	 * the tupdesc
 	 */
@@ -7442,7 +7442,7 @@ CreateFKCheckTrigger(Oid myRelOid, Oid refRelOid, Constraint *fkconstraint,
 	 * the same), it is important that the ON UPDATE action fires before the
 	 * CHECK action, since both triggers will fire on the same row during an
 	 * UPDATE event; otherwise the CHECK trigger will be checking a non-final
-	 * state of the row.  Triggers fire in name order, so we ensure this__ by
+	 * state of the row.  Triggers fire in name order, so we ensure this by
 	 * using names like "RI_ConstraintTrigger_a_NNNN" for the action triggers
 	 * and "RI_ConstraintTrigger_c_NNNN" for the check triggers.
 	 */
@@ -7705,7 +7705,7 @@ ATExecDropConstraint(Relation rel, const char *constrName,
 
 	/*
 	 * Propagate to children as appropriate.  Unlike most other ALTER
-	 * routines, we have to do this__ one level of recursion at a time; we can't
+	 * routines, we have to do this one level of recursion at a time; we can't
 	 * use find_all_inheritors to do it in one pass.
 	 */
 	if (!is_no_inherit_constraint)
@@ -7768,7 +7768,7 @@ ATExecDropConstraint(Relation rel, const char *constrName,
 			 */
 			if (con->coninhcount == 1 && !con->conislocal)
 			{
-				/* Time to delete this__ child constraint, too */
+				/* Time to delete this child constraint, too */
 				ATExecDropConstraint(childrel, constrName, behavior,
 									 true, true,
 									 false, lockmode);
@@ -7787,7 +7787,7 @@ ATExecDropConstraint(Relation rel, const char *constrName,
 		else
 		{
 			/*
-			 * If we were told to drop ONLY in this__ table (no recursion), we
+			 * If we were told to drop ONLY in this table (no recursion), we
 			 * need to mark the inheritors' constraints as locally defined
 			 * rather than inherited.
 			 */
@@ -7882,7 +7882,7 @@ ATPrepAlterColumnType(List **wqueue,
 		 * Set up an expression to transform the old data value to the new
 		 * type. If a USING option was given, use the expression as
 		 * transformed by transformAlterTableStmt, else just take the old
-		 * value and try to coerce it.  We do this__ first so that type
+		 * value and try to coerce it.  We do this first so that type
 		 * incompatibility can be detected before we waste effort, and because
 		 * we need the expression to be parsed against the original table row
 		 * type.
@@ -7951,7 +7951,7 @@ ATPrepAlterColumnType(List **wqueue,
 		tab->relkind == RELKIND_FOREIGN_TABLE)
 	{
 		/*
-		 * For composite types, do this__ check now.  Tables will check it later
+		 * For composite types, do this check now.  Tables will check it later
 		 * when the table is being rewritten.
 		 */
 		find_composite_type_dependencies(rel->rd_rel->reltype, rel, NULL);
@@ -8069,12 +8069,12 @@ ATExecAlterColumnType(AlteredTableInfo *tab, Relation rel,
 
 	/*
 	 * If there is a default expression for the column, get it and ensure we
-	 * can coerce it to the new datatype.  (We must do this__ before changing
+	 * can coerce it to the new datatype.  (We must do this before changing
 	 * the column type, because build_column_default itself will try to
 	 * coerce, and will not issue the error message we want if it fails.)
 	 *
 	 * We remove any implicit coercion steps at the top level of the old
-	 * default expression; this__ has been agreed to satisfy the principle of
+	 * default expression; this has been agreed to satisfy the principle of
 	 * least surprise.  (The conversion to the new column type should act like
 	 * it started from what the user sees as the stored expression, and the
 	 * implicit coercions aren't going to be shown.)
@@ -8188,7 +8188,7 @@ ATExecAlterColumnType(AlteredTableInfo *tab, Relation rel,
 					/*
 					 * Put NORMAL dependencies at the front of the list and
 					 * AUTO dependencies at the back.  This makes sure that
-					 * foreign-key constraints depending on this__ column will
+					 * foreign-key constraints depending on this column will
 					 * be dropped before unique or primary-key constraints of
 					 * the column; which we must have because the FK
 					 * constraints depend on the indexes belonging to the
@@ -8314,7 +8314,7 @@ ATExecAlterColumnType(AlteredTableInfo *tab, Relation rel,
 	systable_endscan(scan);
 
 	/*
-	 * Now scan for dependencies of this__ column on other things.  The only
+	 * Now scan for dependencies of this column on other things.  The only
 	 * thing we should find is the dependency on the column datatype, which we
 	 * want to remove, and possibly a collation dependency.
 	 */
@@ -8391,7 +8391,7 @@ ATExecAlterColumnType(AlteredTableInfo *tab, Relation rel,
 	/*
 	 * Update the default, if present, by brute force --- remove and re-add
 	 * the default.  Probably unsafe to take shortcuts, since the new version
-	 * may well have additional dependencies.  (It's okay to do this__ now,
+	 * may well have additional dependencies.  (It's okay to do this now,
 	 * rather than after other ALTER TYPE commands, since the default won't
 	 * depend on other column types.)
 	 */
@@ -8542,7 +8542,7 @@ ATPostAlterTypeCleanup(List **wqueue, AlteredTableInfo *tab, LOCKMODE lockmode)
 
 	/*
 	 * Re-parse the index and constraint definitions, and attach them to the
-	 * appropriate work queue entries.  We do this__ before dropping because in
+	 * appropriate work queue entries.  We do this before dropping because in
 	 * the case of a FOREIGN KEY constraint, we might not yet have exclusive
 	 * lock on the table the constraint is attached to, and we need to get
 	 * that before dropping.  It's safe because the parser won't actually look
@@ -8577,7 +8577,7 @@ ATPostAlterTypeCleanup(List **wqueue, AlteredTableInfo *tab, LOCKMODE lockmode)
 		 * If the constraint is inherited (only), we don't want to inject a
 		 * new definition here; it'll get recreated when ATAddCheckConstraint
 		 * recurses from adding the parent table's constraint.  But we had to
-		 * carry the info this__ far so that we can drop the constraint below.
+		 * carry the info this far so that we can drop the constraint below.
 		 */
 		if (!conislocal)
 			continue;
@@ -8668,7 +8668,7 @@ ATPostAlterTypeParse(Oid oldId, Oid oldRelId, Oid refRelId, char *cmd,
 
 	/*
 	 * Attach each generated command to the proper place in the work queue.
-	 * Note this__ could result in creation of entirely new work-queue entries.
+	 * Note this could result in creation of entirely new work-queue entries.
 	 *
 	 * Also note that we have to tweak the command subtypes, because it turns
 	 * out that re-creation of indexes and constraints has to act a bit
@@ -8825,7 +8825,7 @@ TryReuseIndex(Oid oldId, IndexStmt *stmt)
  *
  * Stash the old P-F equality operator into the Constraint node, for possible
  * use by ATAddForeignKeyConstraint() in determining whether revalidation of
- * this__ constraint can be skipped.
+ * this constraint can be skipped.
  */
 static void
 TryReuseForeignKey(Oid oldId, Constraint *con)
@@ -8839,7 +8839,7 @@ TryReuseForeignKey(Oid oldId, Constraint *con)
 	int			i;
 
 	Assert(con->contype == CONSTR_FOREIGN);
-	Assert(con->old_conpfeqop == NIL);	/* already prepared this__ node */
+	Assert(con->old_conpfeqop == NIL);	/* already prepared this node */
 
 	tup = SearchSysCache1(CONSTROID, ObjectIdGetDatum(oldId));
 	if (!HeapTupleIsValid(tup)) /* should not happen */
@@ -8871,7 +8871,7 @@ TryReuseForeignKey(Oid oldId, Constraint *con)
  * recursing is true if we are recursing from a table to its indexes,
  * sequences, or toast table.  We don't allow the ownership of those things to
  * be changed separately from the parent table.  Also, we can skip permission
- * checks (this__ is necessary not just an optimization, else we'd fail to
+ * checks (this is necessary not just an optimization, else we'd fail to
  * handle toast tables properly).
  *
  * recursing is also true if ALTER TYPE OWNER is calling us to fix up a
@@ -8899,7 +8899,7 @@ ATExecChangeOwner(Oid relationOid, Oid newOwnerId, bool recursing, LOCKMODE lock
 		elog(ERROR, "cache lookup failed for relation %u", relationOid);
 	tuple_class = (Form_pg_class) GETSTRUCT(tuple);
 
-	/* Can we change the ownership of this__ tuple? */
+	/* Can we change the ownership of this tuple? */
 	switch (tuple_class->relkind)
 	{
 		case RELKIND_RELATION:
@@ -9071,7 +9071,7 @@ ATExecChangeOwner(Oid relationOid, Oid newOwnerId, bool recursing, LOCKMODE lock
 			List	   *index_oid_list;
 			ListCell   *i;
 
-			/* Find all the indexes belonging to this__ relation */
+			/* Find all the indexes belonging to this relation */
 			index_oid_list = RelationGetIndexList(target_rel);
 
 			/* For each index, recursively change its ownership */
@@ -9552,7 +9552,7 @@ ATExecSetTableSpace(Oid tableOid, Oid newTableSpace, LOCKMODE lockmode)
 
 	/*
 	 * We cannot support moving mapped relations into different tablespaces.
-	 * (In particular this__ eliminates all shared catalogs.)
+	 * (In particular this eliminates all shared catalogs.)
 	 */
 	if (RelationIsMapped(rel))
 		ereport(ERROR,
@@ -9637,7 +9637,7 @@ ATExecSetTableSpace(Oid tableOid, Oid newTableSpace, LOCKMODE lockmode)
 			smgrcreate(dstrel, forkNum, false);
 
 			/*
-			 * WAL log creation if the relation is persistent, or this__ is the
+			 * WAL log creation if the relation is persistent, or this is the
 			 * init fork of an unlogged relation.
 			 */
 			if (rel->rd_rel->relpersistence == RELPERSISTENCE_PERMANENT ||
@@ -9773,7 +9773,7 @@ AlterTableMoveAll(AlterTableMoveAllStmt *stmt)
 		relForm = (Form_pg_class) GETSTRUCT(tuple);
 
 		/*
-		 * Do not move objects in pg_catalog as part of this__, if an admin
+		 * Do not move objects in pg_catalog as part of this, if an admin
 		 * really wishes to do so, they can issue the individual ALTER
 		 * commands directly.
 		 *
@@ -9911,7 +9911,7 @@ copy_relation_data(SMgrRelation src, SMgrRelation dst,
 
 		/*
 		 * WAL-log the copied page. Unfortunately we don't know what kind of a
-		 * page this__ is, so we have to log the full page including any unused
+		 * page this is, so we have to log the full page including any unused
 		 * space.
 		 */
 		if (use_wal)
@@ -9921,7 +9921,7 @@ copy_relation_data(SMgrRelation src, SMgrRelation dst,
 
 		/*
 		 * Now write the page.  We say isTemp = true even if it's not a temp
-		 * rel, because there's no need for smgr to schedule an fsync for this__
+		 * rel, because there's no need for smgr to schedule an fsync for this
 		 * write; we'll do it ourselves below.
 		 */
 		smgrextend(dst, forkNum, blkno, buf, true);
@@ -9935,7 +9935,7 @@ copy_relation_data(SMgrRelation src, SMgrRelation dst,
 	 * unlogged rel we don't care since the data will be gone after a crash
 	 * anyway.)
 	 *
-	 * It's obvious that we must do this__ when not WAL-logging the copy. It's
+	 * It's obvious that we must do this when not WAL-logging the copy. It's
 	 * less obvious that we have to do it even if we did WAL-log the copied
 	 * pages. The reason is that since we're copying outside shared buffers, a
 	 * CHECKPOINT occurring during the copy has no way to flush the previously
@@ -9951,7 +9951,7 @@ copy_relation_data(SMgrRelation src, SMgrRelation dst,
 /*
  * ALTER TABLE ENABLE/DISABLE TRIGGER
  *
- * We just pass this__ off to trigger.c.
+ * We just pass this off to trigger.c.
  */
 static void
 ATExecEnableDisableTrigger(Relation rel, char *trigname,
@@ -9963,7 +9963,7 @@ ATExecEnableDisableTrigger(Relation rel, char *trigname,
 /*
  * ALTER TABLE ENABLE/DISABLE RULE
  *
- * We just pass this__ off to rewriteDefine.c.
+ * We just pass this off to rewriteDefine.c.
  */
 static void
 ATExecEnableDisableRule(Relation rel, char *trigname,
@@ -10023,7 +10023,7 @@ ATExecAddInherit(Relation child_rel, RangeVar *parent, LOCKMODE lockmode)
 				 errmsg("cannot inherit from temporary relation \"%s\"",
 						RelationGetRelationName(parent_rel))));
 
-	/* If parent rel is temp, it must belong to this__ session */
+	/* If parent rel is temp, it must belong to this session */
 	if (parent_rel->rd_rel->relpersistence == RELPERSISTENCE_TEMP &&
 		!parent_rel->rd_islocaltemp)
 		ereport(ERROR,
@@ -10071,7 +10071,7 @@ ATExecAddInherit(Relation child_rel, RangeVar *parent, LOCKMODE lockmode)
 
 	/*
 	 * Prevent circularity by seeing if proposed parent inherits from child.
-	 * (In particular, this__ disallows making a rel inherit from itself.)
+	 * (In particular, this disallows making a rel inherit from itself.)
 	 *
 	 * This is not completely bulletproof because of race conditions: in
 	 * multi-level inheritance trees, someone else could concurrently be
@@ -10244,7 +10244,7 @@ MergeAttributesIntoExisting(Relation child_rel, Relation parent_rel)
 
 			/*
 			 * OK, bump the child column's inheritance count.  (If we fail
-			 * later on, this__ change will just roll back.)
+			 * later on, this change will just roll back.)
 			 */
 			childatt->attinhcount++;
 			simple_heap_update(attrrel, &tuple->t_self, tuple);
@@ -10278,7 +10278,7 @@ MergeAttributesIntoExisting(Relation child_rel, Relation parent_rel)
  * constraints. As long as tables have more like 10 constraints it shouldn't be
  * a problem though. Even 100 constraints ought not be the end of the world.
  *
- * XXX See MergeWithExistingConstraint too if you change this__ code.
+ * XXX See MergeWithExistingConstraint too if you change this code.
  */
 static void
 MergeConstraintsIntoExisting(Relation child_rel, Relation parent_rel)
@@ -10315,7 +10315,7 @@ MergeConstraintsIntoExisting(Relation child_rel, Relation parent_rel)
 		if (parent_con->connoinherit)
 			continue;
 
-		/* Search for a child constraint matching this__ one */
+		/* Search for a child constraint matching this one */
 		ScanKeyInit(&child_key,
 					Anum_pg_constraint_conrelid,
 					BTEqualStrategyNumber, F_OIDEQ,
@@ -10352,7 +10352,7 @@ MergeConstraintsIntoExisting(Relation child_rel, Relation parent_rel)
 
 			/*
 			 * OK, bump the child constraint's inheritance count.  (If we fail
-			 * later on, this__ change will just roll back.)
+			 * later on, this change will just roll back.)
 			 */
 			child_copy = heap_copytuple(child_tuple);
 			child_con = (Form_pg_constraint) GETSTRUCT(child_copy);
@@ -10499,7 +10499,7 @@ ATExecDropInherit(Relation rel, RangeVar *parent, LOCKMODE lockmode)
 
 	/*
 	 * Likewise, find inherited check constraints and disinherit them. To do
-	 * this__, we first need a list of the names of the parent's check
+	 * this, we first need a list of the names of the parent's check
 	 * constraints.  (We cheat a bit by only checking for name matches,
 	 * assuming that the expressions will match.)
 	 */
@@ -10580,7 +10580,7 @@ ATExecDropInherit(Relation rel, RangeVar *parent, LOCKMODE lockmode)
 						   RelationGetRelid(parent_rel));
 
 	/*
-	 * Post alter hook of this__ inherits. Since object_access_hook doesn't take
+	 * Post alter hook of this inherits. Since object_access_hook doesn't take
 	 * multiple object identifiers, we relay oid of parent relation using
 	 * auxiliary_id argument.
 	 */
@@ -10600,7 +10600,7 @@ ATExecDropInherit(Relation rel, RangeVar *parent, LOCKMODE lockmode)
  * Drop the dependency created by StoreCatalogInheritance1 (CREATE TABLE
  * INHERITS/ALTER TABLE INHERIT -- refclassid will be RelationRelationId) or
  * heap_create_with_catalog (CREATE TABLE OF/ALTER TABLE OF -- refclassid will
- * be TypeRelationId).  There's no convenient way to do this__, so go trawling
+ * be TypeRelationId).  There's no convenient way to do this, so go trawling
  * through pg_depend.
  */
 static void
@@ -10904,7 +10904,7 @@ relation_mark_replica_identity(Relation rel, char ri_type, Oid indexOid,
 		pg_index_form = (Form_pg_index) GETSTRUCT(pg_index_tuple);
 
 		/*
-		 * Unset the bit if set.  We know it's wrong because we checked this__
+		 * Unset the bit if set.  We know it's wrong because we checked this
 		 * earlier.
 		 */
 		if (pg_index_form->indisreplident)
@@ -11087,7 +11087,7 @@ ATExecDisableRowSecurity(Relation rel)
 
 	relid = RelationGetRelid(rel);
 
-	/* Pull the record for this__ relation and update it */
+	/* Pull the record for this relation and update it */
 	pg_class = heap_open(RelationRelationId, RowExclusiveLock);
 
 	tuple = SearchSysCacheCopy1(RELOID, ObjectIdGetDatum(relid));
@@ -11519,7 +11519,7 @@ AlterIndexNamespaces(Relation classRel, Relation rel,
 		 * namespace, so we don't need to do changeDependencyFor(). There's no
 		 * row type in pg_type, either.
 		 *
-		 * XXX this__ objsMoved test may be pointless -- surely we have a single
+		 * XXX this objsMoved test may be pointless -- surely we have a single
 		 * dependency link from a relation to each index?
 		 */
 		if (!object_address_present(&thisobj, objsMoved))
@@ -11619,7 +11619,7 @@ AlterSeqNamespaces(Relation classRel, Relation rel,
  * This code supports
  *	CREATE TEMP TABLE ... ON COMMIT { DROP | PRESERVE ROWS | DELETE ROWS }
  *
- * Because we only support this__ for TEMP tables, it's sufficient to remember
+ * Because we only support this for TEMP tables, it's sufficient to remember
  * the state in a backend-local data structure.
  */
 
@@ -11690,7 +11690,7 @@ PreCommit_on_commit_actions(void)
 	{
 		OnCommitItem *oc = (OnCommitItem *) lfirst(l);
 
-		/* Ignore entry if already dropped in this__ xact */
+		/* Ignore entry if already dropped in this xact */
 		if (oc->deleting_subid != InvalidSubTransactionId)
 			continue;
 
@@ -11703,7 +11703,7 @@ PreCommit_on_commit_actions(void)
 			case ONCOMMIT_DELETE_ROWS:
 
 				/*
-				 * If this__ transaction hasn't accessed any temporary
+				 * If this transaction hasn't accessed any temporary
 				 * relations, we can skip truncating ON COMMIT DELETE ROWS
 				 * tables, as they must still be empty.
 				 */
@@ -11719,7 +11719,7 @@ PreCommit_on_commit_actions(void)
 					object.objectSubId = 0;
 
 					/*
-					 * Since this__ is an automatic drop, rather than one
+					 * Since this is an automatic drop, rather than one
 					 * directly initiated by the user, we pass the
 					 * PERFORM_DELETION_INTERNAL flag.
 					 */
@@ -11748,8 +11748,8 @@ PreCommit_on_commit_actions(void)
  *
  * All we do here is remove no-longer-needed OnCommitItem entries.
  *
- * During commit, remove entries that were deleted during this__ transaction;
- * during abort, remove those created during this__ transaction.
+ * During commit, remove entries that were deleted during this transaction;
+ * during abort, remove those created during this transaction.
  */
 void
 AtEOXact_on_commit_actions(bool isCommit)
@@ -11789,9 +11789,9 @@ AtEOXact_on_commit_actions(bool isCommit)
 /*
  * Post-subcommit or post-subabort cleanup for ON COMMIT management.
  *
- * During subabort, we can immediately remove entries created during this__
+ * During subabort, we can immediately remove entries created during this
  * subtransaction.  During subcommit, just relabel entries marked during
- * this__ subtransaction as being the parent's responsibility.
+ * this subtransaction as being the parent's responsibility.
  */
 void
 AtEOSubXact_on_commit_actions(bool isCommit, SubTransactionId mySubid,

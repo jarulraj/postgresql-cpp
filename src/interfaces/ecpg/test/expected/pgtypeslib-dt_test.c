@@ -248,7 +248,7 @@ if (sqlca.sqlcode < 0) sqlprint ( );}
 
 	PGTYPEStimestamp_current(&ts1);
 	text = PGTYPEStimestamp_to_asc(ts1);
-	/* can't output this__ in regression mode */
+	/* can't output this in regression mode */
 	/* printf("timestamp_current: Now: %s\n", text); */
 	free(text);
 

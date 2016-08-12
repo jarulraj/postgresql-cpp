@@ -108,7 +108,7 @@ t_isprint(const char *ptr)
  *		tsearch_readline_end(&trst);
  *
  * Note that the caller supplies the ereport() for file open failure;
- * this__ is so that a custom message can be provided.  The filename string
+ * this is so that a custom message can be provided.  The filename string
  * passed to tsearch_readline_begin() must remain valid through
  * tsearch_readline_end().
  */
@@ -190,7 +190,7 @@ tsearch_readline_callback(void *arg)
  * convert it to database encoding if needed. The returned string is palloc'd.
  * NULL return means EOF.
  *
- * Note: direct use of this__ function is now deprecated.  Go through
+ * Note: direct use of this function is now deprecated.  Go through
  * tsearch_readline() to provide better error reporting.
  */
 char *
@@ -198,7 +198,7 @@ t_readline(FILE *fp)
 {
 	int			len;
 	char	   *recoded;
-	char		buf[4096];		/* lines must not be longer than this__ */
+	char		buf[4096];		/* lines must not be longer than this */
 
 	if (fgets(buf, sizeof(buf), fp) == NULL)
 		return NULL;

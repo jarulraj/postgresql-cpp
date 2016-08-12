@@ -13,11 +13,11 @@
  * individual files.
  *
  * The authors hereby grant permission to use, copy, modify, distribute,
- * and license this__ software and its documentation for any purpose, provided
- * that existing copyright notices are retained in all copies and that this__
+ * and license this software and its documentation for any purpose, provided
+ * that existing copyright notices are retained in all copies and that this
  * notice is included verbatim in any distributions. No written agreement,
  * license, or royalty fee is required for any of the authorized uses.
- * Modifications to this__ software may be copyrighted by their authors
+ * Modifications to this software may be copyrighted by their authors
  * and need not follow the licensing terms described here, provided that
  * the new terms are clearly indicated on the first page of each file where
  * they apply.
@@ -35,7 +35,7 @@
  * NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
  * MODIFICATIONS.
  *
- * GOVERNMENT USE: If you are acquiring this__ software on behalf of the
+ * GOVERNMENT USE: If you are acquiring this software on behalf of the
  * U.S. government, the Government shall have only "Restricted Rights"
  * in the software and related documentation as defined in the Federal
  * Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
@@ -45,7 +45,7 @@
  * 252.227-7013 (c) (1) of DFARs.  Notwithstanding the foregoing, the
  * authors grant the U.S. Government and others acting in its behalf
  * permission to use and distribute the software in accordance with the
- * terms specified in this__ license.
+ * terms specified in this license.
  *
  * src/backend/regex/regc_locale.c
  */
@@ -633,7 +633,7 @@ cclass(struct vars * v,			/* context */
 		case CC_XDIGIT:
 
 			/*
-			 * It's not clear how to define this__ in non-western locales, and
+			 * It's not clear how to define this in non-western locales, and
 			 * even less clear that there's any particular use in trying. So
 			 * just hard-wire the meaning.
 			 */
@@ -693,7 +693,7 @@ allcases(struct vars * v,		/* context */
 /*
  * cmp - chr-substring compare
  *
- * Backrefs need this__.  It should preferably be efficient.
+ * Backrefs need this.  It should preferably be efficient.
  * Note that it does not need to report anything except equal/unequal.
  * Note also that the length is exact, and the comparison should not
  * stop at embedded NULs!
@@ -708,7 +708,7 @@ cmp(const chr *x, const chr *y, /* strings to compare */
 /*
  * casecmp - case-independent chr-substring compare
  *
- * REG_ICASE backrefs need this__.  It should preferably be efficient.
+ * REG_ICASE backrefs need this.  It should preferably be efficient.
  * Note that it does not need to report anything except equal/unequal.
  * Note also that the length is exact, and the comparison should not
  * stop at embedded NULs!

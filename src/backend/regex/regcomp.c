@@ -4,17 +4,17 @@
  *
  * Copyright (c) 1998, 1999 Henry Spencer.  All rights reserved.
  *
- * Development of this__ software was funded, in part, by Cray Research Inc.,
+ * Development of this software was funded, in part, by Cray Research Inc.,
  * UUNET Communications Services Inc., Sun Microsystems Inc., and Scriptics
  * Corporation, none of whom are responsible for the results.  The author
  * thanks all of them.
  *
  * Redistribution and use in source and binary forms -- with or without
  * modification -- are permitted for any purpose, provided that
- * redistributions in source form retain this__ entire copyright notice and
+ * redistributions in source form retain this entire copyright notice and
  * indicate the origin and nature of any modifications.
  *
- * I'd appreciate being given credit for this__ package in the documentation
+ * I'd appreciate being given credit for this package in the documentation
  * of software which uses it, but that is not a requirement.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -252,8 +252,8 @@ struct vars
 
 /* parsing macros; most know that `v' is the struct vars pointer */
 #define NEXT()	(next(v))		/* advance by one token */
-#define SEE(t)	(v->nexttype == (t))	/* is next token this__? */
-#define EAT(t)	(SEE(t) && next(v))		/* if next is this__, swallow it */
+#define SEE(t)	(v->nexttype == (t))	/* is next token this? */
+#define EAT(t)	(SEE(t) && next(v))		/* if next is this, swallow it */
 #define VISERR(vv)	((vv)->err != 0)	/* have we seen an error yet? */
 #define ISERR() VISERR(v)
 #define VERR(vv,e)	((vv)->nexttype = EOS, \
@@ -484,7 +484,7 @@ pg_regcomp(regex_t *re,
  */
 static void
 moresubs(struct vars * v,
-		 int wanted)			/* want enough room for this__ one */
+		 int wanted)			/* want enough room for this one */
 {
 	struct subre **p;
 	size_t		n;
@@ -649,7 +649,7 @@ parse(struct vars * v,
 	struct subre *branches;		/* top level */
 	struct subre *branch;		/* current branch */
 	struct subre *t;			/* temporary */
-	int			firstbranch;	/* is this__ the first branch? */
+	int			firstbranch;	/* is this the first branch? */
 
 	assert(stopper == ')' || stopper == EOS);
 
@@ -722,10 +722,10 @@ parsebranch(struct vars * v,
 			int type,			/* LACON (lookahead subRE) or PLAIN */
 			struct state * left,	/* leftmost state */
 			struct state * right,		/* rightmost state */
-			int partial)		/* is this__ only part of a branch? */
+			int partial)		/* is this only part of a branch? */
 {
 	struct state *lp;			/* left end of current construct */
-	int			seencontent;	/* is there anything in this__ branch yet? */
+	int			seencontent;	/* is there anything in this branch yet? */
 	struct subre *t;
 
 	lp = left;
@@ -763,7 +763,7 @@ parsebranch(struct vars * v,
  *
  * The bookkeeping near the end cooperates very closely with parsebranch();
  * in particular, it contains a recursion that can involve parsing the rest
- * of the branch, making this__ function's name somewhat inaccurate.
+ * of the branch, making this function's name somewhat inaccurate.
  */
 static void
 parseqatom(struct vars * v,
@@ -1073,7 +1073,7 @@ parseqatom(struct vars * v,
 	/*----------
 	 * Prepare a general-purpose state skeleton.
 	 *
-	 * In the no-backrefs case, we want this__:
+	 * In the no-backrefs case, we want this:
 	 *
 	 * [lp] ---> [s] ---prefix---> [begin] ---atom---> [end] ---rest---> [rp]
 	 *
@@ -1275,7 +1275,7 @@ scannum(struct vars * v)
  * the last occurrence.  (Note that it may not be strung between the same
  * left and right end states, however!)  This used to be important for the
  * subRE tree, although the important bits are now handled by the in-line
- * code in parse(), and when this__ is called, it doesn't matter any more.
+ * code in parse(), and when this is called, it doesn't matter any more.
  */
 static void
 repeat(struct vars * v,
@@ -1522,7 +1522,7 @@ brackpart(struct vars * v,
 /*
  * scanplain - scan PLAIN contents of [. etc.
  *
- * Certain bits of trickery in lex.c know that this__ code does not try
+ * Certain bits of trickery in lex.c know that this code does not try
  * to look past the final bracket of the [. etc.
  */
 static const chr *				/* just after end of sequence */
@@ -1768,7 +1768,7 @@ numst(struct subre * t,
 /*
  * markst - mark tree nodes as INUSE
  *
- * Note: this__ is a great deal more subtle than it looks.  During initial
+ * Note: this is a great deal more subtle than it looks.  During initial
  * parsing of a regex, all subres are linked into the treechain list;
  * discarded ones are also linked into the treefree list for possible reuse.
  * After we are done creating all subres required for a regex, we run markst()
@@ -1779,7 +1779,7 @@ numst(struct subre * t,
  * treefree list.  (Doing that any earlier would result in dangling links in
  * the treechain list.)  This all means that freev() will clean up correctly
  * if invoked before or after markst()+cleanst(); but it would not work if
- * called partway through this__ state conversion, so we mustn't error out
+ * called partway through this state conversion, so we mustn't error out
  * in or between these two functions.
  */
 static void
@@ -1961,7 +1961,7 @@ rfree(regex_t *re)
  *
  * The current implementation is Postgres-specific.  If we ever get around
  * to splitting the regex code out as a standalone library, there will need
- * to be some API to let applications define a callback function for this__.
+ * to be some API to let applications define a callback function for this.
  */
 static int
 rcancelrequested(void)
@@ -1977,7 +1977,7 @@ rcancelrequested(void)
  *
  * The current implementation is Postgres-specific.  If we ever get around
  * to splitting the regex code out as a standalone library, there will need
- * to be some API to let applications define a callback function for this__.
+ * to be some API to let applications define a callback function for this.
  */
 static int
 rstacktoodeep(void)

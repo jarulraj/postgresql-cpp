@@ -205,7 +205,7 @@ collectMatchBitmap(GinBtreeData *btree, GinBtreeStack *stack,
 		}
 
 		/*
-		 * OK, we want to return the TIDs listed in this__ entry.
+		 * OK, we want to return the TIDs listed in this entry.
 		 */
 		if (GinIsPostingTree(itup))
 		{
@@ -223,7 +223,7 @@ collectMatchBitmap(GinBtreeData *btree, GinBtreeStack *stack,
 
 			LockBuffer(stack->buffer, GIN_UNLOCK);
 
-			/* Collect all the TIDs in this__ entry's posting tree */
+			/* Collect all the TIDs in this entry's posting tree */
 			scanPostingTree(btree->index, scanEntry, rootPostingTree);
 
 			/*
@@ -236,7 +236,7 @@ collectMatchBitmap(GinBtreeData *btree, GinBtreeStack *stack,
 			{
 				/*
 				 * Root page becomes non-leaf while we unlock it. We will
-				 * start again, this__ situation doesn't occur often - root can
+				 * start again, this situation doesn't occur often - root can
 				 * became a non-leaf only once per life of index.
 				 */
 				return false;
@@ -282,7 +282,7 @@ collectMatchBitmap(GinBtreeData *btree, GinBtreeStack *stack,
 		}
 
 		/*
-		 * Done with this__ entry, go to the next
+		 * Done with this entry, go to the next
 		 */
 		stack->off++;
 	}
@@ -653,7 +653,7 @@ entryLoadMoreItems(GinState *ginstate, GinScanEntry entry, ItemPointerData advan
 		if (stepright)
 		{
 			/*
-			 * We've processed all the entries on this__ page. If it was the
+			 * We've processed all the entries on this page. If it was the
 			 * last page in the tree, we're done.
 			 */
 			if (GinPageRightMost(page))
@@ -679,9 +679,9 @@ entryLoadMoreItems(GinState *ginstate, GinScanEntry entry, ItemPointerData advan
 			continue;			/* page was deleted by concurrent vacuum */
 
 		/*
-		 * The first item > advancePast might not be on this__ page, but
+		 * The first item > advancePast might not be on this page, but
 		 * somewhere to the right, if the page was split, or a non-match from
-		 * another key in the query allowed us to skip some items from this__
+		 * another key in the query allowed us to skip some items from this
 		 * entry. Keep following the right-links until we re-find the correct
 		 * page.
 		 */
@@ -690,7 +690,7 @@ entryLoadMoreItems(GinState *ginstate, GinScanEntry entry, ItemPointerData advan
 		{
 			/*
 			 * the item we're looking is > the right bound of the page, so it
-			 * can't be on this__ page.
+			 * can't be on this page.
 			 */
 			continue;
 		}
@@ -726,12 +726,12 @@ entryLoadMoreItems(GinState *ginstate, GinScanEntry entry, ItemPointerData advan
  *
  * Item pointers are returned in ascending order.
  *
- * Note: this__ can return a "lossy page" item pointer, indicating that the
+ * Note: this can return a "lossy page" item pointer, indicating that the
  * entry potentially matches all items on that heap page.  However, it is
  * not allowed to return both a lossy page pointer and exact (regular)
  * item pointers for the same page.  (Doing so would break the key-combination
  * logic in keyGetItem and scanGetItem; see comment in scanGetItem.)  In the
- * current implementation this__ is guaranteed by the behavior of tidbitmaps.
+ * current implementation this is guaranteed by the behavior of tidbitmaps.
  */
 static void
 entryGetItem(GinState *ginstate, GinScanEntry entry,
@@ -752,7 +752,7 @@ entryGetItem(GinState *ginstate, GinScanEntry entry,
 		do
 		{
 			/*
-			 * If we've exhausted all items on this__ block, move to next block
+			 * If we've exhausted all items on this block, move to next block
 			 * in the bitmap.
 			 */
 			while (entry->matchResult == NULL ||
@@ -795,7 +795,7 @@ entryGetItem(GinState *ginstate, GinScanEntry entry,
 
 				/*
 				 * We might as well fall out of the loop; we could not
-				 * estimate number of results on this__ page to support correct
+				 * estimate number of results on this page to support correct
 				 * reducing of result even if it's enabled.
 				 */
 				gotitem = true;
@@ -875,21 +875,21 @@ entryGetItem(GinState *ginstate, GinScanEntry entry,
 }
 
 /*
- * Identify the "current" item among the input entry streams for this__ scan key
+ * Identify the "current" item among the input entry streams for this scan key
  * that is greater than advancePast, and test whether it passes the scan key
  * qual condition.
  *
  * The current item is the smallest curItem among the inputs.  key->curItem
  * is set to that value.  key->curItemMatches is set to indicate whether that
  * TID passes the consistentFn test.  If so, key->recheckCurItem is set true
- * iff recheck is needed for this__ item pointer (including the case where the
+ * iff recheck is needed for this item pointer (including the case where the
  * item pointer is a lossy page pointer).
  *
  * If all entry streams are exhausted, sets key->isFinished to TRUE.
  *
  * Item pointers must be returned in ascending order.
  *
- * Note: this__ can return a "lossy page" item pointer, indicating that the
+ * Note: this can return a "lossy page" item pointer, indicating that the
  * key potentially matches all items on that heap page.  However, it is
  * not allowed to return both a lossy page pointer and exact (regular)
  * item pointers for the same page.  (Doing so would break the key-combination
@@ -911,7 +911,7 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 	Assert(!key->isFinished);
 
 	/*
-	 * We might have already tested this__ item; if so, no need to repeat work.
+	 * We might have already tested this item; if so, no need to repeat work.
 	 * (Note: the ">" case can happen, if advancePast is exact but we
 	 * previously had to set curItem to a lossy-page pointer.)
 	 */
@@ -936,10 +936,10 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 			continue;
 
 		/*
-		 * Advance this__ stream if necessary.
+		 * Advance this stream if necessary.
 		 *
 		 * In particular, since entry->curItem was initialized with
-		 * ItemPointerSetMin, this__ ensures we fetch the first item for each
+		 * ItemPointerSetMin, this ensures we fetch the first item for each
 		 * entry on the first call.
 		 */
 		if (ginCompareItemPointers(&entry->curItem, &advancePast) <= 0)
@@ -986,9 +986,9 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 	}
 
 	/*
-	 * We might not have loaded all the entry streams for this__ TID yet. We
+	 * We might not have loaded all the entry streams for this TID yet. We
 	 * could call the consistent function, passing MAYBE for those entries, to
-	 * see if it can decide if this__ TID matches based on the information we
+	 * see if it can decide if this TID matches based on the information we
 	 * have. But if the consistent-function is expensive, and cannot in fact
 	 * decide with partial information, that could be a big loss. So, load all
 	 * the additional entries, before calling the consistent function.
@@ -1046,7 +1046,7 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 	 * them as TRUE.
 	 *
 	 * Note that only lossy-page entries pointing to the current item's page
-	 * should trigger this__ processing; we might have future lossy pages in the
+	 * should trigger this processing; we might have future lossy pages in the
 	 * entry array, but they aren't relevant yet.
 	 */
 	key->curItem = minItem;
@@ -1092,10 +1092,10 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 	}
 
 	/*
-	 * At this__ point we know that we don't need to return a lossy whole-page
+	 * At this point we know that we don't need to return a lossy whole-page
 	 * pointer, but we might have matches for individual exact item pointers,
 	 * possibly in combination with a lossy pointer. Pass lossy pointers as
-	 * MAYBE to the ternary consistent function, to let it decide if this__
+	 * MAYBE to the ternary consistent function, to let it decide if this
 	 * tuple satisfies the overall key, even though we don't know if the lossy
 	 * entries match.
 	 *
@@ -1110,7 +1110,7 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 
 		/*
 		 * This case can't currently happen, because we loaded all the entries
-		 * for this__ item earlier.
+		 * for this item earlier.
 		 */
 		else if (ginCompareItemPointers(&entry->curItem, &advancePast) <= 0)
 			key->entryRes[i] = GIN_MAYBE;
@@ -1145,7 +1145,7 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
 
 			/*
 			 * the 'default' case shouldn't happen, but if the consistent
-			 * function returns something bogus, this__ is the safe result
+			 * function returns something bogus, this is the safe result
 			 */
 			key->curItemMatches = true;
 			key->recheckCurItem = true;
@@ -1169,7 +1169,7 @@ keyGetItem(GinState *ginstate, MemoryContext tempCtx, GinScanKey key,
  * Returns true if anything found.
  * On success, *item and *recheck are set.
  *
- * Note: this__ is very nearly the same logic as in keyGetItem(), except
+ * Note: this is very nearly the same logic as in keyGetItem(), except
  * that we know the keys are to be combined with AND logic, whereas in
  * keyGetItem() the combination logic is known only to the consistentFn.
  */
@@ -1210,7 +1210,7 @@ scanGetItem(IndexScanDesc scan, ItemPointerData advancePast,
 		{
 			GinScanKey	key = so->keys + i;
 
-			/* Fetch the next item for this__ key that is > advancePast. */
+			/* Fetch the next item for this key that is > advancePast. */
 			keyGetItem(&so->ginstate, so->tempCtx, key, advancePast);
 
 			if (key->isFinished)
@@ -1218,7 +1218,7 @@ scanGetItem(IndexScanDesc scan, ItemPointerData advancePast,
 
 			/*
 			 * If it's not a match, we can immediately conclude that nothing
-			 * <= this__ item matches, without checking the rest of the keys.
+			 * <= this item matches, without checking the rest of the keys.
 			 */
 			if (!key->curItemMatches)
 			{
@@ -1229,10 +1229,10 @@ scanGetItem(IndexScanDesc scan, ItemPointerData advancePast,
 
 			/*
 			 * It's a match. We can conclude that nothing < matches, so the
-			 * other key streams can skip to this__ item.
+			 * other key streams can skip to this item.
 			 *
 			 * Beware of lossy pointers, though; from a lossy pointer, we can
-			 * only conclude that nothing smaller than this__ *block* matches.
+			 * only conclude that nothing smaller than this *block* matches.
 			 */
 			if (ItemPointerIsLossyPage(&key->curItem))
 			{
@@ -1251,13 +1251,13 @@ scanGetItem(IndexScanDesc scan, ItemPointerData advancePast,
 			}
 
 			/*
-			 * If this__ is the first key, remember this__ location as a potential
+			 * If this is the first key, remember this location as a potential
 			 * match, and proceed to check the rest of the keys.
 			 *
-			 * Otherwise, check if this__ is the same item that we checked the
+			 * Otherwise, check if this is the same item that we checked the
 			 * previous keys for (or a lossy pointer for the same page). If
-			 * not, loop back to check the previous keys for this__ item (we
-			 * will check this__ key again too, but keyGetItem returns quickly
+			 * not, loop back to check the previous keys for this item (we
+			 * will check this key again too, but keyGetItem returns quickly
 			 * for that)
 			 */
 			if (i == 0)
@@ -1317,7 +1317,7 @@ scanGetItem(IndexScanDesc scan, ItemPointerData advancePast,
  * Returns false if there are no more. On pages with several heap rows
  * it returns each row separately, on page with part of heap row returns
  * per page data.  pos->firstOffset and pos->lastOffset are set to identify
- * the range of pending-list tuples belonging to this__ heap row.
+ * the range of pending-list tuples belonging to this heap row.
  *
  * The pendingBuffer is presumed pinned and share-locked on entry, and is
  * pinned and share-locked on success exit.  On failure exit it's released.
@@ -1382,7 +1382,7 @@ scanGetCandidate(IndexScanDesc scan, pendingPosition *pos)
 			else
 			{
 				/*
-				 * All itempointers are the same on this__ page
+				 * All itempointers are the same on this page
 				 */
 				pos->lastOffset = maxoff + 1;
 			}
@@ -1627,7 +1627,7 @@ collectMatchesForHeapRow(IndexScanDesc scan, pendingPosition *pos)
 				if (StopLow >= StopHigh && entry->isPartialMatch)
 				{
 					/*
-					 * No exact match on this__ page.  If doing partial match,
+					 * No exact match on this page.  If doing partial match,
 					 * scan from the first tuple greater than target value to
 					 * end of page.  Note that since we don't remember whether
 					 * the comparePartialFn told us to stop early on a

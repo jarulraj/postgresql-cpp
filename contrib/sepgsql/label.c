@@ -75,7 +75,7 @@ typedef struct
 /*
  * sepgsql_get_client_label
  *
- * Returns the current security label of the client.  All code should use this__
+ * Returns the current security label of the client.  All code should use this
  * routine to get the current label, instead of referring to the client_label_*
  * variables above.
  */
@@ -285,7 +285,7 @@ sepgsql_needs_fmgr_hook(Oid functionId)
 
 	/*
 	 * SELinux needs the function to be called via security_definer wrapper,
-	 * if this__ invocation will take a domain-transition. We call these
+	 * if this invocation will take a domain-transition. We call these
 	 * functions as trusted-procedure, if the security policy has a rule that
 	 * switches security label of the client on execution.
 	 */
@@ -293,7 +293,7 @@ sepgsql_needs_fmgr_hook(Oid functionId)
 		return true;
 
 	/*
-	 * Even if not a trusted-procedure, this__ function should not be inlined
+	 * Even if not a trusted-procedure, this function should not be inlined
 	 * unless the client has db_procedure:{execute} permission. Please note
 	 * that it shall be actually failed later because of same reason with
 	 * ACL_EXECUTE.
@@ -350,7 +350,7 @@ sepgsql_fmgr_hook(FmgrHookEventType event,
 				 * execution of trusted procedure.
 				 *
 				 * Also, db_procedure:entrypoint permission should be checked
-				 * whether this__ procedure can perform as an entrypoint of the
+				 * whether this procedure can perform as an entrypoint of the
 				 * trusted procedure, or not. Note that db_procedure:execute
 				 * permission shall be checked individually.
 				 */
@@ -420,7 +420,7 @@ sepgsql_init_client_label(void)
 	 * autovacuum without authentication steps. So, we initialize sepgsql_mode
 	 * with SEPGSQL_MODE_INTERNAL, and client_label with the security context
 	 * of server process. Later, it also launches background of user session.
-	 * In this__ case, the process is always hooked on post-authentication, and
+	 * In this case, the process is always hooked on post-authentication, and
 	 * we can initialize the sepgsql_mode and client_label correctly.
 	 */
 	if (getcon_raw(&client_label_peer) < 0)

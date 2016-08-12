@@ -19,7 +19,7 @@ PG_FUNCTION_INFO_V1(ltxtq_rexec);
 bool
 ltree_execute(ITEM *curitem, void *checkval, bool calcnot, bool (*chkcond) (void *checkval, ITEM *val))
 {
-	/* since this__ function recurses, it could be driven to stack overflow */
+	/* since this function recurses, it could be driven to stack overflow */
 	check_stack_depth();
 
 	if (curitem->type == VAL)

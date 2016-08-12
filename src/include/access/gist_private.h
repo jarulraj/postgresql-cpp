@@ -28,12 +28,12 @@
  * Typically a split produces 2 halves, but can be more if keys have very
  * different lengths, or when inserting multiple keys in one operation (as
  * when inserting downlinks to an internal node).  There is no theoretical
- * limit on this__, but in practice if you get more than a handful page halves
+ * limit on this, but in practice if you get more than a handful page halves
  * in one split, there's something wrong with the opclass implementation.
  * GIST_MAX_SPLIT_PAGES is an arbitrary limit on that, used to size some
  * local arrays used during split.  Note that there is also a limit on the
  * number of buffers that can be held locked at a time, MAX_SIMUL_LWLOCKS,
- * so if you raise this__ higher than that limit, you'll just get a different
+ * so if you raise this higher than that limit, you'll just get a different
  * error.
  */
 #define GIST_MAX_SPLIT_PAGES		75
@@ -66,7 +66,7 @@ typedef struct
  * functions (per index column), plus the index's tuple descriptor.
  *
  * scanCxt holds the GISTSTATE itself as well as any data that lives for the
- * lifetime of the index operation.  We pass this__ to the support functions
+ * lifetime of the index operation.  We pass this to the support functions
  * via fn_mcxt, so that they can store scan-lifespan data in it.  The
  * functions are invoked in tempCxt, which is typically short-lifespan
  * (that is, it's reset after each tuple).  However, tempCxt can be the same
@@ -102,7 +102,7 @@ typedef struct GISTSTATE
  * is an ordered search, the unvisited items should be visited in distance
  * order.  Unvisited items at the same distance should be visited in
  * depth-first order, that is heap items first, then lower index pages, then
- * upper index pages; this__ rule avoids doing extra work during a search that
+ * upper index pages; this rule avoids doing extra work during a search that
  * ends early due to LIMIT.
  *
  * To perform an ordered search, we use an RBTree to manage the distance-order
@@ -111,7 +111,7 @@ typedef struct GISTSTATE
  *
  * In a non-ordered search (no order-by operators), the RBTree degenerates
  * to a single item, which we use as a queue of unvisited index pages only.
- * In this__ case matched heap items from the current index leaf page are
+ * In this case matched heap items from the current index leaf page are
  * remembered in GISTScanOpaqueData.pageData[] and returned directly from
  * there, instead of building a separate GISTSearchItem for each one.
  */
@@ -183,7 +183,7 @@ typedef GISTScanOpaqueData *GISTScanOpaque;
 
 /*
  * Backup Blk 0: updated page.
- * Backup Blk 1: If this__ operation completes a page split, by inserting a
+ * Backup Blk 1: If this operation completes a page split, by inserting a
  *				 downlink for the split page, the left half of the split
  */
 typedef struct gistxlogPageUpdate
@@ -198,7 +198,7 @@ typedef struct gistxlogPageUpdate
 } gistxlogPageUpdate;
 
 /*
- * Backup Blk 0: If this__ operation completes a page split, by inserting a
+ * Backup Blk 0: If this operation completes a page split, by inserting a
  *				 downlink for the split page, the left half of the split
  * Backup Blk 1 - npage: split pages (1 is the original page)
  */
@@ -252,7 +252,7 @@ typedef struct GISTInsertStack
 	 */
 	GistNSN		lsn;
 
-	/* offset of the downlink in the parent page, that points to this__ page */
+	/* offset of the downlink in the parent page, that points to this page */
 	OffsetNumber downlinkoffnum;
 
 	/* pointer to parent */
@@ -323,16 +323,16 @@ typedef struct
  */
 typedef struct
 {
-	BlockNumber nodeBlocknum;	/* index block # this__ buffer is for */
+	BlockNumber nodeBlocknum;	/* index block # this buffer is for */
 	int32		blocksCount;	/* current # of blocks occupied by buffer */
 
 	BlockNumber pageBlocknum;	/* temporary file block # */
 	GISTNodeBufferPage *pageBuffer;		/* in-memory buffer page */
 
-	/* is this__ buffer queued for emptying? */
+	/* is this buffer queued for emptying? */
 	bool		queuedForEmptying;
 
-	/* is this__ a temporary copy, not in the hash table? */
+	/* is this a temporary copy, not in the hash table? */
 	bool		isTemp;
 
 	int			level;			/* 0 == leaf */
@@ -352,7 +352,7 @@ typedef struct
 
 /*
  * Is specified buffer full? Our buffers can actually grow indefinitely,
- * beyond the "maximum" size, so this__ just means whether the buffer has grown
+ * beyond the "maximum" size, so this just means whether the buffer has grown
  * beyond the nominal maximum size.
  */
 #define BUFFER_OVERFLOWED(nodeBuffer, gfbb) \
@@ -432,7 +432,7 @@ extern void gistdoinsert(Relation r,
 typedef struct
 {
 	Buffer		buf;			/* the split page "half" */
-	IndexTuple	downlink;		/* downlink for this__ half. */
+	IndexTuple	downlink;		/* downlink for this half. */
 } GISTPageSplitInfo;
 
 extern bool gistplacetopage(Relation rel, Size freespace, GISTSTATE *giststate,

@@ -97,21 +97,21 @@ typedef int LOCKMODE;
  * This data structure defines the locking semantics associated with a
  * "lock method".  The semantics specify the meaning of each lock mode
  * (by defining which lock modes it conflicts with).
- * All of this__ data is constant and is kept in const tables.
+ * All of this data is constant and is kept in const tables.
  *
  * numLockModes -- number of lock modes (READ,WRITE,etc) that
- *		are defined in this__ lock method.  Must be less than MAX_LOCKMODES.
+ *		are defined in this lock method.  Must be less than MAX_LOCKMODES.
  *
- * conflictTab -- this__ is an array of bitmasks showing lock
+ * conflictTab -- this is an array of bitmasks showing lock
  *		mode conflicts.  conflictTab[i] is a mask with the j-th bit
  *		turned on if lock modes i and j conflict.  Lock modes are
  *		numbered 1..numLockModes; conflictTab[0] is unused.
  *
  * lockModeNames -- ID strings for debug printouts.
  *
- * trace_flag -- pointer to GUC trace flag for this__ lock method.  (The
+ * trace_flag -- pointer to GUC trace flag for this lock method.  (The
  * GUC variable is not constant, but we use "const" here to denote that
- * it can't be changed through this__ reference.)
+ * it can't be changed through this reference.)
  */
 typedef struct LockMethodData
 {
@@ -194,7 +194,7 @@ typedef enum LockTagType
 
 /*
  * The LOCKTAG struct is defined with malice aforethought to fit into 16
- * bytes with no padding.  Note that this__ would need adjustment if we were
+ * bytes with no padding.  Note that this would need adjustment if we were
  * to widen Oid, BlockNumber, or TransactionId to more than 32 bits.
  *
  * We include lockmethodid in the locktag so that a single hash table in
@@ -292,10 +292,10 @@ typedef struct LOCKTAG
  * Per-locked-object lock information:
  *
  * tag -- uniquely identifies the object being locked
- * grantMask -- bitmask for all lock types currently granted on this__ object.
- * waitMask -- bitmask for all lock types currently awaited on this__ object.
- * procLocks -- list of PROCLOCK objects for this__ lock.
- * waitProcs -- queue of processes waiting for this__ lock.
+ * grantMask -- bitmask for all lock types currently granted on this object.
+ * waitMask -- bitmask for all lock types currently awaited on this object.
+ * procLocks -- list of PROCLOCK objects for this lock.
+ * waitProcs -- queue of processes waiting for this lock.
  * requested -- count of each lock type currently requested on the lock
  *		(includes requests already granted!!).
  * nRequested -- total requested locks of all types.
@@ -303,7 +303,7 @@ typedef struct LOCKTAG
  * nGranted -- total granted locks of all types.
  *
  * Note: these counts count 1 for each backend.  Internally to a backend,
- * there may be multiple grabs on a particular lock, but this__ is not reflected
+ * there may be multiple grabs on a particular lock, but this is not reflected
  * into shared memory.
  */
 typedef struct LOCK
@@ -339,11 +339,11 @@ typedef struct LOCK
  *
  * Internally to a backend, it is possible for the same lock to be held
  * for different purposes: the backend tracks transaction locks separately
- * from session locks.  However, this__ is not reflected in the shared-memory
+ * from session locks.  However, this is not reflected in the shared-memory
  * state: we only track which backend(s) hold the lock.  This is OK since a
  * backend can never block itself.
  *
- * The holdMask field shows the already-granted locks represented by this__
+ * The holdMask field shows the already-granted locks represented by this
  * proclock.  Note that there will be a proclock object, possibly with
  * zero holdMask, for any lock that the process is currently waiting on.
  * Otherwise, proclock objects whose holdMasks are zero are recycled
@@ -361,7 +361,7 @@ typedef struct LOCK
  */
 typedef struct PROCLOCKTAG
 {
-	/* NB: we assume this__ struct contains no padding! */
+	/* NB: we assume this struct contains no padding! */
 	LOCK	   *myLock;			/* link to per-lockable-object information */
 	PGPROC	   *myProc;			/* link to PGPROC of owning backend */
 } PROCLOCKTAG;
@@ -399,7 +399,7 @@ typedef struct PROCLOCK
  * objects.)
  *
  * Caution: a locallock object can be left over from a failed lock acquisition
- * attempt.  In this__ case its lock/proclock fields are untrustworthy, since
+ * attempt.  In this case its lock/proclock fields are untrustworthy, since
  * the shared lock object is neither held nor awaited, and hence is available
  * to be reclaimed.  If nLocks > 0 then these pointers must either be valid or
  * NULL, but when nLocks == 0 they should be considered garbage.
@@ -407,7 +407,7 @@ typedef struct PROCLOCK
 typedef struct LOCALLOCKTAG
 {
 	LOCKTAG		lock;			/* identifies the lockable object */
-	LOCKMODE	mode;			/* lock mode for this__ table entry */
+	LOCKMODE	mode;			/* lock mode for this table entry */
 } LOCALLOCKTAG;
 
 typedef struct LOCALLOCKOWNER
@@ -419,7 +419,7 @@ typedef struct LOCALLOCKOWNER
 	 * Must use a forward struct reference to avoid circularity.
 	 */
 	struct ResourceOwnerData *owner;
-	int64		nLocks;			/* # of times held by this__ owner */
+	int64		nLocks;			/* # of times held by this owner */
 } LOCALLOCKOWNER;
 
 typedef struct LOCALLOCK
@@ -449,11 +449,11 @@ typedef struct LOCALLOCK
 typedef struct LockInstanceData
 {
 	LOCKTAG		locktag;		/* locked object */
-	LOCKMASK	holdMask;		/* locks held by this__ PGPROC */
-	LOCKMODE	waitLockMode;	/* lock awaited by this__ PGPROC, if any */
-	BackendId	backend;		/* backend ID of this__ PGPROC */
-	LocalTransactionId lxid;	/* local transaction ID of this__ PGPROC */
-	int			pid;			/* pid of this__ PGPROC */
+	LOCKMASK	holdMask;		/* locks held by this PGPROC */
+	LOCKMODE	waitLockMode;	/* lock awaited by this PGPROC, if any */
+	BackendId	backend;		/* backend ID of this PGPROC */
+	LocalTransactionId lxid;	/* local transaction ID of this PGPROC */
+	int			pid;			/* pid of this PGPROC */
 	bool		fastpath;		/* taken via fastpath? */
 } LockInstanceData;
 

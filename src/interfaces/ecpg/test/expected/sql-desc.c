@@ -182,7 +182,7 @@ if (sqlca.sqlcode < 0) sqlprint();}
 #line 43 "desc.pgc"
 
 	{ ECPGset_desc(__LINE__, "indesc", 2,ECPGd_data,
-	ECPGt_const,"this__ is a long test",(long)19,(long)1,strlen("this__ is a long test"), ECPGd_indicator,
+	ECPGt_const,"this is a long test",(long)19,(long)1,strlen("this is a long test"), ECPGd_indicator,
 	ECPGt_int,&(val1),(long)1,(long)1,sizeof(int), ECPGd_EODT);
 
 #line 44 "desc.pgc"

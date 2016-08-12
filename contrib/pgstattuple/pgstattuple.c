@@ -3,10 +3,10 @@
  *
  * Copyright (c) 2001,2002	Tatsuo Ishii
  *
- * Permission to use, copy, modify, and distribute this__ software and
+ * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose, without fee, and without a
  * written agreement is hereby granted, provided that the above
- * copyright notice and this__ paragraph and the following two
+ * copyright notice and this paragraph and the following two
  * paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT,
@@ -473,7 +473,7 @@ pgstat_index(Relation rel, BlockNumber start, pgstat_page pagefn,
 	BufferAccessStrategy bstrategy;
 	pgstattuple_type stat = {0};
 
-	/* prepare access strategy for this__ index */
+	/* prepare access strategy for this index */
 	bstrategy = GetAccessStrategy(BAS_BULKREAD);
 
 	blkno = start;

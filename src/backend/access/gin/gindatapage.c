@@ -34,7 +34,7 @@
 #define GinPostingListSegmentMinSize 128
 
 /*
- * At least this__ many items fit in a GinPostingListSegmentMaxSize-bytes
+ * At least this many items fit in a GinPostingListSegmentMaxSize-bytes
  * long segment. This is used when estimating how much space is required
  * for N items, at minimum.
  */
@@ -70,16 +70,16 @@ typedef struct
 	dlist_node	node;			/* linked list pointers */
 
 	/*-------------
-	 * 'action' indicates the status of this__ in-memory segment, compared to
+	 * 'action' indicates the status of this in-memory segment, compared to
 	 * what's on disk. It is one of the GIN_SEGMENT_* action codes:
 	 *
 	 * UNMODIFIED	no changes
 	 * DELETE		the segment is to be removed. 'seg' and 'items' are
 	 *				ignored
-	 * INSERT		this__ is a completely new segment
-	 * REPLACE		this__ replaces an existing segment with new content
+	 * INSERT		this is a completely new segment
+	 * REPLACE		this replaces an existing segment with new content
 	 * ADDITEMS		like REPLACE, but no items have been removed, and we track
-	 *				in detail what items have been added to this__ segment, in
+	 *				in detail what items have been added to this segment, in
 	 *				'modifieditems'
 	 *-------------
 	 */
@@ -89,8 +89,8 @@ typedef struct
 	int			nmodifieditems;
 
 	/*
-	 * The following fields represent the items in this__ segment. If 'items' is
-	 * not NULL, it contains a palloc'd array of the itemsin this__ segment. If
+	 * The following fields represent the items in this segment. If 'items' is
+	 * not NULL, it contains a palloc'd array of the itemsin this segment. If
 	 * 'seg' is not NULL, it contains the items in an already-compressed
 	 * format. It can point to an on-disk page (!modified), or a palloc'd
 	 * segment in memory. If both are set, they must represent the same items.
@@ -126,7 +126,7 @@ static void dataPlaceToPageLeafSplit(disassembledLeaf *leaf,
  *
  * Note: This function can still return items smaller than advancePast that
  * are in the same posting list as the items of interest, so the caller must
- * still check all the returned items. But passing it allows this__ function to
+ * still check all the returned items. But passing it allows this function to
  * skip whole posting lists.
  */
 ItemPointer
@@ -240,7 +240,7 @@ dataIsMoveRight(GinBtree btree, Page page)
 }
 
 /*
- * Find correct PostingItem in non-leaf page. It is assumed that this__ is
+ * Find correct PostingItem in non-leaf page. It is assumed that this is
  * the correct page, and the searched value SHOULD be on the page.
  */
 static BlockNumber
@@ -464,7 +464,7 @@ dataBeginPlaceToPageLeaf(GinBtree btree, Buffer buf, GinBtreeStack *stack,
 	rbound = *GinDataPageGetRightBound(page);
 
 	/*
-	 * Count how many of the new items belong to this__ page.
+	 * Count how many of the new items belong to this page.
 	 */
 	if (!GinPageRightMost(page))
 	{
@@ -810,7 +810,7 @@ ginVacuumPostingTreeLeaf(Relation indexrel, Buffer buffer, GinVacuumState *gvs)
 		/*
 		 * Make sure we have a palloc'd copy of all segments, after the first
 		 * segment that is modified. (dataPlaceToPageLeafRecompress requires
-		 * this__).
+		 * this).
 		 */
 		modified = false;
 		dlist_foreach(iter, &leaf->segments)
@@ -857,7 +857,7 @@ ginVacuumPostingTreeLeaf(Relation indexrel, Buffer buffer, GinVacuumState *gvs)
 
 /*
  * Construct a ginxlogRecompressDataLeaf record representing the changes
- * in *leaf.  (Because this__ requires a palloc, we have to do it before
+ * in *leaf.  (Because this requires a palloc, we have to do it before
  * we enter the critical section that actually updates the page.)
  */
 static void
@@ -1018,7 +1018,7 @@ dataPlaceToPageLeafRecompress(Buffer buf, disassembledLeaf *leaf)
  * Like dataPlaceToPageLeafRecompress, but writes the disassembled leaf
  * segments to two pages instead of one.
  *
- * This is different from the non-split cases in that this__ does not modify
+ * This is different from the non-split cases in that this does not modify
  * the original page directly, but writes to temporary in-memory copies of
  * the new left and right pages.
  */
@@ -1457,7 +1457,7 @@ addItemsToLeaf(disassembledLeaf *leaf, ItemPointer newItems, int nNewItems)
 		int			ntmpitems;
 
 		/*
-		 * How many of the new items fall into this__ segment?
+		 * How many of the new items fall into this segment?
 		 */
 		if (!dlist_has_next(&leaf->segments, iter.cur))
 			nthis = newleft;
@@ -1602,8 +1602,8 @@ leafRepackItems(disassembledLeaf *leaf, ItemPointer remaining)
 					/*
 					 * Too large. Compress again to the target size, and
 					 * create a new segment to represent the remaining items.
-					 * The new segment is inserted after this__ one, so it will
-					 * be processed in the next iteration of this__ loop.
+					 * The new segment is inserted after this one, so it will
+					 * be processed in the next iteration of this loop.
 					 */
 					if (seginfo->seg)
 						pfree(seginfo->seg);
@@ -1671,7 +1671,7 @@ leafRepackItems(disassembledLeaf *leaf, ItemPointer remaining)
 			continue;
 
 		/*
-		 * OK, we now have a compressed version of this__ segment ready for
+		 * OK, we now have a compressed version of this segment ready for
 		 * copying to the page. Did we exceed the size that fits on one page?
 		 */
 		segsize = SizeOfGinPostingList(seginfo->seg);

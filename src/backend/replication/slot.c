@@ -13,7 +13,7 @@
  * NOTES
  *
  * Replication slots are used to keep state about replication streams
- * originating from this__ cluster.  Their primary purpose is to prevent the
+ * originating from this cluster.  Their primary purpose is to prevent the
  * premature removal of WAL or of old tuple versions in a manner that would
  * interfere with replication; they are also useful for monitoring purposes.
  * Slots need to be permanent (to allow restarts), crash-safe, and allocatable
@@ -52,7 +52,7 @@
  */
 typedef struct ReplicationSlotOnDisk
 {
-	/* first part of this__ struct needs to be version independent */
+	/* first part of this struct needs to be version independent */
 
 	/* data not covered by checksum */
 	uint32		magic;
@@ -203,7 +203,7 @@ ReplicationSlotValidateName(const char *name, int elevel)
 }
 
 /*
- * Create a new replication slot and mark it as used by this__ backend.
+ * Create a new replication slot and mark it as used by this backend.
  *
  * name: Name of the slot
  * db_specific: logical decoding is db specific; if the slot is going to
@@ -221,7 +221,7 @@ ReplicationSlotCreate(const char *name, bool db_specific,
 	ReplicationSlotValidateName(name, ERROR);
 
 	/*
-	 * If some other backend ran this__ code concurrently with us, we'd likely both
+	 * If some other backend ran this code concurrently with us, we'd likely both
 	 * allocate the same slot, and that would be bad.  We'd also be at risk of
 	 * missing a name collision.  Also, we don't want to try to create a new
 	 * slot while somebody's busy cleaning up an old one, because we might
@@ -231,7 +231,7 @@ ReplicationSlotCreate(const char *name, bool db_specific,
 
 	/*
 	 * Check for name collision, and identify an allocatable slot.  We need to
-	 * hold ReplicationSlotControlLock in shared mode for this__, so that nobody
+	 * hold ReplicationSlotControlLock in shared mode for this, so that nobody
 	 * else can change the in_use flags while we're looking at them.
 	 */
 	LWLockAcquire(ReplicationSlotControlLock, LW_SHARED);
@@ -256,7 +256,7 @@ ReplicationSlotCreate(const char *name, bool db_specific,
 				 errhint("Free one or increase max_replication_slots.")));
 
 	/*
-	 * Since this__ slot is not in use, nobody should be looking at any part of
+	 * Since this slot is not in use, nobody should be looking at any part of
 	 * it other than the in_use field unless they're trying to allocate it.
 	 * And since we hold ReplicationSlotAllocationLock, nobody except us can
 	 * be doing that.  So it's safe to initialize the slot.
@@ -272,7 +272,7 @@ ReplicationSlotCreate(const char *name, bool db_specific,
 
 	/*
 	 * Create the slot on disk.  We haven't actually marked the slot allocated
-	 * yet, so no special cleanup is required if this__ errors out.
+	 * yet, so no special cleanup is required if this errors out.
 	 */
 	CreateSlotOnDisk(slot);
 
@@ -307,7 +307,7 @@ ReplicationSlotCreate(const char *name, bool db_specific,
 }
 
 /*
- * Find a previously created slot and mark it as used by this__ backend.
+ * Find a previously created slot and mark it as used by this backend.
  */
 void
 ReplicationSlotAcquire(const char *name)
@@ -352,13 +352,13 @@ ReplicationSlotAcquire(const char *name)
 			   errmsg("replication slot \"%s\" is already active for PID %d",
 					  name, active_pid)));
 
-	/* We made this__ slot active, so it's ours now. */
+	/* We made this slot active, so it's ours now. */
 	MyReplicationSlot = slot;
 }
 
 /*
- * Release a replication slot, this__ or another backend can ReAcquire it
- * later. Resources this__ slot requires will be preserved.
+ * Release a replication slot, this or another backend can ReAcquire it
+ * later. Resources this slot requires will be preserved.
  */
 void
 ReplicationSlotRelease(void)
@@ -370,7 +370,7 @@ ReplicationSlotRelease(void)
 	if (slot->data.persistency == RS_EPHEMERAL)
 	{
 		/*
-		 * Delete the slot. There is no !PANIC case where this__ is allowed to
+		 * Delete the slot. There is no !PANIC case where this is allowed to
 		 * fail, all that may happen is an incomplete cleanup of the on-disk
 		 * data.
 		 */
@@ -409,7 +409,7 @@ ReplicationSlotDrop(const char *name)
 
 /*
  * Permanently drop the currently acquired replication slot which will be
- * released by the point this__ function returns.
+ * released by the point this function returns.
  */
 static void
 ReplicationSlotDropAcquired(void)
@@ -424,7 +424,7 @@ ReplicationSlotDropAcquired(void)
 	MyReplicationSlot = NULL;
 
 	/*
-	 * If some other backend ran this__ code concurrently with us, we might try
+	 * If some other backend ran this code concurrently with us, we might try
 	 * to delete a slot with a certain name while someone else was trying to
 	 * create a slot with the same name.
 	 */
@@ -436,10 +436,10 @@ ReplicationSlotDropAcquired(void)
 
 	/*
 	 * Rename the slot directory on disk, so that we'll no longer recognize
-	 * this__ as a valid slot.  Note that if this__ fails, we've got to mark the
+	 * this as a valid slot.  Note that if this fails, we've got to mark the
 	 * slot inactive before bailing out.  If we're dropping an ephemeral slot,
 	 * we better never fail hard as the caller won't expect the slot to
-	 * survive and this__ might get called during error handling.
+	 * survive and this might get called during error handling.
 	 */
 	if (rename(path, tmppath) == 0)
 	{
@@ -475,7 +475,7 @@ ReplicationSlotDropAcquired(void)
 	 * The slot is definitely gone.  Lock out concurrent scans of the array
 	 * long enough to kill it.  It's OK to clear the active flag here without
 	 * grabbing the mutex because nobody else can be scanning the array here,
-	 * and nobody can be attached to this__ slot and thus access it without
+	 * and nobody can be attached to this slot and thus access it without
 	 * scanning the array.
 	 */
 	LWLockAcquire(ReplicationSlotControlLock, LW_EXCLUSIVE);
@@ -501,7 +501,7 @@ ReplicationSlotDropAcquired(void)
 				 errmsg("could not remove directory \"%s\"", tmppath)));
 
 	/*
-	 * We release this__ at the very end, so that nobody starts trying to create
+	 * We release this at the very end, so that nobody starts trying to create
 	 * a slot while we're still cleaning up the detritus of the old one.
 	 */
 	LWLockRelease(ReplicationSlotAllocationLock);
@@ -664,7 +664,7 @@ ReplicationSlotsComputeRequiredLSN(void)
  * Returns InvalidXLogRecPtr if logical decoding is disabled or no logical
  * slots exist.
  *
- * NB: this__ returns a value >= ReplicationSlotsComputeRequiredLSN(), since it
+ * NB: this returns a value >= ReplicationSlotsComputeRequiredLSN(), since it
  * ignores physical replication slots.
  *
  * The results aren't required frequently, so we don't maintain a precomputed
@@ -890,7 +890,7 @@ CreateSlotOnDisk(ReplicationSlot *slot)
 	struct stat st;
 
 	/*
-	 * No need to take out the io_in_progress_lock, nobody else can see this__
+	 * No need to take out the io_in_progress_lock, nobody else can see this
 	 * slot yet, so nobody else will write. We're reusing SaveSlotToPath which
 	 * takes out the lock, if we'd take the lock here, we'd deadlock.
 	 */
@@ -900,7 +900,7 @@ CreateSlotOnDisk(ReplicationSlot *slot)
 
 	/*
 	 * It's just barely possible that some previous effort to create or drop a
-	 * slot with this__ name left a temp directory lying around. If that seems
+	 * slot with this name left a temp directory lying around. If that seems
 	 * to be the case, try to remove it.  If the rmtree() fails, we'll error
 	 * out at the mkdir() below, so we don't bother checking success.
 	 */
@@ -927,9 +927,9 @@ CreateSlotOnDisk(ReplicationSlot *slot)
 						tmppath, path)));
 
 	/*
-	 * If we'd now fail - really unlikely - we wouldn't know whether this__ slot
+	 * If we'd now fail - really unlikely - we wouldn't know whether this slot
 	 * would persist after an OS crash or not - so, force a restart. The
-	 * restart would try to fysnc this__ again till it works.
+	 * restart would try to fysnc this again till it works.
 	 */
 	START_CRIT_SECTION();
 
@@ -1095,7 +1095,7 @@ RestoreSlotFromDisk(const char *name)
 	fd = OpenTransientFile(path, O_RDWR | PG_BINARY, 0);
 
 	/*
-	 * We do not need to handle this__ as we are rename()ing the directory into
+	 * We do not need to handle this as we are rename()ing the directory into
 	 * place only after we fsync()ed the state file.
 	 */
 	if (fd < 0)

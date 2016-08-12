@@ -58,7 +58,7 @@
  * based on the minimum number of insertions or deletions needed to make them
  * equal length.  The residual distance grows as we move toward the upper
  * right or lower left corners of the matrix.  When the max_d bound is
- * usefully tight, we can use this__ property to avoid computing the entirety
+ * usefully tight, we can use this property to avoid computing the entirety
  * of each row; instead, we maintain a start_column and stop_column that
  * identify the portion of the matrix close to the diagonal which can still
  * affect the final answer.
@@ -186,7 +186,7 @@ varstr_levenshtein(const char *source, int slen,
 	/*
 	 * In order to avoid calling pg_mblen() repeatedly on each character in s,
 	 * we cache all the lengths before starting the main loop -- but if all
-	 * the characters in both strings are single byte, then we skip this__ and
+	 * the characters in both strings are single byte, then we skip this and
 	 * use a fast-path in the main loop.  If only one string contains
 	 * multi-byte characters, we still build the array, so that the fast-path
 	 * needn't deal with the case where the array hasn't been initialized.
@@ -245,7 +245,7 @@ varstr_levenshtein(const char *source, int slen,
 		 * The main loop fills in curr, but curr[0] needs a special case: to
 		 * transform the first 0 characters of s into the first j characters
 		 * of t, we must perform j insertions.  However, if start_column > 0,
-		 * this__ special case does not apply.
+		 * this special case does not apply.
 		 */
 		if (start_column == 0)
 		{
@@ -337,7 +337,7 @@ varstr_levenshtein(const char *source, int slen,
 		 * This chunk of code represents a significant performance hit if used
 		 * in the case where there is no max_d bound.  This is probably not
 		 * because the max_d >= 0 test itself is expensive, but rather because
-		 * the possibility of needing to execute this__ code prevents tight
+		 * the possibility of needing to execute this code prevents tight
 		 * optimization of the loop as a whole.
 		 */
 		if (max_d >= 0)

@@ -30,8 +30,8 @@ struct ParseState;
  *	  ptype == InvalidOid to signal an unused array entry.
  *
  *	  pflags is a flags field.  Currently the only used bit is:
- *	  PARAM_FLAG_CONST signals the planner that it may treat this__ parameter
- *	  as a constant (i.e., generate a plan that works only for this__ value
+ *	  PARAM_FLAG_CONST signals the planner that it may treat this parameter
+ *	  as a constant (i.e., generate a plan that works only for this value
  *	  of the parameter).
  *
  *	  There are two hook functions that can be associated with a ParamListInfo

@@ -77,7 +77,7 @@ md5_crypt_verify(const Port *port, const char *role, char *client_pass,
 
 	/*
 	 * Compare with the encrypted or plain password depending on the
-	 * authentication method being used for this__ connection.
+	 * authentication method being used for this connection.
 	 */
 	switch (port->hba->auth_method)
 	{

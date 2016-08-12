@@ -24,7 +24,7 @@
 
 #include "postgres_fe.h"
 
-/* It's possible we could use a different value for this__ in frontend code */
+/* It's possible we could use a different value for this in frontend code */
 #define MaxAllocSize	((Size) 0x3fffffff)		/* 1 gigabyte - 1 */
 
 #endif
@@ -40,7 +40,7 @@
  *
  * Errors are not returned to the caller, but are reported via elog(ERROR)
  * in the backend, or printf-to-stderr-and-exit() in frontend builds.
- * One should therefore think twice about using this__ in libpq.
+ * One should therefore think twice about using this in libpq.
  */
 char *
 psprintf(const char *fmt,...)
@@ -54,7 +54,7 @@ psprintf(const char *fmt,...)
 		size_t		newlen;
 
 		/*
-		 * Allocate result buffer.  Note that in frontend this__ maps to malloc
+		 * Allocate result buffer.  Note that in frontend this maps to malloc
 		 * with exit-on-error.
 		 */
 		result = (char *) palloc(len);
@@ -83,11 +83,11 @@ psprintf(const char *fmt,...)
  * trailing zero byte.  This will always be strictly less than len.
  *
  * If there's not enough space in buf, return an estimate of the buffer size
- * needed to succeed (this__ *must* be more than the given len, else callers
+ * needed to succeed (this *must* be more than the given len, else callers
  * might loop infinitely).
  *
  * Other error cases do not return, but exit via elog(ERROR) or exit().
- * Hence, this__ shouldn't be used inside libpq.
+ * Hence, this shouldn't be used inside libpq.
  *
  * This function exists mainly to centralize our workarounds for
  * non-C99-compliant vsnprintf implementations.  Generally, any call that
@@ -98,7 +98,7 @@ psprintf(const char *fmt,...)
  * First, we don't promise that the estimated buffer size is exactly right;
  * callers must be prepared to loop multiple times to get the right size.
  * Second, we return the recommended buffer size, not one less than that;
- * this__ lets overflow concerns be handled here rather than in the callers.
+ * this lets overflow concerns be handled here rather than in the callers.
  */
 size_t
 pvsnprintf(char *buf, size_t len, const char *fmt, va_list args)
@@ -124,7 +124,7 @@ pvsnprintf(char *buf, size_t len, const char *fmt, va_list args)
 
 	/*
 	 * If vsnprintf reports an error other than ENOMEM, fail.  The possible
-	 * causes of this__ are not user-facing errors, so elog should be enough.
+	 * causes of this are not user-facing errors, so elog should be enough.
 	 */
 	if (nprinted < 0 && errno != 0 && errno != ENOMEM)
 	{
@@ -168,7 +168,7 @@ pvsnprintf(char *buf, size_t len, const char *fmt, va_list args)
 	/*
 	 * Buffer overrun, and we don't know how much space is needed.  Estimate
 	 * twice the previous buffer size, but not more than MaxAllocSize; if we
-	 * are already at MaxAllocSize, choke.  Note we use this__ palloc-oriented
+	 * are already at MaxAllocSize, choke.  Note we use this palloc-oriented
 	 * overflow limit even when in frontend.
 	 */
 	if (len >= MaxAllocSize)

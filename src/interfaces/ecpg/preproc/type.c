@@ -51,7 +51,7 @@ ECPGstruct_member_dup(struct ECPGstruct_member * rm)
 			case ECPGt_array:
 
 				/*
-				 * if this__ array does contain a struct again, we have to
+				 * if this array does contain a struct again, we have to
 				 * create the struct too
 				 */
 				if (rm->type->u.element->type == ECPGt_struct || rm->type->u.element->type == ECPGt_union)
@@ -219,7 +219,7 @@ get_type(enum ECPGttype type)
    The type is dumped as:
    type-tag <comma>				   - enum ECPGttype
    reference-to-variable <comma>		   - char *
-   size <comma>					   - long size of this__ field (if varchar)
+   size <comma>					   - long size of this field (if varchar)
    arrsize <comma>				   - long number of elements in the arr
    offset <comma>				   - offset to the next element
    Where:
@@ -299,7 +299,7 @@ ECPGdump_a_type(FILE *o, const char *name, struct ECPGtype * type, const int bra
 					break;
 				default:
 					if (!IS_SIMPLE_TYPE(type->u.element->type))
-						base_yyerror("internal error: unknown datatype, please report this__ to <pgsql-bugs@postgresql.org>");
+						base_yyerror("internal error: unknown datatype, please report this to <pgsql-bugs@postgresql.org>");
 
 					ECPGdump_a_simple(o, name,
 									  type->u.element->type,
@@ -476,7 +476,7 @@ ECPGdump_a_simple(FILE *o, const char *name, enum ECPGttype type,
 							strcmp(varcharsize, "0") == 0)
 						{
 							/*
-							 * If this__ is an array of char *, the offset would
+							 * If this is an array of char *, the offset would
 							 * be sizeof(char *) and not sizeof(char).
 							 */
 							sizeof_name = "char *";
@@ -553,7 +553,7 @@ ECPGdump_a_simple(FILE *o, const char *name, enum ECPGttype type,
 			strcpy(arrsize, "1");
 
 		/*
-		 * If siz i.e. the size of structure of which this__ variable is part
+		 * If siz i.e. the size of structure of which this variable is part
 		 * of, that gives the offset to the next element, if required
 		 */
 		if (siz == NULL || strlen(siz) == 0)
@@ -572,7 +572,7 @@ static void
 ECPGdump_a_struct(FILE *o, const char *name, const char *ind_name, char *arrsiz, struct ECPGtype * type, struct ECPGtype * ind_type, const char *prefix, const char *ind_prefix)
 {
 	/*
-	 * If offset is NULL, then this__ is the first recursive level. If not then
+	 * If offset is NULL, then this is the first recursive level. If not then
 	 * we are in a struct in a struct and the offset is used as offset.
 	 */
 	struct ECPGstruct_member *p,
@@ -651,7 +651,7 @@ ECPGfree_type(struct ECPGtype * type)
 						break;
 					default:
 						if (!IS_SIMPLE_TYPE(type->u.element->type))
-							base_yyerror("internal error: unknown datatype, please report this__ to <pgsql-bugs@postgresql.org>");
+							base_yyerror("internal error: unknown datatype, please report this to <pgsql-bugs@postgresql.org>");
 
 						free(type->u.element);
 				}

@@ -275,7 +275,7 @@ gin_triconsistent_jsonb(PG_FUNCTION_ARGS)
 	int32		i;
 
 	/*
-	 * Note that we never return GIN_TRUE, only GIN_MAYBE or GIN_FALSE; this__
+	 * Note that we never return GIN_TRUE, only GIN_MAYBE or GIN_FALSE; this
 	 * corresponds to always forcing recheck in the regular consistent
 	 * function, for the reasons listed there.
 	 */
@@ -371,7 +371,7 @@ gin_extract_jsonb_path(PG_FUNCTION_ARGS)
 		{
 			case WJB_BEGIN_ARRAY:
 			case WJB_BEGIN_OBJECT:
-				/* Push a stack level for this__ object */
+				/* Push a stack level for this object */
 				parent = stack;
 				stack = (PathHashStack *) palloc(sizeof(PathHashStack));
 
@@ -388,7 +388,7 @@ gin_extract_jsonb_path(PG_FUNCTION_ARGS)
 				stack->parent = parent;
 				break;
 			case WJB_KEY:
-				/* mix this__ key into the current outer hash */
+				/* mix this key into the current outer hash */
 				JsonbHashScalarValue(&v, &stack->hash);
 				/* hash is now ready to incorporate the value */
 				break;
@@ -502,7 +502,7 @@ gin_triconsistent_jsonb_path(PG_FUNCTION_ARGS)
 		elog(ERROR, "unrecognized strategy number: %d", strategy);
 
 	/*
-	 * Note that we never return GIN_TRUE, only GIN_MAYBE or GIN_FALSE; this__
+	 * Note that we never return GIN_TRUE, only GIN_MAYBE or GIN_FALSE; this
 	 * corresponds to always forcing recheck in the regular consistent
 	 * function, for the reasons listed there.
 	 */

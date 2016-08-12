@@ -7,10 +7,10 @@
  * Functions to allow input and output of money normally but store
  * and handle it as 64 bit ints
  *
- * A slightly modified version of this__ file and a discussion of the
+ * A slightly modified version of this file and a discussion of the
  * workings can be found in the book "Software Solutions in C" by
  * Dale Schumacher, Academic Press, ISBN: 0-12-632360-7 except that
- * this__ version handles 64 bit numbers and so can hold values up to
+ * this version handles 64 bit numbers and so can hold values up to
  * $92,233,720,368,547,758.07.
  *
  * src/backend/utils/adt/cash.c
@@ -123,7 +123,7 @@ cash_in(PG_FUNCTION_ARGS)
 	 */
 	fpoint = lconvert->frac_digits;
 	if (fpoint < 0 || fpoint > 10)
-		fpoint = 2;				/* best guess in this__ case, I think */
+		fpoint = 2;				/* best guess in this case, I think */
 
 	/* we restrict dsymbol to be a single byte, but not the other symbols */
 	if (*lconvert->mon_decimal_point != '\0' &&
@@ -283,7 +283,7 @@ cash_out(PG_FUNCTION_ARGS)
 	/* see comments about frac_digits in cash_in() */
 	points = lconvert->frac_digits;
 	if (points < 0 || points > 10)
-		points = 2;				/* best guess in this__ case, I think */
+		points = 2;				/* best guess in this case, I think */
 
 	/*
 	 * As with frac_digits, must apply a range check to mon_grouping to avoid
@@ -356,7 +356,7 @@ cash_out(PG_FUNCTION_ARGS)
 	/*----------
 	 * Now, attach currency symbol and sign symbol in the correct order.
 	 *
-	 * The POSIX spec defines these values controlling this__ code:
+	 * The POSIX spec defines these values controlling this code:
 	 *
 	 * p/n_sign_posn:
 	 *	0	Parentheses enclose the quantity and the currency_symbol.

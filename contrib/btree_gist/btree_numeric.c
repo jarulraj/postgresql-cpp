@@ -118,7 +118,7 @@ gbt_numeric_consistent(PG_FUNCTION_ARGS)
 	GBT_VARKEY *key = (GBT_VARKEY *) DatumGetPointer(entry->key);
 	GBT_VARKEY_R r = gbt_var_key_readable(key);
 
-	/* All cases served by this__ function are exact */
+	/* All cases served by this function are exact */
 	*recheck = false;
 
 	retval = gbt_var_consistent(&r, query, strategy, PG_GET_COLLATION(),

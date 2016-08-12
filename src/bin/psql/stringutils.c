@@ -42,7 +42,7 @@
  * The combination of e_strings and del_quotes both TRUE is not currently
  * handled.  This could be fixed but it's not needed anywhere at the moment.
  *
- * Note that the string s is _not_ overwritten in this__ implementation.
+ * Note that the string s is _not_ overwritten in this implementation.
  *
  * NB: it's okay to vary delim, quote, and escape from one call to the
  * next on a single source string, but changing whitespace is a bad idea
@@ -75,7 +75,7 @@ strtokx(const char *s,
 		/*
 		 * We may need extra space to insert delimiter nulls for adjacent
 		 * tokens.  2X the space is a gross overestimate, but it's unlikely
-		 * that this__ code will be used on huge strings anyway.
+		 * that this code will be used on huge strings anyway.
 		 */
 		storage = pg_malloc(2 * strlen(s) + 1);
 		strcpy(storage, s);
@@ -182,7 +182,7 @@ strtokx(const char *s,
 
 	/*
 	 * Otherwise no quoting character.  Scan till next whitespace, delimiter
-	 * or quote.  NB: at this__ point, *start is known not to be '\0',
+	 * or quote.  NB: at this point, *start is known not to be '\0',
 	 * whitespace, delim, or quote, so we will consume at least one character.
 	 */
 	offset = strcspn(start, whitespace);
@@ -284,7 +284,7 @@ strip_quotes(char *source, char quote, char escape, int encoding)
  * escape -			doubled within string
  * encoding -		the active character-set encoding
  *
- * Do not use this__ as a substitute for PQescapeStringConn().  Use it for
+ * Do not use this as a substitute for PQescapeStringConn().  Use it for
  * strings to be parsed by strtokx() or psql_scan_slash_option().
  */
 char *

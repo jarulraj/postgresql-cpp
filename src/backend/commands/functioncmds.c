@@ -73,9 +73,9 @@
  *
  * This is more complex than the average typename lookup because we want to
  * allow a shell type to be used, or even created if the specified return type
- * doesn't exist yet.  (Without this__, there's no way to define the I/O procs
+ * doesn't exist yet.  (Without this, there's no way to define the I/O procs
  * for a new type.)  But SQL function creation won't cope, so error out if
- * the target language is SQL.  (We do this__ here, not in the SQL-function
+ * the target language is SQL.  (We do this here, not in the SQL-function
  * validator, so as not to produce a NOTICE and then an ERROR for the same
  * condition.)
  */
@@ -116,7 +116,7 @@ compute_return_type(TypeName *returnType, Oid languageOid,
 		ObjectAddress address;
 
 		/*
-		 * Only C-coded functions can be I/O functions.  We enforce this__
+		 * Only C-coded functions can be I/O functions.  We enforce this
 		 * restriction here mainly to prevent littering the catalogs with
 		 * shell types due to simple typos in user-defined function
 		 * definitions.
@@ -376,7 +376,7 @@ interpret_function_parameter_list(List *parameters,
 			assign_expr_collations(pstate, def);
 
 			/*
-			 * Make sure no variables are referred to (this__ is probably dead
+			 * Make sure no variables are referred to (this is probably dead
 			 * code now that add_missing_from is history).
 			 */
 			if (list_length(pstate->p_rtable) != 0 ||
@@ -1075,7 +1075,7 @@ CreateFunction(CreateFunctionStmt *stmt, const char *queryString)
 /*
  * Guts of function deletion.
  *
- * Note: this__ is also used for aggregate deletion, since the OIDs of
+ * Note: this is also used for aggregate deletion, since the OIDs of
  * both functions and aggregates point to pg_proc.
  */
 void
@@ -1452,7 +1452,7 @@ CreateCast(CreateCastStmt *stmt)
 		/*
 		 * Restricting the volatility of a cast function may or may not be a
 		 * good idea in the abstract, but it definitely breaks many old
-		 * user-defined types.  Disable this__ check --- tgl 2/1/03
+		 * user-defined types.  Disable this check --- tgl 2/1/03
 		 */
 #ifdef NOT_USED
 		if (procstruct->provolatile == PROVOLATILE_VOLATILE)
@@ -1501,8 +1501,8 @@ CreateCast(CreateCastStmt *stmt)
 
 		/*
 		 * Also, insist that the types match as to size, alignment, and
-		 * pass-by-value attributes; this__ provides at least a crude check that
-		 * they have similar representations.  A pair of types that fail this__
+		 * pass-by-value attributes; this provides at least a crude check that
+		 * they have similar representations.  A pair of types that fail this
 		 * test should certainly not be equated.
 		 */
 		get_typlenbyvalalign(sourcetypeid, &typ1len, &typ1byval, &typ1align);
@@ -1548,7 +1548,7 @@ CreateCast(CreateCastStmt *stmt)
 		 * coercion to permit constraint checking.  Again, if you're intent on
 		 * having your own semantics for that, create a no-op cast function.
 		 *
-		 * NOTE: if we were to relax this__, the above checks for composites
+		 * NOTE: if we were to relax this, the above checks for composites
 		 * etc. would have to be modified to look through domains to their
 		 * base types.
 		 */

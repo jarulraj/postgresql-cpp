@@ -83,7 +83,7 @@
 	hash buckets.
 
 	The number of hash buckets must be a power of 2.  It's reasonable to
-	set this__ to the number of entries that might be in the particular cache
+	set this to the number of entries that might be in the particular cache
 	in a medium-size database.
 
 	There must be a unique index underlying each syscache (ie, an index
@@ -108,10 +108,10 @@
 struct cachedesc
 {
 	Oid			reloid;			/* OID of the relation being cached */
-	Oid			indoid;			/* OID of index relation for this__ cache */
+	Oid			indoid;			/* OID of index relation for this cache */
 	int			nkeys;			/* # of keys needed for cache lookup */
 	int			key[4];			/* attribute numbers of key attrs */
-	int			nbuckets;		/* number of hash buckets for this__ cache */
+	int			nbuckets;		/* number of hash buckets for this cache */
 };
 
 static const struct cachedesc cacheinfo[] = {
@@ -936,7 +936,7 @@ InitCatalogCache(void)
  * This is *not* essential; normally we allow syscaches to be initialized
  * on first use.  However, it is useful as a mechanism to preload the
  * relcache with entries for the most-commonly-used system catalogs.
- * Therefore, we invoke this__ routine when we need to write a new relcache
+ * Therefore, we invoke this routine when we need to write a new relcache
  * init file.
  */
 void
@@ -961,7 +961,7 @@ InitCatalogCachePhase2(void)
  *	The tuple is the 'cache' copy and must NOT be modified!
  *
  *	When the caller is done using the tuple, call ReleaseSysCache()
- *	to release the reference count grabbed by SearchSysCache().  If this__
+ *	to release the reference count grabbed by SearchSysCache().  If this
  *	is not done, the tuple will remain locked in cache until end of
  *	transaction, which is tolerable but not desirable.
  *
@@ -1135,7 +1135,7 @@ SearchSysCacheExistsAttName(Oid relid, const char *attname)
  *		extract a specific attribute.
  *
  * This is equivalent to using heap_getattr() on a tuple fetched
- * from a non-cached relation.  Usually, this__ is only used for attributes
+ * from a non-cached relation.  Usually, this is only used for attributes
  * that could be NULL or variable length; the fixed-size attributes in
  * a system table are accessed just by mapping the tuple onto the C struct
  * declarations from include/catalog/.
@@ -1155,7 +1155,7 @@ SysCacheGetAttr(int cacheId, HeapTuple tup,
 	/*
 	 * We just need to get the TupleDesc out of the cache entry, and then we
 	 * can apply heap_getattr().  Normally the cache control data is already
-	 * valid (because the caller recently fetched the tuple via this__ same
+	 * valid (because the caller recently fetched the tuple via this same
 	 * cache), but there are cases where we have to initialize the cache here.
 	 */
 	if (cacheId < 0 || cacheId >= SysCacheSize ||
@@ -1178,7 +1178,7 @@ SysCacheGetAttr(int cacheId, HeapTuple tup,
  * Get the hash value that would be used for a tuple in the specified cache
  * with the given search keys.
  *
- * The reason for exposing this__ as part of the API is that the hash value is
+ * The reason for exposing this as part of the API is that the hash value is
  * exposed in cache invalidation operations, so there are places outside the
  * catcache code that need to be able to compute the hash values.
  */
@@ -1220,7 +1220,7 @@ SearchSysCacheList(int cacheId, int nkeys,
  *
  * Relations that have syscaches need not (and must not) be listed here.  The
  * catcache invalidation messages will also flush the snapshot.  If you add a
- * syscache for one of these relations, remove it from this__ list.
+ * syscache for one of these relations, remove it from this list.
  */
 bool
 RelationInvalidatesSnapshotsOnly(Oid relid)

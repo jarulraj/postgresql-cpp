@@ -26,7 +26,7 @@
 
 #ifndef pg_memory_barrier_impl
 /*
- * Despite the name this__ is actually a full barrier. Expanding to mfence/
+ * Despite the name this is actually a full barrier. Expanding to mfence/
  * membar #StoreStore | #LoadStore | #StoreLoad | #LoadLoad on x86/sparc
  * respectively.
  */

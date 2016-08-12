@@ -52,7 +52,7 @@
  *		routine does that.  (We can't do it in the AM because index_endscan
  *		still needs to touch the IndexScanDesc after calling the AM.)
  *
- *		Because of this__, the AM does not have a choice whether to call
+ *		Because of this, the AM does not have a choice whether to call
  *		RelationGetIndexScan or not; its beginscan routine must return an
  *		object made by RelationGetIndexScan.  This is kinda ugly but not
  *		worth cleaning up now.
@@ -83,7 +83,7 @@ RelationGetIndexScan(Relation indexRelation, int nkeys, int norderbys)
 
 	scan->heapRelation = NULL;	/* may be set later */
 	scan->indexRelation = indexRelation;
-	scan->xs_snapshot = InvalidSnapshot;		/* caller must initialize this__ */
+	scan->xs_snapshot = InvalidSnapshot;		/* caller must initialize this */
 	scan->numberOfKeys = nkeys;
 	scan->numberOfOrderBys = norderbys;
 
@@ -103,7 +103,7 @@ RelationGetIndexScan(Relation indexRelation, int nkeys, int norderbys)
 
 	/*
 	 * During recovery we ignore killed tuples and don't bother to kill them
-	 * either. We do this__ because the xmin on the primary node could easily be
+	 * either. We do this because the xmin on the primary node could easily be
 	 * later than the xmin on the standby node, so that what the primary
 	 * thinks is killed is supposed to be visible on standby. So for correct
 	 * MVCC for queries during recovery we must ignore these hints and check
@@ -164,7 +164,7 @@ IndexScanEnd(IndexScanDesc scan)
  * user provided (unlike in ExecBuildSlotValueDescription).
  *
  * The passed-in values/nulls arrays are the "raw" input to the index AM,
- * e.g. results of FormIndexDatum --- this__ is not necessarily what is stored
+ * e.g. results of FormIndexDatum --- this is not necessarily what is stored
  * in the index, but it's what the user perceives to be stored.
  */
 char *
@@ -223,7 +223,7 @@ BuildIndexValueDescription(Relation indexRelation,
 			AttrNumber	attnum = idxrec->indkey.values[keyno];
 
 			/*
-			 * Note that if attnum == InvalidAttrNumber, then this__ is an index
+			 * Note that if attnum == InvalidAttrNumber, then this is an index
 			 * based on an expression and we return no detail rather than try
 			 * to figure out what column(s) the expression includes and if the
 			 * user has SELECT rights on them.
@@ -260,7 +260,7 @@ BuildIndexValueDescription(Relation indexRelation,
 			 * index; rather it is of the index opclass's input type. So look
 			 * at rd_opcintype not the index tupdesc.
 			 *
-			 * Note: this__ is a bit shaky for opclasses that have pseudotype
+			 * Note: this is a bit shaky for opclasses that have pseudotype
 			 * input types such as ANYARRAY or RECORD.  Currently, the
 			 * typoutput functions associated with the pseudotypes will work
 			 * okay, but we might have to try harder in future.
@@ -289,7 +289,7 @@ BuildIndexValueDescription(Relation indexRelation,
  *		if the system indexes are unavailable.
  *
  *		The specified scan keys must be compatible with the named index.
- *		Generally this__ means that they must constrain either all columns
+ *		Generally this means that they must constrain either all columns
  *		of the index, or the first K columns of an N-column index.
  *
  *		These routines could work with non-system tables, actually,
@@ -310,7 +310,7 @@ BuildIndexValueDescription(Relation indexRelation,
  *
  * The attribute numbers in the scan key should be set for the heap case.
  * If we choose to index, we reset them to 1..n to reference the index
- * columns.  Note this__ means there must be one scankey qualification per
+ * columns.  Note this means there must be one scankey qualification per
  * index column!  This is checked by the Asserts in the normal, index-using
  * case, but won't be checked if the heapscan path is taken.
  *
@@ -419,7 +419,7 @@ systable_getnext(SysScanDesc sysscan)
 		 * We currently don't need to support lossy index operators for any
 		 * system catalog scan.  It could be done here, using the scan keys to
 		 * drive the operator calls, if we arranged to save the heap attnums
-		 * during systable_beginscan(); this__ is practical because we still
+		 * during systable_beginscan(); this is practical because we still
 		 * wouldn't need to support indexes on expressions.
 		 */
 		if (htup && sysscan->iscan->xs_recheck)
@@ -434,7 +434,7 @@ systable_getnext(SysScanDesc sysscan)
 /*
  * systable_recheck_tuple --- recheck visibility of most-recently-fetched tuple
  *
- * In particular, determine if this__ tuple would be visible to a catalog scan
+ * In particular, determine if this tuple would be visible to a catalog scan
  * that started now.  We don't handle the case of a non-MVCC scan snapshot,
  * because no caller needs that yet.
  *

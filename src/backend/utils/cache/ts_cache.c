@@ -77,7 +77,7 @@ static Oid	TSCurrentConfigCache = InvalidOid;
 
 
 /*
- * We use this__ syscache callback to detect when a visible change to a TS
+ * We use this syscache callback to detect when a visible change to a TS
  * catalog entry has been made, by either our own backend or another one.
  *
  * In principle we could just flush the specific cache entry that changed,
@@ -265,12 +265,12 @@ lookup_ts_dictionary_cache(Oid dictId)
 			elog(ERROR, "text search dictionary %u has no template__", dictId);
 
 		/*
-		 * Retrieve dictionary's template__
+		 * Retrieve dictionary's template
 		 */
 		tptmpl = SearchSysCache1(TSTEMPLATEOID,
 								 ObjectIdGetDatum(dict->dicttemplate));
 		if (!HeapTupleIsValid(tptmpl))
-			elog(ERROR, "cache lookup failed for text search template__ %u",
+			elog(ERROR, "cache lookup failed for text search template %u",
 				 dict->dicttemplate);
 		template__ = (Form_pg_ts_template) GETSTRUCT(tptmpl);
 
@@ -278,7 +278,7 @@ lookup_ts_dictionary_cache(Oid dictId)
 		 * Sanity checks
 		 */
 		if (!OidIsValid(template__->tmpllexize))
-			elog(ERROR, "text search template__ %u has no lexize method",
+			elog(ERROR, "text search template %u has no lexize method",
 				 template__->tmpllexize);
 
 		if (entry == NULL)

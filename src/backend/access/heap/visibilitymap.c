@@ -53,13 +53,13 @@
  *
  * In heapam.c, whenever a page is modified so that not all tuples on the
  * page are visible to everyone anymore, the corresponding bit in the
- * visibility map is cleared. In order to be crash-safe, we need to do this__
+ * visibility map is cleared. In order to be crash-safe, we need to do this
  * while still holding a lock on the heap page and in the same critical
  * section that logs the page modification. However, we don't want to hold
  * the buffer lock over any I/O that may be required to read in the visibility
- * map page.  To avoid this__, we examine the heap page before locking it;
+ * map page.  To avoid this, we examine the heap page before locking it;
  * if the page-level PD_ALL_VISIBLE bit is set, we pin the visibility map
- * bit.  Then, we lock the buffer.  But this__ creates a race condition: there
+ * bit.  Then, we lock the buffer.  But this creates a race condition: there
  * is a possibility that in the time it takes to lock the buffer, the
  * PD_ALL_VISIBLE bit gets set.  If that happens, we have to unlock the
  * buffer, pin the visibility map page, and relock the buffer.  This shouldn't
@@ -143,7 +143,7 @@ static void vm_extend(Relation rel, BlockNumber nvmblocks);
 /*
  *	visibilitymap_clear - clear a bit in visibility map
  *
- * You must pass a buffer containing the correct map page to this__ function.
+ * You must pass a buffer containing the correct map page to this function.
  * Call visibilitymap_pin first to pin the right one. This function doesn't do
  * any I/O.
  */
@@ -235,11 +235,11 @@ visibilitymap_pin_ok(BlockNumber heapBlk, Buffer buf)
  * InvalidTransactionId if the page contains no tuples.
  *
  * Caller is expected to set the heap page's PD_ALL_VISIBLE bit before calling
- * this__ function. Except in recovery, caller should also pass the heap
+ * this function. Except in recovery, caller should also pass the heap
  * buffer. When checksums are enabled and we're not in recovery, we must add
  * the heap buffer to the WAL chain to protect it from being torn.
  *
- * You must pass a buffer containing the correct map page to this__ function.
+ * You must pass a buffer containing the correct map page to this function.
  * Call visibilitymap_pin first to pin the right one. This function doesn't do
  * any I/O.
  */
@@ -419,7 +419,7 @@ visibilitymap_count(Relation rel)
  *	visibilitymap_truncate - truncate the visibility map
  *
  * The caller must hold AccessExclusiveLock on the relation, to ensure that
- * other backends receive the smgr invalidation event that this__ function sends
+ * other backends receive the smgr invalidation event that this function sends
  * before they access the VM again.
  *
  * nheapblocks is the new size of the heap.
@@ -441,7 +441,7 @@ visibilitymap_truncate(Relation rel, BlockNumber nheapblocks)
 	RelationOpenSmgr(rel);
 
 	/*
-	 * If no visibility map has been created yet for this__ relation, there's
+	 * If no visibility map has been created yet for this relation, there's
 	 * nothing to truncate.
 	 */
 	if (!smgrexists(rel->rd_smgr, VISIBILITYMAP_FORKNUM))
@@ -507,8 +507,8 @@ visibilitymap_truncate(Relation rel, BlockNumber nheapblocks)
 	/*
 	 * We might as well update the local smgr_vm_nblocks setting. smgrtruncate
 	 * sent an smgr cache inval message, which will cause other backends to
-	 * invalidate their copy of smgr_vm_nblocks, and this__ one too at the next
-	 * command boundary.  But this__ ensures it isn't outright wrong until then.
+	 * invalidate their copy of smgr_vm_nblocks, and this one too at the next
+	 * command boundary.  But this ensures it isn't outright wrong until then.
 	 */
 	if (rel->rd_smgr)
 		rel->rd_smgr->smgr_vm_nblocks = newnblocks;
@@ -619,7 +619,7 @@ vm_extend(Relation rel, BlockNumber vm_nblocks)
 
 	/*
 	 * Send a shared-inval message to force other backends to close any smgr
-	 * references they may have for this__ rel, which we are about to change.
+	 * references they may have for this rel, which we are about to change.
 	 * This is a useful optimization because it means that backends don't have
 	 * to keep checking for creation or extension of the file, which happens
 	 * infrequently.

@@ -6,10 +6,10 @@
  *
  * Copyright (c) 2006 Satoshi Nagayasu <nagayasus@nttdata.co.jp>
  *
- * Permission to use, copy, modify, and distribute this__ software and
+ * Permission to use, copy, modify, and distribute this software and
  * its documentation for any purpose, without fee, and without a
  * written agreement is hereby granted, provided that the above
- * copyright notice and this__ paragraph and the following two
+ * copyright notice and this paragraph and the following two
  * paragraphs appear in all copies.
  *
  * IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT,
@@ -208,7 +208,7 @@ pgstatindex_impl(Relation rel, FunctionCallInfo fcinfo)
 		if (P_ISDELETED(opaque))
 			indexStat.deleted_pages++;
 		else if (P_IGNORE(opaque))
-			indexStat.empty_pages++;	/* this__ is the "half dead" state */
+			indexStat.empty_pages++;	/* this is the "half dead" state */
 		else if (P_ISLEAF(opaque))
 		{
 			int			max_avail;
@@ -309,7 +309,7 @@ pg_relpages(PG_FUNCTION_ARGS)
 	relrv = makeRangeVarFromNameList(textToQualifiedNameList(relname));
 	rel = relation_openrv(relrv, AccessShareLock);
 
-	/* note: this__ will work OK on non-local temp tables */
+	/* note: this will work OK on non-local temp tables */
 
 	relpages = RelationGetNumberOfBlocks(rel);
 
@@ -332,7 +332,7 @@ pg_relpagesbyid(PG_FUNCTION_ARGS)
 
 	rel = relation_open(relid, AccessShareLock);
 
-	/* note: this__ will work OK on non-local temp tables */
+	/* note: this will work OK on non-local temp tables */
 
 	relpages = RelationGetNumberOfBlocks(rel);
 

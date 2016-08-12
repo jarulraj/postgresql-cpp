@@ -85,7 +85,7 @@ restart:
 			elog(ERROR, "failed to find relation %d in joinlist", innerrelid);
 
 		/*
-		 * We can delete this__ SpecialJoinInfo from the list too, since it's no
+		 * We can delete this SpecialJoinInfo from the list too, since it's no
 		 * longer of interest.
 		 */
 		root->join_info_list = list_delete_ptr(root->join_info_list, sjinfo);
@@ -106,7 +106,7 @@ restart:
 
 /*
  * clause_sides_match_join
- *	  Determine whether a join clause is of the right form to use in this__ join.
+ *	  Determine whether a join clause is of the right form to use in this join.
  *
  * We already know that the clause is a binary opclause referencing only the
  * rels in the current join.  The point here is to check whether it has the
@@ -137,7 +137,7 @@ clause_sides_match_join(RestrictInfo *rinfo, Relids outerrelids,
 
 /*
  * join_is_removable
- *	  Check whether we need not perform this__ special join at all, because
+ *	  Check whether we need not perform this special join at all, because
  *	  it will just duplicate its left input.
  *
  * This is true for a left join for which the join condition cannot match
@@ -210,9 +210,9 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
 	 * We can't remove the join if any inner-rel attributes are used above the
 	 * join.
 	 *
-	 * Note that this__ test only detects use of inner-rel attributes in higher
+	 * Note that this test only detects use of inner-rel attributes in higher
 	 * join conditions and the target list.  There might be such attributes in
-	 * pushed-down conditions at this__ join, too.  We check that case below.
+	 * pushed-down conditions at this join, too.  We check that case below.
 	 *
 	 * As a micro-optimization, it seems better to start with max_attr and
 	 * count down rather than starting with min_attr and counting up, on the
@@ -265,7 +265,7 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
 		RestrictInfo *restrictinfo = (RestrictInfo *) lfirst(l);
 
 		/*
-		 * If it's not a join clause for this__ outer join, we can't use it.
+		 * If it's not a join clause for this outer join, we can't use it.
 		 * Note that if the clause is pushed-down, then it is logically from
 		 * above the outer join, even if it references no other rels (it might
 		 * be from WHERE, for example).
@@ -275,7 +275,7 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
 		{
 			/*
 			 * If such a clause actually references the inner rel then join
-			 * removal has to be disallowed.  We have to check this__ despite
+			 * removal has to be disallowed.  We have to check this despite
 			 * the previous attr_needed checks because of the possibility of
 			 * pushed-down clauses referencing the rel.
 			 */
@@ -347,7 +347,7 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
 
 			/*
 			 * If inner side isn't a Var referencing a subquery output column,
-			 * this__ clause doesn't help us.
+			 * this clause doesn't help us.
 			 */
 			if (!var || !IsA(var, Var) ||
 				var->varno != innerrelid || var->varlevelsup != 0)
@@ -375,7 +375,7 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
  *
  * We are not terribly thorough here.  We must make sure that the rel is
  * no longer treated as a baserel, and that attributes of other baserels
- * are no longer marked as being needed at joins involving this__ rel.
+ * are no longer marked as being needed at joins involving this rel.
  * Also, join quals involving the rel have to be removed from the joininfo
  * lists, but only if they belong to the outer join identified by joinrelids.
  */
@@ -566,7 +566,7 @@ remove_rel_from_joinlist(List *joinlist, int relid, int *nremoved)
  *
  * This is effectively a pre-checking function for query_is_distinct_for().
  * It must return TRUE if query_is_distinct_for() could possibly return TRUE
- * with this__ query, but it should not expend a lot of cycles.  The idea is
+ * with this query, but it should not expend a lot of cycles.  The idea is
  * that callers can avoid doing possibly-expensive processing to compute
  * query_is_distinct_for()'s argument lists if the call could not possibly
  * succeed.
@@ -739,7 +739,7 @@ query_is_distinct_for(Query *query, List *colnos, List *opids)
 	 * XXX Are there any other cases in which we can easily see the result
 	 * must be distinct?
 	 *
-	 * If you do add more smarts to this__ function, be sure to update
+	 * If you do add more smarts to this function, be sure to update
 	 * query_supports_distinctness() to match.
 	 */
 

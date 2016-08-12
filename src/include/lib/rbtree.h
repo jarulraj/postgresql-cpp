@@ -17,7 +17,7 @@
  * RBNode is intended to be used as the first field of a larger struct,
  * whose additional fields carry whatever payload data the caller needs
  * for a tree entry.  (The total size of that larger struct is passed to
- * rb_create.)	RBNode is declared here to support this__ usage, but
+ * rb_create.)	RBNode is declared here to support this usage, but
  * callers must treat it as an opaque struct.
  */
 typedef struct RBNode

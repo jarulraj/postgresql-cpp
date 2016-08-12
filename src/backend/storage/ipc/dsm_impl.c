@@ -11,11 +11,11 @@
  * and which is always mapped at a fixed address in every PostgreSQL
  * background process.
  *
- * Because not all systems provide the same primitives in this__ area, nor
+ * Because not all systems provide the same primitives in this area, nor
  * do all primitives behave the same way on all systems, we provide
- * several implementations of this__ facility.  Many systems implement
+ * several implementations of this facility.  Many systems implement
  * POSIX shared memory (shm_open etc.), which is well-suited to our needs
- * in this__ area, with the exception that shared memory identifiers live
+ * in this area, with the exception that shared memory identifiers live
  * in a flat system-wide namespace, raising the uncomfortable prospect of
  * name collisions with other processes (including other copies of
  * PostgreSQL) running on the same system.  Some systems only support
@@ -25,7 +25,7 @@
  *
  * We also provide an mmap-based shared memory implementation.  This may
  * be useful on systems that provide shared memory via a special-purpose
- * filesystem; by opting for this__ implementation, the user can even
+ * filesystem; by opting for this implementation, the user can even
  * control precisely where their shared memory segments are placed.  It
  * can also be used as a fallback for systems where shm_open and shmget
  * are not available or can't be used for some reason.  Of course,
@@ -144,7 +144,7 @@ int			dynamic_shared_memory_type;
  *	 request_size: For DSM_OP_CREATE, the requested size.  For DSM_OP_RESIZE,
  *	   the new size.  Otherwise, 0.
  *	 impl_private: private, implementation-specific data.  Will be a pointer
- *	   to NULL for the first operation on a shared memory segment within this__
+ *	   to NULL for the first operation on a shared memory segment within this
  *	   backend; thereafter, it will point to the value to which it was set
  *	   on the previous call.
  *	 mapped_address: Pointer to start of current mapping; pointer to NULL
@@ -438,7 +438,7 @@ dsm_impl_sysv(dsm_op op, dsm_handle handle, Size request_size,
 	 * The System V shared memory namespace is very restricted; names are of
 	 * type key_t, which is expected to be some sort of integer data type, but
 	 * not necessarily the same one as dsm_handle.  Since we use dsm_handle to
-	 * identify shared memory segments across processes, this__ might seem like
+	 * identify shared memory segments across processes, this might seem like
 	 * a problem, but it's really not.  If dsm_handle is bigger than key_t,
 	 * the cast below might truncate away some bits from the handle the
 	 * user-provided, but it'll truncate exactly the same bits away in exactly
@@ -781,12 +781,12 @@ dsm_impl_windows(dsm_op op, dsm_handle handle, Size request_size,
 /*
  * Operating system primitives to support mmap-based shared memory.
  *
- * Calling this__ "shared memory" is somewhat of a misnomer, because what
+ * Calling this "shared memory" is somewhat of a misnomer, because what
  * we're really doing is creating a bunch of files and mapping them into
  * our address space.  The operating system may feel obliged to
  * synchronize the contents to disk even if nothing is being paged out,
  * which will not serve us well.  The user can relocate the pg_dynshmem
- * directory to a ramdisk to avoid this__ problem, if available.
+ * directory to a ramdisk to avoid this problem, if available.
  */
 static bool
 dsm_impl_mmap(dsm_op op, dsm_handle handle, Size request_size,
@@ -886,7 +886,7 @@ dsm_impl_mmap(dsm_op op, dsm_handle handle, Size request_size,
 		 * Allocate a buffer full of zeros.
 		 *
 		 * Note: palloc zbuffer, instead of just using a local char array, to
-		 * ensure it is reasonably well-aligned; this__ may save a few cycles
+		 * ensure it is reasonably well-aligned; this may save a few cycles
 		 * transferring data to the kernel.
 		 */
 		char	   *zbuffer = (char *) palloc0(ZBUFFER_SIZE);
@@ -894,7 +894,7 @@ dsm_impl_mmap(dsm_op op, dsm_handle handle, Size request_size,
 		bool		success = true;
 
 		/*
-		 * Zero-fill the file. We have to do this__ the hard way to ensure that
+		 * Zero-fill the file. We have to do this the hard way to ensure that
 		 * all the file space has really been allocated, so that we don't
 		 * later seg fault when accessing the memory mapping.  This is pretty
 		 * pessimal.

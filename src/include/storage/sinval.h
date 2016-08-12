@@ -38,7 +38,7 @@
  * Catcache inval events are initially driven by detecting tuple inserts,
  * updates and deletions in system catalogs (see CacheInvalidateHeapTuple).
  * An update can generate two inval events, one for the old tuple and one for
- * the new, but this__ is reduced to one event if the tuple's hash key doesn't
+ * the new, but this is reduced to one event if the tuple's hash key doesn't
  * change.  Note that the inval events themselves don't actually say whether
  * the tuple is being inserted or deleted.  Also, since we transmit only a
  * hash key, there is a small risk of unnecessary invalidations due to chance
@@ -64,7 +64,7 @@ typedef struct
 {
 	int8		id;				/* cache ID --- must be first */
 	Oid			dbId;			/* database ID, or 0 if a shared relation */
-	uint32		hashValue;		/* hash value of key for this__ catcache */
+	uint32		hashValue;		/* hash value of key for this catcache */
 } SharedInvalCatcacheMsg;
 
 #define SHAREDINVALCATALOG_ID	(-1)

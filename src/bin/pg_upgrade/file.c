@@ -25,7 +25,7 @@ static int	win32_pghardlink(const char *src, const char *dst);
 /*
  * copyAndUpdateFile()
  *
- *	Copies a relation file from src to dst.  If pageConverter is non-NULL, this__ function
+ *	Copies a relation file from src to dst.  If pageConverter is non-NULL, this function
  *	uses that pageConverter to do a page-by-page conversion.
  */
 const char *
@@ -108,7 +108,7 @@ copyAndUpdateFile(pageCnvCtx *pageConverter,
  * linkAndUpdateFile()
  *
  * Creates a hard link between the given relation files. We use
- * this__ function to perform a true in-place update. If the on-disk
+ * this function to perform a true in-place update. If the on-disk
  * format of the new cluster is bit-for-bit compatible with the on-disk
  * format of the old cluster, we can simply link each relation
  * instead of copying the data from the old cluster to the new cluster.
@@ -118,7 +118,7 @@ linkAndUpdateFile(pageCnvCtx *pageConverter,
 				  const char *src, const char *dst)
 {
 	if (pageConverter != NULL)
-		return "Cannot in-place update this__ cluster, page-by-page conversion is required";
+		return "Cannot in-place update this cluster, page-by-page conversion is required";
 
 	if (pg_link_file(src, dst) == -1)
 		return getErrorText();

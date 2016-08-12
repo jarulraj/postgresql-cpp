@@ -70,7 +70,7 @@ static ObjectAddress makeOperatorDependencies(HeapTuple tuple);
  *
  * This had better match the behavior of parser/scan.l!
  *
- * We need this__ because the parser is not smart enough to check that
+ * We need this because the parser is not smart enough to check that
  * the arguments of CREATE operator's COMMUTATOR, NEGATOR, etc clauses
  * are operator names rather than some other lexical entity.
  */
@@ -304,8 +304,8 @@ OperatorShellMake(const char *operatorName,
  *		negatorName				X negator operator
  *		restrictionId			X restriction selectivity procedure ID
  *		joinId					X join selectivity procedure ID
- *		canMerge				merge join can be used with this__ operator
- *		canHash					hash join can be used with this__ operator
+ *		canMerge				merge join can be used with this operator
+ *		canHash					hash join can be used with this operator
  *
  * The caller should have validated properties and permissions for the
  * objects passed as OID references.  We must handle the commutator and
@@ -323,7 +323,7 @@ OperatorShellMake(const char *operatorName,
  * This is called creating a shell, and its main effect is to
  * create a tuple in the PG_OPERATOR catalog with minimal
  * information about the operator (just its name and types).
- * Forward declaration is used only for this__ purpose, it is
+ * Forward declaration is used only for this purpose, it is
  * not available to the user as it is for type definition.
  */
 ObjectAddress
@@ -425,7 +425,7 @@ OperatorCreate(const char *operatorName,
 						operatorName)));
 
 	/*
-	 * At this__ point, if operatorObjectId is not InvalidOid then we are
+	 * At this point, if operatorObjectId is not InvalidOid then we are
 	 * filling in a previously-created shell.  Insist that the user own any
 	 * such shell.
 	 */
@@ -455,7 +455,7 @@ OperatorCreate(const char *operatorName,
 						   NameListToString(commutatorName));
 
 		/*
-		 * self-linkage to this__ operator; will fix below. Note that only
+		 * self-linkage to this operator; will fix below. Note that only
 		 * self-linkage for commutation makes sense.
 		 */
 		if (!OidIsValid(commutatorId))
@@ -551,7 +551,7 @@ OperatorCreate(const char *operatorName,
 
 	/*
 	 * If a commutator and/or negator link is provided, update the other
-	 * operator(s) to point at this__ one, if they don't already have a link.
+	 * operator(s) to point at this one, if they don't already have a link.
 	 * This supports an alternative style of operator definition wherein the
 	 * user first defines one operator without giving negator or commutator,
 	 * then defines the other operator of the pair with the proper commutator
@@ -573,7 +573,7 @@ OperatorCreate(const char *operatorName,
  * Try to lookup another operator (commutator, etc)
  *
  * If not found, check to see if it is exactly the operator we are trying
- * to define; if so, return InvalidOid.  (Note that this__ case is only
+ * to define; if so, return InvalidOid.  (Note that this case is only
  * sensible for a commutator, so we error out otherwise.)  If it is not
  * the same operator, create a shell operator.
  */
@@ -608,7 +608,7 @@ get_other_operator(List *otherOp, Oid otherLeftTypeId, Oid otherRightTypeId,
 		otherRightTypeId == rightTypeId)
 	{
 		/*
-		 * self-linkage to this__ operator; caller will fix later. Note that
+		 * self-linkage to this operator; caller will fix later. Note that
 		 * only self-linkage for commutation makes sense.
 		 */
 		if (!isCommutator)
@@ -673,7 +673,7 @@ OperatorUpd(Oid baseId, Oid commId, Oid negId)
 
 	/*
 	 * if the commutator and negator are the same operator, do one update. XXX
-	 * this__ is probably useless code --- I doubt it ever makes sense for
+	 * this is probably useless code --- I doubt it ever makes sense for
 	 * commutator and negator to be the same thing...
 	 */
 	if (commId == negId)
@@ -763,7 +763,7 @@ OperatorUpd(Oid baseId, Oid commId, Oid negId)
  * Create dependencies for a new operator (either a freshly inserted
  * complete operator, a new shell operator, or a just-updated shell).
  *
- * NB: the OidIsValid tests in this__ routine are necessary, in case
+ * NB: the OidIsValid tests in this routine are necessary, in case
  * the given operator is a shell.
  */
 static ObjectAddress
@@ -822,7 +822,7 @@ makeOperatorDependencies(HeapTuple tuple)
 
 	/*
 	 * NOTE: we do not consider the operator to depend on the associated
-	 * operators oprcom and oprnegate. We would not want to delete this__
+	 * operators oprcom and oprnegate. We would not want to delete this
 	 * operator if those go away, but only reset the link fields; which is not
 	 * a function that the dependency code can presently handle.  (Something
 	 * could perhaps be done with objectSubId though.)	For now, it's okay to

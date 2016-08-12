@@ -95,7 +95,7 @@ ExecUnique(UniqueState *node)
 	/*
 	 * We have a new tuple different from the previous saved tuple (if any).
 	 * Save it and return it.  We must copy it because the source subplan
-	 * won't guarantee that this__ source tuple is still accessible after
+	 * won't guarantee that this source tuple is still accessible after
 	 * fetching the next source tuple.
 	 */
 	return ExecCopySlot(resultTupleSlot, slot);
@@ -148,7 +148,7 @@ ExecInitUnique(Unique *node, EState *estate, int eflags)
 	outerPlanState(uniquestate) = ExecInitNode(outerPlan(node), estate, eflags);
 
 	/*
-	 * unique nodes do no projections, so initialize projection info for this__
+	 * unique nodes do no projections, so initialize projection info for this
 	 * node appropriately
 	 */
 	ExecAssignResultTypeFromTL(&uniquestate->ps);
@@ -168,7 +168,7 @@ ExecInitUnique(Unique *node, EState *estate, int eflags)
  *		ExecEndUnique
  *
  *		This shuts down the subplan and frees resources allocated
- *		to this__ node.
+ *		to this node.
  * ----------------------------------------------------------------
  */
 void

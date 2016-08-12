@@ -403,7 +403,7 @@ win866_to_iso(PG_FUNCTION_ARGS)
  * Cyrillic support
  * currently supported Cyrillic encodings:
  *
- * KOI8-R (this__ is the charset for the mule internal code
+ * KOI8-R (this is the charset for the mule internal code
  *		for Cyrillic)
  * ISO-8859-5
  * Microsoft's CP1251(windows-1251)

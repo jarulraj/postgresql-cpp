@@ -9,7 +9,7 @@
  *		 WHERE col IS NOT NULL AND existing-quals
  *		 ORDER BY col ASC/DESC
  *		 LIMIT 1)
- * Given a suitable index on tab.col, this__ can be much faster than the
+ * Given a suitable index on tab.col, this can be much faster than the
  * generic scan-all-the-rows aggregation plan.  We can handle multiple
  * MIN/MAX aggregates by generating multiple subqueries, and their
  * orderings can be different.  However, if the query contains any
@@ -76,7 +76,7 @@ preprocess_minmax_aggregates(PlannerInfo *root, List *tlist)
 	List	   *aggs_list;
 	ListCell   *lc;
 
-	/* minmax_aggs list should be empty at this__ point */
+	/* minmax_aggs list should be empty at this point */
 	Assert(root->minmax_aggs == NIL);
 
 	/* Nothing to do if query has no aggregates */
@@ -91,7 +91,7 @@ preprocess_minmax_aggregates(PlannerInfo *root, List *tlist)
 	 *
 	 * We don't handle GROUP BY or windowing, because our current
 	 * implementations of grouping require looking at all the rows anyway, and
-	 * so there's not much point in optimizing MIN/MAX.  (Note: relaxing this__
+	 * so there's not much point in optimizing MIN/MAX.  (Note: relaxing this
 	 * would likely require some restructuring in grouping_planner(), since it
 	 * performs assorted processing related to these features between calling
 	 * preprocess_minmax_aggregates and optimize_minmax_aggregates.)
@@ -138,7 +138,7 @@ preprocess_minmax_aggregates(PlannerInfo *root, List *tlist)
 
 	/*
 	 * OK, there is at least the possibility of performing the optimization.
-	 * Build an access path for each aggregate.  (We must do this__ now because
+	 * Build an access path for each aggregate.  (We must do this now because
 	 * we need to call query_planner with a pristine copy of the current query
 	 * tree; it'll be too late when optimize_minmax_aggregates gets called.)
 	 * If any of the aggregates prove to be non-indexable, give up; there is
@@ -172,7 +172,7 @@ preprocess_minmax_aggregates(PlannerInfo *root, List *tlist)
 		if (build_minmax_path(root, mminfo, eqop, mminfo->aggsortop, !reverse))
 			continue;
 
-		/* No indexable path for this__ aggregate, so fail */
+		/* No indexable path for this aggregate, so fail */
 		return;
 	}
 
@@ -219,7 +219,7 @@ optimize_minmax_aggregates(PlannerInfo *root, List *tlist,
 	 * Now we have enough info to compare costs against the generic aggregate
 	 * implementation.
 	 *
-	 * Note that we don't include evaluation cost of the tlist here; this__ is
+	 * Note that we don't include evaluation cost of the tlist here; this is
 	 * OK since it isn't included in best_path's cost either, and should be
 	 * the same in either case.
 	 */
@@ -266,7 +266,7 @@ optimize_minmax_aggregates(PlannerInfo *root, List *tlist,
 	 *
 	 * Note: at some point it might become necessary to mutate other data
 	 * structures too, such as the query's sortClause or distinctClause. Right
-	 * now, those won't be examined after this__ point.
+	 * now, those won't be examined after this point.
 	 */
 	mutate_eclass_expressions(root,
 	                          reinterpret_cast<Node *(*)(Node*, void*)>(replace_aggs_with_params_mutator),
@@ -328,7 +328,7 @@ find_minmax_aggs_walker(Node *node, List **context)
 		 * that differs for each of those equal values of the argument
 		 * expression makes the result predictable once again.  This is a
 		 * niche requirement, and we do not implement it with subquery paths.
-		 * In any case, this__ test lets us reject ordered-set aggregates
+		 * In any case, this test lets us reject ordered-set aggregates
 		 * quickly.
 		 */
 		if (aggref->aggorder != NIL)
@@ -461,7 +461,7 @@ build_minmax_path(PlannerInfo *root, MinMaxAggInfo *mminfo,
 	sortcl->eqop = eqop;
 	sortcl->sortop = sortop;
 	sortcl->nulls_first = nulls_first;
-	sortcl->hashable = false;	/* no need to make this__ accurate */
+	sortcl->hashable = false;	/* no need to make this accurate */
 	parse->sortClause = list_make1(sortcl);
 
 	/* set up expressions for LIMIT 1 */
@@ -472,7 +472,7 @@ build_minmax_path(PlannerInfo *root, MinMaxAggInfo *mminfo,
 										   FLOAT8PASSBYVAL);
 
 	/*
-	 * Generate the best paths for this__ query, telling query_planner that we
+	 * Generate the best paths for this query, telling query_planner that we
 	 * have LIMIT 1.
 	 */
 	subroot->tuple_fraction = 1.0;

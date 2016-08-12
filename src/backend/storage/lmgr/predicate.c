@@ -6,7 +6,7 @@
  *
  *
  * The approach taken is to implement Serializable Snapshot Isolation (SSI)
- * as initially described in this__ paper:
+ * as initially described in this paper:
  *
  *	Michael J. Cahill, Uwe Röhm, and Alan D. Fekete. 2008.
  *	Serializable isolation for snapshot databases.
@@ -36,7 +36,7 @@
  *		require modelling the predicates through locks against database
  *		objects such as pages, index ranges, or entire tables.
  *
- * (2)	They must be kept in RAM for quick access.  Because of this__, it
+ * (2)	They must be kept in RAM for quick access.  Because of this, it
  *		isn't possible to always maintain tuple-level granularity -- when
  *		the space allocated to store these approaches exhaustion, a
  *		request for a lock may need to scan for situations where a single
@@ -82,7 +82,7 @@
  *
  *
  * Lightweight locks to manage access to the predicate locking shared
- * memory objects must be taken in this__ order, and should be released in
+ * memory objects must be taken in this order, and should be released in
  * reverse order:
  *
  *	SerializableFinishedListLock
@@ -92,9 +92,9 @@
  *	SerializablePredicateLockListLock
  *		- Protects the linked list of locks held by a transaction.  Note
  *			that the locks themselves are also covered by the partition
- *			locks of their respective lock targets; this__ lock only affects
+ *			locks of their respective lock targets; this lock only affects
  *			the linked list connecting the locks related to a transaction.
- *		- All transactions share this__ single lock (with no partitioning).
+ *		- All transactions share this single lock (with no partitioning).
  *		- There is never a need for a process other than the one running
  *			an active transaction to walk the list of locks held by that
  *			transaction.
@@ -280,7 +280,7 @@
 /*
  * Compute the hash code associated with a PREDICATELOCKTARGETTAG.
  *
- * To avoid unnecessary recomputations of the hash code, we try to do this__
+ * To avoid unnecessary recomputations of the hash code, we try to do this
  * just once per function, and then pass it around as needed.  Aside from
  * passing the hashcode to hash_search_with_hash_value(), we can extract
  * the lock partition number from the hashcode.
@@ -294,7 +294,7 @@
  *
  * To make the hash code also depend on the transaction, we xor the sxid
  * struct's address into the hash code, left-shifted so that the
- * partition-number bits don't change.  Since this__ is only a hash, we
+ * partition-number bits don't change.  Since this is only a hash, we
  * don't care if we lose high-order bits of the address; use an
  * intermediate variable to suppress cast-pointer-to-int warnings.
  */
@@ -344,7 +344,7 @@ static OldSerXidControl oldSerXidControl;
 
 /*
  * When the oldest committed transaction on the "finished" list is moved to
- * SLRU, its predicate locks will be moved to this__ "dummy" transaction,
+ * SLRU, its predicate locks will be moved to this "dummy" transaction,
  * collapsing duplicate targets.  When a duplicate is found, the later
  * commitSeqNo is used.
  */
@@ -359,7 +359,7 @@ int			max_predicate_locks_per_xact;		/* set by guc.c */
  * participating in predicate locking.  Entries in the list are fixed size,
  * and reside in shared memory.  The memory address of an entry must remain
  * fixed during its lifetime.  The list will be protected from concurrent
- * update externally; no provision is made in this__ code to manage that.  The
+ * update externally; no provision is made in this code to manage that.  The
  * number of entries in the list, and the size allowed for each entry is
  * fixed upon creation.
  */
@@ -382,7 +382,7 @@ static SHM_QUEUE *FinishedSerializableTransactions;
 
 /*
  * Tag for a dummy entry in PredicateLockTargetHash. By temporarily removing
- * this__ entry, you can ensure that there's enough scratch space available for
+ * this entry, you can ensure that there's enough scratch space available for
  * inserting one entry in the hash table. This is an otherwise-invalid tag.
  */
 static const PREDICATELOCKTARGETTAG ScratchTargetTag = {0, 0, 0, 0};
@@ -463,7 +463,7 @@ static void OnConflict_CheckForSerializationFailure(const SERIALIZABLEXACT *read
 /*------------------------------------------------------------------------*/
 
 /*
- * Does this__ relation participate in predicate locking? Temporary and system
+ * Does this relation participate in predicate locking? Temporary and system
  * relations are exempt, as are materialized views.
  */
 static inline bool
@@ -475,10 +475,10 @@ PredicateLockingNeededForRelation(Relation relation)
 }
 
 /*
- * When a public interface method is called for a read, this__ is the test to
+ * When a public interface method is called for a read, this is the test to
  * see if we should do a quick return.
  *
- * Note: this__ function has side-effects! If this__ transaction has been flagged
+ * Note: this function has side-effects! If this transaction has been flagged
  * as RO-safe since the last call, we release all predicate locks and reset
  * MySerializableXact. That makes subsequent calls to return quickly.
  *
@@ -488,7 +488,7 @@ PredicateLockingNeededForRelation(Relation relation)
 static inline bool
 SerializationNeededForRead(Relation relation, Snapshot snapshot)
 {
-	/* Nothing to do if this__ is not a serializable transaction */
+	/* Nothing to do if this is not a serializable transaction */
 	if (MySerializableXact == InvalidSerializableXact)
 		return false;
 
@@ -505,12 +505,12 @@ SerializationNeededForRead(Relation relation, Snapshot snapshot)
 	/*
 	 * Check if we have just become "RO-safe". If we have, immediately release
 	 * all locks as they're not needed anymore. This also resets
-	 * MySerializableXact, so that subsequent calls to this__ function can exit
+	 * MySerializableXact, so that subsequent calls to this function can exit
 	 * quickly.
 	 *
 	 * A transaction is flagged as RO_SAFE if all concurrent R/W transactions
 	 * commit without having conflicts out to an earlier snapshot, thus
-	 * ensuring that no conflicts are possible for this__ transaction.
+	 * ensuring that no conflicts are possible for this transaction.
 	 */
 	if (SxactIsROSafe(MySerializableXact))
 	{
@@ -532,7 +532,7 @@ SerializationNeededForRead(Relation relation, Snapshot snapshot)
 static inline bool
 SerializationNeededForWrite(Relation relation)
 {
-	/* Nothing to do if this__ is not a serializable transaction */
+	/* Nothing to do if this is not a serializable transaction */
 	if (MySerializableXact == InvalidSerializableXact)
 		return false;
 
@@ -547,7 +547,7 @@ SerializationNeededForWrite(Relation relation)
 /*------------------------------------------------------------------------*/
 
 /*
- * These functions are a simple implementation of a list for this__ specific
+ * These functions are a simple implementation of a list for this specific
  * type of struct.  If there is ever a generalized shared memory list, we
  * should probably switch to that.
  */
@@ -733,7 +733,7 @@ FlagSxactUnsafe(SERIALIZABLEXACT *sxact)
 	sxact->flags |= SXACT_FLAG_RO_UNSAFE;
 
 	/*
-	 * We know this__ isn't a safe snapshot, so we can stop looking for other
+	 * We know this isn't a safe snapshot, so we can stop looking for other
 	 * potential conflicts.
 	 */
 	conflict = (RWConflict)
@@ -819,7 +819,7 @@ OldSerXidInit(void)
 
 /*
  * Record a committed read write serializable xid and the minimum
- * commitSeqNo of any transactions to which this__ xid had a rw-conflict out.
+ * commitSeqNo of any transactions to which this xid had a rw-conflict out.
  * An invalid seqNo means that there were no conflicts out from xid.
  */
 static void
@@ -839,7 +839,7 @@ OldSerXidAdd(TransactionId xid, SerCommitSeqNo minConflictCommitSeqNo)
 
 	/*
 	 * If no serializable transactions are active, there shouldn't be anything
-	 * to push out to the SLRU.  Hitting this__ assert would mean there's
+	 * to push out to the SLRU.  Hitting this assert would mean there's
 	 * something wrong with the earlier cleanup logic.
 	 */
 	tailXid = oldSerXidControl->tailXid;
@@ -906,7 +906,7 @@ OldSerXidAdd(TransactionId xid, SerCommitSeqNo minConflictCommitSeqNo)
 			oldSerXidControl->warningIssued = true;
 			ereport(WARNING,
 					(errmsg("memory for serializable conflict tracking is nearly exhausted"),
-					 errhint("There might be an idle transaction or a forgotten prepared transaction causing this__.")));
+					 errhint("There might be an idle transaction or a forgotten prepared transaction causing this.")));
 		}
 	}
 
@@ -970,7 +970,7 @@ OldSerXidGetMinConflictCommitSeqNo(TransactionId xid)
 }
 
 /*
- * Call this__ whenever there is a new xmin for active serializable
+ * Call this whenever there is a new xmin for active serializable
  * transactions.  We don't need to keep information on transactions which
  * precede that.  InvalidTransactionId means none active, so everything in
  * the SLRU can be discarded.
@@ -1023,7 +1023,7 @@ OldSerXidSetActiveSerXmin(TransactionId xid)
 /*
  * Perform a checkpoint --- either during shutdown, or on-the-fly
  *
- * We don't have any data that needs to survive a restart, but this__ is a
+ * We don't have any data that needs to survive a restart, but this is a
  * convenient place to truncate the SLRU.
  */
 void
@@ -1072,7 +1072,7 @@ CheckPointPredicate(void)
 	 * This is not actually necessary from a correctness point of view. We do
 	 * it merely as a debugging aid.
 	 *
-	 * We're doing this__ after the truncation to avoid writing pages right
+	 * We're doing this after the truncation to avoid writing pages right
 	 * before deleting the file in which they sit, which would be completely
 	 * pointless.
 	 */
@@ -1088,7 +1088,7 @@ CheckPointPredicate(void)
  * more comments.  In the normal postmaster case, the shared hash tables
  * are created here.  Backends inherit the pointers
  * to the shared tables via fork().  In the EXEC_BACKEND case, each
- * backend re-executes this__ code to obtain pointers to the already existing
+ * backend re-executes this code to obtain pointers to the already existing
  * shared hash tables.
  */
 void
@@ -1235,7 +1235,7 @@ InitPredicateLocks(void)
 	 * transactions.
 	 *
 	 * Assume an average of 5 conflicts per transaction.  Calculations suggest
-	 * that this__ will prevent resource exhaustion in even the most pessimal
+	 * that this will prevent resource exhaustion in even the most pessimal
 	 * loads up to max_connections = 200 with all 200 connections pounding the
 	 * database with serializable transactions.  Beyond that, there may be
 	 * occasional transactions canceled when trying to flag conflicts. That's
@@ -1353,7 +1353,7 @@ PredicateLockShmemSize(void)
  * associated PREDICATELOCKTARGETs.  dynahash.c expects the partition number
  * to be the low-order bits of the hash code, and therefore a
  * PREDICATELOCKTAG's hash code must have the same low-order bits as the
- * associated PREDICATELOCKTARGETTAG's hash code.  We achieve this__ with this__
+ * associated PREDICATELOCKTARGETTAG's hash code.  We achieve this with this
  * specialized hash function.
  */
 static uint32
@@ -1376,7 +1376,7 @@ predicatelock_hash(const void *key, Size keysize)
  *		Return a table containing the internal state of the predicate
  *		lock manager for use in pg_lock_status.
  *
- * Like GetLockStatusData, this__ function tries to hold the partition LWLocks
+ * Like GetLockStatusData, this function tries to hold the partition LWLocks
  * for as short a time as possible by returning two arrays that simply
  * contain the PREDICATELOCKTARGETTAG and SERIALIZABLEXACT for each lock
  * table entry. Multiple copies of the same PREDICATELOCKTARGETTAG and
@@ -1464,7 +1464,7 @@ SummarizeOldestCommittedSxact(void)
 	}
 
 	/*
-	 * Grab the first sxact off the finished list -- this__ will be the earliest
+	 * Grab the first sxact off the finished list -- this will be the earliest
 	 * commit.  Remove it from the list.
 	 */
 	sxact = (SERIALIZABLEXACT *)
@@ -1493,7 +1493,7 @@ SummarizeOldestCommittedSxact(void)
  *		transactions to complete, and retrying with a new snapshot if
  *		one of them could possibly create a conflict.
  *
- *		As with GetSerializableTransactionSnapshot (which this__ is a subroutine
+ *		As with GetSerializableTransactionSnapshot (which this is a subroutine
  *		for), the passed-in Snapshot pointer should reference a static data
  *		area that can safely be passed to GetSnapshotData.
  */
@@ -1562,12 +1562,12 @@ GetSafeSnapshot(Snapshot origSnapshot)
  * Acquire a snapshot that can be used for the current transaction.
  *
  * Make sure we have a SERIALIZABLEXACT reference in MySerializableXact.
- * It should be current for this__ process and be contained in PredXact.
+ * It should be current for this process and be contained in PredXact.
  *
  * The passed-in Snapshot pointer should reference a static data area that
  * can safely be passed to GetSnapshotData.  The return value is actually
- * always this__ same pointer; no new snapshot data structure is allocated
- * within this__ function.
+ * always this same pointer; no new snapshot data structure is allocated
+ * within this function.
  */
 Snapshot
 GetSerializableTransactionSnapshot(Snapshot snapshot)
@@ -1632,7 +1632,7 @@ SetSerializableTransactionSnapshot(Snapshot snapshot,
 /*
  * Guts of GetSerializableTransactionSnapshot
  *
- * If sourcexid is valid, this__ is actually an import operation and we should
+ * If sourcexid is valid, this is actually an import operation and we should
  * skip calling GetSnapshotData, because the snapshot contents are already
  * loaded up.  HOWEVER: to avoid race conditions, we must check that the
  * source xact is still running after we acquire SerializableXactHashLock.
@@ -1648,7 +1648,7 @@ GetSerializableTransactionSnapshotInt(Snapshot snapshot,
 			   *othersxact;
 	HASHCTL		hash_ctl;
 
-	/* We only do this__ for serializable transactions.  Once. */
+	/* We only do this for serializable transactions.  Once. */
 	Assert(MySerializableXact == InvalidSerializableXact);
 
 	Assert(!RecoveryInProgress());
@@ -1673,9 +1673,9 @@ GetSerializableTransactionSnapshotInt(Snapshot snapshot,
 	 * to avoid race conditions, for much the same reasons that
 	 * GetSnapshotData takes the ProcArrayLock.  Since we might have to
 	 * release SerializableXactHashLock to call SummarizeOldestCommittedSxact,
-	 * this__ means we have to create the sxact first, which is a bit annoying
+	 * this means we have to create the sxact first, which is a bit annoying
 	 * (in particular, an elog(ERROR) in procarray.c would cause us to leak
-	 * the sxact).  Consider refactoring to avoid this__.
+	 * the sxact).  Consider refactoring to avoid this.
 	 */
 #ifdef TEST_OLDSERXID
 	SummarizeOldestCommittedSxact();
@@ -1712,12 +1712,12 @@ GetSerializableTransactionSnapshotInt(Snapshot snapshot,
 	 * can "opt out" of predicate locking and conflict checking for a
 	 * read-only transaction.
 	 *
-	 * The reason this__ is safe is that a read-only transaction can only become
+	 * The reason this is safe is that a read-only transaction can only become
 	 * part of a dangerous structure if it overlaps a writable transaction
 	 * which in turn overlaps a writable transaction which committed before
 	 * the read-only transaction started.  A new writable transaction can
-	 * overlap this__ one, but it can't meet the other condition of overlapping
-	 * a transaction which committed before this__ one started.
+	 * overlap this one, but it can't meet the other condition of overlapping
+	 * a transaction which committed before this one started.
 	 */
 	if (XactReadOnly && PredXact->WritableSxactCount == 0)
 	{
@@ -1766,7 +1766,7 @@ GetSerializableTransactionSnapshotInt(Snapshot snapshot,
 		/*
 		 * Register all concurrent r/w transactions as possible conflicts; if
 		 * all of them commit without any outgoing conflicts to earlier
-		 * transactions then this__ snapshot can be deemed safe (and we can run
+		 * transactions then this snapshot can be deemed safe (and we can run
 		 * without tracking predicate locks).
 		 */
 		for (othersxact = FirstPredXact();
@@ -1818,7 +1818,7 @@ RegisterPredicateLockingXid(TransactionId xid)
 	bool		found;
 
 	/*
-	 * If we're not tracking predicate lock data for this__ transaction, we
+	 * If we're not tracking predicate lock data for this transaction, we
 	 * should ignore the request and return quickly.
 	 */
 	if (MySerializableXact == InvalidSerializableXact)
@@ -1854,7 +1854,7 @@ RegisterPredicateLockingXid(TransactionId xid)
  * cleanup due to overlapping serializable transactions.  This must
  * return valid information regardless of transaction isolation level.
  *
- * Also note that this__ doesn't check for a conflicting relation lock,
+ * Also note that this doesn't check for a conflicting relation lock,
  * just a lock specifically on the given page.
  *
  * One use is to support proper behavior during GiST index vacuum.
@@ -1886,14 +1886,14 @@ PageIsPredicateLocked(Relation relation, BlockNumber blkno)
 
 
 /*
- * Check whether a particular lock is held by this__ transaction.
+ * Check whether a particular lock is held by this transaction.
  *
- * Important note: this__ function may return false even if the lock is
+ * Important note: this function may return false even if the lock is
  * being held, because it uses the local lock table which is not
  * updated if another transaction modifies our lock list (e.g. to
  * split an index page). It can also return true when a coarser
- * granularity lock that covers this__ target is being held. Be careful
- * to only use this__ function in circumstances where such errors are
+ * granularity lock that covers this target is being held. Be careful
+ * to only use this function in circumstances where such errors are
  * acceptable!
  */
 static bool
@@ -1959,7 +1959,7 @@ GetParentPredicateLockTag(const PREDICATELOCKTARGETTAG *tag,
  * Check whether the lock we are considering is already covered by a
  * coarser lock for our transaction.
  *
- * Like PredicateLockExists, this__ function might return a false
+ * Like PredicateLockExists, this function might return a false
  * negative, but it will never return a false positive.
  */
 static bool
@@ -2041,7 +2041,7 @@ RemoveTargetIfNoLongerUsed(PREDICATELOCKTARGET *target, uint32 targettaghash)
 
 	Assert(LWLockHeldByMe(SerializablePredicateLockListLock));
 
-	/* Can't remove it until no locks at this__ target. */
+	/* Can't remove it until no locks at this target. */
 	if (!SHMQueueEmpty(&target->predicateLocks))
 		return;
 
@@ -2054,12 +2054,12 @@ RemoveTargetIfNoLongerUsed(PREDICATELOCKTARGET *target, uint32 targettaghash)
 }
 
 /*
- * Delete child target locks owned by this__ process.
+ * Delete child target locks owned by this process.
  * This implementation is assuming that the usage of each target tag field
- * is uniform.  No need to make this__ hard if we don't have to.
+ * is uniform.  No need to make this hard if we don't have to.
  *
  * We aren't acquiring lightweight locks for the predicate lock or lock
- * target structures associated with this__ transaction unless we're going
+ * target structures associated with this transaction unless we're going
  * to modify them, because no other process is permitted to modify our
  * locks.
  */
@@ -2208,7 +2208,7 @@ CheckAndPromotePredicateLockRequest(const PREDICATELOCKTARGETTAG *reqtag)
 			PredicateLockPromotionThreshold(&targettag))
 		{
 			/*
-			 * We should promote to this__ parent lock. Continue to check its
+			 * We should promote to this parent lock. Continue to check its
 			 * ancestors, however, both to get their child counts right and to
 			 * check whether we should just go ahead and promote to one of
 			 * them.
@@ -2237,7 +2237,7 @@ CheckAndPromotePredicateLockRequest(const PREDICATELOCKTARGETTAG *reqtag)
  * we've acquired its parent, possibly due to promotion) or when a new
  * MVCC write lock makes the predicate lock unnecessary. There's no
  * point in calling it when locks are released at transaction end, as
- * this__ information is no longer needed.
+ * this information is no longer needed.
  */
 static void
 DecrementParentLocks(const PREDICATELOCKTARGETTAG *targettag)
@@ -2400,7 +2400,7 @@ PredicateLockAcquire(const PREDICATELOCKTARGETTAG *targettag)
 	{
 		/*
 		 * Lock request was promoted to a coarser-granularity lock, and that
-		 * lock was acquired. It will delete this__ lock and any of its
+		 * lock was acquired. It will delete this lock and any of its
 		 * children, so we're done.
 		 */
 	}
@@ -2418,8 +2418,8 @@ PredicateLockAcquire(const PREDICATELOCKTARGETTAG *targettag)
  *
  * Gets a predicate lock at the relation level.
  * Skip if not in full serializable transaction isolation level.
- * Skip if this__ is a temporary table.
- * Clear any finer-grained predicate locks this__ session has on the relation.
+ * Skip if this is a temporary table.
+ * Clear any finer-grained predicate locks this session has on the relation.
  */
 void
 PredicateLockRelation(Relation relation, Snapshot snapshot)
@@ -2440,9 +2440,9 @@ PredicateLockRelation(Relation relation, Snapshot snapshot)
  *
  * Gets a predicate lock at the page level.
  * Skip if not in full serializable transaction isolation level.
- * Skip if this__ is a temporary table.
- * Skip if a coarser predicate lock already covers this__ page.
- * Clear any finer-grained predicate locks this__ session has on the relation.
+ * Skip if this is a temporary table.
+ * Skip if a coarser predicate lock already covers this page.
+ * Clear any finer-grained predicate locks this session has on the relation.
  */
 void
 PredicateLockPage(Relation relation, BlockNumber blkno, Snapshot snapshot)
@@ -2464,7 +2464,7 @@ PredicateLockPage(Relation relation, BlockNumber blkno, Snapshot snapshot)
  *
  * Gets a predicate lock at the tuple level.
  * Skip if not in full serializable transaction isolation level.
- * Skip if this__ is a temporary table.
+ * Skip if this is a temporary table.
  */
 void
 PredicateLockTuple(Relation relation, HeapTuple tuple, Snapshot snapshot)
@@ -2477,7 +2477,7 @@ PredicateLockTuple(Relation relation, HeapTuple tuple, Snapshot snapshot)
 		return;
 
 	/*
-	 * If it's a heap tuple, return if this__ xact wrote it.
+	 * If it's a heap tuple, return if this xact wrote it.
 	 */
 	if (relation->rd_index == NULL)
 	{
@@ -2589,9 +2589,9 @@ DeleteLockTarget(PREDICATELOCKTARGET *target, uint32 targettaghash)
  * for scratch space).
  *
  * Warning: the "removeOld" option should be used only with care,
- * because this__ function does not (indeed, can not) update other
+ * because this function does not (indeed, can not) update other
  * backends' LocalPredicateLockHash. If we are only adding new
- * entries, this__ is not a problem: the local lock table is used only
+ * entries, this is not a problem: the local lock table is used only
  * as a hint, so missing entries for locks that are held are
  * OK. Having entries for locks that are no longer held, as can happen
  * when using "removeOld", is not in general OK. We can only use it
@@ -2801,7 +2801,7 @@ exit:
  * on the specified relation.
  *
  * This requires grabbing a lot of LW locks and scanning the entire lock
- * target table for matches.  That makes this__ more expensive than most
+ * target table for matches.  That makes this more expensive than most
  * predicate lock management functions, but it will only be called for DDL
  * type commands that are expensive anyway, and there are fast returns when
  * no serializable transactions are active or the relation is temporary.
@@ -2833,7 +2833,7 @@ DropAllPredicateLocksFromTable(Relation relation, bool transfer)
 
 	/*
 	 * Bail out quickly if there are no serializable transactions running.
-	 * It's safe to check this__ without taking locks because the caller is
+	 * It's safe to check this without taking locks because the caller is
 	 * holding an ACCESS EXCLUSIVE lock on the relation.  No new locks which
 	 * would matter here can be acquired while that is held.
 	 */
@@ -2884,7 +2884,7 @@ DropAllPredicateLocksFromTable(Relation relation, bool transfer)
 		PREDICATELOCK *oldpredlock;
 
 		/*
-		 * Check whether this__ is a target which needs attention.
+		 * Check whether this is a target which needs attention.
 		 */
 		if (GET_PREDICATELOCKTARGETTAG_RELATION(oldtarget->tag) != relId)
 			continue;			/* wrong relation id */
@@ -2903,7 +2903,7 @@ DropAllPredicateLocksFromTable(Relation relation, bool transfer)
 
 		/*
 		 * First make sure we have the heap relation target.  We only need to
-		 * do this__ once.
+		 * do this once.
 		 */
 		if (transfer && heaptarget == NULL)
 		{
@@ -3024,7 +3024,7 @@ TransferPredicateLocksToHeapRelation(Relation relation)
  *		PredicateLockPageSplit
  *
  * Copies any predicate locks for the old page to the new page.
- * Skip if this__ is a temporary table or toast table.
+ * Skip if this is a temporary table or toast table.
  *
  * NOTE: A page split (or overflow) affects all serializable transactions,
  * even if it occurs in the context of another transaction isolation level.
@@ -3045,11 +3045,11 @@ PredicateLockPageSplit(Relation relation, BlockNumber oldblkno,
 	/*
 	 * Bail out quickly if there are no serializable transactions running.
 	 *
-	 * It's safe to do this__ check without taking any additional locks. Even if
+	 * It's safe to do this check without taking any additional locks. Even if
 	 * a serializable transaction starts concurrently, we know it can't take
 	 * any SIREAD locks on the page being split because the caller is holding
 	 * the associated buffer page lock. Memory reordering isn't an issue; the
-	 * memory barrier in the LWLock acquisition guarantees that this__ read
+	 * memory barrier in the LWLock acquisition guarantees that this read
 	 * occurs while the buffer page lock is held.
 	 */
 	if (!TransactionIdIsValid(PredXact->SxactGlobalXmin))
@@ -3114,7 +3114,7 @@ PredicateLockPageSplit(Relation relation, BlockNumber oldblkno,
  *		PredicateLockPageCombine
  *
  * Combines predicate locks for two existing pages.
- * Skip if this__ is a temporary table or toast table.
+ * Skip if this is a temporary table or toast table.
  *
  * NOTE: A page combine affects all serializable transactions, even if it
  * occurs in the context of another transaction isolation level.
@@ -3182,12 +3182,12 @@ SetNewSxactGlobalXmin(void)
  * transaction when it becomes impossible for the transaction to become
  * part of a dangerous structure.
  *
- * We do nothing unless this__ is a serializable transaction.
+ * We do nothing unless this is a serializable transaction.
  *
  * This method must ensure that shared memory hash tables are cleaned
  * up in some relatively timely fashion.
  *
- * If this__ transaction is committing and is holding any predicate locks,
+ * If this transaction is committing and is holding any predicate locks,
  * it must be added to a list of completed serializable transactions still
  * holding locks.
  */
@@ -3205,7 +3205,7 @@ ReleasePredicateLocks(bool isCommit)
 	 * as READ WRITE can show as READ ONLY later, e.g., within
 	 * substransactions.  We want to flag a transaction as READ ONLY if it
 	 * commits without writing so that de facto READ ONLY transactions get the
-	 * benefit of some RO optimizations, so we will use this__ local variable to
+	 * benefit of some RO optimizations, so we will use this local variable to
 	 * get some cleanup logic right which is based on whether the transaction
 	 * was declared READ ONLY at the top level.
 	 */
@@ -3236,9 +3236,9 @@ ReleasePredicateLocks(bool isCommit)
 	 * We don't hold XidGenLock lock here, assuming that TransactionId is
 	 * atomic!
 	 *
-	 * If this__ value is changing, we don't care that much whether we get the
+	 * If this value is changing, we don't care that much whether we get the
 	 * old or new value -- it is just used to determine how far
-	 * GlobalSerializableXmin must advance before this__ transaction can be
+	 * GlobalSerializableXmin must advance before this transaction can be
 	 * fully cleaned up.  The worst that could happen is we wait for one more
 	 * transaction to complete before freeing some RAM; correctness of visible
 	 * behavior is not affected.
@@ -3260,10 +3260,10 @@ ReleasePredicateLocks(bool isCommit)
 	else
 	{
 		/*
-		 * The DOOMED flag indicates that we intend to roll back this__
+		 * The DOOMED flag indicates that we intend to roll back this
 		 * transaction and so it should not cause serialization failures for
-		 * other transactions that conflict with it. Note that this__ flag might
-		 * already be set, if another backend marked this__ transaction for
+		 * other transactions that conflict with it. Note that this flag might
+		 * already be set, if another backend marked this transaction for
 		 * abort.
 		 *
 		 * The ROLLED_BACK flag further indicates that ReleasePredicateLocks
@@ -3463,7 +3463,7 @@ ReleasePredicateLocks(bool isCommit)
 	 * Check whether it's time to clean up old transactions. This can only be
 	 * done when the last serializable transaction with the oldest xmin among
 	 * serializable transactions completes.  We then find the "new oldest"
-	 * xmin and purge any transactions which finished before this__ transaction
+	 * xmin and purge any transactions which finished before this transaction
 	 * was launched.
 	 */
 	needToClear = false;
@@ -3481,7 +3481,7 @@ ReleasePredicateLocks(bool isCommit)
 
 	LWLockAcquire(SerializableFinishedListLock, LW_EXCLUSIVE);
 
-	/* Add this__ to the list of transactions to check for later cleanup. */
+	/* Add this to the list of transactions to check for later cleanup. */
 	if (isCommit)
 		SHMQueueInsertBefore(FinishedSerializableTransactions,
 							 &MySerializableXact->finishedLink);
@@ -3550,7 +3550,7 @@ ClearOldPredicateLocks(void)
 		   && finishedSxact->commitSeqNo <= PredXact->CanPartialClearThrough)
 		{
 			/*
-			 * Any active transactions that took their snapshot before this__
+			 * Any active transactions that took their snapshot before this
 			 * transaction committed are read-only, so we can clear part of
 			 * its state.
 			 */
@@ -3609,7 +3609,7 @@ ClearOldPredicateLocks(void)
 		LWLockRelease(SerializableXactHashLock);
 
 		/*
-		 * If this__ lock originally belonged to an old enough transaction, we
+		 * If this lock originally belonged to an old enough transaction, we
 		 * can release it.
 		 */
 		if (canDoPartialCleanup)
@@ -3657,7 +3657,7 @@ ClearOldPredicateLocks(void)
  *
  * When the partial flag is set, we can release all predicate locks and
  * in-conflict information -- we've established that there are no longer
- * any overlapping read write transactions for which this__ transaction could
+ * any overlapping read write transactions for which this transaction could
  * matter -- but keep the transaction entry itself and any outConflicts.
  *
  * When the summarize flag is set, we've run short of room for sxact data
@@ -3681,7 +3681,7 @@ ReleaseOneSerializableXact(SERIALIZABLEXACT *sxact, bool partial,
 	Assert(LWLockHeldByMe(SerializableFinishedListLock));
 
 	/*
-	 * First release all the predicate locks held by this__ xact (or transfer
+	 * First release all the predicate locks held by this xact (or transfer
 	 * them to OldCommittedSxact if summarize is true)
 	 */
 	LWLockAcquire(SerializablePredicateLockListLock, LW_SHARED);
@@ -3822,7 +3822,7 @@ ReleaseOneSerializableXact(SERIALIZABLEXACT *sxact, bool partial,
  * (overlaps) our current transaction.
  *
  * We need to identify the top level transaction for SSI, anyway, so pass
- * that to this__ function to save the overhead of checking the snapshot's
+ * that to this function to save the overhead of checking the snapshot's
  * subxip array.
  */
 static bool
@@ -3865,8 +3865,8 @@ XidIsConcurrent(TransactionId xid)
  *
  * This function should be called just about anywhere in heapam.c where a
  * tuple has been read. The caller must hold at least a shared lock on the
- * buffer, because this__ function might set hint bits on the tuple. There is
- * currently no known reason to call this__ function from an index AM.
+ * buffer, because this function might set hint bits on the tuple. There is
+ * currently no known reason to call this function from an index AM.
  */
 void
 CheckForSerializableConflictOut(bool visible, Relation relation,
@@ -3923,15 +3923,15 @@ CheckForSerializableConflictOut(bool visible, Relation relation,
 		default:
 
 			/*
-			 * The only way to get to this__ default clause is if a new value is
-			 * added to the enum type without adding it to this__ switch
+			 * The only way to get to this default clause is if a new value is
+			 * added to the enum type without adding it to this switch
 			 * statement.  That's a bug, so elog.
 			 */
 			elog(ERROR, "unrecognized return value from HeapTupleSatisfiesVacuum: %u", htsvResult);
 
 			/*
 			 * In spite of having all enum values covered and calling elog on
-			 * this__ default, some compilers think this__ is a code path which
+			 * this default, some compilers think this is a code path which
 			 * allows xid to be used below without initialization. Silence
 			 * that warning.
 			 */
@@ -4030,7 +4030,7 @@ CheckForSerializableConflictOut(bool visible, Relation relation,
 	}
 
 	/*
-	 * If this__ is a read-only transaction and the writing transaction has
+	 * If this is a read-only transaction and the writing transaction has
 	 * committed, and it doesn't have a rw-conflict to a transaction which
 	 * committed before it, no conflict.
 	 */
@@ -4060,7 +4060,7 @@ CheckForSerializableConflictOut(bool visible, Relation relation,
 	}
 
 	/*
-	 * Flag the conflict.  But first, if this__ conflict creates a dangerous
+	 * Flag the conflict.  But first, if this conflict creates a dangerous
 	 * structure, ereport an error.
 	 */
 	FlagRWConflict(MySerializableXact, sxact);
@@ -4095,14 +4095,14 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 									HASH_FIND, NULL);
 	if (!target)
 	{
-		/* Nothing has this__ target locked; we're done here. */
+		/* Nothing has this target locked; we're done here. */
 		LWLockRelease(partitionLock);
 		return;
 	}
 
 	/*
 	 * Each lock for an overlapping transaction represents a conflict: a
-	 * rw-dependency in to this__ transaction.
+	 * rw-dependency in to this transaction.
 	 */
 	predlock = (PREDICATELOCK *)
 		SHMQueueNext(&(target->predicateLocks),
@@ -4130,7 +4130,7 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 			 * our SIREAD lock, but we'll defer doing so until after the loop
 			 * because that requires upgrading to an exclusive partition lock.
 			 *
-			 * We can't use this__ optimization within a subtransaction because
+			 * We can't use this optimization within a subtransaction because
 			 * the subtransaction could roll back, and we would be left
 			 * without any lock at the top level.
 			 */
@@ -4175,7 +4175,7 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 	/*
 	 * If we found one of our own SIREAD locks to remove, remove it now.
 	 *
-	 * At this__ point our transaction already has an ExclusiveRowLock on the
+	 * At this point our transaction already has an ExclusiveRowLock on the
 	 * relation, so we are OK to drop the predicate lock on the tuple, if
 	 * found, without fearing that another write against the tuple will occur
 	 * before the MVCC information makes it to the buffer.
@@ -4319,9 +4319,9 @@ CheckForSerializableConflictIn(Relation relation, HeapTuple tuple,
  * SSI.
  *
  * The relation passed in must be a heap relation. Any predicate lock of any
- * granularity on the heap will cause a rw-conflict in to this__ transaction.
+ * granularity on the heap will cause a rw-conflict in to this transaction.
  * Predicate locks on indexes do not matter because they only exist to guard
- * against conflicting inserts into the index, and this__ is a mass *delete*.
+ * against conflicting inserts into the index, and this is a mass *delete*.
  * When a table is truncated or dropped, the index will also be truncated
  * or dropped, and we'll deal with locks on the index when that happens.
  *
@@ -4344,7 +4344,7 @@ CheckTableForSerializableConflictIn(Relation relation)
 
 	/*
 	 * Bail out quickly if there are no serializable transactions running.
-	 * It's safe to check this__ without taking locks because the caller is
+	 * It's safe to check this without taking locks because the caller is
 	 * holding an ACCESS EXCLUSIVE lock on the relation.  No new locks which
 	 * would matter here can be acquired while that is held.
 	 */
@@ -4378,7 +4378,7 @@ CheckTableForSerializableConflictIn(Relation relation)
 		PREDICATELOCK *predlock;
 
 		/*
-		 * Check whether this__ is a target which needs attention.
+		 * Check whether this is a target which needs attention.
 		 */
 		if (GET_PREDICATELOCKTARGETTAG_RELATION(target->tag) != heapId)
 			continue;			/* wrong relation id */
@@ -4386,7 +4386,7 @@ CheckTableForSerializableConflictIn(Relation relation)
 			continue;			/* wrong database id */
 
 		/*
-		 * Loop through locks for this__ target and flag conflicts.
+		 * Loop through locks for this target and flag conflicts.
 		 */
 		predlock = (PREDICATELOCK *)
 			SHMQueueNext(&(target->predicateLocks),
@@ -4430,7 +4430,7 @@ FlagRWConflict(SERIALIZABLEXACT *reader, SERIALIZABLEXACT *writer)
 {
 	Assert(reader != writer);
 
-	/* First, see if this__ conflict causes failure. */
+	/* First, see if this conflict causes failure. */
 	OnConflict_CheckForSerializationFailure(reader, writer);
 
 	/* Actually do the conflict flagging. */
@@ -4625,7 +4625,7 @@ OnConflict_CheckForSerializationFailure(const SERIALIZABLEXACT *reader,
  *		at commit.
  *
  * We're checking for a dangerous structure as each conflict is recorded.
- * The only way we could have a problem at commit is if this__ is the "out"
+ * The only way we could have a problem at commit is if this is the "out"
  * side of a pivot, and neither the "in" side nor the pivot has yet
  * committed.
  *
@@ -4762,7 +4762,7 @@ AtPrepare_PredicateLocks(void)
 	/*
 	 * Generate a lock record for each lock.
 	 *
-	 * To do this__, we need to walk the predicate lock list in our sxact rather
+	 * To do this, we need to walk the predicate lock list in our sxact rather
 	 * than using the local predicate lock table because the latter is not
 	 * guaranteed to be accurate.
 	 */
@@ -4890,7 +4890,7 @@ predicatelock_twophase_recover(TransactionId xid, uint16 info,
 		sxact->SeqNo.lastCommitBeforeSnapshot = RecoverySerCommitSeqNo;
 
 		/*
-		 * Don't need to track this__; no transactions running at the time the
+		 * Don't need to track this; no transactions running at the time the
 		 * recovered xact started are still active, except possibly other
 		 * prepared xacts and we don't care whether those are RO_SAFE or not.
 		 */
@@ -4930,7 +4930,7 @@ predicatelock_twophase_recover(TransactionId xid, uint16 info,
 		sxid->myXact = (SERIALIZABLEXACT *) sxact;
 
 		/*
-		 * Update global xmin. Note that this__ is a special case compared to
+		 * Update global xmin. Note that this is a special case compared to
 		 * registering a normal transaction, because the global xmin might go
 		 * backwards. That's OK, because until recovery is over we're not
 		 * going to complete any transactions or create any non-prepared

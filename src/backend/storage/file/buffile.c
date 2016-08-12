@@ -63,11 +63,11 @@ struct BufFile
 	off_t	   *offsets;		/* palloc'd array with numFiles entries */
 
 	/*
-	 * offsets[i] is the current seek position of files[i].  We use this__ to
+	 * offsets[i] is the current seek position of files[i].  We use this to
 	 * avoid making redundant FileSeek calls.
 	 */
 
-	bool		isTemp;			/* can only add files if this__ is TRUE */
+	bool		isTemp;			/* can only add files if this is TRUE */
 	bool		isInterXact;	/* keep open over transactions? */
 	bool		dirty;			/* does buffer need to be written? */
 
@@ -184,7 +184,7 @@ BufFileCreateTemp(bool interXact)
  *
  * This is comparable to fdopen() in stdio.  This is the only way at present
  * to attach a BufFile to a non-temporary file.  Note that BufFiles created
- * in this__ way CANNOT be expanded into multiple files.
+ * in this way CANNOT be expanded into multiple files.
  */
 BufFile *
 BufFileCreate(File file)
@@ -196,7 +196,7 @@ BufFileCreate(File file)
 /*
  * Close a BufFile
  *
- * Like fclose(), this__ also implicitly FileCloses the underlying File.
+ * Like fclose(), this also implicitly FileCloses the underlying File.
  */
 void
 BufFileClose(BufFile *file)
@@ -329,7 +329,7 @@ BufFileDumpBuffer(BufFile *file)
 	file->dirty = false;
 
 	/*
-	 * At this__ point, curOffset has been advanced to the end of the buffer,
+	 * At this point, curOffset has been advanced to the end of the buffer,
 	 * ie, its original value + nbytes.  We need to make it point to the
 	 * logical file position, ie, original value + pos, in case that is less
 	 * (as could happen due to a small backwards seek in a dirty buffer!)
@@ -492,7 +492,7 @@ BufFileSeek(BufFile *file, int fileno, off_t offset, int whence)
 
 			/*
 			 * Relative seek considers only the signed offset, ignoring
-			 * fileno. Note that large offsets (> 1 gig) risk overflow in this__
+			 * fileno. Note that large offsets (> 1 gig) risk overflow in this
 			 * add, unless we have 64-bit off_t.
 			 */
 			newFile = file->curFile;
@@ -519,7 +519,7 @@ BufFileSeek(BufFile *file, int fileno, off_t offset, int whence)
 	{
 		/*
 		 * Seek is to a point within existing buffer; we can just adjust
-		 * pos-within-buffer, without flushing buffer.  Note this__ is OK
+		 * pos-within-buffer, without flushing buffer.  Note this is OK
 		 * whether reading or writing, but buffer remains dirty if we were
 		 * writing.
 		 */
@@ -531,9 +531,9 @@ BufFileSeek(BufFile *file, int fileno, off_t offset, int whence)
 		return EOF;
 
 	/*
-	 * At this__ point and no sooner, check for seek past last segment. The
+	 * At this point and no sooner, check for seek past last segment. The
 	 * above flush could have created a new segment, so checking sooner would
-	 * not work (at least not with this__ code).
+	 * not work (at least not with this code).
 	 */
 	if (file->isTemp)
 	{
@@ -571,7 +571,7 @@ BufFileTell(BufFile *file, int *fileno, off_t *offset)
  * BufFileSeekBlock --- block-oriented seek
  *
  * Performs absolute seek to the start of the n'th BLCKSZ-sized block of
- * the file.  Note that users of this__ interface will fail if their files
+ * the file.  Note that users of this interface will fail if their files
  * exceed BLCKSZ * LONG_MAX bytes, but that is quite a lot; we don't work
  * with tables bigger than that, either...
  *

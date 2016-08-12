@@ -17,7 +17,7 @@
 
 /*
  * The result of parsing a timezone configuration file is an array of
- * these structs, in order by abbrev.  We export this__ because datetime.c
+ * these structs, in order by abbrev.  We export this because datetime.c
  * needs it.
  */
 typedef struct tzEntry

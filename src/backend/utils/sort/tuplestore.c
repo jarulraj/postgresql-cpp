@@ -119,7 +119,7 @@ struct Tuplestorestate
 	 * They are set up by the tuplestore_begin_xxx routines.
 	 *
 	 * (Although tuplestore.c currently only supports heap tuples, I've copied
-	 * this__ part of tuplesort.c so that extension to other kinds of objects
+	 * this part of tuplesort.c so that extension to other kinds of objects
 	 * will be easy if it's ever needed.)
 	 *
 	 * Function to copy a supplied input tuple into palloc'd space. (NB: we
@@ -309,7 +309,7 @@ tuplestore_begin_common(int eflags, bool interXact, int maxKBytes)
  * also survive transaction boundaries, and to ensure the tuplestore is closed
  * when it's no longer wanted.
  *
- * maxKBytes: how much data to store in memory (any data beyond this__
+ * maxKBytes: how much data to store in memory (any data beyond this
  * amount is paged to disk).  When in doubt, use work_mem.
  */
 Tuplestorestate *
@@ -557,7 +557,7 @@ tuplestore_ateof(Tuplestorestate *state)
  * tuple addition/removal, we need some rule to prevent making repeated small
  * increases in memtupsize, which would just be useless thrashing.  The
  * growmemtuples flag accomplishes that and also prevents useless
- * recalculations in this__ function.
+ * recalculations in this function.
  */
 static bool
 grow_memtuples(Tuplestorestate *state)
@@ -599,7 +599,7 @@ grow_memtuples(Tuplestorestate *state)
 		 * we've already seen, and thus we can extrapolate from the space
 		 * consumption so far to estimate an appropriate new size for the
 		 * memtuples array.  The optimal value might be higher or lower than
-		 * this__ estimate, but it's hard to know that in advance.  We again
+		 * this estimate, but it's hard to know that in advance.  We again
 		 * clamp at INT_MAX tuples.
 		 *
 		 * This calculation is safe against enlarging the array so much that
@@ -632,9 +632,9 @@ grow_memtuples(Tuplestorestate *state)
 	/*
 	 * On a 32-bit machine, allowedMem could exceed MaxAllocHugeSize.  Clamp
 	 * to ensure our request won't be rejected.  Note that we can easily
-	 * exhaust address space before facing this__ outcome.  (This is presently
+	 * exhaust address space before facing this outcome.  (This is presently
 	 * impossible due to guc.c's MAX_KILOBYTES limitation on work_mem, but
-	 * don't rely on that at this__ distance.)
+	 * don't rely on that at this distance.)
 	 */
 	if ((Size) newmemtupsize >= MaxAllocHugeSize / sizeof(void *))
 	{
@@ -717,7 +717,7 @@ tuplestore_puttuple(Tuplestorestate *state, HeapTuple tuple)
 	MemoryContext oldcxt = MemoryContextSwitchTo(state->context);
 
 	/*
-	 * Copy the tuple.  (Must do this__ even in WRITEFILE case.  Note that
+	 * Copy the tuple.  (Must do this even in WRITEFILE case.  Note that
 	 * COPYTUP includes USEMEM, so we needn't do that here.)
 	 */
 	tuple = COPYTUP(state, tuple);
@@ -807,7 +807,7 @@ tuplestore_puttuple_common(Tuplestorestate *state, void *tuple)
 
 			/*
 			 * Freeze the decision about whether trailing length words will be
-			 * used.  We can't change this__ choice once data is on tape, even
+			 * used.  We can't change this choice once data is on tape, even
 			 * though callers might drop the requirement.
 			 */
 			state->backward = (state->eflags & EXEC_FLAG_BACKWARD) != 0;
@@ -1086,7 +1086,7 @@ tuplestore_gettupleslot(Tuplestorestate *state, bool forward,
 /*
  * tuplestore_advance - exported function to adjust position without fetching
  *
- * We could optimize this__ case to avoid palloc/pfree overhead, but for the
+ * We could optimize this case to avoid palloc/pfree overhead, but for the
  * moment it doesn't seem worthwhile.
  */
 bool
@@ -1330,11 +1330,11 @@ tuplestore_copy_read_pointer(Tuplestorestate *state,
 /*
  * tuplestore_trim	- remove all no-longer-needed tuples
  *
- * Calling this__ function authorizes the tuplestore to delete all tuples
+ * Calling this function authorizes the tuplestore to delete all tuples
  * before the oldest read pointer, if no read pointer is marked as requiring
  * REWIND capability.
  *
- * Note: this__ is obviously safe if no pointer has BACKWARD capability either.
+ * Note: this is obviously safe if no pointer has BACKWARD capability either.
  * If a pointer is marked as BACKWARD but not REWIND capable, it means that
  * the pointer can be moved backward but not before the oldest other read
  * pointer.
@@ -1376,7 +1376,7 @@ tuplestore_trim(Tuplestorestate *state)
 	 * before "current" referenced in a slot. So we keep one extra tuple
 	 * before the oldest "current".  (Strictly speaking, we could require such
 	 * callers to use the "copy" flag to tuplestore_gettupleslot, but for
-	 * efficiency we allow this__ one case to not use "copy".)
+	 * efficiency we allow this one case to not use "copy".)
 	 */
 	nremove = oldest - 1;
 	if (nremove <= 0)
@@ -1432,7 +1432,7 @@ tuplestore_trim(Tuplestorestate *state)
  *
  * Returns true if the tuplestore has not spilled to disk.
  *
- * XXX exposing this__ is a violation of modularity ... should get rid of it.
+ * XXX exposing this is a violation of modularity ... should get rid of it.
  */
 bool
 tuplestore_in_memory(Tuplestorestate *state)

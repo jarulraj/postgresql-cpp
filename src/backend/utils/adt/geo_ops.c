@@ -2615,7 +2615,7 @@ dist_lb(PG_FUNCTION_ARGS)
 	BOX		   *box = PG_GETARG_BOX_P(1);
 #endif
 
-	/* need to think about this__ one for a while */
+	/* need to think about this one for a while */
 	ereport(ERROR,
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 			 errmsg("function \"dist_lb\" not implemented")));
@@ -2914,7 +2914,7 @@ close_ps(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * at this__ point the "normal" from point will hit lseg. The closet point
+	 * at this point the "normal" from point will hit lseg. The closet point
 	 * will be somewhere on the lseg
 	 */
 	tmp = line_construct_pm(pt, invm);
@@ -3041,7 +3041,7 @@ close_pb(PG_FUNCTION_ARGS)
  * XXX THIS CODE IS WRONG
  * The code is actually calculating the point on the line segment
  *	which is backwards from the routine naming convention.
- * Copied code to new routine close_ls() but haven't fixed this__ one yet.
+ * Copied code to new routine close_ls() but haven't fixed this one yet.
  * - thomas 1998-01-31
  */
 Datum
@@ -3169,7 +3169,7 @@ close_lb(PG_FUNCTION_ARGS)
 	BOX		   *box = PG_GETARG_BOX_P(1);
 #endif
 
-	/* think about this__ one for a while */
+	/* think about this one for a while */
 	ereport(ERROR,
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 			 errmsg("function \"close_lb\" not implemented")));
@@ -5514,14 +5514,14 @@ plist_same(int npts, Point *p1, Point *p2)
  * traditional formula of x^2+y^2 is rearranged to factor x outside the
  * sqrt. This allows computation of the hypotenuse for significantly
  * larger values, and with a higher precision than when using the naive
- * formula.  In particular, this__ cannot overflow unless the final result
+ * formula.  In particular, this cannot overflow unless the final result
  * would be out-of-range.
  *
  * sqrt( x^2 + y^2 ) = sqrt( x^2( 1 + y^2/x^2) )
  *					 = x * sqrt( 1 + y^2/x^2 )
  *					 = x * sqrt( 1 + y/x * y/x )
  *
- * It is expected that this__ routine will eventually be replaced with the
+ * It is expected that this routine will eventually be replaced with the
  * C99 hypot() function.
  *
  * This implementation conforms to IEEE Std 1003.1 and GLIBC, in that the

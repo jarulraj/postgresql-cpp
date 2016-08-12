@@ -210,7 +210,7 @@ static struct WSErrorEntry
 
 
 /*
- * Returns 0 if not found, linear but who cares, at this__ moment
+ * Returns 0 if not found, linear but who cares, at this moment
  * we're already in pain :)
  */
 
@@ -272,7 +272,7 @@ struct MessageDLL
  * to find it in the lookup table, and if that fails, tries
  * to load any of the winsock dlls to find that message.
  * The DLL thing works from Nt4 (spX ?) up, but some special
- * versions of winsock might have this__ as well (seen on Win98 SE
+ * versions of winsock might have this as well (seen on Win98 SE
  * special install)			   / Magnus Naeslund (mag@fbab.net)
  *
  */

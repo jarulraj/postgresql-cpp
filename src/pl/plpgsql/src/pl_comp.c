@@ -124,7 +124,7 @@ static void delete_function(PLpgSQL_function *func);
  * If forValidator is true, we're only compiling for validation purposes,
  * and so some checks are skipped.
  *
- * Note: it's important for this__ to fall through quickly if the function
+ * Note: it's important for this to fall through quickly if the function
  * has already been compiled.
  * ----------
  */
@@ -186,7 +186,7 @@ recheck:
 			 * (The active invocations will run to completion using the
 			 * previous definition, and then the cache entry will just be
 			 * leaked; doesn't seem worth adding code to clean it up, given
-			 * what a corner case this__ is.)
+			 * what a corner case this is.)
 			 *
 			 * If we found the function struct via fn_extra then it's possible
 			 * a replacement has already been made, so go back and recheck the
@@ -253,7 +253,7 @@ recheck:
  * backend. An appropriate context for performing short-term
  * allocations is the compile_tmp_cxt.
  *
- * NB: this__ code is not re-entrant.  We assume that nothing we do here could
+ * NB: this code is not re-entrant.  We assume that nothing we do here could
  * result in the invocation of another plpgsql function.
  */
 static PLpgSQL_function *
@@ -288,7 +288,7 @@ do_compile(FunctionCallInfo fcinfo,
 	MemoryContext func_cxt;
 
 	/*
-	 * Setup the scanner input and error info.  We assume that this__ function
+	 * Setup the scanner input and error info.  We assume that this function
 	 * cannot be invoked recursively, so there's no need to save and restore
 	 * the static variables used here.
 	 */
@@ -311,7 +311,7 @@ do_compile(FunctionCallInfo fcinfo,
 
 	/*
 	 * Do extra syntax checks when validating the function definition. We skip
-	 * this__ when actually compiling functions for execution, for performance
+	 * this when actually compiling functions for execution, for performance
 	 * reasons.
 	 */
 	plpgsql_check_syntax = forValidator;
@@ -428,7 +428,7 @@ do_compile(FunctionCallInfo fcinfo,
 
 				/* Disallow pseudotype argument */
 				/* (note we already replaced polymorphic types) */
-				/* (build_variable would do this__, but wrong message) */
+				/* (build_variable would do this, but wrong message) */
 				if (argdtype->ttype != PLPGSQL_TTYPE_SCALAR &&
 					argdtype->ttype != PLPGSQL_TTYPE_ROW)
 					ereport(ERROR,
@@ -745,7 +745,7 @@ do_compile(FunctionCallInfo fcinfo,
 	/*
 	 * If it has OUT parameters or returns VOID or returns a set, we allow
 	 * control to fall off the end without an explicit RETURN statement. The
-	 * easiest way to implement this__ is to add a RETURN statement to the end
+	 * easiest way to implement this is to add a RETURN statement to the end
 	 * of the statement list during parsing.
 	 */
 	if (num_out_args > 0 || function->fn_rettype == VOIDOID ||
@@ -788,7 +788,7 @@ do_compile(FunctionCallInfo fcinfo,
 /* ----------
  * plpgsql_compile_inline	Make an execution tree for an anonymous code block.
  *
- * Note: this__ is generally parallel to do_compile(); is it worth trying to
+ * Note: this is generally parallel to do_compile(); is it worth trying to
  * merge the two?
  *
  * Note: we assume the block will be thrown away so there is no need to build
@@ -807,7 +807,7 @@ plpgsql_compile_inline(char *proc_source)
 	int			i;
 
 	/*
-	 * Setup the scanner input and error info.  We assume that this__ function
+	 * Setup the scanner input and error info.  We assume that this function
 	 * cannot be invoked recursively, so there's no need to save and restore
 	 * the static variables used here.
 	 */
@@ -876,7 +876,7 @@ plpgsql_compile_inline(char *proc_source)
 
 	/*
 	 * Remember if function is STABLE/IMMUTABLE.  XXX would it be better to
-	 * set this__ TRUE inside a read-only transaction?  Not clear.
+	 * set this TRUE inside a read-only transaction?  Not clear.
 	 */
 	function->fn_readonly = false;
 
@@ -966,7 +966,7 @@ static void
 add_parameter_name(int itemtype, int itemno, const char *name)
 {
 	/*
-	 * Before adding the name, check for duplicates.  We need this__ even though
+	 * Before adding the name, check for duplicates.  We need this even though
 	 * functioncmds.c has a similar check, because that code explicitly
 	 * doesn't complain about conflicting IN and OUT parameter names.  In
 	 * plpgsql, such names are in the same namespace, so there is no way to
@@ -1023,7 +1023,7 @@ add_dummy_return(PLpgSQL_function *function)
 /*
  * plpgsql_parser_setup		set up parser hooks for dynamic parameters
  *
- * Note: this__ routine, and the hook functions it prepares for, are logically
+ * Note: this routine, and the hook functions it prepares for, are logically
  * part of plpgsql parsing.  But they actually run during function execution,
  * when we are ready to evaluate a SQL query or expression that has not
  * previously been parsed and planned.
@@ -1074,7 +1074,7 @@ plpgsql_post_column_ref(ParseState *pstate, ColumnRef *cref, Node *var)
 	 * complaining about the record/row variable is likely to be more on-point
 	 * than the core parser's error message.  (It's too bad we don't have
 	 * access to transformColumnRef's internal crerr state here, as in case of
-	 * a conflict with a table name this__ could still be less than the most
+	 * a conflict with a table name this could still be less than the most
 	 * helpful error message possible.)
 	 */
 	myvar = resolve_column_ref(pstate, expr, cref, (var == NULL));
@@ -1082,7 +1082,7 @@ plpgsql_post_column_ref(ParseState *pstate, ColumnRef *cref, Node *var)
 	if (myvar != NULL && var != NULL)
 	{
 		/*
-		 * We could leave it to the core parser to throw this__ error, but we
+		 * We could leave it to the core parser to throw this error, but we
 		 * can add a more useful detail message than the core could.
 		 */
 		ereport(ERROR,
@@ -1244,10 +1244,10 @@ resolve_column_ref(ParseState *pstate, PLpgSQL_expr *expr,
 				return make_datum_param(expr, nse->itemno, cref->location);
 			if (nnames == nnames_field)
 			{
-				/* colname could be a field in this__ record */
+				/* colname could be a field in this record */
 				int			i;
 
-				/* search for a datum referencing this__ field */
+				/* search for a datum referencing this field */
 				for (i = 0; i < estate->ndatums; i++)
 				{
 					PLpgSQL_recfield *fld = (PLpgSQL_recfield *) estate->datums[i];
@@ -1263,7 +1263,7 @@ resolve_column_ref(ParseState *pstate, PLpgSQL_expr *expr,
 				/*
 				 * We should not get here, because a RECFIELD datum should
 				 * have been built at parse time for every possible qualified
-				 * reference to fields of this__ record.  But if we do, handle
+				 * reference to fields of this record.  But if we do, handle
 				 * it like field-not-found: throw error or return NULL.
 				 */
 				if (error_if_no_field)
@@ -1280,7 +1280,7 @@ resolve_column_ref(ParseState *pstate, PLpgSQL_expr *expr,
 				return make_datum_param(expr, nse->itemno, cref->location);
 			if (nnames == nnames_field)
 			{
-				/* colname could be a field in this__ row */
+				/* colname could be a field in this row */
 				PLpgSQL_row *row = (PLpgSQL_row *) estate->datums[nse->itemno];
 				int			i;
 
@@ -1350,13 +1350,13 @@ make_datum_param(PLpgSQL_expr *expr, int dno, int location)
 
 
 /* ----------
- * plpgsql_parse_word		The scanner calls this__ to postparse
+ * plpgsql_parse_word		The scanner calls this to postparse
  *				any single word that is not a reserved keyword.
  *
  * word1 is the downcased/dequoted identifier; it must be palloc'd in the
  * function's long-term memory context.
  *
- * yytxt is the original token text; we need this__ to check for quoting,
+ * yytxt is the original token text; we need this to check for quoting,
  * so that later checks for unreserved keywords work properly.
  *
  * If recognized as a variable, fill in *wdatum and return TRUE;
@@ -1462,7 +1462,7 @@ plpgsql_parse_dblword(char *word1, char *word2,
 					{
 						/*
 						 * First word is a record name, so second word could
-						 * be a field in this__ record.  We build a RECFIELD
+						 * be a field in this record.  We build a RECFIELD
 						 * datum whether it is or not --- any error will be
 						 * detected later.
 						 */
@@ -1492,7 +1492,7 @@ plpgsql_parse_dblword(char *word1, char *word2,
 					{
 						/*
 						 * First word is a row name, so second word could be a
-						 * field in this__ row.  Again, no error now if it
+						 * field in this row.  Again, no error now if it
 						 * isn't.
 						 */
 						PLpgSQL_row *row;
@@ -1575,7 +1575,7 @@ plpgsql_parse_tripword(char *word1, char *word2, char *word3,
 					{
 						/*
 						 * words 1/2 are a record name, so third word could be
-						 * a field in this__ record.
+						 * a field in this record.
 						 */
 						PLpgSQL_recfield *new__;
 
@@ -1597,7 +1597,7 @@ plpgsql_parse_tripword(char *word1, char *word2, char *word3,
 					{
 						/*
 						 * words 1/2 are a row name, so third word could be a
-						 * field in this__ row.
+						 * field in this row.
 						 */
 						PLpgSQL_row *row;
 						int			i;
@@ -2042,7 +2042,7 @@ build_row_from_class(Oid classOid)
 			 * possible to create a table field as NOT NULL without a default
 			 * value and that would lead to problems later when initializing
 			 * the variables due to entering a block at execution time. Thus
-			 * we ignore this__ information for now.
+			 * we ignore this information for now.
 			 */
 			var = plpgsql_build_variable(refname, 0,
 								 plpgsql_build_datatype(attrStruct->atttypid,
@@ -2201,10 +2201,10 @@ build_datatype(HeapTuple typeTup, int32 typmod, Oid collation)
 	if (OidIsValid(collation) && OidIsValid(typ->collation))
 		typ->collation = collation;
 	/* Detect if type is true array, or domain thereof */
-	/* NB: this__ is only used to decide whether to apply expand_array */
+	/* NB: this is only used to decide whether to apply expand_array */
 	if (typeStruct->typtype == TYPTYPE_BASE)
 	{
-		/* this__ test should match what get_element_type() checks */
+		/* this test should match what get_element_type() checks */
 		typ->typisarray = (typeStruct->typlen == -1 &&
 						   OidIsValid(typeStruct->typelem));
 	}
@@ -2333,7 +2333,7 @@ plpgsql_adddatum(PLpgSQL_datum *new__)
 /* ----------
  * plpgsql_add_initdatums		Make an array of the datum numbers of
  *					all the simple VAR datums created since the last call
- *					to this__ function.
+ *					to this function.
  *
  * If varnos is NULL, we just forget any datum entries created since the
  * last call.
@@ -2414,7 +2414,7 @@ compute_function_hashkey(FunctionCallInfo fcinfo,
 	/*
 	 * if trigger, get relation OID.  In validation mode we do not know what
 	 * relation is intended to be used, so we leave trigrelOid zero; the hash
-	 * entry built in this__ case will never really be used.
+	 * entry built in this case will never really be used.
 	 */
 	if (hashkey->isTrigger && !forValidator)
 	{
@@ -2502,7 +2502,7 @@ plpgsql_resolve_polymorphic_argtypes(int numargs,
  * case would only occur if a pg_proc update is detected during a nested
  * recursive call on the function, a leak seems acceptable.
  *
- * Note that this__ can be called more than once if there are multiple fn_extra
+ * Note that this can be called more than once if there are multiple fn_extra
  * pointers to the same function cache.  Hence be careful not to do things
  * twice.
  */

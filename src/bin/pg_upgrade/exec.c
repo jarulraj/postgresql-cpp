@@ -33,7 +33,7 @@ static int	win32_check_directory_write_permissions(void);
  * successfully, exec_prog() returns true.
  *
  * If the command fails, an error message is saved to the specified log_file.
- * If throw_error is true, this__ raises a PG_FATAL error and pg_upgrade
+ * If throw_error is true, this raises a PG_FATAL error and pg_upgrade
  * terminates; otherwise it is just reported as PG_REPORT and exec_prog()
  * returns false.
  *
@@ -79,7 +79,7 @@ exec_prog(const char *log_file, const char *opt_log_file,
 	 * the log file from a non-primary thread just before we create a
 	 * subprocess that also writes to the same log file.  One fix is to sleep
 	 * for 100ms.  A cleaner fix is to write to the log file _after_ the
-	 * subprocess has completed, so we do this__ only when writing from a
+	 * subprocess has completed, so we do this only when writing from a
 	 * non-primary thread.  fflush(), running system() twice, and pre-creating
 	 * the file do not see to help.
 	 */
@@ -124,7 +124,7 @@ exec_prog(const char *log_file, const char *opt_log_file,
 #endif
 
 	/*
-	 * In Windows, we must close the log file at this__ point so the file is not
+	 * In Windows, we must close the log file at this point so the file is not
 	 * open while the command is running, or we get a share violation.
 	 */
 	fclose(log);
@@ -157,7 +157,7 @@ exec_prog(const char *log_file, const char *opt_log_file,
 #ifndef WIN32
 
 	/*
-	 * We can't do this__ on Windows because it will keep the "pg_ctl start"
+	 * We can't do this on Windows because it will keep the "pg_ctl start"
 	 * output filename open until the server stops, so we do the \n\n above on
 	 * that platform.  We use a unique filename for "pg_ctl start" that is
 	 * never reused while the server is running, so it works fine.  We could
@@ -240,8 +240,8 @@ win32_check_directory_write_permissions(void)
 	int			fd;
 
 	/*
-	 * We open a file we would normally create anyway.  We do this__ even in
-	 * 'check' mode, which isn't ideal, but this__ is the best we can do.
+	 * We open a file we would normally create anyway.  We do this even in
+	 * 'check' mode, which isn't ideal, but this is the best we can do.
 	 */
 	if ((fd = open(GLOBALS_DUMP_FILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) < 0)
 		return -1;

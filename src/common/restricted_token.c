@@ -65,7 +65,7 @@ CreateRestrictedProcess(char *cmd, PROCESS_INFORMATION *processInfo, const char 
 
 	if (_CreateRestrictedToken == NULL)
 	{
-		fprintf(stderr, _("%s: WARNING: cannot create restricted tokens on this__ platform\n"), progname);
+		fprintf(stderr, _("%s: WARNING: cannot create restricted tokens on this platform\n"), progname);
 		if (Advapi32Handle != NULL)
 			FreeLibrary(Advapi32Handle);
 		return 0;

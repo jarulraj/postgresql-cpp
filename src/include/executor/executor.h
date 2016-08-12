@@ -35,15 +35,15 @@
  *
  * REWIND indicates that the plan node should try to efficiently support
  * rescans without parameter changes.  (Nodes must support ExecReScan calls
- * in any case, but if this__ flag was not given, they are at liberty to do it
+ * in any case, but if this flag was not given, they are at liberty to do it
  * through complete recalculation.  Note that a parameter change forces a
  * full recalculation in any case.)
  *
  * BACKWARD indicates that the plan node must respect the es_direction flag.
- * When this__ is not passed, the plan node will only be run forwards.
+ * When this is not passed, the plan node will only be run forwards.
  *
  * MARK indicates that the plan node must support Mark/Restore calls.
- * When this__ is not passed, no Mark/Restore will occur.
+ * When this is not passed, no Mark/Restore will occur.
  *
  * SKIP_TRIGGERS tells ExecutorStart/ExecutorFinish to skip calling
  * AfterTriggerBeginQuery/AfterTriggerEndQuery.  This does not necessarily

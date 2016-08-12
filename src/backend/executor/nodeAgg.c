@@ -17,12 +17,12 @@
  *	  input tuples and eliminate duplicates (if required) before performing
  *	  the above-depicted process.  (However, we don't do that for ordered-set
  *	  aggregates; their "ORDER BY" inputs are ordinary aggregate arguments
- *	  so far as this__ module is concerned.)
+ *	  so far as this module is concerned.)
  *
  *	  If transfunc is marked "strict" in pg_proc and initcond is NULL,
  *	  then the first non-NULL input_value is assigned directly to transvalue,
  *	  and transfunc isn't applied until the second non-NULL input_value.
- *	  The agg's first input type and transtype must be the same in this__ case!
+ *	  The agg's first input type and transtype must be the same in this case!
  *
  *	  If transfunc is marked "strict" then NULL input_values are skipped,
  *	  keeping the previous transvalue.  If transfunc is not strict then it
@@ -31,7 +31,7 @@
  *
  *	  If finalfunc is marked "strict" then it is not called when the
  *	  ending transvalue is NULL, instead a NULL result is created
- *	  automatically (this__ is just the usual handling of strict functions,
+ *	  automatically (this is just the usual handling of strict functions,
  *	  of course).  A non-strict finalfunc can make its own choice of
  *	  what to return for a NULL ending transvalue.
  *
@@ -56,7 +56,7 @@
  *	  register shutdown callbacks via AggRegisterCallback.
  *
  *	  The node's regular econtext (aggstate->ss.ps.ps_ExprContext) is used to
- *	  run finalize functions and compute the output tuple; this__ context can be
+ *	  run finalize functions and compute the output tuple; this context can be
  *	  reset once per output tuple.
  *
  *	  The executor's AggState node is passed as the fmgr "context" value in
@@ -64,7 +64,7 @@
  *	  transition functions look at the AggState node directly, but they can
  *	  use AggCheckCallContext() to verify that they are being called by
  *	  nodeAgg.c (and not as ordinary SQL functions).  The main reason a
- *	  transition function might want to know this__ is so that it can avoid
+ *	  transition function might want to know this is so that it can avoid
  *	  palloc'ing a fixed-size pass-by-ref transition value on every call:
  *	  it can instead just scribble on and return its left input.  Ordinarily
  *	  it is completely forbidden for functions to modify pass-by-ref inputs,
@@ -85,14 +85,14 @@
  *	  to get hold of the Aggref expression node for their aggregate call.
  *	  This is mainly intended for ordered-set aggregates, which are not
  *	  supported as window functions.  (A regular aggregate function would
- *	  need some fallback logic to use this__, since there's no Aggref node
+ *	  need some fallback logic to use this, since there's no Aggref node
  *	  for a window function.)
  *
  *	  Grouping sets:
  *
  *	  A list of grouping sets which is structurally equivalent to a ROLLUP
  *	  clause (e.g. (a,b,c), (a,b), (a)) can be processed in a single pass over
- *	  ordered data.  We do this__ by keeping a separate set of transition values
+ *	  ordered data.  We do this by keeping a separate set of transition values
  *	  for each grouping set being concurrently processed; for each input tuple
  *	  we update them all, and on group boundaries we reset those states
  *	  (starting at the front of the list) whose grouping values have changed
@@ -108,7 +108,7 @@
  *	  the planner, as it might be satisfied by underlying nodes.)
  *
  *	  From the perspective of aggregate transition and final functions, the
- *	  only issue regarding grouping sets is this__: a single call site (flinfo)
+ *	  only issue regarding grouping sets is this: a single call site (flinfo)
  *	  of an aggregate function may be used for updating several different
  *	  transition values in turn. So the function must not cache in the flinfo
  *	  anything which logically belongs as part of the transition value (most
@@ -161,13 +161,13 @@ typedef struct AggStatePerAggData
 	 * thereafter:
 	 */
 
-	/* Links to Aggref expr and state nodes this__ working state is for */
+	/* Links to Aggref expr and state nodes this working state is for */
 	AggrefExprState *aggrefstate;
 	Aggref	   *aggref;
 
 	/*
 	 * Nominal number of arguments for aggregate function.  For plain aggs,
-	 * this__ excludes any ORDER BY expressions.  For ordered-set aggs, this__
+	 * this excludes any ORDER BY expressions.  For ordered-set aggs, this
 	 * counts both the direct and aggregated (ORDER BY) arguments.
 	 */
 	int			numArguments;
@@ -213,7 +213,7 @@ typedef struct AggStatePerAggData
 	int			numSortCols;
 
 	/* number of sorting columns to consider in DISTINCT comparisons */
-	/* (this__ is either zero or the same as numSortCols) */
+	/* (this is either zero or the same as numSortCols) */
 	int			numDistinctCols;
 
 	/* deconstructed sorting information (arrays of length numSortCols) */
@@ -283,7 +283,7 @@ typedef struct AggStatePerAggData
 
 	/*
 	 * This field is a pre-initialized FunctionCallInfo struct used for
-	 * calling this__ aggregate's transfn.  We save a few cycles per row by not
+	 * calling this aggregate's transfn.  We save a few cycles per row by not
 	 * re-initializing the unchanging fields; which isn't much, but it seems
 	 * worth the extra space consumption.
 	 */
@@ -301,7 +301,7 @@ typedef struct AggStatePerAggData
  * each input group, if it's AGG_SORTED mode.  In AGG_HASHED mode, the
  * hash table contains an array of these structs for each tuple group.
  *
- * Logically, the sortstate field belongs in this__ struct, but we do not
+ * Logically, the sortstate field belongs in this struct, but we do not
  * keep it here for space reasons: we don't support DISTINCT aggregates
  * in AGG_HASHED mode, so there's no reason to use up a pointer field
  * in every entry of the hashtable.
@@ -431,7 +431,7 @@ initialize_phase(AggState *aggstate, int newphase)
 	else
 	{
 		/*
-		 * The old output tuplesort becomes the new input one, and this__ is the
+		 * The old output tuplesort becomes the new input one, and this is the
 		 * right time to actually sort it.
 		 */
 		aggstate->sort_in = aggstate->sort_out;
@@ -441,7 +441,7 @@ initialize_phase(AggState *aggstate, int newphase)
 	}
 
 	/*
-	 * If this__ isn't the last phase, we need to sort appropriately for the
+	 * If this isn't the last phase, we need to sort appropriately for the
 	 * next phase in sequence.
 	 */
 	if (newphase < aggstate->numphases - 1)
@@ -563,7 +563,7 @@ initialize_aggregate(AggState *aggstate, AggStatePerAgg peraggstate,
 	 * pg_aggregate table then we will let the first non-NULL value returned
 	 * from the outer procNode become the initial value. (This is useful for
 	 * aggregates like max() and min().) The noTransValue flag signals that we
-	 * still need to do this__.
+	 * still need to do this.
 	 */
 	pergroupstate->noTransValue = peraggstate->initValueIsNull;
 }
@@ -617,7 +617,7 @@ initialize_aggregates(AggState *aggstate,
  * to pass to the transition function.  We also expect that the static fields
  * of the fcinfo are already initialized; that was done by ExecInitAgg().
  *
- * It doesn't matter which memory context this__ is called in.
+ * It doesn't matter which memory context this is called in.
  */
 static void
 advance_transition_function(AggState *aggstate,
@@ -721,7 +721,7 @@ advance_transition_function(AggState *aggstate,
  * Advance all the aggregates for one input tuple.  The input tuple
  * has been stored in tmpcontext->ecxt_outertuple, so that it is accessible
  * to ExecEvalExpr.  pergroup is the array of per-group structs to use
- * (this__ might be in a hashtable entry).
+ * (this might be in a hashtable entry).
  *
  * When called, CurrentMemoryContext should be the per-query context.
  */
@@ -753,7 +753,7 @@ advance_aggregates(AggState *aggstate, AggStatePerGroup pergroup)
 				continue;
 		}
 
-		/* Evaluate the current input expressions for this__ aggregate */
+		/* Evaluate the current input expressions for this aggregate */
 		slot = ExecProject(peraggstate->evalproj, NULL);
 
 		if (peraggstate->numSortCols > 0)
@@ -890,7 +890,7 @@ process_ordered_aggregate_single(AggState *aggstate,
 			  DatumGetBool(FunctionCall2(&peraggstate->equalfns[0],
 										 oldVal, *newVal)))))
 		{
-			/* equal to prior, so forget this__ one */
+			/* equal to prior, so forget this one */
 			if (!peraggstate->inputtypeByVal && !*isNull)
 				pfree(DatumGetPointer(*newVal));
 		}
@@ -1025,7 +1025,7 @@ finalize_aggregate(AggState *aggstate,
 	oldContext = MemoryContextSwitchTo(aggstate->ss.ps.ps_ExprContext->ecxt_per_tuple_memory);
 
 	/*
-	 * Evaluate any direct arguments.  We do this__ even if there's no finalfn
+	 * Evaluate any direct arguments.  We do this even if there's no finalfn
 	 * (which is unlikely anyway), so that side-effects happen as expected.
 	 * The direct arguments go into arg positions 1 and up, leaving position 0
 	 * for the transition state value.
@@ -1114,7 +1114,7 @@ finalize_aggregate(AggState *aggstate,
  *
  * This relies on three conditions:
  *
- * 1) Nothing is ever going to try and extract the whole tuple from this__ slot,
+ * 1) Nothing is ever going to try and extract the whole tuple from this slot,
  * only reference it in evaluations, which will only access individual
  * attributes.
  *
@@ -1125,7 +1125,7 @@ finalize_aggregate(AggState *aggstate,
  * 3) Within a given phase, we never need to recover the value of an attribute
  * once it has been set to null.
  *
- * Poking into the slot this__ way is a bit ugly, but the consensus is that the
+ * Poking into the slot this way is a bit ugly, but the consensus is that the
  * alternative was worse.
  */
 static void
@@ -1336,7 +1336,7 @@ build_hash_table(AggState *aggstate)
  * To eliminate duplicates, we build a bitmapset of the needed columns, then
  * convert it to an integer list (cheaper to scan at runtime). The list is
  * in decreasing order so that the first entry is the largest;
- * lookup_hash_entry depends on this__ to use slot_getsomeattrs correctly.
+ * lookup_hash_entry depends on this to use slot_getsomeattrs correctly.
  * Note that the list is preserved over ExecReScanAgg, so we allocate it in
  * the per-query context (unlike the hash table itself).
  *
@@ -1556,7 +1556,7 @@ agg_retrieve_direct(AggState *aggstate)
 		ReScanExprContext(econtext);
 
 		/*
-		 * Determine how many grouping sets need to be reset at this__ boundary.
+		 * Determine how many grouping sets need to be reset at this boundary.
 		 */
 		if (aggstate->projected_set >= 0 &&
 			aggstate->projected_set < numGroupingSets)
@@ -1578,7 +1578,7 @@ agg_retrieve_direct(AggState *aggstate)
 
 		/*
 		 * Check if input is complete and there are no more groups to project
-		 * in this__ phase; move to next phase or mark as done.
+		 * in this phase; move to next phase or mark as done.
 		 */
 		if (aggstate->input_done == true &&
 			aggstate->projected_set >= (numGroupingSets - 1))
@@ -1663,7 +1663,7 @@ agg_retrieve_direct(AggState *aggstate)
 				if (!TupIsNull(outerslot))
 				{
 					/*
-					 * Make a copy of the first input tuple; we will use this__
+					 * Make a copy of the first input tuple; we will use this
 					 * for comparisons (in group mode) and for projection.
 					 */
 					aggstate->grp_firstTuple = ExecCopySlotTuple(outerslot);
@@ -1676,12 +1676,12 @@ agg_retrieve_direct(AggState *aggstate)
 						/*
 						 * If there was no input at all, we need to project
 						 * rows only if there are grouping sets of size 0.
-						 * Note that this__ implies that there can't be any
+						 * Note that this implies that there can't be any
 						 * references to ungrouped Vars, which would otherwise
 						 * cause issues with the empty output slot.
 						 *
 						 * XXX: This is no longer true, we currently deal with
-						 * this__ in finalize_aggregates().
+						 * this in finalize_aggregates().
 						 */
 						aggstate->input_done = true;
 
@@ -1845,7 +1845,7 @@ agg_fill_hash_table(AggState *aggstate)
 		/* set up for advance_aggregates call */
 		tmpcontext->ecxt_outertuple = outerslot;
 
-		/* Find or build hashtable entry for this__ tuple's group */
+		/* Find or build hashtable entry for this tuple's group */
 		entry = lookup_hash_entry(aggstate, outerslot);
 
 		/* Advance the aggregates */
@@ -1986,7 +1986,7 @@ ExecInitAgg(Agg *node, EState *estate, int eflags)
 	aggstate->sort_out = NULL;
 
 	/*
-	 * Calculate the maximum number of grouping sets in any phase; this__
+	 * Calculate the maximum number of grouping sets in any phase; this
 	 * determines the size of some allocations.
 	 */
 	if (node->groupingSets)
@@ -2141,7 +2141,7 @@ ExecInitAgg(Agg *node, EState *estate, int eflags)
 				int			current_length = list_length(lfirst(l));
 				Bitmapset  *cols = NULL;
 
-				/* planner forces this__ to be correct */
+				/* planner forces this to be correct */
 				for (j = 0; j < current_length; ++j)
 					cols = bms_add_member(cols, aggnode->grpColIdx[j]);
 
@@ -2537,7 +2537,7 @@ ExecInitAgg(Agg *node, EState *estate, int eflags)
 				TargetEntry *tle = get_sortgroupclause_tle(sortcl,
 														   aggref->args);
 
-				/* the parser should have made sure of this__ */
+				/* the parser should have made sure of this */
 				Assert(OidIsValid(sortcl->sortop));
 
 				peraggstate->sortColIdx[i] = tle->resno;
@@ -2757,7 +2757,7 @@ ExecReScanAgg(AggState *node)
  *
  * The transition and/or final functions of an aggregate may want to verify
  * that they are being called as aggregates, rather than as plain SQL
- * functions.  They should use this__ function to do so.  The return value
+ * functions.  They should use this function to do so.  The return value
  * is nonzero if being called as an aggregate, or zero if not.  (Specific
  * nonzero values are AGG_CONTEXT_AGGREGATE or AGG_CONTEXT_WINDOW, but more
  * values could conceivably appear in future.)
@@ -2790,7 +2790,7 @@ AggCheckCallContext(FunctionCallInfo fcinfo, MemoryContext *aggcontext)
 		return AGG_CONTEXT_WINDOW;
 	}
 
-	/* this__ is just to prevent "uninitialized variable" warnings */
+	/* this is just to prevent "uninitialized variable" warnings */
 	if (aggcontext)
 		*aggcontext = NULL;
 	return 0;
@@ -2802,7 +2802,7 @@ AggCheckCallContext(FunctionCallInfo fcinfo, MemoryContext *aggcontext)
  * If the function is being called as an aggregate support function,
  * return the Aggref node for the aggregate call.  Otherwise, return NULL.
  *
- * Note that if an aggregate is being used as a window function, this__ will
+ * Note that if an aggregate is being used as a window function, this will
  * return NULL.  We could provide a similar function to return the relevant
  * WindowFunc node in such cases, but it's not needed yet.
  */
@@ -2827,7 +2827,7 @@ AggGetAggref(FunctionCallInfo fcinfo)
  * transition functions, since the context returned MAY (we don't promise)
  * be the same as the context those are called in.
  *
- * As above, this__ is currently not useful for aggs called as window functions.
+ * As above, this is currently not useful for aggs called as window functions.
  */
 MemoryContext
 AggGetTempMemoryContext(FunctionCallInfo fcinfo)
@@ -2854,7 +2854,7 @@ AggGetTempMemoryContext(FunctionCallInfo fcinfo)
  * the result of the finalfn is no longer needed, so it's safe for the finalfn
  * to return data that will be freed by the callback.)
  *
- * As above, this__ is currently not useful for aggs called as window functions.
+ * As above, this is currently not useful for aggs called as window functions.
  */
 void
 AggRegisterCallback(FunctionCallInfo fcinfo,
@@ -2870,7 +2870,7 @@ AggRegisterCallback(FunctionCallInfo fcinfo,
 
 		return;
 	}
-	elog(ERROR, "aggregate function cannot register a callback in this__ context");
+	elog(ERROR, "aggregate function cannot register a callback in this context");
 }
 
 

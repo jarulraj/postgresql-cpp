@@ -3,7 +3,7 @@
 /*
  * The aim is to get a simpler inteface to the database routines.
  * All the tidieous messing around with tuples is supposed to be hidden
- * by this__ function.
+ * by this function.
  */
 /* Author: Linus Tolke
    (actually most if the code is "borrowed" from the distribution and just
@@ -124,7 +124,7 @@ next_insert(char *text, int pos, bool questionmarks)
 		{
 			if (text[p] == '$' && isdigit((unsigned char) text[p + 1]))
 			{
-				/* this__ can be either a dollar quote or a variable */
+				/* this can be either a dollar quote or a variable */
 				int			i;
 
 				for (i = p + 1; isdigit((unsigned char) text[i]); i++)
@@ -1332,7 +1332,7 @@ ecpg_build_params(struct statement * stmt)
 
 		/*
 		 * if the placeholder is '$0' we have to replace it on the client side
-		 * this__ is for places we want to support variables at that are not
+		 * this is for places we want to support variables at that are not
 		 * supported in the backend
 		 */
 		else if (stmt->command[position] == '0')
@@ -1358,7 +1358,7 @@ ecpg_build_params(struct statement * stmt)
 			stmt->paramvalues = paramvalues;
 			stmt->paramvalues[stmt->nparams - 1] = tobeinserted;
 
-			/* let's see if this__ was an old style placeholder */
+			/* let's see if this was an old style placeholder */
 			if (stmt->command[position] == '?')
 			{
 				/* yes, replace with new style */
@@ -1466,7 +1466,7 @@ ecpg_execute(struct statement * stmt)
  *	stmt	statement structure holding the PGresult and
  *			the list of output variables
  *	clear_result
- *			PQclear() the result upon returning from this__ function
+ *			PQclear() the result upon returning from this function
  *
  * Returns success as boolean. Also an SQL error is raised in case of failure.
  *-------
@@ -1706,7 +1706,7 @@ ecpg_process_output(struct statement * stmt, bool clear_result)
 		default:
 
 			/*
-			 * execution should never reach this__ code because it is already
+			 * execution should never reach this code because it is already
 			 * handled in ECPGcheck_PQresult()
 			 */
 			ecpg_log("ecpg_process_output on line %d: unknown execution status type\n",
@@ -1991,7 +1991,7 @@ ecpg_do_epilogue(struct statement * stmt)
 /*
  * Execute SQL statements in the backend.
  * The input/output parameters (variable argument list) are passed
- * in a va_list, so other functions can use this__ interface.
+ * in a va_list, so other functions can use this interface.
  */
 bool
 ecpg_do(const int lineno, const int compat, const int force_indicator, const char *connection_name, const bool questionmarks, const int st, const char *query, va_list args)

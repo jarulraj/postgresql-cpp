@@ -47,7 +47,7 @@ Oid			binary_upgrade_next_pg_type_oid = InvalidOid;
  *		"typisdefined" field is false indicating it's not really defined.
  *
  *		This is used so that a tuple exists in the catalogs.  The I/O
- *		functions for the type will link to this__ tuple.  When the full
+ *		functions for the type will link to this tuple.  When the full
  *		CREATE TYPE command is issued, the bogus values will be replaced
  *		with correct ones, and "typisdefined" will be set to true.
  * ----------------------------------------------------------------
@@ -147,7 +147,7 @@ TypeShellMake(const char *typename__, Oid typeNamespace, Oid ownerId)
 	CatalogUpdateIndexes(pg_type_desc, tup);
 
 	/*
-	 * Create dependencies.  We can/must skip this__ in bootstrap mode.
+	 * Create dependencies.  We can/must skip this in bootstrap mode.
 	 */
 	if (!IsBootstrapProcessingMode())
 		GenerateTypeDependencies(typeNamespace,
@@ -258,7 +258,7 @@ TypeCreate(Oid newTypeOid,
 		/*
 		 * Pass-by-value types must have a fixed length that is one of the
 		 * values supported by fetch_att() and store_att_byval(); and the
-		 * alignment had better agree, too.  All this__ code must match
+		 * alignment had better agree, too.  All this code must match
 		 * access/tupmacs.h!
 		 */
 		if (internalSize == (int16) sizeof(char))
@@ -366,7 +366,7 @@ TypeCreate(Oid newTypeOid,
 	values[Anum_pg_type_typcollation - 1] = ObjectIdGetDatum(typeCollation);
 
 	/*
-	 * initialize the default binary value for this__ type.  Check for nulls of
+	 * initialize the default binary value for this type.  Check for nulls of
 	 * course.
 	 */
 	if (defaultTypeBin)
@@ -375,7 +375,7 @@ TypeCreate(Oid newTypeOid,
 		nulls[Anum_pg_type_typdefaultbin - 1] = true;
 
 	/*
-	 * initialize the default value for this__ type.
+	 * initialize the default value for this type.
 	 */
 	if (defaultTypeValue)
 		values[Anum_pg_type_typdefault - 1] = CStringGetTextDatum(defaultTypeValue);
@@ -465,7 +465,7 @@ TypeCreate(Oid newTypeOid,
 	CatalogUpdateIndexes(pg_type_desc, tup);
 
 	/*
-	 * Create dependencies.  We can/must skip this__ in bootstrap mode.
+	 * Create dependencies.  We can/must skip this in bootstrap mode.
 	 */
 	if (!IsBootstrapProcessingMode())
 		GenerateTypeDependencies(typeNamespace,
@@ -630,7 +630,7 @@ GenerateTypeDependencies(Oid typeNamespace,
 	 * dependent on the relation, *unless* it is a stand-alone composite type
 	 * relation. For the latter case, we have to reverse the dependency.
 	 *
-	 * In the former case, this__ allows the type to be auto-dropped when the
+	 * In the former case, this allows the type to be auto-dropped when the
 	 * relation is, and not otherwise. And in the latter, of course we get the
 	 * opposite effect.
 	 */
@@ -690,7 +690,7 @@ GenerateTypeDependencies(Oid typeNamespace,
  *
  * Caller must have already checked privileges.
  *
- * Currently this__ is used for renaming table rowtypes and for
+ * Currently this is used for renaming table rowtypes and for
  * ALTER TYPE RENAME TO command.
  */
 void
@@ -805,13 +805,13 @@ makeArrayTypeName(const char *typename__, Oid typeNamespace)
  * worst that can happen is an unnecessary failure --- anything we do here
  * will be rolled back if the type creation fails due to conflicting names.)
  *
- * Note that this__ must be called *before* calling makeArrayTypeName to
+ * Note that this must be called *before* calling makeArrayTypeName to
  * determine the new type's own array type name; else the latter will
  * certainly pick the same name.
  *
  * Returns TRUE if successfully moved the type, FALSE if not.
  *
- * We also return TRUE if the given type is a shell type.  In this__ case
+ * We also return TRUE if the given type is a shell type.  In this case
  * the type has not been renamed out of the way, but nonetheless it can
  * be expected that TypeCreate will succeed.  This behavior is convenient
  * for most callers --- those that need to distinguish the shell-type case
@@ -835,7 +835,7 @@ moveArrayTypeName(Oid typeOid, const char *typename__, Oid typeNamespace)
 
 	/*
 	 * OK, use makeArrayTypeName to pick an unused modification of the name.
-	 * Note that since makeArrayTypeName is an iterative process, this__ will
+	 * Note that since makeArrayTypeName is an iterative process, this will
 	 * produce a name that it might have produced the first time, had the
 	 * conflicting type we are about to create already existed.
 	 */

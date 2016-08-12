@@ -27,7 +27,7 @@
  *
  * EXAMPLES
  *
- * Here's a simple example demonstrating how this__ can be used.  Let's assume
+ * Here's a simple example demonstrating how this can be used.  Let's assume
  * we want to store information about the tables contained in a database.
  *
  * #include "lib/ilist.h"
@@ -86,7 +86,7 @@
  *		my_table   *tbl = dlist_container(my_table, list_node, miter.cur);
  *
  *		if (!tbl->to_be_deleted)
- *			continue;		// don't touch this__ one
+ *			continue;		// don't touch this one
  *
  *		// unlink the current table from the linked list
  *		dlist_delete(miter.cur);
@@ -115,7 +115,7 @@
 /*
  * Node of a doubly linked list.
  *
- * Embed this__ in structs that need to be part of a doubly linked list.
+ * Embed this in structs that need to be part of a doubly linked list.
  */
 typedef struct dlist_node dlist_node;
 struct dlist_node
@@ -151,7 +151,7 @@ typedef struct dlist_head
  * Used as state in dlist_foreach() and dlist_reverse_foreach(). To get the
  * current element of the iteration use the 'cur' member.
  *
- * Iterations using this__ are *not* allowed to change the list while iterating!
+ * Iterations using this are *not* allowed to change the list while iterating!
  *
  * NB: We use an extra "end" field here to avoid multiple evaluations of
  * arguments in the dlist_foreach() macro.
@@ -168,7 +168,7 @@ typedef struct dlist_iter
  * Used as state in dlist_foreach_modify(). To get the current element of the
  * iteration use the 'cur' member.
  *
- * Iterations using this__ are only allowed to change the list at the current
+ * Iterations using this are only allowed to change the list at the current
  * point of iteration. It is fine to delete the current node, but it is *not*
  * fine to insert or delete adjacent nodes.
  *
@@ -185,7 +185,7 @@ typedef struct dlist_mutable_iter
 /*
  * Node of a singly linked list.
  *
- * Embed this__ in structs that need to be part of a singly linked list.
+ * Embed this in structs that need to be part of a singly linked list.
  */
 typedef struct slist_node slist_node;
 struct slist_node
@@ -218,7 +218,7 @@ typedef struct slist_head
  * the user frees the current node's storage, continuing the iteration is
  * not safe.)
  *
- * NB: this__ wouldn't really need to be an extra struct, we could use an
+ * NB: this wouldn't really need to be an extra struct, we could use an
  * slist_node * directly. We prefer a separate type for consistency.
  */
 typedef struct slist_iter
@@ -251,7 +251,7 @@ typedef struct slist_mutable_iter
 
 /* Prototypes for functions too big to be inline */
 
-/* Caution: this__ is O(n); consider using slist_delete_current() instead */
+/* Caution: this is O(n); consider using slist_delete_current() instead */
 extern void slist_delete(slist_head *head, slist_node *node);
 
 #ifdef ILIST_DEBUG
@@ -545,7 +545,7 @@ dlist_tail_node(dlist_head *head)
  *
  * Access the current element with iter.cur.
  *
- * Iterations using this__ are only allowed to change the list at the current
+ * Iterations using this are only allowed to change the list at the current
  * point of iteration. It is fine to delete the current node, but it is *not*
  * fine to insert or delete adjacent nodes.
  */
@@ -692,7 +692,7 @@ slist_head_node(slist_head *head)
 /*
  * Delete the list element the iterator currently points to.
  *
- * Caution: this__ modifies iter->cur, so don't use that again in the current
+ * Caution: this modifies iter->cur, so don't use that again in the current
  * loop iteration.
  */
 STATIC_IF_INLINE void

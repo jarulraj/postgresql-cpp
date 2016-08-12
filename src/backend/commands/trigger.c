@@ -112,16 +112,16 @@ static void AfterTriggerEnlargeQueryState(void);
  * refers.  If zero, the constraint relation name provided in the statement
  * will be looked up as needed.
  *
- * constraintOid, if nonzero, says that this__ trigger is being created
+ * constraintOid, if nonzero, says that this trigger is being created
  * internally to implement that constraint.  A suitable pg_depend entry will
  * be made to link the trigger to that constraint.  constraintOid is zero when
  * executing a user-entered CREATE TRIGGER command.  (For CREATE CONSTRAINT
  * TRIGGER, we build a pg_constraint entry internally.)
  *
  * indexOid, if nonzero, is the OID of an index associated with the constraint.
- * We do nothing with this__ except store it into pg_trigger.tgconstrindid.
+ * We do nothing with this except store it into pg_trigger.tgconstrindid.
  *
- * If isInternal is true then this__ is an internally-generated trigger.
+ * If isInternal is true then this is an internally-generated trigger.
  * This argument sets the tgisinternal field of the pg_trigger entry, and
  * if TRUE causes us to modify the given trigger name to ensure uniqueness.
  *
@@ -447,7 +447,7 @@ CreateTrigger(CreateTrigStmt *stmt, const char *queryString,
 	 * If the command is a user-entered CREATE CONSTRAINT TRIGGER command that
 	 * references one of the built-in RI_FKey trigger functions, assume it is
 	 * from a dump of a pre-7.3 foreign key constraint, and take steps to
-	 * convert this__ legacy representation into a regular foreign key
+	 * convert this legacy representation into a regular foreign key
 	 * constraint.  Ugly, but necessary for loading old dump files.
 	 */
 	if (stmt->isconstraint && !isInternal &&
@@ -527,13 +527,13 @@ CreateTrigger(CreateTrigStmt *stmt, const char *queryString,
 	}
 
 	/*
-	 * Scan pg_trigger for existing triggers on relation.  We do this__ only to
+	 * Scan pg_trigger for existing triggers on relation.  We do this only to
 	 * give a nice error message if there's already a trigger of the same
 	 * name.  (The unique index on tgrelid/tgname would complain anyway.) We
-	 * can skip this__ for internally generated triggers, since the name
+	 * can skip this for internally generated triggers, since the name
 	 * modification above should be sufficient.
 	 *
-	 * NOTE that this__ is cool only because we have ShareRowExclusiveLock on the
+	 * NOTE that this is cool only because we have ShareRowExclusiveLock on the
 	 * relation, so the trigger set won't be changing underneath us.
 	 */
 	if (!isInternal)
@@ -686,7 +686,7 @@ CreateTrigger(CreateTrigStmt *stmt, const char *queryString,
 
 	/*
 	 * Update relation's pg_class entry.  Crucial side-effect: other backends
-	 * (and this__ one too!) are sent SI message to make them rebuild relcache
+	 * (and this one too!) are sent SI message to make them rebuild relcache
 	 * entries.
 	 */
 	pgrel = heap_open(RelationRelationId, RowExclusiveLock);
@@ -755,7 +755,7 @@ CreateTrigger(CreateTrigStmt *stmt, const char *queryString,
 			referenced.objectSubId = 0;
 			recordDependencyOn(&myself, &referenced, DEPENDENCY_AUTO);
 		}
-		/* Not possible to have an index dependency in this__ case */
+		/* Not possible to have an index dependency in this case */
 		Assert(!OidIsValid(indexOid));
 
 		/*
@@ -929,7 +929,7 @@ ConvertTriggerToFK(CreateTrigStmt *stmt, Oid funcoid)
 			break;
 	}
 
-	/* See if we have a match to this__ trigger */
+	/* See if we have a match to this trigger */
 	foreach(l, info_list)
 	{
 		info = (OldTriggerInfo *) lfirst(l);
@@ -1139,7 +1139,7 @@ RemoveTriggerById(Oid trigOid)
 	 * which would be needed in order to decide whether it's safe to clear the
 	 * relation's relhastriggers.  (In any case, there might be a concurrent
 	 * process adding new triggers.)  Instead, just force a relcache inval to
-	 * make other backends (and this__ one too!) rebuild their relcache entries.
+	 * make other backends (and this one too!) rebuild their relcache entries.
 	 * There's no great harm in leaving relhastriggers true even if there are
 	 * no triggers left.
 	 */
@@ -1275,12 +1275,12 @@ renametrig(RenameStmt *stmt)
 	targetrel = relation_open(relid, NoLock);
 
 	/*
-	 * Scan pg_trigger twice for existing triggers on relation.  We do this__ in
+	 * Scan pg_trigger twice for existing triggers on relation.  We do this in
 	 * order to ensure a trigger does not exist with newname (The unique index
 	 * on tgrelid/tgname would complain anyway) and to ensure a trigger does
 	 * exist with oldname.
 	 *
-	 * NOTE that this__ is cool only because we have AccessExclusiveLock on the
+	 * NOTE that this is cool only because we have AccessExclusiveLock on the
 	 * relation, so the trigger set won't be changing underneath us.
 	 */
 	tgrel = heap_open(TriggerRelationId, RowExclusiveLock);
@@ -1340,8 +1340,8 @@ renametrig(RenameStmt *stmt)
 
 		/*
 		 * Invalidate relation's relcache entry so that other backends (and
-		 * this__ one too!) are sent SI message to make them rebuild relcache
-		 * entries.  (Ideally this__ should happen automatically...)
+		 * this one too!) are sent SI message to make them rebuild relcache
+		 * entries.  (Ideally this should happen automatically...)
 		 */
 		CacheInvalidateRelcache(targetrel);
 	}
@@ -1377,7 +1377,7 @@ renametrig(RenameStmt *stmt)
  * rel: relation to process (caller must hold suitable lock on it)
  * tgname: trigger to process, or NULL to scan all triggers
  * fires_when: new value for tgenabled field. In addition to generic
- *			   enablement/disablement, this__ also defines when the trigger
+ *			   enablement/disablement, this also defines when the trigger
  *			   should be fired in session replication roles.
  * skip_system: if true, skip "system" triggers (constraint triggers)
  *
@@ -1440,7 +1440,7 @@ EnableDisableTrigger(Relation rel, const char *tgname,
 
 		if (oldtrig->tgenabled != fires_when)
 		{
-			/* need to change this__ one ... make a copy to scribble on */
+			/* need to change this one ... make a copy to scribble on */
 			HeapTuple	newtup = heap_copytuple(tuple);
 			Form_pg_trigger newtrig = (Form_pg_trigger) GETSTRUCT(newtup);
 
@@ -1486,7 +1486,7 @@ EnableDisableTrigger(Relation rel, const char *tgname,
  * Note that trigger data attached to a relcache entry must be stored in
  * CacheMemoryContext to ensure it survives as long as the relcache entry.
  * But we should be running in a less long-lived working context.  To avoid
- * leaking cache memory if this__ routine fails partway through, we build a
+ * leaking cache memory if this routine fails partway through, we build a
  * temporary TriggerDesc in working memory and then copy the completed
  * structure into cache memory.
  */
@@ -1787,7 +1787,7 @@ equalTriggerDescs(TriggerDesc *trigdesc1, TriggerDesc *trigdesc2)
 	 *
 	 * Note: comparing the stringToNode forms of the WHEN clauses means that
 	 * parse column locations will affect the result.  This is okay as long as
-	 * this__ function is only used for detecting exact equality, as for example
+	 * this function is only used for detecting exact equality, as for example
 	 * in checking for staleness of a cache entry.
 	 */
 	if (trigdesc1 != NULL)
@@ -1883,7 +1883,7 @@ ExecCallTriggerFunc(TriggerData *trigdata,
 	Assert(finfo->fn_oid == trigdata->tg_trigger->tgfoid);
 
 	/*
-	 * If doing EXPLAIN ANALYZE, start charging time to this__ trigger.
+	 * If doing EXPLAIN ANALYZE, start charging time to this trigger.
 	 */
 	if (instr)
 		InstrStartNode(instr + tgindx);
@@ -1932,7 +1932,7 @@ ExecCallTriggerFunc(TriggerData *trigdata,
 						fcinfo.flinfo->fn_oid)));
 
 	/*
-	 * If doing EXPLAIN ANALYZE, stop charging time to this__ trigger, and count
+	 * If doing EXPLAIN ANALYZE, stop charging time to this trigger, and count
 	 * one "tuple returned" (really the number of firings).
 	 */
 	if (instr)
@@ -2761,7 +2761,7 @@ ltrmark:;
 						 * EvalPlanQual already locked the tuple, but we
 						 * re-call heap_lock_tuple anyway as an easy way of
 						 * re-fetching the correct tuple.  Speed is hardly a
-						 * criterion in this__ path anyhow.
+						 * criterion in this path anyhow.
 						 */
 						goto ltrmark;
 					}
@@ -2769,7 +2769,7 @@ ltrmark:;
 
 				/*
 				 * if tuple was deleted or PlanQual failed for updated tuple -
-				 * we must not process this__ tuple!
+				 * we must not process this tuple!
 				 */
 				return NULL;
 
@@ -2790,7 +2790,7 @@ ltrmark:;
 		buffer = ReadBuffer(relation, ItemPointerGetBlockNumber(tid));
 
 		/*
-		 * Although we already know this__ tuple is valid, we must lock the
+		 * Although we already know this tuple is valid, we must lock the
 		 * buffer to ensure that no one has a buffer cleanup lock; otherwise
 		 * they might move the tuple while we try to copy it.  But we can
 		 * release the lock before actually doing the heap_copytuple call,
@@ -2885,7 +2885,7 @@ TriggerEnabled(EState *estate, ResultRelInfo *relinfo,
 		predicate = &relinfo->ri_TrigWhenExprs[i];
 
 		/*
-		 * If first time through for this__ WHEN expression, build expression
+		 * If first time through for this WHEN expression, build expression
 		 * nodetrees for it.  Keep them in the per-query memory context so
 		 * they'll survive throughout the query.
 		 */
@@ -2989,7 +2989,7 @@ typedef struct SetConstraintTriggerData *SetConstraintTrigger;
 /*
  * SET CONSTRAINT intra-transaction status.
  *
- * We make this__ a single palloc'd object so it can be copied and freed easily.
+ * We make this a single palloc'd object so it can be copied and freed easily.
  *
  * all_isset and all_isdeferred are used to keep track
  * of SET CONSTRAINTS ALL {DEFERRED, IMMEDIATE}.
@@ -3032,7 +3032,7 @@ typedef SetConstraintStateData *SetConstraintState;
  * Note: ats_firing_id is initially zero and is set to something else when
  * AFTER_TRIGGER_IN_PROGRESS is set.  It indicates which trigger firing
  * cycle the trigger will be fired in (or was fired in, if DONE is set).
- * Although this__ is mutable state, we can keep it in AfterTriggerSharedData
+ * Although this is mutable state, we can keep it in AfterTriggerSharedData
  * because all instances of the same type of event in a given event list will
  * be fired at the same time, if they were queued between the same firing
  * cycles.  So we need only ensure that ats_firing_id is zero when attaching
@@ -3044,7 +3044,7 @@ typedef uint32 TriggerFlags;
 														 * bits */
 #define AFTER_TRIGGER_DONE				0x10000000
 #define AFTER_TRIGGER_IN_PROGRESS		0x20000000
-/* bits describing the size and tuple sources of this__ event */
+/* bits describing the size and tuple sources of this event */
 #define AFTER_TRIGGER_FDW_REUSE			0x00000000
 #define AFTER_TRIGGER_FDW_FETCH			0x80000000
 #define AFTER_TRIGGER_1CTID				0x40000000
@@ -3126,7 +3126,7 @@ typedef struct AfterTriggerEventList
 	for (eptr = (AfterTriggerEvent) CHUNK_DATA_START(cptr); \
 		 (char *) eptr < (cptr)->freeptr; \
 		 eptr = (AfterTriggerEvent) (((char *) eptr) + SizeofTriggerEvent(eptr)))
-/* Use this__ if no special per-chunk processing is needed */
+/* Use this if no special per-chunk processing is needed */
 #define for_each_event_chunk(eptr, cptr, evtlist) \
 	for_each_chunk(cptr, evtlist) for_each_event(eptr, cptr)
 
@@ -3178,7 +3178,7 @@ typedef struct AfterTriggerEventList
  * which we similarly use to clean up at subtransaction abort.
  *
  * firing_stack is a stack of copies of subtransaction-start-time
- * firing_counter.  We use this__ to recognize which deferred triggers were
+ * firing_counter.  We use this to recognize which deferred triggers were
  * fired (or marked for firing) within an aborted subtransaction.
  *
  * We use GetCurrentTransactionNestLevel() to determine the correct array
@@ -3285,11 +3285,11 @@ afterTriggerCheckState(AfterTriggerShared evtshared)
 
 	/*
 	 * If constraint state exists, SET CONSTRAINTS might have been executed
-	 * either for this__ trigger or for all triggers.
+	 * either for this trigger or for all triggers.
 	 */
 	if (state != NULL)
 	{
-		/* Check for SET CONSTRAINTS for this__ specific trigger. */
+		/* Check for SET CONSTRAINTS for this specific trigger. */
 		for (i = 0; i < state->numstates; i++)
 		{
 			if (state->trigstates[i].sct_tgoid == tgoid)
@@ -3494,7 +3494,7 @@ afterTriggerRestoreEventList(AfterTriggerEventList *events,
  *	Fetch the required tuples back from the heap and fire one
  *	single trigger function.
  *
- *	Frequently, this__ will be fired many times in a row for triggers of
+ *	Frequently, this will be fired many times in a row for triggers of
  *	a single relation.  Therefore, we cache the open relation and provide
  *	fmgr lookup cache space at the caller level.  (For triggers fired at
  *	the end of a query, we can even piggyback on the executor's state.)
@@ -3544,7 +3544,7 @@ AfterTriggerExecute(AfterTriggerEvent event,
 		elog(ERROR, "could not find trigger %u", tgoid);
 
 	/*
-	 * If doing EXPLAIN ANALYZE, start charging time to this__ trigger. We want
+	 * If doing EXPLAIN ANALYZE, start charging time to this trigger. We want
 	 * to include time spent re-fetching tuples in the trigger cost.
 	 */
 	if (instr)
@@ -3659,7 +3659,7 @@ AfterTriggerExecute(AfterTriggerEvent event,
 		ReleaseBuffer(buffer2);
 
 	/*
-	 * If doing EXPLAIN ANALYZE, stop charging time to this__ trigger, and count
+	 * If doing EXPLAIN ANALYZE, stop charging time to this trigger, and count
 	 * one "tuple returned" (really the number of firings).
 	 */
 	if (instr)
@@ -3709,7 +3709,7 @@ afterTriggerMarkEvents(AfterTriggerEventList *events,
 			else
 			{
 				/*
-				 * Mark it as to be fired in this__ firing cycle.
+				 * Mark it as to be fired in this firing cycle.
 				 */
 				evtshared->ats_firing_id = afterTriggers.firing_counter;
 				event->ate_flags |= AFTER_TRIGGER_IN_PROGRESS;
@@ -3750,7 +3750,7 @@ afterTriggerMarkEvents(AfterTriggerEventList *events,
  *	end, so it's not necessary to worry much about the case where only
  *	some events are fired.)
  *
- *	Returns TRUE if no unfired events remain in the list (this__ allows us
+ *	Returns TRUE if no unfired events remain in the list (this allows us
  *	to avoid repeating afterTriggerMarkEvents).
  */
 static bool
@@ -3802,7 +3802,7 @@ afterTriggerInvokeEvents(AfterTriggerEventList *events,
 			{
 				/*
 				 * So let's fire it... but first, find the correct relation if
-				 * this__ is not the same relation as before.
+				 * this is not the same relation as before.
 				 */
 				if (rel == NULL || RelationGetRelid(rel) != evtshared->ats_relid)
 				{
@@ -3858,7 +3858,7 @@ afterTriggerInvokeEvents(AfterTriggerEventList *events,
 			/*
 			 * If it's last chunk, must sync event list's tailfree too.  Note
 			 * that delete_ok must NOT be passed as true if there could be
-			 * stacked AfterTriggerEventList values pointing at this__ event
+			 * stacked AfterTriggerEventList values pointing at this event
 			 * list, since we'd fail to fix their copies of tailfree.
 			 */
 			if (chunk == events->tail)
@@ -3947,11 +3947,11 @@ AfterTriggerBeginQuery(void)
 /* ----------
  * AfterTriggerEndQuery()
  *
- *	Called after one query has been completely processed. At this__ time
+ *	Called after one query has been completely processed. At this time
  *	we invoke all AFTER IMMEDIATE trigger events queued by the query, and
  *	transfer deferred trigger events to the global deferred-trigger list.
  *
- *	Note that this__ must be called BEFORE closing down the executor
+ *	Note that this must be called BEFORE closing down the executor
  *	with ExecutorEnd, because we make use of the EState's info about
  *	target relations.  Normally it is called from ExecutorFinish.
  * ----------
@@ -4028,11 +4028,11 @@ AfterTriggerEndQuery(EState *estate)
 /* ----------
  * AfterTriggerFireDeferred()
  *
- *	Called just before the current transaction is committed. At this__
+ *	Called just before the current transaction is committed. At this
  *	time we invoke all pending DEFERRED triggers.
  *
  *	It is possible for other modules to queue additional deferred triggers
- *	during pre-commit processing; therefore xact.c may have to call this__
+ *	during pre-commit processing; therefore xact.c may have to call this
  *	multiple times.
  * ----------
  */
@@ -4087,7 +4087,7 @@ AfterTriggerFireDeferred(void)
  *	Any unfired triggers are canceled so we simply throw
  *	away anything we know.
  *
- *	Note: it is possible for this__ to be called repeatedly in case of
+ *	Note: it is possible for this to be called repeatedly in case of
  *	error during transaction abort; therefore, do not complain if
  *	already closed down.
  * ----------
@@ -4114,7 +4114,7 @@ AfterTriggerEndXact(bool isCommit)
 	}
 
 	/*
-	 * Forget any subtransaction state as well.  Since this__ can't be very
+	 * Forget any subtransaction state as well.  Since this can't be very
 	 * large, we let the eventual reset of TopTransactionContext free the
 	 * memory instead of doing it here.
 	 */
@@ -4231,7 +4231,7 @@ AfterTriggerEndSubXact(bool isCommit)
 		state = afterTriggers.state_stack[my_level];
 		if (state != NULL)
 			pfree(state);
-		/* this__ avoids double pfree if error later: */
+		/* this avoids double pfree if error later: */
 		afterTriggers.state_stack[my_level] = NULL;
 		Assert(afterTriggers.query_depth ==
 			   afterTriggers.depth_stack[my_level]);
@@ -4281,7 +4281,7 @@ AfterTriggerEndSubXact(bool isCommit)
 									 &afterTriggers.events_stack[my_level]);
 
 		/*
-		 * Restore the trigger state.  If the saved state is NULL, then this__
+		 * Restore the trigger state.  If the saved state is NULL, then this
 		 * subxact didn't save it, so it doesn't need restoring.
 		 */
 		state = afterTriggers.state_stack[my_level];
@@ -4290,12 +4290,12 @@ AfterTriggerEndSubXact(bool isCommit)
 			pfree(afterTriggers.state);
 			afterTriggers.state = state;
 		}
-		/* this__ avoids double pfree if error later: */
+		/* this avoids double pfree if error later: */
 		afterTriggers.state_stack[my_level] = NULL;
 
 		/*
 		 * Scan for any remaining deferred events that were marked DONE or IN
-		 * PROGRESS by this__ subxact or a child, and un-mark them. We can
+		 * PROGRESS by this subxact or a child, and un-mark them. We can
 		 * recognize such events because they have a firing ID greater than or
 		 * equal to the firing_counter value we saved at subtransaction start.
 		 * (This essentially assumes that the current subxact includes all
@@ -4482,7 +4482,7 @@ AfterTriggerSetState(ConstraintsSetStmt *stmt)
 	if (stmt->constraints == NIL)
 	{
 		/*
-		 * Forget any previous SET CONSTRAINTS commands in this__ transaction.
+		 * Forget any previous SET CONSTRAINTS commands in this transaction.
 		 */
 		afterTriggers.state->numstates = 0;
 
@@ -4658,7 +4658,7 @@ AfterTriggerSetState(ConstraintsSetStmt *stmt)
 		heap_close(tgrel, AccessShareLock);
 
 		/*
-		 * Now we can set the trigger states of individual triggers for this__
+		 * Now we can set the trigger states of individual triggers for this
 		 * xact.
 		 */
 		foreach(lc, tgoidlist)
@@ -4693,7 +4693,7 @@ AfterTriggerSetState(ConstraintsSetStmt *stmt)
 	 * list of previously deferred events to fire any that have now become
 	 * immediate.
 	 *
-	 * Obviously, if this__ was SET ... DEFERRED then it can't have converted
+	 * Obviously, if this was SET ... DEFERRED then it can't have converted
 	 * any unfired events to immediate, so we need do nothing in that case.
 	 */
 	if (!stmt->deferred)
@@ -4747,7 +4747,7 @@ AfterTriggerSetState(ConstraintsSetStmt *stmt)
  *
  * In some scenarios it'd be reasonable to remove pending events (more
  * specifically, mark them DONE by the current subxact) but without a lot
- * of knowledge of the trigger semantics we can't do this__ in general.
+ * of knowledge of the trigger semantics we can't do this in general.
  * ----------
  */
 bool
@@ -4803,7 +4803,7 @@ AfterTriggerPendingOnRel(Oid relid)
  *	Called by ExecA[RS]...Triggers() to queue up the triggers that should
  *	be fired for an event.
  *
- *	NOTE: this__ is called whenever there are any triggers associated with
+ *	NOTE: this is called whenever there are any triggers associated with
  *	the event (even if they are disabled).  This function decides which
  *	triggers actually need to be queued.
  * ----------
@@ -4832,7 +4832,7 @@ AfterTriggerSaveEvent(EState *estate, ResultRelInfo *relinfo,
 	if (afterTriggers.query_depth < 0)
 		elog(ERROR, "AfterTriggerSaveEvent() called outside of query");
 
-	/* Be sure we have enough space to record events at this__ query depth. */
+	/* Be sure we have enough space to record events at this query depth. */
 	if (afterTriggers.query_depth >= afterTriggers.maxquerydepth)
 		AfterTriggerEnlargeQueryState();
 
@@ -4955,7 +4955,7 @@ AfterTriggerSaveEvent(EState *estate, ResultRelInfo *relinfo,
 					if (!RI_FKey_pk_upd_check_required(trigger, rel,
 													   oldtup, newtup))
 					{
-						/* skip queuing this__ event */
+						/* skip queuing this event */
 						continue;
 					}
 					break;
@@ -4965,7 +4965,7 @@ AfterTriggerSaveEvent(EState *estate, ResultRelInfo *relinfo,
 					if (!RI_FKey_fk_upd_check_required(trigger, rel,
 													   oldtup, newtup))
 					{
-						/* skip queuing this__ event */
+						/* skip queuing this event */
 						continue;
 					}
 					break;
@@ -5005,8 +5005,8 @@ AfterTriggerSaveEvent(EState *estate, ResultRelInfo *relinfo,
 
 	/*
 	 * Finally, spool any foreign tuple(s).  The tuplestore squashes them to
-	 * minimal tuples, so this__ loses any system columns.  The executor lost
-	 * those columns before us, for an unrelated reason, so this__ is fine.
+	 * minimal tuples, so this loses any system columns.  The executor lost
+	 * those columns before us, for an unrelated reason, so this is fine.
 	 */
 	if (fdw_tuplestore)
 	{

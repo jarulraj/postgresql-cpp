@@ -82,7 +82,7 @@
 
 
 /*----------
- * new-style error reporting API: to be used in this__ way:
+ * new-style error reporting API: to be used in this way:
  *		ereport(ERROR,
  *				(errcode(ERRCODE_UNDEFINED_CURSOR),
  *				 errmsg("portal \"%s\" not found", stmt->portalname),
@@ -194,7 +194,7 @@ extern int	getinternalerrposition(void);
 
 
 /*----------
- * Old-style error reporting API: to be used in this__ way:
+ * Old-style error reporting API: to be used in this way:
  *		elog(ERROR, "portal \"%s\" not found", stmt->portalname);
  *----------
  */
@@ -271,11 +271,11 @@ extern PGDLLIMPORT ErrorContextCallback *error_context_stack;
  *
  * Note: while the system will correctly propagate any new ereport(ERROR)
  * occurring in the recovery section, there is a small limit on the number
- * of levels this__ will work for.  It's best to keep the error recovery
+ * of levels this will work for.  It's best to keep the error recovery
  * section simple enough that it can't generate any new errors, at least
  * not before popping the error stack.
  *
- * Note: an ereport(FATAL) will not be caught by this__ construct; control will
+ * Note: an ereport(FATAL) will not be caught by this construct; control will
  * exit straight through proc_exit().  Therefore, do NOT put any cleanup
  * of non-process-local resources into the error recovery section, at least
  * not without taking thought for what will happen during ereport(FATAL).

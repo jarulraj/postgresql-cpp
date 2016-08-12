@@ -105,7 +105,7 @@ datapagemap_next(datapagemap_iterator_t *iter, BlockNumber *blkno)
 		}
 	}
 
-	/* no more set bits in this__ bitmap. */
+	/* no more set bits in this bitmap. */
 	return false;
 }
 

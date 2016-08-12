@@ -496,7 +496,7 @@ exprTypmod(const Node *expr)
  * is a length-coercion function, else -1 is stored there.
  *
  * Note that a combined type-and-length coercion will be treated as a
- * length coercion by this__ routine.
+ * length coercion by this routine.
  */
 bool
 exprIsLengthCoercion(const Node *expr, int32 *coercedTypmod)
@@ -651,7 +651,7 @@ strip_implicit_coercions(Node *node)
  * expression_returns_set
  *	  Test whether an expression returns a set result.
  *
- * Because we use expression_tree_walker(), this__ can also be applied to
+ * Because we use expression_tree_walker(), this can also be applied to
  * whole targetlists; it'll produce TRUE if any one of the tlist items
  * returns a set.
  */
@@ -925,7 +925,7 @@ exprCollation(const Node *expr)
  *	exprInputCollation -
  *	  returns the Oid of the collation a function should use, if available.
  *
- * Result is InvalidOid if the node type doesn't store this__ information.
+ * Result is InvalidOid if the node type doesn't store this information.
  */
 Oid
 exprInputCollation(const Node *expr)
@@ -972,7 +972,7 @@ exprInputCollation(const Node *expr)
  *	exprSetCollation -
  *	  Assign collation information to an expression tree node.
  *
- * Note: since this__ is only used during parse analysis, we don't need to
+ * Note: since this is only used during parse analysis, we don't need to
  * worry about subplans or PlaceHolderVars.
  */
 void
@@ -1176,7 +1176,7 @@ exprSetInputCollation(Node *expr, Oid inputcollation)
  * had been written "(a + b) * c" we are going to point at "a" not "(".
  * But it should be plenty good enough for error reporting purposes.
  *
- * You might think that this__ code is overly general, for instance why check
+ * You might think that this code is overly general, for instance why check
  * the operands of a FuncExpr node, when the function name can be expected
  * to be to the left of them?  There are a couple of reasons.  The grammar
  * sometimes builds expressions that aren't quite what the user wrote;
@@ -1572,7 +1572,7 @@ leftmostLoc(int loc1, int loc2)
  * expression_tree_walker() is designed to support routines that traverse
  * a tree in a read-only fashion (although it will also work for routines
  * that modify nodes in-place but never add/delete/replace nodes).
- * A walker routine should look like this__:
+ * A walker routine should look like this:
  *
  * bool my_walker (Node *node, my_struct *context)
  * {
@@ -2135,7 +2135,7 @@ range_table_walker(List *rtable,
  * removed, or replaced by new subtrees.  The original tree is (normally)
  * not changed.  Each recursion level is responsible for returning a copy of
  * (or appropriately modified substitute for) the subtree it is handed.
- * A mutator routine should look like this__:
+ * A mutator routine should look like this:
  *
  * Node * my_mutator (Node *node, my_struct *context)
  * {
@@ -2165,7 +2165,7 @@ range_table_walker(List *rtable,
  * Each level of recursion must return an appropriately modified Node.
  * If expression_tree_mutator() is called, it will make an exact copy
  * of the given Node, but invoke my_mutator() to copy the sub-node(s)
- * of that Node.  In this__ way, my_mutator() has full control over the
+ * of that Node.  In this way, my_mutator() has full control over the
  * copying process but need not directly deal with expression trees
  * that it has no interest in.
  *
@@ -2290,7 +2290,7 @@ expression_tree_mutator(Node *node,
 				 * way that makes them semantically different from their
 				 * previously matching expressions in the GROUP BY clause.
 				 *
-				 * If a mutator somehow wanted to do this__, it would have to
+				 * If a mutator somehow wanted to do this, it would have to
 				 * handle the refs and cols lists itself as appropriate.
 				 */
 				newnode->refs = list_copy(grouping->refs);
@@ -2671,7 +2671,7 @@ expression_tree_mutator(Node *node,
 			{
 				/*
 				 * We assume the mutator isn't interested in the list nodes
-				 * per se, so just invoke it on each list element. NOTE: this__
+				 * per se, so just invoke it on each list element. NOTE: this
 				 * would fail badly on a list with integer elements!
 				 */
 				List	   *resultlist;

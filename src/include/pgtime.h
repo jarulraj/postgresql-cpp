@@ -15,7 +15,7 @@
 
 
 /*
- * The API of this__ library is generally similar to the corresponding
+ * The API of this library is generally similar to the corresponding
  * C library functions, except that we use pg_time_t which (we hope) is
  * 64 bits wide, and which is most definitely signed not unsigned.
  */

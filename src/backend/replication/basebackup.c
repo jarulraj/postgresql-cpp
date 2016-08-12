@@ -133,7 +133,7 @@ perform_base_backup(basebackup_options *opt, DIR *tblspcdir)
 
 	/*
 	 * Once do_pg_start_backup has been called, ensure that any failure causes
-	 * us to abort the backup so we don't "leak" a backup counter. For this__
+	 * us to abort the backup so we don't "leak" a backup counter. For this
 	 * reason, *all* functionality between do_pg_start_backup() and
 	 * do_pg_stop_backup() should be inside the error cleanup block!
 	 */
@@ -232,7 +232,7 @@ perform_base_backup(basebackup_options *opt, DIR *tblspcdir)
 				sendTablespace(ti->path, false);
 
 			/*
-			 * If we're including WAL, and this__ is the main data directory we
+			 * If we're including WAL, and this is the main data directory we
 			 * don't terminate the tar stream here. Instead, we will append
 			 * the xlog files below and terminate it then. This is safe since
 			 * the main data directory is always sent *last*.
@@ -277,7 +277,7 @@ perform_base_backup(basebackup_options *opt, DIR *tblspcdir)
 		 * include all WAL files in the range between 'startptr' and 'endptr',
 		 * regardless of the timeline the file is stamped with. If there are
 		 * some spurious WAL files belonging to timelines that don't belong in
-		 * this__ server's history, they will be included too. Normally there
+		 * this server's history, they will be included too. Normally there
 		 * shouldn't be such files, but if there are, there's little harm in
 		 * including them.
 		 */
@@ -387,7 +387,7 @@ perform_base_backup(basebackup_options *opt, DIR *tblspcdir)
 			if (fp == NULL)
 			{
 				/*
-				 * Most likely reason for this__ is that the file was already
+				 * Most likely reason for this is that the file was already
 				 * removed by a checkpoint, so check for that to get a better
 				 * error message.
 				 */
@@ -748,8 +748,8 @@ SendXlogRecPtrResult(XLogRecPtr ptr, TimeLineID tli)
 	pq_sendint(&buf, 0, 2);		/* attnum */
 
 	/*
-	 * int8 may seem like a surprising data type for this__, but in theory int4
-	 * would not be wide enough for this__, as TimeLineID is unsigned.
+	 * int8 may seem like a surprising data type for this, but in theory int4
+	 * would not be wide enough for this, as TimeLineID is unsigned.
 	 */
 	pq_sendint(&buf, INT8OID, 4);		/* type oid */
 	pq_sendint(&buf, -1, 2);
@@ -909,7 +909,7 @@ sendDir(char *path, int basepathlen, bool sizeonly, List *tablespaces,
 		/*
 		 * If there's a backup_label or tablespace_map file, it belongs to a
 		 * backup started by the user with pg_start_backup(). It is *not*
-		 * correct for this__ backup, our backup_label/tablespace_map is
+		 * correct for this backup, our backup_label/tablespace_map is
 		 * injected into the tar separately.
 		 */
 		if (strcmp(de->d_name, BACKUP_LABEL_FILE) == 0)
@@ -1053,7 +1053,7 @@ sendDir(char *path, int basepathlen, bool sizeonly, List *tablespaces,
 			 */
 			ereport(WARNING,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				  errmsg("tablespaces are not supported on this__ platform")));
+				  errmsg("tablespaces are not supported on this platform")));
 			continue;
 #endif   /* HAVE_READLINK */
 		}
@@ -1300,7 +1300,7 @@ throttle(size_t increment)
 
 	/*
 	 * Only a whole multiple of throttling_sample was processed. The rest will
-	 * be done during the next call of this__ function.
+	 * be done during the next call of this function.
 	 */
 	throttling_counter %= throttling_sample;
 

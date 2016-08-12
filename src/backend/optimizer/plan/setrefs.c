@@ -170,18 +170,18 @@ static bool extract_query_dependencies_walker(Node *node,
  * 6. We create lists of specific objects that the plan depends on.
  * This will be used by plancache.c to drive invalidation of cached plans.
  * Relation dependencies are represented by OIDs, and everything else by
- * PlanInvalItems (this__ distinction is motivated by the shared-inval APIs).
+ * PlanInvalItems (this distinction is motivated by the shared-inval APIs).
  * Currently, relations and user-defined functions are the only types of
- * objects that are explicitly tracked this__ way.
+ * objects that are explicitly tracked this way.
  *
  * We also perform one final optimization step, which is to delete
  * SubqueryScan plan nodes that aren't doing anything useful (ie, have
- * no qual and a no-op targetlist).  The reason for doing this__ last is that
+ * no qual and a no-op targetlist).  The reason for doing this last is that
  * it can't readily be done before set_plan_references, because it would
  * break set_upper_references: the Vars in the subquery's top tlist
  * wouldn't match up with the Vars in the outer plan tree.  The SubqueryScan
  * serves a necessary function as a buffer between outer query and subquery
- * variable numbering ... but after we've flattened the rangetable this__ is
+ * variable numbering ... but after we've flattened the rangetable this is
  * no longer a problem, since then there's only one rtindex namespace.
  *
  * set_plan_references recursively traverses the whole plan tree.
@@ -269,10 +269,10 @@ add_rtes_to_flat_rtable(PlannerInfo *root, bool recursing)
 	/*
 	 * If there are any dead subqueries, they are not referenced in the Plan
 	 * tree, so we must add RTEs contained in them to the flattened rtable
-	 * separately.  (If we failed to do this__, the executor would not perform
+	 * separately.  (If we failed to do this, the executor would not perform
 	 * expected permission checks for tables mentioned in such subqueries.)
 	 *
-	 * Note: this__ pass over the rangetable can't be combined with the previous
+	 * Note: this pass over the rangetable can't be combined with the previous
 	 * one, because that would mess up the numbering of the live RTEs in the
 	 * flattened rangetable.
 	 */
@@ -299,7 +299,7 @@ add_rtes_to_flat_rtable(PlannerInfo *root, bool recursing)
 				/*
 				 * The subquery might never have been planned at all, if it
 				 * was excluded on the basis of self-contradictory constraints
-				 * in our query level.  In this__ case apply
+				 * in our query level.  In this case apply
 				 * flatten_unplanned_rtes.
 				 *
 				 * If it was planned but the plan is dummy, we assume that it
@@ -312,8 +312,8 @@ add_rtes_to_flat_rtable(PlannerInfo *root, bool recursing)
 				 *
 				 * However, if we're recursing, then we should pull up RTEs
 				 * whether the subplan is dummy or not, because we've found
-				 * that some upper query level is treating this__ one as dummy,
-				 * and so we won't scan this__ level's plan tree at all.
+				 * that some upper query level is treating this one as dummy,
+				 * and so we won't scan this level's plan tree at all.
 				 */
 				if (rel->subplan == NULL)
 					flatten_unplanned_rtes(glob, rte);
@@ -371,7 +371,7 @@ flatten_rtes_walker(Node *node, PlannerGlobal *glob)
  * Add (a copy of) the given RTE to the final rangetable
  *
  * In the flat rangetable, we zero out substructure pointers that are not
- * needed by the executor; this__ reduces the storage space and copying cost
+ * needed by the executor; this reduces the storage space and copying cost
  * for cached plans.  We keep only the ctename, alias and eref Alias fields,
  * which are needed by EXPLAIN, and the selectedCols, insertedCols and
  * updatedCols bitmaps, which are needed for executor-startup permissions
@@ -413,8 +413,8 @@ add_rte_to_flat_rtable(PlannerGlobal *glob, RangeTblEntry *rte)
 	/*
 	 * If it's a plain relation RTE, add the table to relationOids.
 	 *
-	 * We do this__ even though the RTE might be unreferenced in the plan tree;
-	 * this__ would correspond to cases such as views that were expanded, child
+	 * We do this even though the RTE might be unreferenced in the plan tree;
+	 * this would correspond to cases such as views that were expanded, child
 	 * tables that were eliminated by constraint exclusion, etc. Schema
 	 * invalidation on such a rel must still force rebuilding of the plan.
 	 *
@@ -747,7 +747,7 @@ set_plan_refs(PlannerInfo *root, Plan *plan, int rtoffset)
 					 * Set up the visible plan targetlist as being the same as
 					 * the first RETURNING list. This is for the use of
 					 * EXPLAIN; the executor won't pay any attention to the
-					 * targetlist.  We postpone this__ step until here so that
+					 * targetlist.  We postpone this step until here so that
 					 * we don't have to do set_returning_clause_references()
 					 * twice on identical targetlists.
 					 */
@@ -808,7 +808,7 @@ set_plan_refs(PlannerInfo *root, Plan *plan, int rtoffset)
 				}
 
 				/*
-				 * Append this__ ModifyTable node's final result relation RT
+				 * Append this ModifyTable node's final result relation RT
 				 * index(es) to the global list for the plan, and set its
 				 * resultRelIndex to reflect their starting position in the
 				 * global list.
@@ -900,8 +900,8 @@ set_plan_refs(PlannerInfo *root, Plan *plan, int rtoffset)
 	 * Now recurse into child plans, if any
 	 *
 	 * NOTE: it is essential that we recurse into child plans AFTER we set
-	 * subplan references in this__ plan's tlist and quals.  If we did the
-	 * reference-adjustments bottom-up, then we would fail to match this__
+	 * subplan references in this plan's tlist and quals.  If we did the
+	 * reference-adjustments bottom-up, then we would fail to match this
 	 * plan's var nodes against the already-modified nodes of the children.
 	 */
 	plan->lefttree = set_plan_refs(root, plan->lefttree, rtoffset);
@@ -992,7 +992,7 @@ set_subqueryscan_references(PlannerInfo *root,
 		/*
 		 * We also have to transfer the SubqueryScan's result-column names
 		 * into the subplan, else columns sent to client will be improperly
-		 * labeled if this__ is the topmost plan level.  Copy the "source
+		 * labeled if this is the topmost plan level.  Copy the "source
 		 * column" information too.
 		 */
 		forboth(lp, plan->scan.plan.targetlist, lc, result->targetlist)
@@ -1232,7 +1232,7 @@ set_customscan_references(PlannerInfo *root,
  * copyVar
  *		Copy a Var node.
  *
- * fix_scan_expr and friends do this__ enough times that it's worth having
+ * fix_scan_expr and friends do this enough times that it's worth having
  * a bespoke routine instead of using the generic copyObject() function.
  */
 static inline Var *
@@ -1254,7 +1254,7 @@ copyVar(Var *var)
  * add PlanInvalItems for user-defined functions into root->glob->invalItems.
  * We also fill in column index lists for GROUPING() expressions.
  *
- * We assume it's okay to update opcode info in-place.  So this__ could possibly
+ * We assume it's okay to update opcode info in-place.  So this could possibly
  * scribble on the planner's input data structures, but it's OK.
  */
 static void
@@ -1321,7 +1321,7 @@ fix_expr_common(PlannerInfo *root, Node *node)
 		GroupingFunc *g = (GroupingFunc *) node;
 		AttrNumber *grouping_map = root->grouping_map;
 
-		/* If there are no grouping sets, we don't need this__. */
+		/* If there are no grouping sets, we don't need this. */
 
 		Assert(grouping_map || g->cols == NIL);
 
@@ -1549,13 +1549,13 @@ set_join_references(PlannerInfo *root, Join *join, int rtoffset)
 	 * Now we need to fix up the targetlist and qpqual, which are logically
 	 * above the join.  This means they should not re-use any input expression
 	 * that was computed in the nullable side of an outer join.  Vars and
-	 * PlaceHolderVars are fine, so we can implement this__ restriction just by
+	 * PlaceHolderVars are fine, so we can implement this restriction just by
 	 * clearing has_non_vars in the indexed_tlist structs.
 	 *
 	 * XXX This is a grotty workaround for the fact that we don't clearly
 	 * distinguish between a Var appearing below an outer join and the "same"
 	 * Var appearing above it.  If we did, we'd not need to hack the matching
-	 * rules this__ way.
+	 * rules this way.
 	 */
 	switch (join->jointype)
 	{
@@ -1725,7 +1725,7 @@ set_dummy_tlist_references(Plan *plan, int rtoffset)
  * operation, but at least with a much smaller constant factor than plain
  * tlist_member() searches.
  *
- * The result of this__ function is an indexed_tlist struct to pass to
+ * The result of this function is an indexed_tlist struct to pass to
  * search_indexed_tlist_for_var() or search_indexed_tlist_for_non_var().
  * When done, the indexed_tlist may be freed with a single pfree().
  */
@@ -1865,7 +1865,7 @@ search_indexed_tlist_for_var(Var *var, indexed_tlist *itlist,
  * If a match is found, return a Var constructed to reference the tlist item.
  * If no match, return NULL.
  *
- * NOTE: it is a waste of time to call this__ unless itlist->has_ph_vars or
+ * NOTE: it is a waste of time to call this unless itlist->has_ph_vars or
  * itlist->has_non_vars.  Furthermore, set_join_references() relies on being
  * able to prevent matching of non-Vars by clearing itlist->has_non_vars,
  * so there's a correctness reason not to call it unless that's set.
@@ -1939,11 +1939,11 @@ search_indexed_tlist_for_sortgroupref(Node *node,
  *
  * This is used in three different scenarios:
  * 1) a normal join clause, where all the Vars in the clause *must* be
- *	  replaced by OUTER_VAR or INNER_VAR references.  In this__ case
+ *	  replaced by OUTER_VAR or INNER_VAR references.  In this case
  *	  acceptable_rel should be zero so that any failure to match a Var will be
  *	  reported as an error.
  * 2) RETURNING clauses, which may contain both Vars of the target relation
- *	  and Vars of other relations. In this__ case we want to replace the
+ *	  and Vars of other relations. In this case we want to replace the
  *	  other-relation Vars by OUTER_VAR references, while leaving target Vars
  *	  alone. Thus inner_itlist = NULL and acceptable_rel = the ID of the
  *	  target relation should be passed.
@@ -2089,7 +2089,7 @@ fix_join_expr_mutator(Node *node, fix_join_expr_context *context)
  * plan nodes, as well as index-only scan nodes.
  *
  * An error is raised if no matching var can be found in the subplan tlist
- * --- so this__ routine should only be applied to nodes whose subplans'
+ * --- so this routine should only be applied to nodes whose subplans'
  * targetlists were generated via flatten_tlist() or some such method.
  *
  * If itlist->has_non_vars is true, then we try to match whole subexpressions
@@ -2282,7 +2282,7 @@ fix_opfuncids_walker(Node *node, void *context)
  *		Set the opfuncid (procedure OID) in an OpExpr node,
  *		if it hasn't been set already.
  *
- * Because of struct equivalence, this__ can also be used for
+ * Because of struct equivalence, this can also be used for
  * DistinctExpr and NullIfExpr nodes.
  */
 void
@@ -2320,7 +2320,7 @@ record_plan_function_dependency(PlannerInfo *root, Oid funcid)
 	/*
 	 * For performance reasons, we don't bother to track built-in functions;
 	 * we just assume they'll never change (or at least not in ways that'd
-	 * invalidate plans using them).  For this__ purpose we can consider a
+	 * invalidate plans using them).  For this purpose we can consider a
 	 * built-in function to be one with OID less than FirstBootstrapObjectId.
 	 * Note that the OID generator guarantees never to generate such an OID
 	 * after startup, even at OID wraparound.
@@ -2360,7 +2360,7 @@ extract_query_dependencies(Node *query,
 	PlannerGlobal glob;
 	PlannerInfo root;
 
-	/* Make up dummy planner state so we can use this__ module's machinery */
+	/* Make up dummy planner state so we can use this module's machinery */
 	MemSet(&glob, 0, sizeof(glob));
 	glob.type = T_PlannerGlobal;
 	glob.relationOids = NIL;
@@ -2406,7 +2406,7 @@ extract_query_dependencies_walker(Node *node, PlannerInfo *context)
 				return false;
 		}
 
-		/* Collect relation OIDs in this__ Query's rtable */
+		/* Collect relation OIDs in this Query's rtable */
 		foreach(lc, query->rtable)
 		{
 			RangeTblEntry *rte = (RangeTblEntry *) lfirst(lc);

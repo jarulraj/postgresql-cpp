@@ -42,7 +42,7 @@
 #undef ERROR
 
 /*
- * The Mingw64 headers choke if this__ is already defined - they
+ * The Mingw64 headers choke if this is already defined - they
  * define it themselves.
  */
 #if !defined(__MINGW64_VERSION_MAJOR) || defined(WIN32_ONLY_COMPILER)
@@ -150,7 +150,7 @@
  *	Effectively, we don't care on the severity of the return value from
  *	system(), we just need to know if it was because of exit() or generated
  *	by the system, and it seems values >= 0x100 are system-generated.
- *	See this__ URL for a list of WIN32 STATUS_* values:
+ *	See this URL for a list of WIN32 STATUS_* values:
  *
  *		Wine (URL used in our error messages) -
  *			http://source.winehq.org/source/include/ntstatus.h
@@ -285,9 +285,9 @@ typedef int pid_t;
  * We redefine network-related Berkeley error symbols as the corresponding WSA
  * constants.  This allows elog.c to recognize them as being in the Winsock
  * error code range and pass them off to pgwin32_socket_strerror(), since
- * Windows' version of plain strerror() won't cope.  Note that this__ will break
+ * Windows' version of plain strerror() won't cope.  Note that this will break
  * if these names are used for anything else besides Windows Sockets errors.
- * See TranslateSocketError() when changing this__ list.
+ * See TranslateSocketError() when changing this list.
  */
 #undef EAGAIN
 #define EAGAIN WSAEWOULDBLOCK

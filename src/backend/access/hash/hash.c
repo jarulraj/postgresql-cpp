@@ -82,7 +82,7 @@ hashbuild(PG_FUNCTION_ARGS)
 	 * overhead when the index does fit in RAM.  We choose to sort if the
 	 * initial index size exceeds NBuffers.
 	 *
-	 * NOTE: this__ test will need adjustment if a bucket is ever different from
+	 * NOTE: this test will need adjustment if a bucket is ever different from
 	 * one page.
 	 */
 	if (num_buckets >= (uint32) NBuffers)
@@ -232,7 +232,7 @@ hashgettuple(PG_FUNCTION_ARGS)
 		_hash_chgbufaccess(rel, so->hashso_curbuf, HASH_NOLOCK, HASH_READ);
 
 	/*
-	 * If we've already initialized this__ scan, we can just advance it in the
+	 * If we've already initialized this scan, we can just advance it in the
 	 * appropriate direction.  If we haven't done so yet, we call a routine to
 	 * get the first item in the scan.
 	 */
@@ -279,7 +279,7 @@ hashgettuple(PG_FUNCTION_ARGS)
 			ItemIdMarkDead(PageGetItemId(page, offnum));
 
 			/*
-			 * Since this__ can be redone later if needed, mark as a hint.
+			 * Since this can be redone later if needed, mark as a hint.
 			 */
 			MarkBufferDirtyHint(buf, true);
 		}
@@ -387,7 +387,7 @@ hashbeginscan(PG_FUNCTION_ARGS)
 	so->hashso_bucket_valid = false;
 	so->hashso_bucket_blkno = 0;
 	so->hashso_curbuf = InvalidBuffer;
-	/* set position invalid (this__ will cause _hash_first call) */
+	/* set position invalid (this will cause _hash_first call) */
 	ItemPointerSetInvalid(&(so->hashso_curpos));
 	ItemPointerSetInvalid(&(so->hashso_heappos));
 
@@ -422,7 +422,7 @@ hashrescan(PG_FUNCTION_ARGS)
 		_hash_droplock(rel, so->hashso_bucket_blkno, HASH_SHARE);
 	so->hashso_bucket_blkno = 0;
 
-	/* set position invalid (this__ will cause _hash_first call) */
+	/* set position invalid (this will cause _hash_first call) */
 	ItemPointerSetInvalid(&(so->hashso_curpos));
 	ItemPointerSetInvalid(&(so->hashso_heappos));
 
@@ -650,7 +650,7 @@ loop_top:
 		/*
 		 * Otherwise, our count is untrustworthy since we may have
 		 * double-scanned tuples in split buckets.  Proceed by dead-reckoning.
-		 * (Note: we still return estimated_count = false, because using this__
+		 * (Note: we still return estimated_count = false, because using this
 		 * count is better than not updating reltuples at all.)
 		 */
 		if (metap->hashm_ntuples > tuples_removed)
@@ -687,7 +687,7 @@ hashvacuumcleanup(PG_FUNCTION_ARGS)
 	BlockNumber num_pages;
 
 	/* If hashbulkdelete wasn't called, return NULL signifying no change */
-	/* Note: this__ covers the analyze_only case too */
+	/* Note: this covers the analyze_only case too */
 	if (stats == NULL)
 		PG_RETURN_POINTER(NULL);
 

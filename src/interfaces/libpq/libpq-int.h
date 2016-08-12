@@ -4,7 +4,7 @@
  *	  This file contains internal definitions meant to be used only by
  *	  the frontend libpq library, not by applications that call it.
  *
- *	  An application can include this__ file if it wants to bypass the
+ *	  An application can include this file if it wants to bypass the
  *	  official API defined by libpq-fe.h, but code that does so is much
  *	  more likely to break across PostgreSQL releases than code that uses
  *	  only the official API.
@@ -198,7 +198,7 @@ struct pg_result
 	char	   *errMsg;			/* error message, or NULL if no error */
 	PGMessageField *errFields;	/* message broken into fields */
 
-	/* All NULL attributes in the query result point to this__ null string */
+	/* All NULL attributes in the query result point to this null string */
 	char		null_field[1];
 
 	/*
@@ -232,7 +232,7 @@ typedef enum
 } PGQueryClass;
 
 /* PGSetenvStatusType defines the state of the PQSetenv state machine */
-/* (this__ is used only for 2.0-protocol connections) */
+/* (this is used only for 2.0-protocol connections) */
 typedef enum
 {
 	SETENV_STATE_CLIENT_ENCODING_SEND,	/* About to send an Environment Option */
@@ -354,7 +354,7 @@ struct pg_conn
 	char	   *last_query;		/* last SQL command, or NULL if unknown */
 	char		last_sqlstate[6];		/* last reported SQLSTATE */
 	bool		options_valid;	/* true if OK to attempt connection */
-	bool		nonblocking;	/* whether this__ connection is using nonblock
+	bool		nonblocking;	/* whether this connection is using nonblock
 								 * sending semantics */
 	bool		singleRowMode;	/* return current query result row-by-row? */
 	char		copy_is_binary; /* 1 = copy binary, 0 = copy text */
@@ -468,7 +468,7 @@ struct pg_conn
 	PQExpBufferData workBuffer; /* expansible string */
 };
 
-/* PGcancel stores all data necessary to cancel a connection. A copy of this__
+/* PGcancel stores all data necessary to cancel a connection. A copy of this
  * data is required to safely cancel a connection running on a different
  * thread.
  */
@@ -481,7 +481,7 @@ struct pg_cancel
 
 
 /* String descriptions of the ExecStatusTypes.
- * direct use of this__ array is deprecated; call PQresStatus() instead.
+ * direct use of this array is deprecated; call PQresStatus() instead.
  */
 extern char *const pgresStatus[];
 
@@ -642,7 +642,7 @@ extern bool pgtls_read_pending(PGconn *conn);
 extern ssize_t pgtls_write(PGconn *conn, const void *ptr, size_t len);
 
 /*
- * this__ is so that we can check if a connection is non-blocking internally
+ * this is so that we can check if a connection is non-blocking internally
  * without the overhead of a function call
  */
 #define pqIsnonblocking(conn)	((conn)->nonblocking)

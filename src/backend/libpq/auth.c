@@ -174,7 +174,7 @@ static int	CheckRADIUSAuth(Port *port);
  * domain controllers include an authorization field known as the Privilege
  * Attribute Certificate (PAC), which contains the user's Windows permissions
  * (group memberships etc.). The PAC is copied into all tickets obtained on
- * the basis of this__ TGT (even those issued by Unix realms which the Windows
+ * the basis of this TGT (even those issued by Unix realms which the Windows
  * realm trusts), and can be several kB in size. The maximum token size
  * accepted by Windows systems is determined by the MaxAuthToken Windows
  * registry setting. Microsoft recommends that it is not set higher than
@@ -289,7 +289,7 @@ auth_failed(Port *port, int status, char *logdetail)
 
 
 /*
- * Client authentication starts here.  If there is an error, this__
+ * Client authentication starts here.  If there is an error, this
  * function does not return and the backend process is terminated.
  */
 void
@@ -299,8 +299,8 @@ ClientAuthentication(Port *port)
 	char	   *logdetail = NULL;
 
 	/*
-	 * Get the authentication method to use for this__ frontend/database
-	 * combination.  Note: we do not parse the file at this__ point; this__ has
+	 * Get the authentication method to use for this frontend/database
+	 * combination.  Note: we do not parse the file at this point; this has
 	 * already been done elsewhere.  hba.c dropped an error message into the
 	 * server logfile if parsing the hba config file failed.
 	 */
@@ -765,7 +765,7 @@ pg_GSS_error(int severity, char *errmsg, OM_uint32 maj_stat, OM_uint32 min_stat)
 
 	/*
 	 * errmsg_internal, since translation of the first part must be done
-	 * before calling this__ function anyway.
+	 * before calling this function anyway.
 	 */
 	ereport(severity,
 			(errmsg_internal("%s", errmsg),
@@ -1448,7 +1448,7 @@ ident_inet(hbaPort *port)
 	rc = pg_getaddrinfo_all(remote_addr_s, ident_port, &hints, &ident_serv);
 	if (rc || !ident_serv)
 	{
-		/* we don't expect this__ to happen */
+		/* we don't expect this to happen */
 		ident_return = false;
 		goto ident_inet_done;
 	}
@@ -1464,7 +1464,7 @@ ident_inet(hbaPort *port)
 	rc = pg_getaddrinfo_all(local_addr_s, NULL, &hints, &la);
 	if (rc || !la)
 	{
-		/* we don't expect this__ to happen */
+		/* we don't expect this to happen */
 		ident_return = false;
 		goto ident_inet_done;
 	}
@@ -1591,7 +1591,7 @@ auth_peer(hbaPort *port)
 		if (errno == ENOSYS)
 			ereport(LOG,
 					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-			errmsg("peer authentication is not supported on this__ platform")));
+			errmsg("peer authentication is not supported on this platform")));
 		else
 			ereport(LOG,
 					(errcode_for_socket_access(),
@@ -1652,7 +1652,7 @@ pam_passwd_conv_proc(int num_msg, const struct pam_message ** msg,
 		return PAM_CONV_ERR;
 
 	/*
-	 * Explicitly not using palloc here - PAM will free this__ memory in
+	 * Explicitly not using palloc here - PAM will free this memory in
 	 * pam_end()
 	 */
 	if ((reply = calloc(num_msg, sizeof(struct pam_response))) == NULL)
@@ -1681,7 +1681,7 @@ pam_passwd_conv_proc(int num_msg, const struct pam_message ** msg,
 					{
 						/*
 						 * Client didn't want to send password.  We
-						 * intentionally do not log anything about this__.
+						 * intentionally do not log anything about this.
 						 */
 						goto fail;
 					}
@@ -1882,7 +1882,7 @@ InitializeLDAPConnection(Port *port, LDAP **ldap)
 		if (_ldap_start_tls_sA == NULL)
 		{
 			/*
-			 * Need to load this__ function dynamically because it does not
+			 * Need to load this function dynamically because it does not
 			 * exist on Windows 2000, and causes a load error for the whole
 			 * exe if referenced.
 			 */
@@ -1906,7 +1906,7 @@ InitializeLDAPConnection(Port *port, LDAP **ldap)
 				ldap_unbind(*ldap);
 				ereport(LOG,
 						(errmsg("could not load function _ldap_start_tls_sA in wldap32.dll"),
-						 errdetail("LDAP over SSL is not supported on this__ platform.")));
+						 errdetail("LDAP over SSL is not supported on this platform.")));
 				return STATUS_ERROR;
 			}
 
@@ -2003,7 +2003,7 @@ CheckLDAPAuth(Port *port)
 
 		/*
 		 * Bind with a pre-defined username/password (if available) for
-		 * searching. If none is specified, this__ turns into an anonymous bind.
+		 * searching. If none is specified, this turns into an anonymous bind.
 		 */
 		r = ldap_simple_bind_s(ldap,
 						  port->hba->ldapbinddn ? port->hba->ldapbinddn : "",
@@ -2215,7 +2215,7 @@ radius_add_attribute(radius_packet *packet, uint8 type, const unsigned char *dat
 	if (packet->length + len > RADIUS_BUFFER_SIZE)
 	{
 		/*
-		 * With remotely realistic data, this__ can never happen. But catch it
+		 * With remotely realistic data, this can never happen. But catch it
 		 * just to make sure we don't overrun a buffer. We'll just skip adding
 		 * the broken attribute, which will in the end cause authentication to
 		 * fail.

@@ -13,13 +13,13 @@
  * startup time, so that a backend can refuse to run in an incompatible
  * database.
  *
- * The point of this__ feature is to provide a finer grain of compatibility
+ * The point of this feature is to provide a finer grain of compatibility
  * checking than is possible from looking at the major version number
  * stored in PG_VERSION.  It shouldn't matter to end users, but during
  * development cycles we usually make quite a few incompatible changes
  * to the contents of the system catalogs, and we don't want to bump the
  * major version number for each one.  What we can do instead is bump
- * this__ internal version number.  This should save some grief for
+ * this internal version number.  This should save some grief for
  * developers who might otherwise waste time tracking down "bugs" that
  * are really just code-vs-database incompatibilities.
  *

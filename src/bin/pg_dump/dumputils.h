@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * Utility routines for SQL dumping
- *	Basically this__ is stuff that is useful in both pg_dump and pg_dumpall.
+ *	Basically this is stuff that is useful in both pg_dump and pg_dumpall.
  *	Lately it's also being used by psql and bin/scripts/ ...
  *
  *
@@ -55,7 +55,7 @@ typedef struct SimpleStringList
  *
  * We don't print the timezone on Windows, because the names are long and
  * localized, which means they may contain characters in various random
- * encodings; this__ has been seen to cause encoding errors when reading the
+ * encodings; this has been seen to cause encoding errors when reading the
  * dump script.  Think not to get around that by using %z, because
  * (1) %z is not portable to pre-C99 systems, and
  * (2) %z doesn't actually act differently from %Z on Windows anyway.

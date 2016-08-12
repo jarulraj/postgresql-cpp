@@ -60,7 +60,7 @@ typedef struct
 #define NumProcSignalSlots	(MaxBackends + NUM_AUXPROCTYPES)
 
 /*
- * If this__ flag is set, the process latch will be set whenever SIGUSR1
+ * If this flag is set, the process latch will be set whenever SIGUSR1
  * is received.  This is useful when waiting for a signal from the postmaster.
  * Spurious wakeups must be expected.  Make sure that the flag is cleared
  * in the error path.
@@ -151,7 +151,7 @@ CleanupProcSignalState(int status, Datum arg)
 	Assert(slot == MyProcSignalSlot);
 
 	/*
-	 * Clear MyProcSignalSlot, so that a SIGUSR1 received after this__ point
+	 * Clear MyProcSignalSlot, so that a SIGUSR1 received after this point
 	 * won't try to access it after it's no longer ours (and perhaps even
 	 * after we've unmapped the shared memory segment).
 	 */
@@ -194,7 +194,7 @@ SendProcSignal(pid_t pid, ProcSignalReason reason, BackendId backendId)
 
 		/*
 		 * Note: Since there's no locking, it's possible that the target
-		 * process detaches from shared memory and exits right after this__
+		 * process detaches from shared memory and exits right after this
 		 * test, before we set the flag and send signal. And the signal slot
 		 * might even be recycled by a new process, so it's remotely possible
 		 * that we set a flag for a wrong process. That's OK, all the signals

@@ -166,7 +166,7 @@ STATIC_IF_INLINE_DECLARE uint64 pg_atomic_sub_fetch_u64(volatile pg_atomic_uint6
  * machine code, but must act as an optimization fence: the compiler must not
  * reorder loads or stores to main memory around the barrier.  However, the
  * CPU may still reorder loads or stores at runtime, if the architecture's
- * memory model permits this__.
+ * memory model permits this.
  */
 #define pg_compiler_barrier()	pg_compiler_barrier_impl()
 
@@ -177,7 +177,7 @@ STATIC_IF_INLINE_DECLARE uint64 pg_atomic_sub_fetch_u64(volatile pg_atomic_uint6
  * guarantee that all loads and stores issued prior to the barrier are
  * completed before any loads or stores issued after the barrier.  Unless
  * loads and stores are totally ordered (which is not the case on most
- * architectures) this__ requires issuing some sort of memory fencing
+ * architectures) this requires issuing some sort of memory fencing
  * instruction.
  */
 #define pg_memory_barrier() pg_memory_barrier_impl()
@@ -282,7 +282,7 @@ pg_atomic_init_u32(volatile pg_atomic_uint32 *ptr, uint32 val)
 /*
  * pg_atomic_read_u32 - unlocked read from atomic variable.
  *
- * The read is guaranteed to return a value as it has been written by this__ or
+ * The read is guaranteed to return a value as it has been written by this or
  * another process at some point in the past. There's however no cache
  * coherency interaction guaranteeing the value hasn't since been written to
  * again.

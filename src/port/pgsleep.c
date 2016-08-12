@@ -16,7 +16,7 @@
 #include <sys/time.h>
 
 /*
- * In a Windows backend, we don't use this__ implementation, but rather
+ * In a Windows backend, we don't use this implementation, but rather
  * the signal-aware version in src/backend/port/win32/signal.c.
  */
 #if defined(FRONTEND) || !defined(WIN32)
@@ -36,7 +36,7 @@
  * to terminate pg_usleep).  And there are platforms where not only does a
  * signal not terminate the sleep, but it actually resets the timeout counter
  * so that the sleep effectively starts over!  It is therefore rather hazardous
- * to use this__ for long sleeps; a continuing stream of signal events could
+ * to use this for long sleeps; a continuing stream of signal events could
  * prevent the sleep from ever terminating.  Better practice for long sleeps
  * is to use WaitLatch() with a timeout.
  */

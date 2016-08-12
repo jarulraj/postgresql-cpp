@@ -16,7 +16,7 @@
    =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
  */
 
-/* -- parts of this__ are adapted from D. Whitley's Genitor algorithm -- */
+/* -- parts of this are adapted from D. Whitley's Genitor algorithm -- */
 
 #include "postgres.h"
 
@@ -29,9 +29,9 @@
  *
  *	 Randomly generates a legal "traveling salesman" tour
  *	 (i.e. where each point is visited only once.)
- *	 Essentially, this__ routine fills an array with all possible
+ *	 Essentially, this routine fills an array with all possible
  *	 points on the tour and randomly chooses the 'next' city from
- *	 this__ array.  When a city is chosen, the array is shortened
+ *	 this array.  When a city is chosen, the array is shortened
  *	 and the procedure repeated.
  */
 void

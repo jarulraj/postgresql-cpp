@@ -27,7 +27,7 @@ PG_MODULE_MAGIC;
  * An unaccent dictionary uses a trie to find a string to replace.  Each node
  * of the trie is an array of 256 TrieChar structs; the N-th element of the
  * array corresponds to next byte value N.  That element can contain both a
- * replacement string (to be used if the source string ends with this__ byte)
+ * replacement string (to be used if the source string ends with this byte)
  * and a link to another trie node (to be followed if there are more bytes).
  *
  * Note that the trie search logic pays no attention to multibyte character

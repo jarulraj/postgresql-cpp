@@ -587,7 +587,7 @@ ReceiveXlogStream(PGconn *conn, XLogRecPtr startpos, uint32 timeline,
 	while (1)
 	{
 		/*
-		 * Fetch the timeline history file for this__ timeline, if we don't have
+		 * Fetch the timeline history file for this timeline, if we don't have
 		 * it already.
 		 */
 		if (!existsTimeLineHistoryFile(basedir, timeline))
@@ -828,7 +828,7 @@ HandleCopyStream(PGconn *conn, XLogRecPtr startpos, uint32 timeline,
 		long		sleeptime;
 
 		/*
-		 * Check if we should continue streaming, or abort at this__ point.
+		 * Check if we should continue streaming, or abort at this point.
 		 */
 		if (!CheckCopyStreamStop(conn, blockpos, timeline, basedir,
 								 stream_stop, partial_suffix, stoppos,
@@ -911,7 +911,7 @@ HandleCopyStream(PGconn *conn, XLogRecPtr startpos, uint32 timeline,
 					goto error;
 
 				/*
-				 * Check if we should continue streaming, or abort at this__
+				 * Check if we should continue streaming, or abort at this
 				 * point.
 				 */
 				if (!CheckCopyStreamStop(conn, blockpos, timeline, basedir,
@@ -1147,7 +1147,7 @@ ProcessXLogDataMsg(PGconn *conn, char *copybuf, int len,
 	}
 	*blockpos = fe_recvint64(&copybuf[1]);
 
-	/* Extract WAL location for this__ block */
+	/* Extract WAL location for this block */
 	xlogoff = *blockpos % XLOG_SEG_SIZE;
 
 	/*
@@ -1239,7 +1239,7 @@ ProcessXLogDataMsg(PGconn *conn, char *copybuf, int len,
 					return false;
 				}
 				still_sending = false;
-				return true;	/* ignore the rest of this__ XLogData packet */
+				return true;	/* ignore the rest of this XLogData packet */
 			}
 		}
 	}
@@ -1292,7 +1292,7 @@ HandleEndOfCopyStream(PGconn *conn, char *copybuf,
 }
 
 /*
- * Check if we should continue streaming, or abort at this__ point.
+ * Check if we should continue streaming, or abort at this point.
  */
 static bool
 CheckCopyStreamStop(PGconn *conn, XLogRecPtr blockpos, uint32 timeline,

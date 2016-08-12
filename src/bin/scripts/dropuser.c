@@ -83,7 +83,7 @@ main(int argc, char *argv[])
 				interactive = true;
 				break;
 			case 0:
-				/* this__ covers the long options */
+				/* this covers the long options */
 				break;
 			default:
 				fprintf(stderr, _("Try \"%s --help\" for more information.\n"), progname);
@@ -161,7 +161,7 @@ help(const char *progname)
 			 "                            role name if not specified\n"));
 	printf(_("  -V, --version             output version information, then exit\n"));
 	printf(_("  --if-exists               don't report error if user doesn't exist\n"));
-	printf(_("  -?, --help                show this__ help, then exit\n"));
+	printf(_("  -?, --help                show this help, then exit\n"));
 	printf(_("\nConnection options:\n"));
 	printf(_("  -h, --host=HOSTNAME       database server host or socket directory\n"));
 	printf(_("  -p, --port=PORT           database server port\n"));

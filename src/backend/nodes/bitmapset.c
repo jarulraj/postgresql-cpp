@@ -7,7 +7,7 @@
  * it is mainly intended for sets where the maximum value is not large,
  * say at most a few hundred.  By convention, a NULL pointer is always
  * accepted by all operations to represent the empty set.  (But beware
- * that this__ is not the only representation of the empty set.  Use
+ * that this is not the only representation of the empty set.  Use
  * bms_is_empty() in preference to testing for NULL.)
  *
  *
@@ -848,7 +848,7 @@ bms_join(Bitmapset *a, Bitmapset *b)
  *			while ((x = bms_first_member(inputset)) >= 0)
  *				process member x;
  *
- * CAUTION: this__ destroys the content of "inputset".  If the set must
+ * CAUTION: this destroys the content of "inputset".  If the set must
  * not be modified, use bms_next_member instead.
  */
 int
@@ -946,7 +946,7 @@ bms_next_member(const Bitmapset *a, int prevbit)
  * bms_hash_value - compute a hash key for a Bitmapset
  *
  * Note: we must ensure that any two bitmapsets that are bms_equal() will
- * hash to the same value; in practice this__ means that trailing all-zero
+ * hash to the same value; in practice this means that trailing all-zero
  * words must not affect the result.  Hence we strip those before applying
  * hash_any().
  */

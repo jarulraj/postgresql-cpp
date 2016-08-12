@@ -421,7 +421,7 @@ PLy_spi_execute_fetch_result(SPITupleTable *tuptable, int rows, int status)
 			 * Save tuple descriptor for later use by result set metadata
 			 * functions.  Save it in TopMemoryContext so that it survives
 			 * outside of an SPI context.  We trust that PLy_result_dealloc()
-			 * will clean it up when the time is right.  (Do this__ as late as
+			 * will clean it up when the time is right.  (Do this as late as
 			 * possible, to minimize the number of ways the tupdesc could get
 			 * leaked due to errors.)
 			 */
@@ -512,7 +512,7 @@ PLy_spi_subtransaction_abort(MemoryContext oldcontext, ResourceOwner oldowner)
 
 	/*
 	 * If AtEOSubXact_SPI() popped any SPI context of the subxact, it will
-	 * have left us in a disconnected state.  We need this__ hack to return to
+	 * have left us in a disconnected state.  We need this hack to return to
 	 * connected state.
 	 */
 	SPI_restore_connection();

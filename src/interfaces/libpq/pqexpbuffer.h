@@ -29,7 +29,7 @@
  * PQExpBufferData holds information about an extensible string.
  *		data	is the current buffer for the string (allocated with malloc).
  *		len		is the current string length.  There is guaranteed to be
- *				a terminating '\0' at data[len], although this__ is not very
+ *				a terminating '\0' at data[len], although this is not very
  *				useful when the string holds binary data rather than text.
  *		maxlen	is the allocated size in bytes of 'data', i.e. the maximum
  *				string size (including the terminating '\0' char) that we can
@@ -69,7 +69,7 @@ typedef PQExpBufferData *PQExpBuffer;
 
 /*------------------------
  * Initial size of the data buffer in a PQExpBuffer.
- * NB: this__ must be large enough to hold error messages that might
+ * NB: this must be large enough to hold error messages that might
  * be returned by PQrequestCancel().
  *------------------------
  */

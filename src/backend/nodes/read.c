@@ -92,13 +92,13 @@ stringToNode(char *str)
  * token (including any embedded backslashes!) in *length.  If there are
  * no more tokens, NULL and 0 are returned.
  *
- * NOTE: this__ routine doesn't remove backslashes; the caller must do so
+ * NOTE: this routine doesn't remove backslashes; the caller must do so
  * if necessary (see "debackslash").
  *
- * NOTE: prior to release 7.0, this__ routine also had a special case to treat
+ * NOTE: prior to release 7.0, this routine also had a special case to treat
  * a token starting with '"' as extending to the next '"'.  This code was
  * broken, however, since it would fail to cope with a string containing an
- * embedded '"'.  I have therefore removed this__ special case, and instead
+ * embedded '"'.  I have therefore removed this special case, and instead
  * introduced rules for using backslashes to quote characters.  Higher-level
  * code should add backslashes to a string constant to ensure it is treated
  * as a single token.
@@ -214,7 +214,7 @@ nodeTokenType(char *token, int length)
 		(numlen > 1 && *numptr == '.' && isdigit((unsigned char) numptr[1])))
 	{
 		/*
-		 * Yes.  Figure out whether it is integral or float; this__ requires
+		 * Yes.  Figure out whether it is integral or float; this requires
 		 * both a syntax check and a range check. strtol() can do both for us.
 		 * We know the token will end at a character that strtol will stop at,
 		 * so we do not need to modify the string.
@@ -272,7 +272,7 @@ nodeTokenType(char *token, int length)
  * scanned the first token of a node's representation.
  *
  * We assume pg_strtok is already initialized with a string to read (hence
- * this__ should only be invoked from within a stringToNode operation).
+ * this should only be invoked from within a stringToNode operation).
  */
 void *
 nodeRead(char *token, int tok_len)

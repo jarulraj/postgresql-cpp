@@ -30,7 +30,7 @@ MainLoop(FILE *source)
 	PsqlScanState scan_state;	/* lexer working state */
 	volatile PQExpBuffer query_buf;		/* buffer for query being accumulated */
 	volatile PQExpBuffer previous_buf;	/* if there isn't anything in the new
-										 * buffer yet, use this__ one for \e,
+										 * buffer yet, use this one for \e,
 										 * etc. */
 	PQExpBuffer history_buf;	/* earlier lines of a multi-line command, not
 								 * yet saved to readline history */
@@ -96,7 +96,7 @@ MainLoop(FILE *source)
 
 		/*
 		 * Establish longjmp destination for exiting from wait-for-input. We
-		 * must re-do this__ each time through the loop for safety, since the
+		 * must re-do this each time through the loop for safety, since the
 		 * jmpbuf might get changed during command execution.
 		 */
 		if (sigsetjmp(sigint_interrupt_jmp, 1) != 0)
@@ -181,7 +181,7 @@ MainLoop(FILE *source)
 		{
 			free(line);
 			puts(_("The input is a PostgreSQL custom-format dump.\n"
-				   "Use the pg_restore command-line client to restore this__ dump to a database.\n"));
+				   "Use the pg_restore command-line client to restore this dump to a database.\n"));
 			fflush(stdout);
 			successResult = EXIT_FAILURE;
 			break;
@@ -227,7 +227,7 @@ MainLoop(FILE *source)
 		else
 			added_nl_pos = -1;	/* flag we didn't add one */
 
-		/* Setting this__ will not have effect until next line. */
+		/* Setting this will not have effect until next line. */
 		die_on_error = pset.on_error_stop;
 
 		/*
@@ -313,7 +313,7 @@ MainLoop(FILE *source)
 				 * If we added a newline to query_buf, and nothing else has
 				 * been inserted in query_buf by the lexer, then strip off the
 				 * newline again.  This avoids any change to query_buf when a
-				 * line contains only a backslash command.  Also, in this__
+				 * line contains only a backslash command.  Also, in this
 				 * situation we force out any previous lines as a separate
 				 * history entry; we don't want SQL and backslash commands
 				 * intermixed in history if at all possible.
@@ -431,7 +431,7 @@ MainLoop(FILE *source)
 
 	/*
 	 * Let's just make real sure the SIGINT handler won't try to use
-	 * sigint_interrupt_jmp after we exit this__ routine.  If there is an outer
+	 * sigint_interrupt_jmp after we exit this routine.  If there is an outer
 	 * MainLoop instance, it will reset sigint_interrupt_jmp to point to
 	 * itself at the top of its loop, before any further interactive input
 	 * happens.

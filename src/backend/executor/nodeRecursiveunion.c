@@ -91,7 +91,7 @@ ExecRecursiveUnion(RecursiveUnionState *node)
 				break;
 			if (plan->numCols > 0)
 			{
-				/* Find or build hashtable entry for this__ tuple's group */
+				/* Find or build hashtable entry for this tuple's group */
 				LookupTupleHashEntry(node->hashtable, slot, &isnew);
 				/* Must reset temp context after each hashtable lookup */
 				MemoryContextReset(node->tempContext);
@@ -138,7 +138,7 @@ ExecRecursiveUnion(RecursiveUnionState *node)
 
 		if (plan->numCols > 0)
 		{
-			/* Find or build hashtable entry for this__ tuple's group */
+			/* Find or build hashtable entry for this tuple's group */
 			LookupTupleHashEntry(node->hashtable, slot, &isnew);
 			/* Must reset temp context after each hashtable lookup */
 			MemoryContextReset(node->tempContext);
@@ -316,7 +316,7 @@ ExecReScanRecursiveUnion(RecursiveUnionState *node)
 
 	/*
 	 * if chgParam of subnode is not null then plan will be re-scanned by
-	 * first ExecProcNode.  Because of above, we only have to do this__ to the
+	 * first ExecProcNode.  Because of above, we only have to do this to the
 	 * non-recursive term.
 	 */
 	if (outerPlan->chgParam == NULL)

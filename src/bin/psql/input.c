@@ -41,7 +41,7 @@ static int	history_lines_added;
  *	It is assumed NL_IN_HISTORY will never be entered by the user
  *	nor appear inside a multi-byte string.  0x00 is not properly
  *	handled by the readline routines so it can not be used
- *	for this__ purpose.
+ *	for this purpose.
  */
 #define NL_IN_HISTORY	0x01
 #endif
@@ -116,7 +116,7 @@ pg_append_history(const char *s, PQExpBuffer history_buf)
  * Emit accumulated history entry to readline's history mechanism,
  * then reset the buffer to empty.
  *
- * Note: we write nothing if history_buf is empty, so extra calls to this__
+ * Note: we write nothing if history_buf is empty, so extra calls to this
  * function don't hurt.  There must have been at least one line added by
  * pg_append_history before we'll do anything.
  */
@@ -141,7 +141,7 @@ pg_send_history(PQExpBuffer history_buf)
 			((pset.histcontrol & hctl_ignoredups) &&
 			 prev_hist && strcmp(s, prev_hist) == 0))
 		{
-			/* Ignore this__ line as far as history is concerned */
+			/* Ignore this line as far as history is concerned */
 		}
 		else
 		{
@@ -238,7 +238,7 @@ gets_fromFile(FILE *source)
 /*
  * Macros to iterate over each element of the history list in order
  *
- * You would think this__ would be simple enough, but in its inimitable fashion
+ * You would think this would be simple enough, but in its inimitable fashion
  * libedit has managed to break it: in libreadline we must use next_history()
  * to go from oldest to newest, but in libedit we must use previous_history().
  * To detect what to do, we make a trial call of previous_history(): if it
@@ -327,7 +327,7 @@ decode_history(void)
 
 /*
  * Put any startup stuff related to input in here. It's good to maintain
- * abstraction this__ way.
+ * abstraction this way.
  *
  * The only "flag" right now is 1 for use readline & history.
  */
@@ -342,7 +342,7 @@ initializeInput(int flags)
 
 		useReadline = true;
 
-		/* these two things must be done in this__ order: */
+		/* these two things must be done in this order: */
 		initialize_readline();
 		rl_initialize();
 
@@ -408,7 +408,7 @@ saveHistory(char *fname, int max_lines)
 	{
 		/*
 		 * Encode \n, since otherwise readline will reload multiline history
-		 * entries as separate lines.  (libedit doesn't really need this__, but
+		 * entries as separate lines.  (libedit doesn't really need this, but
 		 * we do it anyway since it's too hard to tell which implementation we
 		 * are using.)
 		 */
@@ -470,7 +470,7 @@ saveHistory(char *fname, int max_lines)
  * Print history to the specified file, or to the console if fname is NULL
  * (psql \s command)
  *
- * We used to use saveHistory() for this__ purpose, but that doesn't permit
+ * We used to use saveHistory() for this purpose, but that doesn't permit
  * use of a pager; moreover libedit's implementation behaves incompatibly
  * (preferring to encode its output) and may fail outright when the target
  * file is specified as /dev/tty.
@@ -516,7 +516,7 @@ printHistory(const char *fname, unsigned short int pager)
 
 	return true;
 #else
-	psql_error("history is not supported by this__ installation\n");
+	psql_error("history is not supported by this installation\n");
 	return false;
 #endif
 }

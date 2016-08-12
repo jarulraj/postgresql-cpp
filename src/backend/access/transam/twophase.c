@@ -21,7 +21,7 @@
  *		GIDs and aborts the transaction if there already is a global
  *		transaction in prepared state with the same GID.
  *
- *		A global transaction (gxact) also has dummy PGXACT and PGPROC; this__ is
+ *		A global transaction (gxact) also has dummy PGXACT and PGPROC; this is
  *		what keeps the XID considered running by TransactionIdIsInProgress.
  *		It is also convenient as a PGPROC to hook the gxact's locks to.
  *
@@ -125,7 +125,7 @@ typedef struct GlobalTransactionData
 }	GlobalTransactionData;
 
 /*
- * Two Phase Commit shared state.  Access to this__ struct is protected
+ * Two Phase Commit shared state.  Access to this struct is protected
  * by TwoPhaseStateLock.
  */
 typedef struct TwoPhaseStateData
@@ -136,7 +136,7 @@ typedef struct TwoPhaseStateData
 	/* Number of valid prepXacts entries. */
 	int			numPrepXacts;
 
-	/* There are max_prepared_xacts items in this__ array */
+	/* There are max_prepared_xacts items in this array */
 	GlobalTransaction prepXacts[FLEXIBLE_ARRAY_MEMBER];
 } TwoPhaseStateData;
 
@@ -311,8 +311,8 @@ PostPrepare_Twophase()
  * MarkAsPreparing
  *		Reserve the GID for the given transaction.
  *
- * Internally, this__ creates a gxact struct and puts it into the active array.
- * NOTE: this__ is also used when reloading a gxact after a crash; so avoid
+ * Internally, this creates a gxact struct and puts it into the active array.
+ * NOTE: this is also used when reloading a gxact after a crash; so avoid
  * assuming that we can use very much backend context.
  */
 GlobalTransaction
@@ -410,8 +410,8 @@ MarkAsPreparing(TransactionId xid, const char *gid,
 	TwoPhaseState->prepXacts[TwoPhaseState->numPrepXacts++] = gxact;
 
 	/*
-	 * Remember that we have this__ GlobalTransaction entry locked for us. If we
-	 * abort after this__, we must release it.
+	 * Remember that we have this GlobalTransaction entry locked for us. If we
+	 * abort after this, we must release it.
 	 */
 	MyLockedGxact = gxact;
 
@@ -423,7 +423,7 @@ MarkAsPreparing(TransactionId xid, const char *gid,
 /*
  * GXactLoadSubxactData
  *
- * If the transaction being persisted had any subtransactions, this__ must
+ * If the transaction being persisted had any subtransactions, this must
  * be called before MarkAsPrepared() to load information into the dummy
  * PGPROC.
  */
@@ -690,7 +690,7 @@ pg_prepared_xact(PG_FUNCTION_ARGS)
 		oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
 
 		/* build tupdesc for result tuples */
-		/* this__ had better match pg_prepared_xacts view in system_views.sql */
+		/* this had better match pg_prepared_xacts view in system_views.sql */
 		tupdesc = CreateTemplateTupleDesc(5, false);
 		TupleDescInitEntry(tupdesc, (AttrNumber) 1, "transaction",
 						   XIDOID, -1, 0);
@@ -881,7 +881,7 @@ typedef struct TwoPhaseFileHeader
 typedef struct TwoPhaseRecordOnDisk
 {
 	uint32		len;			/* length of rmgr data */
-	TwoPhaseRmgrId rmid;		/* resource manager for this__ record */
+	TwoPhaseRmgrId rmid;		/* resource manager for this record */
 	uint16		info;			/* flag bits for use by rmgr */
 } TwoPhaseRecordOnDisk;
 
@@ -970,7 +970,7 @@ StartPrepare(GlobalTransaction gxact)
 
 	/* Create header */
 	hdr.magic = TWOPHASE_MAGIC;
-	hdr.total_len = 0;			/* EndPrepare will fill this__ in */
+	hdr.total_len = 0;			/* EndPrepare will fill this in */
 	hdr.xid = xid;
 	hdr.database = proc->databaseId;
 	hdr.prepared_at = gxact->prepared_at;
@@ -1079,7 +1079,7 @@ EndPrepare(GlobalTransaction gxact)
 	FIN_CRC32C(statefile_crc);
 
 	/*
-	 * Write a deliberately bogus CRC to the state file; this__ is just paranoia
+	 * Write a deliberately bogus CRC to the state file; this is just paranoia
 	 * to catch the case where four more bytes will run us out of disk space.
 	 */
 	bogus_crc = ~statefile_crc;
@@ -1153,9 +1153,9 @@ EndPrepare(GlobalTransaction gxact)
 	/*
 	 * Mark the prepared transaction as valid.  As soon as xact.c marks
 	 * MyPgXact as not running our XID (which it will do immediately after
-	 * this__ function returns), others can commit/rollback the xact.
+	 * this function returns), others can commit/rollback the xact.
 	 *
-	 * NB: a side effect of this__ is to make a dummy ProcArray entry for the
+	 * NB: a side effect of this is to make a dummy ProcArray entry for the
 	 * prepared XID.  This must happen before we clear the XID from MyPgXact,
 	 * else there is a window where the XID is not running according to
 	 * TransactionIdIsInProgress, and onlookers would be entitled to assume
@@ -1166,14 +1166,14 @@ EndPrepare(GlobalTransaction gxact)
 
 	/*
 	 * Now we can mark ourselves as out of the commit critical section: a
-	 * checkpoint starting after this__ will certainly see the gxact as a
+	 * checkpoint starting after this will certainly see the gxact as a
 	 * candidate for fsyncing.
 	 */
 	MyPgXact->delayChkpt = false;
 
 	/*
-	 * Remember that we have this__ GlobalTransaction entry locked for us.  If
-	 * we crash after this__ point, it's too late to abort, but we must unlock
+	 * Remember that we have this GlobalTransaction entry locked for us.  If
+	 * we crash after this point, it's too late to abort, but we must unlock
 	 * it so that the prepared transaction can be committed or rolled back.
 	 */
 	MyLockedGxact = gxact;
@@ -1183,7 +1183,7 @@ EndPrepare(GlobalTransaction gxact)
 	/*
 	 * Wait for synchronous replication, if required.
 	 *
-	 * Note that at this__ stage we have marked the prepare, but still show as
+	 * Note that at this stage we have marked the prepare, but still show as
 	 * running in the procarray (twice!) and continue to hold locks.
 	 */
 	SyncRepWaitForLSN(gxact->prepare_lsn);
@@ -1426,19 +1426,19 @@ FinishPreparedTransaction(const char *gid, bool isCommit)
 	/*
 	 * In case we fail while running the callbacks, mark the gxact invalid so
 	 * no one else will try to commit/rollback, and so it will be recycled if
-	 * we fail after this__ point.  It is still locked by our backend so it
+	 * we fail after this point.  It is still locked by our backend so it
 	 * won't go away yet.
 	 *
-	 * (We assume it's safe to do this__ without taking TwoPhaseStateLock.)
+	 * (We assume it's safe to do this without taking TwoPhaseStateLock.)
 	 */
 	gxact->valid = false;
 
 	/*
 	 * We have to remove any files that were supposed to be dropped. For
-	 * consistency with the regular xact.c code paths, must do this__ before
+	 * consistency with the regular xact.c code paths, must do this before
 	 * releasing locks, so do it before running the callbacks.
 	 *
-	 * NB: this__ code knows that we couldn't be dropping any temp rels ...
+	 * NB: this code knows that we couldn't be dropping any temp rels ...
 	 */
 	if (isCommit)
 	{
@@ -1522,7 +1522,7 @@ ProcessRecords(char *bufptr, TransactionId xid,
  * Remove the 2PC file for the specified XID.
  *
  * If giveWarning is false, do not complain about file-not-present;
- * this__ is an expected case during WAL replay.
+ * this is an expected case during WAL replay.
  */
 void
 RemoveTwoPhaseFile(TransactionId xid, bool giveWarning)
@@ -1605,7 +1605,7 @@ RecreateTwoPhaseFile(TransactionId xid, void *content, int len)
  *
  * We must fsync the state file of any GXACT that is valid and has a PREPARE
  * LSN <= the checkpoint's redo horizon.  (If the gxact isn't valid yet or
- * has a later LSN, this__ checkpoint is not responsible for fsyncing it.)
+ * has a later LSN, this checkpoint is not responsible for fsyncing it.)
  *
  * This is deliberately run as late as possible in the checkpoint sequence,
  * because GXACTs ordinarily have short lifespans, and so it is quite
@@ -1632,7 +1632,7 @@ CheckPointTwoPhase(XLogRecPtr redo_horizon)
 	 *
 	 * This approach creates a race condition: someone else could delete a
 	 * GXACT between the time we release TwoPhaseStateLock and the time we try
-	 * to open its state file.  We handle this__ by special-casing ENOENT
+	 * to open its state file.  We handle this by special-casing ENOENT
 	 * failures: if we see that, we verify that the GXACT is no longer valid,
 	 * and if so ignore the failure.
 	 */
@@ -1718,7 +1718,7 @@ CheckPointTwoPhase(XLogRecPtr redo_horizon)
  * state that doesn't exist now.
  *
  * However, we will advance nextXid beyond any subxact XIDs belonging to
- * valid prepared xacts.  We need to do this__ since subxact commit doesn't
+ * valid prepared xacts.  We need to do this since subxact commit doesn't
  * write a WAL entry, and so there might be no evidence in WAL of those
  * subxact XIDs.
  *
@@ -1794,7 +1794,7 @@ PrescanPreparedTransactions(TransactionId **xids_p, int *nxids_p)
 			}
 
 			/*
-			 * OK, we think this__ file is valid.  Incorporate xid into the
+			 * OK, we think this file is valid.  Incorporate xid into the
 			 * running-minimum result.
 			 */
 			if (TransactionIdPrecedes(xid, result))
@@ -2032,7 +2032,7 @@ RecoverPreparedTransactions(void)
 			 *
 			 * Note: since we don't have the PREPARE record's WAL location at
 			 * hand, we leave prepare_lsn zeroes.  This means the GXACT will
-			 * be fsync'd on every future checkpoint.  We assume this__
+			 * be fsync'd on every future checkpoint.  We assume this
 			 * situation is infrequent enough that the performance cost is
 			 * negligible (especially since we know the state file has already
 			 * been fsynced).
@@ -2057,7 +2057,7 @@ RecoverPreparedTransactions(void)
 				StandbyReleaseLockTree(xid, hdr->nsubxacts, subxids);
 
 			/*
-			 * We're done with recovering this__ transaction. Clear
+			 * We're done with recovering this transaction. Clear
 			 * MyLockedGxact, like we do in PrepareTransaction() during normal
 			 * operation.
 			 */
@@ -2073,7 +2073,7 @@ RecoverPreparedTransactions(void)
  *	RecordTransactionCommitPrepared
  *
  * This is basically the same as RecordTransactionCommit (q.v. if you change
- * this__ function): in particular, we must set the delayChkpt flag to avoid a
+ * this function): in particular, we must set the delayChkpt flag to avoid a
  * race condition.
  *
  * We know the transaction made at least one XLOG entry (its PREPARE),
@@ -2114,7 +2114,7 @@ RecordTransactionCommitPrepared(TransactionId xid,
 
 
 	if (replorigin)
-		/* Move LSNs forward for this__ replication origin */
+		/* Move LSNs forward for this replication origin */
 		replorigin_session_advance(replorigin_session_origin_lsn,
 								   XactLastRecEnd);
 
@@ -2153,7 +2153,7 @@ RecordTransactionCommitPrepared(TransactionId xid,
 	/*
 	 * Wait for synchronous replication, if required.
 	 *
-	 * Note that at this__ stage we have marked clog, but still show as running
+	 * Note that at this stage we have marked clog, but still show as running
 	 * in the procarray and continue to hold locks.
 	 */
 	SyncRepWaitForLSN(recptr);
@@ -2206,7 +2206,7 @@ RecordTransactionAbortPrepared(TransactionId xid,
 	/*
 	 * Wait for synchronous replication, if required.
 	 *
-	 * Note that at this__ stage we have marked clog, but still show as running
+	 * Note that at this stage we have marked clog, but still show as running
 	 * in the procarray and continue to hold locks.
 	 */
 	SyncRepWaitForLSN(recptr);

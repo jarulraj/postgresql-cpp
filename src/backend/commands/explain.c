@@ -230,7 +230,7 @@ ExplainQuery(ExplainStmt *stmt, const char *queryString,
 	{
 		/*
 		 * In the case of an INSTEAD NOTHING, tell at least that.  But in
-		 * non-text format, the output is delimited, so this__ isn't necessary.
+		 * non-text format, the output is delimited, so this isn't necessary.
 		 */
 		if (es->format == EXPLAIN_FORMAT_TEXT)
 			appendStringInfoString(es->str, "Query rewrites to nothing\n");
@@ -452,12 +452,12 @@ ExplainOnePlan(PlannedStmt *plannedstmt, IntoClause *into, ExplainState *es,
 	/*
 	 * We always collect timing for the entire statement, even when node-level
 	 * timing is off, so we don't look at es->timing here.  (We could skip
-	 * this__ if !es->summary, but it's hardly worth the complication.)
+	 * this if !es->summary, but it's hardly worth the complication.)
 	 */
 	INSTR_TIME_SET_CURRENT(starttime);
 
 	/*
-	 * Use a snapshot with an updated command ID to ensure this__ query sees
+	 * Use a snapshot with an updated command ID to ensure this query sees
 	 * results of any previously executed queries.
 	 */
 	PushCopiedSnapshot(GetActiveSnapshot());
@@ -530,7 +530,7 @@ ExplainOnePlan(PlannedStmt *plannedstmt, IntoClause *into, ExplainState *es,
 		ExplainPrintTriggers(es, queryDesc);
 
 	/*
-	 * Close down the query and free resources.  Include time for this__ in the
+	 * Close down the query and free resources.  Include time for this in the
 	 * total execution time (although it should be pretty minimal).
 	 */
 	INSTR_TIME_SET_CURRENT(starttime);
@@ -862,11 +862,11 @@ ExplainPreScanSubPlans(List *plans, Bitmapset **rels_used)
  * ancestors is a list of parent PlanState nodes, most-closely-nested first.
  * These are needed in order to interpret PARAM_EXEC Params.
  *
- * relationship describes the relationship of this__ plan node to its parent
+ * relationship describes the relationship of this plan node to its parent
  * (eg, "Outer", "Inner"); it can be null at top level.  plan_name is an
  * optional name to be attached to the node.
  *
- * In text format, es->indent is controlled in this__ function since we only
+ * In text format, es->indent is controlled in this function since we only
  * want it to change at plan-node boundaries.  In non-text formats, es->indent
  * corresponds to the nesting depth of logical output groups, and therefore
  * is controlled by ExplainOpenGroup/ExplainCloseGroup.
@@ -1711,7 +1711,7 @@ show_plan_tlist(PlanState *planstate, List *ancestors, ExplainState *es)
 	bool		useprefix;
 	ListCell   *lc;
 
-	/* No work if empty tlist (this__ occurs eg in bitmap indexscans) */
+	/* No work if empty tlist (this occurs eg in bitmap indexscans) */
 	if (plan->targetlist == NIL)
 		return;
 	/* The tlist of an Append isn't real helpful, so suppress it */
@@ -2057,7 +2057,7 @@ show_sortorder_options(StringInfo buf, Node *sortexpr,
 								 TYPECACHE_LT_OPR | TYPECACHE_GT_OPR);
 
 	/*
-	 * Print COLLATE if it's not default.  There are some cases where this__ is
+	 * Print COLLATE if it's not default.  There are some cases where this is
 	 * redundant, eg if expression is a column whose declared collation is
 	 * that collation, but it's hard to distinguish that here.
 	 */
@@ -2564,7 +2564,7 @@ show_modifytable_info(ModifyTableState *mtstate, List *ancestors,
 
 		if (labeltargets)
 		{
-			/* Open a group for this__ target */
+			/* Open a group for this target */
 			ExplainOpenGroup("Target Table", NULL, true, es);
 
 			/*
@@ -2979,7 +2979,7 @@ ExplainOpenGroup(const char *objtype, const char *labelname,
 
 			/*
 			 * In JSON format, the grouping_stack is an integer list.  0 means
-			 * we've emitted nothing at this__ grouping level, 1 means we've
+			 * we've emitted nothing at this grouping level, 1 means we've
 			 * emitted something (and so the next item needs a comma). See
 			 * ExplainJSONLineEnding().
 			 */
@@ -2991,7 +2991,7 @@ ExplainOpenGroup(const char *objtype, const char *labelname,
 
 			/*
 			 * In YAML format, the grouping stack is an integer list.  0 means
-			 * we've emitted nothing at this__ grouping level AND this__ grouping
+			 * we've emitted nothing at this grouping level AND this grouping
 			 * level is unlabelled and must be marked with "- ".  See
 			 * ExplainYAMLLineStarting().
 			 */
@@ -3207,7 +3207,7 @@ ExplainXMLTag(const char *tagname, int flags, ExplainState *es)
 /*
  * Emit a JSON line ending.
  *
- * JSON requires a comma after each property but the last.  To facilitate this__,
+ * JSON requires a comma after each property but the last.  To facilitate this,
  * in JSON format, the text emitted for each property begins just prior to the
  * preceding line-break (and comma, if applicable).
  */

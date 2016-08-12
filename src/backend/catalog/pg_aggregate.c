@@ -167,7 +167,7 @@ AggregateCreate(const char *aggName,
 	/*
 	 * If it's a hypothetical-set aggregate, there must be at least as many
 	 * direct arguments as aggregated ones, and the last N direct arguments
-	 * must match the aggregated ones in type.  (We have to check this__ again
+	 * must match the aggregated ones in type.  (We have to check this again
 	 * when the aggregate is called, in case ANY is involved, but it makes
 	 * sense to reject the aggregate definition now if the declared arg types
 	 * don't match up.)  It's unconditionally OK if numDirectArgs == numArgs,
@@ -301,7 +301,7 @@ AggregateCreate(const char *aggName,
 						 errmsg("must not omit initial value when transition function is strict and transition type is not compatible with input type")));
 		}
 
-		/* Remember if mtransfn is strict; we may need this__ below */
+		/* Remember if mtransfn is strict; we may need this below */
 		mtransIsStrict = proc->proisstrict;
 
 		ReleaseSysCache(tup);
@@ -399,7 +399,7 @@ AggregateCreate(const char *aggName,
 	/*
 	 * If finaltype (i.e. aggregate return type) is polymorphic, inputs must
 	 * be polymorphic also, else parser will fail to deduce result type.
-	 * (Note: given the previous test on transtype and inputs, this__ cannot
+	 * (Note: given the previous test on transtype and inputs, this cannot
 	 * happen, unless someone has snuck a finalfn definition into the catalogs
 	 * that itself violates the rule against polymorphic result with no
 	 * polymorphic input.)
@@ -415,7 +415,7 @@ AggregateCreate(const char *aggName,
 	 * Also, the return type can't be INTERNAL unless there's at least one
 	 * INTERNAL argument.  This is the same type-safety restriction we enforce
 	 * for regular functions, but at the level of aggregates.  We must test
-	 * this__ explicitly because we allow INTERNAL as the transtype.
+	 * this explicitly because we allow INTERNAL as the transtype.
 	 */
 	if (finaltype == INTERNALOID && !hasInternalArg)
 		ereport(ERROR,
@@ -718,14 +718,14 @@ lookup_agg_function(List *fnName,
 	if (variadicArgType == ANYOID && vatype != ANYOID)
 		ereport(ERROR,
 				(errcode(ERRCODE_DATATYPE_MISMATCH),
-				 errmsg("function %s must accept VARIADIC ANY to be used in this__ aggregate",
+				 errmsg("function %s must accept VARIADIC ANY to be used in this aggregate",
 						func_signature_string(fnName, nargs,
 											  NIL, input_types))));
 
 	/*
 	 * If there are any polymorphic types involved, enforce consistency, and
 	 * possibly refine the result type.  It's OK if the result is still
-	 * polymorphic at this__ point, though.
+	 * polymorphic at this point, though.
 	 */
 	*rettype = enforce_generic_type_consistency(input_types,
 												true_oid_array,

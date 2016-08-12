@@ -82,7 +82,7 @@ expand_array(Datum arraydatum, MemoryContext parentcontext,
 		Assert(oldeah->ea_magic == EA_MAGIC);
 
 		/*
-		 * Update caller's cache if provided; we don't need it this__ time, but
+		 * Update caller's cache if provided; we don't need it this time, but
 		 * next call might be for a non-expanded source array.  Furthermore,
 		 * if the caller didn't provide a cache area, use some local storage
 		 * to cache anyway, thereby avoiding a catalog lookup in the case
@@ -123,9 +123,9 @@ expand_array(Datum arraydatum, MemoryContext parentcontext,
 	/*
 	 * Detoast and copy source array into private context, as a flat array.
 	 *
-	 * Note that this__ coding risks leaking some memory in the private context
+	 * Note that this coding risks leaking some memory in the private context
 	 * if we have to fetch data from a TOAST table; however, experimentation
-	 * says that the leak is minimal.  Doing it this__ way saves a copy step,
+	 * says that the leak is minimal.  Doing it this way saves a copy step,
 	 * which seems worthwhile, especially if the array is large enough to need
 	 * external storage.
 	 */
@@ -346,7 +346,7 @@ EA_flatten_into(ExpandedObjectHeader *eohptr,
 /*
  * DatumGetExpandedArray: get a writable expanded array from an input argument
  *
- * Caution: if the input is a read/write pointer, this__ returns the input
+ * Caution: if the input is a read/write pointer, this returns the input
  * argument; so callers must be sure that their changes are "safe", that is
  * they cannot leave the array in a corrupt state.
  */
@@ -441,7 +441,7 @@ deconstruct_expanded_array(ExpandedArrayHeader *eah)
 						  &nelems);
 
 		/*
-		 * Update header only after successful completion of this__ step.  If
+		 * Update header only after successful completion of this step.  If
 		 * deconstruct_array fails partway through, worst consequence is some
 		 * leaked memory in the object's context.  If the caller fails at a
 		 * later point, that's fine, since the deconstructed representation is

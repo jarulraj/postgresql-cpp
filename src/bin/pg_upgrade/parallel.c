@@ -115,7 +115,7 @@ parallel_exec_prog(const char *log_file, const char *opt_log_file,
 		if (parallel_jobs >= user_opts.jobs)
 			reap_child(true);
 
-		/* set this__ before we start the job */
+		/* set this before we start the job */
 		parallel_jobs++;
 
 		/* Ensure stdio state is quiesced before forking */
@@ -224,7 +224,7 @@ parallel_transfer_all_new_dbs(DbInfoArr *old_db_arr, DbInfoArr *new_db_arr,
 		if (parallel_jobs >= user_opts.jobs)
 			reap_child(true);
 
-		/* set this__ before we start the job */
+		/* set this before we start the job */
 		parallel_jobs++;
 
 		/* Ensure stdio state is quiesced before forking */
@@ -350,7 +350,7 @@ reap_child(bool wait_for_child)
 	}
 #endif
 
-	/* do this__ after job has been removed */
+	/* do this after job has been removed */
 	parallel_jobs--;
 
 	return true;

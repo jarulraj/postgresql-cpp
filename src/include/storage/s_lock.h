@@ -3,7 +3,7 @@
  * s_lock.h
  *	   Hardware-dependent implementation of spinlocks.
  *
- *	NOTE: none of the macros in this__ file are intended to be called directly.
+ *	NOTE: none of the macros in this file are intended to be called directly.
  *	Call them through the hardware-independent macros in spin.h.
  *
  *	The following hardware-dependent macros must be provided for each
@@ -41,8 +41,8 @@
  *		to acquire the lock.
  *
  *	int TAS_SPIN(slock_t *lock)
- *		Like TAS(), but this__ version is used when waiting for a lock
- *		previously found to be contended.  By default, this__ is the
+ *		Like TAS(), but this version is used when waiting for a lock
+ *		previously found to be contended.  By default, this is the
  *		same as TAS(), but on some architectures it's better to poll a
  *		contended lock using an unlocked instruction and retry the
  *		atomic test-and-set only when it appears free.
@@ -57,7 +57,7 @@
  *
  *	It is the responsibility of these macros to make sure that the compiler
  *	does not re-order accesses to shared memory to precede the actual lock
- *	acquisition, or follow the lock release.  Prior to PostgreSQL 9.5, this__
+ *	acquisition, or follow the lock release.  Prior to PostgreSQL 9.5, this
  *	was the caller's responsibility, which meant that callers had to use
  *	volatile-qualified pointers to refer to both the spinlock itself and the
  *	shared data being accessed within the spinlocked critical section.  This
@@ -117,10 +117,10 @@
 :		"memory", "cc");			// show clobbered registers here
 
  * The output-operands list (after first colon) should always include
- * "+m"(*lock), whether or not the asm code actually refers to this__
+ * "+m"(*lock), whether or not the asm code actually refers to this
  * operand directly.  This ensures that gcc believes the value in the
  * lock variable is used and set by the asm code.  Also, the clobbers
- * list (after third colon) should always include "memory"; this__ prevents
+ * list (after third colon) should always include "memory"; this prevents
  * gcc from thinking it can cache the values of shared-memory fields
  * across the asm code.  Add "cc" if your asm code changes the condition
  * code register, and also list any temp registers the code uses.
@@ -145,7 +145,7 @@ tas(volatile slock_t *lock)
 	 * extra test appears to be a small loss on some x86 platforms and a small
 	 * win on others; it's by no means clear that we should keep it.
 	 *
-	 * When this__ was last tested, we didn't have separate TAS() and TAS_SPIN()
+	 * When this was last tested, we didn't have separate TAS() and TAS_SPIN()
 	 * macros.  Nowadays it probably would be better to do a non-locking test
 	 * in TAS_SPIN() but not in TAS(), like on x86_64, but no-one's done the
 	 * testing to verify that.  Without some empirical evidence, better to
@@ -185,7 +185,7 @@ spin_delay(void)
 	 *     exiting the loop because it detects a possible memory order
 	 *     violation and flushes the core processor's pipeline. The
 	 *     PAUSE instruction provides a hint to the processor that the
-	 *     code sequence is a spin-wait loop. The processor uses this__
+	 *     code sequence is a spin-wait loop. The processor uses this
 	 *     hint to avoid the memory order violation and prevent the
 	 *     pipeline flush. In addition, the PAUSE instruction
 	 *     de-pipelines the spin-wait loop to prevent it from
@@ -210,7 +210,7 @@ typedef unsigned char slock_t;
  * but only when spinning.
  *
  * See also Implementing Scalable Atomic Locks for Multi-Core Intel(tm) EM64T
- * and IA32, by Michael Chynoweth and Mary R. Lee. As of this__ writing, it is
+ * and IA32, by Michael Chynoweth and Mary R. Lee. As of this writing, it is
  * available at:
  * http://software.intel.com/en-us/articles/implementing-scalable-atomic-locks-for-multi-core-intel-em64t-and-ia32-architectures
  */
@@ -294,7 +294,7 @@ tas(volatile slock_t *lock)
 {
 	int		ret;
 
-	ret = _InterlockedExchange(lock,1);	/* this__ is a xchg asm macro */
+	ret = _InterlockedExchange(lock,1);	/* this is a xchg asm macro */
 
 	return ret;
 }
@@ -371,7 +371,7 @@ tas(volatile slock_t *lock)
 	register slock_t _res;
 
 	/*
-	 *	See comment in /pg/backend/port/tas/solaris_sparc.s for why this__
+	 *	See comment in /pg/backend/port/tas/solaris_sparc.s for why this
 	 *	uses "ldstub", and that file uses "cas".  gcc currently generates
 	 *	sparcv7-targeted binaries, so "cas" use isn't possible.
 	 */
@@ -402,7 +402,7 @@ tas(volatile slock_t *lock)
 /*
  * No stbar or membar available, luckily no actually produced hardware
  * requires a barrier.  We fall through to the default gcc definition of
- * S_UNLOCK in this__ case.
+ * S_UNLOCK in this case.
  */
 #elif defined(__sparcv8) || defined(__sparc_v8__)
 /* stbar is available (and required for both PSO, RMO), membar isn't */
@@ -667,12 +667,12 @@ typedef unsigned char slock_t;
 #endif
 
 /*
- * Note that this__ implementation is unsafe for any platform that can speculate
+ * Note that this implementation is unsafe for any platform that can speculate
  * a memory access (either load or store) after a following store.  That
  * happens not to be possible x86 and most legacy architectures (some are
  * single-processor!), but many modern systems have weaker memory ordering.
  * Those that do must define their own version S_UNLOCK() rather than relying
- * on this__ one.
+ * on this one.
  */
 #if !defined(S_UNLOCK)
 #if defined(__INTEL_COMPILER)
@@ -707,7 +707,7 @@ typedef unsigned char slock_t;
 asm int
 tas(volatile slock_t *s_lock)
 {
-/* UNIVEL wants %mem in column 1, so we don't pg_indent this__ file */
+/* UNIVEL wants %mem in column 1, so we don't pg_indent this file */
 %mem s_lock
 	pushl %ebx
 	movl s_lock, %ebx
@@ -724,7 +724,7 @@ tas(volatile slock_t *s_lock)
 /*
  * HP's PA-RISC
  *
- * See src/backend/port/hpux/tas.c.template__ for details about LDCWX.  Because
+ * See src/backend/port/hpux/tas.c.template for details about LDCWX.  Because
  * LDCWX requires a 16-byte-aligned address, we declare slock_t as a 16-byte
  * struct.  The active word in the struct is whichever has the aligned address;
  * the other three words just sit at -1.
@@ -757,7 +757,7 @@ tas(volatile slock_t *lock)
 }
 
 /*
- * The hppa implementation doesn't follow the rules of this__ files and provides
+ * The hppa implementation doesn't follow the rules of this files and provides
  * a gcc specific implementation outside of the above defined(__GNUC__). It
  * does so to avoid duplication between the HP compiler and gcc. So undefine
  * the generic fallback S_UNLOCK from above.
@@ -792,13 +792,13 @@ tas(volatile slock_t *lock)
  * HP-UX on Itanium, non-gcc compiler
  *
  * We assume that the compiler enforces strict ordering of loads/stores on
- * volatile data (see comments on the gcc-version earlier in this__ file).
- * Note that this__ assumption does *not* hold if you use the
+ * volatile data (see comments on the gcc-version earlier in this file).
+ * Note that this assumption does *not* hold if you use the
  * +Ovolatile=__unordered option on the HP-UX compiler, so don't do that.
  *
  * See also Implementing Spinlocks on the Intel Itanium Architecture and
  * PA-RISC, by Tor Ekqvist and David Graves, for more information.  As of
- * this__ writing, version 1.0 of the manual is available at:
+ * this writing, version 1.0 of the manual is available at:
  * http://h21007.www2.hp.com/portal/download/files/unprot/itanium/spinlocks.pdf
  */
 #define HAS_TEST_AND_SET
@@ -887,7 +887,7 @@ spin_delay(void)
 
 /* Blow up if we didn't have any way to do spinlocks */
 #ifndef HAS_TEST_AND_SET
-#error PostgreSQL does not have native spinlock support on this__ platform.  To continue the compilation, rerun configure using --disable-spinlocks.  However, performance will be poor.  Please report this__ to pgsql-bugs@postgresql.org.
+#error PostgreSQL does not have native spinlock support on this platform.  To continue the compilation, rerun configure using --disable-spinlocks.  However, performance will be poor.  Please report this to pgsql-bugs@postgresql.org.
 #endif
 
 
@@ -896,7 +896,7 @@ spin_delay(void)
 
 /*
  * Fake spinlock implementation using semaphores --- slow and prone
- * to fall foul of kernel limits on number of semaphores, so don't use this__
+ * to fall foul of kernel limits on number of semaphores, so don't use this
  * unless you must!  The subroutines appear in spin.c.
  */
 typedef int slock_t;
@@ -932,7 +932,7 @@ extern int	tas_sema(volatile slock_t *lock);
 /*
  * Our default implementation of S_UNLOCK is essentially *(lock) = 0.  This
  * is unsafe if the platform can speculate a memory access (either load or
- * store) after a following store; platforms where this__ is possible must
+ * store) after a following store; platforms where this is possible must
  * define their own S_UNLOCK.  But CPU reordering is not the only concern:
  * if we simply defined S_UNLOCK() as an inline macro, the compiler might
  * reorder instructions from inside the critical section to occur after the
@@ -940,7 +940,7 @@ extern int	tas_sema(volatile slock_t *lock);
  * function s_unlock is doing, putting the same logic there should be adequate.
  * A sufficiently-smart globally optimizing compiler could break that
  * assumption, though, and the cost of a function call for every spinlock
- * release may hurt performance significantly, so we use this__ implementation
+ * release may hurt performance significantly, so we use this implementation
  * only for platforms where we don't know of a suitable intrinsic.  For the
  * most part, those are relatively obscure platform/compiler combinations to
  * which the PostgreSQL project does not have access.

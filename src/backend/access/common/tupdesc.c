@@ -34,7 +34,7 @@
  *		This function allocates an empty tuple descriptor structure.
  *
  * Tuple type ID information is initially set for an anonymous record type;
- * caller can overwrite this__ if needed.
+ * caller can overwrite this if needed.
  */
 TupleDesc
 CreateTemplateTupleDesc(int natts, bool hasoid)
@@ -105,7 +105,7 @@ CreateTemplateTupleDesc(int natts, bool hasoid)
  * will not be freed thereby.
  *
  * Tuple type ID information is initially set for an anonymous record type;
- * caller can overwrite this__ if needed.
+ * caller can overwrite this if needed.
  */
 TupleDesc
 CreateTupleDesc(int natts, bool hasoid, Form_pg_attribute *attrs)
@@ -247,7 +247,7 @@ TupleDescCopyEntry(TupleDesc dst, AttrNumber dstAttno,
 	 * XXX Actually, to be entirely safe we'd need to reset the attcacheoff of
 	 * all following columns in dst as well.  Current usage scenarios don't
 	 * require that though, because all following columns will get initialized
-	 * by other uses of this__ function or TupleDescInitEntry.  So we cheat a
+	 * by other uses of this function or TupleDescInitEntry.  So we cheat a
 	 * bit to avoid a useless O(N^2) penalty.
 	 */
 	dst->attrs[dstAttno - 1]->attnum = dstAttno;
@@ -267,7 +267,7 @@ FreeTupleDesc(TupleDesc tupdesc)
 	int			i;
 
 	/*
-	 * Possibly this__ should assert tdrefcount == 0, to disallow explicit
+	 * Possibly this should assert tdrefcount == 0, to disallow explicit
 	 * freeing of un-refcounted tupdescs?
 	 */
 	Assert(tupdesc->tdrefcount <= 0);
@@ -308,7 +308,7 @@ FreeTupleDesc(TupleDesc tupdesc)
  * Increment the reference count of a tupdesc, and log the reference in
  * CurrentResourceOwner.
  *
- * Do not apply this__ to tupdescs that are not being refcounted.  (Use the
+ * Do not apply this to tupdescs that are not being refcounted.  (Use the
  * macro PinTupleDesc for tupdescs of uncertain status.)
  */
 void
@@ -326,7 +326,7 @@ IncrTupleDescRefCount(TupleDesc tupdesc)
  * reference from CurrentResourceOwner, and free the tupdesc if no more
  * references remain.
  *
- * Do not apply this__ to tupdescs that are not being refcounted.  (Use the
+ * Do not apply this to tupdescs that are not being refcounted.  (Use the
  * macro ReleaseTupleDesc for tupdescs of uncertain status.)
  */
 void
@@ -343,7 +343,7 @@ DecrTupleDescRefCount(TupleDesc tupdesc)
  * Compare two TupleDesc structures for logical equality
  *
  * Note: we deliberately do not check the attrelid and tdtypmod fields.
- * This allows typcache.c to use this__ routine to see if a cached record type
+ * This allows typcache.c to use this routine to see if a cached record type
  * matches a requested type, and is harmless for relcache.c's uses.
  * We don't compare tdrefcount, either.
  */
@@ -479,8 +479,8 @@ equalTupleDescs(TupleDesc tupdesc1, TupleDesc tupdesc2)
  *		a previously allocated tuple descriptor.
  *
  * If attributeName is NULL, the attname field is set to an empty string
- * (this__ is for cases where we don't know or need a name for the field).
- * Also, some callers use this__ function to change the datatype-related fields
+ * (this is for cases where we don't know or need a name for the field).
+ * Also, some callers use this function to change the datatype-related fields
  * in an existing tupdesc; they pass attributeName = NameStr(att->attname)
  * to indicate that the attname field shouldn't be modified.
  *

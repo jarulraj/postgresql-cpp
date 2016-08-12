@@ -122,7 +122,7 @@ ssl_client_serial(PG_FUNCTION_ARGS)
  * replaced by question marks.
  *
  * Parameter: str - OpenSSL ASN1_STRING structure.  Memory management
- * of this__ structure is responsibility of caller.
+ * of this structure is responsibility of caller.
  *
  * Returns Datum, which can be directly returned from a C language SQL
  * function.

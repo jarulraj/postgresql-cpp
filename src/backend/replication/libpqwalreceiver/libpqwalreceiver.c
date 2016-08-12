@@ -235,7 +235,7 @@ libpqrcv_endstreaming(TimeLineID *next_tli)
 	 * down.
 	 *
 	 * If we had not yet received CopyDone from the backend, PGRES_COPY_IN
-	 * would also be possible. However, at the moment this__ function is only
+	 * would also be possible. However, at the moment this function is only
 	 * called after receiving CopyDone from the backend - the walreceiver
 	 * never terminates replication on its own initiative.
 	 */
@@ -404,7 +404,7 @@ libpqrcv_PQexec(const char *query)
 	 */
 
 	/*
-	 * Submit a query. Since we don't use non-blocking mode, this__ also can
+	 * Submit a query. Since we don't use non-blocking mode, this also can
 	 * block. But its risk is relatively small, so we ignore that for now.
 	 */
 	if (!PQsendQuery(streamConn, query))

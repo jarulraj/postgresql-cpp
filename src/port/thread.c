@@ -40,7 +40,7 @@
  *	doesn't have strerror_r(), so we can't fall back to only using *_r
  *	functions for threaded programs.
  *
- *	The current setup is to try threading in this__ order:
+ *	The current setup is to try threading in this order:
  *
  *		use *_r function names if they exit
  *			(*_THREADSAFE=yes)

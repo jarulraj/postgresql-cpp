@@ -210,7 +210,7 @@ makeWholeRowVar(RangeTblEntry *rte,
 		default:
 
 			/*
-			 * RTE is a join, subselect, or VALUES.  We represent this__ as a
+			 * RTE is a join, subselect, or VALUES.  We represent this as a
 			 * whole-row Var of RECORD type. (Note that in most cases the Var
 			 * will be expanded to a RowExpr during planning, but that is not
 			 * our concern here.)
@@ -305,7 +305,7 @@ makeConst(Oid consttype,
 
 	/*
 	 * If it's a varlena value, force it to be in non-expanded (non-toasted)
-	 * format; this__ avoids any possible dependency on external values and
+	 * format; this avoids any possible dependency on external values and
 	 * improves consistency of representation, which is important for equal().
 	 */
 	if (!constisnull && constlen == -1)

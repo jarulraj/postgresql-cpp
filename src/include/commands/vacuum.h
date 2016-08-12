@@ -28,16 +28,16 @@
  * to be analyzed.  The struct and subsidiary data are in anl_context,
  * so they live until the end of the ANALYZE operation.
  *
- * The type-specific typanalyze function is passed a pointer to this__ struct
- * and must return TRUE to continue analysis, FALSE to skip analysis of this__
+ * The type-specific typanalyze function is passed a pointer to this struct
+ * and must return TRUE to continue analysis, FALSE to skip analysis of this
  * column.  In the TRUE case it must set the compute_stats and minrows fields,
  * and can optionally set extra_data to pass additional info to compute_stats.
  * minrows is its request for the minimum number of sample rows to be gathered
- * (but note this__ request might not be honored, eg if there are fewer rows
+ * (but note this request might not be honored, eg if there are fewer rows
  * than that in the table).
  *
  * The compute_stats routine will be called after sample rows have been
- * gathered.  Aside from this__ struct, it is passed:
+ * gathered.  Aside from this struct, it is passed:
  *		fetchfunc: a function for accessing the column values from the
  *				   sample rows
  *		samplerows: the number of sample tuples

@@ -17,7 +17,7 @@
  * in a larger record.  SHMQueueNext has to return a pointer
  * to the record itself instead of a pointer to the SHMQueue field
  * of the record.  It takes an extra parameter and does some extra
- * pointer arithmetic to do this__ correctly.
+ * pointer arithmetic to do this correctly.
  *
  * NOTE: These are set up so they can be turned into macros some day.
  *
@@ -132,7 +132,7 @@ SHMQueueInsertAfter(SHM_QUEUE *queue, SHM_QUEUE *elem)
  *		int				stuff;
  *		SHMQueue		elem;
  * } ELEMType;
- * When this__ element is in a queue, prevElem->next points at struct.elem.
+ * When this element is in a queue, prevElem->next points at struct.elem.
  * We subtract linkOffset to get the correct start address of the structure.
  *
  * calls to SHMQueueNext should take these parameters:

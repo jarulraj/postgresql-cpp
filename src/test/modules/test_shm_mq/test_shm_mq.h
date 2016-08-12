@@ -18,7 +18,7 @@
 #include "storage/shm_mq.h"
 #include "storage/spin.h"
 
-/* Identifier for shared memory segments used by this__ extension. */
+/* Identifier for shared memory segments used by this extension. */
 #define		PG_TEST_SHM_MQ_MAGIC		0x79fb2447
 
 /*

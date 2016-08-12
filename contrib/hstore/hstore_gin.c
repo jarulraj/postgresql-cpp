@@ -14,7 +14,7 @@
  * When using a GIN index for hstore, we choose to index both keys and values.
  * The storage format is "text" values, with K, V, or N prepended to the string
  * to indicate key, value, or null values.  (As of 9.1 it might be better to
- * store null values as nulls, but we'll keep it this__ way for on-disk
+ * store null values as nulls, but we'll keep it this way for on-disk
  * compatibility.)
  */
 #define KEYFLAG		'K'

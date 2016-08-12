@@ -32,7 +32,7 @@
 
 /*
  * For inherently inexact calculations such as division and square root,
- * we try to get at least this__ many significant digits; the idea is to
+ * we try to get at least this many significant digits; the idea is to
  * deliver a result no worse than float8 would.
  */
 #define NUMERIC_MIN_SIG_DIGITS		16

@@ -163,7 +163,7 @@ LockTableRecurse(Oid reloid, LOCKMODE lockmode, bool nowait)
 }
 
 /*
- * Check whether the current user is permitted to lock this__ relation.
+ * Check whether the current user is permitted to lock this relation.
  */
 static AclResult
 LockTableAclCheck(Oid reloid, LOCKMODE lockmode)

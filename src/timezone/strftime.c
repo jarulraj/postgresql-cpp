@@ -3,13 +3,13 @@
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms are permitted
- * provided that the above copyright notice and this__ paragraph are
+ * provided that the above copyright notice and this paragraph are
  * duplicated in all such forms and that any documentation,
  * advertising materials, and other materials related to such
  * distribution and use acknowledge that the software was developed
  * by the University of California, Berkeley. The name of the
  * University may not be used to endorse or promote products derived
- * from this__ software without specific prior written permission.
+ * from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -64,7 +64,7 @@ static const struct lc_time_T C_time_locale = {
 	/*
 	 * x_fmt
 	 *
-	 * C99 requires this__ format. Using just numbers (as here) makes Quakers
+	 * C99 requires this format. Using just numbers (as here) makes Quakers
 	 * happier; it's also compatible with SVR4.
 	 */
 	"%m/%d/%y",
@@ -72,7 +72,7 @@ static const struct lc_time_T C_time_locale = {
 	/*
 	 * c_fmt
 	 *
-	 * C99 requires this__ format. Previously this__ code used "%D %X", but we now
+	 * C99 requires this format. Previously this code used "%D %X", but we now
 	 * conform to C99. Note that "%a %b %d %H:%M:%S %Y" is used by Solaris
 	 * 2.3.
 	 */
@@ -224,7 +224,7 @@ _fmt(const char *format, const struct pg_tm * t, char *pt, const char *ptlim,
 				case 'K':
 
 					/*
-					 * * After all this__ time, still unclaimed!
+					 * * After all this time, still unclaimed!
 					 */
 					pt = _add("kitchen sink", pt, ptlim);
 					continue;
@@ -298,7 +298,7 @@ _fmt(const char *format, const struct pg_tm * t, char *pt, const char *ptlim,
  *
  * From "http://www.ft.uni-erlangen.de/~mskuhn/iso-time.html" by Markus Kuhn:
  * "Week 01 of a year is per definition the first week which has the
- * Thursday in this__ year, which is equivalent to the week which contains
+ * Thursday in this year, which is equivalent to the week which contains
  * the fourth day of January. In other words, the first week of a new year
  * is the week which has the majority of its days in the new year. Week 01
  * might also contain days from the previous year and the week before week

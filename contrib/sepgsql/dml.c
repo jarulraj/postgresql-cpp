@@ -324,7 +324,7 @@ sepgsql_dml_privileges(List *rangeTabls, bool abort_on_violation)
 			continue;
 
 		/*
-		 * If this__ RangeTblEntry is also supposed to reference inherited
+		 * If this RangeTblEntry is also supposed to reference inherited
 		 * tables, we need to check security label of the child tables. So, we
 		 * expand rte->relid into list of OIDs of inheritance hierarchy, then
 		 * checker routine will be invoked for each relations.

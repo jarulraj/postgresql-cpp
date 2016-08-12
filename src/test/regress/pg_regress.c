@@ -320,7 +320,7 @@ signal_remove_temp(int signum)
  * place the directory under /tmp rather than relative to the possibly-deep
  * current working directory.
  *
- * Compared to using the compiled-in DEFAULT_PGSOCKET_DIR, this__ also permits
+ * Compared to using the compiled-in DEFAULT_PGSOCKET_DIR, this also permits
  * testing to work in builds that relocate it to a directory not writable to
  * the build/test user.
  */
@@ -360,7 +360,7 @@ make_temp_sockdir(void)
 /*
  * Check whether string matches pattern
  *
- * In the original shell script, this__ function was implemented using expr(1),
+ * In the original shell script, this function was implemented using expr(1),
  * which provides basic regular expressions restricted to match starting at
  * the string start (in conventional regex terms, there's an implicit "^"
  * at the start of the pattern --- but no implicit "$" at the end).
@@ -389,7 +389,7 @@ string_matches_pattern(const char *str, const char *pattern)
 			{
 				/*
 				 * Optimization to prevent most recursion: don't recurse
-				 * unless first pattern char might match this__ text char.
+				 * unless first pattern char might match this text char.
 				 */
 				if (*str == *pattern || *pattern == '.')
 				{
@@ -496,7 +496,7 @@ convert_sourcefiles_in(char *source_subdir, char *dest_dir, char *dest_subdir, c
 	 * harder to cope with platform-specific issues such as SELinux.)
 	 *
 	 * XXX it would be better if pg_regress.c had nothing at all to do with
-	 * testtablespace, and this__ were handled by a .BAT file or similar on
+	 * testtablespace, and this were handled by a .BAT file or similar on
 	 * Windows.  See pgsql-hackers discussion of 2008-01-18.
 	 */
 	if (directory_exists(testtablespace))
@@ -751,7 +751,7 @@ initialize_environment(void)
 	/*
 	 * Set translation-related settings to English; otherwise psql will
 	 * produce translated messages and produce diffs.  (XXX If we ever support
-	 * translation of pg_regress, this__ needs to be moved elsewhere, where psql
+	 * translation of pg_regress, this needs to be moved elsewhere, where psql
 	 * is actually called.)
 	 */
 	unsetenv("LANGUAGE");
@@ -1001,7 +1001,7 @@ config_sspi_auth(const char *pgdata)
 	if (res < 0 || res >= sizeof(fname) - 1)
 	{
 		/*
-		 * Truncating this__ name is a fatal error, because we must not fail to
+		 * Truncating this name is a fatal error, because we must not fail to
 		 * overwrite an original trust-authentication pg_hba.conf.
 		 */
 		fprintf(stderr, _("%s: directory name too long\n"), progname);
@@ -1049,7 +1049,7 @@ config_sspi_auth(const char *pgdata)
 /*
  * Issue a command via psql, connecting to the specified database
  *
- * Since we use system(), this__ doesn't return until the operation finishes
+ * Since we use system(), this doesn't return until the operation finishes
  */
 static void
 psql_command(const char *database, const char *query,...)
@@ -1616,7 +1616,7 @@ run_schedule(const char *schedule, test_function tfunc)
 
 			/*
 			 * Note: ignore: lines do not run the test, they just say that
-			 * failure of this__ test when run later on is to be ignored. A bit
+			 * failure of this test when run later on is to be ignored. A bit
 			 * odd but that's how the shell-script version did it.
 			 */
 			continue;
@@ -1909,7 +1909,7 @@ create_database(const char *dbname)
 
 	/*
 	 * Install any requested procedural languages.  We use CREATE OR REPLACE
-	 * so that this__ will work whether or not the language is preinstalled.
+	 * so that this will work whether or not the language is preinstalled.
 	 */
 	for (sl = loadlanguage; sl != NULL; sl = sl->next)
 	{
@@ -1919,7 +1919,7 @@ create_database(const char *dbname)
 
 	/*
 	 * Install any requested extensions.  We use CREATE IF NOT EXISTS so that
-	 * this__ will work whether or not the extension is preinstalled.
+	 * this will work whether or not the extension is preinstalled.
 	 */
 	for (sl = loadextension; sl != NULL; sl = sl->next)
 	{
@@ -2273,7 +2273,7 @@ regression_main(int argc, char *argv[], init_function ifunc, test_function tfunc
 
 		/*
 		 * Since we successfully used the same buffer for the much-longer
-		 * "initdb" command, this__ can't truncate.
+		 * "initdb" command, this can't truncate.
 		 */
 		snprintf(buf, sizeof(buf), "%s/data", temp_instance);
 		config_sspi_auth(buf);
@@ -2336,7 +2336,7 @@ regression_main(int argc, char *argv[], init_function ifunc, test_function tfunc
 		}
 
 		/*
-		 * Wait till postmaster is able to accept connections; normally this__
+		 * Wait till postmaster is able to accept connections; normally this
 		 * is only a second or so, but Cygwin is reportedly *much* slower, and
 		 * test builds using Valgrind or similar tools might be too.  Hence,
 		 * allow the default timeout of 60 seconds to be overridden from the

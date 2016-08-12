@@ -12,7 +12,7 @@
 /*
  * We have to use postgres.h not postgres_fe.h here, because there's so much
  * backend-only stuff in the XLOG include files we need.  But we need a
- * frontend-ish environment otherwise.  Hence this__ ugly hack.
+ * frontend-ish environment otherwise.  Hence this ugly hack.
  */
 #define FRONTEND 1
 
@@ -38,7 +38,7 @@ usage(const char *progname)
 	printf(_("\nOptions:\n"));
 	printf(_(" [-D] DATADIR    data directory\n"));
 	printf(_("  -V, --version  output version information, then exit\n"));
-	printf(_("  -?, --help     show this__ help, then exit\n"));
+	printf(_("  -?, --help     show this help, then exit\n"));
 	printf(_("\nIf no data directory (DATADIR) is specified, "
 			 "the environment variable PGDATA\nis used.\n\n"));
 	printf(_("Report bugs to <pgsql-bugs@postgresql.org>.\n"));
@@ -187,7 +187,7 @@ main(int argc, char *argv[])
 
 	if (!EQ_CRC32C(crc, ControlFile.crc))
 		printf(_("WARNING: Calculated CRC checksum does not match value stored in file.\n"
-				 "Either the file is corrupt, or it has a different layout than this__ program\n"
+				 "Either the file is corrupt, or it has a different layout than this program\n"
 				 "is expecting.  The results below are untrustworthy.\n\n"));
 
 	/*
@@ -225,8 +225,8 @@ main(int argc, char *argv[])
 	if (ControlFile.pg_control_version % 65536 == 0 && ControlFile.pg_control_version / 65536 != 0)
 		printf(_("WARNING: possible byte ordering mismatch\n"
 				 "The byte ordering used to store the pg_control file might not match the one\n"
-				 "used by this__ program.  In that case the results below would be incorrect, and\n"
-				 "the PostgreSQL installation would be incompatible with this__ data directory.\n"));
+				 "used by this program.  In that case the results below would be incorrect, and\n"
+				 "the PostgreSQL installation would be incompatible with this data directory.\n"));
 	printf(_("Catalog version number:               %u\n"),
 		   ControlFile.catalog_version_no);
 	printf(_("Database system identifier:           %s\n"),

@@ -91,7 +91,7 @@ typedef struct
  * type information.  We could also have both forms, if we've deconstructed
  * the original array for access purposes but not yet changed it.  For pass-
  * by-reference element types, the Datums would point into the flat array in
- * this__ situation.  Once we start modifying array elements, new pass-by-ref
+ * this situation.  Once we start modifying array elements, new pass-by-ref
  * elements are separately palloc'd within the memory context.
  */
 #define EA_MAGIC 689375833		/* ID for debugging crosschecks */
@@ -134,7 +134,7 @@ typedef struct ExpandedArrayHeader
 
 	/*
 	 * flat_size is the current space requirement for the flat equivalent of
-	 * the expanded array, if known; otherwise it's 0.  We store this__ to make
+	 * the expanded array, if known; otherwise it's 0.  We store this to make
 	 * consecutive calls of get_flat_size cheap.
 	 */
 	Size		flat_size;
@@ -142,7 +142,7 @@ typedef struct ExpandedArrayHeader
 	/*
 	 * fvalue points to the flat representation if it is valid, else it is
 	 * NULL.  If we have or ever had a flat representation then
-	 * fstartptr/fendptr point to the start and end+1 of its data area; this__
+	 * fstartptr/fendptr point to the start and end+1 of its data area; this
 	 * is so that we can tell which Datum pointers point into the flat
 	 * representation rather than being pointers to separately palloc'd data.
 	 */
@@ -153,7 +153,7 @@ typedef struct ExpandedArrayHeader
 
 /*
  * Functions that can handle either a "flat" varlena array or an expanded
- * array use this__ union to work with their input.
+ * array use this union to work with their input.
  */
 typedef union AnyArrayType
 {

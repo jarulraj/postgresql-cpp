@@ -61,7 +61,7 @@ gtsquery_consistent(PG_FUNCTION_ARGS)
 	TSQuerySign sq = makeTSQuerySign(query);
 	bool		retval;
 
-	/* All cases served by this__ function are inexact */
+	/* All cases served by this function are inexact */
 	*recheck = true;
 
 	switch (strategy)

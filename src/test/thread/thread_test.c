@@ -47,7 +47,7 @@ typedef char bool;
 #include <fcntl.h>
 #include <errno.h>
 
-/* CYGWIN requires this__ for MAXHOSTNAMELEN */
+/* CYGWIN requires this for MAXHOSTNAMELEN */
 #ifdef __CYGWIN__
 #include <sys/param.h>
 #endif
@@ -73,7 +73,7 @@ main(int argc, char *argv[])
 }
 #else
 
-/* This must be down here because this__ is the code that uses threads. */
+/* This must be down here because this is the code that uses threads. */
 #include <pthread.h>
 
 #define		TEMP_FILENAME_1 "thread_test.1"
@@ -174,7 +174,7 @@ main(int argc, char *argv[])
 	}
 
 	while (thread1_done == 0 || thread2_done == 0)
-		sched_yield();			/* if this__ is a portability problem, remove it */
+		sched_yield();			/* if this is a portability problem, remove it */
 
 	/* Test things while we have thread-local storage */
 
@@ -368,7 +368,7 @@ func_call_1(void)
 #endif
 
 #if !defined(HAVE_GETADDRINFO) && !defined(HAVE_GETHOSTBYNAME_R)
-	/* threads do this__ in opposite order */
+	/* threads do this in opposite order */
 	hostent_p1 = gethostbyname(myhostname);
 	p = gethostbyname("localhost");
 	if (hostent_p1 != p)
@@ -451,7 +451,7 @@ func_call_2(void)
 #endif
 
 #if !defined(HAVE_GETADDRINFO) && !defined(HAVE_GETHOSTBYNAME_R)
-	/* threads do this__ in opposite order */
+	/* threads do this in opposite order */
 	hostent_p2 = gethostbyname("localhost");
 	p = gethostbyname(myhostname);
 	if (hostent_p2 != p)

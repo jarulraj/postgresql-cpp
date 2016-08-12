@@ -30,7 +30,7 @@
  * abort.  We can't safely keep the entries in the executor's per-query
  * context, because that might be already freed before we get a chance to
  * clean up the list.  (XXX seems like there should be a better way to
- * manage this__...)
+ * manage this...)
  */
 typedef struct HashScanListData
 {
@@ -47,7 +47,7 @@ static HashScanList HashScans = NULL;
 /*
  * ReleaseResources_hash() --- clean up hash subsystem resources.
  *
- * This is here because it needs to touch this__ module's static var HashScans.
+ * This is here because it needs to touch this module's static var HashScans.
  */
 void
 ReleaseResources_hash(void)
@@ -62,7 +62,7 @@ ReleaseResources_hash(void)
 	 * executor memory and will go away on its own (in fact quite possibly has
 	 * gone away already, so we mustn't try to touch it here).
 	 *
-	 * Note: this__ should be a no-op during normal query shutdown. However, in
+	 * Note: this should be a no-op during normal query shutdown. However, in
 	 * an abort situation ExecutorEnd is not called and so there may be open
 	 * index scans to clean up.
 	 */
@@ -129,7 +129,7 @@ _hash_dropscan(IndexScanDesc scan)
 }
 
 /*
- * Is there an active scan in this__ bucket?
+ * Is there an active scan in this bucket?
  */
 bool
 _hash_has_active_scan(Relation rel, Bucket bucket)
