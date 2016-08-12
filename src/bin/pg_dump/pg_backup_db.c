@@ -43,14 +43,14 @@ _check_database_version(ArchiveHandle *AH)
 	if (remoteversion == 0 || !remoteversion_str)
 		exit_horribly(modulename, "could not get server_version from libpq\n");
 
-	AH->public.remoteVersionStr = pg_strdup(remoteversion_str);
-	AH->public.remoteVersion = remoteversion;
+	AH->public__.remoteVersionStr = pg_strdup(remoteversion_str);
+	AH->public__.remoteVersion = remoteversion;
 	if (!AH->archiveRemoteVersion)
-		AH->archiveRemoteVersion = AH->public.remoteVersionStr;
+		AH->archiveRemoteVersion = AH->public__.remoteVersionStr;
 
 	if (remoteversion != PG_VERSION_NUM
-		&& (remoteversion < AH->public.minRemoteVersion ||
-			remoteversion > AH->public.maxRemoteVersion))
+		&& (remoteversion < AH->public__.minRemoteVersion ||
+			remoteversion > AH->public__.maxRemoteVersion))
 	{
 		write_msg(NULL, "server version: %s; %s version: %s\n",
 				  remoteversion_str, progname, PG_VERSION);
@@ -499,7 +499,7 @@ ExecuteSimpleCommands(ArchiveHandle *AH, const char *buf, size_t bufLen)
 				/* We needn't handle '' specially */
 				if (ch == '\'' && !AH->sqlparse.backSlash)
 					AH->sqlparse.state = SQL_SCAN;
-				else if (ch == '\\' && !AH->public.std_strings)
+				else if (ch == '\\' && !AH->public__.std_strings)
 					AH->sqlparse.backSlash = !AH->sqlparse.backSlash;
 				else
 					AH->sqlparse.backSlash = false;

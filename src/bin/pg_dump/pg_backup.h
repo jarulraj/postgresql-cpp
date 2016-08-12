@@ -238,7 +238,7 @@ extern PGconn *GetConnection(Archive *AHX);
 extern void ArchiveEntry(Archive *AHX,
 			 CatalogId catalogId, DumpId dumpId,
 			 const char *tag,
-			 const char *namespace, const char *tablespace,
+			 const char *namespace__, const char *tablespace,
 			 const char *owner, bool withOids,
 			 const char *desc, teSection section,
 			 const char *defn,

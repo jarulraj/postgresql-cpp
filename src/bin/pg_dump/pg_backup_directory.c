@@ -314,7 +314,7 @@ _PrintExtraToc(ArchiveHandle *AH, TocEntry *te)
 {
 	lclTocEntry *tctx = (lclTocEntry *) te->formatData;
 
-	if (AH->public.verbose && tctx->filename)
+	if (AH->public__.verbose && tctx->filename)
 		ahprintf(AH, "-- File: %s\n", tctx->filename);
 }
 
@@ -465,7 +465,7 @@ _LoadBlobs(ArchiveHandle *AH)
 			exit_horribly(modulename, "invalid line in large object TOC file \"%s\": \"%s\"\n",
 						  fname, line);
 
-		StartRestoreBlob(AH, oid, AH->public.ropt->dropSchema);
+		StartRestoreBlob(AH, oid, AH->public__.ropt->dropSchema);
 		snprintf(path, MAXPGPATH, "%s/%s", ctx->directory, fname);
 		_PrintFileData(AH, path);
 		EndRestoreBlob(AH, oid);
@@ -839,7 +839,7 @@ _WorkerJobRestoreDirectory(ArchiveHandle *AH, TocEntry *te)
 	status = parallel_restore(&pargs);
 
 	snprintf(buf, buflen, "OK RESTORE %d %d %d", te->dumpId, status,
-			 status == WORKER_IGNORED_ERRORS ? AH->public.n_errors : 0);
+			 status == WORKER_IGNORED_ERRORS ? AH->public__.n_errors : 0);
 
 	return buf;
 }
@@ -871,7 +871,7 @@ _MasterEndParallelItem(ArchiveHandle *AH, TocEntry *te, const char *str, T_Actio
 		Assert(dumpId == te->dumpId);
 		Assert(nBytes == strlen(str));
 
-		AH->public.n_errors += n_errors;
+		AH->public__.n_errors += n_errors;
 	}
 
 	return status;

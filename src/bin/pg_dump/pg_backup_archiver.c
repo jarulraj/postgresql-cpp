@@ -248,7 +248,7 @@ void
 ProcessArchiveRestoreOptions(Archive *AHX)
 {
 	ArchiveHandle *AH = (ArchiveHandle *) AHX;
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	TocEntry   *te;
 	teSection	curSection;
 
@@ -301,7 +301,7 @@ void
 RestoreArchive(Archive *AHX)
 {
 	ArchiveHandle *AH = (ArchiveHandle *) AHX;
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	bool		parallel_mode;
 	TocEntry   *te;
 	OutputContext sav;
@@ -320,7 +320,7 @@ RestoreArchive(Archive *AHX)
 	/*
 	 * If we're going to do parallel restore, there are some restrictions.
 	 */
-	parallel_mode = (AH->public.numWorkers > 1 && ropt->useDB);
+	parallel_mode = (AH->public__.numWorkers > 1 && ropt->useDB);
 	if (parallel_mode)
 	{
 		/* We haven't got round to making this work for all archive formats */
@@ -433,7 +433,7 @@ RestoreArchive(Archive *AHX)
 
 	ahprintf(AH, "\n");
 
-	if (AH->public.verbose)
+	if (AH->public__.verbose)
 		dumpTimestamp(AH, "Started on", AH->createDate);
 
 	if (ropt->single_txn)
@@ -484,7 +484,7 @@ RestoreArchive(Archive *AHX)
 				ahlog(AH, 1, "dropping %s %s\n", te->desc, te->tag);
 				/* Select owner and schema as necessary */
 				_becomeOwner(AH, te);
-				_selectOutputSchema(AH, te->namespace);
+				_selectOutputSchema(AH, te->namespace__);
 
 				/*
 				 * Now emit the DROP command, if the object has one.  Note we
@@ -633,9 +633,9 @@ RestoreArchive(Archive *AHX)
 		if ((te->reqs & (REQ_SCHEMA | REQ_DATA)) != 0)
 		{
 			/* Show namespace if available */
-			if (te->namespace)
+			if (te->namespace__)
 				ahlog(AH, 1, "setting owner and privileges for %s \"%s.%s\"\n",
-					  te->desc, te->namespace, te->tag);
+					  te->desc, te->namespace__, te->tag);
 			else
 				ahlog(AH, 1, "setting owner and privileges for %s \"%s\"\n",
 					  te->desc, te->tag);
@@ -651,7 +651,7 @@ RestoreArchive(Archive *AHX)
 			ahprintf(AH, "COMMIT;\n\n");
 	}
 
-	if (AH->public.verbose)
+	if (AH->public__.verbose)
 		dumpTimestamp(AH, "Completed on", time(NULL));
 
 	ahprintf(AH, "--\n-- PostgreSQL database dump complete\n--\n\n");
@@ -665,7 +665,7 @@ RestoreArchive(Archive *AHX)
 		RestoreOutput(AH, sav);
 
 	if (ropt->useDB)
-		DisconnectDatabase(&AH->public);
+		DisconnectDatabase(&AH->public__);
 }
 
 /*
@@ -678,7 +678,7 @@ RestoreArchive(Archive *AHX)
 static int
 restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	int			status = WORKER_OK;
 	teReqs		reqs;
 	bool		defnDumped;
@@ -713,9 +713,9 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 	if ((reqs & REQ_SCHEMA) != 0)		/* We want the schema */
 	{
 		/* Show namespace if available */
-		if (te->namespace)
+		if (te->namespace__)
 			ahlog(AH, 1, "creating %s \"%s.%s\"\n",
-				  te->desc, te->namespace, te->tag);
+				  te->desc, te->namespace__, te->tag);
 		else
 			ahlog(AH, 1, "creating %s \"%s\"\n", te->desc, te->tag);
 
@@ -808,10 +808,10 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 
 					/* Select owner and schema as necessary */
 					_becomeOwner(AH, te);
-					_selectOutputSchema(AH, te->namespace);
+					_selectOutputSchema(AH, te->namespace__);
 
 					ahlog(AH, 1, "processing data for table \"%s.%s\"\n",
-						  te->namespace, te->tag);
+						  te->namespace__, te->tag);
 
 					/*
 					 * In parallel restore, if we created the table earlier in
@@ -827,7 +827,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 						 * Parallel restore is always talking directly to a
 						 * server, so no need to see if we should issue BEGIN.
 						 */
-						StartTransaction(&AH->public);
+						StartTransaction(&AH->public__);
 
 						/*
 						 * If the server version is >= 8.4, make sure we issue
@@ -858,12 +858,12 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 					 */
 					if (AH->outputKind == OUTPUT_COPYDATA &&
 						RestoringToDB(AH))
-						EndDBCopyMode(&AH->public, te->tag);
+						EndDBCopyMode(&AH->public__, te->tag);
 					AH->outputKind = OUTPUT_SQLCMDS;
 
 					/* close out the transaction started above */
 					if (is_parallel && te->created)
-						CommitTransaction(&AH->public);
+						CommitTransaction(&AH->public__);
 
 					_enableTriggersIfNecessary(AH, te);
 				}
@@ -877,7 +877,7 @@ restore_toc_entry(ArchiveHandle *AH, TocEntry *te, bool is_parallel)
 		}
 	}
 
-	if (AH->public.n_errors > 0 && status == WORKER_OK)
+	if (AH->public__.n_errors > 0 && status == WORKER_OK)
 		status = WORKER_IGNORED_ERRORS;
 
 	return status;
@@ -905,7 +905,7 @@ NewRestoreOptions(void)
 static void
 _disableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	/* This hack is only needed in a data-only restore */
 	if (!ropt->dataOnly || !ropt->disable_triggers)
@@ -924,7 +924,7 @@ _disableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 	/*
 	 * Disable them.
 	 */
-	_selectOutputSchema(AH, te->namespace);
+	_selectOutputSchema(AH, te->namespace__);
 
 	ahprintf(AH, "ALTER TABLE %s DISABLE TRIGGER ALL;\n\n",
 			 fmtId(te->tag));
@@ -933,7 +933,7 @@ _disableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 static void
 _enableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	/* This hack is only needed in a data-only restore */
 	if (!ropt->dataOnly || !ropt->disable_triggers)
@@ -952,7 +952,7 @@ _enableTriggersIfNecessary(ArchiveHandle *AH, TocEntry *te)
 	/*
 	 * Enable them.
 	 */
-	_selectOutputSchema(AH, te->namespace);
+	_selectOutputSchema(AH, te->namespace__);
 
 	ahprintf(AH, "ALTER TABLE %s ENABLE TRIGGER ALL;\n\n",
 			 fmtId(te->tag));
@@ -986,7 +986,7 @@ void
 ArchiveEntry(Archive *AHX,
 			 CatalogId catalogId, DumpId dumpId,
 			 const char *tag,
-			 const char *namespace,
+			 const char *namespace__,
 			 const char *tablespace,
 			 const char *owner, bool withOids,
 			 const char *desc, teSection section,
@@ -1014,7 +1014,7 @@ ArchiveEntry(Archive *AHX,
 	newToc->section = section;
 
 	newToc->tag = pg_strdup(tag);
-	newToc->namespace = namespace ? pg_strdup(namespace) : NULL;
+	newToc->namespace__ = namespace__ ? pg_strdup(namespace__) : NULL;
 	newToc->tablespace = tablespace ? pg_strdup(tablespace) : NULL;
 	newToc->owner = pg_strdup(owner);
 	newToc->withOids = withOids;
@@ -1050,7 +1050,7 @@ void
 PrintTOCSummary(Archive *AHX)
 {
 	ArchiveHandle *AH = (ArchiveHandle *) AHX;
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	TocEntry   *te;
 	teSection	curSection;
 	OutputContext sav;
@@ -1106,7 +1106,7 @@ PrintTOCSummary(Archive *AHX)
 			(_tocEntryRequired(te, curSection, ropt) & (REQ_SCHEMA | REQ_DATA)) != 0)
 			ahprintf(AH, "%d; %u %u %s %s %s %s\n", te->dumpId,
 					 te->catalogId.tableoid, te->catalogId.oid,
-					 te->desc, te->namespace ? te->namespace : "-",
+					 te->desc, te->namespace__ ? te->namespace__ : "-",
 					 te->tag, te->owner);
 		if (ropt->verbose && te->nDeps > 0)
 		{
@@ -1163,12 +1163,12 @@ EndBlob(Archive *AHX, Oid oid)
 void
 StartRestoreBlobs(ArchiveHandle *AH)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	if (!ropt->single_txn)
 	{
 		if (AH->connection)
-			StartTransaction(&AH->public);
+			StartTransaction(&AH->public__);
 		else
 			ahprintf(AH, "BEGIN;\n\n");
 	}
@@ -1182,12 +1182,12 @@ StartRestoreBlobs(ArchiveHandle *AH)
 void
 EndRestoreBlobs(ArchiveHandle *AH)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	if (!ropt->single_txn)
 	{
 		if (AH->connection)
-			CommitTransaction(&AH->public);
+			CommitTransaction(&AH->public__);
 		else
 			ahprintf(AH, "COMMIT;\n\n");
 	}
@@ -1276,7 +1276,7 @@ void
 SortTocFromFile(Archive *AHX)
 {
 	ArchiveHandle *AH = (ArchiveHandle *) AHX;
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	FILE	   *fh;
 	char		buf[100];
 	bool		incomplete_line;
@@ -1545,7 +1545,7 @@ ahlog(ArchiveHandle *AH, int level, const char *fmt,...)
 {
 	va_list		ap;
 
-	if (AH->debugLevel < level && (!AH->public.verbose || level > 1))
+	if (AH->debugLevel < level && (!AH->public__.verbose || level > 1))
 		return;
 
 	va_start(ap, fmt);
@@ -1559,7 +1559,7 @@ ahlog(ArchiveHandle *AH, int level, const char *fmt,...)
 static int
 RestoringToDB(ArchiveHandle *AH)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	return (ropt && ropt->useDB && AH->connection);
 }
@@ -1647,7 +1647,7 @@ ahwrite(const void *ptr, size_t size, size_t nmemb, ArchiveHandle *AH)
 		 * connected then send it to the DB.
 		 */
 		if (RestoringToDB(AH))
-			bytes_written = ExecuteSqlCommandBuf(&AH->public, (const char *) ptr, size * nmemb);
+			bytes_written = ExecuteSqlCommandBuf(&AH->public__, (const char *) ptr, size * nmemb);
 		else
 			bytes_written = fwrite(ptr, size, nmemb, AH->OF) * size;
 	}
@@ -1701,10 +1701,10 @@ warn_or_exit_horribly(ArchiveHandle *AH,
 	vwrite_msg(modulename, fmt, ap);
 	va_end(ap);
 
-	if (AH->public.exit_on_error)
+	if (AH->public__.exit_on_error)
 		exit_nicely(1);
 	else
-		AH->public.n_errors++;
+		AH->public__.n_errors++;
 }
 
 #ifdef NOT_USED
@@ -2217,12 +2217,12 @@ _allocAH(const char *FileSpec, const ArchiveFormat fmt,
 	AH->version = ((AH->vmaj * 256 + AH->vmin) * 256 + AH->vrev) * 256 + 0;
 
 	/* initialize for backwards compatible string processing */
-	AH->public.encoding = 0;	/* PG_SQL_ASCII */
-	AH->public.std_strings = false;
+	AH->public__.encoding = 0;	/* PG_SQL_ASCII */
+	AH->public__.std_strings = false;
 
 	/* sql error handling */
-	AH->public.exit_on_error = true;
-	AH->public.n_errors = 0;
+	AH->public__.exit_on_error = true;
+	AH->public__.n_errors = 0;
 
 	AH->archiveDumpVersion = PG_VERSION;
 
@@ -2415,7 +2415,7 @@ WriteToc(ArchiveHandle *AH)
 		WriteStr(AH, te->defn);
 		WriteStr(AH, te->dropStmt);
 		WriteStr(AH, te->copyStmt);
-		WriteStr(AH, te->namespace);
+		WriteStr(AH, te->namespace__);
 		WriteStr(AH, te->tablespace);
 		WriteStr(AH, te->owner);
 		WriteStr(AH, te->withOids ? "true" : "false");
@@ -2514,7 +2514,7 @@ ReadToc(ArchiveHandle *AH)
 			te->copyStmt = ReadStr(AH);
 
 		if (AH->version >= K_VERS_1_6)
-			te->namespace = ReadStr(AH);
+			te->namespace__ = ReadStr(AH);
 
 		if (AH->version >= K_VERS_1_10)
 			te->tablespace = ReadStr(AH);
@@ -2609,7 +2609,7 @@ processEncodingEntry(ArchiveHandle *AH, TocEntry *te)
 		if (encoding < 0)
 			exit_horribly(modulename, "unrecognized encoding \"%s\"\n",
 						  ptr1);
-		AH->public.encoding = encoding;
+		AH->public__.encoding = encoding;
 	}
 	else
 		exit_horribly(modulename, "invalid ENCODING item: %s\n",
@@ -2626,9 +2626,9 @@ processStdStringsEntry(ArchiveHandle *AH, TocEntry *te)
 
 	ptr1 = strchr(te->defn, '\'');
 	if (ptr1 && strncmp(ptr1, "'on'", 4) == 0)
-		AH->public.std_strings = true;
+		AH->public__.std_strings = true;
 	else if (ptr1 && strncmp(ptr1, "'off'", 5) == 0)
-		AH->public.std_strings = false;
+		AH->public__.std_strings = false;
 	else
 		exit_horribly(modulename, "invalid STDSTRINGS item: %s\n",
 					  te->defn);
@@ -2676,9 +2676,9 @@ _tocEntryRequired(TocEntry *te, teSection curSection, RestoreOptions *ropt)
 	if (ropt->schemaNames.head != NULL)
 	{
 		/* If no namespace is specified, it means all. */
-		if (!te->namespace)
+		if (!te->namespace__)
 			return 0;
-		if (!(simple_string_list_member(&ropt->schemaNames, te->namespace)))
+		if (!(simple_string_list_member(&ropt->schemaNames, te->namespace__)))
 			return 0;
 	}
 
@@ -2789,7 +2789,7 @@ _tocEntryIsACL(TocEntry *te)
 static void
 _doSetFixedOutputState(ArchiveHandle *AH)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	/* Disable statement_timeout since restore is probably slow */
 	ahprintf(AH, "SET statement_timeout = 0;\n");
@@ -2799,11 +2799,11 @@ _doSetFixedOutputState(ArchiveHandle *AH)
 
 	/* Select the correct character set encoding */
 	ahprintf(AH, "SET client_encoding = '%s';\n",
-			 pg_encoding_to_char(AH->public.encoding));
+			 pg_encoding_to_char(AH->public__.encoding));
 
 	/* Select the correct string literal syntax */
 	ahprintf(AH, "SET standard_conforming_strings = %s;\n",
-			 AH->public.std_strings ? "on" : "off");
+			 AH->public__.std_strings ? "on" : "off");
 
 	/* Select the role to be used during restore */
 	if (ropt && ropt->use_role)
@@ -2814,7 +2814,7 @@ _doSetFixedOutputState(ArchiveHandle *AH)
 
 	/* Avoid annoying notices etc */
 	ahprintf(AH, "SET client_min_messages = warning;\n");
-	if (!AH->public.std_strings)
+	if (!AH->public__.std_strings)
 		ahprintf(AH, "SET escape_string_warning = off;\n");
 
 	/* Adjust row-security state */
@@ -2976,7 +2976,7 @@ _becomeUser(ArchiveHandle *AH, const char *user)
 static void
 _becomeOwner(ArchiveHandle *AH, TocEntry *te)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	if (ropt && (ropt->noOwner || !ropt->use_setsessauth))
 		return;
@@ -3049,7 +3049,7 @@ _selectOutputSchema(ArchiveHandle *AH, const char *schemaName)
 static void
 _selectTablespace(ArchiveHandle *AH, const char *tablespace)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	PQExpBuffer qry;
 	const char *want,
 			   *have;
@@ -3183,7 +3183,7 @@ _getObjectDescription(PQExpBuffer buf, TocEntry *te, ArchiveHandle *AH)
 static void
 _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 
 	/* ACLs are dumped only during acl pass */
 	if (acl_pass)
@@ -3215,7 +3215,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 
 	/* Select owner, schema, and tablespace as necessary */
 	_becomeOwner(AH, te);
-	_selectOutputSchema(AH, te->namespace);
+	_selectOutputSchema(AH, te->namespace__);
 	_selectTablespace(AH, te->tablespace);
 
 	/* Set up OID mode too */
@@ -3236,7 +3236,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 			pfx = "";
 
 		ahprintf(AH, "--\n");
-		if (AH->public.verbose)
+		if (AH->public__.verbose)
 		{
 			ahprintf(AH, "-- TOC entry %d (class %u OID %u)\n",
 					 te->dumpId, te->catalogId.tableoid, te->catalogId.oid);
@@ -3258,8 +3258,8 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 		 * dump containing objects with maliciously crafted names).
 		 */
 		sanitized_name = replace_line_endings(te->tag);
-		if (te->namespace)
-			sanitized_schema = replace_line_endings(te->namespace);
+		if (te->namespace__)
+			sanitized_schema = replace_line_endings(te->namespace__);
 		else
 			sanitized_schema = pg_strdup("-");
 		if (!ropt->noOwner)
@@ -3433,7 +3433,7 @@ WriteHead(ArchiveHandle *AH)
 	WriteInt(AH, crtm.tm_year);
 	WriteInt(AH, crtm.tm_isdst);
 	WriteStr(AH, PQdb(AH->connection));
-	WriteStr(AH, AH->public.remoteVersionStr);
+	WriteStr(AH, AH->public__.remoteVersionStr);
 	WriteStr(AH, PG_VERSION);
 }
 
@@ -3655,7 +3655,7 @@ restore_toc_entries_prefork(ArchiveHandle *AH)
 	 * mainly to ensure that we don't exceed the specified number of parallel
 	 * connections.
 	 */
-	DisconnectDatabase(&AH->public);
+	DisconnectDatabase(&AH->public__);
 
 	/* blow away any transient state from the old connection */
 	if (AH->currUser)
@@ -3825,7 +3825,7 @@ restore_toc_entries_parallel(ArchiveHandle *AH, ParallelState *pstate,
 static void
 restore_toc_entries_postfork(ArchiveHandle *AH, TocEntry *pending_list)
 {
-	RestoreOptions *ropt = AH->public.ropt;
+	RestoreOptions *ropt = AH->public__.ropt;
 	TocEntry   *te;
 
 	ahlog(AH, 2, "entering restore_toc_entries_postfork\n");
@@ -4019,7 +4019,7 @@ parallel_restore(ParallelArgs *args)
 
 	Assert(AH->connection != NULL);
 
-	AH->public.n_errors = 0;
+	AH->public__.n_errors = 0;
 
 	/* Restore the TOC item */
 	status = restore_toc_entry(AH, te, true);
@@ -4054,10 +4054,10 @@ mark_work_done(ArchiveHandle *AH, TocEntry *ready_list,
 	else if (status == WORKER_INHIBIT_DATA)
 	{
 		inhibit_data_for_failed_table(AH, te);
-		AH->public.n_errors++;
+		AH->public__.n_errors++;
 	}
 	else if (status == WORKER_IGNORED_ERRORS)
-		AH->public.n_errors++;
+		AH->public__.n_errors++;
 	else if (status != 0)
 		exit_horribly(modulename, "worker process failed: exit code %d\n",
 					  status);
@@ -4374,7 +4374,7 @@ CloneArchive(ArchiveHandle *AH)
 		clone->savedPassword = pg_strdup(clone->savedPassword);
 
 	/* clone has its own error count, too */
-	clone->public.n_errors = 0;
+	clone->public__.n_errors = 0;
 
 	/*
 	 * Connect our new clone object to the database: In parallel restore the
@@ -4384,7 +4384,7 @@ CloneArchive(ArchiveHandle *AH)
 	 */
 	if (AH->mode == archModeRead)
 	{
-		RestoreOptions *ropt = AH->public.ropt;
+		RestoreOptions *ropt = AH->public__.ropt;
 
 		Assert(AH->connection == NULL);
 		/* this also sets clone->connection */
@@ -4412,7 +4412,7 @@ CloneArchive(ArchiveHandle *AH)
 		pghost = PQhost(AH->connection);
 		pgport = PQport(AH->connection);
 		username = PQuser(AH->connection);
-		encname = pg_encoding_to_char(AH->public.encoding);
+		encname = pg_encoding_to_char(AH->public__.encoding);
 
 		/* this also sets clone->connection */
 		ConnectDatabase((Archive *) clone, dbname, pghost, pgport, username, TRI_NO);
