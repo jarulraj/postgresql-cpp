@@ -433,13 +433,24 @@ typedef uint32 (*utf_local_conversion_func) (uint32 code);
 								   (destencoding))
 
 
+// Peloton
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 /*
  * These functions are considered part of libpq's exported API and
  * are also declared in libpq-fe.h.
  */
 extern int	pg_char_to_encoding(const char *name);
 extern const char *pg_encoding_to_char(int encoding);
-extern int	pg_valid_server_encoding_id(int encoding);
+extern int  pg_valid_server_encoding_id(int encoding);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 /*
  * Remaining functions are not considered part of libpq's API, though many
