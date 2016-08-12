@@ -3363,9 +3363,9 @@ initialize_data_directory(void)
 
 	setup_collation();
 
-	setup_conversion();
+	//setup_conversion();
 
-	setup_dictionary();
+	//setup_dictionary();
 
 	setup_privileges();
 

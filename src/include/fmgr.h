@@ -347,6 +347,7 @@ typedef const Pg_finfo_record *(*PGFInfoFunction) (void);
  *	Win32 loadable functions usually link with 'dlltool --export-all', but it
  *	doesn't hurt to add PGDLLIMPORT in case they don't.
  */
+// Peloton
 #define PG_FUNCTION_INFO_V1(funcname) \
 Datum funcname(PG_FUNCTION_ARGS); \
 extern PGDLLEXPORT const Pg_finfo_record * CppConcat(pg_finfo_,funcname)(void); \
@@ -356,7 +357,7 @@ CppConcat(pg_finfo_,funcname) (void) \
 	static const Pg_finfo_record my_finfo = { 1 }; \
 	return &my_finfo; \
 } \
-extern int no_such_variable
+//extern int no_such_variable
 
 
 /*-------------------------------------------------------------------------
@@ -417,6 +418,8 @@ typedef const Pg_magic_struct *(*PGModuleMagicFunction) (void);
 #define PG_MAGIC_FUNCTION_NAME Pg_magic_func
 #define PG_MAGIC_FUNCTION_NAME_STRING "Pg_magic_func"
 
+// Peloton
+
 #define PG_MODULE_MAGIC \
 extern PGDLLEXPORT const Pg_magic_struct *PG_MAGIC_FUNCTION_NAME(void); \
 const Pg_magic_struct * \
@@ -425,7 +428,7 @@ PG_MAGIC_FUNCTION_NAME(void) \
 	static const Pg_magic_struct Pg_magic_data = PG_MODULE_MAGIC_DATA; \
 	return &Pg_magic_data; \
 } \
-extern int no_such_variable
+//extern int no_such_variable
 
 
 /*-------------------------------------------------------------------------
