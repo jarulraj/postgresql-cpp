@@ -24,8 +24,6 @@
 #include "utils/guc.h"
 #include "utils/lsyscache.h"
 #include "utils/syscache.h"
-#include "postgres.h"
-#include "fmgr.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -36,9 +34,7 @@ static bool plpgsql_extra_checks_check_hook(char **newvalue, void **extra, GucSo
 static void plpgsql_extra_warnings_assign_hook(const char *newvalue, void *extra);
 static void plpgsql_extra_errors_assign_hook(const char *newvalue, void *extra);
 
-#ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
-#endif
 
 /* Custom GUC variable */
 static const struct config_enum_entry variable_conflict_options[] = {
