@@ -524,7 +524,7 @@ seg_contained(SEG *a, SEG *b)
 }
 
 /*****************************************************************************
- * operator__ class__ for R-tree indexing
+ * operator class for R-tree indexing
  *****************************************************************************/
 
 bool

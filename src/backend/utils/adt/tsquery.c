@@ -116,7 +116,7 @@ typedef enum
 /*
  * get token from query string
  *
- * *operator__ is filled in with OP_* when return values is PT_OPR
+ * *operator is filled in with OP_* when return values is PT_OPR
  * *strval, *lenval and *weight are filled in when return value is PT_VAL
  */
 static ts_tokentype
@@ -220,7 +220,7 @@ gettoken_query(TSQueryParserState state,
 }
 
 /*
- * Push an operator__ to state->polstr
+ * Push an operator to state->polstr
  */
 void
 pushOperator(TSQueryParserState state, int8 oper)
@@ -462,7 +462,7 @@ findoprnd(QueryItem *ptr, int size)
  * pushValue and pushOperator. It must push a single value with pushValue,
  * a complete expression with all operands, or a stopword placeholder
  * with pushStop, otherwise the prefix notation representation will be broken,
- * having an operator__ with no operand.
+ * having an operator with no operand.
  *
  * opaque is passed on to pushval as is, pushval can use it to store its
  * private state.
@@ -554,7 +554,7 @@ parse_tsquery(char *buf,
 	memcpy((void *) GETOPERAND(query), (void *) state.op, state.sumlen);
 	pfree(state.op);
 
-	/* Set left operand pointers for every operator__. */
+	/* Set left operand pointers for every operator. */
 	findoprnd(ptr, query->size);
 
 	return query;
@@ -723,7 +723,7 @@ infix(INFIX *in, bool first)
 		in->curpol = nrm.curpol;
 		infix(in, false);
 
-		/* print operator__ & right operand */
+		/* print operator & right operand */
 		RESIZEBUF(in, 3 + (nrm.cur - nrm.buf));
 		switch (op)
 		{
@@ -735,7 +735,7 @@ infix(INFIX *in, bool first)
 				break;
 			default:
 				/* OP_NOT is handled in above if-branch */
-				elog(ERROR, "unrecognized operator__ type: %d", op);
+				elog(ERROR, "unrecognized operator type: %d", op);
 		}
 		in->cur = strchr(in->cur, '\0');
 		pfree(nrm.buf);
@@ -787,9 +787,9 @@ tsqueryout(PG_FUNCTION_ARGS)
  *			operand text in client encoding, null-terminated
  * uint8	prefix
  *
- * For each operator__:
+ * For each operator:
  * uint8	type, QI_OPR
- * uint8	operator__, one of OP_AND, OP_OR, OP_NOT.
+ * uint8	operator, one of OP_AND, OP_OR, OP_NOT.
  */
 Datum
 tsquerysend(PG_FUNCTION_ARGS)
@@ -908,7 +908,7 @@ tsqueryrecv(PG_FUNCTION_ARGS)
 
 			oper = (int8) pq_getmsgint(buf, sizeof(int8));
 			if (oper != OP_NOT && oper != OP_OR && oper != OP_AND)
-				elog(ERROR, "invalid tsquery: unrecognized operator__ type %d",
+				elog(ERROR, "invalid tsquery: unrecognized operator type %d",
 					 (int) oper);
 			if (i == size - 1)
 				elog(ERROR, "invalid pointer to right operand");

@@ -30,10 +30,10 @@
 /* Default selectivity constant for "@>" and "<@" operators */
 #define DEFAULT_CONTAIN_SEL 0.005
 
-/* Default selectivity constant for "&&" operator__ */
+/* Default selectivity constant for "&&" operator */
 #define DEFAULT_OVERLAP_SEL 0.01
 
-/* Default selectivity for given operator__ */
+/* Default selectivity for given operator */
 #define DEFAULT_SEL(operator__) \
 	((operator__) == OID_ARRAY_OVERLAP_OP ? \
 		DEFAULT_OVERLAP_SEL : DEFAULT_CONTAIN_SEL)
@@ -69,11 +69,11 @@ static int	float_compare_desc(const void *key1, const void *key2);
  *		Estimate selectivity of ScalarArrayOpExpr via array containment.
  *
  * If we have const =/<> ANY/ALL (array_var) then we can estimate the
- * selectivity as though this__ were an array containment operator__,
+ * selectivity as though this__ were an array containment operator,
  * array_var op ARRAY[const].
  *
- * scalararraysel() has already verified that the ScalarArrayOpExpr's operator__
- * is the array element type's default equality or inequality operator__, and
+ * scalararraysel() has already verified that the ScalarArrayOpExpr's operator
+ * is the array element type's default equality or inequality operator, and
  * has aggressively simplified both inputs to constants.
  *
  * Returns selectivity (0..1), or -1 if we fail to estimate selectivity.
@@ -126,7 +126,7 @@ scalararraysel_containment(PlannerInfo *root,
 	cmpfunc = &typentry->cmp_proc_finfo;
 
 	/*
-	 * If the operator__ is <>, swap ANY/ALL, then invert the result later.
+	 * If the operator is <>, swap ANY/ALL, then invert the result later.
 	 */
 	if (!isEquality)
 		useOr = !useOr;
@@ -233,7 +233,7 @@ scalararraysel_containment(PlannerInfo *root,
 	ReleaseVariableStats(vardata);
 
 	/*
-	 * If the operator__ is <>, invert the results.
+	 * If the operator is <>, invert the results.
 	 */
 	if (!isEquality)
 		selec = 1.0 - selec;
@@ -287,7 +287,7 @@ arraycontsel(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * If var is on the right, commute the operator__, so that we can assume the
+	 * If var is on the right, commute the operator, so that we can assume the
 	 * var is on the left in what follows.
 	 */
 	if (!varonleft)
@@ -444,7 +444,7 @@ calc_arraycontsel(VariableStatData *vardata, Datum constval,
  *
  * This function just deconstructs and sorts the array constant's contents,
  * and then passes the problem on to mcelem_array_contain_overlap_selec or
- * mcelem_array_contained_selec depending on the operator__.
+ * mcelem_array_contained_selec depending on the operator.
  */
 static Selectivity
 mcelem_array_selec(ArrayType *array, TypeCacheEntry *typentry,
@@ -498,7 +498,7 @@ mcelem_array_selec(ArrayType *array, TypeCacheEntry *typentry,
 	qsort_arg(elem_values, nonnull_nitems, sizeof(Datum),
 			  element_compare, cmpfunc);
 
-	/* Separate cases according to operator__ */
+	/* Separate cases according to operator */
 	if (operator__ == OID_ARRAY_CONTAINS_OP || operator__ == OID_ARRAY_OVERLAP_OP)
 		selec = mcelem_array_contain_overlap_selec(mcelem, nmcelem,
 												   numbers, nnumbers,
@@ -512,7 +512,7 @@ mcelem_array_selec(ArrayType *array, TypeCacheEntry *typentry,
 											 operator__, cmpfunc);
 	else
 	{
-		elog(ERROR, "arraycontsel called for unrecognized operator__ %u",
+		elog(ERROR, "arraycontsel called for unrecognized operator %u",
 			 operator__);
 		selec = 0.0;			/* keep compiler quiet */
 	}

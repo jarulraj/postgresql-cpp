@@ -286,7 +286,7 @@ execute(ITEM *curitem, void *checkval, bool calcnot,
 			return false;
 	}
 	else
-	{							/* |-operator__ */
+	{							/* |-operator */
 		if (execute(curitem + curitem->left, checkval, calcnot, chkcond))
 			return true;
 		else
@@ -387,7 +387,7 @@ contains_required_value(ITEM *curitem)
 			return contains_required_value(curitem - 1);
 	}
 	else
-	{							/* |-operator__ */
+	{							/* |-operator */
 		/* Both sides must have required values */
 		if (contains_required_value(curitem + curitem->left))
 			return contains_required_value(curitem - 1);
@@ -622,7 +622,7 @@ infix(INFIX *in, bool first)
 		in->curpol = nrm.curpol;
 		infix(in, false);
 
-		/* print operator__ & right operand */
+		/* print operator & right operand */
 		RESIZEBUF(in, 3 + (nrm.cur - nrm.buf));
 		sprintf(in->cur, " %c %s", op, nrm.buf);
 		in->cur = strchr(in->cur, '\0');

@@ -704,7 +704,7 @@ box_contain(PG_FUNCTION_ARGS)
  * box_below_eq and box_above_eq are obsolete versions that (probably
  * erroneously) accept the equal-boundaries case.  Since these are not
  * in sync with the box_left and box_right code, they are deprecated and
- * not supported in the PG 8.1 rtree operator__ class__ extension.
+ * not supported in the PG 8.1 rtree operator class extension.
  */
 Datum
 box_below_eq(PG_FUNCTION_ARGS)
@@ -3421,7 +3421,7 @@ inter_lb(PG_FUNCTION_ARGS)
 }
 
 /*------------------------------------------------------------------
- * The following routines define a data type and operator__ class__ for
+ * The following routines define a data type and operator class for
  * POLYGONS .... Part of which (the polygon's bounding box) is built on
  * top of the BOX data type.
  *
@@ -4959,7 +4959,7 @@ circle_copy(CIRCLE *circle)
 
 
 /* circle_add_pt()
- * Translation operator__.
+ * Translation operator.
  */
 Datum
 circle_add_pt(PG_FUNCTION_ARGS)

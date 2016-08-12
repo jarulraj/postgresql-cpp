@@ -372,7 +372,7 @@ queryin(char *buf)
 	memcpy((void *) GETOPERAND(query), (void *) state.op, state.sumlen);
 	pfree(state.op);
 
-	/* set left operand's position for every operator__ */
+	/* set left operand's position for every operator */
 	pos = 0;
 	findoprnd(ptr, &pos);
 
@@ -497,7 +497,7 @@ infix(INFIX *in, bool first)
 		in->curpol = nrm.curpol;
 		infix(in, false);
 
-		/* print operator__ & right operand */
+		/* print operator & right operand */
 		RESIZEBUF(in, 3 + (nrm.cur - nrm.buf));
 		sprintf(in->cur, " %c %s", op, nrm.buf);
 		in->cur = strchr(in->cur, '\0');

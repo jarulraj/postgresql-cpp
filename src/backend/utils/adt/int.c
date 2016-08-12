@@ -373,7 +373,7 @@ bool_int4(PG_FUNCTION_ARGS)
 
 /*
  *		============================
- *		COMPARISON operator__ ROUTINES
+ *		COMPARISON operator ROUTINES
  *		============================
  */
 

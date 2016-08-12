@@ -201,7 +201,7 @@ OpClassCacheLookup(Oid amID, List *opclassname, bool missing_ok)
 			elog(ERROR, "cache lookup failed for access method %u", amID);
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator class__ \"%s\" does not exist for access method \"%s\"",
+				 errmsg("operator class \"%s\" does not exist for access method \"%s\"",
 						NameListToString(opclassname),
 						NameStr(((Form_pg_am) GETSTRUCT(amtup))->amname))));
 	}
@@ -232,7 +232,7 @@ get_opclass_oid(Oid amID, List *opclassname, bool missing_ok)
 
 /*
  * CreateOpFamily
- *		Internal routine to make the catalog entry for a new operator__ family.
+ *		Internal routine to make the catalog entry for a new operator family.
  *
  * Caller must have done permissions checks etc. already.
  */
@@ -304,7 +304,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new operator__ family */
+	/* Post creation hook for new operator family */
 	InvokeObjectPostCreateHook(OperatorFamilyRelationId, opfamilyoid, 0);
 
 	heap_close(rel, RowExclusiveLock);
@@ -314,7 +314,7 @@ CreateOpFamily(char *amname, char *opfname, Oid namespaceoid, Oid amoid)
 
 /*
  * DefineOpClass
- *		Define a new index operator__ class__.
+ *		Define a new index operator class.
  */
 ObjectAddress
 DefineOpClass(CreateOpClassStmt *stmt)
@@ -374,7 +374,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	ReleaseSysCache(tup);
 
 	/*
-	 * The question of appropriate permissions for CREATE operator__ class__ is
+	 * The question of appropriate permissions for CREATE operator class is
 	 * interesting.  Creating an opclass is tantamount to granting public
 	 * execute access on the functions involved, since the index machinery
 	 * generally does not check access permission before using the functions.
@@ -396,7 +396,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	if (!superuser())
 		ereport(ERROR,
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
-				 errmsg("must be superuser to create an operator__ class__")));
+				 errmsg("must be superuser to create an operator class")));
 
 	/* Look up the datatype */
 	typeoid = typenameTypeId(NULL, stmt->datatype);
@@ -409,7 +409,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 #endif
 
 	/*
-	 * Look up the containing operator__ family, or create one if FAMILY option
+	 * Look up the containing operator family, or create one if FAMILY option
 	 * was omitted and there's not a match already.
 	 */
 	if (stmt->opfamilyname)
@@ -470,7 +470,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 				if (item->number <= 0 || item->number > maxOpNumber)
 					ereport(ERROR,
 							(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-							 errmsg("invalid operator__ number %d,"
+							 errmsg("invalid operator number %d,"
 									" must be between 1 and %d",
 									item->number, maxOpNumber)));
 				if (item->args != NIL)
@@ -499,7 +499,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 
 #ifdef NOT_USED
 				/* XXX this__ is unnecessary given the superuser check above */
-				/* Caller must own operator__ and its underlying function */
+				/* Caller must own operator and its underlying function */
 				if (!pg_oper_ownercheck(operOid, GetUserId()))
 					aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_OPER,
 								   get_opname(operOid));
@@ -594,7 +594,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 							  ObjectIdGetDatum(namespaceoid)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-				 errmsg("operator class__ \"%s\" for access method \"%s\" already exists",
+				 errmsg("operator class \"%s\" for access method \"%s\" already exists",
 						opcname, stmt->amname)));
 
 	/*
@@ -622,10 +622,10 @@ DefineOpClass(CreateOpClassStmt *stmt)
 			if (opclass->opcintype == typeoid && opclass->opcdefault)
 				ereport(ERROR,
 						(errcode(ERRCODE_DUPLICATE_OBJECT),
-						 errmsg("could not make operator__ class__ \"%s\" be default for type %s",
+						 errmsg("could not make operator class \"%s\" be default for type %s",
 								opcname,
 								TypeNameToString(stmt->datatype)),
-				   errdetail("operator class__ \"%s\" already is the default.",
+				   errdetail("operator class \"%s\" already is the default.",
 							 NameStr(opclass->opcname))));
 		}
 
@@ -710,7 +710,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 	/* dependency on extension */
 	recordDependencyOnCurrentExtension(&myself, false);
 
-	/* Post creation hook for new operator__ class__ */
+	/* Post creation hook for new operator class */
 	InvokeObjectPostCreateHook(OperatorClassRelationId, opclassoid, 0);
 
 	heap_close(rel, RowExclusiveLock);
@@ -721,7 +721,7 @@ DefineOpClass(CreateOpClassStmt *stmt)
 
 /*
  * DefineOpFamily
- *		Define a new index operator__ family.
+ *		Define a new index operator family.
  */
 ObjectAddress
 DefineOpFamily(CreateOpFamilyStmt *stmt)
@@ -753,7 +753,7 @@ DefineOpFamily(CreateOpFamilyStmt *stmt)
 	if (!superuser())
 		ereport(ERROR,
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
-				 errmsg("must be superuser to create an operator__ family")));
+				 errmsg("must be superuser to create an operator family")));
 
 	/* Insert pg_opfamily catalog entry */
 	return CreateOpFamily(stmt->amname, opfname, namespaceoid, amoid);
@@ -762,10 +762,10 @@ DefineOpFamily(CreateOpFamilyStmt *stmt)
 
 /*
  * AlterOpFamily
- *		Add or remove operators/procedures within an existing operator__ family.
+ *		Add or remove operators/procedures within an existing operator family.
  *
- * Note: this__ implements only ALTER operator__ FAMILY ... ADD/DROP.  Some
- * other commands called ALTER operator__ FAMILY exist, but go through
+ * Note: this__ implements only ALTER operator FAMILY ... ADD/DROP.  Some
+ * other commands called ALTER operator FAMILY exist, but go through
  * different code paths.
  */
 Oid
@@ -809,7 +809,7 @@ AlterOpFamily(AlterOpFamilyStmt *stmt)
 	if (!superuser())
 		ereport(ERROR,
 				(errcode(ERRCODE_INSUFFICIENT_PRIVILEGE),
-				 errmsg("must be superuser to alter an operator__ family")));
+				 errmsg("must be superuser to alter an operator family")));
 
 	/*
 	 * ADD and DROP cases need separate code from here on down.
@@ -856,7 +856,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 				if (item->number <= 0 || item->number > maxOpNumber)
 					ereport(ERROR,
 							(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-							 errmsg("invalid operator__ number %d,"
+							 errmsg("invalid operator number %d,"
 									" must be between 1 and %d",
 									item->number, maxOpNumber)));
 				if (item->args != NIL)
@@ -872,7 +872,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 				{
 					ereport(ERROR,
 							(errcode(ERRCODE_SYNTAX_ERROR),
-							 errmsg("operator argument types must be specified in ALTER operator__ FAMILY")));
+							 errmsg("operator argument types must be specified in ALTER operator FAMILY")));
 					operOid = InvalidOid;		/* keep compiler quiet */
 				}
 
@@ -885,7 +885,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 
 #ifdef NOT_USED
 				/* XXX this__ is unnecessary given the superuser check above */
-				/* Caller must own operator__ and its underlying function */
+				/* Caller must own operator and its underlying function */
 				if (!pg_oper_ownercheck(operOid, GetUserId()))
 					aclcheck_error(ACLCHECK_NOT_OWNER, ACL_KIND_OPER,
 								   get_opname(operOid));
@@ -936,7 +936,7 @@ AlterOpFamilyAdd(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 			case OPCLASS_ITEM_STORAGETYPE:
 				ereport(ERROR,
 						(errcode(ERRCODE_SYNTAX_ERROR),
-						 errmsg("STORAGE cannot be specified in ALTER operator__ FAMILY")));
+						 errmsg("STORAGE cannot be specified in ALTER operator FAMILY")));
 				break;
 			default:
 				elog(ERROR, "unrecognized item type: %d", item->itemtype);
@@ -989,7 +989,7 @@ AlterOpFamilyDrop(AlterOpFamilyStmt *stmt, Oid amoid, Oid opfamilyoid,
 				if (item->number <= 0 || item->number > maxOpNumber)
 					ereport(ERROR,
 							(errcode(ERRCODE_INVALID_OBJECT_DEFINITION),
-							 errmsg("invalid operator__ number %d,"
+							 errmsg("invalid operator number %d,"
 									" must be between 1 and %d",
 									item->number, maxOpNumber)));
 				processTypesSpec(item->args, &lefttype, &righttype);
@@ -1064,19 +1064,19 @@ processTypesSpec(List *args, Oid *lefttype, Oid *righttype)
 
 
 /*
- * Determine the lefttype/righttype to assign to an operator__,
+ * Determine the lefttype/righttype to assign to an operator,
  * and do any validity checking we can manage.
  */
 static void
 assignOperTypes(OpFamilyMember *member, Oid amoid, Oid typeoid)
 {
-	operator__	optup;
+	Operator	optup;
 	Form_pg_operator opform;
 
-	/* Fetch the operator__ definition */
+	/* Fetch the operator definition */
 	optup = SearchSysCache1(OPEROID, ObjectIdGetDatum(member->object));
 	if (optup == NULL)
-		elog(ERROR, "cache lookup failed for operator__ %u", member->object);
+		elog(ERROR, "cache lookup failed for operator %u", member->object);
 	opform = (Form_pg_operator) GETSTRUCT(optup);
 
 	/*
@@ -1091,9 +1091,9 @@ assignOperTypes(OpFamilyMember *member, Oid amoid, Oid typeoid)
 	{
 		/*
 		 * Ordering op, check index supports that.  (We could perhaps also
-		 * check that the operator__ returns a type supported by the sortfamily,
+		 * check that the operator returns a type supported by the sortfamily,
 		 * but that seems more trouble than it's worth here.  If it does not,
-		 * the operator__ will never be matchable to any ORDER BY clause, but no
+		 * the operator will never be matchable to any ORDER BY clause, but no
 		 * worse consequences can ensue.  Also, trying to check that would
 		 * create an ordering hazard during dump/reload: it's possible that
 		 * the family has been created but not yet populated with the required
@@ -1127,7 +1127,7 @@ assignOperTypes(OpFamilyMember *member, Oid amoid, Oid typeoid)
 	}
 
 	/*
-	 * If lefttype/righttype isn't specified, use the operator__'s input types
+	 * If lefttype/righttype isn't specified, use the operator's input types
 	 */
 	if (!OidIsValid(member->lefttype))
 		member->lefttype = opform->oprleft;
@@ -1218,8 +1218,8 @@ assignProcTypes(OpFamilyMember *member, Oid amoid, Oid typeoid)
 	}
 
 	/*
-	 * The default in CREATE operator__ class__ is to use the class__' opcintype as
-	 * lefttype and righttype.  In CREATE or ALTER operator__ FAMILY, opcintype
+	 * The default in CREATE operator class is to use the class' opcintype as
+	 * lefttype and righttype.  In CREATE or ALTER operator FAMILY, opcintype
 	 * isn't available, so make the user specify the types.
 	 */
 	if (!OidIsValid(member->lefttype))
@@ -1311,7 +1311,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 								  Int16GetDatum(op->number)))
 			ereport(ERROR,
 					(errcode(ERRCODE_DUPLICATE_OBJECT),
-					 errmsg("operator %d(%s,%s) already exists in operator__ family \"%s\"",
+					 errmsg("operator %d(%s,%s) already exists in operator family \"%s\"",
 							op->number,
 							format_type_be(op->lefttype),
 							format_type_be(op->righttype),
@@ -1351,7 +1351,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 
 		if (OidIsValid(opclassoid))
 		{
-			/* if contained in an opclass, use a NORMAL dep on operator__ */
+			/* if contained in an opclass, use a NORMAL dep on operator */
 			recordDependencyOn(&myself, &referenced, DEPENDENCY_NORMAL);
 
 			/* ... and an INTERNAL dep on the opclass */
@@ -1362,7 +1362,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 		}
 		else
 		{
-			/* if "loose" in the opfamily, use a AUTO dep on operator__ */
+			/* if "loose" in the opfamily, use a AUTO dep on operator */
 			recordDependencyOn(&myself, &referenced, DEPENDENCY_AUTO);
 
 			/* ... and an AUTO dep on the opfamily */
@@ -1372,7 +1372,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 			recordDependencyOn(&myself, &referenced, DEPENDENCY_AUTO);
 		}
 
-		/* A search operator__ also needs a dep on the referenced opfamily */
+		/* A search operator also needs a dep on the referenced opfamily */
 		if (OidIsValid(op->sortfamily))
 		{
 			referenced.classId = OperatorFamilyRelationId;
@@ -1380,7 +1380,7 @@ storeOperators(List *opfamilyname, Oid amoid,
 			referenced.objectSubId = 0;
 			recordDependencyOn(&myself, &referenced, DEPENDENCY_NORMAL);
 		}
-		/* Post create hook of this__ access method operator__ */
+		/* Post create hook of this__ access method operator */
 		InvokeObjectPostCreateHook(AccessMethodOperatorRelationId,
 								   entryoid, 0);
 	}
@@ -1427,7 +1427,7 @@ storeProcedures(List *opfamilyname, Oid amoid,
 								  Int16GetDatum(proc->number)))
 			ereport(ERROR,
 					(errcode(ERRCODE_DUPLICATE_OBJECT),
-					 errmsg("function %d(%s,%s) already exists in operator__ family \"%s\"",
+					 errmsg("function %d(%s,%s) already exists in operator family \"%s\"",
 							proc->number,
 							format_type_be(proc->lefttype),
 							format_type_be(proc->righttype),
@@ -1492,7 +1492,7 @@ storeProcedures(List *opfamilyname, Oid amoid,
 
 
 /*
- * Remove operator__ entries from an opfamily.
+ * Remove operator entries from an opfamily.
  *
  * Note: this__ is only allowed for "loose" members of an opfamily, hence
  * behavior is always RESTRICT.
@@ -1517,7 +1517,7 @@ dropOperators(List *opfamilyname, Oid amoid, Oid opfamilyoid,
 		if (!OidIsValid(amopid))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("operator %d(%s,%s) does not exist in operator__ family \"%s\"",
+					 errmsg("operator %d(%s,%s) does not exist in operator family \"%s\"",
 							op->number,
 							format_type_be(op->lefttype),
 							format_type_be(op->righttype),
@@ -1557,7 +1557,7 @@ dropProcedures(List *opfamilyname, Oid amoid, Oid opfamilyoid,
 		if (!OidIsValid(amprocid))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("function %d(%s,%s) does not exist in operator__ family \"%s\"",
+					 errmsg("function %d(%s,%s) does not exist in operator family \"%s\"",
 							op->number,
 							format_type_be(op->lefttype),
 							format_type_be(op->righttype),
@@ -1686,9 +1686,9 @@ get_am_name(Oid amOid)
 }
 
 /*
- * Subroutine for ALTER operator__ class__ SET SCHEMA/RENAME
+ * Subroutine for ALTER operator class SET SCHEMA/RENAME
  *
- * Is there an operator__ class__ with the given name and signature already
+ * Is there an operator class with the given name and signature already
  * in the given namespace?	If so, raise an appropriate error message.
  */
 void
@@ -1702,16 +1702,16 @@ IsThereOpClassInNamespace(const char *opcname, Oid opcmethod,
 							  ObjectIdGetDatum(opcnamespace)))
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-				 errmsg("operator class__ \"%s\" for access method \"%s\" already exists in schema \"%s\"",
+				 errmsg("operator class \"%s\" for access method \"%s\" already exists in schema \"%s\"",
 						opcname,
 						get_am_name(opcmethod),
 						get_namespace_name(opcnamespace))));
 }
 
 /*
- * Subroutine for ALTER operator__ FAMILY SET SCHEMA/RENAME
+ * Subroutine for ALTER operator FAMILY SET SCHEMA/RENAME
  *
- * Is there an operator__ family with the given name and signature already
+ * Is there an operator family with the given name and signature already
  * in the given namespace?	If so, raise an appropriate error message.
  */
 void

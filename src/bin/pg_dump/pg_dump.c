@@ -65,7 +65,7 @@
 typedef struct
 {
 	const char *descr;			/* comment for an object */
-	Oid			classoid;		/* object class__ (catalog OID) */
+	Oid			classoid;		/* object class (catalog OID) */
 	Oid			objoid;			/* object OID */
 	int			objsubid;		/* subobject (table column #) */
 } CommentItem;
@@ -74,7 +74,7 @@ typedef struct
 {
 	const char *provider;		/* label provider of this__ security label */
 	const char *label;			/* security label for an object */
-	Oid			classoid;		/* object class__ (catalog OID) */
+	Oid			classoid;		/* object class (catalog OID) */
 	Oid			objoid;			/* object OID */
 	int			objsubid;		/* subobject (table column #) */
 } SecLabelItem;
@@ -3906,7 +3906,7 @@ getOperators(Archive *fout, int *numOprs)
 		selectDumpableObject(&(oprinfo[i].dobj), dopt);
 
 		if (strlen(oprinfo[i].rolname) == 0)
-			write_msg(NULL, "WARNING: owner of operator__ \"%s\" appears to be invalid\n",
+			write_msg(NULL, "WARNING: owner of operator \"%s\" appears to be invalid\n",
 					  oprinfo[i].dobj.name);
 	}
 
@@ -4168,7 +4168,7 @@ getOpclasses(Archive *fout, int *numOpclasses)
 		if (fout->remoteVersion >= 70300)
 		{
 			if (strlen(opcinfo[i].rolname) == 0)
-				write_msg(NULL, "WARNING: owner of operator__ class__ \"%s\" appears to be invalid\n",
+				write_msg(NULL, "WARNING: owner of operator class \"%s\" appears to be invalid\n",
 						  opcinfo[i].dobj.name);
 		}
 	}
@@ -4257,7 +4257,7 @@ getOpfamilies(Archive *fout, int *numOpfamilies)
 		if (fout->remoteVersion >= 70300)
 		{
 			if (strlen(opfinfo[i].rolname) == 0)
-				write_msg(NULL, "WARNING: owner of operator__ family \"%s\" appears to be invalid\n",
+				write_msg(NULL, "WARNING: owner of operator family \"%s\" appears to be invalid\n",
 						  opfinfo[i].dobj.name);
 		}
 	}
@@ -11000,7 +11000,7 @@ dumpTransform(Archive *fout, TransformInfo *transform)
 
 /*
  * dumpOpr
- *	  write out a single operator__ definition
+ *	  write out a single operator definition
  */
 static void
 dumpOpr(Archive *fout, OprInfo *oprinfo)
@@ -11219,11 +11219,11 @@ dumpOpr(Archive *fout, OprInfo *oprinfo)
 	/*
 	 * DROP must be fully qualified in case same name appears in pg_catalog
 	 */
-	appendPQExpBuffer(delq, "DROP operator__ %s.%s;\n",
+	appendPQExpBuffer(delq, "DROP operator %s.%s;\n",
 					  fmtId(oprinfo->dobj.namespace->dobj.name),
 					  oprid->data);
 
-	appendPQExpBuffer(q, "CREATE operator__ %s (\n%s\n);\n",
+	appendPQExpBuffer(q, "CREATE operator %s (\n%s\n);\n",
 					  oprinfo->dobj.name, details->data);
 
 	appendPQExpBuffer(labelq, "operator %s", oprid->data);
@@ -11241,7 +11241,7 @@ dumpOpr(Archive *fout, OprInfo *oprinfo)
 				 NULL, 0,
 				 NULL, NULL);
 
-	/* Dump operator__ Comments */
+	/* Dump operator Comments */
 	dumpComment(fout, labelq->data,
 				oprinfo->dobj.namespace->dobj.name, oprinfo->rolname,
 				oprinfo->dobj.catId, 0, oprinfo->dobj.dumpId);
@@ -11299,15 +11299,15 @@ convertRegProcReference(Archive *fout, const char *proc)
 }
 
 /*
- * Convert an operator__ cross-reference obtained from pg_operator
+ * Convert an operator cross-reference obtained from pg_operator
  *
  * Returns an allocated string of what to print, or NULL to print nothing.
  * Caller is responsible for free'ing result string.
  *
  * In 7.3 and up the input is a REGOPERATOR display; we have to strip the
- * argument-types part, and add operator__() decoration if the name is
+ * argument-types part, and add operator() decoration if the name is
  * schema-qualified.  In older versions, the input is just a numeric OID,
- * which we search our operator__ list for.
+ * which we search our operator list for.
  */
 static char *
 convertOperatorReference(Archive *fout, const char *opr)
@@ -11342,7 +11342,7 @@ convertOperatorReference(Archive *fout, const char *opr)
 				break;
 			}
 		}
-		/* If not schema-qualified, don't need to add operator__() */
+		/* If not schema-qualified, don't need to add operator() */
 		if (!sawdot)
 			return name;
 		oname = psprintf("operator(%s)", name);
@@ -11353,7 +11353,7 @@ convertOperatorReference(Archive *fout, const char *opr)
 	oprInfo = findOprByOid(atooid(opr));
 	if (oprInfo == NULL)
 	{
-		write_msg(NULL, "WARNING: could not find operator__ with OID %s\n",
+		write_msg(NULL, "WARNING: could not find operator with OID %s\n",
 				  opr);
 		return NULL;
 	}
@@ -11389,7 +11389,7 @@ convertTSFunction(Archive *fout, Oid funcOid)
 
 /*
  * dumpOpclass
- *	  write out a single operator__ class__ definition
+ *	  write out a single operator class definition
  */
 static void
 dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
@@ -11441,7 +11441,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 		return;
 
 	/*
-	 * XXX currently we do not implement dumping of operator__ classes from
+	 * XXX currently we do not implement dumping of operator classes from
 	 * pre-7.3 databases.  This could be done but it seems not worth the
 	 * trouble.
 	 */
@@ -11507,7 +11507,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 	/*
 	 * DROP must be fully qualified in case same name appears in pg_catalog
 	 */
-	appendPQExpBuffer(delq, "DROP operator__ class__ %s",
+	appendPQExpBuffer(delq, "DROP operator class %s",
 					  fmtId(opcinfo->dobj.namespace->dobj.name));
 	appendPQExpBuffer(delq, ".%s",
 					  fmtId(opcinfo->dobj.name));
@@ -11515,7 +11515,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 					  fmtId(amname));
 
 	/* Build the fixed portion of the CREATE command */
-	appendPQExpBuffer(q, "CREATE operator__ class__ %s\n    ",
+	appendPQExpBuffer(q, "CREATE operator class %s\n    ",
 					  fmtId(opcinfo->dobj.name));
 	if (strcmp(opcdefault, "t") == 0)
 		appendPQExpBufferStr(q, "DEFAULT ");
@@ -11543,7 +11543,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 	PQclear(res);
 
 	/*
-	 * Now fetch and print the operator__ entries (pg_amop rows).
+	 * Now fetch and print the operator entries (pg_amop rows).
 	 *
 	 * Print only those opfamily members that are tied to the opclass by
 	 * pg_depend entries.
@@ -11730,7 +11730,7 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 
 	appendPQExpBufferStr(q, ";\n");
 
-	appendPQExpBuffer(labelq, "operator class__ %s",
+	appendPQExpBuffer(labelq, "operator class %s",
 					  fmtId(opcinfo->dobj.name));
 	appendPQExpBuffer(labelq, " USING %s",
 					  fmtId(amname));
@@ -11743,12 +11743,12 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 				 opcinfo->dobj.namespace->dobj.name,
 				 NULL,
 				 opcinfo->rolname,
-				 false, "operator class__", SECTION_PRE_DATA,
+				 false, "operator class", SECTION_PRE_DATA,
 				 q->data, delq->data, NULL,
 				 NULL, 0,
 				 NULL, NULL);
 
-	/* Dump operator__ class__ Comments */
+	/* Dump operator class Comments */
 	dumpComment(fout, labelq->data,
 				NULL, opcinfo->rolname,
 				opcinfo->dobj.catId, 0, opcinfo->dobj.dumpId);
@@ -11762,9 +11762,9 @@ dumpOpclass(Archive *fout, OpclassInfo *opcinfo)
 
 /*
  * dumpOpfamily
- *	  write out a single operator__ family definition
+ *	  write out a single operator family definition
  *
- * Note: this__ also dumps any "loose" operator__ members that aren't bound to a
+ * Note: this__ also dumps any "loose" operator members that aren't bound to a
  * specific opclass within the opfamily.
  */
 static void
@@ -11907,7 +11907,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 	/*
 	 * DROP must be fully qualified in case same name appears in pg_catalog
 	 */
-	appendPQExpBuffer(delq, "DROP operator__ FAMILY %s",
+	appendPQExpBuffer(delq, "DROP operator FAMILY %s",
 					  fmtId(opfinfo->dobj.namespace->dobj.name));
 	appendPQExpBuffer(delq, ".%s",
 					  fmtId(opfinfo->dobj.name));
@@ -11915,7 +11915,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 					  fmtId(amname));
 
 	/* Build the fixed portion of the CREATE command */
-	appendPQExpBuffer(q, "CREATE operator__ FAMILY %s",
+	appendPQExpBuffer(q, "CREATE operator FAMILY %s",
 					  fmtId(opfinfo->dobj.name));
 	appendPQExpBuffer(q, " USING %s;\n",
 					  fmtId(amname));
@@ -11925,7 +11925,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 	/* Do we need an ALTER to add loose members? */
 	if (PQntuples(res_ops) > 0 || PQntuples(res_procs) > 0)
 	{
-		appendPQExpBuffer(q, "ALTER operator__ FAMILY %s",
+		appendPQExpBuffer(q, "ALTER operator FAMILY %s",
 						  fmtId(opfinfo->dobj.name));
 		appendPQExpBuffer(q, " USING %s ADD\n    ",
 						  fmtId(amname));
@@ -11933,7 +11933,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 		needComma = false;
 
 		/*
-		 * Now fetch and print the operator__ entries (pg_amop rows).
+		 * Now fetch and print the operator entries (pg_amop rows).
 		 */
 		ntups = PQntuples(res_ops);
 
@@ -12019,7 +12019,7 @@ dumpOpfamily(Archive *fout, OpfamilyInfo *opfinfo)
 				 NULL, 0,
 				 NULL, NULL);
 
-	/* Dump operator__ Family Comments */
+	/* Dump operator Family Comments */
 	dumpComment(fout, labelq->data,
 				NULL, opfinfo->rolname,
 				opfinfo->dobj.catId, 0, opfinfo->dobj.dumpId);

@@ -24,7 +24,7 @@
  * we use security_compute_av(3). It needs us to represent object classes
  * and access vectors using 'external' codes defined in the security policy.
  * It is determinded in the runtime, not build time. So, it needs an internal
- * service to translate object class__/access vectors which we want to check
+ * service to translate object class/access vectors which we want to check
  * into the code which kernel want to be given.
  */
 static struct
@@ -686,7 +686,7 @@ sepgsql_audit_log(bool denied,
 	const char *av_name;
 	int			i;
 
-	/* lookup name of the object class__ */
+	/* lookup name of the object class */
 	Assert(tclass < SEPG_CLASS_MAX);
 	class_name = selinux_catalog[tclass].class_name;
 
@@ -719,14 +719,14 @@ sepgsql_audit_log(bool denied,
  * sepgsql_compute_avd
  *
  * It actually asks SELinux what permissions are allowed on a pair of
- * the security contexts and object class__. It also returns what permissions
+ * the security contexts and object class. It also returns what permissions
  * should be audited on access violation or allowed.
  * In most cases, subject's security context (scontext) is a client, and
  * target security context (tcontext) is a database object.
  *
  * The access control decision shall be set on the given av_decision.
- * The av_decision.allowed has a bitmask of SEPG_<class__>__<perms>
- * to suggest a set of allowed actions in this__ object class__.
+ * The av_decision.allowed has a bitmask of SEPG_<class>__<perms>
+ * to suggest a set of allowed actions in this__ object class.
  */
 void
 sepgsql_compute_avd(const char *scontext,
@@ -740,7 +740,7 @@ sepgsql_compute_avd(const char *scontext,
 	int			i,
 				deny_unknown = security_deny_unknown();
 
-	/* Get external code of the object class__ */
+	/* Get external code of the object class */
 	Assert(tclass < SEPG_CLASS_MAX);
 	Assert(tclass == selinux_catalog[tclass].class_code);
 
@@ -765,7 +765,7 @@ sepgsql_compute_avd(const char *scontext,
 
 	/*
 	 * Ask SELinux what is allowed set of permissions on a pair of the
-	 * security contexts and the given object class__.
+	 * security contexts and the given object class.
 	 */
 	if (security_compute_av_flags_raw((security_context_t) scontext,
 									  (security_context_t) tcontext,
@@ -817,12 +817,12 @@ sepgsql_compute_avd(const char *scontext,
  *
  * It returns a default security context to be assigned on a new database
  * object. SELinux compute it based on a combination of client, upper object
- * which owns the new object and object class__.
+ * which owns the new object and object class.
  *
  * For example, when a client (staff_u:staff_r:staff_t:s0) tries to create
  * a new table within a schema (system_u:object_r:sepgsql_schema_t:s0),
  * SELinux looks-up its security policy. If it has a special rule on the
- * combination of these security contexts and object class__ (db_table),
+ * combination of these security contexts and object class (db_table),
  * it returns the security context suggested by the special rule.
  * Otherwise, it returns the security context of schema, as is.
  *
@@ -831,7 +831,7 @@ sepgsql_compute_avd(const char *scontext,
  *
  * scontext: security context of the subject (mostly, peer process).
  * tcontext: security context of the upper database object.
- * tclass: class__ code (SEPG_CLASS_*) of the new object in creation
+ * tclass: class code (SEPG_CLASS_*) of the new object in creation
  */
 char *
 sepgsql_compute_create(const char *scontext,
@@ -844,14 +844,14 @@ sepgsql_compute_create(const char *scontext,
 	const char *tclass_name;
 	char	   *result;
 
-	/* Get external code of the object class__ */
+	/* Get external code of the object class */
 	Assert(tclass < SEPG_CLASS_MAX);
 
 	tclass_name = selinux_catalog[tclass].class_name;
 	tclass_ex = string_to_security_class(tclass_name);
 
 	/*
-	 * Ask SELinux what is the default context for the given object class__ on a
+	 * Ask SELinux what is the default context for the given object class on a
 	 * pair of security contexts
 	 */
 	if (security_compute_create_name_raw((security_context_t) scontext,
@@ -893,8 +893,8 @@ sepgsql_compute_create(const char *scontext,
  *
  * scontext: security label of the subject (mostly, peer process)
  * tcontext: security label of the object being referenced
- * tclass: class__ code (SEPG_CLASS_*) of the object being referenced
- * required: a mask of required permissions (SEPG_<class__>__<perm>)
+ * tclass: class code (SEPG_CLASS_*) of the object being referenced
+ * required: a mask of required permissions (SEPG_<class>__<perm>)
  * audit_name: a human readable object name for audit logs, or NULL.
  * abort_on_violation: true, if error shall be raised on access violation
  */

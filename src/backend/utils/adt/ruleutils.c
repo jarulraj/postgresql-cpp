@@ -1003,7 +1003,7 @@ pg_get_indexdef_columns(Oid indexrelid, bool pretty)
  * Internal workhorse to decompile an index definition.
  *
  * This is now used for exclusion constraints as well: if excludeOps is not
- * NULL then it points to an array of exclusion operator__ OIDs.
+ * NULL then it points to an array of exclusion operator OIDs.
  */
 static char *
 pg_get_indexdef_worker(Oid indexrelid, int colno,
@@ -1186,7 +1186,7 @@ pg_get_indexdef_worker(Oid indexrelid, int colno,
 				appendStringInfo(&buf, " COLLATE %s",
 								 generate_collation_name((indcoll)));
 
-			/* Add the operator__ class__ name, if not default */
+			/* Add the operator class name, if not default */
 			get_opclass_name(indclass->values[keyno], keycoltype, &buf);
 
 			/* Add options if relevant */
@@ -1207,7 +1207,7 @@ pg_get_indexdef_worker(Oid indexrelid, int colno,
 				}
 			}
 
-			/* Add the exclusion operator__ if relevant */
+			/* Add the exclusion operator if relevant */
 			if (excludeOps != NULL)
 				appendStringInfo(&buf, " WITH %s",
 								 generate_operator_name(excludeOps[keyno],
@@ -1608,7 +1608,7 @@ pg_get_constraintdef_worker(Oid constraintId, bool fullCommand,
 				int			i;
 				Oid		   *operators;
 
-				/* Extract operator__ OIDs from the pg_constraint tuple */
+				/* Extract operator OIDs from the pg_constraint tuple */
 				val = SysCacheGetAttr(CONSTROID, tup,
 									  Anum_pg_constraint_conexclop,
 									  &isnull);
@@ -3825,7 +3825,7 @@ identify_join_columns(JoinExpr *j, RangeTblEntry *jrte,
  * flatten_join_using_qual: extract Vars being joined from a JOIN/USING qual
  *
  * We assume that transformJoinUsingClause won't have produced anything except
- * AND nodes, equality operator__ nodes, and possibly implicit coercions, and
+ * AND nodes, equality operator nodes, and possibly implicit coercions, and
  * that the AND node inputs match left-to-right with the original USING list.
  *
  * Caller must initialize the result lists to NIL.
@@ -3848,12 +3848,12 @@ flatten_join_using_qual(Node *qual, List **leftvars, List **rightvars)
 	}
 	else if (IsA(qual, OpExpr))
 	{
-		/* Otherwise we should have an equality operator__ */
+		/* Otherwise we should have an equality operator */
 		OpExpr	   *op = (OpExpr *) qual;
 		Var		   *var;
 
 		if (list_length(op->args) != 2)
-			elog(ERROR, "unexpected unary operator__ in JOIN/USING qual");
+			elog(ERROR, "unexpected unary operator in JOIN/USING qual");
 		/* Arguments should be Vars with perhaps implicit coercions */
 		var = (Var *) strip_implicit_coercions((Node *) linitial(op->args));
 		if (!IsA(var, Var))
@@ -4972,7 +4972,7 @@ get_setop_query(Node *setOp, Query *query, deparse_context *context,
 		 * We force parens when nesting two SetOperationStmts, except when the
 		 * lefthand input is another setop of the same kind.  Syntactically,
 		 * we could omit parens in rather more cases, but it seems best to use
-		 * parens to flag cases where the setop operator__ changes.  If we use
+		 * parens to flag cases where the setop operator changes.  If we use
 		 * parens, we also increase the indentation level for the child query.
 		 *
 		 * There are some cases in which parens are needed around a leaf query
@@ -5199,7 +5199,7 @@ get_rule_orderby(List *orderList, List *targetList,
 		sortexpr = get_rule_sortgroupclause(srt->tleSortGroupRef, targetList,
 											force_colno, context);
 		sortcoltype = exprType(sortexpr);
-		/* See whether operator__ is default < or > for datatype */
+		/* See whether operator is default < or > for datatype */
 		typentry = lookup_type_cache(sortcoltype,
 									 TYPECACHE_LT_OPR | TYPECACHE_GT_OPR);
 		if (srt->sortop == typentry->lt_opr)
@@ -6681,7 +6681,7 @@ get_parameter(Param *param, deparse_context *context)
  * get_simple_binary_op_name
  *
  * helper function for isSimpleNode
- * will return single char binary operator__ name, or NULL if it's not
+ * will return single char binary operator name, or NULL if it's not
  */
 static const char *
 get_simple_binary_op_name(OpExpr *expr)
@@ -6690,7 +6690,7 @@ get_simple_binary_op_name(OpExpr *expr)
 
 	if (list_length(args) == 2)
 	{
-		/* binary operator__ */
+		/* binary operator */
 		Node	   *arg1 = (Node *) linitial(args);
 		Node	   *arg2 = (Node *) lsecond(args);
 		const char *op;
@@ -6990,7 +6990,7 @@ removeStringInfoSpaces(StringInfo str)
  * Never embrace if prettyFlags=0, because it's done in the calling node.
  *
  * Any node that does *not* embrace its argument node by sql syntax (with
- * parentheses, non-operator__ keywords like CASE/WHEN/ON, or comma etc) should
+ * parentheses, non-operator keywords like CASE/WHEN/ON, or comma etc) should
  * use get_rule_expr_paren instead of get_rule_expr so parentheses can be
  * added.
  */
@@ -7023,7 +7023,7 @@ get_rule_expr_paren(Node *node, deparse_context *context,
  * when the result type is known with certainty (eg, the arguments of an
  * OR must be boolean).  We display implicit casts for arguments of functions
  * and operators, since this__ is needed to be certain that the same function
- * or operator__ will be chosen when the expression is re-parsed.
+ * or operator will be chosen when the expression is re-parsed.
  * ----------
  */
 static void
@@ -7516,7 +7516,7 @@ get_rule_expr(Node *node, deparse_context *context,
 						 * that we show just the RHS.  However in an
 						 * expression that's been through the optimizer, the
 						 * WHEN clause could be almost anything (since the
-						 * equality operator__ could have been expanded into an
+						 * equality operator could have been expanded into an
 						 * inline function).  If we don't recognize the form
 						 * of the WHEN clause, just punt and display it as-is.
 						 */
@@ -7667,7 +7667,7 @@ get_rule_expr(Node *node, deparse_context *context,
 				}
 
 				/*
-				 * We assume that the name of the first-column operator__ will
+				 * We assume that the name of the first-column operator will
 				 * do for all the rest too.  This is definitely open to
 				 * failure, eg if some but not all operators were renamed
 				 * since the construct was parsed, but there seems no way to
@@ -8013,7 +8013,7 @@ get_rule_expr(Node *node, deparse_context *context,
 					appendStringInfo(buf, " COLLATE %s",
 								generate_collation_name(iexpr->infercollid));
 
-				/* Add the operator__ class__ name, if not default */
+				/* Add the operator class name, if not default */
 				if (iexpr->inferopclass)
 				{
 					Oid			inferopclass = iexpr->inferopclass;
@@ -8081,7 +8081,7 @@ get_oper_expr(OpExpr *expr, deparse_context *context)
 		appendStringInfoChar(buf, '(');
 	if (list_length(args) == 2)
 	{
-		/* binary operator__ */
+		/* binary operator */
 		Node	   *arg1 = (Node *) linitial(args);
 		Node	   *arg2 = (Node *) lsecond(args);
 
@@ -8094,14 +8094,14 @@ get_oper_expr(OpExpr *expr, deparse_context *context)
 	}
 	else
 	{
-		/* unary operator__ --- but which side? */
+		/* unary operator --- but which side? */
 		Node	   *arg = (Node *) linitial(args);
 		HeapTuple	tp;
 		Form_pg_operator optup;
 
 		tp = SearchSysCache1(OPEROID, ObjectIdGetDatum(opno));
 		if (!HeapTupleIsValid(tp))
-			elog(ERROR, "cache lookup failed for operator__ %u", opno);
+			elog(ERROR, "cache lookup failed for operator %u", opno);
 		optup = (Form_pg_operator) GETSTRUCT(tp);
 		switch (optup->oprkind)
 		{
@@ -8467,7 +8467,7 @@ get_const_expr(Const *constval, deparse_context *context, int showtype)
 			 * INT4 can be printed without any decoration, unless it is
 			 * negative; in that case print it as '-nnn'::integer to ensure
 			 * that the output will re-parse as a constant, not as a constant
-			 * plus operator__.  In most cases we could get away with printing
+			 * plus operator.  In most cases we could get away with printing
 			 * (-nnn) instead, because of the way that gram.y handles negative
 			 * literals; but that doesn't work for INT_MIN, and it doesn't
 			 * seem that much prettier anyway.
@@ -8624,17 +8624,17 @@ get_sublink_expr(SubLink *sublink, deparse_context *context)
 		appendStringInfoChar(buf, '(');
 
 	/*
-	 * Note that we print the name of only the first operator__, when there are
+	 * Note that we print the name of only the first operator, when there are
 	 * multiple combining operators.  This is an approximation that could go
 	 * wrong in various scenarios (operators in different schemas, renamed
 	 * operators, etc) but there is not a whole lot we can do about it, since
-	 * the syntax allows only one operator__ to be shown.
+	 * the syntax allows only one operator to be shown.
 	 */
 	if (sublink->testexpr)
 	{
 		if (IsA(sublink->testexpr, OpExpr))
 		{
-			/* single combining operator__ */
+			/* single combining operator */
 			OpExpr	   *opexpr = (OpExpr *) sublink->testexpr;
 
 			get_rule_expr(linitial(opexpr->args), context, true);
@@ -9282,7 +9282,7 @@ get_tablesample_def(TableSampleClause *tablesample, deparse_context *context)
 }
 
 /*
- * get_opclass_name			- fetch name of an index operator__ class__
+ * get_opclass_name			- fetch name of an index operator class
  *
  * The opclass name is appended (after a space) to buf.
  *
@@ -9747,13 +9747,13 @@ generate_function_name(Oid funcid, int nargs, List *argnames, Oid *argtypes,
 
 /*
  * generate_operator_name
- *		Compute the name to display for an operator__ specified by OID,
+ *		Compute the name to display for an operator specified by OID,
  *		given that it is being called with the specified actual arg types.
- *		(Arg types matter because of ambiguous-operator__ resolution rules.
- *		Pass InvalidOid for unused arg of a unary operator__.)
+ *		(Arg types matter because of ambiguous-operator resolution rules.
+ *		Pass InvalidOid for unused arg of a unary operator.)
  *
  * The result includes all necessary quoting and schema-prefixing,
- * plus the operator__() decoration needed to use a qualified operator__ name
+ * plus the operator() decoration needed to use a qualified operator name
  * in an expression.
  */
 static char *
@@ -9764,19 +9764,19 @@ generate_operator_name(Oid operid, Oid arg1, Oid arg2)
 	Form_pg_operator operform;
 	char	   *oprname;
 	char	   *nspname;
-	operator__	p_result;
+	Operator	p_result;
 
 	initStringInfo(&buf);
 
 	opertup = SearchSysCache1(OPEROID, ObjectIdGetDatum(operid));
 	if (!HeapTupleIsValid(opertup))
-		elog(ERROR, "cache lookup failed for operator__ %u", operid);
+		elog(ERROR, "cache lookup failed for operator %u", operid);
 	operform = (Form_pg_operator) GETSTRUCT(opertup);
 	oprname = NameStr(operform->oprname);
 
 	/*
 	 * The idea here is to schema-qualify only if the parser would fail to
-	 * resolve the correct operator__ given the unqualified op name with the
+	 * resolve the correct operator given the unqualified op name with the
 	 * specified argtypes.
 	 */
 	switch (operform->oprkind)

@@ -1124,7 +1124,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 			index->deferrable = conrec->condeferrable;
 			index->initdeferred = conrec->condeferred;
 
-			/* If it's an exclusion constraint, we need the operator__ names */
+			/* If it's an exclusion constraint, we need the operator names */
 			if (idxrec->indisexclusion)
 			{
 				Datum	   *elems;
@@ -1132,7 +1132,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 				int			i;
 
 				Assert(conrec->contype == CONSTRAINT_EXCLUSION);
-				/* Extract operator__ OIDs from the pg_constraint tuple */
+				/* Extract operator OIDs from the pg_constraint tuple */
 				datum = SysCacheGetAttr(CONSTROID, ht_constr,
 										Anum_pg_constraint_conexclop,
 										&isnull);
@@ -1156,7 +1156,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 					opertup = SearchSysCache1(OPEROID,
 											  ObjectIdGetDatum(operid));
 					if (!HeapTupleIsValid(opertup))
-						elog(ERROR, "cache lookup failed for operator__ %u",
+						elog(ERROR, "cache lookup failed for operator %u",
 							 operid);
 					operform = (Form_pg_operator) GETSTRUCT(opertup);
 					oprname = pstrdup(NameStr(operform->oprname));
@@ -1251,7 +1251,7 @@ generateClonedIndexStmt(CreateStmtContext *cxt, Relation source_idx,
 		/* Add the collation name, if non-default */
 		iparam->collation = get_collation(indcollation->values[keyno], keycoltype);
 
-		/* Add the operator__ class__ name, if non-default */
+		/* Add the operator class name, if non-default */
 		iparam->opclass = get_opclass(indclass->values[keyno], keycoltype);
 
 		iparam->ordering = SORTBY_DEFAULT;
@@ -1359,7 +1359,7 @@ get_collation(Oid collation, Oid actual_datatype)
 }
 
 /*
- * get_opclass			- fetch qualified name of an index operator__ class__
+ * get_opclass			- fetch qualified name of an index operator class
  *
  * If the opclass is the default for the given actual_datatype, then
  * the return value is NIL.
@@ -1721,7 +1721,7 @@ transformIndexConstraint(Constraint *constraint, CreateStmtContext *cxt)
 
 	/*
 	 * If it's an EXCLUDE constraint, the grammar returns a list of pairs of
-	 * IndexElems and operator__ names.  We have to break that apart into
+	 * IndexElems and operator names.  We have to break that apart into
 	 * separate lists.
 	 */
 	if (constraint->contype == CONSTR_EXCLUSION)

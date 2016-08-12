@@ -197,26 +197,26 @@ inet_cidr_pton_ipv4(const char *src, u_char *dst, size_t size)
 	/* If nothing was written to the destination, we found no address. */
 	if (dst == odst)
 		goto enoent;
-	/* If no CIDR spec was given, infer width from net class__. */
+	/* If no CIDR spec was given, infer width from net class. */
 	if (bits == -1)
 	{
-		if (*odst >= 240)		/* class__ E */
+		if (*odst >= 240)		/* class E */
 			bits = 32;
-		else if (*odst >= 224)	/* class__ D */
+		else if (*odst >= 224)	/* class D */
 			bits = 8;
-		else if (*odst >= 192)	/* class__ C */
+		else if (*odst >= 192)	/* class C */
 			bits = 24;
-		else if (*odst >= 128)	/* class__ B */
+		else if (*odst >= 128)	/* class B */
 			bits = 16;
 		else
-			/* class__ A */
+			/* class A */
 			bits = 8;
 		/* If imputed mask is narrower than specified octets, widen. */
 		if (bits < ((dst - odst) * 8))
 			bits = (dst - odst) * 8;
 
 		/*
-		 * If there are no additional bits specified for a class__ D address
+		 * If there are no additional bits specified for a class D address
 		 * adjust bits to 4.
 		 */
 		if (bits == 8 && *odst == 224)

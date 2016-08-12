@@ -162,7 +162,7 @@ typedef struct RI_QueryHashEntry
  */
 typedef struct RI_CompareKey
 {
-	Oid			eq_opr;			/* the equality operator__ to apply */
+	Oid			eq_opr;			/* the equality operator to apply */
 	Oid			typeid__;			/* the data type to apply it to */
 } RI_CompareKey;
 
@@ -2564,11 +2564,11 @@ quoteRelationName(char *buffer, Relation rel)
  *
  * The idea is to append " sep leftop op rightop" to buf.  The complexity
  * comes from needing to be sure that the parser will select the desired
- * operator__.  We always name the operator__ using operator__(schema.op) syntax
+ * operator.  We always name the operator using operator(schema.op) syntax
  * (readability isn't a big priority here), so as to avoid search-path
  * uncertainties.  We have to emit casts too, if either input isn't already
- * the input type of the operator__; else we are at the mercy of the parser's
- * heuristics for ambiguous-operator__ resolution.
+ * the input type of the operator; else we are at the mercy of the parser's
+ * heuristics for ambiguous-operator resolution.
  */
 static void
 ri_GenerateQual(StringInfo buf,
@@ -2584,7 +2584,7 @@ ri_GenerateQual(StringInfo buf,
 
 	opertup = SearchSysCache1(OPEROID, ObjectIdGetDatum(opoid));
 	if (!HeapTupleIsValid(opertup))
-		elog(ERROR, "cache lookup failed for operator__ %u", opoid);
+		elog(ERROR, "cache lookup failed for operator %u", opoid);
 	operform = (Form_pg_operator) GETSTRUCT(opertup);
 	Assert(operform->oprkind == 'b');
 	oprname = NameStr(operform->oprname);
@@ -2594,7 +2594,7 @@ ri_GenerateQual(StringInfo buf,
 	appendStringInfo(buf, " %s %s", sep, leftop);
 	if (leftoptype != operform->oprleft)
 		ri_add_cast_to(buf, operform->oprleft);
-	appendStringInfo(buf, " operator__(%s.", quote_identifier(nspname));
+	appendStringInfo(buf, " operator(%s.", quote_identifier(nspname));
 	appendStringInfoString(buf, oprname);
 	appendStringInfo(buf, ") %s", rightop);
 	if (rightoptype != operform->oprright)
@@ -3556,7 +3556,7 @@ ri_KeysEqual(Relation rel, HeapTuple oldtup, HeapTuple newtup,
 			return false;
 
 		/*
-		 * Compare them with the appropriate equality operator__.
+		 * Compare them with the appropriate equality operator.
 		 */
 		if (!ri_AttributesEqual(eq_oprs[i], RIAttType(rel, attnums[i]),
 								oldvalue, newvalue))
@@ -3570,7 +3570,7 @@ ri_KeysEqual(Relation rel, HeapTuple oldtup, HeapTuple newtup,
 /* ----------
  * ri_AttributesEqual -
  *
- *	Call the appropriate equality comparison operator__ for two values.
+ *	Call the appropriate equality comparison operator for two values.
  *
  *	NB: we have already checked that neither value is null.
  * ----------
@@ -3595,7 +3595,7 @@ ri_AttributesEqual(Oid eq_opr, Oid typeid__,
 	}
 
 	/*
-	 * Apply the comparison operator__.  We assume it doesn't care about
+	 * Apply the comparison operator.  We assume it doesn't care about
 	 * collations.
 	 */
 	return DatumGetBool(FunctionCall2(&entry->eq_opr_finfo,
@@ -3646,13 +3646,13 @@ ri_HashCompareOp(Oid eq_opr, Oid typeid__)
 					castfunc;
 		CoercionPathType pathtype;
 
-		/* We always need to know how to call the equality operator__ */
+		/* We always need to know how to call the equality operator */
 		fmgr_info_cxt(get_opcode(eq_opr), &entry->eq_opr_finfo,
 					  TopMemoryContext);
 
 		/*
 		 * If we chose to use a cast from FK to PK type, we may have to apply
-		 * the cast function to get to the operator__'s input type.
+		 * the cast function to get to the operator's input type.
 		 *
 		 * XXX eventually it would be good to support array-coercion cases
 		 * here and in ri_AttributesEqual().  At the moment there is no point

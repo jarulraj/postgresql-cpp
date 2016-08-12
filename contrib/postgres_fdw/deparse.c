@@ -18,7 +18,7 @@
  * the remote server: it might not have the same collation names we do.
  * (Later we might consider it safe to send COLLATE "C", but even that would
  * fail on old remote servers.)  An expression is considered safe to send
- * only if all operator__/function input collations used in it are traceable to
+ * only if all operator/function input collations used in it are traceable to
  * Var(s) of the foreign table.  That implies that if the remote server gets
  * a different answer than we do, the foreign table's columns are not marked
  * with collations that match the remote table's columns, which we can
@@ -424,7 +424,7 @@ foreign_expr_walker(Node *node,
 
 				/*
 				 * Similarly, only built-in operators can be sent to remote.
-				 * (If the operator__ is, surely its underlying function is
+				 * (If the operator is, surely its underlying function is
 				 * too.)
 				 */
 				if (!is_builtin(oe->opno))
@@ -438,7 +438,7 @@ foreign_expr_walker(Node *node,
 					return false;
 
 				/*
-				 * If operator__'s input collation is not derived from a foreign
+				 * If operator's input collation is not derived from a foreign
 				 * Var, it can't be sent to remote.
 				 */
 				if (oe->inputcollid == InvalidOid)
@@ -478,7 +478,7 @@ foreign_expr_walker(Node *node,
 					return false;
 
 				/*
-				 * If operator__'s input collation is not derived from a foreign
+				 * If operator's input collation is not derived from a foreign
 				 * Var, it can't be sent to remote.
 				 */
 				if (oe->inputcollid == InvalidOid)
@@ -1603,7 +1603,7 @@ deparseFuncExpr(FuncExpr *node, deparse_expr_cxt *context)
 }
 
 /*
- * Deparse given operator__ expression.   To avoid problems around
+ * Deparse given operator expression.   To avoid problems around
  * priority of operations, we always parenthesize the arguments.
  */
 static void
@@ -1615,10 +1615,10 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 	char		oprkind;
 	ListCell   *arg;
 
-	/* Retrieve information about the operator__ from system catalog. */
+	/* Retrieve information about the operator from system catalog. */
 	tuple = SearchSysCache1(OPEROID, ObjectIdGetDatum(node->opno));
 	if (!HeapTupleIsValid(tuple))
-		elog(ERROR, "cache lookup failed for operator__ %u", node->opno);
+		elog(ERROR, "cache lookup failed for operator %u", node->opno);
 	form = (Form_pg_operator) GETSTRUCT(tuple);
 	oprkind = form->oprkind;
 
@@ -1638,7 +1638,7 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 		appendStringInfoChar(buf, ' ');
 	}
 
-	/* Deparse operator__ name. */
+	/* Deparse operator name. */
 	deparseOperatorName(buf, form);
 
 	/* Deparse right operand. */
@@ -1655,7 +1655,7 @@ deparseOpExpr(OpExpr *node, deparse_expr_cxt *context)
 }
 
 /*
- * Print the name of an operator__.
+ * Print the name of an operator.
  */
 static void
 deparseOperatorName(StringInfo buf, Form_pg_operator opform)
@@ -1671,13 +1671,13 @@ deparseOperatorName(StringInfo buf, Form_pg_operator opform)
 		const char *opnspname;
 
 		opnspname = get_namespace_name(opform->oprnamespace);
-		/* Print fully qualified operator__ name. */
+		/* Print fully qualified operator name. */
 		appendStringInfo(buf, "operator(%s.%s)",
 						 quote_identifier(opnspname), opname);
 	}
 	else
 	{
-		/* Just print operator__ name. */
+		/* Just print operator name. */
 		appendStringInfoString(buf, opname);
 	}
 }
@@ -1712,10 +1712,10 @@ deparseScalarArrayOpExpr(ScalarArrayOpExpr *node, deparse_expr_cxt *context)
 	Expr	   *arg1;
 	Expr	   *arg2;
 
-	/* Retrieve information about the operator__ from system catalog. */
+	/* Retrieve information about the operator from system catalog. */
 	tuple = SearchSysCache1(OPEROID, ObjectIdGetDatum(node->opno));
 	if (!HeapTupleIsValid(tuple))
-		elog(ERROR, "cache lookup failed for operator__ %u", node->opno);
+		elog(ERROR, "cache lookup failed for operator %u", node->opno);
 	form = (Form_pg_operator) GETSTRUCT(tuple);
 
 	/* Sanity check. */
@@ -1729,7 +1729,7 @@ deparseScalarArrayOpExpr(ScalarArrayOpExpr *node, deparse_expr_cxt *context)
 	deparseExpr(arg1, context);
 	appendStringInfoChar(buf, ' ');
 
-	/* Deparse operator__ name plus decoration. */
+	/* Deparse operator name plus decoration. */
 	deparseOperatorName(buf, form);
 	appendStringInfo(buf, " %s (", node->useOr ? "ANY" : "ALL");
 

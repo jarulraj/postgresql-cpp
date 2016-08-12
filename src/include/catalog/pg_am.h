@@ -41,7 +41,7 @@ CATALOG(pg_am,2601)
 	int16		amsupport;		/* total number of support functions that this__
 								 * AM uses */
 	bool		amcanorder;		/* does AM support order by column value? */
-	bool		amcanorderbyop; /* does AM support order by operator__ result? */
+	bool		amcanorderbyop; /* does AM support order by operator result? */
 	bool		amcanbackward;	/* does AM support backward scan? */
 	bool		amcanunique;	/* does AM support UNIQUE indexes? */
 	bool		amcanmulticol;	/* does AM support multi-column indexes? */

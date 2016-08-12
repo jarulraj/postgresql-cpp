@@ -1025,7 +1025,7 @@ create_unique_plan(PlannerInfo *root, UniquePath *best_path)
 			Oid			eq_oper;
 
 			if (!get_compatible_hash_operators(in_oper, NULL, &eq_oper))
-				elog(ERROR, "could not find compatible hash operator__ for operator__ %u",
+				elog(ERROR, "could not find compatible hash operator for operator %u",
 					 in_oper);
 			groupOperators[groupColPos++] = eq_oper;
 		}
@@ -1063,7 +1063,7 @@ create_unique_plan(PlannerInfo *root, UniquePath *best_path)
 
 			sortop = get_ordering_op_for_equality_op(in_oper, false);
 			if (!OidIsValid(sortop))	/* shouldn't happen */
-				elog(ERROR, "could not find ordering operator__ for equality operator__ %u",
+				elog(ERROR, "could not find ordering operator for equality operator %u",
 					 in_oper);
 
 			/*
@@ -1074,7 +1074,7 @@ create_unique_plan(PlannerInfo *root, UniquePath *best_path)
 			 */
 			eqop = get_equality_op_for_ordering_op(sortop, NULL);
 			if (!OidIsValid(eqop))		/* shouldn't happen */
-				elog(ERROR, "could not find equality operator__ for ordering operator__ %u",
+				elog(ERROR, "could not find equality operator for ordering operator %u",
 					 sortop);
 
 			tle = get_tle_by_resno(subplan->targetlist,
@@ -1343,7 +1343,7 @@ create_indexscan_plan(PlannerInfo *root,
 		/*
 		 * PathKey contains OID of the btree opfamily we're sorting by, but
 		 * that's not quite enough because we need the expression's datatype
-		 * to look up the sort operator__ in the operator__ family.
+		 * to look up the sort operator in the operator family.
 		 */
 		Assert(list_length(best_path->path.pathkeys) == list_length(indexorderbys));
 		forboth(pathkeyCell, best_path->path.pathkeys, exprCell, indexorderbys)
@@ -1353,13 +1353,13 @@ create_indexscan_plan(PlannerInfo *root,
 			Oid			exprtype = exprType(expr);
 			Oid			sortop;
 
-			/* Get sort operator__ from opfamily */
+			/* Get sort operator from opfamily */
 			sortop = get_opfamily_member(pathkey->pk_opfamily,
 										 exprtype,
 										 exprtype,
 										 pathkey->pk_strategy);
 			if (!OidIsValid(sortop))
-				elog(ERROR, "failed to find sort operator__ for ORDER BY expression");
+				elog(ERROR, "failed to find sort operator for ORDER BY expression");
 			indexorderbyops = lappend_oid(indexorderbyops, sortop);
 		}
 	}
@@ -4039,7 +4039,7 @@ make_sort(PlannerInfo *root, Plan *lefttree, int numCols,
  *	  'adjust_tlist_in_place' is TRUE if lefttree must be modified in-place
  *
  * We must convert the pathkey information into arrays of sort key column
- * numbers, sort operator__ OIDs, collation OIDs, and nulls-first flags,
+ * numbers, sort operator OIDs, collation OIDs, and nulls-first flags,
  * which is the representation the executor wants.  These are returned into
  * the output parameters *p_numsortkeys etc.
  *
@@ -4156,7 +4156,7 @@ prepare_sort_from_pathkeys(PlannerInfo *root, Plan *lefttree, List *pathkeys,
 			 * XXX if we have a choice, is there any way of figuring out which
 			 * might be cheapest to execute?  (For example, int4lt is likely
 			 * much cheaper to execute than numericlt, but both might appear
-			 * in the same equivalence class__...)  Not clear that we ever will
+			 * in the same equivalence class...)  Not clear that we ever will
 			 * have an interesting choice in practice, so it may not matter.
 			 */
 			foreach(j, tlist)
@@ -4191,7 +4191,7 @@ prepare_sort_from_pathkeys(PlannerInfo *root, Plan *lefttree, List *pathkeys,
 				ListCell   *k;
 
 				/*
-				 * We shouldn't be trying to sort by an equivalence class__ that
+				 * We shouldn't be trying to sort by an equivalence class that
 				 * contains a constant, so no need to consider such cases any
 				 * further.
 				 */
@@ -4252,7 +4252,7 @@ prepare_sort_from_pathkeys(PlannerInfo *root, Plan *lefttree, List *pathkeys,
 		}
 
 		/*
-		 * Look up the correct sort operator__ from the PathKey's slightly
+		 * Look up the correct sort operator from the PathKey's slightly
 		 * abstracted representation.
 		 */
 		sortop = get_opfamily_member(pathkey->pk_opfamily,
@@ -4307,7 +4307,7 @@ find_ec_member_for_tle(EquivalenceClass *ec,
 		Expr	   *emexpr;
 
 		/*
-		 * We shouldn't be trying to sort by an equivalence class__ that
+		 * We shouldn't be trying to sort by an equivalence class that
 		 * contains a constant, so no need to consider such cases any further.
 		 */
 		if (em->em_is_const)

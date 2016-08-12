@@ -126,10 +126,10 @@ freetree(NODE *node)
 }
 
 /*
- * clean tree for ! operator__.
+ * clean tree for ! operator.
  * It's useful for debug, but in
  * other case, such view is used with search in index.
- * operator__ ! always return TRUE
+ * operator ! always return TRUE
  */
 static NODE *
 clean_NOT_intree(NODE *node)
@@ -146,7 +146,7 @@ clean_NOT_intree(NODE *node)
 		return NULL;
 	}
 
-	/* operator__ & or | */
+	/* operator & or | */
 	if (node->valnode->qoperator.oper == OP_OR)
 	{
 		if ((node->left = clean_NOT_intree(node->left)) == NULL ||

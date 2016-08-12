@@ -447,7 +447,7 @@ my %API = map { /^(\w+)\|([^|]*)\|([^|]*)\|(\w*)$/
                 : die "invalid spec: $_" } qw(
 AvFILLp|5.004050||p
 AvFILL|||
-class__|||n
+class|||n
 CPERLscope|5.005000||p
 CX_CURPAD_SAVE|||
 CX_CURPAD_SV|||

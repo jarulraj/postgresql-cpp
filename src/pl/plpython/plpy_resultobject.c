@@ -1,5 +1,5 @@
 /*
- * the PLyResult class__
+ * the PLyResult class
  *
  * src/pl/plpython/plpy_resultobject.c
  */

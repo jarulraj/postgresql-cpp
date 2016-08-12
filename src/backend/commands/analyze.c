@@ -1665,9 +1665,9 @@ ind_fetch_func(VacAttrStatsP stats, int rownum, bool *isNull)
  */
 typedef struct
 {
-	Oid			eqopr;			/* '=' operator__ for datatype, if any */
+	Oid			eqopr;			/* '=' operator for datatype, if any */
 	Oid			eqfunc;			/* and associated function */
-	Oid			ltopr;			/* '<' operator__ for datatype, if any */
+	Oid			ltopr;			/* '<' operator for datatype, if any */
 } StdAnalyzeData;
 
 typedef struct
@@ -1727,7 +1727,7 @@ std_typanalyze(VacAttrStats *stats)
 							 &ltopr, &eqopr, NULL,
 							 NULL);
 
-	/* Save the operator__ info for compute_stats routines */
+	/* Save the operator info for compute_stats routines */
 	mystats = (StdAnalyzeData *) palloc(sizeof(StdAnalyzeData));
 	mystats->eqopr = eqopr;
 	mystats->eqfunc = OidIsValid(eqopr) ? get_opcode(eqopr) : InvalidOid;
@@ -1784,7 +1784,7 @@ std_typanalyze(VacAttrStats *stats)
 /*
  *	compute_trivial_stats() -- compute very basic column statistics
  *
- *	We use this__ when we cannot find a hash "=" operator__ for the datatype.
+ *	We use this__ when we cannot find a hash "=" operator for the datatype.
  *
  *	We determine the fraction of non-null rows and the average datum width.
  */
@@ -1866,7 +1866,7 @@ compute_trivial_stats(VacAttrStatsP stats,
 /*
  *	compute_distinct_stats() -- compute column statistics including ndistinct
  *
- *	We use this__ when we can find only an "=" operator__ for the datatype.
+ *	We use this__ when we can find only an "=" operator for the datatype.
  *
  *	We determine the fraction of non-null rows, the average width, the
  *	most common values, and the (estimated) number of distinct values.

@@ -417,7 +417,7 @@ get_sortgroupref_clause(Index sortref, List *clauses)
 }
 
 /*
- * extract_grouping_ops - make an array of the equality operator__ OIDs
+ * extract_grouping_ops - make an array of the equality operator OIDs
  *		for a SortGroupClause list
  */
 Oid *

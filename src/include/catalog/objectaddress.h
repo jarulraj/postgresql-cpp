@@ -23,7 +23,7 @@
  */
 typedef struct ObjectAddress
 {
-	Oid			classId;		/* class__ Id from pg_class */
+	Oid			classId;		/* class Id from pg_class */
 	Oid			objectId;		/* OID of the object */
 	int32		objectSubId;	/* Subitem within object (eg column), or 0 */
 } ObjectAddress;

@@ -13,7 +13,7 @@
  * trigrams.  The opposite is not necessarily true, however: a string that
  * matches the logical expression might not match the original regex.  Such
  * false positives are removed via recheck, by running the regular regex match
- * operator__ on the retrieved heap tuple.
+ * operator on the retrieved heap tuple.
  *
  * Since the trigram expression involves both AND and OR operators, we can't
  * expect the core index machinery to evaluate it completely.  Instead, the

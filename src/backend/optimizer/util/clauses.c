@@ -147,12 +147,12 @@ static bool tlist_matches_coltypelist(List *tlist, List *coltypelist);
 
 
 /*****************************************************************************
- *		operator__ clause functions
+ *		operator clause functions
  *****************************************************************************/
 
 /*
  * make_opclause
- *	  Creates an operator__ clause given its operator__ info, left operand
+ *	  Creates an operator clause given its operator info, left operand
  *	  and right operand (pass NULL to create single-operand clause),
  *	  and collation info.
  */
@@ -839,7 +839,7 @@ contain_subplans_walker(Node *node, void *context)
  * contain_mutable_functions
  *	  Recursively search for mutable functions within a clause.
  *
- * Returns true if any mutable function (or operator__ implemented by a
+ * Returns true if any mutable function (or operator implemented by a
  * mutable function) is found.  This test is needed so that we don't
  * mistakenly think that something like "WHERE random() < 0.5" can be treated
  * as a constant qualification.
@@ -962,7 +962,7 @@ contain_mutable_functions_walker(Node *node, void *context)
  * contain_volatile_functions
  *	  Recursively search for volatile functions within a clause.
  *
- * Returns true if any volatile function (or operator__ implemented by a
+ * Returns true if any volatile function (or operator implemented by a
  * volatile function) is found. This test prevents, for example,
  * invalid conversions of volatile expressions into indexscan quals.
  *
@@ -2065,7 +2065,7 @@ is_strict_saop(ScalarArrayOpExpr *expr, bool falseOK)
 {
 	Node	   *rightop;
 
-	/* The contained operator__ must be strict. */
+	/* The contained operator must be strict. */
 	set_sa_opfuncid(expr);
 	if (!func_strict(expr->opfuncid))
 		return false;
@@ -2114,7 +2114,7 @@ is_strict_saop(ScalarArrayOpExpr *expr, bool falseOK)
  *	  will be constant over any one scan of the current query, so it can be
  *	  used as, eg, an indexscan key.
  *
- * CAUTION: this__ function omits to test for one very important class__ of
+ * CAUTION: this__ function omits to test for one very important class of
  * not-constant expressions, namely aggregates (Aggrefs).  In current usage
  * this__ is only applied to WHERE clauses and so a check for Aggrefs would be
  * a waste of cycles; but be sure to also check contain_agg_clause() if you
@@ -2174,7 +2174,7 @@ NumRelids(Node *clause)
 }
 
 /*
- * CommuteOpExpr: commute a binary operator__ clause
+ * CommuteOpExpr: commute a binary operator clause
  *
  * XXX the clause is destructively modified!
  */
@@ -2187,12 +2187,12 @@ CommuteOpExpr(OpExpr *clause)
 	/* Sanity checks: caller is at fault if these fail */
 	if (!is_opclause(clause) ||
 		list_length(clause->args) != 2)
-		elog(ERROR, "cannot commute non-binary-operator__ clause");
+		elog(ERROR, "cannot commute non-binary-operator clause");
 
 	opoid = get_commutator(clause->opno);
 
 	if (!OidIsValid(opoid))
-		elog(ERROR, "could not find commutator for operator__ %u",
+		elog(ERROR, "could not find commutator for operator %u",
 			 clause->opno);
 
 	/*
@@ -2231,7 +2231,7 @@ CommuteRowCompareExpr(RowCompareExpr *clause)
 
 		opoid = get_commutator(opoid);
 		if (!OidIsValid(opoid))
-			elog(ERROR, "could not find commutator for operator__ %u",
+			elog(ERROR, "could not find commutator for operator %u",
 				 lfirst_oid(l));
 		newops = lappend_oid(newops, opoid);
 	}
@@ -2263,7 +2263,7 @@ CommuteRowCompareExpr(RowCompareExpr *clause)
 
 	/*
 	 * Note: we need not change the opfamilies list; we assume any btree
-	 * opfamily containing an operator__ will also contain its commutator.
+	 * opfamily containing an operator will also contain its commutator.
 	 * Collations don't change either.
 	 */
 
@@ -2578,7 +2578,7 @@ eval_const_expressions_mutator(Node *node,
 					return (Node *) simple;
 
 				/*
-				 * If the operator__ is boolean equality or inequality, we know
+				 * If the operator is boolean equality or inequality, we know
 				 * how to simplify cases involving one constant and one
 				 * non-constant argument.
 				 */
@@ -2631,7 +2631,7 @@ eval_const_expressions_mutator(Node *node,
 				/*
 				 * We must do our own check for NULLs because DistinctExpr has
 				 * different results for NULL input than the underlying
-				 * operator__ does.
+				 * operator does.
 				 */
 				foreach(arg, args)
 				{
@@ -2655,7 +2655,7 @@ eval_const_expressions_mutator(Node *node,
 					if (has_null_input)
 						return makeBoolConst(true, false);
 
-					/* otherwise try to evaluate the '=' operator__ */
+					/* otherwise try to evaluate the '=' operator */
 					/* (NOT okay to try to inline it, though!) */
 
 					/*
@@ -2681,7 +2681,7 @@ eval_const_expressions_mutator(Node *node,
 					if (simple) /* successfully simplified it */
 					{
 						/*
-						 * Since the underlying operator__ is "=", must negate
+						 * Since the underlying operator is "=", must negate
 						 * its result
 						 */
 						Const	   *csimple = (Const *) simple;
@@ -3711,7 +3711,7 @@ simplify_and_arguments(List *args,
  * Subroutine for eval_const_expressions: try to simplify boolean equality
  * or inequality condition
  *
- * Inputs are the operator__ OID and the simplified arguments to the operator__.
+ * Inputs are the operator OID and the simplified arguments to the operator.
  * Returns a simplified expression if successful, or NULL if cannot
  * simplify the expression.
  *
@@ -3774,7 +3774,7 @@ simplify_boolean_equality(Oid opno, List *args)
 
 /*
  * Subroutine for eval_const_expressions: try to simplify a function call
- * (which might originally have been an operator__; we don't care)
+ * (which might originally have been an operator; we don't care)
  *
  * Inputs are the function OID, actual result type OID (which is needed for
  * polymorphic functions), result typmod, result collation, the input
@@ -3886,7 +3886,7 @@ simplify_function(Oid funcid, Oid result_type, int32 result_typmod,
  * If we need to change anything, the input argument list is copied, not
  * modified.
  *
- * Note: this__ gets applied to operator__ argument lists too, even though the
+ * Note: this__ gets applied to operator argument lists too, even though the
  * cases it handles should never occur there.  This should be OK since it
  * will fall through very quickly if there's nothing to do.
  */
@@ -4185,7 +4185,7 @@ evaluate_function(Oid funcid, Oid result_type, int32 result_typmod,
 		return NULL;
 
 	/*
-	 * OK, looks like we can simplify this__ operator__/function.
+	 * OK, looks like we can simplify this__ operator/function.
 	 *
 	 * Build a new FuncExpr node containing the already-simplified arguments.
 	 */

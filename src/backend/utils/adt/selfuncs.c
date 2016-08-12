@@ -21,8 +21,8 @@
  */
 
 /*----------
- * operator__ selectivity estimation functions are called to estimate the
- * selectivity of WHERE clauses whose top-level operator__ is their operator__.
+ * operator selectivity estimation functions are called to estimate the
+ * selectivity of WHERE clauses whose top-level operator is their operator.
  * We divide the problem into two cases:
  *		Restriction clause estimation: the clause involves vars of just
  *			one relation.
@@ -39,14 +39,14 @@
  * The call convention for a restriction estimator (oprrest function) is
  *
  *		Selectivity oprrest (PlannerInfo *root,
- *							 Oid operator__,
+ *							 Oid operator,
  *							 List *args,
  *							 int varRelid);
  *
  * root: general information about the query (rtable and RelOptInfo lists
  * are particularly important for the estimator).
- * operator__: OID of the specific operator__ in question.
- * args: argument list from the operator__ clause.
+ * operator: OID of the specific operator in question.
+ * args: argument list from the operator clause.
  * varRelid: if not zero, the relid (rtable index) of the relation to
  * be treated as the variable relation.  May be zero if the args list
  * is known to contain vars of only one relation.
@@ -57,14 +57,14 @@
  *
  * The result is a selectivity, that is, a fraction (0 to 1) of the rows
  * of the relation that are expected to produce a TRUE result for the
- * given operator__.
+ * given operator.
  *
  * The call convention for a join estimator (oprjoin function) is similar
  * except that varRelid is not needed, and instead join information is
  * supplied:
  *
  *		Selectivity oprjoin (PlannerInfo *root,
- *							 Oid operator__,
+ *							 Oid operator,
  *							 List *args,
  *							 JoinType jointype,
  *							 SpecialJoinInfo *sjinfo);
@@ -79,17 +79,17 @@
  *
  * Join selectivity for regular inner and outer joins is defined as the
  * fraction (0 to 1) of the cross product of the relations that is expected
- * to produce a TRUE result for the given operator__.  For both semi and anti
+ * to produce a TRUE result for the given operator.  For both semi and anti
  * joins, however, the selectivity is defined as the fraction of the left-hand
  * side relation's rows that are expected to have a match (ie, at least one
  * row with a TRUE result) in the right-hand side.
  *
- * For both oprrest and oprjoin functions, the operator__'s input collation OID
+ * For both oprrest and oprjoin functions, the operator's input collation OID
  * (if any) is passed using the standard fmgr mechanism, so that the estimator
  * function can fetch it with PG_GET_COLLATION().  Note, however, that all
  * statistics in pg_statistic are currently built using the database's default
  * collation.  Thus, in most cases where we are looking at statistics, we
- * should ignore the actual operator__ collation and use DEFAULT_COLLATION_OID.
+ * should ignore the actual operator collation and use DEFAULT_COLLATION_OID.
  * We expect that the error induced by doing this__ is usually not large enough
  * to justify complicating matters.
  *----------
@@ -266,8 +266,8 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 	bool		isdefault;
 
 	/*
-	 * If the constant is NULL, assume operator__ is strict and return zero, ie,
-	 * operator__ will never return TRUE.
+	 * If the constant is NULL, assume operator is strict and return zero, ie,
+	 * operator will never return TRUE.
 	 */
 	if (constisnull)
 		return 0.0;
@@ -275,7 +275,7 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 	/*
 	 * If we matched the var to a unique index or DISTINCT clause, assume
 	 * there is exactly one match regardless of anything else.  (This is
-	 * slightly bogus, since the index or clause's equality operator__ might be
+	 * slightly bogus, since the index or clause's equality operator might be
 	 * different from ours, but it's much more likely to be right than
 	 * ignoring the information.)
 	 */
@@ -296,10 +296,10 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 
 		/*
 		 * Is the constant "=" to any of the column's most common values?
-		 * (Although the given operator__ may not really be "=", we will assume
+		 * (Although the given operator may not really be "=", we will assume
 		 * that seeing whether it returns TRUE is an appropriate test.  If you
 		 * don't like this__, maybe you shouldn't be using eqsel for your
-		 * operator__...)
+		 * operator...)
 		 */
 		if (get_attstatsslot(vardata->statsTuple,
 							 vardata->atttype, vardata->atttypmod,
@@ -314,7 +314,7 @@ var_eq_const(VariableStatData *vardata, Oid operator__,
 
 			for (i = 0; i < nvalues; i++)
 			{
-				/* be careful to apply operator__ right way 'round */
+				/* be careful to apply operator right way 'round */
 				if (varonleft)
 					match = DatumGetBool(FunctionCall2Coll(&eqproc,
 													   DEFAULT_COLLATION_OID,
@@ -410,7 +410,7 @@ var_eq_non_const(VariableStatData *vardata, Oid operator__,
 	/*
 	 * If we matched the var to a unique index or DISTINCT clause, assume
 	 * there is exactly one match regardless of anything else.  (This is
-	 * slightly bogus, since the index or clause's equality operator__ might be
+	 * slightly bogus, since the index or clause's equality operator might be
 	 * different from ours, but it's much more likely to be right than
 	 * ignoring the information.)
 	 */
@@ -491,8 +491,8 @@ neqsel(PG_FUNCTION_ARGS)
 	float8		result;
 
 	/*
-	 * We want 1 - eqsel() where the equality operator__ is the one associated
-	 * with this__ != operator__, that is, its negator.
+	 * We want 1 - eqsel() where the equality operator is the one associated
+	 * with this__ != operator, that is, its negator.
 	 */
 	eqop = get_negator(operator__);
 	if (eqop)
@@ -593,7 +593,7 @@ scalarineqsel(PlannerInfo *root, Oid operator__, bool isgt,
  * Determine the fraction of the variable's MCV population that satisfies
  * the predicate (VAR OP CONST), or (CONST OP VAR) if !varonleft.  Also
  * compute the fraction of the total column population represented by the MCV
- * list.  This code will work for any boolean-returning predicate operator__.
+ * list.  This code will work for any boolean-returning predicate operator.
  *
  * The function result is the MCV selectivity, and the fraction of the
  * total population is returned into *sumcommonp.  Zeroes are returned
@@ -651,8 +651,8 @@ mcv_selectivity(VariableStatData *vardata, FmgrInfo *opproc,
  * Determine the fraction of the variable's histogram entries that satisfy
  * the predicate (VAR OP CONST), or (CONST OP VAR) if !varonleft.
  *
- * This code will work for any boolean-returning predicate operator__, whether
- * or not it has anything to do with the histogram sort operator__.  We are
+ * This code will work for any boolean-returning predicate operator, whether
+ * or not it has anything to do with the histogram sort operator.  We are
  * essentially using the histogram just as a representative sample.  However,
  * small histograms are unlikely to be all that representative, so the caller
  * should be prepared to fall back on some other estimation approach when the
@@ -763,9 +763,9 @@ ineq_histogram_selectivity(PlannerInfo *root,
 	 * corresponding to more than one possible sort ordering defined for the
 	 * column type.  However, to make that work we will need to figure out
 	 * which staop to search for --- it's not necessarily the one we have at
-	 * hand!  (For example, we might have a '<=' operator__ rather than the '<'
-	 * operator__ that will appear in staop.)  For now, assume that whatever
-	 * appears in pg_statistic is sorted the same way our operator__ sorts, or
+	 * hand!  (For example, we might have a '<=' operator rather than the '<'
+	 * operator that will appear in staop.)  For now, assume that whatever
+	 * appears in pg_statistic is sorted the same way our operator sorts, or
 	 * the reverse way if isgt is TRUE.
 	 */
 	if (HeapTupleIsValid(vardata->statsTuple) &&
@@ -780,7 +780,7 @@ ineq_histogram_selectivity(PlannerInfo *root,
 		{
 			/*
 			 * Use binary search to find proper location, ie, the first slot
-			 * at which the comparison fails.  (If the given operator__ isn't
+			 * at which the comparison fails.  (If the given operator isn't
 			 * actually sort-compatible with the histogram, you'll get garbage
 			 * results ... but probably not any more garbage-y than you would
 			 * from the old linear search.)
@@ -904,7 +904,7 @@ ineq_histogram_selectivity(PlannerInfo *root,
 				{
 					/*
 					 * Ideally we'd produce an error here, on the grounds that
-					 * the given operator__ shouldn't have scalarXXsel
+					 * the given operator shouldn't have scalarXXsel
 					 * registered as its selectivity func unless we can deal
 					 * with its operand types.  But currently, all manner of
 					 * stuff is invoking scalarXXsel, so give a default
@@ -989,8 +989,8 @@ scalarltsel(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * If the constant is NULL, assume operator__ is strict and return zero, ie,
-	 * operator__ will never return TRUE.
+	 * If the constant is NULL, assume operator is strict and return zero, ie,
+	 * operator will never return TRUE.
 	 */
 	if (((Const *) other)->constisnull)
 	{
@@ -1064,8 +1064,8 @@ scalargtsel(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * If the constant is NULL, assume operator__ is strict and return zero, ie,
-	 * operator__ will never return TRUE.
+	 * If the constant is NULL, assume operator is strict and return zero, ie,
+	 * operator will never return TRUE.
 	 */
 	if (((Const *) other)->constisnull)
 	{
@@ -1128,15 +1128,15 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	double		result;
 
 	/*
-	 * If this__ is for a NOT LIKE or similar operator__, get the corresponding
-	 * positive-match operator__ and work with that.  Set result to the correct
+	 * If this__ is for a NOT LIKE or similar operator, get the corresponding
+	 * positive-match operator and work with that.  Set result to the correct
 	 * default estimate, too.
 	 */
 	if (negate)
 	{
 		operator__ = get_negator(operator__);
 		if (!OidIsValid(operator__))
-			elog(ERROR, "patternsel called for operator__ without a negator");
+			elog(ERROR, "patternsel called for operator without a negator");
 		result = 1.0 - DEFAULT_MATCH_SEL;
 	}
 	else
@@ -1158,8 +1158,8 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	}
 
 	/*
-	 * If the constant is NULL, assume operator__ is strict and return zero, ie,
-	 * operator__ will never return TRUE.  (It's zero even for a negator op.)
+	 * If the constant is NULL, assume operator is strict and return zero, ie,
+	 * operator will never return TRUE.  (It's zero even for a negator op.)
 	 */
 	if (((Const *) other)->constisnull)
 	{
@@ -1173,7 +1173,7 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	 * The right-hand const is type text or bytea for all supported operators.
 	 * We do not expect to see binary-compatible types here, since
 	 * const-folding should have relabeled the const to exactly match the
-	 * operator__'s declared type.
+	 * operator's declared type.
 	 */
 	if (consttype != TEXTOID && consttype != BYTEAOID)
 	{
@@ -1216,7 +1216,7 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	/*
 	 * Pull out any fixed prefix implied by the pattern, and estimate the
 	 * fractional selectivity of the remainder of the pattern.  Unlike many of
-	 * the other functions in this__ file, we use the pattern operator__'s actual
+	 * the other functions in this__ file, we use the pattern operator's actual
 	 * collation for this__ step.  This is not because we expect the collation
 	 * to make a big difference in the selectivity estimate (it seldom would),
 	 * but because we want to be sure we cache compiled regexps under the
@@ -1255,13 +1255,13 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 	if (pstatus == Pattern_Prefix_Exact)
 	{
 		/*
-		 * Pattern specifies an exact match, so pretend operator__ is '='
+		 * Pattern specifies an exact match, so pretend operator is '='
 		 */
 		Oid			eqopr = get_opfamily_member(opfamily, vartype, vartype,
 												BTEqualStrategyNumber);
 
 		if (eqopr == InvalidOid)
-			elog(ERROR, "no = operator__ for opfamily %u", opfamily);
+			elog(ERROR, "no = operator for opfamily %u", opfamily);
 		result = var_eq_const(&vardata, eqopr, prefix->constvalue,
 							  false, true);
 	}
@@ -1279,7 +1279,7 @@ patternsel(PG_FUNCTION_ARGS, Pattern_Type ptype, bool negate)
 		 *
 		 * We then add up data for any most-common-values values; these are
 		 * not in the histogram population, and we can get exact answers for
-		 * them by applying the pattern operator__, so there's no reason to
+		 * them by applying the pattern operator, so there's no reason to
 		 * approximate.  (If the MCVs cover a significant part of the total
 		 * population, this__ gives us a big leg up in accuracy.)
 		 */
@@ -1794,8 +1794,8 @@ scalararraysel(PlannerInfo *root,
 	rightop = strip_array_coercion(rightop);
 
 	/*
-	 * Detect whether the operator__ is the default equality or inequality
-	 * operator__ of the array element type.
+	 * Detect whether the operator is the default equality or inequality
+	 * operator of the array element type.
 	 */
 	typentry = lookup_type_cache(nominal_element_type, TYPECACHE_EQ_OPR);
 	if (OidIsValid(typentry->eq_opr))
@@ -1822,7 +1822,7 @@ scalararraysel(PlannerInfo *root,
 	}
 
 	/*
-	 * Look up the underlying operator__'s selectivity estimator. Punt if it
+	 * Look up the underlying operator's selectivity estimator. Punt if it
 	 * hasn't got one.
 	 */
 	if (is_join_clause)
@@ -1835,8 +1835,8 @@ scalararraysel(PlannerInfo *root,
 
 	/*
 	 * In the array-containment check above, we must only believe that an
-	 * operator__ is equality or inequality if it is the default btree equality
-	 * operator__ (or its negator) for the element type, since those are the
+	 * operator is equality or inequality if it is the default btree equality
+	 * operator (or its negator) for the element type, since those are the
 	 * operators that array containment will use.  But in what follows, we can
 	 * be a little laxer, and also believe that any operators using eqsel() or
 	 * neqsel() as selectivity estimator act like equality or inequality.
@@ -1850,10 +1850,10 @@ scalararraysel(PlannerInfo *root,
 	 * We consider three cases:
 	 *
 	 * 1. rightop is an Array constant: deconstruct the array, apply the
-	 * operator__'s selectivity function for each array element, and merge the
+	 * operator's selectivity function for each array element, and merge the
 	 * results in the same way that clausesel.c does for AND/OR combinations.
 	 *
-	 * 2. rightop is an ARRAY[] construct: apply the operator__'s selectivity
+	 * 2. rightop is an ARRAY[] construct: apply the operator's selectivity
 	 * function for each element of the ARRAY[] construct, and merge.
 	 *
 	 * 3. otherwise, make a guess ...
@@ -1973,7 +1973,7 @@ scalararraysel(PlannerInfo *root,
 
 			/*
 			 * Theoretically, if elem isn't of nominal_element_type we should
-			 * insert a RelabelType, but it seems unlikely that any operator__
+			 * insert a RelabelType, but it seems unlikely that any operator
 			 * estimation function would really care ...
 			 */
 			args = list_make2(leftop, elem);
@@ -2020,7 +2020,7 @@ scalararraysel(PlannerInfo *root,
 		int			i;
 
 		/*
-		 * We need a dummy rightop to pass to the operator__ selectivity
+		 * We need a dummy rightop to pass to the operator selectivity
 		 * routine.  It can be pretty much anything that doesn't look like a
 		 * constant; CaseTestExpr is a convenient choice.
 		 */
@@ -2120,7 +2120,7 @@ rowcomparesel(PlannerInfo *root,
 	List	   *opargs;
 	bool		is_join_clause;
 
-	/* Build equivalent arg list for single operator__ */
+	/* Build equivalent arg list for single operator */
 	opargs = list_make2(linitial(clause->largs), linitial(clause->rargs));
 
 	/*
@@ -2300,7 +2300,7 @@ eqjoinsel_inner(Oid operator__,
 		/*
 		 * We have most-common-value lists for both relations.  Run through
 		 * the lists to see which MCVs actually join to each other with the
-		 * given operator__.  This allows us to determine the exact join
+		 * given operator.  This allows us to determine the exact join
 		 * selectivity for the portion of the relations represented by the MCV
 		 * lists.  We still have to estimate for the remaining population, but
 		 * in a skewed distribution this__ gives us a big leg up in accuracy.
@@ -2332,7 +2332,7 @@ eqjoinsel_inner(Oid operator__,
 
 		/*
 		 * Note we assume that each MCV will match at most one member of the
-		 * other MCV list.  If the operator__ isn't really equality, there could
+		 * other MCV list.  If the operator isn't really equality, there could
 		 * be multiple matches --- but we don't look for them, both for speed
 		 * and because the math wouldn't add up...
 		 */
@@ -2427,7 +2427,7 @@ eqjoinsel_inner(Oid operator__,
 		/*
 		 * We do not have MCV lists for both sides.  Estimate the join
 		 * selectivity as MIN(1/nd1,1/nd2)*(1-nullfrac1)*(1-nullfrac2). This
-		 * is plausible if we assume that the join operator__ is strict and the
+		 * is plausible if we assume that the join operator is strict and the
 		 * non-null values are about equally distributed: a given non-null
 		 * tuple of rel1 will join to either zero or N2*(1-nullfrac2)/nd2 rows
 		 * of rel2, so total join rows are at most
@@ -2544,7 +2544,7 @@ eqjoinsel_semi(Oid operator__,
 		/*
 		 * We have most-common-value lists for both relations.  Run through
 		 * the lists to see which MCVs actually join to each other with the
-		 * given operator__.  This allows us to determine the exact join
+		 * given operator.  This allows us to determine the exact join
 		 * selectivity for the portion of the relations represented by the MCV
 		 * lists.  We still have to estimate for the remaining population, but
 		 * in a skewed distribution this__ gives us a big leg up in accuracy.
@@ -2575,7 +2575,7 @@ eqjoinsel_semi(Oid operator__,
 
 		/*
 		 * Note we assume that each MCV will match at most one member of the
-		 * other MCV list.  If the operator__ isn't really equality, there could
+		 * other MCV list.  If the operator isn't really equality, there could
 		 * be multiple matches --- but we don't look for them, both for speed
 		 * and because the math wouldn't add up...
 		 */
@@ -2684,8 +2684,8 @@ neqjoinsel(PG_FUNCTION_ARGS)
 	float8		result;
 
 	/*
-	 * We want 1 - eqjoinsel() where the equality operator__ is the one
-	 * associated with this__ != operator__, that is, its negator.
+	 * We want 1 - eqjoinsel() where the equality operator is the one
+	 * associated with this__ != operator, that is, its negator.
 	 */
 	eqop = get_negator(operator__);
 	if (eqop)
@@ -2874,7 +2874,7 @@ mergejoinscansel(PlannerInfo *root, Node *clause,
 	examine_variable(root, left, 0, &leftvar);
 	examine_variable(root, right, 0, &rightvar);
 
-	/* Extract the operator__'s declared left/right datatypes */
+	/* Extract the operator's declared left/right datatypes */
 	get_op_opfamily_properties(opno, opfamily, false,
 							   &op_strategy,
 							   &op_lefttype,
@@ -2886,7 +2886,7 @@ mergejoinscansel(PlannerInfo *root, Node *clause,
 	 * probably means the opfamily is broken, but we just fail silently.
 	 *
 	 * Note: we expect that pg_statistic histograms will be sorted by the '<'
-	 * operator__, regardless of which sort direction we are considering.
+	 * operator, regardless of which sort direction we are considering.
 	 */
 	switch (strategy)
 	{
@@ -3639,7 +3639,7 @@ convert_to_scalar(Datum value, Oid valuetypid, double *scaledvalue,
 {
 	/*
 	 * Both the valuetypid and the boundstypid should exactly match the
-	 * declared input type(s) of the operator__ we are invoked for, so we just
+	 * declared input type(s) of the operator we are invoked for, so we just
 	 * error out if either is not recognized.
 	 *
 	 * XXX The histogram we are interpolating between points of could belong
@@ -3788,7 +3788,7 @@ convert_numeric_to_scalar(Datum value, Oid typid)
 
 	/*
 	 * Can't get here unless someone tries to use scalarltsel/scalargtsel on
-	 * an operator__ with one numeric and one non-numeric operand.
+	 * an operator with one numeric and one non-numeric operand.
 	 */
 	elog(ERROR, "unsupported type: %u", typid);
 	return 0;
@@ -3964,7 +3964,7 @@ convert_string_datum(Datum value, Oid typid)
 
 			/*
 			 * Can't get here unless someone tries to use scalarltsel on an
-			 * operator__ with one string and one non-string operand.
+			 * operator with one string and one non-string operand.
 			 */
 			elog(ERROR, "unsupported type: %u", typid);
 			return NULL;
@@ -4187,7 +4187,7 @@ convert_timevalue_to_scalar(Datum value, Oid typid)
 
 	/*
 	 * Can't get here unless someone tries to use scalarltsel/scalargtsel on
-	 * an operator__ with one timevalue and one non-timevalue operand.
+	 * an operator with one timevalue and one non-timevalue operand.
 	 */
 	elog(ERROR, "unsupported type: %u", typid);
 	return 0;
@@ -4286,7 +4286,7 @@ get_join_variables(PlannerInfo *root, List *args, SpecialJoinInfo *sjinfo,
 			   *right;
 
 	if (list_length(args) != 2)
-		elog(ERROR, "join operator__ should take two arguments");
+		elog(ERROR, "join operator should take two arguments");
 
 	left = (Node *) linitial(args);
 	right = (Node *) lsecond(args);
@@ -4324,7 +4324,7 @@ get_join_variables(PlannerInfo *root, List *args, SpecialJoinInfo *sjinfo,
  *		otherwise NULL.
  *	freefunc: pointer to a function to release statsTuple with.
  *	vartype: exposed type of the expression; this__ should always match
- *		the declared input type of the operator__ we are estimating for.
+ *		the declared input type of the operator we are estimating for.
  *	atttype, atttypmod: type data to pass to get_attstatsslot().  This is
  *		commonly the same as the exposed type of the variable argument,
  *		but can be different in binary-compatible-type cases.
@@ -4434,7 +4434,7 @@ examine_variable(PlannerInfo *root, Node *node, int varRelid,
 		 *
 		 * XXX it's conceivable that there are multiple matches with different
 		 * index opfamilies; if so, we need to pick one that matches the
-		 * operator__ we are estimating for.  FIXME later.
+		 * operator we are estimating for.  FIXME later.
 		 */
 		ListCell   *ilist;
 
@@ -4637,7 +4637,7 @@ examine_simple_variable(PlannerInfo *root, Var *var,
 		 * This is probably a harsher restriction than necessary; it's
 		 * certainly OK for the selectivity estimator (which is a C function,
 		 * and therefore omnipotent anyway) to look at the statistics.  But
-		 * many selectivity estimators will happily *invoke the operator__
+		 * many selectivity estimators will happily *invoke the operator
 		 * function* to try to work out a good estimate - and that's not OK.
 		 * So for now, don't dig down for stats.
 		 */
@@ -4795,7 +4795,7 @@ get_variable_numdistinct(VariableStatData *vardata, bool *isdefault)
  *		If successful, store values in *min and *max, and return TRUE.
  *		If no data available, return FALSE.
  *
- * sortop is the "<" comparison operator__ to use.  This should generally
+ * sortop is the "<" comparison operator to use.  This should generally
  * be "<" not ">", as only the former is likely to be found in pg_statistic.
  */
 static bool
@@ -4834,7 +4834,7 @@ get_variable_range(PlannerInfo *root, VariableStatData *vardata, Oid sortop,
 	/*
 	 * If there is a histogram, grab the first and last values.
 	 *
-	 * If there is a histogram that is sorted with some other operator__ than
+	 * If there is a histogram that is sorted with some other operator than
 	 * the one we want, fail --- this__ suggests that there is data we can't
 	 * use.
 	 */
@@ -4928,7 +4928,7 @@ get_variable_range(PlannerInfo *root, VariableStatData *vardata, Oid sortop,
  *		(Either pointer can be NULL if that endpoint isn't needed.)
  *		If no data available, return FALSE.
  *
- * sortop is the "<" comparison operator__ to use.
+ * sortop is the "<" comparison operator to use.
  */
 static bool
 get_actual_variable_range(PlannerInfo *root, VariableStatData *vardata,
@@ -4973,7 +4973,7 @@ get_actual_variable_range(PlannerInfo *root, VariableStatData *vardata,
 
 		/*
 		 * The first index column must match the desired variable and sort
-		 * operator__ --- but we can use a descending-order index.
+		 * operator --- but we can use a descending-order index.
 		 */
 		if (!match_index_to_operand(vardata->var, 0, index))
 			continue;
@@ -5458,7 +5458,7 @@ pattern_fixed_prefix(Const *patt, Pattern_Type ptype, Oid collation,
  * estimation.  The given variable and Const must be of the associated
  * datatype.
  *
- * XXX Note: we make use of the upper bound to estimate operator__ selectivity
+ * XXX Note: we make use of the upper bound to estimate operator selectivity
  * even if the locale is such that we cannot rely on the upper-bound string.
  * The selectivity only needs to be approximately right anyway, so it seems
  * more useful to use the upper-bound code than not.
@@ -5476,7 +5476,7 @@ prefix_selectivity(PlannerInfo *root, VariableStatData *vardata,
 	cmpopr = get_opfamily_member(opfamily, vartype, vartype,
 								 BTGreaterEqualStrategyNumber);
 	if (cmpopr == InvalidOid)
-		elog(ERROR, "no >= operator__ for opfamily %u", opfamily);
+		elog(ERROR, "no >= operator for opfamily %u", opfamily);
 	fmgr_info(get_opcode(cmpopr), &opproc);
 
 	prefixsel = ineq_histogram_selectivity(root, vardata, &opproc, true,
@@ -5497,7 +5497,7 @@ prefix_selectivity(PlannerInfo *root, VariableStatData *vardata,
 	cmpopr = get_opfamily_member(opfamily, vartype, vartype,
 								 BTLessStrategyNumber);
 	if (cmpopr == InvalidOid)
-		elog(ERROR, "no < operator__ for opfamily %u", opfamily);
+		elog(ERROR, "no < operator for opfamily %u", opfamily);
 	fmgr_info(get_opcode(cmpopr), &opproc);
 	greaterstrcon = make_greater_string(prefixcon, &opproc,
 										DEFAULT_COLLATION_OID);
@@ -5537,7 +5537,7 @@ prefix_selectivity(PlannerInfo *root, VariableStatData *vardata,
 	cmpopr = get_opfamily_member(opfamily, vartype, vartype,
 								 BTEqualStrategyNumber);
 	if (cmpopr == InvalidOid)
-		elog(ERROR, "no = operator__ for opfamily %u", opfamily);
+		elog(ERROR, "no = operator for opfamily %u", opfamily);
 	eq_sel = var_eq_const(vardata, cmpopr, prefixcon->constvalue,
 						  false, true);
 
@@ -5644,7 +5644,7 @@ regex_selectivity_sub(const char *patt, int pattlen, bool case_insensitive)
 				negclass = true;
 				pos++;
 			}
-			if (patt[pos] == ']')		/* ']' at start of class__ is not
+			if (patt[pos] == ']')		/* ']' at start of class is not
 										 * special */
 				pos++;
 			while (pos < pattlen && patt[pos] != ']')
@@ -6014,8 +6014,8 @@ typedef struct
 	RestrictInfo *rinfo;		/* the indexqual itself */
 	int			indexcol;		/* zero-based index column number */
 	bool		varonleft;		/* true if index column is on left of qual */
-	Oid			clause_op;		/* qual's operator__ OID, if relevant */
-	Node	   *other_operand;	/* non-index operand of qual's operator__ */
+	Oid			clause_op;		/* qual's operator OID, if relevant */
+	Node	   *other_operand;	/* non-index operand of qual's operator */
 } IndexQualInfo;
 
 static List *
@@ -6360,7 +6360,7 @@ genericcostestimate(PlannerInfo *root,
 	 * evaluated once at the start of the scan to reduce them to runtime keys
 	 * to pass to the index AM (see nodeIndexscan.c).  We model the per-tuple
 	 * CPU costs as cpu_index_tuple_cost plus one cpu_operator_cost per
-	 * indexqual operator__.  Because we have numIndexTuples as a per-scan
+	 * indexqual operator.  Because we have numIndexTuples as a per-scan
 	 * number, we have to multiply by num_sa_scans to get the correct result
 	 * for ScalarArrayOpExpr cases.  Similarly add in costs for any index
 	 * ORDER BY expressions.
@@ -6480,7 +6480,7 @@ btcostestimate(PG_FUNCTION_ARGS)
 	 * rowcomparesel() does.
 	 *
 	 * If there's a ScalarArrayOpExpr in the quals, we'll actually perform N
-	 * index scans not one, but the ScalarArrayOpExpr's operator__ can be
+	 * index scans not one, but the ScalarArrayOpExpr's operator can be
 	 * considered to act the same as it normally does.
 	 */
 	indexBoundQuals = NIL;
@@ -6536,7 +6536,7 @@ btcostestimate(PG_FUNCTION_ARGS)
 		 */
 		clause_op = qinfo->clause_op;
 
-		/* check for equality operator__ */
+		/* check for equality operator */
 		if (OidIsValid(clause_op))
 		{
 			op_strategy = get_op_opfamily_strategy(clause_op,
@@ -6780,7 +6780,7 @@ hashcostestimate(PG_FUNCTION_ARGS)
 	 * A bigger issue is that chance hash-value collisions will result in
 	 * wasted probes into the heap.  We don't currently attempt to model this__
 	 * cost on the grounds that it's rare, but maybe it's not rare enough.
-	 * (Any fix for this__ ought to consider the generic lossy-operator__ problem,
+	 * (Any fix for this__ ought to consider the generic lossy-operator problem,
 	 * though; it's not entirely hash-specific.)
 	 */
 
@@ -6961,7 +6961,7 @@ gincost_pattern(IndexOptInfo *index, int indexcol,
 	int32		i;
 
 	/*
-	 * Get the operator__'s strategy number and declared input data types within
+	 * Get the operator's strategy number and declared input data types within
 	 * the index opfamily.  (We don't need the latter, but we use
 	 * get_op_opfamily_properties because it will throw error if it fails to
 	 * find a matching pg_amop entry.)
@@ -7057,7 +7057,7 @@ gincost_opexpr(PlannerInfo *root,
 
 	if (!qinfo->varonleft)
 	{
-		/* must commute the operator__ */
+		/* must commute the operator */
 		clause_op = get_commutator(clause_op);
 	}
 

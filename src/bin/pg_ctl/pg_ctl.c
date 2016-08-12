@@ -151,7 +151,7 @@ static void WINAPI pgwin32_ServiceMain(DWORD, LPTSTR *);
 static void pgwin32_doRunAsService(void);
 static int	CreateRestrictedProcess(char *cmd, PROCESS_INFORMATION *processInfo, bool as_service);
 static bool pgwin32_get_dynamic_tokeninfo(HANDLE token,
-							  TOKEN_INFORMATION_CLASS class__,
+							  TOKEN_INFORMATION_CLASS class,
 							  char **InfoBuffer, char *errbuf, int errsize);
 static int pgwin32_is_service(void);
 #endif
@@ -1701,12 +1701,12 @@ pgwin32_doRunAsService(void)
  * the calling function!
  */
 static bool
-pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class__,
+pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class,
 							  char **InfoBuffer, char *errbuf, int errsize)
 {
 	DWORD		InfoBufferSize;
 
-	if (GetTokenInformation(token, class__, NULL, 0, &InfoBufferSize))
+	if (GetTokenInformation(token, class, NULL, 0, &InfoBufferSize))
 	{
 		snprintf(errbuf, errsize, "could not get token information: got zero size\n");
 		return false;
@@ -1727,7 +1727,7 @@ pgwin32_get_dynamic_tokeninfo(HANDLE token, TOKEN_INFORMATION_CLASS class__,
 		return false;
 	}
 
-	if (!GetTokenInformation(token, class__, *InfoBuffer,
+	if (!GetTokenInformation(token, class, *InfoBuffer,
 							 InfoBufferSize, &InfoBufferSize))
 	{
 		snprintf(errbuf, errsize, "could not get token information: error code %lu\n",

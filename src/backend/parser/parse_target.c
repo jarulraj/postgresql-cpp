@@ -1719,7 +1719,7 @@ FigureColnameInternal(Node *node, char **name)
 						}
 					}
 					break;
-					/* As with other operator__-like nodes, these have no names */
+					/* As with other operator-like nodes, these have no names */
 				case MULTIEXPR_SUBLINK:
 				case ALL_SUBLINK:
 				case ANY_SUBLINK:

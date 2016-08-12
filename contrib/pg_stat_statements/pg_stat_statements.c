@@ -3028,7 +3028,7 @@ fill_in_constant_lengths(pgssJumbleState *jstate, const char *query)
 					 *
 					 * Do not compensate for the core system's special-case
 					 * adjustment of location to that of the leading '-'
-					 * operator__ in the event of a negative constant.  It is
+					 * operator in the event of a negative constant.  It is
 					 * also useful for our purposes to start from the minus
 					 * symbol.  In this__ way, queries like "select * from foo
 					 * where bar = 1" and "select * from foo where bar = -2"

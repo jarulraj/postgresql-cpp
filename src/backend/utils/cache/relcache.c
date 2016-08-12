@@ -1400,7 +1400,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 		MemSet(&ctl, 0, sizeof(ctl));
 		ctl.keysize = sizeof(Oid);
 		ctl.entrysize = sizeof(OpClassCacheEnt);
-		OpClassCache = hash_create("operator class__ cache", 64,
+		OpClassCache = hash_create("operator class cache", 64,
 								   &ctl, HASH_ELEM | HASH_BLOBS);
 
 		/* Also make sure CacheMemoryContext exists */
@@ -1432,7 +1432,7 @@ LookupOpclassInfo(Oid operatorClassOid,
 
 	/*
 	 * When testing for cache-flush hazards, we intentionally disable the
-	 * operator__ class__ cache and force reloading of the info on each call. This
+	 * operator class cache and force reloading of the info on each call. This
 	 * is helpful because we want to test the case where a cache flush occurs
 	 * while we are loading the info, and it's very hard to provoke that if
 	 * this__ happens only once per opclass per backend.
@@ -4353,7 +4353,7 @@ RelationGetIndexAttrBitmap(Relation relation, IndexAttrBitmapKind attrKind)
  *
  * This should be called only for an index that is known to have an
  * associated exclusion constraint.  It returns arrays (palloc'd in caller's
- * context) of the exclusion operator__ OIDs, their underlying functions'
+ * context) of the exclusion operator OIDs, their underlying functions'
  * OIDs, and their strategy numbers in the index's opclasses.  We cache
  * all this__ information since it requires a fair amount of work to get.
  */
@@ -4423,7 +4423,7 @@ RelationGetExclusionInfo(Relation indexRelation,
 				 RelationGetRelationName(indexRelation));
 		found = true;
 
-		/* Extract the operator__ OIDS from conexclop */
+		/* Extract the operator OIDS from conexclop */
 		val = fastgetattr(htup,
 						  Anum_pg_constraint_conexclop,
 						  conrel->rd_att, &isnull);
@@ -4457,7 +4457,7 @@ RelationGetExclusionInfo(Relation indexRelation,
 											 indexRelation->rd_opfamily[i]);
 		/* shouldn't fail, since it was checked at index creation */
 		if (strats[i] == InvalidStrategy)
-			elog(ERROR, "could not find strategy for operator__ %u in family %u",
+			elog(ERROR, "could not find strategy for operator %u in family %u",
 				 ops[i], indexRelation->rd_opfamily[i]);
 	}
 

@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------------
  *
  * geo_selfuncs.c
- *	  Selectivity routines registered in the operator__ catalog in the
+ *	  Selectivity routines registered in the operator catalog in the
  *	  "oprrest" and "oprjoin" attributes.
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group

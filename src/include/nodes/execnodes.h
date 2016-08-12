@@ -94,7 +94,7 @@ typedef struct ExprContext_CB
 /* ----------------
  *	  ExprContext
  *
- *		This class__ holds the "current context" information
+ *		This class holds the "current context" information
  *		needed to evaluate expressions for doing tuple qualifications
  *		and tuple projections.  For example, if an expression refers
  *		to an attribute in the current inner tuple then we need to know
@@ -257,7 +257,7 @@ typedef struct ProjectionInfo
 /* ----------------
  *	  JunkFilter
  *
- *	  This class__ is used to store information regarding junk attributes.
+ *	  This class is used to store information regarding junk attributes.
  *	  A junk attribute is an attribute in a tuple that is needed only for
  *	  storing intermediate information in the executor, and does not belong
  *	  in emitted tuples.  For example, when we do an UPDATE query,
@@ -297,7 +297,7 @@ typedef struct JunkFilter
  *
  *		Whenever we update an existing relation, we have to
  *		update indices on the relation, and perhaps also fire triggers.
- *		The ResultRelInfo class__ is used to hold all the information needed
+ *		The ResultRelInfo class is used to hold all the information needed
  *		about a result relation, including indices.. -cim 10/15/89
  *
  *		RangeTableIndex			result relation's range table index
@@ -1746,7 +1746,7 @@ typedef struct HashJoinState
 	List	   *hashclauses;	/* list of ExprState nodes */
 	List	   *hj_OuterHashKeys;		/* list of ExprState nodes */
 	List	   *hj_InnerHashKeys;		/* list of ExprState nodes */
-	List	   *hj_HashOperators;		/* list of operator__ OIDs */
+	List	   *hj_HashOperators;		/* list of operator OIDs */
 	HashJoinTable hj_HashTable;
 	uint32		hj_CurHashValue;
 	int			hj_CurBucketNo;

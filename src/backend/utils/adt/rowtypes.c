@@ -1164,7 +1164,7 @@ record_eq(PG_FUNCTION_ARGS)
 			if (!OidIsValid(typentry->eq_opr_finfo.fn_oid))
 				ereport(ERROR,
 						(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				errmsg("could not identify an equality operator__ for type %s",
+				errmsg("could not identify an equality operator for type %s",
 					   format_type_be(typentry->type_id))));
 			my_extra->columns[j].typentry = typentry;
 		}

@@ -1344,9 +1344,9 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
 	 *
 	 * Note that the semi_operators list consists of the joinqual operators
 	 * themselves (but commuted if needed to put the RHS value on the right).
-	 * These could be cross-type operators, in which case the operator__
-	 * actually needed for uniqueness is a related single-type operator__. We
-	 * assume here that that operator__ will be available from the btree or hash
+	 * These could be cross-type operators, in which case the operator
+	 * actually needed for uniqueness is a related single-type operator. We
+	 * assume here that that operator will be available from the btree or hash
 	 * opclass when the time comes ... if not, create_unique_plan() will fail.
 	 */
 	semi_operators = NIL;
@@ -1382,7 +1382,7 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
 					return;
 				continue;
 			}
-			/* Non-operator__ clause referencing both sides, must punt */
+			/* Non-operator clause referencing both sides, must punt */
 			return;
 		}
 
@@ -1486,7 +1486,7 @@ compute_semijoin_info(SpecialJoinInfo *sjinfo, List *clause)
  *	  (depending on whether the clause is a join) of each base relation
  *	  mentioned in the clause.  A RestrictInfo node is created and added to
  *	  the appropriate list for each rel.  Alternatively, if the clause uses a
- *	  mergejoinable operator__ and is not delayed by outer-join rules, enter
+ *	  mergejoinable operator and is not delayed by outer-join rules, enter
  *	  the left- and right-side expressions into the query's list of
  *	  EquivalenceClasses.  Alternatively, if the clause needs to be treated
  *	  as belonging to a higher join level, just add it to postponed_qual_list.
@@ -1811,7 +1811,7 @@ distribute_qual_to_rels(PlannerInfo *root, Node *clause,
 	 * machinery.  We do *not* attach it directly to any restriction or join
 	 * lists.  The EC code will propagate it to the appropriate places later.
 	 *
-	 * If the clause has a mergejoinable operator__ and is not
+	 * If the clause has a mergejoinable operator and is not
 	 * outerjoin-delayed, yet isn't an equivalence because it is an outer-join
 	 * clause, the EC code may yet be able to do something with it.  We add it
 	 * to appropriate lists for further consideration later.  Specifically:
@@ -2098,7 +2098,7 @@ check_redundant_nullability_qual(PlannerInfo *root, Node *clause)
  *	  clause list(s).
  *
  * This is the last step of distribute_qual_to_rels() for ordinary qual
- * clauses.  Clauses that are interesting for equivalence-class__ processing
+ * clauses.  Clauses that are interesting for equivalence-class processing
  * are diverted to the EC machinery, but may ultimately get fed back here.
  */
 void
@@ -2155,7 +2155,7 @@ distribute_restrictinfo_to_rels(PlannerInfo *root,
  * process_implied_equality
  *	  Create a restrictinfo item that says "item1 op item2", and push it
  *	  into the appropriate lists.  (In practice opno is always a btree
- *	  equality operator__.)
+ *	  equality operator.)
  *
  * "qualscope" is the nominal syntactic level to impute to the restrictinfo.
  * This must contain at least all the rels used in the expressions, but it
@@ -2297,7 +2297,7 @@ build_implied_join_equality(Oid opno,
  *	  info fields in the restrictinfo.
  *
  *	  Currently, we support mergejoin for binary opclauses where
- *	  the operator__ is a mergejoinable operator__.  The arguments can be
+ *	  the operator is a mergejoinable operator.  The arguments can be
  *	  anything --- as long as there are no volatile functions in them.
  */
 static void
@@ -2322,7 +2322,7 @@ check_mergejoinable(RestrictInfo *restrictinfo)
 		restrictinfo->mergeopfamilies = get_mergejoin_opfamilies(opno);
 
 	/*
-	 * Note: op_mergejoinable is just a hint; if we fail to find the operator__
+	 * Note: op_mergejoinable is just a hint; if we fail to find the operator
 	 * in any btree opfamilies, mergeopfamilies remains NIL and so the clause
 	 * is not treated as mergejoinable.
 	 */
@@ -2334,7 +2334,7 @@ check_mergejoinable(RestrictInfo *restrictinfo)
  *	  info fields in the restrictinfo.
  *
  *	  Currently, we support hashjoin for binary opclauses where
- *	  the operator__ is a hashjoinable operator__.  The arguments can be
+ *	  the operator is a hashjoinable operator.  The arguments can be
  *	  anything --- as long as there are no volatile functions in them.
  */
 static void

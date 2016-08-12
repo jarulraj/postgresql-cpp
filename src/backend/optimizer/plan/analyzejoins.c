@@ -255,7 +255,7 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
 
 	/*
 	 * Search for mergejoinable clauses that constrain the inner rel against
-	 * either the outer rel or a pseudoconstant.  If an operator__ is
+	 * either the outer rel or a pseudoconstant.  If an operator is
 	 * mergejoinable then it behaves like equality for some btree opclass, so
 	 * it's what we want.  The mergejoinability test also eliminates clauses
 	 * containing volatile functions, which we couldn't depend on.
@@ -330,9 +330,9 @@ join_is_removable(PlannerInfo *root, SpecialJoinInfo *sjinfo)
 			Var		   *var;
 
 			/*
-			 * Get the equality operator__ we need uniqueness according to.
-			 * (This might be a cross-type operator__ and thus not exactly the
-			 * same operator__ the subquery would consider; that's all right
+			 * Get the equality operator we need uniqueness according to.
+			 * (This might be a cross-type operator and thus not exactly the
+			 * same operator the subquery would consider; that's all right
 			 * since query_is_distinct_for can resolve such cases.)  The
 			 * mergejoinability test above should have selected only OpExprs.
 			 */
@@ -624,7 +624,7 @@ query_is_distinct_for(Query *query, List *colnos, List *opids)
 
 	/*
 	 * DISTINCT (including DISTINCT ON) guarantees uniqueness if all the
-	 * columns in the DISTINCT clause appear in colnos and operator__ semantics
+	 * columns in the DISTINCT clause appear in colnos and operator semantics
 	 * match.
 	 */
 	if (query->distinctClause)
@@ -646,7 +646,7 @@ query_is_distinct_for(Query *query, List *colnos, List *opids)
 
 	/*
 	 * Similarly, GROUP BY without GROUPING SETS guarantees uniqueness if all
-	 * the grouped columns appear in colnos and operator__ semantics match.
+	 * the grouped columns appear in colnos and operator semantics match.
 	 */
 	if (query->groupClause && !query->groupingSets)
 	{

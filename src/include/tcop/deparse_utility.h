@@ -70,7 +70,7 @@ typedef struct CollectedCommand
 			InternalGrant *istmt;
 		}			grant;
 
-		/* ALTER operator__ FAMILY */
+		/* ALTER operator FAMILY */
 		struct
 		{
 			ObjectAddress address;
@@ -78,7 +78,7 @@ typedef struct CollectedCommand
 			List	   *procedures;
 		}			opfam;
 
-		/* CREATE operator__ class__ */
+		/* CREATE operator class */
 		struct
 		{
 			ObjectAddress address;

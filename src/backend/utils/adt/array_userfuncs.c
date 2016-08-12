@@ -779,7 +779,7 @@ array_position_common(FunctionCallInfo fcinfo)
 		if (!OidIsValid(typentry->eq_opr_finfo.fn_oid))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				errmsg("could not identify an equality operator__ for type %s",
+				errmsg("could not identify an equality operator for type %s",
 					   format_type_be(element_type))));
 
 		my_extra->element_type = element_type;
@@ -811,7 +811,7 @@ array_position_common(FunctionCallInfo fcinfo)
 				continue;
 		}
 
-		/* not nulls, so run the operator__ */
+		/* not nulls, so run the operator */
 		if (DatumGetBool(FunctionCall2Coll(&my_extra->proc, collation,
 										   searched_element, value)))
 		{
@@ -917,7 +917,7 @@ array_positions(PG_FUNCTION_ARGS)
 		if (!OidIsValid(typentry->eq_opr_finfo.fn_oid))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_FUNCTION),
-				errmsg("could not identify an equality operator__ for type %s",
+				errmsg("could not identify an equality operator for type %s",
 					   format_type_be(element_type))));
 
 		my_extra->element_type = element_type;
@@ -947,7 +947,7 @@ array_positions(PG_FUNCTION_ARGS)
 			continue;
 		}
 
-		/* not nulls, so run the operator__ */
+		/* not nulls, so run the operator */
 		if (DatumGetBool(FunctionCall2Coll(&my_extra->proc, collation,
 										   searched_element, value)))
 			astate =

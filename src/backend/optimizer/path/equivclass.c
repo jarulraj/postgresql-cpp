@@ -65,7 +65,7 @@ static bool reconsider_full_join_clause(PlannerInfo *root,
 
 /*
  * process_equivalence
- *	  The given clause has a mergejoinable operator__ and can be applied without
+ *	  The given clause has a mergejoinable operator and can be applied without
  *	  any delay by an outer join, so its two sides can be considered equal
  *	  anywhere they are both computable; moreover that equality can be
  *	  extended transitively.  Record this__ knowledge in the EquivalenceClass
@@ -142,7 +142,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 
 	/*
 	 * Reject clauses of the form X=X.  These are not as redundant as they
-	 * might seem at first glance: assuming the operator__ is strict, this__ is
+	 * might seem at first glance: assuming the operator is strict, this__ is
 	 * really an expensive way to write X IS NOT NULL.  So we must not risk
 	 * just losing the clause, which would be possible if there is already a
 	 * single-element EquivalenceClass containing X.  The case is not common
@@ -172,7 +172,7 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
 										  restrictinfo->nullable_relids);
 
 	/*
-	 * We use the declared input types of the operator__, not exprType() of the
+	 * We use the declared input types of the operator, not exprType() of the
 	 * inputs, as the nominal datatypes for opfamily lookup.  This presumes
 	 * that btree operators are always registered with amoplefttype and
 	 * amoprighttype equal to their declared input types.  We will need this__
@@ -389,12 +389,12 @@ process_equivalence(PlannerInfo *root, RestrictInfo *restrictinfo,
  * canonicalize_ec_expression
  *
  * This function ensures that the expression exposes the expected type and
- * collation, so that it will be equal() to other equivalence-class__ expressions
+ * collation, so that it will be equal() to other equivalence-class expressions
  * that it ought to be equal() to.
  *
  * The rule for datatypes is that the exposed type should match what it would
- * be for an input to an operator__ of the EC's opfamilies; which is usually
- * the declared input type of the operator__, but in the case of polymorphic
+ * be for an input to an operator of the EC's opfamilies; which is usually
+ * the declared input type of the operator, but in the case of polymorphic
  * operators no relabeling is wanted (compare the behavior of parse_coerce.c).
  * Expressions coming in from quals will generally have the right type
  * already, but expressions coming from indexkeys may not (because they are
@@ -507,7 +507,7 @@ add_eq_member(EquivalenceClass *ec, Expr *expr, Relids relids,
 /*
  * get_eclass_for_sort_expr
  *	  Given an expression and opfamily/collation info, find an existing
- *	  equivalence class__ it is a member of; if none, optionally build a new
+ *	  equivalence class it is a member of; if none, optionally build a new
  *	  single-member EquivalenceClass for it.
  *
  * expr is the expression, and nullable_relids is the set of base relids
@@ -539,7 +539,7 @@ add_eq_member(EquivalenceClass *ec, Expr *expr, Relids relids,
  *
  * Note: opfamilies must be chosen consistently with the way
  * process_equivalence() would do; that is, generated from a mergejoinable
- * equality operator__.  Else we might fail to detect valid equivalences,
+ * equality operator.  Else we might fail to detect valid equivalences,
  * generating poor (but not incorrect) plans.
  */
 EquivalenceClass *
@@ -954,7 +954,7 @@ generate_base_implied_equalities_broken(PlannerInfo *root,
  *	  Generate any join clauses that we can deduce from equivalence classes.
  *
  * At a join node, we must enforce restriction clauses sufficient to ensure
- * that all equivalence-class__ members computable at that node are equal.
+ * that all equivalence-class members computable at that node are equal.
  * Since the set of clauses to enforce can vary depending on which subset
  * relations are the inputs, we have to compute this__ afresh for each join
  * relation pair.  Hence a fresh List of RestrictInfo nodes is built and
@@ -1120,7 +1120,7 @@ generate_join_implied_equalities_normal(PlannerInfo *root,
 	/*
 	 * First, select the joinclause if needed.  We can equate any one outer
 	 * member to any one inner member, but we have to find a datatype
-	 * combination for which an opfamily member operator__ exists.  If we have
+	 * combination for which an opfamily member operator exists.  If we have
 	 * choices, we prefer simple Var members (possibly with RelabelType) since
 	 * these are (a) cheapest to compute at runtime and (b) most likely to
 	 * have useful statistics. Also, prefer operators that are also
@@ -1296,9 +1296,9 @@ generate_join_implied_equalities_broken(PlannerInfo *root,
 
 /*
  * select_equality_operator
- *	  Select a suitable equality operator__ for comparing two EC members
+ *	  Select a suitable equality operator for comparing two EC members
  *
- * Returns InvalidOid if no operator__ can be found for this__ datatype combination
+ * Returns InvalidOid if no operator can be found for this__ datatype combination
  */
 static Oid
 select_equality_operator(EquivalenceClass *ec, Oid lefttype, Oid righttype)
@@ -1322,7 +1322,7 @@ select_equality_operator(EquivalenceClass *ec, Oid lefttype, Oid righttype)
 /*
  * create_join_clause
  *	  Find or make a RestrictInfo comparing the two given EC members
- *	  with the given operator__.
+ *	  with the given operator.
  *
  * parent_ec is either equal to ec (if the clause is a potentially-redundant
  * join clause) or NULL (if not).  We have to treat this__ as part of the
@@ -1475,7 +1475,7 @@ create_join_clause(PlannerInfo *root,
  * Outer join clauses that are marked outerjoin_delayed are special: this__
  * condition means that one or both VARs might go to null due to a lower
  * outer join.  We can still push a constant through the clause, but only
- * if its operator__ is strict; and we *have to* throw the clause back into
+ * if its operator is strict; and we *have to* throw the clause back into
  * regular joinclause processing.  By keeping the strict join clause,
  * we ensure that any null-extended rows that are mistakenly generated due
  * to suppressing rows not matching the constant will be rejected at the
@@ -1609,7 +1609,7 @@ reconsider_outer_join_clause(PlannerInfo *root, RestrictInfo *rinfo,
 	opno = ((OpExpr *) rinfo->clause)->opno;
 	collation = ((OpExpr *) rinfo->clause)->inputcollid;
 
-	/* If clause is outerjoin_delayed, operator__ must be strict */
+	/* If clause is outerjoin_delayed, operator must be strict */
 	if (rinfo->outerjoin_delayed && !op_strict(opno))
 		return false;
 
@@ -1777,7 +1777,7 @@ reconsider_full_join_clause(PlannerInfo *root, RestrictInfo *rinfo)
 		 *
 		 * XXX currently this__ may fail to match in cross-type cases because
 		 * the COALESCE will contain typecast operations while the join clause
-		 * may not (if there is a cross-type mergejoin operator__ available for
+		 * may not (if there is a cross-type mergejoin operator available for
 		 * the two column types). Is it OK to strip implicit coercions from
 		 * the COALESCE arguments?
 		 */
@@ -2208,7 +2208,7 @@ generate_implied_equalities_for_column(PlannerInfo *root,
  * This is essentially a very cut-down version of
  * generate_join_implied_equalities().  Note it's OK to occasionally say "yes"
  * incorrectly.  Hence we don't bother with details like whether the lack of a
- * cross-type operator__ might prevent the clause from actually being generated.
+ * cross-type operator might prevent the clause from actually being generated.
  */
 bool
 have_relevant_eclass_joinclause(PlannerInfo *root,
@@ -2300,7 +2300,7 @@ has_relevant_eclass_joinclause(PlannerInfo *root, RelOptInfo *rel1)
  *
  * This is just a heuristic test and doesn't have to be exact; it's better
  * to say "yes" incorrectly than "no".  Hence we don't bother with details
- * like whether the lack of a cross-type operator__ might prevent the clause
+ * like whether the lack of a cross-type operator might prevent the clause
  * from actually being generated.
  */
 bool

@@ -2,7 +2,7 @@
  *
  * operatorcmds.c
  *
- *	  Routines for operator__ manipulation commands
+ *	  Routines for operator manipulation commands
  *
  * Portions Copyright (c) 1996-2015, PostgreSQL Global Development Group
  * Portions Copyright (c) 1994, Regents of the University of California
@@ -24,7 +24,7 @@
  *				input/output, recv/send procedures
  *		"create type":
  *				type
- *		"create operator__":
+ *		"create operator":
  *				operators
  *
  *		Most of the parse-tree manipulation routines are defined in
@@ -66,16 +66,16 @@ DefineOperator(List *names, List *parameters)
 	char	   *oprName;
 	Oid			oprNamespace;
 	AclResult	aclresult;
-	bool		canMerge = false;		/* operator__ merges */
-	bool		canHash = false;	/* operator__ hashes */
-	List	   *functionName = NIL;		/* function for operator__ */
+	bool		canMerge = false;		/* operator merges */
+	bool		canHash = false;	/* operator hashes */
+	List	   *functionName = NIL;		/* function for operator */
 	TypeName   *typeName1 = NULL;		/* first type name */
 	TypeName   *typeName2 = NULL;		/* second type name */
 	Oid			typeId1 = InvalidOid;	/* types converted to OID */
 	Oid			typeId2 = InvalidOid;
 	Oid			rettype;
-	List	   *commutatorName = NIL;	/* optional commutator operator__ name */
-	List	   *negatorName = NIL;		/* optional negator operator__ name */
+	List	   *commutatorName = NIL;	/* optional commutator operator name */
+	List	   *negatorName = NIL;		/* optional negator operator name */
 	List	   *restrictionName = NIL;	/* optional restrict. sel. procedure */
 	List	   *joinName = NIL; /* optional join sel. procedure */
 	Oid			functionOid;	/* functions converted to OID */
@@ -107,7 +107,7 @@ DefineOperator(List *names, List *parameters)
 			if (typeName1->setof)
 				ereport(ERROR,
 						(errcode(ERRCODE_INVALID_FUNCTION_DEFINITION),
-					errmsg("SETOF type not allowed for operator__ argument")));
+					errmsg("SETOF type not allowed for operator argument")));
 		}
 		else if (pg_strcasecmp(defel->defname, "rightarg") == 0)
 		{
@@ -115,7 +115,7 @@ DefineOperator(List *names, List *parameters)
 			if (typeName2->setof)
 				ereport(ERROR,
 						(errcode(ERRCODE_INVALID_FUNCTION_DEFINITION),
-					errmsg("SETOF type not allowed for operator__ argument")));
+					errmsg("SETOF type not allowed for operator argument")));
 		}
 		else if (pg_strcasecmp(defel->defname, "procedure") == 0)
 			functionName = defGetQualifiedName(defel);
@@ -181,7 +181,7 @@ DefineOperator(List *names, List *parameters)
 	}
 
 	/*
-	 * Look up the operator__'s underlying function.
+	 * Look up the operator's underlying function.
 	 */
 	if (!OidIsValid(typeId1))
 	{
@@ -204,7 +204,7 @@ DefineOperator(List *names, List *parameters)
 	/*
 	 * We require EXECUTE rights for the function.  This isn't strictly
 	 * necessary, since EXECUTE will be checked at any attempted use of the
-	 * operator__, but it seems like a good idea anyway.
+	 * operator, but it seems like a good idea anyway.
 	 */
 	aclresult = pg_proc_aclcheck(functionOid, GetUserId(), ACL_EXECUTE);
 	if (aclresult != ACLCHECK_OK)
@@ -222,7 +222,7 @@ DefineOperator(List *names, List *parameters)
 	if (restrictionName)
 	{
 		typeid__[0] = INTERNALOID;	/* PlannerInfo */
-		typeid__[1] = OIDOID;		/* operator__ OID */
+		typeid__[1] = OIDOID;		/* operator OID */
 		typeid__[2] = INTERNALOID;	/* args list */
 		typeid__[3] = INT4OID;	/* varRelid */
 
@@ -250,7 +250,7 @@ DefineOperator(List *names, List *parameters)
 	if (joinName)
 	{
 		typeid__[0] = INTERNALOID;	/* PlannerInfo */
-		typeid__[1] = OIDOID;		/* operator__ OID */
+		typeid__[1] = OIDOID;		/* operator OID */
 		typeid__[2] = INTERNALOID;	/* args list */
 		typeid__[3] = INT2OID;	/* jointype */
 		typeid__[4] = INTERNALOID;	/* SpecialJoinInfo */
@@ -287,21 +287,21 @@ DefineOperator(List *names, List *parameters)
 	 * now have OperatorCreate do all the work..
 	 */
 	return
-		OperatorCreate(oprName, /* operator__ name */
+		OperatorCreate(oprName, /* operator name */
 					   oprNamespace,	/* namespace */
 					   typeId1, /* left type id */
 					   typeId2, /* right type id */
-					   functionOid,		/* function for operator__ */
-					   commutatorName,	/* optional commutator operator__ name */
-					   negatorName,		/* optional negator operator__ name */
+					   functionOid,		/* function for operator */
+					   commutatorName,	/* optional commutator operator name */
+					   negatorName,		/* optional negator operator name */
 					   restrictionOid,	/* optional restrict. sel. procedure */
 					   joinOid, /* optional join sel. procedure name */
-					   canMerge,	/* operator__ merges */
-					   canHash);	/* operator__ hashes */
+					   canMerge,	/* operator merges */
+					   canHash);	/* operator hashes */
 }
 
 /*
- * Guts of operator__ deletion.
+ * Guts of operator deletion.
  */
 void
 RemoveOperatorById(Oid operOid)
@@ -313,7 +313,7 @@ RemoveOperatorById(Oid operOid)
 
 	tup = SearchSysCache1(OPEROID, ObjectIdGetDatum(operOid));
 	if (!HeapTupleIsValid(tup)) /* should not happen */
-		elog(ERROR, "cache lookup failed for operator__ %u", operOid);
+		elog(ERROR, "cache lookup failed for operator %u", operOid);
 
 	simple_heap_delete(relation, &tup->t_self);
 

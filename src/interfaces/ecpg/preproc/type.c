@@ -428,7 +428,7 @@ ECPGdump_a_simple(FILE *o, const char *name, enum ECPGttype type,
 		switch (type)
 		{
 				/*
-				 * we have to use the & operator__ except for arrays and
+				 * we have to use the & operator except for arrays and
 				 * pointers
 				 */
 

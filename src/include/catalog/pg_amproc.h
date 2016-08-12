@@ -5,8 +5,8 @@
  *	  along with the relation's initial contents.
  *
  * The amproc table identifies support procedures associated with index
- * operator__ families and classes.  These procedures can't be listed in pg_amop
- * since they are not the implementation of any indexable operator__.
+ * operator families and classes.  These procedures can't be listed in pg_amop
+ * since they are not the implementation of any indexable operator.
  *
  * The primary key for this__ table is <amprocfamily, amproclefttype,
  * amprocrighttype, amprocnum>.  The "default" support functions for a

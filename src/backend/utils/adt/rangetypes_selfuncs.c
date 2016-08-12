@@ -57,7 +57,7 @@ static double calc_hist_selectivity_contains(TypeCacheEntry *typcache,
 						 Datum *length_hist_values, int length_hist_nvalues);
 
 /*
- * Returns a default selectivity estimate for given operator__, when we don't
+ * Returns a default selectivity estimate for given operator, when we don't
  * have statistics or cannot use them for some reason.
  */
 static double
@@ -143,7 +143,7 @@ rangesel(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * If var is on the right, commute the operator__, so that we can assume the
+	 * If var is on the right, commute the operator, so that we can assume the
 	 * var is on the left in what follows.
 	 */
 	if (!varonleft)
@@ -164,7 +164,7 @@ rangesel(PG_FUNCTION_ARGS)
 	 * useful. (Such cases will likely fail at runtime, but here we'd rather
 	 * just return a default estimate.)
 	 *
-	 * If the operator__ is "range @> element", the constant should be of the
+	 * If the operator is "range @> element", the constant should be of the
 	 * element type of the range column. Convert it to a range that includes
 	 * only that single point, so that we don't need special handling for that
 	 * in what follows.
@@ -206,7 +206,7 @@ rangesel(PG_FUNCTION_ARGS)
 	}
 
 	/*
-	 * If we got a valid constant on one side of the operator__, proceed to
+	 * If we got a valid constant on one side of the operator, proceed to
 	 * estimate using statistics. Otherwise punt and return a default constant
 	 * estimate.  Note that calc_rangesel need not handle
 	 * OID_RANGE_ELEM_CONTAINED_OP.
@@ -278,7 +278,7 @@ calc_rangesel(TypeCacheEntry *typcache, VariableStatData *vardata,
 	{
 		/*
 		 * An empty range matches all ranges, all empty ranges, or nothing,
-		 * depending on the operator__
+		 * depending on the operator
 		 */
 		switch (operator__)
 		{
@@ -315,7 +315,7 @@ calc_rangesel(TypeCacheEntry *typcache, VariableStatData *vardata,
 				/* an element cannot be empty */
 			case OID_RANGE_CONTAINS_ELEM_OP:
 			default:
-				elog(ERROR, "unexpected operator__ %u", operator__);
+				elog(ERROR, "unexpected operator %u", operator__);
 				selec = 0.0;	/* keep compiler quiet */
 				break;
 		}
@@ -347,7 +347,7 @@ calc_rangesel(TypeCacheEntry *typcache, VariableStatData *vardata,
 		}
 		else
 		{
-			/* with any other operator__, empty Op non-empty matches nothing */
+			/* with any other operator, empty Op non-empty matches nothing */
 			selec = (1.0 - empty_frac) * hist_selec;
 		}
 	}
@@ -362,7 +362,7 @@ calc_rangesel(TypeCacheEntry *typcache, VariableStatData *vardata,
 }
 
 /*
- * Calculate range operator__ selectivity using histograms of range bounds.
+ * Calculate range operator selectivity using histograms of range bounds.
  *
  * This estimate is for the portion of values that are not empty and not
  * NULL.
@@ -555,7 +555,7 @@ calc_hist_selectivity(TypeCacheEntry *typcache, VariableStatData *vardata,
 			break;
 
 		default:
-			elog(ERROR, "unknown range operator__ %u", operator__);
+			elog(ERROR, "unknown range operator %u", operator__);
 			hist_selec = -1.0;	/* keep compiler quiet */
 			break;
 	}
@@ -596,7 +596,7 @@ calc_hist_selectivity_scalar(TypeCacheEntry *typcache, RangeBound *constbound,
  * range bounds in array are greater or equal(greater) than given range bound,
  * return -1. When "equal" flag is set conditions in brackets are used.
  *
- * This function is used in scalar operator__ selectivity estimation. Another
+ * This function is used in scalar operator selectivity estimation. Another
  * goal of this__ function is to find a histogram bin where to stop
  * interpolation of portion of bounds which are less or equal to given bound.
  */
@@ -972,7 +972,7 @@ calc_length_hist_frac(Datum *length_hist_values, int length_hist_nvalues,
 }
 
 /*
- * Calculate selectivity of "var <@ const" operator__, ie. estimate the fraction
+ * Calculate selectivity of "var <@ const" operator, ie. estimate the fraction
  * of ranges that fall within the constant lower and upper bounds. This uses
  * the histograms of range lower bounds and range lengths, on the assumption
  * that the range lengths are independent of the lower bounds.
@@ -1082,7 +1082,7 @@ calc_hist_selectivity_contained(TypeCacheEntry *typcache,
 }
 
 /*
- * Calculate selectivity of "var @> const" operator__, ie. estimate the fraction
+ * Calculate selectivity of "var @> const" operator, ie. estimate the fraction
  * of ranges that contain the constant lower and upper bounds. This uses
  * the histograms of range lower bounds and range lengths, on the assumption
  * that the range lengths are independent of the lower bounds.

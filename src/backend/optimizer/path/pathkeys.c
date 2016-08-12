@@ -98,17 +98,17 @@ make_canonical_pathkey(PlannerInfo *root,
  *
  * We detect two cases:
  *
- * 1. If the new pathkey's equivalence class__ contains a constant, and isn't
+ * 1. If the new pathkey's equivalence class contains a constant, and isn't
  * below an outer join, then we can disregard it as a sort key.  An example:
  *			SELECT ... WHERE x = 42 ORDER BY x, y;
  * We may as well just sort by y.  Note that because of opfamily matching,
  * this__ is semantically correct: we know that the equality constraint is one
  * that actually binds the variable to a single value in the terms of any
- * ordering operator__ that might go with the eclass.  This rule not only lets
+ * ordering operator that might go with the eclass.  This rule not only lets
  * us simplify (or even skip) explicit sorts, but also allows matching index
  * sort orders to a query when there are don't-care index columns.
  *
- * 2. If the new pathkey's equivalence class__ is the same as that of any
+ * 2. If the new pathkey's equivalence class is the same as that of any
  * existing member of the pathkey list, then it is redundant.  Some examples:
  *			SELECT ... ORDER BY x, x;
  *			SELECT ... ORDER BY x, x DESC;
@@ -193,18 +193,18 @@ make_pathkey_from_sortinfo(PlannerInfo *root,
 	 * EquivalenceClasses need to contain opfamily lists based on the family
 	 * membership of mergejoinable equality operators, which could belong to
 	 * more than one opfamily.  So we have to look up the opfamily's equality
-	 * operator__ and get its membership.
+	 * operator and get its membership.
 	 */
 	equality_op = get_opfamily_member(opfamily,
 									  opcintype,
 									  opcintype,
 									  BTEqualStrategyNumber);
 	if (!OidIsValid(equality_op))		/* shouldn't happen */
-		elog(ERROR, "could not find equality operator__ for opfamily %u",
+		elog(ERROR, "could not find equality operator for opfamily %u",
 			 opfamily);
 	opfamilies = get_mergejoin_opfamilies(equality_op);
 	if (!opfamilies)			/* certainly should find some */
-		elog(ERROR, "could not find opfamilies for equality operator__ %u",
+		elog(ERROR, "could not find opfamilies for equality operator %u",
 			 equality_op);
 
 	/* Now find or (optionally) create a matching EquivalenceClass */
@@ -223,7 +223,7 @@ make_pathkey_from_sortinfo(PlannerInfo *root,
 
 /*
  * make_pathkey_from_sortop
- *	  Like make_pathkey_from_sortinfo, but work from a sort operator__.
+ *	  Like make_pathkey_from_sortinfo, but work from a sort operator.
  *
  * This should eventually go away, but we need to restructure SortGroupClause
  * first.
@@ -242,10 +242,10 @@ make_pathkey_from_sortop(PlannerInfo *root,
 				collation;
 	int16		strategy;
 
-	/* Find the operator__ in pg_amop --- failure shouldn't happen */
+	/* Find the operator in pg_amop --- failure shouldn't happen */
 	if (!get_ordering_op_properties(ordering_op,
 									&opfamily, &opcintype, &strategy))
-		elog(ERROR, "operator %u is not a valid ordering operator__",
+		elog(ERROR, "operator %u is not a valid ordering operator",
 			 ordering_op);
 
 	/* Because SortGroupClause doesn't carry collation, consult the expr */
@@ -504,10 +504,10 @@ build_index_pathkeys(PlannerInfo *root,
 /*
  * build_expression_pathkey
  *	  Build a pathkeys list that describes an ordering by a single expression
- *	  using the given sort operator__.
+ *	  using the given sort operator.
  *
  * expr, nullable_relids, and rel are as for make_pathkey_from_sortinfo.
- * We induce the other arguments assuming default sort order for the operator__.
+ * We induce the other arguments assuming default sort order for the operator.
  *
  * Similarly to make_pathkey_from_sortinfo, the result is NIL if create_it
  * is false and the expression isn't already in some EquivalenceClass.
@@ -526,10 +526,10 @@ build_expression_pathkey(PlannerInfo *root,
 	int16		strategy;
 	PathKey    *cpathkey;
 
-	/* Find the operator__ in pg_amop --- failure shouldn't happen */
+	/* Find the operator in pg_amop --- failure shouldn't happen */
 	if (!get_ordering_op_properties(opno,
 									&opfamily, &opcintype, &strategy))
-		elog(ERROR, "operator %u is not a valid ordering operator__",
+		elog(ERROR, "operator %u is not a valid ordering operator",
 			 opno);
 
 	cpathkey = make_pathkey_from_sortinfo(root,
@@ -890,7 +890,7 @@ initialize_mergeclause_eclasses(PlannerInfo *root, RestrictInfo *restrictinfo)
 	Assert(restrictinfo->left_ec == NULL);
 	Assert(restrictinfo->right_ec == NULL);
 
-	/* Need the declared input types of the operator__ */
+	/* Need the declared input types of the operator */
 	op_input_types(((OpExpr *) clause)->opno, &lefttype, &righttype);
 
 	/* Find or create a matching EquivalenceClass for each side */
@@ -989,7 +989,7 @@ find_mergeclauses_for_pathkeys(PlannerInfo *root,
 		 * A mergejoin clause matches a pathkey if it has the same EC.
 		 * If there are multiple matching clauses, take them all.  In plain
 		 * inner-join scenarios we expect only one match, because
-		 * equivalence-class__ processing will have removed any redundant
+		 * equivalence-class processing will have removed any redundant
 		 * mergeclauses.  However, in outer-join scenarios there might be
 		 * multiple matches.  An example is
 		 *

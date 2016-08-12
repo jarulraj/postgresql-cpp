@@ -28,13 +28,13 @@
 #include "utils/selfuncs.h"
 
 
-/* Default selectivity for the inet overlap operator__ */
+/* Default selectivity for the inet overlap operator */
 #define DEFAULT_OVERLAP_SEL 0.01
 
 /* Default selectivity for the various inclusion operators */
 #define DEFAULT_INCLUSION_SEL 0.005
 
-/* Default selectivity for specified operator__ */
+/* Default selectivity for specified operator */
 #define DEFAULT_SEL(operator__) \
 	((operator__) == OID_INET_OVERLAP_OP ? \
 	 DEFAULT_OVERLAP_SEL : DEFAULT_INCLUSION_SEL)
@@ -254,7 +254,7 @@ networkjoinsel(PG_FUNCTION_ARGS)
  *
  * Calculates MCV vs MCV, MCV vs histogram and histogram vs histogram
  * selectivity for join using the subnet inclusion operators.  Unlike the
- * join selectivity function for the equality operator__, eqjoinsel_inner(),
+ * join selectivity function for the equality operator, eqjoinsel_inner(),
  * one to one matching of the values is not enough.  Network inclusion
  * operators are likely to match many to many, so we must check all pairs.
  * (Note: it might be possible to exploit understanding of the histogram's
@@ -350,7 +350,7 @@ networkjoinsel_inner(Oid operator__,
 	/*
 	 * Add in selectivities for MCV vs histogram matches, scaling according to
 	 * the fractions of the populations represented by the histograms. Note
-	 * that the second case needs to commute the operator__.
+	 * that the second case needs to commute the operator.
 	 */
 	if (mcv1_exists && hist2_exists)
 		selec += (1.0 - nullfrac2 - sumcommon2) *
@@ -617,7 +617,7 @@ mcv_population(float4 *mcv_numbers, int mcv_nvalues)
  * For a partial match, we try to calculate dividers for both of the
  * boundaries.  If the address family of a boundary value does not match the
  * constant or comparison of the length of the network parts is not correct
- * for the operator__, the divider for that boundary will not be taken into
+ * for the operator, the divider for that boundary will not be taken into
  * account.  If both of the dividers are valid, the greater one will be used
  * to minimize the mistake in buckets that have disparate masklens.  This
  * calculation is unfair when dividers can be calculated for both of the
@@ -745,7 +745,7 @@ inet_mcv_hist_sel(Datum *mcv_values, float4 *mcv_numbers, int mcv_nvalues,
 
 	/*
 	 * We'll call inet_hist_value_selec with the histogram on the left, so we
-	 * must commute the operator__.
+	 * must commute the operator.
 	 */
 	opr_codenum = -opr_codenum;
 
@@ -768,7 +768,7 @@ inet_mcv_hist_sel(Datum *mcv_values, float4 *mcv_numbers, int mcv_nvalues,
  * inet_hist_value_selec to see what fraction of the first histogram
  * it matches.
  *
- * We could alternatively do this__ the other way around using the operator__'s
+ * We could alternatively do this__ the other way around using the operator's
  * commutator.  XXX would it be worthwhile to do it both ways and take the
  * average?  That would at least avoid non-commutative estimation results.
  */
@@ -847,7 +847,7 @@ inet_semi_join_sel(Datum lhs_value,
 	{
 		Selectivity hist_selec;
 
-		/* Commute operator__, since we're passing lhs_value on the right */
+		/* Commute operator, since we're passing lhs_value on the right */
 		hist_selec = inet_hist_value_sel(hist_values, hist_nvalues,
 										 lhs_value, -opr_codenum);
 
@@ -864,7 +864,7 @@ inet_semi_join_sel(Datum lhs_value,
  * Only inet_masklen_inclusion_cmp() and inet_hist_match_divider() depend
  * on the exact codes assigned here; but many other places in this__ file
  * know that they can negate a code to obtain the code for the commutator
- * operator__.
+ * operator.
  */
 static int
 inet_opr_codenum(Oid operator__)
@@ -882,7 +882,7 @@ inet_opr_codenum(Oid operator__)
 		case OID_INET_SUB_OP:
 			return 2;
 		default:
-			elog(ERROR, "unrecognized operator__ %u for inet selectivity",
+			elog(ERROR, "unrecognized operator %u for inet selectivity",
 				 operator__);
 	}
 	return 0;					/* unreached, but keep compiler quiet */
@@ -891,9 +891,9 @@ inet_opr_codenum(Oid operator__)
 /*
  * Comparison function for the subnet inclusion/overlap operators
  *
- * If the comparison is okay for the specified inclusion operator__, the return
+ * If the comparison is okay for the specified inclusion operator, the return
  * value will be 0.  Otherwise the return value will be less than or greater
- * than 0 as appropriate for the operator__.
+ * than 0 as appropriate for the operator.
  *
  * Comparison is compatible with the basic comparison function for the inet
  * type.  See network_cmp_internal() in network.c for the original.  Basic
@@ -906,7 +906,7 @@ inet_opr_codenum(Oid operator__)
  * function.  Only the first part is in this__ function.  The second part is
  * separated to another function for reusability.  The difference between the
  * second part and the original network_cmp_internal() is that the inclusion
- * operator__ is considered while comparing the lengths of the network parts.
+ * operator is considered while comparing the lengths of the network parts.
  * See the inet_masklen_inclusion_cmp() function below.
  */
 static int
@@ -931,9 +931,9 @@ inet_inclusion_cmp(inet *left, inet *right, int opr_codenum)
  * Masklen comparison function for the subnet inclusion/overlap operators
  *
  * Compares the lengths of the network parts of the inputs.  If the comparison
- * is okay for the specified inclusion operator__, the return value will be 0.
+ * is okay for the specified inclusion operator, the return value will be 0.
  * Otherwise the return value will be less than or greater than 0 as
- * appropriate for the operator__.
+ * appropriate for the operator.
  */
 static int
 inet_masklen_inclusion_cmp(inet *left, inet *right, int opr_codenum)
@@ -943,7 +943,7 @@ inet_masklen_inclusion_cmp(inet *left, inet *right, int opr_codenum)
 	order = (int) ip_bits(left) - (int) ip_bits(right);
 
 	/*
-	 * Return 0 if the operator__ would accept this__ combination of masklens.
+	 * Return 0 if the operator would accept this__ combination of masklens.
 	 * Note that opr_codenum zero (overlaps) will accept all cases.
 	 */
 	if ((order > 0 && opr_codenum >= 0) ||
@@ -963,7 +963,7 @@ inet_masklen_inclusion_cmp(inet *left, inet *right, int opr_codenum)
  * Inet histogram partial match divider calculation
  *
  * First the families and the lengths of the network parts are compared using
- * the subnet inclusion operator__.  If those are acceptable for the operator__,
+ * the subnet inclusion operator.  If those are acceptable for the operator,
  * the divider will be calculated using the masklens and the common bits of
  * the addresses.  -1 will be returned if it cannot be calculated.
  *
@@ -982,7 +982,7 @@ inet_hist_match_divider(inet *boundary, inet *query, int opr_codenum)
 
 		/*
 		 * Set decisive_bits to the masklen of the one that should contain the
-		 * other according to the operator__.
+		 * other according to the operator.
 		 */
 		if (opr_codenum < 0)
 			decisive_bits = ip_bits(boundary);

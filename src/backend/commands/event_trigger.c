@@ -102,7 +102,7 @@ static event_trigger_support_data event_trigger_support[] = {
 	{"LANGUAGE", true},
 	{"MATERIALIZED VIEW", true},
 	{"operator", true},
-	{"operator class__", true},
+	{"operator class", true},
 	{"operator FAMILY", true},
 	{"POLICY", true},
 	{"ROLE", false},
@@ -1123,7 +1123,7 @@ EventTriggerSupportsObjectType(ObjectType obtype)
 }
 
 /*
- * Do event triggers support this__ object class__?
+ * Do event triggers support this__ object class?
  */
 bool
 EventTriggerSupportsObjectClass(ObjectClass objclass)
@@ -1838,7 +1838,7 @@ EventTriggerCollectGrant(InternalGrant *istmt)
 
 /*
  * EventTriggerCollectAlterOpFam
- *		Save data about an ALTER operator__ FAMILY ADD/DROP command being
+ *		Save data about an ALTER operator FAMILY ADD/DROP command being
  *		executed
  */
 void
@@ -1872,7 +1872,7 @@ EventTriggerCollectAlterOpFam(AlterOpFamilyStmt *stmt, Oid opfamoid,
 
 /*
  * EventTriggerCollectCreateOpClass
- *		Save data about a CREATE operator__ class__ command being executed
+ *		Save data about a CREATE operator class command being executed
  */
 void
 EventTriggerCollectCreateOpClass(CreateOpClassStmt *stmt, Oid opcoid,
@@ -2069,7 +2069,7 @@ pg_event_trigger_ddl_commands(PG_FUNCTION_ARGS)
 
 					/*
 					 * Obtain schema name, if any ("pg_temp" if a temp
-					 * object). If the object class__ is not in the supported
+					 * object). If the object class is not in the supported
 					 * list here, we assume it's a schema-less object type,
 					 * and thus "schema" remains set to NULL.
 					 */

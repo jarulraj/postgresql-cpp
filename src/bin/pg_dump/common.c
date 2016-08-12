@@ -169,11 +169,11 @@ getSchemaData(Archive *fout, int *numTablesPtr)
 	oprinfoindex = buildIndexArray(oprinfo, numOperators, sizeof(OprInfo));
 
 	if (g_verbose)
-		write_msg(NULL, "reading user-defined operator__ classes\n");
+		write_msg(NULL, "reading user-defined operator classes\n");
 	getOpclasses(fout, &numOpclasses);
 
 	if (g_verbose)
-		write_msg(NULL, "reading user-defined operator__ families\n");
+		write_msg(NULL, "reading user-defined operator families\n");
 	getOpfamilies(fout, &numOpfamilies);
 
 	if (g_verbose)
@@ -744,7 +744,7 @@ findFuncByOid(Oid oid)
 
 /*
  * findOprByOid
- *	  finds the entry (in oprinfo) of the operator__ with the given oid
+ *	  finds the entry (in oprinfo) of the operator with the given oid
  *	  returns NULL if not found
  */
 OprInfo *

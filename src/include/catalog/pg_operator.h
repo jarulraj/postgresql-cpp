@@ -33,9 +33,9 @@
 
 CATALOG(pg_operator,2617)
 {
-	NameData	oprname;		/* name of operator__ */
+	NameData	oprname;		/* name of operator */
 	Oid			oprnamespace;	/* OID of namespace containing this__ oper */
-	Oid			oprowner;		/* operator__ owner */
+	Oid			oprowner;		/* operator owner */
 	char		oprkind;		/* 'l', 'r', or 'b' */
 	bool		oprcanmerge;	/* can be used in merge join? */
 	bool		oprcanhash;		/* can be used in hash join? */
@@ -84,7 +84,7 @@ typedef FormData_pg_operator *Form_pg_operator;
 
 /*
  * Note: every entry in pg_operator.h is expected to have a DESCR() comment.
- * If the operator__ is a deprecated equivalent of some other entry, be sure
+ * If the operator is a deprecated equivalent of some other entry, be sure
  * to comment it as such so that initdb doesn't think it's a preferred name
  * for the underlying function.
  */

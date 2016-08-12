@@ -3155,7 +3155,7 @@ _getObjectDescription(PQExpBuffer buf, TocEntry *te, ArchiveHandle *AH)
 	if (strcmp(type, "AGGREGATE") == 0 ||
 		strcmp(type, "FUNCTION") == 0 ||
 		strcmp(type, "operator") == 0 ||
-		strcmp(type, "operator class__") == 0 ||
+		strcmp(type, "operator class") == 0 ||
 		strcmp(type, "operator FAMILY") == 0)
 	{
 		/* Chop "DROP " off the front and make a modifiable copy */
@@ -3238,7 +3238,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 		ahprintf(AH, "--\n");
 		if (AH->public.verbose)
 		{
-			ahprintf(AH, "-- TOC entry %d (class__ %u OID %u)\n",
+			ahprintf(AH, "-- TOC entry %d (class %u OID %u)\n",
 					 te->dumpId, te->catalogId.tableoid, te->catalogId.oid);
 			if (te->nDeps > 0)
 			{
@@ -3324,7 +3324,7 @@ _printTocEntry(ArchiveHandle *AH, TocEntry *te, bool isData, bool acl_pass)
 			strcmp(te->desc, "DOMAIN") == 0 ||
 			strcmp(te->desc, "FUNCTION") == 0 ||
 			strcmp(te->desc, "operator") == 0 ||
-			strcmp(te->desc, "operator class__") == 0 ||
+			strcmp(te->desc, "operator class") == 0 ||
 			strcmp(te->desc, "operator FAMILY") == 0 ||
 			strcmp(te->desc, "PROCEDURAL LANGUAGE") == 0 ||
 			strcmp(te->desc, "SCHEMA") == 0 ||

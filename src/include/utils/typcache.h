@@ -51,14 +51,14 @@ typedef struct TypeCacheEntry
 	Oid			btree_opintype; /* the default btree opclass' opcintype */
 	Oid			hash_opf;		/* the default hash opclass' family */
 	Oid			hash_opintype;	/* the default hash opclass' opcintype */
-	Oid			eq_opr;			/* the equality operator__ */
-	Oid			lt_opr;			/* the less-than operator__ */
-	Oid			gt_opr;			/* the greater-than operator__ */
+	Oid			eq_opr;			/* the equality operator */
+	Oid			lt_opr;			/* the less-than operator */
+	Oid			gt_opr;			/* the greater-than operator */
 	Oid			cmp_proc;		/* the btree comparison function */
 	Oid			hash_proc;		/* the hash calculation function */
 
 	/*
-	 * Pre-set-up fmgr call info for the equality operator__, the btree
+	 * Pre-set-up fmgr call info for the equality operator, the btree
 	 * comparison function, and the hash calculation function.  These are kept
 	 * in the type cache to avoid problems with memory leaks in repeated calls
 	 * to functions such as array_eq, array_cmp, hash_array.  There is not

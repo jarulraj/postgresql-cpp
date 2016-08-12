@@ -18,7 +18,7 @@ PgBenchExpr *expr_parse_result;
 
 static PgBenchExpr *make_integer_constant(int64 ival);
 static PgBenchExpr *make_variable(char *varname);
-static PgBenchExpr *make_op(char operator__, PgBenchExpr *lexpr,
+static PgBenchExpr *make_op(char operator, PgBenchExpr *lexpr,
 		PgBenchExpr *rexpr);
 
 %}
@@ -84,14 +84,14 @@ make_variable(char *varname)
 }
 
 static PgBenchExpr *
-make_op(char operator__, PgBenchExpr *lexpr, PgBenchExpr *rexpr)
+make_op(char operator, PgBenchExpr *lexpr, PgBenchExpr *rexpr)
 {
 	PgBenchExpr *expr = pg_malloc(sizeof(PgBenchExpr));
 
 	expr->etype = ENODE_OPERATOR;
-	expr->u.operator__.operator__ = operator__;
-	expr->u.operator__.lexpr = lexpr;
-	expr->u.operator__.rexpr = rexpr;
+	expr->u.operator.operator = operator;
+	expr->u.operator.lexpr = lexpr;
+	expr->u.operator.rexpr = rexpr;
 	return expr;
 }
 

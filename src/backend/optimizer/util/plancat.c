@@ -416,10 +416,10 @@ get_relation_info(PlannerInfo *root, Oid relationObjectId, bool inhparent,
  * unique index (in particular, a partial unique index) in order to be
  * inferred.
  *
- * The implementation does not consider which B-Tree operator__ class__ any
+ * The implementation does not consider which B-Tree operator class any
  * particular available unique index attribute uses, unless one was specified
  * in the inference specification. The same is true of collations.  In
- * particular, there is no system dependency on the default operator__ class__ for
+ * particular, there is no system dependency on the default operator class for
  * the purposes of inference.  If no opclass (or collation) is specified, then
  * all matching indexes (that may or may not match the default in terms of
  * each attribute opclass/collation) are used for inference.
@@ -1402,9 +1402,9 @@ build_index_tlist(PlannerInfo *root, IndexOptInfo *index,
 /*
  * restriction_selectivity
  *
- * Returns the selectivity of a specified restriction operator__ clause.
+ * Returns the selectivity of a specified restriction operator clause.
  * This code executes registered procedures stored in the
- * operator__ relation, by calling the function manager.
+ * operator relation, by calling the function manager.
  *
  * See clause_selectivity() for the meaning of the additional parameters.
  */
@@ -1441,9 +1441,9 @@ restriction_selectivity(PlannerInfo *root,
 /*
  * join_selectivity
  *
- * Returns the selectivity of a specified join operator__ clause.
+ * Returns the selectivity of a specified join operator clause.
  * This code executes registered procedures stored in the
- * operator__ relation, by calling the function manager.
+ * operator relation, by calling the function manager.
  */
 Selectivity
 join_selectivity(PlannerInfo *root,

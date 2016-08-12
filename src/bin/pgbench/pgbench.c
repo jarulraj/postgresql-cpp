@@ -937,11 +937,11 @@ evaluateExpr(CState *st, PgBenchExpr *expr, int64 *retval)
 				int64		lval;
 				int64		rval;
 
-				if (!evaluateExpr(st, expr->u.operator__.lexpr, &lval))
+				if (!evaluateExpr(st, expr->u.operator.lexpr, &lval))
 					return false;
-				if (!evaluateExpr(st, expr->u.operator__.rexpr, &rval))
+				if (!evaluateExpr(st, expr->u.operator.rexpr, &rval))
 					return false;
-				switch (expr->u.operator__.operator__)
+				switch (expr->u.operator.operator)
 				{
 					case '+':
 						*retval = lval + rval;
@@ -1006,7 +1006,7 @@ evaluateExpr(CState *st, PgBenchExpr *expr, int64 *retval)
 						return true;
 				}
 
-				fprintf(stderr, "bad operator__\n");
+				fprintf(stderr, "bad operator\n");
 				return false;
 			}
 

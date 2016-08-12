@@ -1406,7 +1406,7 @@ RemoveRoleFromObjectACL(Oid roleid, Oid classid, Oid objid)
 				istmt.objtype = ACL_OBJECT_FDW;
 				break;
 			default:
-				elog(ERROR, "unexpected object class__ %u", classid);
+				elog(ERROR, "unexpected object class %u", classid);
 				break;
 		}
 		istmt.is_grant = false;
@@ -3267,7 +3267,7 @@ static const char *const no_priv_msg[MAX_ACL_KIND] =
 	/* ACL_KIND_PROC */
 	gettext_noop("permission denied for function %s"),
 	/* ACL_KIND_OPER */
-	gettext_noop("permission denied for operator__ %s"),
+	gettext_noop("permission denied for operator %s"),
 	/* ACL_KIND_TYPE */
 	gettext_noop("permission denied for type %s"),
 	/* ACL_KIND_LANGUAGE */
@@ -3277,9 +3277,9 @@ static const char *const no_priv_msg[MAX_ACL_KIND] =
 	/* ACL_KIND_NAMESPACE */
 	gettext_noop("permission denied for schema %s"),
 	/* ACL_KIND_OPCLASS */
-	gettext_noop("permission denied for operator__ class__ %s"),
+	gettext_noop("permission denied for operator class %s"),
 	/* ACL_KIND_OPFAMILY */
-	gettext_noop("permission denied for operator__ family %s"),
+	gettext_noop("permission denied for operator family %s"),
 	/* ACL_KIND_COLLATION */
 	gettext_noop("permission denied for collation %s"),
 	/* ACL_KIND_CONVERSION */
@@ -3313,7 +3313,7 @@ static const char *const not_owner_msg[MAX_ACL_KIND] =
 	/* ACL_KIND_PROC */
 	gettext_noop("must be owner of function %s"),
 	/* ACL_KIND_OPER */
-	gettext_noop("must be owner of operator__ %s"),
+	gettext_noop("must be owner of operator %s"),
 	/* ACL_KIND_TYPE */
 	gettext_noop("must be owner of type %s"),
 	/* ACL_KIND_LANGUAGE */
@@ -3323,9 +3323,9 @@ static const char *const not_owner_msg[MAX_ACL_KIND] =
 	/* ACL_KIND_NAMESPACE */
 	gettext_noop("must be owner of schema %s"),
 	/* ACL_KIND_OPCLASS */
-	gettext_noop("must be owner of operator__ class__ %s"),
+	gettext_noop("must be owner of operator class %s"),
 	/* ACL_KIND_OPFAMILY */
-	gettext_noop("must be owner of operator__ family %s"),
+	gettext_noop("must be owner of operator family %s"),
 	/* ACL_KIND_COLLATION */
 	gettext_noop("must be owner of collation %s"),
 	/* ACL_KIND_CONVERSION */
@@ -4535,7 +4535,7 @@ pg_type_ownercheck(Oid type_oid, Oid roleid)
 }
 
 /*
- * Ownership check for an operator__ (specified by OID).
+ * Ownership check for an operator (specified by OID).
  */
 bool
 pg_oper_ownercheck(Oid oper_oid, Oid roleid)
@@ -4712,7 +4712,7 @@ pg_tablespace_ownercheck(Oid spc_oid, Oid roleid)
 }
 
 /*
- * Ownership check for an operator__ class__ (specified by OID).
+ * Ownership check for an operator class (specified by OID).
  */
 bool
 pg_opclass_ownercheck(Oid opc_oid, Oid roleid)
@@ -4728,7 +4728,7 @@ pg_opclass_ownercheck(Oid opc_oid, Oid roleid)
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator class__ with OID %u does not exist",
+				 errmsg("operator class with OID %u does not exist",
 						opc_oid)));
 
 	ownerId = ((Form_pg_opclass) GETSTRUCT(tuple))->opcowner;
@@ -4739,7 +4739,7 @@ pg_opclass_ownercheck(Oid opc_oid, Oid roleid)
 }
 
 /*
- * Ownership check for an operator__ family (specified by OID).
+ * Ownership check for an operator family (specified by OID).
  */
 bool
 pg_opfamily_ownercheck(Oid opf_oid, Oid roleid)

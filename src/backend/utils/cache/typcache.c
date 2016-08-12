@@ -25,7 +25,7 @@
  * We have some provisions for updating cache entries if the stored data
  * becomes obsolete.  Information dependent on opclasses is cleared if we
  * detect updates to pg_opclass.  We also support clearing the tuple
- * descriptor and operator__/function parts of a rowtype's cache entry,
+ * descriptor and operator/function parts of a rowtype's cache entry,
  * since those may need to change as a consequence of ALTER TABLE.
  * Domain constraint changes are also tracked properly.
  *
@@ -300,7 +300,7 @@ lookup_type_cache(Oid type_id, int flags)
 	}
 
 	/*
-	 * If we need to look up equality operator__, and there's no btree opclass,
+	 * If we need to look up equality operator, and there's no btree opclass,
 	 * force lookup of hash opclass.
 	 */
 	if ((flags & (TYPECACHE_EQ_OPR | TYPECACHE_EQ_OPR_FINFO)) &&
@@ -355,7 +355,7 @@ lookup_type_cache(Oid type_id, int flags)
 										 HTEqualStrategyNumber);
 
 		/*
-		 * If the proposed equality operator__ is array_eq or record_eq, check
+		 * If the proposed equality operator is array_eq or record_eq, check
 		 * to see if the element type or column types support equality. If
 		 * not, array_eq or record_eq would fail at runtime, so we don't want
 		 * to report that the type has equality.
@@ -375,8 +375,8 @@ lookup_type_cache(Oid type_id, int flags)
 
 		/*
 		 * Reset info about hash function whenever we pick up new info about
-		 * equality operator__.  This is so we can ensure that the hash function
-		 * matches the operator__.
+		 * equality operator.  This is so we can ensure that the hash function
+		 * matches the operator.
 		 */
 		typentry->flags &= ~(TCFLAGS_CHECKED_HASH_PROC);
 		typentry->flags |= TCFLAGS_CHECKED_EQ_OPR;
@@ -496,7 +496,7 @@ lookup_type_cache(Oid type_id, int flags)
 	 * memory context) but this__ will do for our purposes.
 	 *
 	 * Note: the code above avoids invalidating the finfo structs unless the
-	 * referenced operator__/function OID actually changes.  This is to prevent
+	 * referenced operator/function OID actually changes.  This is to prevent
 	 * unnecessary leakage of any subsidiary data attached to an finfo, since
 	 * that would cause session-lifespan memory leaks.
 	 */
@@ -1319,7 +1319,7 @@ assign_record_type_typmod(TupleDesc tupDesc)
 			CreateCacheMemoryContext();
 	}
 
-	/* Find or create a hashtable entry for this__ hash class__ */
+	/* Find or create a hashtable entry for this__ hash class */
 	MemSet(hashkey, 0, sizeof(hashkey));
 	for (i = 0; i < tupDesc->natts; i++)
 	{
@@ -1449,7 +1449,7 @@ TypeCacheRelCallback(Datum arg, Oid relid)
  * invalid.
  *
  * Note that we don't bother watching for updates on pg_amop or pg_amproc.
- * This should be safe because ALTER operator__ FAMILY ADD/DROP operator__/FUNCTION
+ * This should be safe because ALTER operator FAMILY ADD/DROP operator/FUNCTION
  * is not allowed to be used to add/drop the primary operators and functions
  * of an opclass, only cross-type members of a family; and the latter sorts
  * of members are not going to get cached here.

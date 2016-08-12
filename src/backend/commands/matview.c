@@ -498,7 +498,7 @@ mv_GenerateOper(StringInfo buf, Oid opoid)
 
 	opertup = SearchSysCache1(OPEROID, ObjectIdGetDatum(opoid));
 	if (!HeapTupleIsValid(opertup))
-		elog(ERROR, "cache lookup failed for operator__ %u", opoid);
+		elog(ERROR, "cache lookup failed for operator %u", opoid);
 	operform = (Form_pg_operator) GETSTRUCT(opertup);
 	Assert(operform->oprkind == 'b');
 
@@ -591,8 +591,8 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 					 "SELECT newdata FROM %s newdata "
 					 "WHERE newdata IS NOT NULL AND EXISTS "
 					 "(SELECT * FROM %s newdata2 WHERE newdata2 IS NOT NULL "
-					 "AND newdata2 operator__(pg_catalog.*=) newdata "
-					 "AND newdata2.ctid operator__(pg_catalog.<>) "
+					 "AND newdata2 operator(pg_catalog.*=) newdata "
+					 "AND newdata2.ctid operator(pg_catalog.<>) "
 					 "newdata.ctid) LIMIT 1",
 					 tempname, tempname);
 	if (SPI_execute(querybuf.data, false, 1) != SPI_OK_SELECT)
@@ -703,7 +703,7 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 				 errhint("Create a unique index with no WHERE clause on one or more columns of the materialized view.")));
 
 	appendStringInfoString(&querybuf,
-						   " AND newdata operator__(pg_catalog.*=) mv) "
+						   " AND newdata operator(pg_catalog.*=) mv) "
 						   "WHERE newdata IS NULL OR mv IS NULL "
 						   "ORDER BY tid");
 
@@ -730,7 +730,7 @@ refresh_by_match_merge(Oid matviewOid, Oid tempOid, Oid relowner,
 	/* Deletes must come before inserts; do them first. */
 	resetStringInfo(&querybuf);
 	appendStringInfo(&querybuf,
-				   "DELETE FROM %s mv WHERE ctid operator__(pg_catalog.=) ANY "
+				   "DELETE FROM %s mv WHERE ctid operator(pg_catalog.=) ANY "
 					 "(SELECT diff.tid FROM %s diff "
 					 "WHERE diff.tid IS NOT NULL "
 					 "AND diff.newdata IS NULL)",

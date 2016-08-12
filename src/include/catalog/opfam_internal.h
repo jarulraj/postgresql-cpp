@@ -18,11 +18,11 @@
  */
 typedef struct
 {
-	Oid			object;			/* operator__ or support proc's OID */
+	Oid			object;			/* operator or support proc's OID */
 	int			number;			/* strategy or support proc number */
 	Oid			lefttype;		/* lefttype */
 	Oid			righttype;		/* righttype */
-	Oid			sortfamily;		/* ordering operator__'s sort opfamily, or 0 */
+	Oid			sortfamily;		/* ordering operator's sort opfamily, or 0 */
 } OpFamilyMember;
 
 #endif   /* OPFAM_INTERNAL_H */

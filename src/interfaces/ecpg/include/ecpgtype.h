@@ -11,7 +11,7 @@
 /*
  * Here are all the types that we are to handle. Note that it is the type
  * that is registered and that has nothing whatsoever to do with the storage
- * class__.
+ * class.
  *
  * Simple types
  * integers: char, short, int, long (signed and unsigned)

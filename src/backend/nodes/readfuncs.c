@@ -639,7 +639,7 @@ _readOpExpr(void)
 	 * and documentation reasons.  We want to always read it as zero to force
 	 * it to be re-looked-up in the pg_operator entry.  This ensures that
 	 * stored rules don't have hidden dependencies on operators' functions.
-	 * (We don't currently support an ALTER operator__ command, but might
+	 * (We don't currently support an ALTER operator command, but might
 	 * someday.)
 	 */
 	local_node->opfuncid = InvalidOid;
@@ -670,7 +670,7 @@ _readDistinctExpr(void)
 	 * and documentation reasons.  We want to always read it as zero to force
 	 * it to be re-looked-up in the pg_operator entry.  This ensures that
 	 * stored rules don't have hidden dependencies on operators' functions.
-	 * (We don't currently support an ALTER operator__ command, but might
+	 * (We don't currently support an ALTER operator command, but might
 	 * someday.)
 	 */
 	local_node->opfuncid = InvalidOid;
@@ -701,7 +701,7 @@ _readNullIfExpr(void)
 	 * and documentation reasons.  We want to always read it as zero to force
 	 * it to be re-looked-up in the pg_operator entry.  This ensures that
 	 * stored rules don't have hidden dependencies on operators' functions.
-	 * (We don't currently support an ALTER operator__ command, but might
+	 * (We don't currently support an ALTER operator command, but might
 	 * someday.)
 	 */
 	local_node->opfuncid = InvalidOid;
@@ -732,7 +732,7 @@ _readScalarArrayOpExpr(void)
 	 * and documentation reasons.  We want to always read it as zero to force
 	 * it to be re-looked-up in the pg_operator entry.  This ensures that
 	 * stored rules don't have hidden dependencies on operators' functions.
-	 * (We don't currently support an ALTER operator__ command, but might
+	 * (We don't currently support an ALTER operator command, but might
 	 * someday.)
 	 */
 	local_node->opfuncid = InvalidOid;

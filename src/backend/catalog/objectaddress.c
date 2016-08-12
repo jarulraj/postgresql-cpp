@@ -102,7 +102,7 @@ typedef struct
 										 * name alone, if there's no
 										 * namespace) be considered a unique
 										 * identifier for an object of this__
-										 * class__? */
+										 * class? */
 } ObjectPropertyType;
 
 static const ObjectPropertyType ObjectProperty[] =
@@ -553,7 +553,7 @@ static const struct object_type_map
 	},
 	/* OCLASS_OPCLASS */
 	{
-		"operator class__", OBJECT_OPCLASS
+		"operator class", OBJECT_OPCLASS
 	},
 	/* OCLASS_OPFAMILY */
 	{
@@ -709,7 +709,7 @@ static void getRelationIdentity(StringInfo buffer, Oid relid, List **objname);
  *
  * Note: If the object is not found, we don't give any indication of the
  * reason.  (It might have been a missing schema if the name was qualified, or
- * an inexistant type name in case of a cast, function or operator__; etc).
+ * an inexistant type name in case of a cast, function or operator; etc).
  * Currently there is only one caller that might be interested in such info, so
  * we don't spend much effort here.  If more callers start to care, it might be
  * better to add some support for that in this__ function.
@@ -2332,7 +2332,7 @@ get_object_namensp_unique(Oid class_id)
 }
 
 /*
- * Return whether we have useful data for the given object class__ in the
+ * Return whether we have useful data for the given object class in the
  * ObjectProperty table.
  */
 bool
@@ -2360,7 +2360,7 @@ get_object_property_data(Oid class_id)
 
 	/*
 	 * A shortcut to speed up multiple consecutive lookups of a particular
-	 * object class__.
+	 * object class.
 	 */
 	if (prop_last && prop_last->class_oid == class_id)
 		return prop_last;
@@ -2375,7 +2375,7 @@ get_object_property_data(Oid class_id)
 	}
 
 	ereport(ERROR,
-			(errmsg_internal("unrecognized class__ ID: %u", class_id)));
+			(errmsg_internal("unrecognized class ID: %u", class_id)));
 
 	return NULL;				/* keep MSC compiler happy */
 }
@@ -2642,7 +2642,7 @@ getObjectDescription(const ObjectAddress *object)
 				else
 					nspname = get_namespace_name(opcForm->opcnamespace);
 
-				appendStringInfo(&buffer, _("operator class__ %s for access method %s"),
+				appendStringInfo(&buffer, _("operator class %s for access method %s"),
 								 quote_qualified_identifier(nspname,
 												  NameStr(opcForm->opcname)),
 								 NameStr(amForm->amname));
@@ -2688,10 +2688,10 @@ getObjectDescription(const ObjectAddress *object)
 				getOpFamilyDescription(&opfam, amopForm->amopfamily);
 
 				/*------
-				   translator: %d is the operator__ strategy (a number), the
+				   translator: %d is the operator strategy (a number), the
 				   first two %s's are data type names, the third %s is the
-				   description of the operator__ family, and the last %s is the
-				   textual form of the operator__ with arguments.  */
+				   description of the operator family, and the last %s is the
+				   textual form of the operator with arguments.  */
 				appendStringInfo(&buffer, _("operator %d (%s, %s) of %s: %s"),
 								 amopForm->amopstrategy,
 								 format_type_be(amopForm->amoplefttype),
@@ -2740,7 +2740,7 @@ getObjectDescription(const ObjectAddress *object)
 				/*------
 				   translator: %d is the function number, the first two %s's
 				   are data type names, the third %s is the description of the
-				   operator__ family, and the last %s is the textual form of the
+				   operator family, and the last %s is the textual form of the
 				   function with arguments.  */
 				appendStringInfo(&buffer, _("function %d (%s, %s) of %s: %s"),
 								 amprocForm->amprocnum,
@@ -3223,7 +3223,7 @@ getRelationDescription(StringInfo buffer, Oid relid)
 }
 
 /*
- * subroutine for getObjectDescription: describe an operator__ family
+ * subroutine for getObjectDescription: describe an operator family
  */
 static void
 getOpFamilyDescription(StringInfo buffer, Oid opfid)
@@ -3521,7 +3521,7 @@ getObjectTypeDescription(const ObjectAddress *object)
 			break;
 
 		case OCLASS_OPCLASS:
-			appendStringInfoString(&buffer, "operator class__");
+			appendStringInfoString(&buffer, "operator class");
 			break;
 
 		case OCLASS_OPFAMILY:
@@ -4578,7 +4578,7 @@ getObjectIdentityParts(const ObjectAddress *object,
 	 * leave it as NIL.
 	 */
 	if (objname && *objname == NIL)
-		elog(ERROR, "requested object address for unsupported object class__ %d: text result \"%s\"",
+		elog(ERROR, "requested object address for unsupported object class %d: text result \"%s\"",
 			 (int) getObjectClass(object), buffer.data);
 
 	return buffer.data;

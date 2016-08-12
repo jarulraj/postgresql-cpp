@@ -1010,7 +1010,7 @@ index_create(Relation heapRelation,
 			}
 		}
 
-		/* Store dependency on operator__ classes */
+		/* Store dependency on operator classes */
 		for (i = 0; i < indexInfo->ii_NumIndexAttrs; i++)
 		{
 			referenced.classId = OperatorClassRelationId;
@@ -1709,8 +1709,8 @@ BuildSpeculativeIndexInfo(Relation index, IndexInfo *ii)
 	ii->ii_UniqueStrats = (uint16 *) palloc(sizeof(uint16) * ncols);
 
 	/*
-	 * We have to look up the operator__'s strategy number.  This provides a
-	 * cross-check that the operator__ does match the index.
+	 * We have to look up the operator's strategy number.  This provides a
+	 * cross-check that the operator does match the index.
 	 */
 	/* We need the func OIDs and strategy numbers too */
 	for (i = 0; i < ncols; i++)

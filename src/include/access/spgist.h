@@ -170,7 +170,7 @@ typedef struct spgLeafConsistentIn
 typedef struct spgLeafConsistentOut
 {
 	Datum		leafValue;		/* reconstructed original data, if any */
-	bool		recheck;		/* set true if operator__ must be rechecked */
+	bool		recheck;		/* set true if operator must be rechecked */
 } spgLeafConsistentOut;
 
 

@@ -43,13 +43,13 @@ get_command_type(PG_FUNCTION_ARGS)
 			type = "grant";
 			break;
 		case SCT_AlterOpFamily:
-			type = "alter operator__ family";
+			type = "alter operator family";
 			break;
 		case SCT_AlterDefaultPrivileges:
 			type = "alter default privileges";
 			break;
 		case SCT_CreateOpClass:
-			type = "create operator__ class__";
+			type = "create operator class";
 			break;
 		case SCT_AlterTSConfig:
 			type = "alter text search configuration";

@@ -1272,7 +1272,7 @@ doDeletion(const ObjectAddress *object, int flags)
 			break;
 
 		default:
-			elog(ERROR, "unrecognized object class__: %u",
+			elog(ERROR, "unrecognized object class: %u",
 				 object->classId);
 	}
 }
@@ -1463,7 +1463,7 @@ recordDependencyOnSingleRelExpr(const ObjectAddress *depender,
  * Note: in many cases we do not need to create dependencies on the datatypes
  * involved in an expression, because we'll have an indirect dependency via
  * some other object.  For instance Var nodes depend on a column which depends
- * on the datatype, and OpExpr nodes depend on the operator__ which depends on
+ * on the datatype, and OpExpr nodes depend on the operator which depends on
  * the datatype.  However we do need a type dependency if there is no such
  * indirect dependency, as for example in Const and CoerceToDomain nodes.
  *
@@ -1883,7 +1883,7 @@ find_expr_references_walker(Node *node,
 	{
 		SetOperationStmt *setop = (SetOperationStmt *) node;
 
-		/* we need to look at the groupClauses for operator__ references */
+		/* we need to look at the groupClauses for operator references */
 		find_expr_references_walker((Node *) setop->groupClauses, context);
 		/* fall through to examine child nodes */
 	}
@@ -2037,7 +2037,7 @@ new_object_addresses(void)
 /*
  * Add an entry to an ObjectAddresses array.
  *
- * It is convenient to specify the class__ by ObjectClass rather than directly
+ * It is convenient to specify the class by ObjectClass rather than directly
  * by catalog OID.
  */
 static void
@@ -2299,7 +2299,7 @@ free_object_addresses(ObjectAddresses *addrs)
 }
 
 /*
- * Determine the class__ of a given object identified by objectAddress.
+ * Determine the class of a given object identified by objectAddress.
  *
  * This function is essentially the reverse mapping for the object_classes[]
  * table.  We implement it as a function because the OIDs aren't consecutive.
@@ -2310,7 +2310,7 @@ getObjectClass(const ObjectAddress *object)
 	/* only pg_class entries can have nonzero objectSubId */
 	if (object->classId != RelationRelationId &&
 		object->objectSubId != 0)
-		elog(ERROR, "invalid non-zero objectSubId for object class__ %u",
+		elog(ERROR, "invalid non-zero objectSubId for object class %u",
 			 object->classId);
 
 	switch (object->classId)
@@ -2417,6 +2417,6 @@ getObjectClass(const ObjectAddress *object)
 	}
 
 	/* shouldn't get here */
-	elog(ERROR, "unrecognized object class__: %u", object->classId);
+	elog(ERROR, "unrecognized object class: %u", object->classId);
 	return OCLASS_CLASS;		/* keep compiler quiet */
 }

@@ -206,7 +206,7 @@ schema_does_not_exist_skipping(List *objname, const char **msg, char **name)
  *		Subroutine for RemoveObjects
  *
  * After determining that a specification for a function, cast, aggregate or
- * operator__ returns that the specified object does not exist, test whether the
+ * operator returns that the specified object does not exist, test whether the
  * involved datatypes, and their schemas, exist or not; if they do, return
  * false --- the original object itself is missing instead.  If the datatypes
  * or schemas do not exist, fill the error message format string and the
@@ -419,7 +419,7 @@ does_not_exist_skipping(ObjectType objtype, List *objname, List *objargs)
 
 				if (!schema_does_not_exist_skipping(opcname, &msg, &name))
 				{
-					msg = gettext_noop("operator class__ \"%s\" does not exist for access method \"%s\", skipping");
+					msg = gettext_noop("operator class \"%s\" does not exist for access method \"%s\", skipping");
 					name = NameListToString(opcname);
 					args = strVal(linitial(objname));
 				}

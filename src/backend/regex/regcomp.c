@@ -735,7 +735,7 @@ parsebranch(struct vars * v,
 	while (!SEE('|') && !SEE(stopper) && !SEE(EOS))
 	{
 		if (seencontent)
-		{						/* implicit concat operator__ */
+		{						/* implicit concat operator */
 			lp = newstate(v->nfa);
 			NOERRN();
 			moveins(v->nfa, right, lp);

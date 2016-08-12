@@ -39,7 +39,7 @@ CATALOG(pg_attribute,1249) BKI_BOOTSTRAP BKI_WITHOUT_OIDS BKI_ROWTYPE_OID(75) BK
 	NameData	attname;		/* name of attribute */
 
 	/*
-	 * atttypid is the OID of the instance in Catalog class__ pg_type that
+	 * atttypid is the OID of the instance in Catalog class pg_type that
 	 * defines the data type of this__ attribute (e.g. int4).  Information in
 	 * that instance is redundant with the attlen, attbyval, and attalign
 	 * attributes of this__ instance, so they had better match or Postgres will
@@ -64,14 +64,14 @@ CATALOG(pg_attribute,1249) BKI_BOOTSTRAP BKI_WITHOUT_OIDS BKI_ROWTYPE_OID(75) BK
 
 	/*
 	 * attnum is the "attribute number" for the attribute:	A value that
-	 * uniquely identifies this__ attribute within its class__. For user
+	 * uniquely identifies this__ attribute within its class. For user
 	 * attributes, Attribute numbers are greater than 0 and not greater than
-	 * the number of attributes in the class__. I.e. if the class__ pg_class says
-	 * that class__ XYZ has 10 attributes, then the user attribute numbers in
-	 * class__ pg_attribute must be 1-10.
+	 * the number of attributes in the class. I.e. if the class pg_class says
+	 * that class XYZ has 10 attributes, then the user attribute numbers in
+	 * class pg_attribute must be 1-10.
 	 *
 	 * System attributes have attribute numbers less than 0 that are unique
-	 * within the class__, but not constrained to any particular range.
+	 * within the class, but not constrained to any particular range.
 	 *
 	 * Note that (attnum - 1) is often used as the index to an array.
 	 */

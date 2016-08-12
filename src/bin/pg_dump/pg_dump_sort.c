@@ -1331,7 +1331,7 @@ describeDumpableObject(DumpableObject *obj, char *buf, int bufsize)
 			return;
 		case DO_OPCLASS:
 			snprintf(buf, bufsize,
-					 "operator class__ %s  (ID %d OID %u)",
+					 "operator class %s  (ID %d OID %u)",
 					 obj->name, obj->dumpId, obj->catId.oid);
 			return;
 		case DO_OPFAMILY:

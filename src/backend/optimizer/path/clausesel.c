@@ -172,7 +172,7 @@ clauselist_selectivity(PlannerInfo *root,
 			if (ok)
 			{
 				/*
-				 * If it's not a "<" or ">" operator__, just merge the
+				 * If it's not a "<" or ">" operator, just merge the
 				 * selectivity in generically.  But if it's the right oprrest,
 				 * add the clause to rqlist for later processing.
 				 */
@@ -398,7 +398,7 @@ bms_is_subset_singleton(const Bitmapset *s, int x)
 
 /*
  * treat_as_join_clause -
- *	  Decide whether an operator__ clause is to be handled by the
+ *	  Decide whether an operator clause is to be handled by the
  *	  restriction or join estimator.  Subroutine for clause_selectivity().
  */
 static inline bool
@@ -662,7 +662,7 @@ clause_selectivity(PlannerInfo *root,
 
 		/*
 		 * DistinctExpr has the same representation as OpExpr, but the
-		 * contained operator__ is "=" not "<>", so we must negate the result.
+		 * contained operator is "=" not "<>", so we must negate the result.
 		 * This estimation method doesn't give the right behavior for nulls,
 		 * but it's better than doing nothing.
 		 */

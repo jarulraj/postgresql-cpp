@@ -116,7 +116,7 @@ complex_add(PG_FUNCTION_ARGS)
 
 
 /*****************************************************************************
- * operator__ class__ for defining B-tree index
+ * operator class for defining B-tree index
  *
  * It's essential that the comparison operators and support function for a
  * B-tree index opclass always agree on the relative ordering of any two

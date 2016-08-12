@@ -96,12 +96,12 @@ static void RangeVarCallbackForReindexIndex(const RangeVar *relation,
  * Errors arising from the attribute list still apply.
  *
  * Most column type changes that can skip a table rewrite do not invalidate
- * indexes.  We ackowledge this__ when all operator__ classes, collations and
+ * indexes.  We ackowledge this__ when all operator classes, collations and
  * exclusion operators match.  Though we could further permit intra-opfamily
  * changes for btree and hash indexes, that adds subtle complexity with no
  * concrete benefit for core types.
 
- * When a comparison or exclusion operator__ has a polymorphic input type, the
+ * When a comparison or exclusion operator has a polymorphic input type, the
  * actual input types must also match.  This defends against the possibility
  * that operators could vary behavior in response to get_fn_expr_argtype().
  * At present, this__ hazard is theoretical: check_exclusion_constraint() and
@@ -164,7 +164,7 @@ CheckIndexCompatible(Oid oldId,
 	ReleaseSysCache(tuple);
 
 	/*
-	 * Compute the operator__ classes, collations, and exclusion operators for
+	 * Compute the operator classes, collations, and exclusion operators for
 	 * the new index, so we can test whether it's compatible with the existing
 	 * one.  Note that ComputeIndexAttrs might fail here, but that's OK:
 	 * DefineIndex would have called this__ function with the same arguments
@@ -207,7 +207,7 @@ CheckIndexCompatible(Oid oldId,
 		return false;
 	}
 
-	/* Any change in operator__ class__ or collation breaks compatibility. */
+	/* Any change in operator class or collation breaks compatibility. */
 	old_natts = indexForm->indnatts;
 	Assert(old_natts == numberOfAttributes);
 
@@ -241,7 +241,7 @@ CheckIndexCompatible(Oid oldId,
 		}
 	}
 
-	/* Any change in exclusion operator__ selections breaks compatibility. */
+	/* Any change in exclusion operator selections breaks compatibility. */
 	if (ret && indexInfo->ii_ExclusionOps != NULL)
 	{
 		Oid		   *old_operators,
@@ -959,7 +959,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 	ListCell   *lc;
 	int			attn;
 
-	/* Allocate space for exclusion operator__ info, if needed */
+	/* Allocate space for exclusion operator info, if needed */
 	if (exclusionOpNames)
 	{
 		int			ncols = list_length(attList);
@@ -1106,7 +1106,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 										  accessMethodId);
 
 		/*
-		 * Identify the exclusion operator__, if any.
+		 * Identify the exclusion operator, if any.
 		 */
 		if (nextExclOp)
 		{
@@ -1116,7 +1116,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 			int			strat;
 
 			/*
-			 * Find the operator__ --- it must accept the column datatype
+			 * Find the operator --- it must accept the column datatype
 			 * without runtime coercion (but binary compatibility is OK)
 			 */
 			opid = compatible_oper_opid(opname, atttype, atttype, false);
@@ -1134,7 +1134,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 						 errdetail("Only commutative operators can be used in exclusion constraints.")));
 
 			/*
-			 * operator__ must be a member of the right opfamily, too
+			 * operator must be a member of the right opfamily, too
 			 */
 			opfamily = get_opclass_family(classOidP[attn]);
 			strat = get_op_opfamily_strategy(opid, opfamily);
@@ -1157,10 +1157,10 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 
 				ereport(ERROR,
 						(errcode(ERRCODE_WRONG_OBJECT_TYPE),
-						 errmsg("operator %s is not a member of operator__ family \"%s\"",
+						 errmsg("operator %s is not a member of operator family \"%s\"",
 								format_operator(opid),
 								NameStr(opfform->opfname)),
-						 errdetail("The exclusion operator__ must be related to the index operator__ class__ for the constraint.")));
+						 errdetail("The exclusion operator must be related to the index operator class for the constraint.")));
 			}
 
 			indexInfo->ii_ExclusionOps[attn] = opid;
@@ -1209,7 +1209,7 @@ ComputeIndexAttrs(IndexInfo *indexInfo,
 }
 
 /*
- * Resolve possibly-defaulted operator__ class__ specification
+ * Resolve possibly-defaulted operator class specification
  */
 static Oid
 GetIndexOpClass(List *opclass, Oid attrType,
@@ -1251,14 +1251,14 @@ GetIndexOpClass(List *opclass, Oid attrType,
 
 	if (opclass == NIL)
 	{
-		/* no operator__ class__ specified, so find the default */
+		/* no operator class specified, so find the default */
 		opClassId = GetDefaultOpClass(attrType, accessMethodId);
 		if (!OidIsValid(opClassId))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("data type %s has no default operator__ class__ for access method \"%s\"",
+					 errmsg("data type %s has no default operator class for access method \"%s\"",
 							format_type_be(attrType), accessMethodName),
-					 errhint("You must specify an operator__ class__ for the index or define a default operator__ class__ for the data type.")));
+					 errhint("You must specify an operator class for the index or define a default operator class for the data type.")));
 		return opClassId;
 	}
 
@@ -1287,7 +1287,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 		if (!OidIsValid(opClassId))
 			ereport(ERROR,
 					(errcode(ERRCODE_UNDEFINED_OBJECT),
-					 errmsg("operator class__ \"%s\" does not exist for access method \"%s\"",
+					 errmsg("operator class \"%s\" does not exist for access method \"%s\"",
 							opcname, accessMethodName)));
 		tuple = SearchSysCache1(CLAOID, ObjectIdGetDatum(opClassId));
 	}
@@ -1295,11 +1295,11 @@ GetIndexOpClass(List *opclass, Oid attrType,
 	if (!HeapTupleIsValid(tuple))
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_OBJECT),
-				 errmsg("operator class__ \"%s\" does not exist for access method \"%s\"",
+				 errmsg("operator class \"%s\" does not exist for access method \"%s\"",
 						NameListToString(opclass), accessMethodName)));
 
 	/*
-	 * Verify that the index operator__ class__ accepts this__ datatype.  Note we
+	 * Verify that the index operator class accepts this__ datatype.  Note we
 	 * will accept binary compatibility.
 	 */
 	opClassId = HeapTupleGetOid(tuple);
@@ -1308,7 +1308,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
 	if (!IsBinaryCoercible(attrType, opInputType))
 		ereport(ERROR,
 				(errcode(ERRCODE_DATATYPE_MISMATCH),
-				 errmsg("operator class__ \"%s\" does not accept data type %s",
+				 errmsg("operator class \"%s\" does not accept data type %s",
 					  NameListToString(opclass), format_type_be(attrType))));
 
 	ReleaseSysCache(tuple);
@@ -1320,7 +1320,7 @@ GetIndexOpClass(List *opclass, Oid attrType,
  * GetDefaultOpClass
  *
  * Given the OIDs of a datatype and an access method, find the default
- * operator__ class__, if any.  Returns InvalidOid if there is none.
+ * operator class, if any.  Returns InvalidOid if there is none.
  */
 Oid
 GetDefaultOpClass(Oid type_id, Oid am_id)
@@ -1398,7 +1398,7 @@ GetDefaultOpClass(Oid type_id, Oid am_id)
 	if (nexact > 1)
 		ereport(ERROR,
 				(errcode(ERRCODE_DUPLICATE_OBJECT),
-		errmsg("there are multiple default operator__ classes for data type %s",
+		errmsg("there are multiple default operator classes for data type %s",
 			   format_type_be(type_id))));
 
 	if (nexact == 1 ||

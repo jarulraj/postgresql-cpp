@@ -685,7 +685,7 @@ aclitemComparator(const void *arg1, const void *arg2)
 }
 
 /*
- * aclitem equality operator__
+ * aclitem equality operator
  */
 Datum
 aclitem_eq(PG_FUNCTION_ARGS)

@@ -54,7 +54,7 @@ get_attavgwidth_hook_type get_attavgwidth_hook = NULL;
 /*
  * op_in_opfamily
  *
- *		Return t iff operator__ 'opno' is in operator__ family 'opfamily'.
+ *		Return t iff operator 'opno' is in operator family 'opfamily'.
  *
  * This function only considers search operators, not ordering operators.
  */
@@ -70,7 +70,7 @@ op_in_opfamily(Oid opno, Oid opfamily)
 /*
  * get_op_opfamily_strategy
  *
- *		Get the operator__'s strategy number within the specified opfamily,
+ *		Get the operator's strategy number within the specified opfamily,
  *		or 0 if it's not a member of the opfamily.
  *
  * This function only considers search operators, not ordering operators.
@@ -97,7 +97,7 @@ get_op_opfamily_strategy(Oid opno, Oid opfamily)
 /*
  * get_op_opfamily_sortfamily
  *
- *		If the operator__ is an ordering operator__ within the specified opfamily,
+ *		If the operator is an ordering operator within the specified opfamily,
  *		return its amopsortfamily OID; else return InvalidOid.
  */
 Oid
@@ -122,7 +122,7 @@ get_op_opfamily_sortfamily(Oid opno, Oid opfamily)
 /*
  * get_op_opfamily_properties
  *
- *		Get the operator__'s strategy number and declared input data types
+ *		Get the operator's strategy number and declared input data types
  *		within the specified opfamily.
  *
  * Caller should already have verified that opno is a member of opfamily,
@@ -153,7 +153,7 @@ get_op_opfamily_properties(Oid opno, Oid opfamily, bool ordering_op,
 
 /*
  * get_opfamily_member
- *		Get the OID of the operator__ that implements the specified strategy
+ *		Get the OID of the operator that implements the specified strategy
  *		with the specified datatypes for the specified opfamily.
  *
  * Returns InvalidOid if there is no pg_amop entry for the given keys.
@@ -181,14 +181,14 @@ get_opfamily_member(Oid opfamily, Oid lefttype, Oid righttype,
 
 /*
  * get_ordering_op_properties
- *		Given the OID of an ordering operator__ (a btree "<" or ">" operator__),
+ *		Given the OID of an ordering operator (a btree "<" or ">" operator),
  *		determine its opfamily, its declared input datatype, and its
  *		strategy number (BTLessStrategyNumber or BTGreaterStrategyNumber).
  *
  * Returns TRUE if successful, FALSE if no matching pg_amop entry exists.
- * (This indicates that the operator__ is not a valid ordering operator__.)
+ * (This indicates that the operator is not a valid ordering operator.)
  *
- * Note: the operator__ could be registered in multiple families, for example
+ * Note: the operator could be registered in multiple families, for example
  * if someone were to build a "reverse sort" opfamily.  This would result in
  * uncertainty as to whether "ORDER BY USING op" would default to NULLS FIRST
  * or NULLS LAST, as well as inefficient planning due to failure to match up
@@ -213,8 +213,8 @@ get_ordering_op_properties(Oid opno,
 	*strategy = 0;
 
 	/*
-	 * Search pg_amop to see if the target operator__ is registered as the "<"
-	 * or ">" operator__ of any btree opfamily.
+	 * Search pg_amop to see if the target operator is registered as the "<"
+	 * or ">" operator of any btree opfamily.
 	 */
 	catlist = SearchSysCacheList1(AMOPOPID, ObjectIdGetDatum(opno));
 
@@ -250,14 +250,14 @@ get_ordering_op_properties(Oid opno,
 
 /*
  * get_equality_op_for_ordering_op
- *		Get the OID of the datatype-specific btree equality operator__
- *		associated with an ordering operator__ (a "<" or ">" operator__).
+ *		Get the OID of the datatype-specific btree equality operator
+ *		associated with an ordering operator (a "<" or ">" operator).
  *
- * If "reverse" isn't NULL, also set *reverse to FALSE if the operator__ is "<",
+ * If "reverse" isn't NULL, also set *reverse to FALSE if the operator is "<",
  * TRUE if it's ">"
  *
- * Returns InvalidOid if no matching equality operator__ can be found.
- * (This indicates that the operator__ is not a valid ordering operator__.)
+ * Returns InvalidOid if no matching equality operator can be found.
+ * (This indicates that the operator is not a valid ordering operator.)
  */
 Oid
 get_equality_op_for_ordering_op(Oid opno, bool *reverse)
@@ -267,11 +267,11 @@ get_equality_op_for_ordering_op(Oid opno, bool *reverse)
 	Oid			opcintype;
 	int16		strategy;
 
-	/* Find the operator__ in pg_amop */
+	/* Find the operator in pg_amop */
 	if (get_ordering_op_properties(opno,
 								   &opfamily, &opcintype, &strategy))
 	{
-		/* Found a suitable opfamily, get matching equality operator__ */
+		/* Found a suitable opfamily, get matching equality operator */
 		result = get_opfamily_member(opfamily,
 									 opcintype,
 									 opcintype,
@@ -285,17 +285,17 @@ get_equality_op_for_ordering_op(Oid opno, bool *reverse)
 
 /*
  * get_ordering_op_for_equality_op
- *		Get the OID of a datatype-specific btree ordering operator__
- *		associated with an equality operator__.  (If there are multiple
+ *		Get the OID of a datatype-specific btree ordering operator
+ *		associated with an equality operator.  (If there are multiple
  *		possibilities, assume any one will do.)
  *
  * This function is used when we have to sort data before unique-ifying,
  * and don't much care which sorting op is used as long as it's compatible
- * with the intended equality operator__.  Since we need a sorting operator__,
- * it should be single-data-type even if the given operator__ is cross-type.
+ * with the intended equality operator.  Since we need a sorting operator,
+ * it should be single-data-type even if the given operator is cross-type.
  * The caller specifies whether to find an op for the LHS or RHS data type.
  *
- * Returns InvalidOid if no matching ordering operator__ can be found.
+ * Returns InvalidOid if no matching ordering operator can be found.
  */
 Oid
 get_ordering_op_for_equality_op(Oid opno, bool use_lhs_type)
@@ -305,8 +305,8 @@ get_ordering_op_for_equality_op(Oid opno, bool use_lhs_type)
 	int			i;
 
 	/*
-	 * Search pg_amop to see if the target operator__ is registered as the "="
-	 * operator__ of any btree opfamily.
+	 * Search pg_amop to see if the target operator is registered as the "="
+	 * operator of any btree opfamily.
 	 */
 	catlist = SearchSysCacheList1(AMOPOPID, ObjectIdGetDatum(opno));
 
@@ -321,7 +321,7 @@ get_ordering_op_for_equality_op(Oid opno, bool use_lhs_type)
 
 		if (aform->amopstrategy == BTEqualStrategyNumber)
 		{
-			/* Found a suitable opfamily, get matching ordering operator__ */
+			/* Found a suitable opfamily, get matching ordering operator */
 			Oid			typid;
 
 			typid = use_lhs_type ? aform->amoplefttype : aform->amoprighttype;
@@ -341,12 +341,12 @@ get_ordering_op_for_equality_op(Oid opno, bool use_lhs_type)
 
 /*
  * get_mergejoin_opfamilies
- *		Given a putatively mergejoinable operator__, return a list of the OIDs
+ *		Given a putatively mergejoinable operator, return a list of the OIDs
  *		of the btree opfamilies in which it represents equality.
  *
- * It is possible (though at present unusual) for an operator__ to be equality
+ * It is possible (though at present unusual) for an operator to be equality
  * in more than one opfamily, hence the result is a list.  This also lets us
- * return NIL if the operator__ is not found in any opfamilies.
+ * return NIL if the operator is not found in any opfamilies.
  *
  * The planner currently uses simple equal() tests to compare the lists
  * returned by this__ function, which makes the list order relevant, though
@@ -366,8 +366,8 @@ get_mergejoin_opfamilies(Oid opno)
 	int			i;
 
 	/*
-	 * Search pg_amop to see if the target operator__ is registered as the "="
-	 * operator__ of any btree opfamily.
+	 * Search pg_amop to see if the target operator is registered as the "="
+	 * operator of any btree opfamily.
 	 */
 	catlist = SearchSysCacheList1(AMOPOPID, ObjectIdGetDatum(opno));
 
@@ -389,18 +389,18 @@ get_mergejoin_opfamilies(Oid opno)
 
 /*
  * get_compatible_hash_operators
- *		Get the OID(s) of hash equality operator__(s) compatible with the given
- *		operator__, but operating on its LHS and/or RHS datatype.
+ *		Get the OID(s) of hash equality operator(s) compatible with the given
+ *		operator, but operating on its LHS and/or RHS datatype.
  *
- * An operator__ for the LHS type is sought and returned into *lhs_opno if
- * lhs_opno isn't NULL.  Similarly, an operator__ for the RHS type is sought
+ * An operator for the LHS type is sought and returned into *lhs_opno if
+ * lhs_opno isn't NULL.  Similarly, an operator for the RHS type is sought
  * and returned into *rhs_opno if rhs_opno isn't NULL.
  *
- * If the given operator__ is not cross-type, the results should be the same
- * operator__, but in cross-type situations they will be different.
+ * If the given operator is not cross-type, the results should be the same
+ * operator, but in cross-type situations they will be different.
  *
- * Returns true if able to find the requested operator__(s), false if not.
- * (This indicates that the operator__ should not have been marked oprcanhash.)
+ * Returns true if able to find the requested operator(s), false if not.
+ * (This indicates that the operator should not have been marked oprcanhash.)
  */
 bool
 get_compatible_hash_operators(Oid opno,
@@ -417,8 +417,8 @@ get_compatible_hash_operators(Oid opno,
 		*rhs_opno = InvalidOid;
 
 	/*
-	 * Search pg_amop to see if the target operator__ is registered as the "="
-	 * operator__ of any hash opfamily.  If the operator__ is registered in
+	 * Search pg_amop to see if the target operator is registered as the "="
+	 * operator of any hash opfamily.  If the operator is registered in
 	 * multiple opfamilies, assume we can use any one.
 	 */
 	catlist = SearchSysCacheList1(AMOPOPID, ObjectIdGetDatum(opno));
@@ -431,7 +431,7 @@ get_compatible_hash_operators(Oid opno,
 		if (aform->amopmethod == HASH_AM_OID &&
 			aform->amopstrategy == HTEqualStrategyNumber)
 		{
-			/* No extra lookup needed if given operator__ is single-type */
+			/* No extra lookup needed if given operator is single-type */
 			if (aform->amoplefttype == aform->amoprighttype)
 			{
 				if (lhs_opno)
@@ -443,7 +443,7 @@ get_compatible_hash_operators(Oid opno,
 			}
 
 			/*
-			 * Get the matching single-type operator__(s).  Failure probably
+			 * Get the matching single-type operator(s).  Failure probably
 			 * shouldn't happen --- it implies a bogus opfamily --- but
 			 * continue looking if so.
 			 */
@@ -470,7 +470,7 @@ get_compatible_hash_operators(Oid opno,
 												HTEqualStrategyNumber);
 				if (!OidIsValid(*rhs_opno))
 				{
-					/* Forget any LHS operator__ from this__ opfamily */
+					/* Forget any LHS operator from this__ opfamily */
 					if (lhs_opno)
 						*lhs_opno = InvalidOid;
 					continue;
@@ -490,17 +490,17 @@ get_compatible_hash_operators(Oid opno,
 /*
  * get_op_hash_functions
  *		Get the OID(s) of hash support function(s) compatible with the given
- *		operator__, operating on its LHS and/or RHS datatype as required.
+ *		operator, operating on its LHS and/or RHS datatype as required.
  *
  * A function for the LHS type is sought and returned into *lhs_procno if
  * lhs_procno isn't NULL.  Similarly, a function for the RHS type is sought
  * and returned into *rhs_procno if rhs_procno isn't NULL.
  *
- * If the given operator__ is not cross-type, the results should be the same
+ * If the given operator is not cross-type, the results should be the same
  * function, but in cross-type situations they will be different.
  *
  * Returns true if able to find the requested function(s), false if not.
- * (This indicates that the operator__ should not have been marked oprcanhash.)
+ * (This indicates that the operator should not have been marked oprcanhash.)
  */
 bool
 get_op_hash_functions(Oid opno,
@@ -517,8 +517,8 @@ get_op_hash_functions(Oid opno,
 		*rhs_procno = InvalidOid;
 
 	/*
-	 * Search pg_amop to see if the target operator__ is registered as the "="
-	 * operator__ of any hash opfamily.  If the operator__ is registered in
+	 * Search pg_amop to see if the target operator is registered as the "="
+	 * operator of any hash opfamily.  If the operator is registered in
 	 * multiple opfamilies, assume we can use any one.
 	 */
 	catlist = SearchSysCacheList1(AMOPOPID, ObjectIdGetDatum(opno));
@@ -550,7 +550,7 @@ get_op_hash_functions(Oid opno,
 					result = true;
 					break;
 				}
-				/* Only one lookup needed if given operator__ is single-type */
+				/* Only one lookup needed if given operator is single-type */
 				if (aform->amoplefttype == aform->amoprighttype)
 				{
 					*rhs_procno = *lhs_procno;
@@ -585,12 +585,12 @@ get_op_hash_functions(Oid opno,
 
 /*
  * get_op_btree_interpretation
- *		Given an operator__'s OID, find out which btree opfamilies it belongs to,
+ *		Given an operator's OID, find out which btree opfamilies it belongs to,
  *		and what properties it has within each one.  The results are returned
  *		as a palloc'd list of OpBtreeInterpretation structs.
  *
- * In addition to the normal btree operators, we consider a <> operator__ to be
- * a "member" of an opfamily if its negator is an equality operator__ of the
+ * In addition to the normal btree operators, we consider a <> operator to be
+ * a "member" of an opfamily if its negator is an equality operator of the
  * opfamily.  ROWCOMPARE_NE is returned as the strategy number for this__ case.
  */
 List *
@@ -602,7 +602,7 @@ get_op_btree_interpretation(Oid opno)
 	int			i;
 
 	/*
-	 * Find all the pg_amop entries containing the operator__.
+	 * Find all the pg_amop entries containing the operator.
 	 */
 	catlist = SearchSysCacheList1(AMOPOPID, ObjectIdGetDatum(opno));
 
@@ -616,7 +616,7 @@ get_op_btree_interpretation(Oid opno)
 		if (op_form->amopmethod != BTREE_AM_OID)
 			continue;
 
-		/* Get the operator__'s btree strategy number */
+		/* Get the operator's btree strategy number */
 		op_strategy = (StrategyNumber) op_form->amopstrategy;
 		Assert(op_strategy >= 1 && op_strategy <= 5);
 
@@ -632,8 +632,8 @@ get_op_btree_interpretation(Oid opno)
 	ReleaseSysCacheList(catlist);
 
 	/*
-	 * If we didn't find any btree opfamily containing the operator__, perhaps
-	 * it is a <> operator__.  See if it has a negator that is in an opfamily.
+	 * If we didn't find any btree opfamily containing the operator, perhaps
+	 * it is a <> operator.  See if it has a negator that is in an opfamily.
 	 */
 	if (result == NIL)
 	{
@@ -654,7 +654,7 @@ get_op_btree_interpretation(Oid opno)
 				if (op_form->amopmethod != BTREE_AM_OID)
 					continue;
 
-				/* Get the operator__'s btree strategy number */
+				/* Get the operator's btree strategy number */
 				op_strategy = (StrategyNumber) op_form->amopstrategy;
 				Assert(op_strategy >= 1 && op_strategy <= 5);
 
@@ -684,11 +684,11 @@ get_op_btree_interpretation(Oid opno)
  *		Return TRUE if the two given equality operators have compatible
  *		semantics.
  *
- * This is trivially true if they are the same operator__.  Otherwise,
+ * This is trivially true if they are the same operator.  Otherwise,
  * we look to see if they can be found in the same btree or hash opfamily.
  * Either finding allows us to assume that they have compatible notions
  * of equality.  (The reason we need to do these pushups is that one might
- * be a cross-type operator__; for instance int24eq vs int4eq.)
+ * be a cross-type operator; for instance int24eq vs int4eq.)
  */
 bool
 equality_ops_are_compatible(Oid opno1, Oid opno2)
@@ -697,7 +697,7 @@ equality_ops_are_compatible(Oid opno1, Oid opno2)
 	CatCList   *catlist;
 	int			i;
 
-	/* Easy if they're the same operator__ */
+	/* Easy if they're the same operator */
 	if (opno1 == opno2)
 		return true;
 
@@ -1008,7 +1008,7 @@ get_language_name(Oid langoid, bool missing_ok)
 /*
  * get_opclass_family
  *
- *		Returns the OID of the operator__ family the opclass belongs to.
+ *		Returns the OID of the operator family the opclass belongs to.
  */
 Oid
 get_opclass_family(Oid opclass)
@@ -1049,13 +1049,13 @@ get_opclass_input_type(Oid opclass)
 	return result;
 }
 
-/*				---------- operator__ CACHE ----------					 */
+/*				---------- operator CACHE ----------					 */
 
 /*
  * get_opcode
  *
  *		Returns the regproc id of the routine used to implement an
- *		operator__ given the operator__ oid.
+ *		operator given the operator oid.
  */
 RegProcedure
 get_opcode(Oid opno)
@@ -1078,9 +1078,9 @@ get_opcode(Oid opno)
 
 /*
  * get_opname
- *	  returns the name of the operator__ with the given opno
+ *	  returns the name of the operator with the given opno
  *
- * Note: returns a palloc'd copy of the string, or NULL if no such operator__.
+ * Note: returns a palloc'd copy of the string, or NULL if no such operator.
  */
 char *
 get_opname(Oid opno)
@@ -1104,7 +1104,7 @@ get_opname(Oid opno)
 /*
  * op_input_types
  *
- *		Returns the left and right input datatypes for an operator__
+ *		Returns the left and right input datatypes for an operator
  *		(InvalidOid if not relevant).
  */
 void
@@ -1115,7 +1115,7 @@ op_input_types(Oid opno, Oid *lefttype, Oid *righttype)
 
 	tp = SearchSysCache1(OPEROID, ObjectIdGetDatum(opno));
 	if (!HeapTupleIsValid(tp))	/* shouldn't happen */
-		elog(ERROR, "cache lookup failed for operator__ %u", opno);
+		elog(ERROR, "cache lookup failed for operator %u", opno);
 	optup = (Form_pg_operator) GETSTRUCT(tp);
 	*lefttype = optup->oprleft;
 	*righttype = optup->oprright;
@@ -1125,13 +1125,13 @@ op_input_types(Oid opno, Oid *lefttype, Oid *righttype)
 /*
  * op_mergejoinable
  *
- * Returns true if the operator__ is potentially mergejoinable.  (The planner
+ * Returns true if the operator is potentially mergejoinable.  (The planner
  * will fail to find any mergejoin plans unless there are suitable btree
- * opfamily entries for this__ operator__ and associated sortops.  The pg_operator
+ * opfamily entries for this__ operator and associated sortops.  The pg_operator
  * flag is just a hint to tell the planner whether to bother looking.)
  *
  * In some cases (currently only array_eq and record_eq), mergejoinability
- * depends on the specific input data type the operator__ is invoked for, so
+ * depends on the specific input data type the operator is invoked for, so
  * that must be passed as well. We currently assume that only one input's type
  * is needed to check this__ --- by convention, pass the left input's data type.
  */
@@ -1178,11 +1178,11 @@ op_mergejoinable(Oid opno, Oid inputtype)
 /*
  * op_hashjoinable
  *
- * Returns true if the operator__ is hashjoinable.  (There must be a suitable
- * hash opfamily entry for this__ operator__ if it is so marked.)
+ * Returns true if the operator is hashjoinable.  (There must be a suitable
+ * hash opfamily entry for this__ operator if it is so marked.)
  *
  * In some cases (currently only array_eq), hashjoinability depends on the
- * specific input data type the operator__ is invoked for, so that must be
+ * specific input data type the operator is invoked for, so that must be
  * passed as well.  We currently assume that only one input's type is needed
  * to check this__ --- by convention, pass the left input's data type.
  */
@@ -1219,7 +1219,7 @@ op_hashjoinable(Oid opno, Oid inputtype)
 /*
  * op_strict
  *
- * Get the proisstrict flag for the operator__'s underlying function.
+ * Get the proisstrict flag for the operator's underlying function.
  */
 bool
 op_strict(Oid opno)
@@ -1235,7 +1235,7 @@ op_strict(Oid opno)
 /*
  * op_volatile
  *
- * Get the provolatile flag for the operator__'s underlying function.
+ * Get the provolatile flag for the operator's underlying function.
  */
 char
 op_volatile(Oid opno)
@@ -1251,7 +1251,7 @@ op_volatile(Oid opno)
 /*
  * get_commutator
  *
- *		Returns the corresponding commutator of an operator__.
+ *		Returns the corresponding commutator of an operator.
  */
 Oid
 get_commutator(Oid opno)
@@ -1275,7 +1275,7 @@ get_commutator(Oid opno)
 /*
  * get_negator
  *
- *		Returns the corresponding negator of an operator__.
+ *		Returns the corresponding negator of an operator.
  */
 Oid
 get_negator(Oid opno)
@@ -1299,7 +1299,7 @@ get_negator(Oid opno)
 /*
  * get_oprrest
  *
- *		Returns procedure id for computing selectivity of an operator__.
+ *		Returns procedure id for computing selectivity of an operator.
  */
 RegProcedure
 get_oprrest(Oid opno)

@@ -38,7 +38,7 @@ ltree_execute(ITEM *curitem, void *checkval, bool calcnot, bool (*chkcond) (void
 			return false;
 	}
 	else
-	{							/* |-operator__ */
+	{							/* |-operator */
 		if (ltree_execute(curitem + curitem->left, checkval, calcnot, chkcond))
 			return true;
 		else

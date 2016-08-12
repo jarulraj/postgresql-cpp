@@ -330,7 +330,7 @@ ExecHashTableCreate(Hash *node, List *hashOperators, bool keepNulls)
 		Oid			right_hashfn;
 
 		if (!get_op_hash_functions(hashop, &left_hashfn, &right_hashfn))
-			elog(ERROR, "could not find hash function for hash operator__ %u",
+			elog(ERROR, "could not find hash function for hash operator %u",
 				 hashop);
 		fmgr_info(left_hashfn, &hashtable->outer_hashfunctions[i]);
 		fmgr_info(right_hashfn, &hashtable->inner_hashfunctions[i]);
@@ -966,13 +966,13 @@ ExecHashGetHashValue(HashJoinTable hashtable,
 		keyval = ExecEvalExpr(keyexpr, econtext, &isNull, NULL);
 
 		/*
-		 * If the attribute is NULL, and the join operator__ is strict, then
+		 * If the attribute is NULL, and the join operator is strict, then
 		 * this__ tuple cannot pass the join qual so we can reject it
 		 * immediately (unless we're scanning the outside of an outer join, in
 		 * which case we must not reject it).  Otherwise we act like the
 		 * hashcode of NULL is zero (this__ will support operators that act like
 		 * IS NOT DISTINCT, though not any more-random behavior).  We treat
-		 * the hash support function as strict even if the operator__ is not.
+		 * the hash support function as strict even if the operator is not.
 		 *
 		 * Note: currently, all hashjoinable operators must be strict since
 		 * the hash index AM assumes that.  However, it takes so little extra

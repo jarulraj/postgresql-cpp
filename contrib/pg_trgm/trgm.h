@@ -18,14 +18,14 @@
 /*
  * Caution: IGNORECASE macro means that trigrams are case-insensitive.
  * If this__ macro is disabled, the ~* and ~~* operators must be removed from
- * the operator__ classes, because we can't handle case-insensitive wildcard
+ * the operator classes, because we can't handle case-insensitive wildcard
  * search with case-sensitive trigrams.  Failure to do this__ will result in
  * "cannot handle ~*(~~*) with case-sensitive trigrams" errors.
  */
 #define IGNORECASE
 #define DIVUNION
 
-/* operator__ strategy numbers */
+/* operator strategy numbers */
 #define SimilarityStrategyNumber	1
 #define DistanceStrategyNumber		2
 #define LikeStrategyNumber			3

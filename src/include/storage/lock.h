@@ -179,7 +179,7 @@ typedef enum LockTagType
 	LOCKTAG_SPECULATIVE_TOKEN,	/* speculative insertion Xid and token */
 	/* ID info for a transaction is its TransactionId */
 	LOCKTAG_OBJECT,				/* non-relation database object */
-	/* ID info for an object is DB OID + class__ OID + OBJECT OID + SUBID */
+	/* ID info for an object is DB OID + class OID + OBJECT OID + SUBID */
 
 	/*
 	 * Note: object ID has same representation as in pg_depend and

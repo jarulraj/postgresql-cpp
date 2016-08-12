@@ -1816,13 +1816,13 @@ AlterObjectTypeCommandTag(ObjectType objtype)
 			tag = "ALTER LARGE OBJECT";
 			break;
 		case OBJECT_OPCLASS:
-			tag = "ALTER operator__ class__";
+			tag = "ALTER operator class";
 			break;
 		case OBJECT_OPERATOR:
-			tag = "ALTER operator__";
+			tag = "ALTER operator";
 			break;
 		case OBJECT_OPFAMILY:
-			tag = "ALTER operator__ FAMILY";
+			tag = "ALTER operator FAMILY";
 			break;
 		case OBJECT_POLICY:
 			tag = "ALTER POLICY";
@@ -2120,7 +2120,7 @@ CreateCommandTag(Node *parsetree)
 					tag = "DROP AGGREGATE";
 					break;
 				case OBJECT_OPERATOR:
-					tag = "DROP operator__";
+					tag = "DROP operator";
 					break;
 				case OBJECT_LANGUAGE:
 					tag = "DROP LANGUAGE";
@@ -2144,10 +2144,10 @@ CreateCommandTag(Node *parsetree)
 					tag = "DROP SERVER";
 					break;
 				case OBJECT_OPCLASS:
-					tag = "DROP operator__ class__";
+					tag = "DROP operator class";
 					break;
 				case OBJECT_OPFAMILY:
-					tag = "DROP operator__ FAMILY";
+					tag = "DROP operator FAMILY";
 					break;
 				case OBJECT_POLICY:
 					tag = "DROP POLICY";
@@ -2231,7 +2231,7 @@ CreateCommandTag(Node *parsetree)
 					tag = "CREATE AGGREGATE";
 					break;
 				case OBJECT_OPERATOR:
-					tag = "CREATE operator__";
+					tag = "CREATE operator";
 					break;
 				case OBJECT_TYPE:
 					tag = "CREATE TYPE";
@@ -2483,15 +2483,15 @@ CreateCommandTag(Node *parsetree)
 			break;
 
 		case T_CreateOpClassStmt:
-			tag = "CREATE operator__ class__";
+			tag = "CREATE operator class";
 			break;
 
 		case T_CreateOpFamilyStmt:
-			tag = "CREATE operator__ FAMILY";
+			tag = "CREATE operator FAMILY";
 			break;
 
 		case T_AlterOpFamilyStmt:
-			tag = "ALTER operator__ FAMILY";
+			tag = "ALTER operator FAMILY";
 			break;
 
 		case T_AlterTSDictionaryStmt:

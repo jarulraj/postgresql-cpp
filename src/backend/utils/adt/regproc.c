@@ -513,7 +513,7 @@ regproceduresend(PG_FUNCTION_ARGS)
 
 
 /*
- * regoperin		- converts "oprname" to operator__ OID
+ * regoperin		- converts "oprname" to operator OID
  *
  * We also accept a numeric OID, for symmetry with the output routine.
  *
@@ -584,7 +584,7 @@ regoperin(PG_FUNCTION_ARGS)
 		else if (matches > 1)
 			ereport(ERROR,
 					(errcode(ERRCODE_AMBIGUOUS_FUNCTION),
-					 errmsg("more than one operator__ named %s",
+					 errmsg("more than one operator named %s",
 							opr_name_or_oid)));
 
 		PG_RETURN_OID(result);
@@ -604,7 +604,7 @@ regoperin(PG_FUNCTION_ARGS)
 	else if (clist->next != NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_AMBIGUOUS_FUNCTION),
-				 errmsg("more than one operator__ named %s",
+				 errmsg("more than one operator named %s",
 						opr_name_or_oid)));
 
 	result = clist->oid;
@@ -613,7 +613,7 @@ regoperin(PG_FUNCTION_ARGS)
 }
 
 /*
- * to_regoper		- converts "oprname" to operator__ OID
+ * to_regoper		- converts "oprname" to operator OID
  *
  * If the name is not found, we return NULL.
  */
@@ -638,7 +638,7 @@ to_regoper(PG_FUNCTION_ARGS)
 }
 
 /*
- * regoperout		- converts operator__ OID to "opr_name"
+ * regoperout		- converts operator OID to "opr_name"
  */
 Datum
 regoperout(PG_FUNCTION_ARGS)
@@ -727,7 +727,7 @@ regopersend(PG_FUNCTION_ARGS)
 
 
 /*
- * regoperatorin		- converts "oprname(args)" to operator__ OID
+ * regoperatorin		- converts "oprname(args)" to operator OID
  *
  * We also accept a numeric OID, for symmetry with the output routine.
  *
@@ -772,12 +772,12 @@ regoperatorin(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_PARAMETER),
 				 errmsg("missing argument"),
-				 errhint("Use NONE to denote the missing argument of a unary operator__.")));
+				 errhint("Use NONE to denote the missing argument of a unary operator.")));
 	if (nargs != 2)
 		ereport(ERROR,
 				(errcode(ERRCODE_TOO_MANY_ARGUMENTS),
 				 errmsg("too many arguments"),
-				 errhint("Provide two argument types for operator__.")));
+				 errhint("Provide two argument types for operator.")));
 
 	result = OpernameGetOprid(names, argtypes[0], argtypes[1]);
 
@@ -790,7 +790,7 @@ regoperatorin(PG_FUNCTION_ARGS)
 }
 
 /*
- * to_regoperator	- converts "oprname(args)" to operator__ OID
+ * to_regoperator	- converts "oprname(args)" to operator OID
  *
  * If the name is not found, we return NULL.
  */
@@ -813,12 +813,12 @@ to_regoperator(PG_FUNCTION_ARGS)
 		ereport(ERROR,
 				(errcode(ERRCODE_UNDEFINED_PARAMETER),
 				 errmsg("missing argument"),
-				 errhint("Use NONE to denote the missing argument of a unary operator__.")));
+				 errhint("Use NONE to denote the missing argument of a unary operator.")));
 	if (nargs != 2)
 		ereport(ERROR,
 				(errcode(ERRCODE_TOO_MANY_ARGUMENTS),
 				 errmsg("too many arguments"),
-				 errhint("Provide two argument types for operator__.")));
+				 errhint("Provide two argument types for operator.")));
 
 	result = OpernameGetOprid(names, argtypes[0], argtypes[1]);
 
@@ -829,7 +829,7 @@ to_regoperator(PG_FUNCTION_ARGS)
 }
 
 /*
- * format_operator		- converts operator__ OID to "opr_name(args)"
+ * format_operator		- converts operator OID to "opr_name(args)"
  *
  * This exports the useful functionality of regoperatorout for use
  * in other backend modules.  The result is a palloc'd string.
@@ -918,7 +918,7 @@ format_operator_parts(Oid operator_oid, List **objnames, List **objargs)
 
 	opertup = SearchSysCache1(OPEROID, ObjectIdGetDatum(operator_oid));
 	if (!HeapTupleIsValid(opertup))
-		elog(ERROR, "cache lookup failed for operator__ with OID %u",
+		elog(ERROR, "cache lookup failed for operator with OID %u",
 			 operator_oid);
 
 	oprForm = (Form_pg_operator) GETSTRUCT(opertup);
@@ -936,7 +936,7 @@ format_operator_parts(Oid operator_oid, List **objnames, List **objargs)
 }
 
 /*
- * regoperatorout		- converts operator__ OID to "opr_name(args)"
+ * regoperatorout		- converts operator OID to "opr_name(args)"
  */
 Datum
 regoperatorout(PG_FUNCTION_ARGS)
@@ -974,7 +974,7 @@ regoperatorsend(PG_FUNCTION_ARGS)
 
 
 /*
- * regclassin		- converts "classname" to class__ OID
+ * regclassin		- converts "classname" to class OID
  *
  * We also accept a numeric OID, for symmetry with the output routine.
  *
@@ -1054,7 +1054,7 @@ regclassin(PG_FUNCTION_ARGS)
 }
 
 /*
- * to_regclass		- converts "classname" to class__ OID
+ * to_regclass		- converts "classname" to class OID
  *
  * If the name is not found, we return NULL.
  */
@@ -1081,7 +1081,7 @@ to_regclass(PG_FUNCTION_ARGS)
 }
 
 /*
- * regclassout		- converts class__ OID to "class_name"
+ * regclassout		- converts class OID to "class_name"
  */
 Datum
 regclassout(PG_FUNCTION_ARGS)
@@ -1105,7 +1105,7 @@ regclassout(PG_FUNCTION_ARGS)
 
 		/*
 		 * In bootstrap mode, skip the fancy namespace stuff and just return
-		 * the class__ name.  (This path is only needed for debugging output
+		 * the class name.  (This path is only needed for debugging output
 		 * anyway.)
 		 */
 		if (IsBootstrapProcessingMode())
@@ -1115,7 +1115,7 @@ regclassout(PG_FUNCTION_ARGS)
 			char	   *nspname;
 
 			/*
-			 * Would this__ class__ be found by regclassin? If not, qualify it.
+			 * Would this__ class be found by regclassin? If not, qualify it.
 			 */
 			if (RelationIsVisible(classid))
 				nspname = NULL;
@@ -1863,11 +1863,11 @@ stringToQualifiedNameList(const char *string)
  *****************************************************************************/
 
 /*
- * Given a C string, parse it into a qualified function or operator__ name
+ * Given a C string, parse it into a qualified function or operator name
  * followed by a parenthesized list of type names.  Reduce the
  * type names to an array of OIDs (returned into *nargs and *argtypes;
  * the argtypes array should be of size FUNC_MAX_ARGS).  The function or
- * operator__ name is returned to *names as a List of Strings.
+ * operator name is returned to *names as a List of Strings.
  *
  * If allowNone is TRUE, accept "NONE" and return it as InvalidOid (this__ is
  * for unary operators).

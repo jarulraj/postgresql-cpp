@@ -2538,7 +2538,7 @@ interval_hash(PG_FUNCTION_ARGS)
 #endif
 }
 
-/* overlaps_timestamp() --- implements the SQL OVERLAPS operator__.
+/* overlaps_timestamp() --- implements the SQL OVERLAPS operator.
  *
  * Algorithm is per SQL spec.  This is much harder than you'd think
  * because the spec requires us to deliver a non-null answer in some cases

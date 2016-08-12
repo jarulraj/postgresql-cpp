@@ -919,7 +919,7 @@ sepgsql_restorecon(PG_FUNCTION_ARGS)
 
 	/*
 	 * Open selabel_lookup(3) stuff. It provides a set of mapping between an
-	 * initial security label and object class__/name due to the system setting.
+	 * initial security label and object class/name due to the system setting.
 	 */
 	if (PG_ARGISNULL(0))
 	{
