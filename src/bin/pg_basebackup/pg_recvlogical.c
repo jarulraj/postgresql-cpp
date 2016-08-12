@@ -12,6 +12,9 @@
 
 #include "postgres_fe.h"
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -24,8 +27,6 @@
 #include "getopt_long.h"
 #include "libpq-fe.h"
 #include "libpq/pqsignal.h"
-#include "pqexpbuffer.h"
-
 
 /* Time to sleep between reconnection attempts */
 #define RECONNECT_SLEEP_TIME 5

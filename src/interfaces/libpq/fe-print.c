@@ -16,6 +16,9 @@
  */
 #include "postgres_fe.h"
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #include <signal.h>
 
 #ifdef WIN32

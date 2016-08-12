@@ -14,6 +14,9 @@
  */
 #include "postgres_fe.h"
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #include <ctype.h>
 #include <fcntl.h>
 

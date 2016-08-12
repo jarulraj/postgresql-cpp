@@ -22,6 +22,9 @@
 
 #include "postgres_fe.h"
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #include <signal.h>
 #include <fcntl.h>
 #include <ctype.h>

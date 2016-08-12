@@ -24,6 +24,9 @@
 
 #include "postgres_fe.h"
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #ifdef WIN32
 #include "win32.h"
 #else

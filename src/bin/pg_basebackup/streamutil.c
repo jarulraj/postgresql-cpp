@@ -13,6 +13,9 @@
 
 #include "postgres_fe.h"
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -27,7 +30,6 @@
 #include "receivelog.h"
 #include "streamutil.h"
 
-#include "pqexpbuffer.h"
 #include "common/fe_memutils.h"
 #include "datatype/timestamp.h"
 

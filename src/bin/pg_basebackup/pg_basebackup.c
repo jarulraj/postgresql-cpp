@@ -25,10 +25,12 @@
 #include <zlib.h>
 #endif
 
+// Peloton
+#include "pqexpbuffer.h"
+
 #include "common/string.h"
 #include "getopt_long.h"
 #include "libpq-fe.h"
-#include "pqexpbuffer.h"
 #include "pgtar.h"
 #include "pgtime.h"
 #include "receivelog.h"
@@ -111,7 +113,6 @@ static bool reached_end_position(XLogRecPtr segendpos, uint32 timeline,
 
 static const char *get_tablespace_mapping(const char *dir);
 static void tablespace_list_append(const char *arg);
-
 
 static void
 disconnect_and_exit(int code)

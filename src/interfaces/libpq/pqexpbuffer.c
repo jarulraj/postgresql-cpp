@@ -33,6 +33,11 @@
 #include "win32.h"
 #endif
 
+// Peloton
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 /* All "broken" PQExpBuffers point to this string. */
 static const char oom_buffer[1] = "";
@@ -428,3 +433,7 @@ appendBinaryPQExpBuffer(PQExpBuffer str, const char *data, size_t datalen)
 	 */
 	str->data[str->len] = '\0';
 }
+
+#ifdef __cplusplus
+}
+#endif
