@@ -65,11 +65,11 @@ extractPageMap(const char *datadir, XLogRecPtr startpoint, TimeLineID tli,
 	XLogRecord *record;
 	XLogReaderState *xlogreader;
 	char	   *errormsg;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private_;
 
-	private.datadir = datadir;
-	private.tli = tli;
-	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private);
+	private_.datadir = datadir;
+	private_.tli = tli;
+	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private_);
 	if (xlogreader == NULL)
 		pg_fatal("out of memory\n");
 
@@ -117,12 +117,12 @@ readOneRecord(const char *datadir, XLogRecPtr ptr, TimeLineID tli)
 	XLogRecord *record;
 	XLogReaderState *xlogreader;
 	char	   *errormsg;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private_;
 	XLogRecPtr	endptr;
 
-	private.datadir = datadir;
-	private.tli = tli;
-	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private);
+	private_.datadir = datadir;
+	private_.tli = tli;
+	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private_);
 	if (xlogreader == NULL)
 		pg_fatal("out of memory\n");
 
@@ -161,7 +161,7 @@ findLastCheckpoint(const char *datadir, XLogRecPtr forkptr, TimeLineID tli,
 	XLogRecPtr	searchptr;
 	XLogReaderState *xlogreader;
 	char	   *errormsg;
-	XLogPageReadPrivate private;
+	XLogPageReadPrivate private_;
 
 	/*
 	 * The given fork pointer points to the end of the last common record,
@@ -172,9 +172,9 @@ findLastCheckpoint(const char *datadir, XLogRecPtr forkptr, TimeLineID tli,
 	if (forkptr % XLOG_BLCKSZ == 0)
 		forkptr += (forkptr % XLogSegSize == 0) ? SizeOfXLogLongPHD : SizeOfXLogShortPHD;
 
-	private.datadir = datadir;
-	private.tli = tli;
-	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private);
+	private_.datadir = datadir;
+	private_.tli = tli;
+	xlogreader = XLogReaderAllocate(&SimpleXLogPageRead, &private_);
 	if (xlogreader == NULL)
 		pg_fatal("out of memory\n");
 
@@ -234,7 +234,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 				   int reqLen, XLogRecPtr targetRecPtr, char *readBuf,
 				   TimeLineID *pageTLI)
 {
-	XLogPageReadPrivate *private = (XLogPageReadPrivate *) xlogreader->private_data;
+	XLogPageReadPrivate *private_ = (XLogPageReadPrivate *) xlogreader->private_data;
 	uint32		targetPageOff;
 	XLogSegNo targetSegNo PG_USED_FOR_ASSERTS_ONLY;
 
@@ -257,9 +257,9 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 	{
 		char		xlogfname[MAXFNAMELEN];
 
-		XLogFileName(xlogfname, private->tli, xlogreadsegno);
+		XLogFileName(xlogfname, private_->tli, xlogreadsegno);
 
-		snprintf(xlogfpath, MAXPGPATH, "%s/" XLOGDIR "/%s", private->datadir, xlogfname);
+		snprintf(xlogfpath, MAXPGPATH, "%s/" XLOGDIR "/%s", private_->datadir, xlogfname);
 
 		xlogreadfd = open(xlogfpath, O_RDONLY | PG_BINARY, 0);
 
@@ -293,7 +293,7 @@ SimpleXLogPageRead(XLogReaderState *xlogreader, XLogRecPtr targetPagePtr,
 
 	Assert(targetSegNo == xlogreadsegno);
 
-	*pageTLI = private->tli;
+	*pageTLI = private_->tli;
 	return XLOG_BLCKSZ;
 }
 

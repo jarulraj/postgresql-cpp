@@ -35,10 +35,10 @@ struct PgBenchExpr
 		}			variable;
 		struct
 		{
-			char		operator;
+			char		operator__;
 			PgBenchExpr *lexpr;
 			PgBenchExpr *rexpr;
-		}			operator;
+		}			operator__;
 	}			u;
 };
 

@@ -16573,3 +16573,4 @@ ExecuteSqlQueryForSingleRow(Archive *fout, char *query)
 
 	return res;
 }
+

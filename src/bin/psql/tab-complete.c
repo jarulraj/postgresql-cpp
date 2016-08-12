@@ -102,7 +102,7 @@ typedef struct SchemaQuery
 	 * namespace --- name of field to join to pg_namespace.oid. For example,
 	 * "c.relnamespace".
 	 */
-	const char *namespace;
+	const char *namespace__;
 
 	/*
 	 * Result --- the appropriately-quoted name to return, in the case of an
@@ -4251,7 +4251,7 @@ _complete_from_query(int is_schema_query, const char *text, int state)
 							  "WHERE %s = n.oid AND ",
 							  qualresult,
 							  completion_squery->catname,
-							  completion_squery->namespace);
+							  completion_squery->namespace__);
 			if (completion_squery->selcondition)
 				appendPQExpBuffer(&query_buffer, "%s AND ",
 								  completion_squery->selcondition);
