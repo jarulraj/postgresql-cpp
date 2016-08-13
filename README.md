@@ -1,6 +1,5 @@
 # PostgreSQL-CPP 
-<a href="http://pelotondb.org/"><img src="http://db.cs.cmu.edu/wordpress/wp-content/uploads/2015/01/pgc.jpg" width="250"></a>
-
+<img src="http://db.cs.cmu.edu/wordpress/wp-content/uploads/2015/01/pgc.jpg" width="200"></img>
 [![PostgreSQL license](https://img.shields.io/badge/license-postgresql-green.svg?style=flat)](https://www.postgresql.org/about/licence/) [![Version](https://img.shields.io/badge/version-9.5.3-red.svg)](https://www.postgresql.org/docs/9.5/static/release-9-5-3.html)
 -----------------
 
@@ -15,8 +14,8 @@ The following packages are needed for building Postgres, including ssl support:
 ### Redhat
 
 ```
-sudo yum install -y bison-devel readline-devel zlib-devel openssl-devel wget
-sudo yum groupinstall -y 'Development Tools'
+$ sudo yum install -y bison-devel readline-devel zlib-devel openssl-devel wget
+$ sudo yum groupinstall -y 'Development Tools'
 ```
 
 ### Ubuntu 
@@ -108,4 +107,4 @@ Here's a list of the key changes:
 
 ## Credits
 
-Ming Fang (@mindbergh)	
+[Ming Fang](https://github.com/mindbergh)	
