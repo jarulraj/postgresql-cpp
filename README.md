@@ -1,10 +1,8 @@
 # PostgreSQL-CPP 
+<a href="http://pelotondb.org/"><img src="http://db.cs.cmu.edu/wordpress/wp-content/uploads/2015/01/pgc.jpg" width="250"></a>
 
-<a href="http://pelotondb.org/"><img src="http://db.cs.cmu.edu/wordpress/wp-content/uploads/2015/01/pgc.jpg" alt="PostgreSQL-CPP Logo"></a>
+[![PostgreSQL license](https://img.shields.io/badge/license-postgresql-green.svg?style=flat)](https://www.postgresql.org/about/licence/) [![Version](https://img.shields.io/badge/version-9.5.3-red.svg)](https://www.postgresql.org/docs/9.5/static/release-9-5-3.html)
 -----------------
-
-[![PostgreSQL license](https://img.shields.io/badge/license-postgresql-green.svg?style=flat)](https://www.postgresql.org/about/licence/)
-[![Version](https://img.shields.io/badge/version-9.5.3-green.svg)](https://www.postgresql.org/docs/9.5/static/release-9-5-3.html)
 
 This is a port of the [PostgreSQL Database Management System](https://www.postgresql.org/) to the C++ language ([C++11 standard](https://gcc.gnu.org/projects/cxx-status.html#cxx11)).
 
@@ -14,10 +12,20 @@ This is a port of the [PostgreSQL Database Management System](https://www.postgr
 
 The following packages are needed for building Postgres, including ssl support: 
 
+### Redhat
+
 ```
-$ sudo apt-get install build-essential libreadline-dev zlib1g-dev flex bison \ 
-  libxml2-dev libxslt-dev libssl-dev
+sudo yum install -y bison-devel readline-devel zlib-devel openssl-devel wget
+sudo yum groupinstall -y 'Development Tools'
 ```
+
+### Ubuntu 
+
+```
+$ sudo apt-get install build-essential libreadline-dev zlib1g-dev flex bison libxml2-dev libxslt-dev libssl-dev
+```
+
+More information is available in the [PostgreSQL manual](https://www.postgresql.org/docs/9.5/static/install-procedure.html) and the [PostgreSQL wiki](https://wiki.postgresql.org/wiki/Compile_and_Install_from_source_code).
 
 ## Building the DBMS
 
@@ -31,9 +39,9 @@ $  make CC=g++ CPPFLAGS+="-std=c++11 -fpermissive -w"
 ## Testing the DBMS
 
 ```
-    cd build
-    cp ../src/test/regress/expected/security_label.out ./src/test/regress/results/
-    make check
+$  cd build
+$  cp ../src/test/regress/expected/security_label.out ./src/test/regress/results/
+$  make check
 ```
 
 ## Porting Notes
