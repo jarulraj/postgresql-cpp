@@ -33,7 +33,56 @@ $  mkdir build
 $  cd build
 $  ../configure
 $  make CC=g++ CPPFLAGS+="-std=c++11 -fpermissive -w"
+$  make install
 ```
+
+## Using the DBMS
+
+### Create a data directory
+
+```
+$ cd build
+$ ./bin/initdb ./data
+```
+
+We use `initdb` to create a new database cluster which is a collection of databases that are managed by a single server instance. Here, `./data` is the location of the data directory for this new database cluster.
+
+### Start the server
+
+```
+$ ./bin/pg_ctl -D ./data start
+```
+
+`pg_ctl` is a program that can be used to start, stop, and control a Peloton server. It is installed along with Peloton, by default in `usr/local/peloton/bin`. Here, we use it to start the server. 
+
+### Create a default user
+
+```
+$ ./bin/createuser -s -r postgres
+```
+
+Let's create a default user using `createuser` utility.
+
+### Connect to the server
+
+```
+$ ./bin/psql postgres
+```
+
+Finally, we can connect to the Peloton server using the `psql` terminal utility. Here, we connect to the `postgres` database. We can also connect to any other database in the cluster by altering this command. To get a list of `psql` shortcuts, just type `help` and then press enter.
+
+### Stop the server
+
+```
+$ ./bin/pg_ctl -D ./data stop
+```
+
+Now, we can use `pg_ctl` to stop the server. 
+
+### More information on using the terminal
+
+[PSQL manual](http://www.postgresql.org/docs/9.5/static/app-psql.html)  
+[PSQL common usage](http://postgresguide.com/utilities/psql.html)
 
 ## Testing the DBMS
 
@@ -49,18 +98,8 @@ Here's a list of the key changes:
 
 1. Refactored identifiers that conflict with C++ reserved keywords. Appended the identifiers with "__" to resolve this problem. Here's a list of the keywords that we refactored:
 
-  * `new`
-  * `this`
-  * `namespace`
-  * `friend`
-  * `public`
-  * `private`
-  * `typename`
-  * `typeid`
-  * `constexpr`
-  * `operator`
-  * `class`
-  * `template`
+  * `new`, `this`, `namespace`, `friend`, `public`, `private`
+  * `typename`, `typeid`, `constexpr`, `operator`, `class`, `template`
 
 2. Defined the assignment operator for structures with volatile instances.
 
