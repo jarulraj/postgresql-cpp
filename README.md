@@ -5,6 +5,8 @@
 
 This is a port of the [PostgreSQL Database Management System](https://www.postgresql.org/) to the C++ language ([C++11 standard](https://gcc.gnu.org/projects/cxx-status.html#cxx11)).
 
+Certain features of the C++ language and its library should help simplify coding, improve code reuse, and avoid bugs. Here's a nice article that provides more context: [Moving to C++](https://petereisentraut.blogspot.com/2013/05/moving-to-c.html).
+
 ## Dependencies
 
 - **g++ >= 4.8** (C++11 support)
