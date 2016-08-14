@@ -1,5 +1,5 @@
 # PostgreSQL-CPP 
-<img src="http://db.cs.cmu.edu/wordpress/wp-content/uploads/2015/01/pgc.jpg" width="200"></img>
+<img src="http://db.cs.cmu.edu/wordpress/wp-content/uploads/2013/12/pgc.jpg" width="200"></img>
 [![PostgreSQL license](https://img.shields.io/badge/license-postgresql-green.svg?style=flat)](https://www.postgresql.org/about/licence/) [![Version](https://img.shields.io/badge/version-9.5.3-red.svg)](https://www.postgresql.org/docs/9.5/static/release-9-5-3.html)
 -----------------
 
