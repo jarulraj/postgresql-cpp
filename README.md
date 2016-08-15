@@ -33,7 +33,7 @@ More information is available in the [PostgreSQL manual](https://www.postgresql.
 ```
 $  mkdir build
 $  cd build
-$  ../configure
+$  ../configure --prefix=/path/to/build
 $  make CC=g++ CPPFLAGS+="-std=c++11 -fpermissive -w"
 $  make install
 ```
